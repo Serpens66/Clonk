@@ -1,0 +1,43 @@
+# Entwicklung und Tests mit LegacyClonk
+
+## C4Script und Spieldaten
+
+1. Für ein einzelnes Szenario mit einer offenen `.c4s`-Gruppe beginnen. `Scenario.txt` beschreibt das Szenario, `Script.c` enthält seine Logik. Die benötigten Definitionspakete beim Start erfassen. [Szenariodaten](https://crdocs.clonkspot.org/de/sdk/scenario/index.html), [Szenarioskripte](https://crdocs.clonkspot.org/de/sdk/scenario/script.html)
+2. Eigenständige Objektdefinitionen in `.c4d`-Gruppen führen. `DefCore.txt` enthält unter anderem die Objekt-ID, `ActMap.txt` die Aktionen und `Script.c` die Skriptlogik. Für eine gezielte Erweiterung einer vorhandenen Definition kommt ein `#appendto`-Skript infrage. Die Ziel-ID und die tatsächlich geladenen Pakete prüfen. [Objektdefinitionen](https://crdocs.clonkspot.org/de/sdk/definition/index.html), [Objektskripte](https://crdocs.clonkspot.org/de/sdk/definition/script.html), [#appendto](https://crdocs.clonkspot.org/de/sdk/script/AppendTo.html)
+3. Bei einem API-Aufruf zuerst den [Katalog](Reference/C4Script_API.md) und die verlinkte SDK-Seite lesen. Beispielsweise dokumentiert `CreateObject` absolute Landschaftskoordinaten im globalen Aufruf und Offsets zum Objekt im lokalen Aufruf. Bei Suchfunktionen, Effekten und Callbacks auch den Objektkontext und die Rückgabewerte prüfen. [C4Script-Grundlagen](https://crdocs.clonkspot.org/de/sdk/script/index.html), [CreateObject](https://crdocs.clonkspot.org/de/sdk/script/fn/CreateObject.html), [Effekte](https://crdocs.clonkspot.org/de/sdk/script/Effects.html)
+4. Bei neuem Code, der ausdrücklich auf LegacyClonk zielt, `#strict 3` erwägen. Bei Altcode zuerst den ursprünglichen Strict-Modus beibehalten. Gemischte Strict-Stufen können sich bei `nil`-Konvertierungen und Zugriffen unterschiedlich verhalten. Syntax und APIs anhand von LegacyClonk prüfen, da andere Clonk-Engines eigene Varianten von C4Script haben. [Ältere SDK-Strict-Referenz](https://crdocs.clonkspot.org/de/sdk/script/Strict.html), [LegacyClonk-Strict-3-Erläuterung](https://forum.clonkspot.org/t/modernes-scripting-in-legacyclonk-mit-strict-3/1462)
+
+## Pakete und Werkzeuge
+
+`.c4s` steht für Szenarien, `.c4d` für Objektdefinitionen oder Definitionspakete, `.c4f` für Szenarioordner und `.c4g` für weitere Gruppen wie Systemdaten. Die Engine kann gepackte und offene Gruppen verarbeiten. Offene Gruppen erleichtern das Bearbeiten und Versionieren. [SDK-Spieldaten](https://crdocs.clonkspot.org/de/sdk/files.html)
+
+Das installierte `c4group.exe` zeigt seine Hilfe beim Aufruf ohne Argumente. In PowerShell Pfade als getrennte Argumente übergeben. `-p` und `-u` ersetzen die angegebene Gruppe am selben Pfad. Bei verschachtelten Archivgruppen den Vorgang auf der Kopie je Ebene durchführen. [SDK-Kommandozeile](https://crdocs.clonkspot.org/de/sdk/cmdline.html), [CLI-Quellcode](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/c4group_ng.cpp)
+
+```powershell
+$c4groupExe = 'C:\Users\Serpens66\Desktop\Spiele\LegacyClonk\c4group.exe'
+# Probe.c4d ist hier eine offene Testgruppe unter .work.
+$probeGroup = '.work\Probe.c4d'
+& $c4groupExe $probeGroup -l
+& $c4groupExe $probeGroup -p
+& $c4groupExe $probeGroup -l
+& $c4groupExe $probeGroup -u
+```
+
+**Werkzeugtest vom 8. November 2026:** `Probe.c4d` mit `Names.txt` wurde als offener Ordner und gepackte Datei aufgelistet. `-p` erzeugte die Gruppendatei, `-u` stellte den Ordner wieder her. SHA-256 von `Names.txt` stimmte überein (`5CD1B83547C1328E83A80FB343AF9C43E558D3847EF084D47809084CE0DAEDA6`). Das Ergebnis belegt den Durchlauf des Archivwerkzeugs.
+
+## Spieltest
+
+- Eine Arbeitskopie mit dem kleinstmöglichen Szenario und seinen deklarierten Abhängigkeiten starten. Den Start mit Zielbuild und erwarteter Wirkung dokumentieren.
+- Skriptfehler und gezielte `Log()`-Ausgaben in `Clonk.log` dem konkreten Lauf zuordnen. Beim Erfolg zusätzlich die sichtbare Wirkung prüfen, etwa ob das erwartete Objekt an der richtigen Stelle entsteht oder ein Callback nur im vorgesehenen Kontext auslöst.
+- Speichern, Laden und Mehrspieler jeweils prüfen, wenn die Mod diese Modi unterstützen soll. Dazu den Paketstand einschließlich `System.c4g` für alle beteiligten Spielinstanzen erfassen. [Engine-README](https://github.com/legacyclonk/LegacyClonk#play)
+
+## Quellcode und Beiträge
+
+| Frage | Einstieg am Release-Stand |
+| --- | --- |
+| Wie ist die Funktion registriert und implementiert? | [C4Script.cpp](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Script.cpp), [System.c4g](https://github.com/legacyclonk/LegacyClonk/tree/v365/planet/System.c4g) |
+| Wie werden Skripte geparst, verknüpft und ausgeführt? | [C4AulParse.cpp](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4AulParse.cpp), [C4AulLink.cpp](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4AulLink.cpp), [C4AulExec.cpp](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4AulExec.cpp) |
+| Wo entstehen Objekt-, Szenario- oder Effekt-Callbacks? | [Callback-Namen](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Script.h), [Szenarioablauf](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Game.cpp), [Effekte](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Effect.cpp) |
+| Wie lädt oder verarbeitet die Engine C4-Gruppen? | [Gruppenimplementierung](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Group.cpp), [CLI-Einstieg](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/c4group_ng.cpp) |
+
+Für einen Engine-Fix zuerst prüfen, ob der Fehler am vorgesehenen Upstream-Stand reproduzierbar ist. Die Änderung in einer eigenen Git-Arbeitskopie unter `.work/` vorbereiten und den Buildablauf aus der dortigen README verwenden. In einem beauftragten PR den reproduzierten Fall, den getesteten Quellstand und das beobachtete Ergebnis angeben. [Upstream-Buildanleitung](https://github.com/legacyclonk/LegacyClonk#compiling---quick-start)

@@ -1,0 +1,110 @@
+Hier die Packs und deren Autoren, welche ich für meine (Serpens66) Sammlung verwendet habe.
+Teils habe ich Objekte direkt übernommen, teils nur ein paar und teils nur die Ideen. Bei den allermeisten Objekten habe ich aber Änderungen (in DefCore) vorgenommen, weshalb es nötig war, die Inhalte komplett einzubinden. 
+
+
+Author                 -    Dateinmane          - Name auf Ccan          - Erlaubnis  - Email vorhanden?                       - ungefähr verwendet
+
+freakazoyd             -                        - Bauklotzpack           -            -                                        - Gerüst
+GunJack                -    BlackSitePack       -  Blacksite Objektpack  -            - nein                                   - Monster: Mireok,Mutant,Schmonk,Schroffel
+Kosta Kazakow          -    Bomb Pack           -                        -  pending   -                                        - ein paar Bomben: Nitro-Flint,Macro-Flint,Tetra-Flint,Tetra-Torpedo
+Hendrik P. (Enrique)   -    Bugsolutions        -                        -  ja,jeder  -                                        - fast alle bugfixes
+Cheiron                -    CO1 bzw CO2         -                        -            -                                        - hauptsächlich den Bunkerkomplex
+Shamino (alt)          -    CharcoalBurning     -   Köhlerei und Meiler  -            - nein                                   - komplett
+YuPoKa                 -    ClonkerStrike       -                        -            -                                        - Blendgranate, verbessert
+Luchs&Nachtfalter      -    ClonkMars           -   Clonk Mars           -  ja        - nein                                   - nur Plastik
+Martin Rittweger/sulai -    CloudMerge          -   Wolkenbildung        -  pending   - nein                                   - nur Idee
+JimiRaynor             -    Conkit-append       -                        -            -                                        - komplett
+Crazy Chris            -    CrazyPack           -   Crazy Pack           -            - nein                                   - Tera-T-Flint
+s_m_w/smw3/Misumi      -    DoorLock            -  Door Lock             -            - nein                                   - Idee, Graphiken und teile des Skripts. von mir deutlich verbessert.
+Ingmar Knof/Toastbrot  -    DynString           -                        -            -                                        - komplett
+Zagabar/Wertilq        -    E.P.I.C.            -   E.P.I.C. Melee Pack  -            - http://www.clonkforge.net/pr.php?pr=1138 - einzelne Items: Air elevator pack, Holdwalk, Blitz-Ableiter bzw anzieher, Frog Spring, Fernrhohr,Smoke Bomb und Kabelkutter.
+Newton                 -  Eingeschneite_Gebaeude-                        -  pending   - newton@abide.de                         - komplett
+                       -    EnemyAI             -                        -            -                                         - komplett und erweitert.
+St.Ivo                 -    Erweiterungspack    -  Erweiterungspack      -            -                                         - komplett
+SaschaChristmann SasCh -   Faehigkeiten_appendto-                        -            -                                         - Idee und 1-2 Grafiken
+bzw. Saiodin
+Kosta Kazakow          -    Fallout             -                        -  pending   -                                         - einzelne Items: Todekrähe, Zelt, ein paar Regeln, MetallFahrstuhl, Rüstungen (stark verbessert), HazardWaffenpack, Nahkampfwaffen,Waffenteile, Topfpflanze und Munitionsgürtel die halbe Grafik (funktionsweise selbst gemacht).
+IndianaClonk           -    Gangverschluss      -  Gangverschluss        -            - nein                                    - komplett und verbessert
+Florian Groß (flgr)    -    "Goodies" aus KHNESE-                        -  pending   -                                         - ein paar Bomben und teilweise verbessert: Doof, Oberdoof, Crumbler, SplitterFlint, VerfolgerBombe, Feuerfliegennest,Hauskiller, Lava-Säure-Falle,
+Mega Clonker           -    Handelsstation      -                        -            -                                         - komplett und verbessert.
+Mace                   -    Hazard Ships        -                        -            -                                         - komplett und bugs gefixt
+Newton                 -    Hazard              -                        - pending    - nein                                    - komplett und erweitert
+NOMPL                  -    HazardFix           -Gegenstände Fallenlassen-            -                                         - komplett
+Valentin Oellers       -    InExtranos          -                        -            -                                         - nur Grafik eines Gebäudes für Autragshaus
+Henry Kielmann/henry4k -    Jetbelt             - Jetbelt                -            - nein                                    - komplett
+ST-DDT                 -LandwirtschaftsErweiterung-                      -            - http://clonkforge.net/user.php?usr=1428 - einzelne Objekte: Bergwerk, Tiefbrunnen, Sense, SaugerLore , Tank
+Bulti/JimiRaynor       -    MTS_0               - MagnetTransportSystem  -            - nein                                    - komplett
+Hobby-Clonk            -    MaterialTeleporter  -  MaterialTeleporter    -            - nein                                    - komplett und leicht vereinfacht
+Pluto                  -    MetalMagicExtra     -                        -            -                                         - Poenix und Fledermaus
+CMC team/Michael14     -    ModernCombat        -                        -            -                                         - ein paar Grafiken und Environments, Clonk Portraits und War atmosphere.
+ClonkBastler           -    NeueHazardWaffen    -  Hazard Waffenpack     -            - nein                                    - komplett und leicht verbessert
+Tobias Stengg          -    NewRules            -                        -            -                                         - komplett und leicht verbessert
+Tyron                  - GoldenZapEdition v0.2.5-                        - ja    -                                         - Blumen, Werfen+Spring,Realistische treffergeschwindgikeit, Holzlore. (Blumen und Holzlore sind von Nachtfalter, Erlaubnis ja)
+Tim Wölfle/timi        -    Observation         -                        -            -                                         - komplett
+Tobias Zwick /Newton   -    Realistic_Effects   -                        - pending    -                                         - komplett und stark verbessert
+Søren                  -    RufDerWipfe         -                        -            -                                         - einige Objekte, einige Grafiken und Ideen: Müllobjekte,Time, Chooser, Grundwasser,Müllverbrennung,Regenerator, Wolken, Lichter, Grafikwechsel Bäume/Häuser, Feuerlöscher
+David Konhäuser        -    SGGP_Betarelease_9  -                        -            -                                         - Paar Grafiken und Items: Stargate Objekte.
+Paul Nasdalack         -    Seasons             -                        -            -                                         - Grafiken für Bäume
+ST-DDT                 -    SensorPaket         -                        -            -                                         - komplett und erweitert
+Gecko                  -    Silvesterpack_2007  -                        - ja         -                                         - eine Raketenbatterie. Lichteffekte zugefügt
+Chryss und mehr        -Space Empire/StarEmpires-                        -            -                                         - komplett, zahlreiche starke Verbesserungen
+Hobby-Clonk            -    Sperrenbausatz      -                        -            -                                         - komplett 
+Killerwipf             -    Transportelevator   -                        -            -                                         - komplett
+M.A.J.O.R.             -    Tunnelregeln        -                        -            -                                         - komplett
+marci                  -    Versteckpack        -                        -            -                                         - Versteck Wand und Idee für BaumBasis
+Rico Schrage/Baal Shemen-  Wetterkontrollstation-                        -            -                                         - komplett (wird noch verbessert)
+Mario Schweidt         -    WideningV222c       -                        -            -                                         - einzelne Objekte: 5er Gold, Profibeton,Ultimativer Beton, Werkzeugkästen,GoldLore,Plastiksprengstoff,Blitzflint,Ionenflint grafik,Atomtorpedo,Torpedo Gold, Todestorpedo.
+Benedikt Albert        -    Schildupgrade       -                        -            -                                         - komplett und stark verbessert
+Viktor Yuschuk         -    Seilbahn            -                        -            -                                         - komplett
+Henry Kielmann/henry4k -    sign                -  Schild                -            -                                         - komplett und vergrößert
+
+
+Dankeschön auch an alle fleißigen Helfer aus dem Clonkspot Forum, die mir bei jeder Frage geduldig geantwortet haben!
+Darunter: Sven2, Zapper, Luchs, Clonkonaut, Drome, B_E, Gecko, Pyrit, ClonkGeist, Pirti, Nachtschatten, Marky,Nachtfalter,
+alex,Octagon,Cmdr. Adler
+
+
+Ach und natürlich kommen die Skins der Clonks bei den ganzen unterschiedlichen Rüstungen aus dem QuakeR Pack!  Anbei die Credits aus dem Quake Pack:
+==============
+QuakeR
+==============
+
+Großer Dank geht an:
+--------------------
+
+* Nachtfalter
+ - für seine Grafiken und das Logo
+ - für viele der Skys
+ - die Waffengrafiken
+ - die Foldermap
+ - und vor allem für die genialen (und genial ausgestalteten) Szenarien
+
+* Mimmo
+ - für seine Grafiken
+ - und Szenarienideen
+
+* Icewing
+ - für seine Scriptarbeiten
+
+* bb-generation
+ - fürs SVN-Hosting
+
+Außerdem Leute die Respectcredits bekommen:
+-------------------------------------------
+
+* Freakclonk für den Quakebot und den Spy
+* Simsi für den ABC-Clonk Skin
+* Valentin(Valentin130) für die Clonkgrafik des Future-, Schutzanzug- und Droidenskins
+* Kanibal für den Bauer-Skin und Bugfixes
+* Zapper für den Wooza-Skin und Bugfixes
+* KKenny für die Grundlage des Medieval-Wetters
+* Randrian für den Medieval-Blitz
+* Das M&M-Team für den (Dunklen)Priester, die Assassine und das Skelett
+* RwD für die Originalclonks ;)
+
+* Zerg für sein Betatesting
+
+* Hazard für die Waffenbasis
+
+Außerdem an alle die mitgemacht haben für Test und Vorschläge, und fürs mitmachen generell. ;)
+

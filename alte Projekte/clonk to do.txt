@@ -1,0 +1,96 @@
+ERROR: Object call: No function "ConDesc" in object "Gürtel groß Allrounder #1100"!
+ by: ContextUseEquipment(Branno #822) (obj Branno #822) (allerleiFabian gute Sammlung36.c4d\Space Empire.c4d\Hazard.c4d\Libraries.c4d\Functionalities.c4d\UseGear.c4d\Script.c:85)
+ by: MenuCommand in allerleiFabian gute Sammlung36.c4d\Space Empire.c4d\Hazard.c4d\Crew.c4d\HazardClonk.c4d\Script.c (obj Branno #822)
+-> wenn Rüstung und Gürtel gleichzeitig angelegt und ausrüstung aktivieren wählen
+
+
+KI weicht auch eigenen geschossen aus. Ist nur sinnvoll, wenn teamschaden an ist.
+Daher kontrolle einbauen, ob teamschaden oder nicht und wenn nicht, dann owner checken.
+
+bei KI check einbauen, ob Contained(). wenn contained, dann eben nach unten drücken, damit gebäude verlassen wird.
+
+
+deko projektor licht nach laden verschoben
+
+
+start maximal fps liegt nicht an regeln... und auch nicht an enviremonet? kriegsnebel vermutlich auch nicht, da auch ohne häufiger 33fps als maximal
+-> liegt an keinen funktionen... 
+
+wenn null schaden, dann mach 3 schaden -> das war vorher, jetzt null=null. Eventuell machen waffen nun also keinen schaden mehr, evlt alle testen.
+
+
+
+die Waste funktion im unweltschutz noch verbessern, da dort jeder spieler einzeln durchgegangen wird (weil abhängig davon, was er erforscht hat)
+dort auch die anderen Forschungskontrolllen in checkpolution verbessern, also mit for schleife
+
+
+in terraforming oder forsthaus ein "schnelles wachstum" zauber oderso, wodurch in bestimmten BEreich pflanzen schneller wachsen
+bzw "dünger"
+
+Während Spiel die kaufbaren Dinge manipulieren können, falls iwas doof eingestellt, kann 1 spieler dies während spiel wie regeln usw auch ändern.
+
+
+teleporter über konsole auch für "nicht-feinde" freischaltbar, sodass diese sie zumindest als Ziel wählen können
+
+
+
+nachdem barriere entfernt wird, falls erforscht, ein paar EJD kaufbar machen (am besten im kampfkarte skript einmalig wenn keine barriere da)
+
+die regeln während spiel ändern am besten nur für ersten menschspieler möglich machen
+
+artillerie geschütz -> energieanzeige einbauen
+
+leichter jäger munitionsverbrauch
+
+geschützplattform wie den geschützturm zu sensoren zufügen?  normaler geschützturm schießt nicht
+
+
+
+
+In regelchooser noch szenario spezifische dinge beachten. nicht immer soll z.b ein ziel ausgewählt werden können usw.
+
+
+Saboteurclonk KI zufügen, welcher z.b mit KEttensäge militärgebäude angreift
+
+schutzschild mit lebenspunkten ausstatten? 
+
+wenn ein worm einen clonk gefressen hat, kann man explosive dinge drinnen ablegen und dann explodiert wurm
+
+eine schöne KArte ohne Gold in der luft erstellen, weil alle flugfeinde dort abprallen und sonstige Feinde die vom himmel fallen evlt dort landen
+
+kosten für munitionskauf in tucan sinnvoll anpassen
+
+Kosten für alle zukunftsdinge iwie per script anpassen?  Je nach dem, mit welchem Forschungsstand begonnen wurde
+
+reichweite für materialteleporter begrenzen und besser kein materalisieren vor Eingängen.
+
+eine "Bombe" bauen, welche per Zünder gezündet werden kann, auch während sie geworfen wird (sollte auch per Katapult usw gehen.. oder sie muss selbst fliegen können)
+Sie soll bei explosion keinen Schaden machen, sondern nur kreisförmig x Partikel entfernen. Die Anzahl der PArtikel ist recht klein, sodass sie bei explosion auf festen untergrund kaum was wegnimmt.
+Aber wenn sie in der nähe von vielen Fusselpartikeln explodiert, entfernt sie diese fussel.
+
+
+
+
+to do:
+ist SEGU angreifbar/zerstörbar? 
+
+Habe konsole so eingestellt, dass nur alle Segus gleichzeitig an-ausgeschaltet und bewaffnet werden können.
+Es erscheint aber ein Pfeil bei auswahl über einer Segu, die anderen sind nicht wählbar.
+Doch wieder so ändern, dass alle einzeln einstellbar sind? 
+
+Segu hat kein Scahdenssymbol bei beschädigung. vermtulich weil zerstörung in script geregelt. (dazu am besten in DefCore einen Wert leicht über den im script einstellen, dann passt das)
+
+
+
+
+Bugs: (ich glaub alle bereits gelöst? )
+- Mireok bekommen keinen schaden von bazooka? testen
+- wurfrakete wird von verb. schild erfasst... evlt beim schild einbauen, dass auch geschossen von verb. spielern nicht beachtet werden
+- fische/vögel kein ziel für wärmesucher
+- cancer besitzprobleme
+
+
+
+Es gibt von Hazard und von E.P.I.C neue Versionen
+
+

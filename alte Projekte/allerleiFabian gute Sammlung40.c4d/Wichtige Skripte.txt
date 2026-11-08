@@ -1,0 +1,14 @@
+Zu den wichtigsten Skripten gehören:
+
+Umweltschutz -> RufderWipfe2 -> RWd ->  Effekte .   Dort wird nicht nur die Umweltverschmutzung suw geregelt, sondern auch das tödliche Klima, die Baumveränderungen und einiges mehr.
+Time -> RufderWipfe2 -> RWd -> Enivronment .      Es regelt natürlich die Tageszeit, aber auch die Helligkeit und einfärbung des bildschirms, sowie die Grafikwechsel der Gebäude im Winter.
+
+Settings  -> mehr oder weniger eigenes -> Umwelt und Regeln.   Regelt die möglichkeit zu beginn und während des spüiels alle möglichen Einstellungen zu ändern. Dort wird auch die static hash variable hashSpielRegeln erstellt, die für alle möglichen funktionen wichtig ist.
+
+Clonk appendto im erweiterungspack, sowie das clonk/hazardclonk skript selbst
+
+
+
+
+
+

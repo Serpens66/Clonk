@@ -1,0 +1,1676 @@
+/*-- Forschungsbaum 1 --*/
+
+#strict 2
+
+#appendto HUT3
+#appendto CNKT
+#appendto ANVL
+#appendto FACK
+#appendto LNKT
+
+#appendto FRGE
+#appendto TENP
+#appendto FDRS
+#appendto AEHN
+#appendto _BMR
+#appendto WDBR
+#appendto SIGN
+#appendto ELEV
+
+
+//Steinhütte
+//Bausatz
+//Amboss
+//Fackkeln herstellen
+//Leitungsbausatz
+
+//Esse
+//Ritterzelt gepackt
+//kl. Hochofen
+//Alte Handelsstation
+//Bumerang
+//Holzfass
+//straßenschild
+//Fahrstuhl
+
+//Forschungsvoraussetzung:
+public func GetResearchBase() { return(IDOL); }
+public func GetResearchBase1() { return(WMIL); }
+public func GetResearchBase2() { return(SAWM); }
+
+//Statue
+//Windmühle
+//Sägewerk
+
+
+
+
+/*-- Forschungsbaum 2 --*/
+
+#strict 2
+
+
+#appendto CHEM
+#appendto FLNT
+#appendto TFLN
+#appendto GIDL
+#appendto FH9I
+#appendto AM5P
+#appendto EAWL
+
+#appendto BETL
+#appendto B4S7
+#appendto _Y3B
+#appendto SPKT
+#appendto WGTW
+#appendto LAGF
+#appendto GV5Y
+#appendto GIGN
+#appendto WLRZ
+
+
+// frühe Chemiefabrik
+//Feuerstein
+//TFlint
+//Goldstatue
+//Fosthaus
+//Fernrohr
+//Lehmklumpen manschen
+
+//Beutel
+//Fundament (einzeln)
+//früher Feuerlöscher
+//Sperrenbausatz für kleine Fahrstühle
+//HolzWachturm
+//Lagerfeuer
+//Gangverschluss
+//gr. Straßenschild
+//HolzLore
+
+
+//Forschungsvoraussetzung:
+public func GetResearchBase() { return(HUT3); }
+public func GetResearchBase1() { return(CNKT); }
+public func GetResearchBase2() { return(ANVL); }
+public func GetResearchBase3() { return(FACK); }
+public func GetResearchBase4() { return(LNKT); }
+public func GetResearchBase5() { return(FRGE); }
+public func GetResearchBase6() { return(TENP); }
+public func GetResearchBase7() { return(FDRS); }
+public func GetResearchBase8() { return(AEHN); }
+public func GetResearchBase9() { return(_BMR); }
+public func GetResearchBase10() { return(WDBR); }
+public func GetResearchBase11() { return(SIGN); }
+public func GetResearchBase12() { return(ELEV); }
+
+
+//Steinhütte
+//Bausatz
+//Amboss
+//Fackkeln herstellen
+//Leitungsbausatz
+
+//Esse
+//Ritterzelt gepackt
+//kl. Hochofen
+//Alte Handelsstation
+//Bumerang
+//Holzfass
+//straßenschild
+//Fahrstuhl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 3 --*/
+
+#strict 2
+
+
+#appendto WRKS
+#appendto STFN
+#appendto CST1
+#appendto D18Z
+#appendto SLBT
+
+#appendto CATA
+#appendto BRDG
+#appendto CU8Z
+
+#appendto FLAG
+#appendto BT7U
+#appendto AXE1
+#appendto JPTH
+#appendto TWR1
+
+#appendto SHM6
+
+
+
+
+//Werkstatt
+//Super T-Flint
+//kleineBurg
+//SmokeBombe
+//Boot
+
+//Katapult
+//HolzBrücke
+//WireCutter
+
+//Flagge
+//Beobachtungsturm (alarm)
+//Wurfaxt
+//Springstein
+//kleiner Turm
+
+//Masterschlüssel 
+
+
+
+//Forschungsvoraussetzung:
+public func GetResearchBase() { return(CHEM); }
+public func GetResearchBase1() { return(FLNT); }
+public func GetResearchBase2() { return(TFLN); }
+public func GetResearchBase3() { return(GIDL); }
+public func GetResearchBase4() { return(FH9I); }
+public func GetResearchBase5() { return(AM5P); }
+public func GetResearchBase6() { return(EAWL); }
+public func GetResearchBase7() { return(BETL); }
+public func GetResearchBase8() { return(B4S7); }
+public func GetResearchBase9() { return(_Y3B); }
+public func GetResearchBase10() { return(SPKT); }
+public func GetResearchBase11() { return(WGTW); }
+public func GetResearchBase12() { return(LAGF); }
+public func GetResearchBase13() { return(GV5Y); }
+public func GetResearchBase14() { return(GIGN); }
+public func GetResearchBase15() { return(WLRZ); }
+
+
+// frühe Chemiefabrik
+//Feuerstein
+//TFlint
+//Goldstatue
+//Fosthaus
+//Fernrohr
+//Lehmklumpen manschen
+//Beutel
+//Fundament (einzeln)
+//früher Feuerlöscher
+//Sperrenbausatz für kleine Fahrstühle
+//HolzWachturm
+//Lagerfeuer
+//Gangverschluss
+//gr. Straßenschild
+//HolzLore
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 4 --*/
+
+#strict 2
+
+
+#appendto C11B
+#appendto DH8Z
+#appendto D_8Z
+#appendto POWR
+#appendto PUMP
+#appendto SFLN
+#appendto WAGN
+#appendto SGNL
+
+#appendto STMG
+#appendto XBOW
+#appendto ARWP
+#appendto FARP
+#appendto FBMP
+
+#appendto CST2
+#appendto SPDM
+#appendto GLSH
+#appendto SAER
+
+#appendto F_EL
+#appendto FNDR
+#appendto BARL
+#appendto TWR2
+#appendto WTWR
+#appendto BALN
+#appendto CHPI
+
+
+//Stein zu Beton
+//Blitzableiter
+//Blitzanzieher
+//Kraftwerk
+//Pumpe
+//SuperFlint
+//Waggon
+//Signal
+
+//Dampfmaschine
+//Armbrust
+//Pfeile
+//Feuerpfeile
+//Brandbombe
+
+//Burg
+//Superkuppel
+//Glas herstellen
+//Sand aus Erde
+
+//Metallfahrstuhl
+//Hochofen
+//MetalFass
+//Stein Wachturm
+//Zauberturm
+//Ballon
+//Kohlemeiler
+
+
+
+//Forschungsvoraussetzung:
+public func GetResearchBase() { return(WRKS); }
+public func GetResearchBase1() { return(STFN); }
+public func GetResearchBase2() { return(CST1); }
+public func GetResearchBase3() { return(D18Z); }
+public func GetResearchBase4() { return(SLBT); }
+public func GetResearchBase5() { return(CATA); }
+public func GetResearchBase6() { return(BRDG); }
+public func GetResearchBase6() { return(CU8Z); }
+public func GetResearchBase8() { return(FLAG); }
+public func GetResearchBase9() { return(BT7U); }
+public func GetResearchBase10() { return(AXE1); }
+public func GetResearchBase11() { return(JPTH); }
+public func GetResearchBase12() { return(TWR1); }
+public func GetResearchBase13() { return(SHM6); }
+
+
+//Werkstatt
+//Super T-Flint
+//kleineBurg
+//SmokeBombe
+//Boot
+
+//Katapult
+//HolzBrücke
+//WireCutter
+
+//Flagge
+//Beobachtungsturm (alarm)
+//Wurfaxt
+//Springstein
+//kleiner Turm
+//Masterschlüssel
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 5 --*/
+
+#strict 2
+
+
+#appendto TAAZ
+#appendto THLM
+#appendto LUPU
+#appendto EFLN
+#appendto GRS1
+#appendto DRCK
+
+#appendto BLMP
+#appendto GRS3
+#appendto XARP
+#appendto TNNE
+#appendto DK8Z
+
+#appendto BELV
+#appendto BEKP
+#appendto SFLF
+#appendto LORY
+#appendto E18Z
+#appendto _BRD
+
+//Taucheranzug
+//Taucherhelm
+//Luftpumpe
+//Tera Flint
+//Grundgerüst
+//Bohrturm
+
+//Luftschiff
+//Flaschenzug
+//Sprengpfeile
+//Tonne
+// Frog Spring
+
+//Transport Fahrstuhl
+//Schachtsperre für Trans. Fahrstuhl
+//Super-BrandFlint (superflint und brandbombe)
+//Lore
+//Air Elevator
+//Metal Brücke
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(C11B); }
+public func GetResearchBase1() { return(DH8Z); }
+public func GetResearchBase2() { return(D_8Z); }
+public func GetResearchBase3() { return(POWR); }
+public func GetResearchBase4() { return(PUMP); }
+public func GetResearchBase5() { return(SFLN); }
+public func GetResearchBase6() { return(WAGN); }
+public func GetResearchBase7() { return(SGNL); }
+public func GetResearchBase8() { return(STMG); }
+public func GetResearchBase9() { return(XBOW); }
+public func GetResearchBase10() { return(ARWP); }
+public func GetResearchBase11() { return(FARP); }
+public func GetResearchBase12() { return(FBMP); }
+public func GetResearchBase13() { return(CST2); }
+public func GetResearchBase14() { return(SPDM); }
+public func GetResearchBase15() { return(GLSH); }
+public func GetResearchBase16() { return(SAER); }
+public func GetResearchBase17() { return(F_EL); }
+public func GetResearchBase18() { return(FNDR); }
+public func GetResearchBase19() { return(BARL); }
+public func GetResearchBase20() { return(TWR2); }
+public func GetResearchBase21() { return(WTWR); }
+public func GetResearchBase22() { return(BALN); }
+public func GetResearchBase23() { return(CHPI); }
+
+//Stein zu Beton
+//Blitzableiter
+//Blitzanzieher
+//Kraftwerk
+//Pumpe
+//SuperFlint
+//Waggon
+//Signal
+
+//Dampfmaschine
+//Armbrust
+//Pfeile
+//Feuerpfeile
+//Brandbombe
+
+//Burg
+//Superkuppel
+//Glas herstellen
+//Sand aus Erde
+
+//Metallfahrstuhl
+//Hochofen
+//MetalFass
+//Stein Wachturm
+//Zauberturm
+//Ballon
+//Kohlemeiler
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 6 --*/
+
+#strict 2
+
+
+#appendto E78Z
+#appendto CST3
+#appendto CANN
+#appendto GUNP
+#appendto EFL0
+
+#appendto _U2A
+#appendto HTCH
+#appendto HATR
+
+
+//Frog spring 2
+//Schloss
+//Haubitze
+// Schießpulver
+//Nitro- Flint
+
+//Müllverbrennungsanlage
+//kleine Luke
+//Forschung Handelsstation Transfer
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(TAAZ); }
+public func GetResearchBase1() { return(THLM); }
+public func GetResearchBase2() { return(LUPU); }
+public func GetResearchBase3() { return(EFLN); }
+public func GetResearchBase4() { return(GRS1); }
+public func GetResearchBase5() { return(DRCK); }
+public func GetResearchBase6() { return(BLMP); }
+public func GetResearchBase7() { return(GRS3); }
+public func GetResearchBase8() { return(XARP); }
+public func GetResearchBase9() { return(TNNE); }
+public func GetResearchBase10() { return(DK8Z); }
+public func GetResearchBase11() { return(BELV); }
+public func GetResearchBase12() { return(BEKP); }
+public func GetResearchBase13() { return(SFLF); }
+public func GetResearchBase14() { return(LORY); }
+public func GetResearchBase15() { return(E18Z); }
+public func GetResearchBase16() { return(_BRD); }
+
+//Taucheranzug
+//Taucherhelm
+//Luftpumpe
+//Tera Flint
+//Grundgerüst
+//Bohrturm
+
+//Luftschiff
+//Flaschenzug
+//Sprengpfeile
+//Tonne
+// Frog Spring
+
+//Transport Fahrstuhl
+//Schachtsperre für Trans. Fahrstuhl
+//Super-BrandFlint (superflint und brandbombe)
+//Lore
+//Air Elevator
+//MEtalbrücke
+
+
+
+
+
+
+/*-- Forschungsbaum 7 --*/
+
+#strict 2
+
+
+#appendto CTW0
+#appendto CTW3
+#appendto CTW5
+#appendto CTW7
+#appendto ACT1
+#appendto ACT3
+#appendto LICN
+
+#appendto ADM1
+#appendto SUB1
+#appendto TRP1
+#appendto EFL2
+#appendto ADM3
+
+#appendto CHBU
+#appendto SAK1
+#appendto _X1A
+#appendto SPD3
+#appendto PNCR
+#appendto IBMP
+
+//Geschützturm
+//Geschütz1
+//Geschütz2
+//Geschütz3
+//Geschütz4
+//Geschütz5
+//Geschütz6
+
+//Munitionspack (schießpulver)
+//U-Boot
+//Torpedo
+//Macro-Flint
+//Batterie
+
+//Köhlerei
+//Sack
+//Regenerator (ohne Temp fähigkeit, später erforschbar)
+//MegaKuppel
+//Profibeton
+//Infernobombe
+
+//Forschungsbedingung:
+public func GetResearchBase() { return(E78Z); }
+public func GetResearchBase1() { return(CST3); }
+public func GetResearchBase2() { return(CANN); }
+public func GetResearchBase3() { return(GUNP); }
+public func GetResearchBase4() { return(EFL0); }
+public func GetResearchBase5() { return(_U2A); }
+public func GetResearchBase6() { return(HTCH); }
+
+//Frog spring 2
+//Schloss
+//Haubitze
+// Schießpulver
+//Nitro- Flint
+
+//Müllverbrennungsanlage
+//kleine Luke
+//Forschung Handelsstation Transfer (ist keine Bedingung, sondern freiwillig!)
+
+
+
+
+
+
+/*-- Forschungsbaum 8 --*/
+
+#strict 2
+
+
+
+#appendto CNBS
+#appendto SDWU
+#appendto SFDY
+#appendto SWEG
+
+#appendto TB5B
+#appendto LORG
+#appendto HTC2
+#appendto EFL6
+#appendto SFLI
+#appendto DE_5
+#appendto SBBA
+#appendto B556
+
+// Futur Basis
+// Wohneinheit
+// Futur Gießerei 
+// futur Windmühle
+
+//Zeltpaket
+//GoldLore
+//große Luke
+//Random Flint
+//Super-InfernoFlint
+//Schutt
+//Sandsäcke
+//Zukunfts Fundament (einzeln)  Sobald erforscht, gibt es hazardclonks zu kaufen
+
+
+//Forschungsbedingung:
+public func GetResearchBase1() { return(CTW0); }
+
+public func GetResearchBase2() { return(ADM1); }
+public func GetResearchBase3() { return(SUB1); }
+public func GetResearchBase4() { return(TRP1); }
+public func GetResearchBase5() { return(EFL2); }
+public func GetResearchBase6() { return(ADM3); }
+public func GetResearchBase7() { return(CHBU); }
+public func GetResearchBase8() { return(SAK1); }
+public func GetResearchBase9() { return(_X1A); }
+public func GetResearchBase10() { return(SPD3); }
+public func GetResearchBase11() { return(PNCR); }
+public func GetResearchBase12() { return(IBMP); }
+
+
+//Geschützturm
+//Geschütz1         (die einzelnen Geschütze sind keine Bedingung und freiwillig!)
+//Geschütz2
+//Geschütz3
+//Geschütz4
+//Geschütz5
+//Geschütz6
+
+//Munitionspack (schießpulver)
+//U-Boot
+//Torpedo
+//Macro-Flint
+//Batterie
+
+//Köhlerei
+//Sack
+//Regenerator 
+//MegaKuppel
+//Profibeton
+//Infernobombe
+
+
+
+
+
+
+/*-- Forschungsbaum 9 --*/
+
+#strict 2
+
+
+#appendto KNIK
+#appendto LAMP
+#appendto FLSH
+#appendto CCHF
+#appendto SCHM
+#appendto CREF
+
+#appendto CRCO
+#appendto F_0C
+#appendto SPCO
+#appendto PLST
+
+#appendto CFUR
+#appendto SGEO
+#appendto ERER
+#appendto CHOL
+#appendto SLD1
+#appendto AILK
+#appendto EFL3
+
+#appendto SMFC
+#appendto SWEF
+#appendto OILR
+
+#appendto SW01
+#appendto WC_0
+#appendto WC_1
+#appendto WC_2
+#appendto WC_3
+#appendto O00F
+#appendto SPD2
+#appendto SPD4
+#appendto UNCR
+#appendto TOKT
+
+#appendto BLFL
+#appendto CS4K //++ anderes Zubehör, am besten in ein Pack zusammenfassen
+#appendto PS4K
+#appendto BS4K
+#appendto LS4K
+#appendto SS4K
+#appendto WS4K
+#appendto GTE1
+#appendto KC4K
+#appendto UPLI
+#appendto SFEX
+
+
+//knicklichter herstellen
+// Lampe (ganz früheres knicklicht)
+//Taschenlampe
+// neue Chemiefabrik
+//Chemielabor
+//Rafinerie
+
+//Kohle zu Kristall
+//Elektrolyse (Säure Erz)
+//Öl Schwefel
+//Plastikherstellung
+
+
+//Heizkraftwerk
+//Geothermisches Werk
+//Erde zu Erz
+// Futur Fahrstuhl1
+// Futur Fahrstuhl2
+//Airlockbausatz
+// Tetra Flint
+
+//Maschinenfabrik
+//Waffenfabrik
+//Öl Herstellung
+
+//Messer
+//Waffenbauteile 1+2+3+4
+//Standleuchte
+//SuperTitanKuppel
+//MegaTitanKuppel
+//Ultimativer beton
+//Werkzeugkasten
+
+//Blitzflint
+//Sensorenzubehör (8 teile)  (am besten in ein Forschungspack zusammenfassen)
+//Uplink
+// neuer Feuerlöscher
+
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(CNBS); }
+public func GetResearchBase1() { return(SDWU); }
+public func GetResearchBase2() { return(SFDY); }
+public func GetResearchBase3() { return(SWEG); }
+
+
+public func GetResearchBase4() { return(TB5B); }
+public func GetResearchBase5() { return(LORG); }
+public func GetResearchBase6() { return(HTC2); }
+public func GetResearchBase7() { return(EFL6); }
+public func GetResearchBase8() { return(SFLI); }
+public func GetResearchBase9() { return(DE_5); }
+public func GetResearchBase10() { return(SBBA); }
+public func GetResearchBase11() { return(B556); }
+
+
+
+// Futur Basis
+// Wohneinheit
+// Futur Gießerei 
+// futur Windmühle
+
+//Zeltpaket
+//GoldLore
+//große Luke
+//Random Flint
+//Super-InfernoFlint
+//Schutt
+//Sandsäcke
+//Zukunfts Fundament (einzeln)
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 10 --*/
+
+#strict 2
+
+
+#appendto CPMP
+
+#appendto GRAP
+#appendto MEDI
+
+#appendto PIWP
+#appendto STAP
+#appendto AIRT
+#appendto ENAP
+#appendto SBTR
+
+#appendto CENM
+#appendto SDBM
+#appendto CNBF
+
+
+#appendto PTAP
+#appendto ACWP
+#appendto SNWP
+#appendto _BAO
+
+#appendto S_RB
+#appendto S_LJ
+#appendto S_MA
+#appendto S_L2
+#appendto S_CA
+
+#appendto STLM
+#appendto SHMU
+#appendto SNI_
+#appendto GRN2
+#appendto SW02
+#appendto TWRF
+#appendto MIAP
+#appendto GSAP
+#appendto MEZL
+
+#appendto CH2P
+#appendto CFCP
+
+//autom. Pumpe
+
+//Granatenmunitionskiste
+//Medipack
+
+//Sturmpistole
+//Munitionskiste
+//Atemflasche
+//Engergiezelle munition
+//Emergency Power Supply
+
+//Emergency power module
+//Deradbombe
+//Plasma Accumulator
+
+
+//Partikelbehälter (munition)
+//AntiContent Waffe
+//Schallpistole
+//Umweltbewusststein 1
+
+//alle einfachen Rüstungen (außer Power. 5 stück)
+
+//Neue ProjektilMunitionen (3Stück)
+//Handgranate
+//Kampfmesser
+//ZukunftsWachturm
+//Raketen Munition
+// Benzinkanister (Munition)
+//Motorsäge
+
+//H2 Produktion
+//Brennstoffzelle
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(KNIK); }
+public func GetResearchBase1() { return(LAMP); }
+public func GetResearchBase2() { return(FLSH); }
+public func GetResearchBase3() { return(CCHF); }
+public func GetResearchBase4() { return(SCHM); }
+public func GetResearchBase5() { return(CREF); }
+public func GetResearchBase6() { return(CRCO); }
+public func GetResearchBase7() { return(F_0C); }
+public func GetResearchBase8() { return(SPCO); }
+public func GetResearchBase9() { return(PLST); }
+
+public func GetResearchBase10() { return(CFUR); }
+public func GetResearchBase11() { return(SGEO); }
+public func GetResearchBase12() { return(ERER); }
+public func GetResearchBase13() { return(CHOL); }
+public func GetResearchBase14() { return(SLD1); }
+public func GetResearchBase15() { return(AILK); }
+public func GetResearchBase16() { return(EFL3); }
+
+public func GetResearchBase17() { return(SMFC); }
+public func GetResearchBase18() { return(SWEF); }
+public func GetResearchBase19() { return(OILR); }
+
+public func GetResearchBase20() { return(SW01); }
+public func GetResearchBase21() { return(WC_0); }
+public func GetResearchBase22() { return(WC_1); }
+public func GetResearchBase23() { return(WC_2); }
+public func GetResearchBase24() { return(WC_3); }
+public func GetResearchBase25() { return(O00F); }
+public func GetResearchBase26() { return(SPD2); }
+public func GetResearchBase27() { return(SPD4); }
+public func GetResearchBase28() { return(UNCR); }
+public func GetResearchBase29() { return(TOKT); }
+public func GetResearchBase30() { return(BLFL); }
+public func GetResearchBase31() { return(UPLI); }
+public func GetResearchBase32() { return(SFEX); }
+
+
+
+//knicklichter herstellen
+// Lampe (ganz früheres knicklicht)
+//Taschenlampe
+// neue Chemiefabrik
+//Chemielabor
+//Rafinerie
+
+//Kohle zu Kristall
+//Elektrolyse (Säure Erz)
+//Öl Schwefel
+//Plastikherstellung
+
+
+//Heizkraftwerk
+//Geothermisches Werk
+//Erde zu Erz
+// Futur Fahrstuhl1
+// Futur Fahrstuhl2
+//Airlockbausatz
+// Tetra Flint
+
+//Maschinenfabrik
+//Waffenfabrik
+//Öl Herstellung
+
+//Messer
+//Waffenbauteile 1+2+3+4
+//Standleuchte
+//SuperTitanKuppel
+//MegaTitanKuppel
+//Ultimativer beton
+//Werkzeugkasten
+
+//Blitzflint
+//Sensorenzubehör (8 teile)  (freiwillige Forschung, alle Teile)
+//Uplink
+// neuer Feuerlöscher
+
+
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 11 --*/
+
+#strict 2
+
+
+#appendto GLWP
+#appendto JTPK
+#appendto BZWP
+
+#appendto CDFT
+#appendto HARM
+#appendto HSHD
+#appendto SMBS
+
+#appendto SPC1
+#appendto SCNB
+#appendto CH2R
+#appendto CVLA
+#appendto FLAK
+#appendto PRC1
+
+#appendto MPWP
+#appendto KI_T
+#appendto PPWP
+#appendto _SKT
+#appendto S_TA
+#appendto PNGU
+
+
+#appendto ASHG
+#appendto SOC2
+#appendto SW03
+#appendto TRP3
+#appendto MIN_
+
+#appendto SMI_
+#appendto LMI_
+#appendto FTWP
+#appendto PGWP
+#appendto CVFC
+#appendto CGBE
+#appendto CGBF
+#appendto NVDN
+
+#appendto GSTA
+
+//Granatwerfer
+//Jetpack
+//Bazooka
+
+//Abwehrturm
+//Rüstung
+//Schildgenerator
+//Hauptbasis
+
+//Explosiv Siege Ammo
+//Geschützplattform (Canon base)
+//Hydrogen Power Plant
+//Leichter Jäger
+//Flak
+//Partikelgeschütz
+
+// Maschinengewehr
+//Kiste
+//Partik. Pistole
+//Schildupgrade
+//Tesla Rüstung
+//Pinguinanzug
+
+//abgesägte Schrotflinte
+//Dual Soccom
+//Klinge
+//Torpedo Gold
+//Fakemine
+
+//FakeSchwarmmine
+//FakeLaserMine
+//Flammenwerfer
+//PumpGun
+// Raumschifffabrik 
+//Hydrogen Bottle
+//volle Hydrogen Bottle
+//Novadekan
+
+//Gastank
+
+//Forschungsbedingungen
+public func GetResearchBase() { return(CPMP); }
+public func GetResearchBase2() { return(GRAP); }
+public func GetResearchBase5() { return(MEDI); }
+public func GetResearchBase6() { return(PIWP); }
+public func GetResearchBase7() { return(STAP); }
+public func GetResearchBase8() { return(AIRT); }
+public func GetResearchBase9() { return(ENAP); }
+public func GetResearchBase10() { return(SBTR); }
+public func GetResearchBase11() { return(CENM); }
+public func GetResearchBase12() { return(SDBM); }
+public func GetResearchBase13() { return(CNBF); }
+public func GetResearchBase14() { return(PTAP); }
+public func GetResearchBase15() { return(ACWP); }
+public func GetResearchBase16() { return(SNWP); }
+public func GetResearchBase17() { return(STLM); }
+public func GetResearchBase18() { return(SHMU); }
+public func GetResearchBase19() { return(SNI_); }
+public func GetResearchBase20() { return(GRN2); }
+public func GetResearchBase21() { return(SW02); }
+public func GetResearchBase22() { return(TWRF); }
+public func GetResearchBase23() { return(MIAP); }
+public func GetResearchBase24() { return(GSAP); }
+public func GetResearchBase25() { return(S_RB); }
+public func GetResearchBase26() { return(S_LA); }
+public func GetResearchBase27() { return(S_MA); }
+public func GetResearchBase28() { return(S_L2); }
+public func GetResearchBase29() { return(S_CA); }
+public func GetResearchBase30() { return(MEZL); }
+public func GetResearchBase31() { return(CH2P); }
+public func GetResearchBase32() { return(CFCP); }
+
+
+
+
+
+//autom. Pumpe
+
+//Granatenmunitionskiste
+//Medipack
+
+//Sturmpistole
+//Munitionskiste
+//Atemflasche
+//Engergiezelle munition
+//Emergency Power Supply
+
+//Emergency power module
+//Deradbombe
+//Plasma Accumulator
+
+
+//Partikelbehälter (munition)
+//AntiContent Waffe
+//Schallpistole
+//Umweltbewusststein 1    (freiwillige Forschung!)
+
+//Neue ProjektilMunitionen (3Stück)
+//Handgranate
+//Kampfmesser
+//ZukunftsWachturm
+//Raketen Munition
+// Benzinkanister (Munition)
+
+//alle einfachen Rüstungen (5stück)
+//Motorsäge
+//H2 Produtkoin
+// Brenstoffzelle
+
+
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 12 --*/
+
+#strict 2
+
+
+
+#appendto TANK
+#appendto SHTL
+#appendto SDRK
+#appendto MINE
+#appendto SPC2
+#appendto CENC
+#appendto SAPP
+
+#appendto SBST
+#appendto STRK
+#appendto ENWP
+#appendto CGDT
+
+#appendto PTWP
+#appendto _BAL
+#appendto _Y4C
+
+#appendto S_C2
+#appendto S_LA
+#appendto S_M2
+#appendto S_CJ
+
+#appendto SCOT
+#appendto FL2H
+#appendto SW04
+#appendto IMTK
+
+#appendto GU01
+#appendto GU03
+#appendto GU05
+#appendto GU07
+#appendto GU09
+#appendto GU11
+#appendto GU13
+#appendto GU15
+#appendto GU17
+#appendto GU19
+
+#appendto PLR1
+#appendto PLR2
+#appendto PLR3
+#appendto ERIT
+#appendto TELE
+#appendto CONS
+#appendto CNS2
+#appendto MIWP
+#appendto CWBO
+#appendto SSPR
+#appendto BTWP
+
+#appendto STRM
+#appendto SHGN
+// Panzer
+// Shuttle
+//Bohrturm
+//Mine
+//Cluster siege Ammo
+//Energy Collector
+//Atomkraftwerk
+
+//Isotope 
+//HandRakete
+//Energiegewehr
+//Guardian Bunker (Wachturm, GuardTower)
+
+//Partikellader
+//Umwelt stärken
+//Schutzanzug
+
+//verstärkte Rüstungen (4Stück)
+
+//Scount (sniper)
+//Flutlicht
+//Hammer (nahkampf)
+//verb. Werkzeugkasten
+
+//die kleinen Munitionsgürtel (10 stück)
+
+//Plutoniumumwandlungsprozesse (3Stück)
+//KI Händler erforschen (optional durch eine Regel lässt sich für diese Forschung noch sie selbst hinzufügen, wodurch sie nicht erforschbar ist)
+//Teleporter
+//Konsole 1+2
+//Minigun
+//Bomb (alt)
+//Explosiv Kit
+//Schweißbrenner
+
+//Transmitter
+//Shotgun
+
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(GLWP); }
+public func GetResearchBase3() { return(JTPK); }
+public func GetResearchBase4() { return(BZWP); }
+public func GetResearchBase6() { return(CDFT); }
+public func GetResearchBase7() { return(HARM); }
+public func GetResearchBase8() { return(HSHD); }
+public func GetResearchBase9() { return(SMBS); }
+public func GetResearchBase10() { return(SPC1); }
+public func GetResearchBase11() { return(SCNB); }
+public func GetResearchBase12() { return(CH2R); }
+public func GetResearchBase13() { return(CVLA); }
+public func GetResearchBase14() { return(FLAK); }
+public func GetResearchBase15() { return(PRC1); }
+public func GetResearchBase16() { return(MPWP); }
+public func GetResearchBase17() { return(KI_T); }
+public func GetResearchBase18() { return(PPWP); }
+public func GetResearchBase19() { return(_SKT); }
+public func GetResearchBase20() { return(S_TA); }
+public func GetResearchBase21() { return(PNGU); }
+public func GetResearchBase23() { return(ASHG); }
+public func GetResearchBase24() { return(SOC2); }
+public func GetResearchBase25() { return(SW03); }
+public func GetResearchBase26() { return(TRP3); }
+public func GetResearchBase27() { return(MIN_); }
+public func GetResearchBase28() { return(SMI_); }
+public func GetResearchBase29() { return(LMI_); }
+public func GetResearchBase30() { return(FTWP); }
+public func GetResearchBase31() { return(PGWP); }
+public func GetResearchBase32() { return(CVFC); }
+public func GetResearchBase33() { return(CGBE); }
+public func GetResearchBase34() { return(CGBF); }
+public func GetResearchBase35() { return(NVDN); }
+public func GetResearchBase36() { return(GSTA); }
+
+
+
+
+
+//Granatwerfer
+//Jetpack
+//Bazooka
+
+//Abwehrturm
+//Rüstung
+//Schildgenerator
+//Hauptbasis
+
+//Explosiv Siege Ammo
+//Geschützplattform (Canon base)
+//Hydrogen Power Plant
+//Leichter Jäger
+//Flak
+//Partikelgeschütz
+
+// Maschinengewehr
+//Kiste
+//Partik. Pistole
+//Schildupgrade
+//Tesla Rüstung
+//Pinguinanzug
+
+//abgesägte Schrotflinte
+//Dual Soccom
+//Klinge
+//Torpedo Gold
+//Fakemine
+
+//FakeSchwarmmine
+//FakeLaserMine
+//Flammenwerfer
+//PumpGun
+// Raumschifffabrik 
+//Hydrogen Bottle
+//volle Hydrogen Bottel
+//Novadekan
+
+//Gastank
+
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 13 --*/
+
+#strict 2
+
+
+#appendto STOW
+#appendto SPC4
+
+#appendto SPC3
+
+#appendto CWPP
+#appendto GGWP
+
+#appendto TRP2
+#appendto SROP
+
+
+#appendto JB4K
+#appendto BLWP
+#appendto ELWP
+#appendto S_BA
+#appendto M249
+#appendto P90_
+#appendto C40_
+#appendto MFUS
+#appendto SFUS
+#appendto SEGU
+#appendto AIRS
+//Guardian Outpost (Tower, Wachturm Spacelaunch)
+//Toxic Siege Ammo
+
+//Nuclear Siege Ammo
+
+//Advanced windmühle
+//PartikelKanone  (Energiekanone)
+
+//Tetra-Torpedo
+//Rockets Pack  (für raketenwerfer Geschütz)
+
+//Jetbelt
+//Partikelblaster
+//Partikelgewehr
+//SpezialRüstung
+//M249 Waffe
+//P90 Waffe
+//PlastikSprengstoff + 2 Zünder
+//Selbstschussanlage (SEGU)
+//Luftschlag
+
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(TANK); }
+public func GetResearchBase1() { return(SHTL); }
+public func GetResearchBase2() { return(SDRK); }
+public func GetResearchBase4() { return(MINE); }
+public func GetResearchBase5() { return(SPC2); }
+public func GetResearchBase6() { return(CENC); }
+public func GetResearchBase7() { return(SAPP); }
+public func GetResearchBase8() { return(SBST); }
+public func GetResearchBase9() { return(STRK); }
+public func GetResearchBase10() { return(ENWP); }
+public func GetResearchBase11() { return(CGDT); }
+public func GetResearchBase12() { return(PTWP); }
+public func GetResearchBase13() { return(_Y4C); }
+public func GetResearchBase14() { return(S_C2); }
+public func GetResearchBase15() { return(S_LA); }
+public func GetResearchBase16() { return(S_M2); }
+public func GetResearchBase17() { return(S_CJ); }
+public func GetResearchBase18() { return(SCOT); }
+public func GetResearchBase19() { return(FL2H); }
+public func GetResearchBase20() { return(SW04); }
+public func GetResearchBase21() { return(IMTK); }
+public func GetResearchBase22() { return(PLR1); }
+public func GetResearchBase23() { return(PLR2); }
+public func GetResearchBase24() { return(PLR3); }
+public func GetResearchBase25() { return(TELE); }
+public func GetResearchBase26() { return(CONS); }
+public func GetResearchBase27() { return(CNS2); }
+public func GetResearchBase28() { return(MIWP); }
+public func GetResearchBase29() { return(CWBO); }
+public func GetResearchBase30() { return(SSPR); }
+public func GetResearchBase31() { return(BTWP); }
+public func GetResearchBase32() { return(STRM); }
+public func GetResearchBase22() { return(SHGN); }
+
+
+// Panzer
+// Shuttle
+//Bohrturm
+//Mine
+//Cluster siege Ammo
+//Energy Collector
+//Atomkraftwerk
+
+//Isotope 
+//HandRakete
+//Energiegewehr
+//Guardian Bunker (Wachturm, GuardTower)
+
+//Partikellader
+//Umwelt stärken   (freiwillige Forschung!)
+//Schutzanzug
+
+//verstärkte Rüstungen (4Stück)
+
+//Scount (sniper)
+//Flutlicht
+//Hammer (nahkampf)
+//verb. Werkzeugkasten
+
+//die kleinen Munitionsgürtel (10 stück)  (freiwillige Forschungen!)
+
+//Plutoniumumwandlungsprozesse (3Stück)
+//KI Händler erforschen (freiwillige Forschung!)
+//Teleporter
+//Konsole 1+2
+//Minigun
+//Bomb (alt)
+//Explosiv Kit
+//Schweißbrenner
+//Transmitter
+//Shotgun
+
+
+
+
+
+
+
+/*-- Forschungsbaum 14 --*/
+
+#strict 2
+
+#appendto SREP
+#appendto KLAS
+#appendto KSLM
+
+#appendto KRFL
+#appendto SMI1
+#appendto LMIN
+
+
+#appendto AMIN
+#appendto STRH
+#appendto S_PA
+
+#appendto GU02
+#appendto GU04
+#appendto GU06
+#appendto GU08
+#appendto GU10
+#appendto GU12
+#appendto GU14
+#appendto GU16
+#appendto GU18
+#appendto GU20
+
+#appendto _BA2
+#appendto 2SKT
+#appendto TRP4
+#appendto CPBX
+#appendto DKIT
+
+//Repair Naniten
+//LaserUpgrade
+//Bio Upgrade
+
+//WAffenteil Upgrade
+//Schwarmmine
+//LaserMine
+
+
+//Alienmine
+//Partikelkonverter (Upgrade)
+//Power Rüstung
+
+// die großen Munitionsgürtel (10stück)
+
+//Umweltbewusstsein2
+//großes Schildupgrade
+//Todestorpedo
+//Atombunker
+//Dronen Kit
+
+
+//Forschungsbedingungen:
+public func GetResearchBase2() { return(STOW); }
+public func GetResearchBase3() { return(SPC4); }
+public func GetResearchBase6() { return(SPC3); }
+public func GetResearchBase8() { return(CWPP); }
+public func GetResearchBase10() { return(GGWP); }
+public func GetResearchBase11() { return(TRP2); }
+public func GetResearchBase13() { return(SROP); }
+public func GetResearchBase14() { return(JB4K); }
+public func GetResearchBase15() { return(BLWP); }
+public func GetResearchBase16() { return(ELWP); }
+public func GetResearchBase17() { return(S_BA); }
+public func GetResearchBase18() { return(M249); }
+public func GetResearchBase19() { return(P90_); }
+public func GetResearchBase20() { return(C40_); }
+public func GetResearchBase21() { return(MFUS); }
+public func GetResearchBase22() { return(SFUS); }
+public func GetResearchBase23() { return(SEGU); }
+public func GetResearchBase24() { return(AIRS); }
+
+
+
+//Guardian Outpost (Tower, Wachturm Spacelaunch)
+//Toxic Siege Ammo
+
+//Nuclear Siege Ammo
+
+//Advanced windmühle
+//PartikelKanone  (Energiekanone)
+
+//Tetra-Torpedo
+//Rockets Pack  (für raketenwerfer Geschütz)
+
+//Jetbelt
+//Partikelblaster
+//Partikelgewehr
+//SpezialRüstung
+//M249 Waffe
+//P90 Waffe
+//PlastikSprengstoff + 2 Zünder
+//Selbstschussanlage (SEGU)
+//Luftschkage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-- Forschungsbaum 15 --*/
+
+#strict 2
+
+
+
+#appendto CENR
+#appendto SLTW
+#appendto SNSS
+#appendto CBBS
+
+#appendto SCR_
+#appendto PRE_
+
+#appendto CSOC
+
+
+#appendto S_P2
+#appendto SC_2 
+
+//Energie Transmitter (aus CA, Energierelais)
+//Guardian Laser
+//Nuclear bomb
+//Battle Fortress
+
+//Scorpion
+//Predetor
+
+//Solar Power Plant
+
+//verstärkte Power Rüstung
+// Gaus Sniper
+
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(SREP); }
+public func GetResearchBase1() { return(KLAS); }
+public func GetResearchBase2() { return(KSLM); }
+public func GetResearchBase3() { return(KRFL); }
+public func GetResearchBase4() { return(SMI1); }
+public func GetResearchBase5() { return(LMIN); }
+public func GetResearchBase6() { return(AMIN); }
+public func GetResearchBase7() { return(STRH); }
+public func GetResearchBase8() { return(S_PA); }
+public func GetResearchBase9() { return(2SKT); }
+public func GetResearchBase10() { return(TRP4); }
+public func GetResearchBase11() { return(CPBX); }
+public func GetResearchBase12() { return(DKIT); }
+
+
+
+//Repair Naniten
+//LaserUpgrade
+//Bio Upgrade
+
+//Waffenteil Upgrade
+//Schwarmmine
+//LaserMine
+
+
+//Alienmine
+//Partikelkonverter (Upgrade)
+//Power Rüstung
+
+// die großen Munitionsgürtel (10stück)   (freiwillige Forschungen!)
+
+//Umweltbewusstsein2                (freiwillige Forschung)
+//großes Schildupgrade
+//Todestorpedo
+//Atombunker
+//DronenKit
+
+
+
+
+
+
+
+/*-- Forschungsbaum 16 --*/
+
+#strict 2
+
+
+#appendto TSP_
+
+
+//Technosspähre
+
+
+//Forschungsbedingungen:
+public func GetResearchBase() { return(CENR); }
+public func GetResearchBase1() { return(SLTW); }
+public func GetResearchBase2() { return(SNSS); }
+public func GetResearchBase3() { return(CBBS); }
+public func GetResearchBase4() { return(SCR_); }
+public func GetResearchBase5() { return(PRE_); }
+public func GetResearchBase7() { return(CSOC); }
+public func GetResearchBase8() { return(S_P2); }
+public func GetResearchBase9() { return(SC_2); }
+
+
+//Energie Transmitter
+//Guardian Laser
+//Nuclear bomb
+//Battle Fortress
+
+//Scorpion
+//Predetor
+
+//Solar Power Plant
+
+//verstärkte Power Rüstung
+// Gaus Sniper
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

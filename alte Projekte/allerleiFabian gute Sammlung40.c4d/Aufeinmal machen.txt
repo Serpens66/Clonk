@@ -1,0 +1,15 @@
+ins script :
+"isProjectile()" bei gefährlichen Objekten zufügen, damit KI auswicht und Lasertower sie abschießt (größtenteils erledigt)
+EMP REaktionen von elektrischen Dinge und Gebäuden
+Ziel von Bullets machen (größtenteils erledigt)
+
+
+in Defcore:
+die Baumaterialien anpassen, sowohl gebäude, als auch Waffen.
+die masse der zukunftsgebäude verdoppeln, damit Bau länger dauert und Arbeiter sich lohnt
+Die Massen von Herstellungsprozessen anpassen -> Zeit für herstellung
+
+
+vermutlich beides:
+die stromerzeugung und verbrauch anpassen
+
