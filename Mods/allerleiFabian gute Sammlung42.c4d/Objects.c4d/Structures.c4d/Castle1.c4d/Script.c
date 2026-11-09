@@ -1,6 +1,6 @@
 /*-- Kleine Burg --*/
 
-#strict
+#strict 3
 
 #include BAS5
 #include DOOR

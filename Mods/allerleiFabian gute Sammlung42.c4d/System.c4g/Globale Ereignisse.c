@@ -291,8 +291,8 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
         if(FindObject(WOL_)) // wenn keine wolken erlaubt, dann nur Blitze und regen
         {
-            ScheduleKatastrophenAufruf("lBlitze", staerke*5, dauer);
-            ScheduleKatastrophenAufruf("Regenxyz", staerke*2, dauer);
+            ScheduleKatastrophenAufruf("lBlitze", staerke*5, dauer); // Chance pro Frame: staerke*5 von 3700, bei etwa 37 Frames pro Sekunde.
+            ScheduleKatastrophenAufruf("Regenxyz", staerke*2, dauer); // Ein Tropfen je Einheit staerke*2 pro Frame, ueber die Landschaft verteilt.
         }
         else
         {
@@ -307,7 +307,7 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
     else if(skatastrophe=="Erdbeben")
     {
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
-        ScheduleKatastrophenAufruf("lErdbeben", staerke*2, dauer);
+        ScheduleKatastrophenAufruf("lErdbeben", staerke*2, dauer); // Wie bei Blitzen wird die Wahrscheinlichkeit pro Frame ausgewertet.
     }
     else if(skatastrophe=="Vulkan")
     {

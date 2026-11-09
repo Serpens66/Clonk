@@ -1,5 +1,5 @@
 /*-- Akku (voll) --*/
 
-#strict
+#strict 3
 
 

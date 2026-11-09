@@ -1,6 +1,6 @@
 /*-- Bambushütte --*/
 
-#strict
+#strict 3
 
 #include DOOR
 #include XFER  // für Uplink Transfer

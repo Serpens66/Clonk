@@ -1,6 +1,6 @@
 // Eigentlich nur ein Dummy mit Tag...
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -10,7 +10,8 @@ protected func Hit()
 
 func IsExplosiveFuse() { return(1); }
 
-IsGasProduct: return(1);
+func IsGasProduct() { return(1);
+}
 
 
 

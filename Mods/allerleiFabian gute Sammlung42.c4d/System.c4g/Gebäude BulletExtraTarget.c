@@ -2,7 +2,7 @@
 
 // nicht sicher, ob das so noch aktuell ist... bulletextratarget wird auch in den sichtradius skripten gemacht und ismachine stimmt bei den alten gebäuden ja eher nicht... hmmm
 
-#strict 2
+#strict 3
 
 
 //alte GEbäude

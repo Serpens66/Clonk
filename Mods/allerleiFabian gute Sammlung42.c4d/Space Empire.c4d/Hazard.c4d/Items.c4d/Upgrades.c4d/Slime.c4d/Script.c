@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #include KLAS
 
 protected func Hit() { Sound("MetalHit"); }

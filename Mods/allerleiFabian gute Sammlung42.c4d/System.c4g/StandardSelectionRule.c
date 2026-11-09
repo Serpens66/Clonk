@@ -1,6 +1,6 @@
 /*-- Regel-Dingens Standarteinstellungen --*/
 
-#strict
+#strict 3
 #appendto CNMT  // Baumaterial
 #appendto ENRG  // Energiebedarf
 #appendto COAN  // einsammelbare Tiere

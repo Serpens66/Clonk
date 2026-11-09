@@ -1,5 +1,5 @@
 /*-- Verbrannte Hütte --*/
 
-#strict
+#strict 3
 
 #include BAS4

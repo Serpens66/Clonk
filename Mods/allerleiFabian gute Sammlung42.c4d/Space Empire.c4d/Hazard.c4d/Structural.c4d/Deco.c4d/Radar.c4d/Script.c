@@ -1,6 +1,6 @@
 /*-- toller Radar --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {

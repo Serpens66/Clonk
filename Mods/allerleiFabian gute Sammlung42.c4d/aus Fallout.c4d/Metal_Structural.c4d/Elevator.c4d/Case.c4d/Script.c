@@ -1,6 +1,6 @@
 /*-- Fahrstuhlkorb --*/
 
-#strict
+#strict 3
 #include ELEC
 /* 
 // Local 8: Obergrenze

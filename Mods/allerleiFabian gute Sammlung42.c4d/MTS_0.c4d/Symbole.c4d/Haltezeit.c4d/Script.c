@@ -1,6 +1,6 @@
 /*-- Zeit --*/
 
-#strict
+#strict 3
 
 
 func Initialize() {

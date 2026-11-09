@@ -1,6 +1,6 @@
 /*-- Wand (statisch) --*/
 
-#strict
+#strict 3
 
 #include BP5C // Burgteilfunktion
 

@@ -1,6 +1,6 @@
 /*-- Objekte in Waffenfabrik herstellbar --*/
 
-#strict 2
+#strict 3
 
 #appendto BZWP
 #appendto MEZL

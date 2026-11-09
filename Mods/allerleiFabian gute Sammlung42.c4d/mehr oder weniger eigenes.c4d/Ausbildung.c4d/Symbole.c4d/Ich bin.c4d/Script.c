@@ -1,6 +1,6 @@
 /*-- Ich bin --*/
 
-#strict
+#strict 3
 
 func Initialize() {
    

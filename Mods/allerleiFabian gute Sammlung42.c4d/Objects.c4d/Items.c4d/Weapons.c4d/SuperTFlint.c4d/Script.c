@@ -1,6 +1,6 @@
 /*-- Super-T-Flint --*/
 
-#strict
+#strict 3
 
 #include TFLN
 

@@ -1,6 +1,6 @@
 /*-- Goldstatue --*/
 
-#strict
+#strict 3
 #include IDOL
 
 public func GolemID() { return(GGLM); }

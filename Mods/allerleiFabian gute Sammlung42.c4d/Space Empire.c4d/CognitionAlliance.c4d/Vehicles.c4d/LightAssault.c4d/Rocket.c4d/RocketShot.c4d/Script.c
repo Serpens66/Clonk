@@ -1,6 +1,6 @@
 /*-- Plasmaschuss --*/
 
-#strict
+#strict 3
 
 
 local XDir, YDir, count;
@@ -15,7 +15,7 @@ protected func Initialize()
 
 public func Launch()
 {
-  if (Par(0) == DIR_Left()) { XDir = -150; SetR(270); }
+  if ((Par(0) ?? DIR_Left) == DIR_Left) { XDir = -150; SetR(270); }
   else { XDir = +150;  SetR(90); }
   YDir = 0;
   
@@ -28,22 +28,22 @@ public func Launch()
 protected func Hit()
 {
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))Explode(6);
-  else FakeExplode(6,0,0,6);
+  else FakeExplode(6, nil, false, 6);
   return(1);
 }
 
 protected func Flight()
 {
-  var target = FindObject(0,-15,-10,30,20,OCF_Alive(),"",0,NoContainer());
-  if (!target) target=FindObject(0,-20,-15,40,30,OCF_Entrance(),"",0,NoContainer());
+  var target = FindObject(NONE, -15, -10, 30, 20, OCF_Alive, nil, nil, NoContainer());
+  if (!target) target=FindObject(NONE, -20, -15, 40, 30, OCF_Entrance, nil, nil, NoContainer());
   if (!target)
-    target = FindObject2(Find_AtPoint(), Find_NoContainer(), Find_Func("IsBulletTarget"));
+    target = FindObject2(Find_AtPoint(), Find_NoContainer(), Find_Func("IsBulletTarget")); // alle bullettargets
   if (target)
   {
     var ocf = GetOCF(target);
     if (((ocf & OCF_Living) && !(ocf & OCF_Alive)) ||
         (FindObject(NOFF) && !Hostile(GetOwner(target), GetOwner())))
-      target = 0;
+      target = nil;
   }
   if (!Random(6)) Smoke(0,0,8);
   if (GetActTime() > 50) return(RemoveObject());
@@ -53,7 +53,7 @@ protected func Flight()
   if (!target) return(1); 
   DoDmg(5,DMG_Explosion,target); 
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))Explode(3);
-  else FakeExplode(3,0,0,3);
+  else FakeExplode(3, nil, false, 3);
   //if (GetCategory(target) && C4D_Structure()) DoDamage(-5,target);  
   return(1);
 }

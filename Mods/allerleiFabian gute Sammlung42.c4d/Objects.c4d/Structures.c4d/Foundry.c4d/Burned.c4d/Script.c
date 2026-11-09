@@ -1,5 +1,5 @@
 /*-- Verbrannter Hochofen --*/
 
-#strict
+#strict 3
 
 #include BAS5

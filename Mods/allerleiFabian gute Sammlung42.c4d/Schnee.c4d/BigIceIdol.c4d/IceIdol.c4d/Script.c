@@ -1,4 +1,4 @@
 /* Kleine Eisstatue */
 
-#strict
+#strict 3
 #include QBII

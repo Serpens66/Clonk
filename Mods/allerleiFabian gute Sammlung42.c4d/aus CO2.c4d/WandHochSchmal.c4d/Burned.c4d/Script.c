@@ -1,5 +1,5 @@
 /*-- Verbranntes Burgteil --*/
 
-#strict
+#strict 3
 
 #include CPN2

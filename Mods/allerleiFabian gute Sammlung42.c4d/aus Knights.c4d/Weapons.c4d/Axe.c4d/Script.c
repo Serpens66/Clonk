@@ -1,6 +1,6 @@
 /*-- Axt --*/
 
-#strict
+#strict 3
 
 /* Ist eine Handwaffe */
 public func IsFightWeapon()

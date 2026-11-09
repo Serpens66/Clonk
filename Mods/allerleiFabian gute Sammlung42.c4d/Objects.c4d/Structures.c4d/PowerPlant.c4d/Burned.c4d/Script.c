@@ -1,5 +1,5 @@
 /* Fundament (Local 9) */
 
-#strict
+#strict 3
 
 #include BAS4

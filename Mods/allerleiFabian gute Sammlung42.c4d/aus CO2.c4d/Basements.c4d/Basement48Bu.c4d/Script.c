@@ -1,6 +1,6 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 
 /* Burgfundamente leiten ihre Grundfunktionalität von BSC1 ab */
 

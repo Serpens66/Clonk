@@ -14,6 +14,7 @@ Der Workspace dient C4Script-Mods, Szenarien und Werkzeugen für **LegacyClonk**
 
 - Zuerst die SDK-Signatur, den Aufrufkontext und die benötigten Definitionen prüfen. Bei versionsabhängigen Aussagen im passenden Release-Quellstand nachsehen. Clonk Rage, LegacyClonk und OpenClonk als getrennte Referenzen behandeln.
 - Bestehende Änderungen, Dateikodierung und Strict-Stufe erhalten. Eine Änderung der Strict-Stufe als eigene Kompatibilitätsänderung prüfen. Neue Workspace-Dokumente als UTF-8 ohne BOM mit CRLF schreiben.
+- Bestehende Codekommentare erhalten. Bei geändertem Verhalten betroffene Kommentare anpassen. Kommentare nur entfernen, wenn ihr Inhalt durch die Änderung gegenstandslos wird.
 - Nur die für das Vorhaben relevanten Szenarien und Pakete testen. Für `c4group` und lokale Spieltests Arbeitskopien verwenden. Die Spielinstallation und das Archiv dienen als Quellen.
 - Neue belastbare Erkenntnisse in `Documentation/` eintragen. Quelle, Build oder Commit und Prüfart angeben. SDK-Aussagen, Quellcodefunde, Altprojektnotizen, Werkzeugtests und Spieltests getrennt kennzeichnen.
 

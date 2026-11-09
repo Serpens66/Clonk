@@ -1,10 +1,12 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 
 /* Alle Fundamente leiten ihre Grundfunktionalität von BAS7 ab */
 
 #include BAS7
 
-private BasementID: return(BA35);
-private BasementWidth: return(35);
+private func BasementID() { return(BA35);
+}
+private func BasementWidth() { return(35);
+}

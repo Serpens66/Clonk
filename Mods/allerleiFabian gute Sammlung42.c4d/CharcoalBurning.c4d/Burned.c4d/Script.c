@@ -1,5 +1,5 @@
 /*-- Verbrannte Köhlerei --*/
 
-#strict
+#strict 3
 
 #include BAS4

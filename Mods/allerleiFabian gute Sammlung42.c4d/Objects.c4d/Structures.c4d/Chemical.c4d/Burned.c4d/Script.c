@@ -1,6 +1,6 @@
 /*-- Verbrannte Chemiefabrik --*/
 
-#strict
+#strict 3
 
 #include WRKB
 #include BAS3

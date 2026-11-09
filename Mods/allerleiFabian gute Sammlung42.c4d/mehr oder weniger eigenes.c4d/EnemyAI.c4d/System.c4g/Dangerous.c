@@ -2,7 +2,7 @@
 
 // weicht außerdem noch einigen anderen dingen aus, die im enemyai skript definiert sind.
 
-#strict 2
+#strict 3
 
 // #appendto FIRB // Feuerball
 //#appendto AFTF // Luftklaue

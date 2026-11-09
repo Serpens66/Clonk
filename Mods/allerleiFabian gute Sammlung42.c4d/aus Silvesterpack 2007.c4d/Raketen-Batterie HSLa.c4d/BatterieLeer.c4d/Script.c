@@ -1,4 +1,4 @@
 /*-- Batterie --*/
 
-#strict
+#strict 3
 

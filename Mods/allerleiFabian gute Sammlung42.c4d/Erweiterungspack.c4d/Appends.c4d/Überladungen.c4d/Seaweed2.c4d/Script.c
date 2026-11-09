@@ -1,4 +1,4 @@
 /*-- Seegras --*/
 
-#strict
+#strict 3
 #include SWD1

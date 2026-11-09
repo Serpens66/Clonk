@@ -1,6 +1,6 @@
 /*-- Rahmen 1X1 --*/
 
-#strict 2
+#strict 3
 
 func Initialize() {
    SetAction("Da");

@@ -1,3 +1,4 @@
-#strict
+#strict 3
 
-public IsVehicleProduct: return(1);
+public func IsVehicleProduct() { return(1);
+}

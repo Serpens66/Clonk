@@ -1,6 +1,6 @@
 /* Avoidopoint */
 
-#strict
+#strict 3
 
 
 //Anfangswerte

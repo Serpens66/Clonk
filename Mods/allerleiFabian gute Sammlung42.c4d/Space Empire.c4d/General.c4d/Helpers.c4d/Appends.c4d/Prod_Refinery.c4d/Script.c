@@ -1,6 +1,7 @@
-#strict
+#strict 3
 #appendto BARL   // Fässer
 #appendto CNKT
 #appendto LNKT
 
-public IsRefineryProduct: return(1);
+public func IsRefineryProduct() { return(1);
+}

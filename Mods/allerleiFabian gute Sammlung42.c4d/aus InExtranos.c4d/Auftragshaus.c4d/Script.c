@@ -205,10 +205,10 @@ func Jagdfertig(pRegel) // entfernerregel ruft in allen auftragshäusern diese f
                 ArrayAdd(kandidaten, plan, true);
             }
             if (!GetLength(kandidaten)) break;
-            var bauplan = ArrayRandomEntry(kandidaten);
+            var bauplan = ArrayRandomEntry(kandidaten); // Einen zufaelligen unbekannten Plan der aktuellen Forschungsstufe vergeben.
             if (!SetPlrKnowledge(iPlr, bauplan)) break;
             ArrayAdd(aErforscht, GetName(0, bauplan));
-            if (n + 1 < menge) alter = gPlayerAge(iPlr);
+            if (n + 1 < menge) alter = gPlayerAge(iPlr); // Nach der letzten Stufe liefert gPlayerAge den Wert 23.
         }
         PlayerMessage(GetOwner(derclonk),Format("Danke fuer deine Hilfe! Hier habe ich folgende Bauplaene fuer euch:|%v Erfahrung|%s |%s |%s |%s |%s",xp,ArrayData(aErforscht,0,""),ArrayData(aErforscht,1,""),ArrayData(aErforscht,2,""),ArrayData(aErforscht,3,""),ArrayData(aErforscht,4,"")));
     }

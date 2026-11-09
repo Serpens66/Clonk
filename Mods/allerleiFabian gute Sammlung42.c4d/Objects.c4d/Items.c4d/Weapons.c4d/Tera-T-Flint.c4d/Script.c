@@ -1,11 +1,13 @@
 /*-- Tera-T-Flint --*/
 
-#strict
+#strict 3
 
 #include TFLN
 
-private ExplodeSize: return(38);
+private func ExplodeSize() { return(38);
+}
 
 /* Forschung */
 
-public GetResearchBase: return(STFN);
+public func GetResearchBase() { return(STFN);
+}

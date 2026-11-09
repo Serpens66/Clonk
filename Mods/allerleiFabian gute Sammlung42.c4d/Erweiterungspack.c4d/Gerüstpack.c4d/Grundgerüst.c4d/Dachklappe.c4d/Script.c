@@ -1,6 +1,6 @@
 /*-- Deckel --*/
 
-#strict
+#strict 3
 
 public func CreateSolidMask()
 {

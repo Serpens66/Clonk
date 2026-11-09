@@ -2,8 +2,10 @@
 
 /* Alle Fundamente leiten ihre Grundfunktionalität von SB04 ab */
 
-#strict
+#strict 3
 #include BS04
 
-private BasementID: return(BSA1);
-private BasementWidth: return(35);
+private func BasementID() { return(BSA1);
+}
+private func BasementWidth() { return(35);
+}

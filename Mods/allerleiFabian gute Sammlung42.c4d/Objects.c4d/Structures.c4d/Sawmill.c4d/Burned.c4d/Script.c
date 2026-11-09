@@ -1,5 +1,5 @@
 /*-- Verbranntes Sägewerk --*/
 
-#strict
+#strict 3
 
 #include BAS7

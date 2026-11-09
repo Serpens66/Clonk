@@ -2,7 +2,7 @@
 
 // Raffinerie stellt all diese Produkte her und auch IsAnvilProduct
 
-#strict
+#strict 3
 #appendto JTPK
 #appendto HSHD
 #appendto LMIN

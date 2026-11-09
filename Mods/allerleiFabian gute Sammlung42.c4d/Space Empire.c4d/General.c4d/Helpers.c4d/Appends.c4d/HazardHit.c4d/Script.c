@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #appendto MONS
 #appendto FMNS
 #appendto SHRK
@@ -63,4 +63,5 @@
 // #appendto SPFL
 // #appendto _CHP
 
-public IsBulletTarget: return(1);
+public func IsBulletTarget() { return(1);
+}

@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #appendto MONS   // Monster
 #appendto FMNS   // Feuermonster
 #appendto SHRK   // Hai
@@ -45,4 +45,5 @@
 // #appendto SPFL
 // #appendto _CHP
 
-public IsAnimalAim: return(1);
+public func IsAnimalAim() { return(1);
+}

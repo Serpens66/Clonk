@@ -1,6 +1,6 @@
 //  Partially taken from the Clonk Infinity Project - debugged, extended and simplified ;)
 
-#strict 2
+#strict 3
 
 // Concat up to 9 strings into one
 global func ConcatStrings() {
@@ -16,6 +16,7 @@ global func ConcatStrings() {
 global func Substring(string str, int start, int end) {
 	var result = "";
 	
+	start ??= 0;
 	if (start < 0) {
 		start = GetLength(str) + start;
 	}
@@ -31,7 +32,8 @@ global func Substring(string str, int start, int end) {
 
 // Returns -1 if not found
 global func IndexOf(string needle, string haystack, int start) {
-	var haystacklen = GetLength(haystack), needlelen = GetLength(needle);
+	start ??= 0;
+	var haystacklen = GetLength(haystack) ?? 0, needlelen = GetLength(needle) ?? 0;
 	
 	for(var i = start; i <= haystacklen - needlelen; i++) {
 		var matching = true;

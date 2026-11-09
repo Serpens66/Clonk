@@ -1,12 +1,13 @@
 /*-- Globale Funktionen --*/
 
-#strict
+#strict 3
 
 // Globale NaturFunktionen. Regenwolke: iStrength bestimmt die Stärke und iEnde bestimmt, wann die Wolke wieder entfernt wird. iBlitze von 0 bis 100 regelt die Häufigkeit der Blitze.
 
 
 global func gChangeMeeresspiegel(value,set)  // ändert den Y Meeresspiegel um value, bzw. wenn set wahr ist, dann setzt es den Spiegel auf den die Y Position value.
 { 
+    value ??= 0;
     for(var object in FindObjects(Find_ID(DRAI)))  // funnktioniert also nur, wenn das Environment Meeresspiegel aktiv ist.
     {
         var newY;
@@ -38,21 +39,29 @@ global func Meteoritenxyz(x) // ein Meteorit
 
 global func Vulcanxyz(int x, y, int strength, string mat)  
 {
-  var xRand = 0;
-  if(!x) {x = Random(LandscapeWidth());xRand=1;}
-  if(y=="Zufall") 
+  var breite = LandscapeWidth();
+  var xRand = !x;
+  if (xRand) x = Random(breite);
+  if (y == "Zufall")
   {
-      y = Random(LandscapeHeight()); 
-      var timer=0; 
-      while(!GBackSolid(x,y) && timer<2000)  // muss in erde und nicht in flüssigkeit sein
+      if (x < 0 || x >= breite) return;
+      for (var versuch = 0; versuch < 2000; versuch++)
       {
-          y = Random(LandscapeHeight());timer++;
-          if(timer>=1000 && xRand) x = Random(LandscapeWidth());// wenn nach 1000 veruschen nichts gefunden, dann auch x verändern, wenn zufällig erlaubt
+          y = Random(LandscapeHeight());
+          if (versuch >= 1000 && xRand) x = Random(breite); // Bei Bedarf auch die Spalte wechseln.
+          // Die Pruefung ohne Objektkontext verwendet wie LaunchVolcano Kartenkoordinaten.
+          // y=0 bezeichnet im Vulkanhelfer den Kartenboden. FXV1 prueft beim Start auch
+          // den Untergrund 8 Pixel ueber seiner Position.
+          if (y >= 8 && global->GBackSolid(x, y) && global->GBackSolid(x, y - 8))
+          {
+              LaunchVolcano(x, y, strength, mat); // Fester Untergrund, keine Fluessigkeit.
+              return;
+          }
       }
-  } // eine stelle in der Erde suchen
-  
-  if(timer>=1999) Log(Format("Keine gültige Ausbruchsstelle fuer die Koordinaten x: %v und y: %v",x,y));
-  LaunchVolcano(x,y,strength,mat);
+      Log(Format("Keine gueltige Ausbruchsstelle fuer x: %v und y: %v", x, y));
+      return;
+  }
+  LaunchVolcano(x, y, strength, mat);
 }
 
 
@@ -61,9 +70,10 @@ global func Erdbebenxyz(x,y) // ein erdbeben
   if(!x) x = Random(LandscapeWidth());
   if(!y)
   {
-      while(!GBackSolid(x,y) && y+GetY()<=LandscapeHeight()) y+=5;
+      y = 0;
+      while(!GBackSolid(x,y) && y+(GetY() ?? 0)<=LandscapeHeight()) y+=5;
   }
-  LaunchEarthquake(GetX()+x,GetY()+y);
+  LaunchEarthquake((GetX() ?? 0)+x,(GetY() ?? 0)+y);
 }
 
 
@@ -75,10 +85,10 @@ global func Blitzexyz(x) // ein Blitz
 
 global func Eismeteoritenxyz(izahl, ignoretemp, dauer)
 {
-    var regel = CreateObject(_ICR, 1, 1, -1);
-    if (!regel) return(0);
-    regel->Einstellen(izahl, ignoretemp);
-    if (dauer > 0) Schedule("RemoveObject()", dauer, 1, regel);
+    var regel = CreateObject(_ICR, 1, 1, -1); // Erstellt eine Eismeteoritenregel. izahl bestimmt die Wahrscheinlichkeit.
+    if (!regel) return;
+    regel->Einstellen(izahl, ignoretemp); // Mit ignoretemp kann die Regel auch bei milder Temperatur ausloesen.
+    if ((dauer ?? 0) > 0) Schedule("RemoveObject()", dauer, 1, regel); // Nach Ablauf nur die Regel dieses Eissturms entfernen.
     return(1);
 }
 
@@ -103,8 +113,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
   var iMat= Material("Sand");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);
 }
@@ -125,8 +135,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
   var iMat= Material("Ashes");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);
 }
@@ -148,8 +158,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
   var iMat= Material("Lava");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);
 }
@@ -170,32 +180,32 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
   var iMat= Material("Acid");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);
 }
 
 
-global func Regenxyz(izahl, x)
+global func Regenxyz(izahl, x) // Ein Partikel je Einheit, als Regen, Schnee oder Eisregen.
 {
-    if (!izahl) izahl = 1;
+    if (!izahl) izahl = 1; // Ohne Mengenangabe einen Partikel erzeugen.
     var temperatur = GetTemperature();
-    if (temperatur >= 80) return(0);
+    if (temperatur >= 80) return; // Ab 80 verdunstet der Niederschlag.
 
     var material;
     if (temperatur > 0) material = "Water";
     else if (temperatur >= -60) material = "Snow";
     else material = "Ice";
 
-    var zufaelligesX = !x;
+    var zufaelligesX = !x; // Ohne x die Position fuer jeden Partikel neu ziehen.
     while (izahl > 0)
     {
         if (zufaelligesX) x = Random(LandscapeWidth());
         CastPXS(material, 1, 0, x, 0);
         izahl--;
     }
-    if (temperatur >= -60) return(0);
+    if (temperatur >= -60) return;
 }
 
 global func Regenwolkexyz(iStrenght,iEnde,iBlitze)  // bzw. Schnee  bzw Eisregen. iStrenght von 0 bis 100, wie stark es regnen soll. iEnde die Zeit in Frames, bis Wolke verschwindet. iBlitze, Chance von  iBlitze zu 200, dass es blitzt
@@ -207,8 +217,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
  var iMat= Material("Sand");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);}
 
@@ -219,8 +229,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
  var iMat= Material("Water");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);}
 
@@ -230,8 +240,8 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
 var iMat= Material("Snow");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);}
   
@@ -241,9 +251,9 @@ var blitze=iBlitze;
 var ende = iEnde;
  var strenght = iStrenght;
  var iMat= Material("Ice");
- var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloud) return(0);
+ var cloud= CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER);
+  if(!cloud) return;
   cloud-> Activate(iMat,LandscapeWidth(),strenght,blitze);
   Schedule("RemoveObject()",ende,0,cloud);}
-  else {return(0);}   // bei größer 80, verdunstet alles und bei kleiner -60 gibts Eisregen.
+  else {return;}   // bei größer 80, verdunstet alles und bei kleiner -60 gibts Eisregen.
 }

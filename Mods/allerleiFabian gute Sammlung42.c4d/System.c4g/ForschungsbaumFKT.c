@@ -1,6 +1,6 @@
 /*-- Forschungsbaum --*/
 
-#strict 2
+#strict 3
 // static gForschungverbotenlisteVariable; // werden in regelchooser objekt eingeführt
 // static gForschungerforschtlisteVariable; // wird nur verwendet, wenn szeario forschungsbaum aktiv, denn dann ist StartZeitalter deaktiviert. Dies wird dann zusätzlich zu den szenarioeinstellungen noch erforscht und wird im szenarioskript festgelegt.
 // static gSzenarioStandardForschungFreiwilligVariable //werden in regelchooser objekt eingeführt
@@ -23,6 +23,7 @@
 // die Funktion, welche diesen Wissensstand z.b zu Spielstart vergibt. Wird nicht aufgerufen, wenn szenario Forshcungsbaum aktiv.
 global func GlobalStartingEra(zahl) // wird in regelchooser aufgerufen, nach erstem Start, oder wenn im spiel an start zeitalter was geändert wurde (dort wird auch vorher vorhandenes wissen gelöscht)
 {
+    zahl ??= 0; // Alte Aufrufer geben Stufe 0 als fehlenden Wert weiter.
     for(var j=0;j<zahl+1;j++) // alle forschungslisten bis zum gewünschten zeitalter durchgehen und forschungen verteilen
     {
         var forschliste = gForschungsliste(j);
@@ -51,27 +52,42 @@ global func gForschungfreiwilligliste() // eine liste von IDs dessen Forschung a
 
 global func gForschungverbotenliste() // wird vom szenario festgelegt
 {
-    if(gForschungverbotenlisteVariable==0) // sollte nie eintreffen, da in regelchooser standard gesetzt wird.
-        gForschungverbotenlisteVariable = []; // erstmal leere liste
+    // Normalerweise setzt der Regelwähler die Liste. Ohne Vorgabe ist sie leer.
+    gForschungverbotenlisteVariable ??= [];
     return(gForschungverbotenlisteVariable);
 }
 
-global func gPlayerAge(iPlr)
+global func gPlayerAge(iPlr) // gibt den aktuellen wissensstand eines spielers zurück, die zahl richtet sich nach den Einteilungen in gForschungsliste()
 {
+    // Historische Alternative: Aufstieg beim ersten bekannten Eintrag der Stufe.
+    // var age = -1;
+    // for(var a=0;a<23;a++) // aktuell gibts 22 "zeitalter" in der gForschungsliste,
+    // {
+        // for(var idDef in gForschungsliste(a)) // geht alle ids in der jeweiligen liste durch
+        // {
+            // if(GetPlrKnowledge(iPlr,idDef))
+                // age++; // wenn mind. eines davon erforscht, dann ist der spieler in diesem Zeitalter
+                // break; // diese for schleife kann abgebrochen werden, es reicht zu wissen, das mind. eines davon erforscht ist
+        // }
+    // }
+    // return(age);
+
+    iPlr ??= 0; // Spieler 0 kann bei alten Aufrufern als nil ankommen.
     var freiwillig = gForschungfreiwilligliste();
-    for (var alter = 0; alter < 23; alter++)
+    for (var alter = 0; alter < 23; alter++) // Stufen 0 bis 22. Ist eine Stufe komplett, folgt die naechste.
     {
-        for (var idDef in gForschungsliste(alter))
+        for (var idDef in gForschungsliste(alter)) // geht alle ids in der jeweiligen liste durch
         {
             if (!InArray(freiwillig, idDef) && !GetPlrKnowledge(iPlr, idDef))
                 return(alter);
         }
     }
-    return(23);
+    return(23); // Alle Pflichtforschungen sind bekannt.
 }
 
 global func gForschungsliste(a) 
 {
+    a ??= 0; // Ohne Wert sowie bei Stufe 0 aus Altcode gilt die Startstufe.
     var Liste = [];
     if(a==0) // zu beginn erforscht
     {

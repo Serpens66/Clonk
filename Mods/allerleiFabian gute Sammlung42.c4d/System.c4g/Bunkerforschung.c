@@ -2,7 +2,7 @@
 
 //damit es reicht ein Objekt davon zu erforschen, um alle Bunker und DekoTeile erforscht zu haben.
 
-#strict
+#strict 3
 
 //die Bunkerteile
 #appendto BT5C   

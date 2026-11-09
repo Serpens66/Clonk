@@ -1,5 +1,5 @@
 /*-- Verbranntes Forschungslabor --*/
 
-#strict
+#strict 3
 
 #include BAS5

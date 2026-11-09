@@ -1,4 +1,4 @@
 /*-- Verbrannter Transportfahrstuhl --*/
 
-#strict
+#strict 3
 #include ELVB

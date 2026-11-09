@@ -1,6 +1,6 @@
 /*-- Schwarze Rüstung --*/
 
-#strict
+#strict 3
 
 #include ARMR
 

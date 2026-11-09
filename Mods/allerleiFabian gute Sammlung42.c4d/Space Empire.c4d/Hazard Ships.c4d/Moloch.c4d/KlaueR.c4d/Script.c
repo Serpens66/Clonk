@@ -1,6 +1,6 @@
 /*-- Klaue--*/
 
-#strict
+#strict 3
 
 
 

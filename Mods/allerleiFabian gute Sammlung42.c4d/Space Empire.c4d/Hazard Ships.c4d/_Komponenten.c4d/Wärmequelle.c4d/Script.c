@@ -1,6 +1,6 @@
 /* Predator-Wärmequelle */
 
-#strict
+#strict 3
 
 public func IsThreat() {return(true);}
 

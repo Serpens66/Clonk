@@ -1,6 +1,6 @@
 /*-- Environment-Dingens Standarteinstellungen --*/
 
-#strict
+#strict 3
 #appendto D12M  // Verwesung
 #appendto CLFS  // Bunte Fische
 #appendto REPR  // Nachwuchs

@@ -1,7 +1,8 @@
 /*-- Ofen --*/
 
-#strict
+#strict 3
 
-public Initialize:
+public func Initialize() {
   SetAction("IgnoreDay");
   return(1);
+}

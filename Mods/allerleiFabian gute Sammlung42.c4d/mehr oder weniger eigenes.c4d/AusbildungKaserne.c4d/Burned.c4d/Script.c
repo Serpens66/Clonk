@@ -1,3 +1,3 @@
 /*-- Verbranntes Lager --*/
 
-#strict 2
+#strict 3

@@ -1,6 +1,6 @@
 /*-- Konsole2 --*/
 
-#strict
+#strict 3
 #include CONS
 
 

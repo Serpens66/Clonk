@@ -1,6 +1,6 @@
 /*-- Uplink Transfer erforschen --*/
 
-#strict
+#strict 3
 
 func GetResearchTime() { return 1;}
 func GetResearchCosts() { return 100;}

@@ -1,11 +1,13 @@
 /*-- Effekt --*/
 
-#strict
+#strict 3
 
-Initialize:
+func Initialize() {
   SetAction("Effekt");
   return(1);
+}
 
-Weg:
+func Weg() {
   RemoveObject();
   return(1);
+}

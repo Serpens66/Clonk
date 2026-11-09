@@ -1,5 +1,5 @@
 /*-- Verbrannter Zauberturm --*/
 
-#strict
+#strict 3
 
 #include BAS2

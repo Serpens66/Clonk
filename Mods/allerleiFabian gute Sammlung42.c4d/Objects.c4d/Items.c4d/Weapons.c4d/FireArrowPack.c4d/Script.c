@@ -1,6 +1,6 @@
 /*-- Brandpfeilpaket --*/
 
-#strict
+#strict 3
 
 #include ARWP
 

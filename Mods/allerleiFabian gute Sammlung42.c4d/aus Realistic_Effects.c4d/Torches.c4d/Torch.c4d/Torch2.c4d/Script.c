@@ -1,4 +1,4 @@
 /*-- Fackel --*/
 
-#strict
+#strict 3
 #include TOR3

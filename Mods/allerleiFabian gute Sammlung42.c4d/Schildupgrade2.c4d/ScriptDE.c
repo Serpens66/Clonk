@@ -1,9 +1,11 @@
-#strict
+#strict 3
 
 public func Activate()
 {
 
-  CreateObject(3ATW,0,12,GetOwner()); Sound("Connect"); RemoveObject();
+  if (!CreateObject(3ATW, 0, 12, GetOwner())) return;
+  Sound("Connect");
+  RemoveObject();
   return(1);
 }
 

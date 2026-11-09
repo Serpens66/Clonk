@@ -1,6 +1,6 @@
 
 
-#strict
+#strict 3
 
 /*--- Bausatz ---
 #appendto CNKT

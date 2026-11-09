@@ -1,6 +1,6 @@
 /*-- Plasmaschuss --*/
 
-#strict
+#strict 3
 
 
 local XDir, YDir, count;
@@ -16,7 +16,7 @@ public func Launch()
 {
   Sound("PlasmaShot");
   
-  if (Par(0) == DIR_Left()) XDir = -125;
+  if ((Par(0) ?? DIR_Left) == DIR_Left) XDir = -125;
   else (XDir = +125);
   YDir = 0;
   
@@ -35,15 +35,15 @@ protected func Hit()
 
 protected func Flight()
 {
-  var obj = FindObject(0,-15,-10,30,20,OCF_Alive(),"",0,NoContainer());
+  var obj = FindObject(NONE, -15, -10, 30, 20, OCF_Alive, nil, nil, NoContainer());
   if (!obj)
-    obj = FindObject2(Find_AtPoint(), Find_NoContainer(), Find_Func("IsBulletTarget"));
+    obj = FindObject2(Find_AtPoint(), Find_NoContainer(), Find_Func("IsBulletTarget")); // alle bullettargets
   if (obj)
   {
     var ocf = GetOCF(obj);
     if (((ocf & OCF_Living) && !(ocf & OCF_Alive)) ||
         (FindObject(NOFF) && !Hostile(GetOwner(obj), GetOwner())))
-      obj = 0;
+      obj = nil;
   }
   if (GetActTime() > 12) return(RemoveObject());
   SetXDir(XDir);

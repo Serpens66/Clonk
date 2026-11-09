@@ -1,6 +1,6 @@
 /*-- Ereignis-Info --*/
 
-#strict
+#strict 3
 
 #include SEVI
 

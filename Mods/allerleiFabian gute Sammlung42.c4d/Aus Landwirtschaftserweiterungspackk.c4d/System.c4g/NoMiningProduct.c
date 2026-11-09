@@ -1,6 +1,6 @@
 /* --- Keine Bergwerksprodukte --- */
 
-#strict 2
+#strict 3
 
 //wegen ROCK include
 #appendto MRCK
@@ -9,5 +9,5 @@
 
 public func IsMiningProduct()
 {
-	return 0;
+	return nil;
 }

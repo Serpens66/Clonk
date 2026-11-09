@@ -1,5 +1,5 @@
 /*-- Palme --*/
 
-#strict
+#strict 3
 
 #include TRE1

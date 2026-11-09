@@ -1,6 +1,6 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
 func Initialize() {
    SetAction("Pfeil");

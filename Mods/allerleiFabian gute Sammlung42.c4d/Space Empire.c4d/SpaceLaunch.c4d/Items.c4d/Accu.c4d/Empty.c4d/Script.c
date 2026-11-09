@@ -1,6 +1,7 @@
 /*-- Akku (leer) --*/
 
-#strict
+#strict 3
 
-protected SellTo: return(SACU);
+protected func SellTo() { return(SACU);
+}
 

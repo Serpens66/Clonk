@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 /* // nun alles geregelt im appendto im epic teil
 

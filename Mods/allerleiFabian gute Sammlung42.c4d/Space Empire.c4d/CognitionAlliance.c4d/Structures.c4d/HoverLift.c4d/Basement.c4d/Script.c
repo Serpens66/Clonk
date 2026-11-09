@@ -1,9 +1,12 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 #include BS04 // Basisfundament
 
-protected Initialize: return(1);
+protected func Initialize() { return(1);
+}
 
-private BasementID: return(BSA3);
-private BasementWidth: return(90);
+private func BasementID() { return(BSA3);
+}
+private func BasementWidth() { return(90);
+}

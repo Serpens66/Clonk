@@ -1,6 +1,6 @@
 /*-- Tor --*/
 
-#strict
+#strict 3
 #include DOOR
 
 private func SoundOpenDoor()

@@ -1,4 +1,4 @@
-#strict 2
+#strict 3
 
 /* A C4Script Equivalent for rounding numbers. 
  *
@@ -13,6 +13,7 @@
  * Round(6444447, 6) - will return 7
  */
 global func Round(int val, int prec) {
+	val ??= 0;
 	if (!prec) prec=1;
 	
 	var div10;

@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 // static musikerlaubt,cheatmode,g_iFrameRate;
 

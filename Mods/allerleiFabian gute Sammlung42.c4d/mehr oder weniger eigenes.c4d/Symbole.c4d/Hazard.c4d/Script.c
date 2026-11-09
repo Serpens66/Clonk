@@ -1,3 +1,3 @@
 /*-- Brotherhood Armor --*/
 
-#strict
+#strict 3

@@ -2,7 +2,7 @@
 
 // in vielen objekten ist diese funktion direkt im skript.  evlt auch bei ein paar, die hier nochmal gelistet sind
 
-#strict
+#strict 3
 
 #appendto D18Z
 #appendto SDBM

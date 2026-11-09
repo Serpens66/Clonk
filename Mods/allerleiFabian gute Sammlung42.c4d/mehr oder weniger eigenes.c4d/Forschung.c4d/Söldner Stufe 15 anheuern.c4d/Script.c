@@ -1,6 +1,6 @@
 /*-- Söldner 15 kaufen --*/
 
-#strict
+#strict 3
 
 func GetResearchTime() { return(1);}
 func GetResearchCosts() { return(1);}

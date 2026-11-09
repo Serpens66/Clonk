@@ -1,6 +1,6 @@
 /*-- Regeln, die nicht mit dem Startwähler Settings auswählbar sein sollen --*/
 
-#strict
+#strict 3
 #appendto CTFL
 #appendto FGRV
 #appendto LSBS

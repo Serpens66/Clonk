@@ -1,3 +1,3 @@
-#strict
+#strict 3
 #include KLAS
-public func GetUpgradeGraphicsIDBit() { return 0; }
+public func GetUpgradeGraphicsIDBit() { return nil; }

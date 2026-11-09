@@ -1,6 +1,6 @@
 /*-- Super-Flint --*/
 
-#strict
+#strict 3
 
 #include FLNT
 

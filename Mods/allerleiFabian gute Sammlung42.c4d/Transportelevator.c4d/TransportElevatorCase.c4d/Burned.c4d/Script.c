@@ -1,4 +1,4 @@
 /*-- Verbrannter Fahrstuhlkorb --*/
 
-#strict
+#strict 3
 #include ELCB

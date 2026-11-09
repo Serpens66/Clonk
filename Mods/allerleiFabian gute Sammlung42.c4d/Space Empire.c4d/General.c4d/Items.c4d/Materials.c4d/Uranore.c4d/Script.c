@@ -1,6 +1,6 @@
 /*-- Uranerz --*/
 
-#strict
+#strict 3
 
 public func Hit()
 {

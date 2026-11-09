@@ -1,6 +1,6 @@
 /*-- Holzhütte --*/
 
-#strict
+#strict 3
 
 #include DOOR
 #include BAS4

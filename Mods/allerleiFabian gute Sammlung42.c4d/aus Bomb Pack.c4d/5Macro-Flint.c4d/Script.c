@@ -1,6 +1,6 @@
 /*-- Nitro-Flint --*/
 
-#strict
+#strict 3
 
 #include FLNT
 #include EFL0

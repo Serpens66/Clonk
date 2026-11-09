@@ -1,5 +1,5 @@
 /*-- Verbrannte Burg --*/
 
-#strict
+#strict 3
 
 #include BAS5

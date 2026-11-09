@@ -1,5 +1,5 @@
 /*-- Pferd: HORS,HRSK,HRSW --*/
 
-#strict
+#strict 3
 
 #include HORS

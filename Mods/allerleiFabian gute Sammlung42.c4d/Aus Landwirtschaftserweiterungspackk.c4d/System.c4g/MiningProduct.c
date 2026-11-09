@@ -1,6 +1,6 @@
 /* --- Bergwerksprodukte --- */
 
-#strict 2
+#strict 3
 
 #appendto ROCK
 #appendto GOLD

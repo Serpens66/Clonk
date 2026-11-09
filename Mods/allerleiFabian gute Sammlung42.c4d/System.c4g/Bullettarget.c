@@ -1,7 +1,7 @@
 /*-- Alles was noch Ziel der Hazardwaffen sein soll --*/
 
 
-#strict 2
+#strict 3
 
 #appendto BALN
 #appendto BLMP

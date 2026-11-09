@@ -1,5 +1,6 @@
-#strict
+#strict 3
 
 func Hit() { Sound("Crystal*"); }
 
-public IsChemicalProduct: return(1);
+public func IsChemicalProduct() { return(1);
+}

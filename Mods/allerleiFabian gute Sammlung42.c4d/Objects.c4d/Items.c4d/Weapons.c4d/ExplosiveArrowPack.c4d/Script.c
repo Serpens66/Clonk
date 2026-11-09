@@ -1,6 +1,6 @@
 /*-- Sprengpfeilpaket --*/
 
-#strict
+#strict 3
 
 #include ARWP
 

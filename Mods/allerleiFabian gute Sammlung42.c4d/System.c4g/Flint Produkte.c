@@ -2,7 +2,7 @@
 
 // aktuell keine Verwendung für diese Funktion, aber vllt braucht man es ja noch
 
-#strict
+#strict 3
 
 #appendto FBMP
 #appendto FLNT

@@ -303,7 +303,7 @@ protected func FxSnapBackTimer(object target, int num, int time) {
             {
                 var explosive = Contents(i, prey);
                 if (!explosive->~ExplodeSize()) continue;
-                Enter(target, explosive);
+                Enter(target, explosive); // ein explosives objekt in wurm uebertragen
                 break;
             }
         }
@@ -331,7 +331,7 @@ private func EndSnapBack(object myprey)
           var explosive = Contents(i);
           var size = explosive->~ExplodeSize();
           if (!size) continue;
-          Explode(size * 2 / 3, explosive);
+          Explode(size * 2 / 3, explosive); // nun nach rauswurf explodieren lassen
           break;
       }
     }

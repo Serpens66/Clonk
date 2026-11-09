@@ -2,7 +2,7 @@
 
 /* Alle Fundamente leiten ihre Grundfunktionalität von BAS7 ab */
 
-#strict
+#strict 3
 
 #include BAS7
 

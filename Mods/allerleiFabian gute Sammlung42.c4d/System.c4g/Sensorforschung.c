@@ -2,7 +2,7 @@
 
 //damit es reicht ein Objekt zu erforschen
 
-#strict
+#strict 3
 
 //die sensorteile
 #appendto CS4K   

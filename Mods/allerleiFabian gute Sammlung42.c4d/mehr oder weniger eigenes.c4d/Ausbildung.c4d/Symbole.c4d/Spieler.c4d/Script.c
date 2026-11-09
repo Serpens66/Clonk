@@ -1,6 +1,6 @@
 /*-- Spieler--*/
 
-#strict
+#strict 3
 
 func Initialize() {
    

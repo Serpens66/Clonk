@@ -1,7 +1,7 @@
 /*-- Forschungsbaum appednto --*/
 
 // hier wird für alle objekte die Forschungsbasis, die Kosten und die Zeit anhand der gForschungsliste aus dem ForschungsbaumFKT.c skript festgelegt.
-#strict 2
+#strict 3
 
 #appendto *
 
@@ -11,7 +11,7 @@ public func GetResearchTime(pBuilding,pClonk) // kann abhängig vom forschungsgeb
     {
         var wert = _inherited(pBuilding, pClonk);
         if (wert) return(wert);
-        return(50);
+        return(50); // den Wert returnen, der im objekt skript gespeichert ist, wenn es keinen gibt, dann 50.
     }
     for(var a=0;a<23;a++) // zurzeit haben wir von 0 bis 22 Wissensstände in der fkt gForschungsliste(a)
         if (InArray(gForschungsliste(a), GetID())) // wenn ID dieses objekts in einer Liste gefunden, dann die entsprechenden voraussetzungen returnen
@@ -27,7 +27,7 @@ public func GetResearchCosts(pBuilding,pClonk) // kann abhängig vom forschungsge
     {
         var wert = _inherited(pBuilding, pClonk);
         if (wert) return(wert);
-        return(5);
+        return(5); // den Wert returnen, der im objekt skript gespeichert ist, wenn es keinen gibt, dann 5. // alles guenstig, kann mit kostenmultiplikator noch verändert werden wenn gewünscht
     }
     for(var a=0;a<23;a++) // zurzeit haben wir von 0 bis 22 Wissensstände in der fkt gForschungsliste(a)
         if (InArray(gForschungsliste(a), GetID())) // wenn ID dieses objekts in einer Liste gefunden, dann die entsprechenden voraussetzungen returnen
