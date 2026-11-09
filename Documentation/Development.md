@@ -7,6 +7,10 @@
 3. Bei einem API-Aufruf zuerst den [Katalog](Reference/C4Script_API.md) und die verlinkte SDK-Seite lesen. Beispielsweise dokumentiert `CreateObject` absolute Landschaftskoordinaten im globalen Aufruf und Offsets zum Objekt im lokalen Aufruf. Bei Suchfunktionen, Effekten und Callbacks auch den Objektkontext und die Rückgabewerte prüfen. [C4Script-Grundlagen](https://crdocs.clonkspot.org/de/sdk/script/index.html), [CreateObject](https://crdocs.clonkspot.org/de/sdk/script/fn/CreateObject.html), [Effekte](https://crdocs.clonkspot.org/de/sdk/script/Effects.html)
 4. Bei neuem Code, der ausdrücklich auf LegacyClonk zielt, `#strict 3` erwägen. Bei Altcode zuerst den ursprünglichen Strict-Modus beibehalten. Gemischte Strict-Stufen können sich bei `nil`-Konvertierungen und Zugriffen unterschiedlich verhalten. Syntax und APIs anhand von LegacyClonk prüfen, da andere Clonk-Engines eigene Varianten von C4Script haben. [Ältere SDK-Strict-Referenz](https://crdocs.clonkspot.org/de/sdk/script/Strict.html), [LegacyClonk-Strict-3-Erläuterung](https://forum.clonkspot.org/t/modernes-scripting-in-legacyclonk-mit-strict-3/1462)
 
+**Quellcodeprüfung für Build [365] (Tag `v365`).** `#strict 3` wird am Anfang der jeweiligen Skriptdatei gesetzt. Ohne Direktive startet das Skript im Modus `NONSTRICT`. `#strict` ohne Zahl wählt Stufe 1. Der Parser akzeptiert als explizite Zahlen nur 2 und 3. [Initialisierung](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Aul.cpp#L182-L194), [Parser](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4AulParse.cpp#L1491-L1506)
+
+Syntax, Dateistruktur und Aufrufkontext stehen in der [Sprachreferenz](C4Script.md). Für die Änderung bestehender Strict-2-Dateien den [Migrationsleitfaden](Strict3Migration.md) verwenden.
+
 ## Pakete und Werkzeuge
 
 `.c4s` steht für Szenarien, `.c4d` für Objektdefinitionen oder Definitionspakete, `.c4f` für Szenarioordner und `.c4g` für weitere Gruppen wie Systemdaten. Die Engine kann gepackte und offene Gruppen verarbeiten. Offene Gruppen erleichtern das Bearbeiten und Versionieren. [SDK-Spieldaten](https://crdocs.clonkspot.org/de/sdk/files.html)

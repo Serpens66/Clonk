@@ -150,7 +150,9 @@ func FuseInOut(type,mode)
 
  if(type && !mode)
  {
-  if(RemoveObject(FindObject(type,0,0,0,0,0,0,0,caller))) return(fuse=type);
+  if (!caller) return(0);
+  var zuender = FindContents(type, caller);
+  if (zuender && RemoveObject(zuender)) return(fuse=type);
  }
 
  if(mode == 1)

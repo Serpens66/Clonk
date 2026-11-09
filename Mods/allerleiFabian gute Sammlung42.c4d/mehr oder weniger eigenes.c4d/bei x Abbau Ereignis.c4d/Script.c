@@ -189,7 +189,7 @@ func Monsterereignis()
     var Age = 0;
     for(var i = 0; i < GetPlayerCount(); i++)
     {
-        if(Age<gPlayerAge(GetPlayerByIndex(i))) Age = gPlayerAge(GetPlayerByIndex(i)); // das hoechste Zeitalter aller spieler rausfinden
+        Age = Max(Age, gPlayerAge(GetPlayerByIndex(i))); // das hoechste Zeitalter aller spieler rausfinden
     }
     if(Age<=4)  // ab zeitalter 5 hat man armbrust usw.
     {
@@ -231,7 +231,7 @@ func Katastrophenereignis()
     var Age = 0;
     for(var i = 0; i < GetPlayerCount(); i++)
     {
-        if(Age<gPlayerAge(GetPlayerByIndex(i))) Age = gPlayerAge(GetPlayerByIndex(i)); // das hoechste Zeitalter aller spieler rausfinden
+        Age = Max(Age, gPlayerAge(GetPlayerByIndex(i))); // das hoechste Zeitalter aller spieler rausfinden
     }
     if(Age<=5)  KKatastrophen("Zufall", RandomX(1,5),RandomX(400,1200),1); // globale funktion im Globale Ereignisse Skript
     else if(Age>5 && Age<=12) KKatastrophen("Zufall", RandomX(2,8),RandomX(500,1500),1);

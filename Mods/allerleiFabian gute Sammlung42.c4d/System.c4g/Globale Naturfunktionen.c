@@ -73,13 +73,14 @@ global func Blitzexyz(x) // ein Blitz
   LaunchLightning(x, 0, -20, 41, +5, 15);
 }
 
-global func Eismeteoritenxyz(izahl,ignoretemp)
+global func Eismeteoritenxyz(izahl, ignoretemp, dauer)
 {
-// erstellt "zahl" eismeteoritenregeln, welche nur unter -60 mit Anzahl/20, bzw. unter -80 Anzahl/10 Wahrscheinlichkeit eismetoriten spawnt.
-CreateObject(_ICR,1,1,-1)->~Einstellen(izahl,ignoretemp);  // wenn ignoretemp wahr ist, werden mit zahl/20 wahrscheinlichkeit trzd welche gemacht, egal wie temperatur ist.
-return(1);
+    var regel = CreateObject(_ICR, 1, 1, -1);
+    if (!regel) return(0);
+    regel->Einstellen(izahl, ignoretemp);
+    if (dauer > 0) Schedule("RemoveObject()", dauer, 1, regel);
+    return(1);
 }
-
 
 global func Entferneeismeteoritenxyz()
 {
@@ -176,29 +177,26 @@ var ende = iEnde;
 }
 
 
-global func Regenxyz(izahl,x)  // bzw. Schnee  bzw Eisregen. ein tropfen fuer jede izahl
+global func Regenxyz(izahl, x)
 {
-  if(!izahl) izahl = 1; // nicht angegeben, dann nur 1 tropfen
-  var xRand = 0; 
-  if(!x) xRand = 1; // gibt an, ob x zufällig sein soll, oder obs der uebergebene wert sein soll
-  
-  if(GetTemperature()>0 && GetTemperature() < 80) 
-  {
-      while(izahl>0) {if(xRand) x = Random(LandscapeWidth()); CastPXS("Water",1,0,x,0);izahl--;}
-  }
+    if (!izahl) izahl = 1;
+    var temperatur = GetTemperature();
+    if (temperatur >= 80) return(0);
 
-  if(GetTemperature()<1 && GetTemperature() > -60) 
+    var material;
+    if (temperatur > 0) material = "Water";
+    else if (temperatur >= -60) material = "Snow";
+    else material = "Ice";
+
+    var zufaelligesX = !x;
+    while (izahl > 0)
     {
-        while(izahl>0) {if(xRand) x = Random(LandscapeWidth());CastPXS("Snow",1,0,x,0);izahl--;}
+        if (zufaelligesX) x = Random(LandscapeWidth());
+        CastPXS(material, 1, 0, x, 0);
+        izahl--;
     }
-  
-  if(GetTemperature() < -60)
-    { 
-        while(izahl>0) {if(xRand) x = Random(LandscapeWidth());CastPXS("Ice",1,0,x,0);izahl--;}
-    }
-  else {return(0);}   // bei größer 80, verdunstet alles und bei kleiner -60 gibts Eisregen.
+    if (temperatur >= -60) return(0);
 }
-
 
 global func Regenwolkexyz(iStrenght,iEnde,iBlitze)  // bzw. Schnee  bzw Eisregen. iStrenght von 0 bis 100, wie stark es regnen soll. iEnde die Zeit in Frames, bis Wolke verschwindet. iBlitze, Chance von  iBlitze zu 200, dass es blitzt
 {

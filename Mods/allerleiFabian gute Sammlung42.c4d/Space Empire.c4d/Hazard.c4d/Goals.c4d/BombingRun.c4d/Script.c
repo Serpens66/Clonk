@@ -33,7 +33,7 @@ public func GetHUDInfo(int player, object hud) {
 			SetHUDGraphics(0,hud,GetID(),2,2,"BombEnemy");
 	}
 	// Bombe an Heimatposition
-	else if(bomb->IsAtHome()) {
+	else if(bomb && bomb->IsAtHome()) {
 		SetHUDGraphics(0,hud,GetID(),2,2);
 	}
 	// ansonsten isse lose
@@ -65,7 +65,7 @@ public func BombLoose() {
 global func CreateBomb(int iX, int iY, int iColor) // Platziert eine Bombe an der angegebenen Position mit der angegebenen Farbe.
 {
   var pBomb = CreateObject(GBRB, AbsX(iX), AbsY(iY), -1);
-  pBomb->Init(iX,iY,iColor);
+  if (pBomb) pBomb->Init(iX,iY,iColor);
 }
 
 public func Activate(iCaller)
@@ -87,6 +87,7 @@ public func GetBomb()
 
 public func GetBombCarrier(object bomb)
 {
+  if (!bomb) return(0);
   return(bomb->Contained());
 }
 
@@ -109,19 +110,17 @@ public func AITactic(object pAIPlayer)
 {
   var owner = pAIPlayer->GetOwner();
   var bomb = GetBomb();
+  if (!bomb) return();
   var carrier = GetBombCarrier(bomb);
-  var goal = GetOwnGoal(owner);
   var egoal = GetEnemyGoal(owner);
-
-  var crewcount = GetCrewCount(GetOwner());
 
   for(var i=0, pCrew ; pCrew = GetCrew(owner, i) ; i++) {
     if(pCrew->Contained()) continue;
 
     // bomb carrier
     if(pCrew == carrier) {
-      if(pCrew->GetMacroCommand(0, 1) != egoal);
-        // rush to enemy goal
+      // rush to enemy goal
+      if (egoal && pCrew->GetMacroCommand(0, 1) != egoal)
         pAIPlayer->Run(pCrew, egoal);
     }
     else {
@@ -141,8 +140,8 @@ public func AITactic(object pAIPlayer)
       }
       // No one has the bomb!
       else {
-        if(pCrew->GetMacroCommand(0, 1) != bomb);
-          // rush to bomb
+        // rush to bomb
+        if (pCrew->GetMacroCommand(0, 1) != bomb)
           pAIPlayer->Run(pCrew, bomb);
       }
     }

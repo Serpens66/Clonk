@@ -7,7 +7,12 @@
 
 public func GetResearchTime(pBuilding,pClonk) // kann abhängig vom forschungsgebäude und forschung initierenden Clonk gesetzt werden. 
 {
-    if(FindObject(SZRE)) if(_inherited(pBuilding,pClonk)) return(_inherited(pBuilding,pClonk)); else return(50); // den Wert returnen, der im objekt skript gespeichert ist, wenn es keinen gibt, dann 50.
+    if (FindObject(SZRE))
+    {
+        var wert = _inherited(pBuilding, pClonk);
+        if (wert) return(wert);
+        return(50);
+    }
     for(var a=0;a<23;a++) // zurzeit haben wir von 0 bis 22 Wissensstände in der fkt gForschungsliste(a)
         if (InArray(gForschungsliste(a), GetID())) // wenn ID dieses objekts in einer Liste gefunden, dann die entsprechenden voraussetzungen returnen
         {
@@ -18,7 +23,12 @@ public func GetResearchTime(pBuilding,pClonk) // kann abhängig vom forschungsgeb
 
 public func GetResearchCosts(pBuilding,pClonk) // kann abhängig vom forschungsgebäude und forschung initierenden Clonk gesetzt werden. 
 {
-    if(FindObject(SZRE)) if(_inherited(pBuilding,pClonk)) return(_inherited(pBuilding,pClonk)); else return(5); // den Wert returnen, der im objekt skript gespeichert ist, wenn es keinen gibt, dann 5. // alles guenstig, kann mit kostenmultiplikator noch verändert werden wenn gewünscht
+    if (FindObject(SZRE))
+    {
+        var wert = _inherited(pBuilding, pClonk);
+        if (wert) return(wert);
+        return(5);
+    }
     for(var a=0;a<23;a++) // zurzeit haben wir von 0 bis 22 Wissensstände in der fkt gForschungsliste(a)
         if (InArray(gForschungsliste(a), GetID())) // wenn ID dieses objekts in einer Liste gefunden, dann die entsprechenden voraussetzungen returnen
         {

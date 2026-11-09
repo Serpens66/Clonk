@@ -31,7 +31,7 @@ protected func Initialize()
     SetGraphics();
     // Fahrstuhlkorb erzeugen
     SetAction("LiftCase", pCase = CreateObject(CPEC, +0, +37, GetOwner()));
-    LocalN("RangeTop", pCase) = GetY() + 23;
+    if (pCase) LocalN("RangeTop", pCase) = GetY() + 23;
   }
   // An Aufzuege anpassen
   CheckAdjust();
@@ -89,12 +89,17 @@ public func AdjustTo(int iDir, object pToObj)
 
 public func ToShaft(object pObj) 
 {
-  if (!LocalN("is_shaft", pObj) ) 
+  if (pObj && !LocalN("is_shaft", pObj))
   {
     ObjectSetAction(pObj, "Idle");
     // Fahrstuhlkorb entfernen
-    LocalN("oElev", GetActionTarget(0, pObj)) = 0;
-    RemoveObject(GetActionTarget(0, pObj));
+    var korb = GetActionTarget(0, pObj);
+    if (korb && GetID(korb) == CPEC)
+    {
+      LocalN("oElev", korb) = 0;
+      RemoveObject(korb);
+    }
+    LocalN("pCase", pObj) = 0;
     // Solidmask entfernen
     SetSolidMask(42,13,40,5,0,13,pObj);
     // umwandeln
@@ -106,10 +111,18 @@ public func ToShaft(object pObj)
 
 public func ToElevator(object pObj) 
 {
-  if(LocalN("is_shaft", pObj)) 
+  if (pObj && LocalN("is_shaft", pObj))
   {
     // Fahrstuhlkorb erzeugen
-    ObjectSetAction(pObj, "LiftCase", pCase = CreateObject(BE5C,+0,+37,GetOwner()));
+    var korb = CreateObject(CPEC, GetX(pObj) - GetX(), GetY(pObj) - GetY() + 37, GetOwner(pObj));
+    if (!korb) return(0);
+    if (!ObjectSetAction(pObj, "LiftCase", korb))
+    {
+      RemoveObject(korb);
+      return(0);
+    }
+    LocalN("pCase", pObj) = korb;
+    LocalN("RangeTop", korb) = GetY(pObj) + 23;
     // Solidmask erzeugen
     SetSolidMask(0,14,40,5,0,14,pObj);
     // umwandeln

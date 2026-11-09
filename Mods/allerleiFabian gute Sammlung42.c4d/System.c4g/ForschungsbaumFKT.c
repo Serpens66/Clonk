@@ -56,31 +56,18 @@ global func gForschungverbotenliste() // wird vom szenario festgelegt
     return(gForschungverbotenlisteVariable);
 }
 
-global func gPlayerAge(iPlr) // gibt den aktuellen wissensstand eines spielers zurück, die zahl richtet sich nach den Einteilungen in gForschungsliste()
+global func gPlayerAge(iPlr)
 {
-    // var age = -1;
-    // for(var a=0;a<23;a++) // aktuell gibts 22 "zeitalter" in der gForschungsliste, 
-    // {
-        // for(var idDef in gForschungsliste(a)) // geht alle ids in der jeweiligen liste durch
-        // {
-            // if(GetPlrKnowledge(iPlr,idDef))
-                // age++; // wenn mind. eines davon erforscht, dann ist der spieler in diesem Zeitalter
-                // break; // diese for schleife kann abgebrochen werden, es reicht zu wissen, das mind. eines davon erforscht ist 
-        // }
-    // }
-    // return(age);
-    var breaken=0;   // Unterschied zur vorherigen Variante: wenn z.b alles von a==1 erforscht ist, gibt funktion nun 2, anstatt 1 zurück.
-    for(var a=0;a<24;a++) // aktuell gibts 22 "zeitalter" in der gForschungsliste, 23 wenn alles erforscht
+    var freiwillig = gForschungfreiwilligliste();
+    for (var alter = 0; alter < 23; alter++)
     {
-        for(var idDef in gForschungsliste(a)) // geht alle ids in der jeweiligen liste durch
+        for (var idDef in gForschungsliste(alter))
         {
-            if(!GetPlrKnowledge(iPlr,idDef))
-                breaken = 1;
-                break; // sobald etwas nicht erforscht ist, break und a returnen.
+            if (!InArray(freiwillig, idDef) && !GetPlrKnowledge(iPlr, idDef))
+                return(alter);
         }
-        if(breaken || GetLength(gForschungsliste(a))==0) break;
     }
-    return(a);
+    return(23);
 }
 
 global func gForschungsliste(a) 

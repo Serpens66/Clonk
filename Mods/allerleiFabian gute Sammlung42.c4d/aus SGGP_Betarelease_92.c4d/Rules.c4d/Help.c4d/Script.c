@@ -578,7 +578,7 @@ func ChooseRules(int iPlayer)
 	Sound("Connect");
 	var pCaller;
 	pCaller = GetCursor(iPlayer);
-	CreateMenu(GetID(this(0)), pCaller, 0, 0,"Einstellungen", 0, 1,1);
+	CreateMenu(GetID(), pCaller, 0, 0,"Einstellungen", 0, 1,1);
 	AddMenuItem("Regeln", Format("Regeln(%d)",GetOwner(pCaller)), MEPU, pCaller);
 	AddMenuItem("Ziele", Format("Ziele(%d)",GetOwner(pCaller)), MEPU, pCaller);
 	AddMenuItem("Umwelt", Format("Umwelt(%d)",GetOwner(pCaller)),MEPU, pCaller);

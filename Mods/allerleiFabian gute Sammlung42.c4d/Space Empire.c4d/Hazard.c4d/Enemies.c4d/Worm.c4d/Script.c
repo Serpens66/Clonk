@@ -294,15 +294,20 @@ protected func FxSnapBackTimer(object target, int num, int time) {
 				{ target->MoveHead(RandomX(-70,70),RandomX(700,1000),schnelligkeit); }
 	}
 	// Ende (Ausspucken)
-	if(time == 250)	
-    { 
-        for(var i=0; i < ObjectCount(0,0,0,0,0,0,0,0,EffectVar(0,target,num)); i++)
+    if (time == 250)
+    {
+        var prey = EffectVar(0, target, num);
+        if (prey)
         {
-            if (Contents(i,EffectVar(0,target,num))->~ExplodeSize())
-                Enter(this(),Contents(i,EffectVar(0,target,num)));  // ein explosives objekt in wurm uebertragen   
+            for (var i = 0; i < ContentsCount(0, prey); i++)
+            {
+                var explosive = Contents(i, prey);
+                if (!explosive->~ExplodeSize()) continue;
+                Enter(target, explosive);
                 break;
+            }
         }
-        target->EndSnapBack(EffectVar(0,target,num));  
+        target->EndSnapBack(prey);
     }
 }
 
@@ -321,14 +326,14 @@ private func EndSnapBack(object myprey)
 	  DoDmg(20,DMG_Bio,myprey);
       //Punch(prey,0);
       AddEffect("NoSnap",this(),1,150);
-      for(var i=0; i < ObjectCount(0,0,0,0,0,0,0,0,this()); i++)
-        {
-            Log(Format("this: %v",this()));
-            Log(Format("Objekt in this: %v",Contents(i,this())));
-            if (Contents(i,this())->~ExplodeSize())  // nun nach rauswurf explodieren lassen
-                Explode(Contents(i,this())->~ExplodeSize()*2/3,Contents(i,this()));
-                break;
-        }
+      for (var i = 0; i < ContentsCount(); i++)
+      {
+          var explosive = Contents(i);
+          var size = explosive->~ExplodeSize();
+          if (!size) continue;
+          Explode(size * 2 / 3, explosive);
+          break;
+      }
     }
 }
 

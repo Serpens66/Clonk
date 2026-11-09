@@ -167,7 +167,9 @@ func Jagdfertig(pRegel) // entfernerregel ruft in allen auftragshäusern diese f
     var belohnung = aBelohnungen[RandomX(0,4)];
     // belohnung = "Items";
     
-    if(belohnung=="Bauplaene" && gPlayerAge(GetOwner(derclonk))>=16) belohnung = aBelohnungen[RandomX(0,3)]; // wenn zeitalter 16 oder mehr, dann keine Baupläne mehr als belohnung
+    var iPlr = GetOwner(derclonk), alter;
+    if (belohnung == "Bauplaene" || belohnung == "Items") alter = gPlayerAge(iPlr);
+    if(belohnung=="Bauplaene" && alter>=16) belohnung = aBelohnungen[RandomX(0,3)]; // wenn zeitalter 16 oder mehr, dann keine Baupläne mehr als belohnung
     
     if (belohnung=="Clunker")
     {
@@ -192,20 +194,21 @@ func Jagdfertig(pRegel) // entfernerregel ruft in allen auftragshäusern diese f
         var menge = RandomX(1,5); // 1 bis 5 forschungspläne
         var xp = RandomX(kosten,kosten*6); // immer auch ein bisschen XP
         DoCrewExp(xp,derclonk); 
-        var counter = 0;
-        var securecounter = 0;
-        var aErforscht = [];
-        while(counter<menge)
+        var aErforscht = [], verboten = gForschungverbotenliste();
+        for (var n = 0; n < menge && alter < 23; n++)
         {
-            idDef = ArrayRandomEntry(gForschungsliste(gPlayerAge(GetOwner(derclonk))));  // zufälliger eintrag aus der aktuellen forschungsliste
-            if(!GetPlrKnowledge(GetOwner(derclonk),idDef)) // sobald etwas gefunden wurde, was noch nicht erforscht wurde, erforschen und zum aErforscht Array zufügen
+            var kandidaten = [];
+            for (var plan in gForschungsliste(alter))
             {
-                SetPlrKnowledge(GetOwner(derclonk),idDef);
-                ArrayAdd(aErforscht,GetName(0,idDef)); // zum array zufügen
-                counter++;
+                if (GetPlrKnowledge(iPlr, plan) || InArray(verboten, plan) || !GetName(0, plan))
+                    continue;
+                ArrayAdd(kandidaten, plan, true);
             }
-            if(securecounter>=5000) {Log("ssecurecounter");break;}
-            if(gPlayerAge(GetOwner(derclonk))==23) break; // ist 23, wenn alles erforscht
+            if (!GetLength(kandidaten)) break;
+            var bauplan = ArrayRandomEntry(kandidaten);
+            if (!SetPlrKnowledge(iPlr, bauplan)) break;
+            ArrayAdd(aErforscht, GetName(0, bauplan));
+            if (n + 1 < menge) alter = gPlayerAge(iPlr);
         }
         PlayerMessage(GetOwner(derclonk),Format("Danke fuer deine Hilfe! Hier habe ich folgende Bauplaene fuer euch:|%v Erfahrung|%s |%s |%s |%s |%s",xp,ArrayData(aErforscht,0,""),ArrayData(aErforscht,1,""),ArrayData(aErforscht,2,""),ArrayData(aErforscht,3,""),ArrayData(aErforscht,4,"")));
     }
@@ -216,7 +219,8 @@ func Jagdfertig(pRegel) // entfernerregel ruft in allen auftragshäusern diese f
         DoCrewExp(xp,derclonk); 
         var counter = 0;
         var aItemsName = [];
-        var i,idDef,iPlr=GetOwner(derclonk);
+        var i,idDef;
+        var forschliste = gForschungsliste(alter);
         var aAlleItems = [];
         while(idDef = GetDefinition(i++, C4D_Object())) // klappt irgendwie nicht mit 3600 ... 
         {
@@ -224,11 +228,11 @@ func Jagdfertig(pRegel) // entfernerregel ruft in allen auftragshäusern diese f
                 continue;
             if (GetDefCoreVal("NoSell", "DefCore", idDef))  // keine objekte die nicht verkaufbar sind, wie Müll
                 continue;
-            if(!GetPlrKnowledge(iPlr,idDef) &&  !InArray(gForschungsliste(gPlayerAge(GetOwner(derclonk))), idDef) ) // wenn es weder erforscht, noch im aktuellen forschungsplan ist, dann nicht nehmen
+            if(!GetPlrKnowledge(iPlr,idDef) &&  !InArray(forschliste, idDef) ) // wenn es weder erforscht, noch im aktuellen forschungsplan ist, dann nicht nehmen
                 continue;
             ArrayAdd(aAlleItems,idDef); // hier erstmal alle in frage kommenden Items eintragen.
         } 
-        while(counter<menge) // alle objekte der kategorie 3600 , also alle die herstellbare und in heimatbasis einstellbare gegenstände sind
+        while(counter<menge && GetLength(aAlleItems)) // alle objekte der kategorie 3600 , also alle die herstellbare und in heimatbasis einstellbare gegenstände sind
         {
             idDef = ArrayRandomEntry(aAlleItems);  // zufälliges element aus den erlaubten items...    flüssigkeitsgeschütz ... wieso geschütz, das ist nicht 3600 ... 
             ArrayAdd(aItemsName,GetName(0,idDef)); // zum array zufügen

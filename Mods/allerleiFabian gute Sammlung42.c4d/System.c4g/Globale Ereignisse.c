@@ -3,6 +3,7 @@
 // globale Ereignis Funktionen. Z.b monsterangriff oder Katastrophen
 
 #strict
+#appendto *
 
 global func MMonsterAttack(smonster, iaufeinmal, ierledigen,ikill,ikeinflug,imessage) // string welches Monster, wieviele aufeinmal und wieviele getötet werden müssen, damit Angriff aufhört. ikill == 1 Wenn angriff aufhört, alle übrigen monster automatisch töten, wenn ikill==2 dann entfernen, iFlug bei Zufall, ob Flugeinheiten erlaubt.
 {    // imessage, wenn wahr, wird nach erledigung der Monster eine erfolgsnachricht ausgegeben
@@ -290,10 +291,8 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
         if(FindObject(WOL_)) // wenn keine wolken erlaubt, dann nur Blitze und regen
         {
-            // ScheduleCall(0,"lBlitze",1,dauer,staerke*5); // wenn staerke 1, dann kommt jede sekunde ein blitz mit chance von 5%. wenn staerke 10, dann kommt jede sekunde ein blitz mit 50% chance
-            // ScheduleCall(0,"Regenxyz",1,dauer,staerke*2); // jeden Frame kommen staerke*2 tropfen iwo auf der landschaft
-            Schedule(Format("lBlitze(%v)",staerke*5),1, dauer);
-            Schedule(Format("Regenxyz(%v)",staerke*2),1, dauer);
+            ScheduleKatastrophenAufruf("lBlitze", staerke*5, dauer);
+            ScheduleKatastrophenAufruf("Regenxyz", staerke*2, dauer);
         }
         else
         {
@@ -303,14 +302,12 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
     else if(skatastrophe=="Blitze")
     {
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
-        // ScheduleCall(0,"lBlitze",1,dauer,staerke*5); // wenn staerke 1, dann kommt jede sekunde ein blitz mit chance von 5%. wenn staerke 10, dann kommt jede sekunde ein blitz mit 50% chance
-        Schedule(Format("lBlitze(%v)",staerke*5),1, dauer);
+        ScheduleKatastrophenAufruf("lBlitze", staerke*5, dauer);
     }
     else if(skatastrophe=="Erdbeben")
     {
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
-        // ScheduleCall(0,"lErdbeben",1,dauer,staerke*2); 
-        Schedule(Format("lErdbeben(%v)",staerke*2),1, dauer);
+        ScheduleKatastrophenAufruf("lErdbeben", staerke*2, dauer);
     }
     else if(skatastrophe=="Vulkan")
     {
@@ -321,14 +318,13 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
     else if(skatastrophe=="Meteoriten")
     {
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
-        Schedule(Format("lMeteoriten(%v)",staerke*5),1, dauer);
+        ScheduleKatastrophenAufruf("lMeteoriten", staerke*5, dauer);
     }
     else if(skatastrophe=="Eissturm") // Eissturm, mit eismeteoriten
     {
         DynMessage(Format("%s der Stufe %v!",skatastrophe,staerke),0,24,RGBa(204,203,245,0));
-        Eismeteoritenxyz(staerke,1); // unabhängig von Temperatur (temperatur nicht ändern, weil sonst gewitter aufziehen)
-        if(GetTemperature()<0) Schedule(Format("Regenxyz(%v)",staerke*2),1, dauer); // schnee/eisregen nur, wenn es kalt genug ist.
-        Schedule("Entferneeismeteoritenxyz()",dauer); //   nach dauer frames alle eismeteoriten entfernen
+        Eismeteoritenxyz(staerke, 1, dauer); // unabhängig von Temperatur (temperatur nicht ändern, weil sonst gewitter aufziehen)
+        if(GetTemperature()<0) ScheduleKatastrophenAufruf("Regenxyz", staerke*2, dauer); // schnee/eisregen nur, wenn es kalt genug ist.
     }
     else if(skatastrophe=="Quelle") // Wasser oder Öl sprudeln als vulkan iwo in der erde
     {
@@ -343,6 +339,21 @@ global func KKatastrophen(skatastrophe, istaerke,idauer,imessage) // istaerke so
     }
     else 
         Log(Format("ungueltiger Katastrophen Name: %v",skatastrophe));
+}
+
+global func ScheduleKatastrophenAufruf(string funktion, int wert, int dauer)
+{
+    if (this()) return(ScheduleCall(this(), "Sammlung42KatastrophenTimer", 1, dauer, funktion, wert));
+    return(Schedule(Format("%s(%v)", funktion, wert), 1, dauer));
+}
+
+// ScheduleCall sucht die Funktion im Skript des Zielobjekts.
+private func Sammlung42KatastrophenTimer(string funktion, int wert)
+{
+    if (funktion S= "lBlitze") return(lBlitze(wert));
+    if (funktion S= "lErdbeben") return(lErdbeben(wert));
+    if (funktion S= "lMeteoriten") return(lMeteoriten(wert));
+    if (funktion S= "Regenxyz") return(Regenxyz(wert));
 }
 
 global func lBlitze(ichance) 

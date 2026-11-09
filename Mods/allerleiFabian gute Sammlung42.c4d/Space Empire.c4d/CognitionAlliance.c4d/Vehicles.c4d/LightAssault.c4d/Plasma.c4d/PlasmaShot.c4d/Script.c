@@ -36,11 +36,16 @@ protected func Hit()
 protected func Flight()
 {
   var obj = FindObject(0,-15,-10,30,20,OCF_Alive(),"",0,NoContainer());
-   if(!obj) 
-   obj = FindObject2(Find_AtPoint(),Find_NoContainer(),Find_Func("IsBulletTarget")); // alle bullettargets
-     if(!(GetOCF(obj) & OCF_Living && !(GetOCF(obj) & OCF_Alive))) { if(!FindObject(NOFF))  obj=obj; else obj=0; if(FindObject(NOFF)) if(Hostile(GetOwner(obj), GetOwner())) obj=obj; else obj=0; }
-    else  obj=0;
-  if (GetActTime() > 12) RemoveObject();
+  if (!obj)
+    obj = FindObject2(Find_AtPoint(), Find_NoContainer(), Find_Func("IsBulletTarget"));
+  if (obj)
+  {
+    var ocf = GetOCF(obj);
+    if (((ocf & OCF_Living) && !(ocf & OCF_Alive)) ||
+        (FindObject(NOFF) && !Hostile(GetOwner(obj), GetOwner())))
+      obj = 0;
+  }
+  if (GetActTime() > 12) return(RemoveObject());
   SetXDir(XDir);
   SetYDir(YDir);
   
