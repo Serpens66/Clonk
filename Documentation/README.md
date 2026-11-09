@@ -6,6 +6,7 @@ Die Wissensbasis unterstützt neue Mods, Szenarien und Werkzeuge für LegacyClon
 | --- | --- |
 | Szenario, Objektdefinition oder C4Script schreiben | [Entwicklungsleitfaden](Development.md) |
 | LegacyClonk-C4Script lesen oder schreiben | [Sprachreferenz](C4Script.md) |
+| Alte Skripte von `#strict` auf `#strict 2` umstellen | [Migrationsleitfaden](Strict2Migration.md) |
 | Alte Skripte von `#strict 2` auf `#strict 3` umstellen | [Migrationsleitfaden](Strict3Migration.md) |
 | Funktion, Konstante, Callback oder Syntaxform finden | [Alphabetischer API-Katalog](Reference/C4Script_API.md) |
 | API-Einträge maschinell durchsuchen oder aktualisieren | [JSON-Katalog](Reference/C4Script_API.json), [Erzeugung](Reference/README.md) |

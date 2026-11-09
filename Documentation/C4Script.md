@@ -1,6 +1,6 @@
 # LegacyClonk-C4Script lesen und schreiben
 
-Diese Sprachreferenz gilt für LegacyClonk 4.9.11.2 [365], Tag `v365`, Commit `31b2cde5d1d68a86765c68c8252184ca38469c0d`. Für Funktionen und Konstanten verwende den [API-Katalog](Reference/C4Script_API.md). Für Altcode gibt es den [Migrationsleitfaden für #strict 3](Strict3Migration.md). Die [Quellenübersicht](Sources.md) und der [Entwicklungsleitfaden](Development.md) beschreiben den Versionsabgleich und die Paket- und Spieltests.
+Diese Sprachreferenz gilt für LegacyClonk 4.9.11.2 [365], Tag `v365`, Commit `31b2cde5d1d68a86765c68c8252184ca38469c0d`. Für Funktionen und Konstanten verwende den [API-Katalog](Reference/C4Script_API.md). Für Altcode gibt es die Migrationsleitfäden [von #strict auf #strict 2](Strict2Migration.md) und [von #strict 2 auf #strict 3](Strict3Migration.md). Die [Quellenübersicht](Sources.md) und der [Entwicklungsleitfaden](Development.md) beschreiben den Versionsabgleich und die Paket- und Spieltests.
 
 ## Datei und Aufrufstelle bestimmen
 

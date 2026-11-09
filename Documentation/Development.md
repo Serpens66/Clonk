@@ -9,7 +9,7 @@
 
 **Quellcodeprüfung für Build [365] (Tag `v365`).** `#strict 3` wird am Anfang der jeweiligen Skriptdatei gesetzt. Ohne Direktive startet das Skript im Modus `NONSTRICT`. `#strict` ohne Zahl wählt Stufe 1. Der Parser akzeptiert als explizite Zahlen nur 2 und 3. [Initialisierung](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4Aul.cpp#L182-L194), [Parser](https://github.com/legacyclonk/LegacyClonk/blob/v365/src/C4AulParse.cpp#L1491-L1506)
 
-Syntax, Dateistruktur und Aufrufkontext stehen in der [Sprachreferenz](C4Script.md). Für die Änderung bestehender Strict-2-Dateien den [Migrationsleitfaden](Strict3Migration.md) verwenden.
+Syntax, Dateistruktur und Aufrufkontext stehen in der [Sprachreferenz](C4Script.md). Für Altcode gibt es die Leitfäden [von #strict auf #strict 2](Strict2Migration.md) und [von #strict 2 auf #strict 3](Strict3Migration.md).
 
 ## Pakete und Werkzeuge
 

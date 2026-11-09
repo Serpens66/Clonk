@@ -1,6 +1,6 @@
 # C4Script von #strict 2 auf #strict 3 umstellen
 
-In LegacyClonk kann jede Skriptdatei ihre Strict-Stufe separat wählen. Bei `#include` und `#appendto` behält eine Funktion die Stufe ihrer Ursprungsdatei. Eine Migration kann daher schrittweise erfolgen. Ziel dieses Leitfadens ist LegacyClonk 4.9.11.2 [365], Tag `v365`, Commit `31b2cde5d1d68a86765c68c8252184ca38469c0d`. Für Syntax und API-Aufrufe siehe die [Sprachreferenz](C4Script.md) und den [API-Katalog](Reference/C4Script_API.md). [SDK zu #strict](https://crdocs.clonkspot.org/en/sdk/script/Strict.html), [Entwicklerbeitrag mit Beispielen](https://forum.clonkspot.org/t/modernes-scripting-in-legacyclonk-mit-strict-3/1462)
+In LegacyClonk kann jede Skriptdatei ihre Strict-Stufe separat wählen. Bei `#include` und `#appendto` behält eine Funktion die Stufe ihrer Ursprungsdatei. Eine Migration kann daher schrittweise erfolgen. Für Dateien mit `#strict` ohne Zahl zuerst die [Migration auf #strict 2](Strict2Migration.md) prüfen. Ziel dieses Leitfadens ist LegacyClonk 4.9.11.2 [365], Tag `v365`, Commit `31b2cde5d1d68a86765c68c8252184ca38469c0d`. Für Syntax und API-Aufrufe siehe die [Sprachreferenz](C4Script.md) und den [API-Katalog](Reference/C4Script_API.md). [SDK zu #strict](https://crdocs.clonkspot.org/en/sdk/script/Strict.html), [Entwicklerbeitrag mit Beispielen](https://forum.clonkspot.org/t/modernes-scripting-in-legacyclonk-mit-strict-3/1462)
 
 ## Ablauf für eine Migration
 
