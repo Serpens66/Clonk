@@ -1,0 +1,3 @@
+Dies ist ein riesiger Speichertank für ausgewählte Flüssigkeiten.
+Dank seines speziellen Filterungs und überlaufsystems, kann er an verschiedene andere Tanks angeschlossen werden, um eine optimale Flüssigkeitsverteilung zu erziehlen.
+Mithilfe von Pumpen können die Flüssigkeiten auch wieder abgepummt werden.

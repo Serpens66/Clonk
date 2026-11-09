@@ -1,0 +1,22 @@
+[DefCore]
+id=_X1B
+Name=Verbrannter Luftregenerator
+Version=4,9,7,5
+Category=2
+Width=106
+Height=120
+Offset=-53,-60
+Value=125
+Mass=4300
+Components=METL=4;ROCK=8;_Y1A=3;
+Vertices=4
+VertexX=-50,50,-50,50
+VertexY=-60,-60,60,60
+VertexFriction=50,50,100,100
+Exclusive=0
+BlastIncinerate=45
+ConstructTo=_X1A
+Construction=1
+Rotate=0
+ContainBlast=1
+Basement=0

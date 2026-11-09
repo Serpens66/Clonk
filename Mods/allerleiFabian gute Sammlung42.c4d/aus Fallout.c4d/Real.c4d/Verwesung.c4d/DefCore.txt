@@ -1,0 +1,10 @@
+[DefCore]
+id=D12M
+Name=Verwesung
+Value=1
+Version=4,6,0
+Category=65
+MaxUserSelect=1
+Picture=0,0,64,64
+TimerCall=Check
+Timer=250

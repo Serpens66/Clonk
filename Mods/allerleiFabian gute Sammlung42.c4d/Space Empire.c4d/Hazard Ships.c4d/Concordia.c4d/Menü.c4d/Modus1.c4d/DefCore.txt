@@ -1,0 +1,6 @@
+[DefCore]
+id=C11Q
+Name=Hauptdeck
+Category=1
+Picture=0,0,35,35
+ 

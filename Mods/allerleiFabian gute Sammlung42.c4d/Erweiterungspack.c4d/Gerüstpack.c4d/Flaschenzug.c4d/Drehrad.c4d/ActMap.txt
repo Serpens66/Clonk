@@ -1,0 +1,13 @@
+[Action]
+Name=Normal
+Procedure=FLOAT
+FacetBase=1
+
+[Action]
+Name=Work
+Procedure=FLOAT
+Length=2
+Delay=10
+Facet=0,0,16,18
+NextAction=Work
+EndCall=Working

@@ -1,0 +1,10 @@
+[DefCore]
+id=MBSR
+Name=Blaulicht/Martinshorn
+Category=4
+Width=200
+Height=200
+Offset=-100,-100
+Vertices=1
+VertexFriction=100
+BlitMode=1

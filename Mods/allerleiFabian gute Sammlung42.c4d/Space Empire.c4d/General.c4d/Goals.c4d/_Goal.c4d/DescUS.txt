@@ -1,0 +1,3 @@
+Controls the round completition checks.
+This special version was modified for Star Empires and provides that the goal checkup works for every player independently.
+Moreover there has only a definite number of goals to be fulfilled, which can be set in the goal choice.

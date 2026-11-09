@@ -1,0 +1,16 @@
+An dieser Station können UAV's zur Aufklärung gekauft, gestartet und gesteuert werden.
+
+[Doppelgraben]:
+Menü aufrufen um ein UAV zu kaufen, bzw. das aktuelle zu zerstören.
+
+[Werfen]:
+Triebwerke des UAV's bedienen (kann in der Luft stehenbleiben!).
+
+[Hoch]:
+UAV gerade fliegn lassen.
+
+[Links]:
+UAV gegen den Uhrzeigersinn lenken.
+
+[Right]:
+UAV mit dem Uhrzeigersinn lenken.

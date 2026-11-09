@@ -1,0 +1,6 @@
+[DefCore]
+id=_Y7D
+Name=Atompilz
+Category=1
+Width=1
+Height=1

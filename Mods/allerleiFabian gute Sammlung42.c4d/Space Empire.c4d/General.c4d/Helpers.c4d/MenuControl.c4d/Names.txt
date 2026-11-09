@@ -1,0 +1,2 @@
+DE:Menü-Überwachung
+US:Menu control

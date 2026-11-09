@@ -1,0 +1,3 @@
+DE:Attached Power Accumulator
+US:Attached Power Accumulator
+

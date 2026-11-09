@@ -1,0 +1,1 @@
+Die Clonk achten noch verstärkter auf ihre Umwelt, sodass ihre Verschmutzung noch ein Stück zurückgeht. Nun ist der Umweltschadenswert jedes Objektes/Gebäudes nur noch halb so groß, wie er ohne jegliche Forschung wäre.

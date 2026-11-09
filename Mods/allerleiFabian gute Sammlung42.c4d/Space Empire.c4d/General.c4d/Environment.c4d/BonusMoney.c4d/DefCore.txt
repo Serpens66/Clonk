@@ -1,0 +1,10 @@
+[DefCore]
+id=SBON
+Name=BonusMoney
+Version=4,9,5
+Value=1
+Category=65
+MaxUserSelect=50
+Picture=0,0,70,70
+TimerCall=DoBonus
+Timer=10

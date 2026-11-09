@@ -1,0 +1,2 @@
+Schnelles Spiel:
+Erhöhte Geschwindigkeit beim erforschen, bauen und produzieren. Ausserdem verbessert es die Startbedingung (d.h Sesshaftigkeit + 50 Gold).

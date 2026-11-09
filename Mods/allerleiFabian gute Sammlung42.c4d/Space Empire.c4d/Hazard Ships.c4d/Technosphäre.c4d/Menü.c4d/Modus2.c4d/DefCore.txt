@@ -1,0 +1,6 @@
+[DefCore]
+id=M27G
+Name=Schwebe
+Category=1
+Picture=0,0,35,35
+ 

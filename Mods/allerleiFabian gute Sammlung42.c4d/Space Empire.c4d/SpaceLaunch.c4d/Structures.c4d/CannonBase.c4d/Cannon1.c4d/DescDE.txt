@@ -1,0 +1,3 @@
+Mit dem Artilleriegeschütz können in der Geschützplattform Gegenstände, Flints und sogar Clonks verschossen werden.
+Die Schussstärke lässt sich über doppelhoch einstellen.
+Das Geschütz verbraucht allerdings Energie. Je schwerer das Geschoss ist und desto weiter geschossen werden soll, desto mehr Energie wird gebraucht.

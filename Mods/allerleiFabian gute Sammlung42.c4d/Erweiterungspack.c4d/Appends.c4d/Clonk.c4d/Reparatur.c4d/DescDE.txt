@@ -1,0 +1,1 @@
+Wenn ein Gebäude Schaden nimmt, erscheint dieses Symbol über dem Gebäude. Je mehr Schaden es nimmt, desto rötlicher färbt sich das Symbol.

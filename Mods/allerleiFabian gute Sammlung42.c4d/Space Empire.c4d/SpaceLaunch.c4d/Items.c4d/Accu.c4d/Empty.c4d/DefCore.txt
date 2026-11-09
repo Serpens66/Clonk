@@ -1,0 +1,17 @@
+[DefCore]
+id=SACE
+Version=4,9,5
+Name=Accu
+Category=16
+Width=13
+Height=13
+Offset=-6,-6
+Value=5
+Mass=10
+Picture=0,14,90,100
+Vertices=1
+VertexX=0
+VertexY=5
+VertexFriction=100
+Rebuy=1
+Collectible=1

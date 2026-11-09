@@ -1,0 +1,8 @@
+[Action]
+Name=CheckStatus
+Procedure=NONE
+Length=10
+Delay=20
+Facet=0,0,90,44
+PhaseCall=CheckEnergy
+NextAction=CheckStatus

@@ -1,0 +1,2 @@
+DE:Seilbahnkorb
+US:Ropeway case

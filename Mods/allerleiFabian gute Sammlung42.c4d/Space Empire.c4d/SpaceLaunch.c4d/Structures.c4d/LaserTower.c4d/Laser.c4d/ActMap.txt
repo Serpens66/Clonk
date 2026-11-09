@@ -1,0 +1,7 @@
+[Action]
+Name=Laser
+Procedure=FLOAT
+Length=6
+Delay=1
+Facet=0,0,5,101
+EndCall=Remove

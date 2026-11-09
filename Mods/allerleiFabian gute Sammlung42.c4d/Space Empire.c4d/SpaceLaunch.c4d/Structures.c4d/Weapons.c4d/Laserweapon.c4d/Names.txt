@@ -1,0 +1,2 @@
+DE:Laserwaffe-Geschütz
+US:Laser Obelisk

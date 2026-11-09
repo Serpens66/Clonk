@@ -1,0 +1,8 @@
+Made of Leather Armor and 3 Metal.|
+Cost - 95. Mass - 10.|
+Normal 25% |
+Laser 20% |
+Fire 25% |
+Plasma 10% |
+Explosion 25% |
+Electric 40% |

@@ -1,0 +1,6 @@
+[DefCore]
+id=CM_4
+Name=Generator(Besetzt)
+Category=1
+Picture=0,0,35,35
+ 

@@ -1,0 +1,7 @@
+[Action]
+Name=Attaching
+Procedure=ATTACH
+Delay=1
+FacetBase=1
+NextAction=Attaching
+StartCall=Repair

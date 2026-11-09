@@ -1,0 +1,1 @@
+Funktionsmodul für Objekte mit Lichtern

@@ -1,0 +1,20 @@
+Dieser Projektordner enthält mehrere steuerbare Raumschiffe für die Verwendung im Zusammenhang mit dem Hazard Pack.
+
+Genaue Beschreibungen und Anleitungen zu den einzelnen Fahrzeugen befinden sich im Objektordner.
+
+
+
+Verwendung der Objekte in euren eigenen Maps erwünscht!
+
+Viel Spaß beim fliegen!
+
+Mace.
+
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

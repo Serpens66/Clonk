@@ -1,0 +1,6 @@
+Ein Deckenlicht, welches nach dem Bau nach oben an die Decke wandert.
+Mysteriöse Lebensform. Klammert sich zumeist an Decken.
+
+Braucht keine Energie, kann dafür aber nur im Bunker gebaut werden.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

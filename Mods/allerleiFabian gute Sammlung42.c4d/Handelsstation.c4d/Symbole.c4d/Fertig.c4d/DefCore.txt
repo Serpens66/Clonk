@@ -1,0 +1,7 @@
+[DefCore]
+id=OKAY
+Name=Fertig
+Category=1
+Picture=0,0,31,31
+
+ 

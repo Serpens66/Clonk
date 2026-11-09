@@ -1,0 +1,2 @@
+Wenn der Script Counter den Wert 99999999 erreicht, ist das Spiel gewonnen.
+Auf diese Weise kann das Ziel für alles verwendet werden und es ist gewonnen wenn mit goto auf diesen Wert gesetzt wird.

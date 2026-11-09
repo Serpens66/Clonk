@@ -1,0 +1,26 @@
+[DefCore]
+id=STOW
+Name=Tower
+Version=4,9,5
+Category=1154
+MaxUserSelect=5
+Width=66
+Height=90
+Offset=-33,-45
+Value=125
+Mass=2000
+Components=METL=1;CRYS=1;WOOD=1;CTIT=2;CALU=2;GLAS=1;
+Picture=66,0,48,70
+Vertices=5
+VertexX= 1,-20, 18,18,-20
+VertexY=-5,-26,-26,45, 45
+VertexFriction=50,50,50,100,100
+Entrance=-6,21,18,25
+Exclusive=1
+LineConnect=35
+Construction=1
+ColorByOwner=1
+AttractLightning=1
+
+[Physical]
+Energy=100000

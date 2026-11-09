@@ -1,0 +1,27 @@
+[DefCore]
+id=VF9I
+Name=Verbranntes Forsthaus
+Version=4,9,5
+Category=2
+Width=60
+Height=50
+Offset=-30,-25
+Value=10
+Mass=750
+Components=WOOD=4;ROCK=1;
+Picture=0,0,60,50
+Vertices=4
+VertexX=-29,-24,15,25
+VertexY=-1,24,-19,24
+VertexFriction=50,50,50,50
+Entrance=-19,9,13,15
+Exclusive=1
+ContactIncinerate=3
+BlastIncinerate=10
+Construction=1
+ConstructTo=FH9I
+Grab=1
+Rotate=1
+Float=1
+Basement=0
+ 

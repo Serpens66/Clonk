@@ -1,0 +1,1 @@
+Die EventInfo-Objekte zeigen kleine Bildchen in der linken oberen Ecke, die jeden Spieler über wichtige Ereignisse informieren.

@@ -1,0 +1,2 @@
+OpenFlap=Open trapdoor
+CloseFlap=Close trapdoor

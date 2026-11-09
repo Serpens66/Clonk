@@ -1,0 +1,7 @@
+[Action]
+Name=Fensterln
+Procedure=FLOAT
+Length=3
+Delay=10
+Facet=0,0,12,10,0,10
+NextAction=Fensterln

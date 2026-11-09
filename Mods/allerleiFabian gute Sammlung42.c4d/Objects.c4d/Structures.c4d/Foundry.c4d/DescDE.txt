@@ -1,0 +1,4 @@
+Erzeugt aus Erz und Brennmaterial glühendes Metall.
+Kann außerdem 1 Sand zu 1 Glas schmelzen (bzw mit Forschung 1 zu 2)
+Mit einer Chance von 1 zu 10 entsteht dabei auch das Abfallprodukt Schlacke.
+Kann 3 Metallschrott mit Brennmaterial zu 1 Metall und 10Schlacke schmelzen.

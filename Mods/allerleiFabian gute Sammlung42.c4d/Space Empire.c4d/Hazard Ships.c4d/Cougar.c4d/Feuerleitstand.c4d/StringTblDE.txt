@@ -1,0 +1,1 @@
+NotEnoughAmmo=Nicht genug {{%i}}!

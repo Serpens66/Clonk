@@ -1,0 +1,13 @@
+[DefCore]
+id=SCN1
+Name=Artillery
+Version=4,9,5
+Category=1026
+Width=68
+Height=46
+Offset=-34,-30
+Value=50
+Picture=0,0,80,60
+Vertices=1
+VertexX=-30
+VertexY=18

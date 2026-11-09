@@ -1,0 +1,1 @@
+Hilfsobjekt zur Überwachung von Menüs. Das Objekt meldet jede Auswahländerung an das Objekt, das das Menü erstellt hat.

@@ -1,0 +1,3 @@
+This explosive-kit contaminates more than it destroys. As soon as its 30sec timer runs out, it detonates and releases immense radiation.
+
+Through grab + double-dig you can activate the timer, but only the owner can deactivate it again.

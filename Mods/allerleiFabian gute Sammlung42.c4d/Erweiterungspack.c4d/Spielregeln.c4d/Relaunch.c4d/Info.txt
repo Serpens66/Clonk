@@ -1,0 +1,7 @@
+Um die Relaunch-Regel besser nutzen zu können, kannst du in dein Szenarioscript folgende Funktionen einbauen:
+
+// x muss mit der Anzahl Relaunchs ersetzt werden, die ein Spieler hat, bevor seine Clonks normal sterben.
+func MaxRelaunchs() { return(x); }
+
+// Wird aufgerufen, wenn ein Clonk relauncht wird. pClonk gibt den neuen Clonk an, pDead den Toten.
+func Relaunching(pClonk,pDead) { ... }

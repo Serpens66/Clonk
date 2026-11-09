@@ -1,0 +1,1 @@
+Kann von einem Clonk angezogen werden und versorgt diesen dann mit Luft, sofern der Helm ueber das Kontextmenue an eine Luftpumpe angeschlossen wurde.

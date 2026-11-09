@@ -1,0 +1,30 @@
+[DefCore]
+id=CDFT
+Name=Defense Tower
+Category=1154
+MaxUserSelect=10
+Width=35
+Height=40
+Offset=-17,-20
+Value=350
+Mass=1500
+Components=METL=1;CRYS=1;WOOD=1;CTIT=1;CALU=1;GLAS=1;
+Picture=0,40,52,70
+Vertices=5
+VertexX=  0,-17,-17, 18,18
+VertexY=-20,-30, 20,-30,20
+VertexFriction=100,100,100,100,100
+Exclusive=1
+//Grab=2
+//NoPushEnter=1
+LineConnect=35
+Construction=1
+ColorByOwner=1 
+AttractLightning=1
+//GrabPutGet=C4D_GrabGet|C4D_GrabPut
+Entrance=-5,4,15,20
+TimerCall=Zumachen
+Timer=5
+
+[Physical]
+Energy=100000 

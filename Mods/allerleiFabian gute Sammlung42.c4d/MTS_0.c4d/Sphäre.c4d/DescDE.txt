@@ -1,0 +1,4 @@
+Die Magnetsphäre transportiert Clonks und Material auf einer von Feldweichen festgelegten Bahn.
+Während sie unter Tage in alle Himmelsrichtungen schweben kann, muss sie  sich im Freien
+mangels Abstoßungsfläche knapp über den Erdboden bewegen. Vorsicht bei Beschuss: Die Sphäre 
+ist nicht allzu stabil!

@@ -1,0 +1,7 @@
+[DefCore]
+id=DELE
+Name=Delete
+Category=1
+Picture=0,0,32,32
+
+ 

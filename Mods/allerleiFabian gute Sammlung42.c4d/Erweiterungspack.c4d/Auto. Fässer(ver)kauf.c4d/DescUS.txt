@@ -1,0 +1,1 @@
+If the Clonk is in a base, you can give him by context menu the instruction to sell automatically full barrels and buy new barrels.

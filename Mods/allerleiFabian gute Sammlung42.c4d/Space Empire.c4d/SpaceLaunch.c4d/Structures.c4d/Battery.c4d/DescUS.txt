@@ -1,0 +1,1 @@
+Stores energy and gives it off when it is needed.

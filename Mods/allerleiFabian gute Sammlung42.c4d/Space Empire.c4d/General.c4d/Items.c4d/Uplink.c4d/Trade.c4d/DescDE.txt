@@ -1,0 +1,4 @@
+Ein Aufsatz für Basisgebäude, durch den Handel zwischen den Spielern und mit KI-Händlern ermöglicht wird.
+Die Handelsmenüs für Kaufen und Verkaufen können aus dem Gebäude aufgerufen werden, auf dem der Uplink aufgesetzt ist.
+
+Momentan auf das Handelssystem eingestellt.

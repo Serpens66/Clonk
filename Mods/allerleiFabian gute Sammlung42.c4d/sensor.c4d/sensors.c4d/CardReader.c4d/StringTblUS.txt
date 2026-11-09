@@ -1,0 +1,7 @@
+Control=Control
+Keycard=Keycard for card reader.
+OVERWRITE=Overwrite
+OVERWRITE_DESC=Code of keycard.
+VALID=Vaild
+SETCODE=Set card
+SETCODE_DESC=Set card.

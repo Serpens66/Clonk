@@ -1,0 +1,3 @@
+Der Luftregenerator saugt Luft ein, bearbeitet diese, und stößt sie dann aus. Somit kann die Umweltverschmutzung gesenkt, oder die Temperatur gesteuert werden (wenn erforscht).
+Wenn der Filter aktiv die Luft verbessert, senkt dies die Verschmutzung um 200, solange aktiv.
+Wenn die Temperatur gesteuert wird, egal wie, erhöht es die Verschmutzung um 1000, solange aktiv.

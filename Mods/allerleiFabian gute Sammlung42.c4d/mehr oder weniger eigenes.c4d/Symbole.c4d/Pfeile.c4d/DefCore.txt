@@ -1,0 +1,17 @@
+[DefCore]
+id=PFEI
+Name=Pfeile
+Version=4,9,5
+Category=1
+Width=6
+Height=6
+Offset=-3,-3
+Picture=0,0,64,64
+Vertices=1
+VertexY=1
+VertexFriction=20
+Collectible=1
+NoGet=1
+NoSell=1
+Oversize=1
+IncompleteActivity=1

@@ -1,0 +1,7 @@
+[DefCore]
+id=SENS
+Name=sensor_functions
+Version=4,9,5
+Category=4
+Picture=0,0,35,35
+ 

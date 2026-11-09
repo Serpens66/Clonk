@@ -1,0 +1,2 @@
+Erhöht langsam den Kontostand jedes Spielers im Laufe der Zeit.
+Je öfter aktiviert, umso mehr Geld gibt's - und zwar zwischen 1 und 5 Clunker alle 300 Frames.

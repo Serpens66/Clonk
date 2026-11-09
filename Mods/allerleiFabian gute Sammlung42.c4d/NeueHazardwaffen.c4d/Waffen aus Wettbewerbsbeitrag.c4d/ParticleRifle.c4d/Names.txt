@@ -1,0 +1,2 @@
+DE:Partikelgewehr
+US:Particle rifle

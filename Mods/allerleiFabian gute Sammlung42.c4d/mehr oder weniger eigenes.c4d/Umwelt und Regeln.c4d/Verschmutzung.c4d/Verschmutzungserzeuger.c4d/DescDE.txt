@@ -1,0 +1,2 @@
+Diese Regel erzeugt in 50 Frame Intervallen 1 Verschmutzungsobjekt, bis es maximal 5 stück sind.
+Kann z.b an Bedingungen geknüpft werden.

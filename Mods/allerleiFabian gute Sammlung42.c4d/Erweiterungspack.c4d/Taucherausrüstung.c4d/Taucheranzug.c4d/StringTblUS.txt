@@ -1,0 +1,3 @@
+PutOn=Put on
+AlreadyHasSuit=%s is already|wearing a diving suit!
+PutOnSuit=Diving suit put on.

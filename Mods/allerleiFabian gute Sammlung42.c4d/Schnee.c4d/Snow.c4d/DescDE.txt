@@ -1,0 +1,2 @@
+Eine Regel, die den Schnee nur effektm‰ﬂig fallen l‰sst.
+Es entsteht also kein Schneematerial am Boden.

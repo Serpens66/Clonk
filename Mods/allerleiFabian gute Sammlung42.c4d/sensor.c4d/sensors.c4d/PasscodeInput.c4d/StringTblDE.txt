@@ -1,0 +1,5 @@
+InputCode=Code eingeben
+Cancel=Abbrechen
+CORRECT=richtiger Code
+SET_CODE=Code einstellen
+SET_CODE_DESC=Hier kann der PIN-Code eingestellt werden.

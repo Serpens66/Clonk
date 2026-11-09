@@ -1,0 +1,8 @@
+[Action]
+Name=Blast
+Procedure=FLOAT
+Length=12
+Delay=1
+Facet=0,0,200,200
+PhaseCall=ScreenGamma
+EndCall=Remove

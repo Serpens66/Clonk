@@ -1,0 +1,15 @@
+DepositHelm=Taucherhelm ablegen
+ConnectHelm=Taucherhelm anschliessen
+TearOffBuilding=Gebäude abreissen
+TearOff=%s abbreissen?
+Yes=Ja
+No=Nein
+RepairObject=Objekt reparieren
+WhatIsToRepair=Was soll repariert werden?
+Nothing=Nichts
+MustBeEmpty=%s|muss leer sein!
+NotEnoughMoney=Nicht genug Geld!
+AutomaticBarrel=Auto. Fässer(ver)kauf
+Supervising=Fässer(ver)kauf|wird überwacht.
+NoSupervising=Fässer(ver)kauf wird|nicht mehr überwacht.
+SaleMenu=Verkaufsmenü

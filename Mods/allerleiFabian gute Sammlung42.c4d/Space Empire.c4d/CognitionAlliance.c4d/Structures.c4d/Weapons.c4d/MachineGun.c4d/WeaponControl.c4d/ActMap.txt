@@ -1,0 +1,9 @@
+[Action]
+Name=Fire
+Procedure=NONE
+Length=1
+Delay=3
+FacetBase=1
+//Sound=AutoGun*
+NextAction=Fire
+StartCall=Firing

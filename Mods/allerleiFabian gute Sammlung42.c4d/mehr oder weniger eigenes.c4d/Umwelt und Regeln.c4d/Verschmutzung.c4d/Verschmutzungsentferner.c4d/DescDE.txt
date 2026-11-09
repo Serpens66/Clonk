@@ -1,0 +1,2 @@
+Entfernt die Nebelerzeuger Regel und sämtlichen Nebel.
+Kann an Bedingungen geknüpft werden.

@@ -1,0 +1,17 @@
+[DefCore]
+id=EO8Z
+Name=BiterSeed
+Version=4,9,6,0
+Category=2576
+MaxUserSelect=10
+Width=6
+Height=6
+Offset=-3,-3
+Value=6
+Mass=5
+Components=E08Z=1;
+Picture=0,6,64,64
+Vertices=1
+VertexY=1
+VertexFriction=20
+Collectible=1

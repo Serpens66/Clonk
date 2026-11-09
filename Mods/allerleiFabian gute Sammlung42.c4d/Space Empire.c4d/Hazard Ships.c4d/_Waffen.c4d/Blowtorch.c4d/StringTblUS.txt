@@ -1,0 +1,6 @@
+Standard=Automatic
+Quickshot=High velocity
+
+KRFLUpgradeDesc=Replaces the fire mechanism with a high velocity fire mechanism.
+
+KRFLUpgraded=Replaced the fire mechanism with a high velocity fire mechanism.

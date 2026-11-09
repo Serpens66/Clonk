@@ -1,0 +1,12 @@
+[DefCore]
+id=KNIK
+Name=Knicklicht
+Version=4,9,5
+Category=1040
+Width=1
+Height=1
+Offset=0,0
+Value=25
+Mass=100
+Picture=0,0,64,64
+Components=SPHR=1;

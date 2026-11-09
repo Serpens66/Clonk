@@ -1,0 +1,9 @@
+[Action]
+Name=IgnoreDay
+Procedure=ATTACH
+Length=15
+Delay=5
+Facet=0,0,20,20
+FacetTopFace=1
+NextAction=IgnoreDay
+Sound=Revolution

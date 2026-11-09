@@ -1,0 +1,6 @@
+TxtProduction=Production
+TxtWrongPlacement=Wrong Placement!|It can be build only next to the lower map border!|Current Depth: %d|Upper limit: %d
+TxtSelectRess=Select resource
+TxtProductionDefault=All
+TxtProductionDefaultDesc=Produces all resources. Produces more and totally randomly.
+TxtProductionRessDesc=Produces more %s but less in total.|The higher the value, the lower the chance to find it.|Chance~%d/%d

@@ -1,0 +1,15 @@
+DepositHelm=Deposit the diving helmet
+ConnectHelm=Connect the diving helmet
+TearOffBuilding=Tear off a building
+TearOff=Tear off %s?
+Yes=Yes
+No=No
+RepairObject=Repair an object
+WhatIsToRepair=What is to be repaired?
+Nothing=Nothing
+MustBeEmpty=%s|must be empty!
+NotEnoughMoney=Not enough money!
+AutomaticBarrel=Auto. barrel sale / purchase
+Supervising=Barrel sale / purchase|is supervised.
+NoSupervising=Barrel sale / purchase|is not supervised.
+SaleMenu=Sale menu

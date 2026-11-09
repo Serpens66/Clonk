@@ -1,0 +1,2 @@
+DE:Splitter Cluster Siege Ammo
+US:Cluster Siege Ammo

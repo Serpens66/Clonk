@@ -1,0 +1,6 @@
+[DefCore]
+id=XMTR
+Name=Transmitter
+Version=4,9,5
+Category=1
+ 

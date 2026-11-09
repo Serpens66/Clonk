@@ -1,0 +1,5 @@
+[Action]
+Name=Count
+Delay=2
+NextAction=Count
+EndCall=Count

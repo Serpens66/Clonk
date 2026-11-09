@@ -1,0 +1,3 @@
+DE:Kampfmesser
+US:Combat Knife
+RU:Боевой Нож

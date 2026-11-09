@@ -1,0 +1,2 @@
+Versperrt Feinden im Tunnel den Weg.
+Nicht mit Sensoren verwendbar (die haben ein eigenes Tor).

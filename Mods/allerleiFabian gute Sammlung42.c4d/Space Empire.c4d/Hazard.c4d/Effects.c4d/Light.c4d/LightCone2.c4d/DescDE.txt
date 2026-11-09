@@ -1,0 +1,2 @@
+Photonen.
+Ignoriert Kriegsnebel und wird auch darin gezeichnet.

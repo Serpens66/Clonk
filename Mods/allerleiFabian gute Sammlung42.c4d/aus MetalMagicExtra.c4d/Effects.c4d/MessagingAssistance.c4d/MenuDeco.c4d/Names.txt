@@ -1,0 +1,2 @@
+DE:Menürand
+US:Menu border

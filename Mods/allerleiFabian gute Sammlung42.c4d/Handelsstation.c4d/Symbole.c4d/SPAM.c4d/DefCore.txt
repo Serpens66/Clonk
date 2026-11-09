@@ -1,0 +1,7 @@
+[DefCore]
+id=SPAM
+Name=Spam
+Category=1
+Picture=0,0,41,41
+
+ 

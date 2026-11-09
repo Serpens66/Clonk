@@ -1,0 +1,5 @@
+Die Energiekanone feuert Energieteilchen mit annähernd Lichtgeschwindigkeit ab.
+Alternativ kann sie auch eine Ladungskugel abfeuern, die nahe gelegene elektrische Objekte lahmlegt.
+
+Aufrüstbar mit:
+-Laser

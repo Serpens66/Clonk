@@ -1,0 +1,15 @@
+[DefCore]
+id=C_S2
+Name=blaster shot
+Category=4
+Width=3
+Height=1
+Offset=-2,-1
+Mass=10
+Components=C_S2=1;
+Picture=0,0,3,1
+Vertices=1
+VertexX=0
+VertexY=0
+VertexFriction=20
+ 

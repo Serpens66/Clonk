@@ -1,0 +1,3 @@
+Kann bis zu 4 Objekte beinhalten und erleichtert somit den Transport von mittleren Materialmengen.
+Kann mit doppel-[Graben] angelegt werden und dann durch das Kontextmenü verwaltet werden.
+Der Sack ist ein mächtiges Hilfsmittel, weshalb er auch so teuer ist.

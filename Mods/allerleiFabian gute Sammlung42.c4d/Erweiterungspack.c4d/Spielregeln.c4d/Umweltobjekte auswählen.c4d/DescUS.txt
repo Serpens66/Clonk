@@ -1,0 +1,4 @@
+In the rules-menu you can adjust the environment control objects.
+
+Note:
+Some environmental objects, for exaple sea level, can not are cancelled...

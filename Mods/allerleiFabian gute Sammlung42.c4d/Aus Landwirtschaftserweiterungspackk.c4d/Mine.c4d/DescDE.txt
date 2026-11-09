@@ -1,0 +1,5 @@
+Mit Hilfe des Bergwerkes können selbst sehr tief gelegene Rohstoffquellen erschlossen werden. Außerdem sind die hier abgebauten Rohstoffvorkommenn fast unerschöpflich.
+Da die Mine außerhalb der Karte buddelt, sind besondere Sicherheitsmaßnahmen nötig.
+So muss man in regelmäßigen Abständen Stützen einbauen. Dafür kann sowohl Holz als auch Beton verwendet werden.
+
+Hinweis: Das Bergwerk kann nur knapp über den Kartenrand gebaut werden.

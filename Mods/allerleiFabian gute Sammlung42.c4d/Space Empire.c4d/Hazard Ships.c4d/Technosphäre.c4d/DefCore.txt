@@ -1,0 +1,25 @@
+[DefCore]
+id=TSP_
+Name=Technosphäre
+Version=4,9,5
+Category=3332
+TimerCall=Ownerkontrolle
+MaxUserSelect=1
+Width=51
+Height=51
+Offset=-25,-25
+Value=1000
+Mass=180
+Components=METL=15,CRYS=20;CTIT=5;CALU=3;SURO=5;GLAS=3;
+Vertices=5
+VertexX=0, 0,0,25,-25
+VertexY=0,25,-25,0,0
+VertexFriction=20
+Rebuy=1
+Entrance=-10,0,20,25
+ColorByOwner=1  
+BorderBound=7
+CollectionLimit=1
+
+[Physical]
+Float=300

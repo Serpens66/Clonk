@@ -1,0 +1,1 @@
+Kümmert sich um einige Effekte wie den Aufbau des Sternenhimmels oder von Hintergrund-Landschaften.

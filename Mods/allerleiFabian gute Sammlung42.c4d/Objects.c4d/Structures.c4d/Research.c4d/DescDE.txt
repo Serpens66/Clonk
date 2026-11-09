@@ -1,0 +1,4 @@
+Hier können Spieler weitere Baupläne erforschen. Umweltschaden des Gebäudes= 15.
+Auf "Graben" kann außerdem die aktuelle Temperatur und der Umweltverschmutzungsgrad eingesehen werden.
+Letzterem wirkt man am besten mit Bäumen und später Filteranlagen entgegen.
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=15.

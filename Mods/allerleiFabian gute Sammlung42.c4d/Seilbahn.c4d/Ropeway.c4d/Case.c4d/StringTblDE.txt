@@ -1,0 +1,17 @@
+TxtElevatorLockTurnOn=Seilbahnbremse ein
+TxtElevatorLockTurnOff=Seilbahnbremse aus
+TxtElevatorLockOn=Seilbahnbremse|eingeschaltet
+TxtElevatorLockOff=Seilbahnbremse|ausgeschaltet
+TxtElevatorLockDesc=Arretiert die Seilbahn in ihrer aktuellen Position
+TxtLeft=Nach links
+TxtRight=Nach rechts
+TxtPushLeft=Fahrzeug nach links schieben
+TxtPushRight=Fahrzeug nach rechts schieben
+TxtStop=Anhalten
+TxtPutGet=Ablegen/Nehmen
+TxtPermanentmode=Dauerbetrieb
+TxtPermanentmodeon=Dauerbetrieb eingeschaltet
+TxtPermanentmodeoff=Dauerbetrieb ausgeschaltet
+TxtPermanentModeTurnOn=Dauerbetrieb ein
+TxtPermanentModeTurnOff=Dauerbetrieb aus
+TxtPermanentModeDesc=Im Dauerbetrieb fährt die Seilbahn kontinuierlich nach links und rechts und kommt nicht zu wartenden Clonks.

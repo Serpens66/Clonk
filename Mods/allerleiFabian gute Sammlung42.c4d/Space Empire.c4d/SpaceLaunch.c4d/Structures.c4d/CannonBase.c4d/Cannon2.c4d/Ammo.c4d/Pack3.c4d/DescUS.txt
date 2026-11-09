@@ -1,0 +1,2 @@
+Bazooka: Creates nuclear radiation at impact.
+MG: Concentrated explosive shot.

@@ -1,0 +1,6 @@
+[DefCore]
+id=CT_1
+Name=Beam Up
+Category=1
+Picture=0,0,35,35
+ 

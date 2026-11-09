@@ -1,0 +1,1 @@
+Dient den Spielern zur Auswahl ihrer Seite und wird später verwendet, um die Wahl zu speichern.

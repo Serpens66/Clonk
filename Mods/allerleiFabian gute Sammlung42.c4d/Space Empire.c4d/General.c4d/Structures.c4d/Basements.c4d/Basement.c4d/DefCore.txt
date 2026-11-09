@@ -1,0 +1,18 @@
+[DefCore]
+id=B516
+Name=baubares Basement wird noch nicht eingerückt
+Category=2
+MaxUserSelect=5
+Width=80
+Height=8
+Offset=-40,-4
+Value=10
+Mass=10
+Components=ROCK=1;CTIT=1;
+Picture=0,0,80,8
+SolidMask=0,0,80,8
+Vertices=2
+VertexX=-38,38
+VertexY=-4,-4
+VertexFriction=100,100
+Construction=1 

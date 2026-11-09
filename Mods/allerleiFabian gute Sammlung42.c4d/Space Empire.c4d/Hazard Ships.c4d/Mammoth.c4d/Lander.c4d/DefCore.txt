@@ -1,0 +1,27 @@
+[DefCore]
+id=MAL_
+Name=Landevorrichtung
+Version=4,9,5
+Category=4
+Width=70
+Height=30
+Offset=-35,-15
+Value=10
+Mass=100
+Components=MAL_=1;
+Vertices=8
+VertexX= 0, 20, 32, 12, 0,-12,-32,-20
+VertexY=10, 13,  6,-11,-12,-11,  6, 13
+VertexCNAT=8,2,2,4,4,4,1,1
+VertexFriction=20,20,35,35,35,35,35,35
+ColorByOwner=1 
+BorderBound=7
+Entrance=-10,-10,20,20
+Rotate=1
+Grab=1
+NoStabilize=1
+NoGet=1
+NoSell=1
+
+
+

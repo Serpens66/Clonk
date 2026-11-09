@@ -1,0 +1,8 @@
+[DefCore]
+id=CWA2
+Name=Rocketthrower
+Category=1
+Width=1
+Height=1
+Value=30
+Picture=0,0,35,35

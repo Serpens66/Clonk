@@ -1,0 +1,6 @@
+This wheel controls the Pulley block.
+
+Controls:
+[Left]/[Right]: Up/Down.
+[Dig]: Stop.
+[Up]: Displays a menu.

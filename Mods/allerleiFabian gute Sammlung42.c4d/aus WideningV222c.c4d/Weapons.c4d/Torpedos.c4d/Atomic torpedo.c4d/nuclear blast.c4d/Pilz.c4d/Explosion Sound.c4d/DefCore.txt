@@ -1,0 +1,9 @@
+[DefCore]
+id=ABFO
+Name=Explosion Sound
+Category=1
+MaxUserSelect=10
+Offset=-3,-3
+Value=10
+Mass=10
+ 

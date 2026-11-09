@@ -1,0 +1,2 @@
+Jede erforschbare Sache hat eine festgelegte eigene Zeitdauer und Kosten.
+Hier kannst du diese Zahl multiplizieren, um die Schnelligkeit/Kosten zu variieren.

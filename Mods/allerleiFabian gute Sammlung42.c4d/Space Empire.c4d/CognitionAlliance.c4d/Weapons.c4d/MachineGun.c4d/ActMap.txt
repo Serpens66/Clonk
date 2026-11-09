@@ -1,0 +1,14 @@
+[Action]
+Name=Fireing
+Procedure=NONE
+Delay=2
+Length=5
+PhaseCall=FireBullet
+Sound=AutoFire
+NextAction=Reload
+
+[Action]
+Name=Reload
+Procedure=NONE
+Delay=5
+NextAction=Idle

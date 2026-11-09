@@ -1,0 +1,3 @@
+A fabricator that allows you to generate hydrogen out of water and Energy.
+
+To generate the hydrogen, connect the building to an water source and then to a big energy source and it will work.

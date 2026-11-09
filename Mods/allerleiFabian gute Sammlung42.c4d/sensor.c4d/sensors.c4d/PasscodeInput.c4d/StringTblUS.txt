@@ -1,0 +1,5 @@
+InputCode=Input code
+Cancel=Cancel
+CORRECT=Correct
+SET_CODE=Set code
+SET_CODE_DESC=Set code.

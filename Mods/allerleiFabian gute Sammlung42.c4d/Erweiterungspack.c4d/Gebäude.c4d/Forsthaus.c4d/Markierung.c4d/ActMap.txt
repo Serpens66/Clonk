@@ -1,0 +1,15 @@
+[Action]
+Name=A1
+Procedure=FLOAT
+Length=1
+Delay=20
+Facet=0,0,6,6
+NextAction=A2
+
+[Action]
+Name=A2
+Procedure=FLOAT
+Length=1
+Delay=20
+Facet=0,6,6,6
+NextAction=A1

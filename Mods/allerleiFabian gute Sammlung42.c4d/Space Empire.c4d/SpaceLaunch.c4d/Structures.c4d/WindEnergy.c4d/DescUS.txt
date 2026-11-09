@@ -1,0 +1,1 @@
+Generates electricity out of wind power.

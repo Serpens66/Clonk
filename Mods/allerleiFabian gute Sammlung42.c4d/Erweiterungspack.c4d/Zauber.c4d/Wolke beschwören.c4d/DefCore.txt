@@ -1,0 +1,11 @@
+[DefCore]
+id=WLKB
+Version=4,0,2
+Name=Wolke beschwören
+Category=131072
+Width=1
+Height=1
+Value=30
+Components=IASH=1;IGOL=1;ISPH=1;
+Picture=0,0,64,64
+ 

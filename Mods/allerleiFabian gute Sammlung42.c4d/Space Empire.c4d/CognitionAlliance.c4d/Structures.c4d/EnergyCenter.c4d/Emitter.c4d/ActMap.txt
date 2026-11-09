@@ -1,0 +1,15 @@
+[Action]
+Name=Rotating
+Procedure=ATTACH
+Length=17
+Delay=3
+Facet=0,0,35,20
+EndCall=Check
+
+[Action]
+Name=Waiting
+Procedure=ATTACH
+Length=1
+Delay=10
+Facet=0,0,35,20
+EndCall=Check

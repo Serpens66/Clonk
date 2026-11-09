@@ -1,0 +1,2 @@
+DE:Fernrohrmenü
+US:Telescope menu

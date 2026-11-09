@@ -1,0 +1,2 @@
+DE:Beutel
+US:Bag

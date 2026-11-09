@@ -1,0 +1,2 @@
+DE:Energiekanone
+US:Particle cannon

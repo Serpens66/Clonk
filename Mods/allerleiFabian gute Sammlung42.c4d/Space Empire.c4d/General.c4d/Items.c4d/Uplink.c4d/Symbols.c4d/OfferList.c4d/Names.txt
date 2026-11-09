@@ -1,0 +1,2 @@
+DE:Angebotsliste
+US:Offer list

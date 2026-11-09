@@ -1,0 +1,20 @@
+[DefCore]
+id=IMTK
+Name=Improved Tool Kit
+Version=4,6,0
+Category=3600
+MaxUserSelect=5
+Width=8
+Height=6
+Offset=-4,-3
+Value=35
+Mass=25
+Components=ALU1=1;METL=3;
+Picture=8,0,118,111
+Vertices=1
+VertexY=1
+VertexFriction=50
+Rebuy=1
+Collectible=1
+
+TimerCall=Check

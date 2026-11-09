@@ -1,0 +1,4 @@
+Viel Licht. 400 Sichtradius, also wie ein Clonk bei Tag an der Oberfläche. Allerdings ist das Licht der Scheinwerfer so stark, dass sogar andere/feindliche Clonks hier Sichtradius bekommen.
+Verbraucht Strom, kann an und aus geschaltet werden.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

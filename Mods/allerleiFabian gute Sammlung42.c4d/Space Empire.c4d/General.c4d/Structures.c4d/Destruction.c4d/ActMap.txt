@@ -1,0 +1,6 @@
+[Action]
+Name=Destruct
+Length=1
+Delay=7
+NextAction=Destruct
+EndCall=DestructionStep

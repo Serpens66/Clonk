@@ -1,0 +1,9 @@
+[DefCore]
+id=SRAD
+Version=4,9,1,4
+Name=Radiation
+Category=16
+Width=50
+Height=50
+Offset=-25,-25
+Picture=250,250,50,50

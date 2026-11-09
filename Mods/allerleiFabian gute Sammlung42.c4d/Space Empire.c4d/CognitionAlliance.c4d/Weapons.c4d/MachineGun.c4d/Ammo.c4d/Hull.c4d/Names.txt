@@ -1,0 +1,2 @@
+DE:Kugelhülse
+US:bullet hull

@@ -1,0 +1,12 @@
+[DefCore]
+id=SMGF
+Name=Fire
+Category=16
+Width=7
+Height=35
+Offset=-3,-17
+Picture=0,0,7,19
+Vertices=1
+Rotate=1
+NoStabilize=1
+ 

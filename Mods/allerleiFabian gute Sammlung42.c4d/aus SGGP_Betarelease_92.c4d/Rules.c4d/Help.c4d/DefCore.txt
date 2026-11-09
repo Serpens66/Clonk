@@ -1,0 +1,13 @@
+[DefCore]
+id=HELP
+Name=Hilfsregel
+Version=4,9,6,0
+//Category=524289
+Category=1
+Value=1
+Width=1
+Height=1
+Picture=0,0,64,64
+MaxUserSelect=1
+Timer=50
+TimerCall=Timer

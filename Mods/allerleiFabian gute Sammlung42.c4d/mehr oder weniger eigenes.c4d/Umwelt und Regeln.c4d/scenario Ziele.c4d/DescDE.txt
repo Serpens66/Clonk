@@ -1,0 +1,5 @@
+Szenario Ziele.
+Wenn aktiv direkt in szenario.txt eingestellt, dann werden als Ziele diejenigen aus szenario.txt verwendet.
+
+Andernfalls werden die dort eingestellten Ziele gelöscht und es muss im Spiel mit dem Regelchooser ein Ziel gesetzt werden.
+Wenn aktiv, dann koennen die Regeln während des Spiels nicht über den Regelchooser verändert werden!

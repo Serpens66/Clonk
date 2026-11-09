@@ -1,0 +1,17 @@
+[DefCore]
+id=C_S5
+Name=MG-bullet
+Category=2
+MaxUserSelect=10
+Width=3
+Height=1
+Offset=-1,-1
+Value=10
+Mass=5
+Components=C_S5=1;
+Picture=0,0,3,1
+Vertices=1
+VertexX=0
+VertexY=0
+VertexFriction=20
+ 

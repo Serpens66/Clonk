@@ -1,0 +1,2 @@
+DE:Lampe
+US:Lamp

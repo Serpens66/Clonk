@@ -1,0 +1,4 @@
+Blendgranate!
+Blendet jeden Clonk, der zum Explosionszeitpunkt in die Granate schaut stark, für ca. 10 Sekunden
+Ist der Clonk weiter als 700 Clonkmeter entfernt oder schaut in die andere Richtung, wird er nur leicht für 3 Sekunden geblendet. 
+Befindet sich ein Hinderniss zwischen ihm und der Explosion, oder ist er weiter als 1500 Meter weg bzw. in einem Gebäude/Fahrzeug, hat es keine Auswirkung.

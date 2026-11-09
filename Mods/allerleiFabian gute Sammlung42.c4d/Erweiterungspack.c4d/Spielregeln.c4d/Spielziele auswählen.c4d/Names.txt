@@ -1,0 +1,2 @@
+DE:Spielziele auswählen
+US:Select goals

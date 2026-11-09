@@ -1,0 +1,10 @@
+[DefCore]
+id=_AMG
+Name=Armageddon
+Version=4,9,5
+MaxUserSelect=10
+Value=1
+Category=65
+Picture=12,12,39,39
+TimerCall=DoMeteors
+Timer=10

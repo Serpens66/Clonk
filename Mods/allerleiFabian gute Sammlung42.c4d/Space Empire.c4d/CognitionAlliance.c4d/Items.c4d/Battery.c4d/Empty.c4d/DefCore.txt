@@ -1,0 +1,18 @@
+[DefCore]
+id=CNBE
+Name=Empty Battery
+Category=1552
+Width=10
+Height=10
+Offset=-5,-5
+Value=10
+Mass=10
+Components=CNBE=1;
+Picture=10,0,113,120
+Vertices=2
+VertexX=0,0
+VertexY=-4,5
+VertexFriction=100,100
+Rebuy=1
+Collectible=1
+MaxUserSelect=10

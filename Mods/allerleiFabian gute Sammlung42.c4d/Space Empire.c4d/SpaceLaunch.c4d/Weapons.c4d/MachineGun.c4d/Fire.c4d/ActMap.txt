@@ -1,0 +1,6 @@
+[Action]
+Name=Show
+Procedure=ATTACH
+Delay=2
+Facet=0,0,7,35
+EndCall=Remove

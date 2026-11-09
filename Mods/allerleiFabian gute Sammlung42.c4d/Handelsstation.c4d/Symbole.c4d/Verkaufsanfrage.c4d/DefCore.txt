@@ -1,0 +1,7 @@
+[DefCore]
+id=MFDV
+Name=Verkaufsanfrage
+Category=1
+Picture=0,0,61,61
+
+ 

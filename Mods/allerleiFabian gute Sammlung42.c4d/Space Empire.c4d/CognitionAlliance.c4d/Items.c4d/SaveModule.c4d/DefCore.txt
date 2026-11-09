@@ -1,0 +1,22 @@
+[DefCore]
+id=CENM
+Name=Energy Module
+Category=3588
+MaxUserSelect=5
+Width=16
+Height=25
+Offset=-8,-12
+Value=80
+Mass=40
+Components=CRYS=1;CTIT=1;CALU=1;
+Picture=0,25,108,120
+Timer=5
+TimerCall=Convert
+Vertices=3
+VertexX=0,-7,7
+VertexY=-12,12,12
+VertexFriction=50,50,50
+BorderBound=1
+Rebuy=1
+Grab=1 
+LineConnect=C4D_EnergyHolder

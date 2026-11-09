@@ -1,0 +1,1 @@
+Enthält alle Verkaufsangebote und Preise eines Spielers.

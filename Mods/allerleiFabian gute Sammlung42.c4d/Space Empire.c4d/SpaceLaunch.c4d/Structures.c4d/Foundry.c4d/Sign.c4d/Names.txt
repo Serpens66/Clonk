@@ -1,0 +1,2 @@
+DE:Anzeige
+US:Info sign

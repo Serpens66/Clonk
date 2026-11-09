@@ -1,0 +1,12 @@
+[DefCore]
+id=SY11
+Version=4,9,5
+Name=Streckenauswahl
+Category=1
+Width=2
+Height=2
+Offset=-1,-1
+Picture=0,0,35,35
+PictureFE=0,0,35,35
+ColorByOwner=1
+ 

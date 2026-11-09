@@ -1,0 +1,2 @@
+Funktinoiert noch nicht, findet fundament nicht.
+Soll eig für baubares Fundament außerhalb bunker genutzt werden können.

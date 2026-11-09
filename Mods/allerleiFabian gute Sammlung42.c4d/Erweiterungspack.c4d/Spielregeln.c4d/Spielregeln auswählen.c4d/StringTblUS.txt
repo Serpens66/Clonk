@@ -1,0 +1,3 @@
+NoRules=There aren't rules.
+DisposeOf=Dispose of %s
+Add=Add %s

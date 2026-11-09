@@ -1,0 +1,15 @@
+[DefCore]
+id=ST_5
+Name=Rohr
+Category=2
+Width=19
+Height=14
+Offset=-12,-7
+Value=0
+Mass=10
+Picture=0,0,1,1
+PictureFE=0,0,1,1
+Vertices=1
+VertexX=-8
+VertexY=-1
+ 

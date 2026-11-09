@@ -1,0 +1,2 @@
+Der Turm verteidigt automatisch das umliegende Gebiet, wenn eine Waffe darauf installiert ist. Die Waffe kann jederzeit mit der Graben-Taste gewechselt werden.
+Hinweis: Beim Waffenwechsel gibt's für die alte Waffe nur 80% des Preises zurück.

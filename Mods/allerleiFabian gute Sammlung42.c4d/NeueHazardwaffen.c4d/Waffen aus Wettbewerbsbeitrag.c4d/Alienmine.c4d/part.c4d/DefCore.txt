@@ -1,0 +1,21 @@
+[DefCore]
+id=P__2
+Name=New Object
+Version=4,9,5
+Category=4
+MaxUserSelect=10
+Width=6
+Height=6
+Offset=-3,-3
+Value=10
+Mass=12
+Rotate=1
+Timer=50
+TimerCall=Remove
+Components=_NEW=1;
+Picture=6,0,64,64
+Vertices=1
+VertexY=1
+VertexFriction=20
+Rebuy=1
+ 

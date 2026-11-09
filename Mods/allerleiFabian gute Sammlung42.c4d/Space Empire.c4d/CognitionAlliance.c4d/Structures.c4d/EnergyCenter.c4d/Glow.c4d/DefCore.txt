@@ -1,0 +1,19 @@
+[DefCore]
+id=CLE1
+Name=battery glow
+Category=4
+MaxUserSelect=10
+Width=75
+Height=32
+Offset=-37,-16
+Value=10
+Mass=10
+Components=CLE1=1;
+Picture=1875,0,75,32
+Vertices=1
+VertexX=0
+VertexY=-13
+VertexFriction=100
+
+[Physical]
+Energy=100000

@@ -1,0 +1,13 @@
+[DefCore]
+id=SLTS
+Name=Scanner
+Version=4,9,5
+Category=2
+Width=20
+Height=9
+Offset=-10,-4
+Picture=140,0,20,9
+Vertices=1
+VertexX=0
+VertexY=-39
+ 

@@ -1,0 +1,7 @@
+Control=Bedienen
+Keycard=Hier passt eine Schlüsselkarte rein.
+OVERWRITE=Karte überschreiben
+OVERWRITE_DESC=Der Code der Karte wird mit dem des Kartenlesers überschrieben.
+VALID=gültige Karte
+SETCODE=Kartenleser überschreiben
+SETCODE_DESC=Der Code des Kartenlesers wird mit dem der Karte überschrieben.

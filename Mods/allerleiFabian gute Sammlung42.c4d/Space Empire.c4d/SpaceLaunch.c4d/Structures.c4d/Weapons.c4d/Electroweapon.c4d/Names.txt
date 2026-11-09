@@ -1,0 +1,2 @@
+DE:Elektrowaffe-Geschütz
+US:Tesla Coil

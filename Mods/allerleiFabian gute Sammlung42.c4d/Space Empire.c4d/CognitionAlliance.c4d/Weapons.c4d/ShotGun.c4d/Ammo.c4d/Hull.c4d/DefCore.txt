@@ -1,0 +1,13 @@
+[DefCore]
+id=CSH1
+Name=BulletHull1
+Category=4
+Width=3
+Height=3
+Offset=-1,-1
+Mass=2
+Components=CSH1=1;
+Picture=0,0,3,3
+TopFace=0,0,3,3
+Rotate=1
+ 

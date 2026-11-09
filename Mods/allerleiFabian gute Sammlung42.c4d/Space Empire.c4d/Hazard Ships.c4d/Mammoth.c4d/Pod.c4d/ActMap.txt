@@ -1,0 +1,7 @@
+[Action]
+Name=Attaching
+Procedure=ATTACH
+Directions=1
+FacetBase=1
+Delay=1
+NextAction=Attaching

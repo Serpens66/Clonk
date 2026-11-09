@@ -1,0 +1,19 @@
+[DefCore]
+id=_CB1
+Name=Cougarwrack
+Version=4,9,5
+Category=4
+MaxUserSelect=0
+Width=70
+Height=60
+Offset=-35,-30
+Value=50
+Mass=200
+ColorByOwner=0
+Components=METL=20;
+Vertices=5
+VertexX=3,27,16,-10,-35
+VertexY=19,11,-23 ,-5,7
+StretchGrowth=0 
+VertexFriction=100,100,100,100,100
+Rotate=1

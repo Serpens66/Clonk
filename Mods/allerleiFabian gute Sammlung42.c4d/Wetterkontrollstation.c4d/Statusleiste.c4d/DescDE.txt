@@ -1,0 +1,1 @@
+Die Statusleiste der WKS, sie zeigt die auf- und abladende Phase und die Dauer der Aktivität an.

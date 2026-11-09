@@ -1,0 +1,3 @@
+Alle Clonk-Typen des Ritterpacks.
+
+Erstmal nur für Bots, später vllt noch in Ausbildung integrieren.

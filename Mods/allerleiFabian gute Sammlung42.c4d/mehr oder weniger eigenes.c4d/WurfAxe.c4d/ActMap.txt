@@ -1,0 +1,17 @@
+[Action]
+Name=Depart
+Procedure=NONE
+FacetBase=1
+Length=1
+Delay=1
+EndCall=Departure2
+
+[Action]
+Name=Fly
+Procedure=NONE
+FacetBase=1
+Length=1
+Delay=1
+NextAction=Fly
+EndCall=Flug
+

@@ -1,0 +1,2 @@
+DE:Ausrichtungsmenü
+US:Challenge menu

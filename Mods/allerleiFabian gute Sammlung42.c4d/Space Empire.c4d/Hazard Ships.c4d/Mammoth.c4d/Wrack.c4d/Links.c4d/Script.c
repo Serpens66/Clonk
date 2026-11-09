@@ -1,0 +1,15 @@
+#strict
+
+func Initialize() {
+Incinerate();
+SetRDir(RandomX(-5,5));
+SetAction("Destroyed");
+return(1);
+}
+
+func Effects() {
+  if (Not(OnFire())) return(1);
+  Smoke(Sum(-20,Random(40)),Sum(-20,Random(10)),Sum(10,Random(20)));
+  if (GreaterThan(GetActTime(),1000)) Extinguish();
+  return(1);
+}

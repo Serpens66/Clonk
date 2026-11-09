@@ -1,0 +1,7 @@
+On=On
+Off=Off
+Water=Water
+Oil=Oil
+Lava=Lava
+Acid=Acid
+SaleOf=Sale of...

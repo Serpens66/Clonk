@@ -1,0 +1,1 @@
+Dieses Objekt enthält die Grundfunktionalität für die anfassbaren Gebäude ohne Tür.

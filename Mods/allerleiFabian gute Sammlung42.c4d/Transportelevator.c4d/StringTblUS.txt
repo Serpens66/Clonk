@@ -1,0 +1,2 @@
+TxtPermanentModeTurnOn=Permanent mode on
+TxtPermanentModeTurnOff=Permanent mode off

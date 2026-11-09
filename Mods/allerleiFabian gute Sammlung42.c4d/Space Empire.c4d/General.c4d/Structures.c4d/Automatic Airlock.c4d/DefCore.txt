@@ -1,0 +1,23 @@
+[DefCore]
+id=AIAL
+Version=4,9,5
+Name=Automatische Luftschleuse
+Category=2
+Width=40
+Height=35
+Offset=-20,-17
+Value=100
+Mass=1000
+Components=METL=1;GLAS=3;
+SolidMask=80,0,40,35
+TopFace=40,5,40,27,0,5
+Picture=0,0,40,35
+PictureFE=0,0,40,35
+Vertices=4
+VertexX=-20,20,-20,-20
+VertexY=-17,-17,17,17
+VertexFriction=100,100,100,100
+Construction=1
+HorizontalFix=1
+Exclusive=1
+ 

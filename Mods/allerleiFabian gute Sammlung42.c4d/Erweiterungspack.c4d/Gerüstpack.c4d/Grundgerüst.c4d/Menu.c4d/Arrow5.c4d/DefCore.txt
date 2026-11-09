@@ -1,0 +1,9 @@
+[DefCore]
+id=LMM5
+Name=MenuItemLoam5
+Version=4,9,1,3
+Category=1
+Width=1
+Height=1
+Picture=0,0,50,50
+ 

@@ -1,0 +1,2 @@
+DE:Gestorben
+US:Died

@@ -1,0 +1,2 @@
+Lässt tote Lebewesen langsam verwesen.
+Monster sondern Säure, und Feuermonster Lava beim Verwesen ab.

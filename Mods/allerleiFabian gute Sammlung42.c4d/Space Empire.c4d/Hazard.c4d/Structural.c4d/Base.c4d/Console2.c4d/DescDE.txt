@@ -1,0 +1,3 @@
+Steuert etwas.
+Bisher können Teleporter und Geschütze(Selbstschussanlange) hiermit konfiguriert werden.
+Auf "werfen" wird das Ziel ausgewähtl, welches eingestellt werden soll. Und auf "Graben" wird das vorher gewählte Ziel dann bedient.

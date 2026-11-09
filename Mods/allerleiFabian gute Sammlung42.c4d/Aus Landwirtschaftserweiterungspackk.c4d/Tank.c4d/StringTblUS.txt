@@ -1,0 +1,24 @@
+TxtSelectMaterial=Select liquid
+TxtNoMaterial=None
+TxtNoMaterialDesc=Don't store liquids!
+TxtMaterial=%s
+TxtMaterialDesc=Store %s in here.
+TxtSelectDirtyPipe=Select liquid separator pipe
+TxtNoDirtyPipe=None
+TxtNoDirtyPipeDesc=Disable liquid separator!
+TxtDirtyPipe=%s
+TxtDirtyPipeDesc=Select %s as target for liquid separator (Special to show the target)
+TxtSelectLimitPipe=Select overflow pipe
+TxtNoLimitPipe=None
+TxtNoLimitPipeDesc=Disable overflow!
+TxtLimitPipe=%s
+TxtLimitPipeDesc=Select %s as target for the overflow (Special to show the target)
+
+TxtEjectContent=Eject liquids
+TxtEjectContentDesc=Ejects all liquids.|WARNING: Can not be stopped!
+TxtNoEjection=Do not eject
+TxtNoEjectionDesc=Abort Process. Do not eject liquids.
+TxtNoEjectPipe=Eject here
+TxtNoEjectPipeDesc=Eject liquids here
+TxtEjectPipe=%s
+TxtEjectPipeDesc=Pump liquids to %s

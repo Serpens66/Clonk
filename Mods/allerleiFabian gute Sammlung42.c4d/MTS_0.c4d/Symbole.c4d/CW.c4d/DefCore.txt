@@ -1,0 +1,10 @@
+[DefCore]
+id=CWSY
+Name=Symbol CCW
+Category=1
+Width=44
+Height=44
+Offset=-22,-22
+Value=0
+Picture=0,0,44,44
+ 

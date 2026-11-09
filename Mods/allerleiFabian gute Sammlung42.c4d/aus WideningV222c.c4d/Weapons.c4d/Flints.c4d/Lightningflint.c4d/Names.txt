@@ -1,0 +1,2 @@
+DE:Blitzflint
+US:Lightningflint

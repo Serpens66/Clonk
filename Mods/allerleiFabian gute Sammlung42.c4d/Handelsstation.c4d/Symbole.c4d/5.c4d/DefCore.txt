@@ -1,0 +1,7 @@
+[DefCore]
+id=FIVE
+Name=Fünf
+Category=1
+Picture=0,0,34,34
+
+ 

@@ -1,0 +1,9 @@
+[DefCore]
+id=FFF9
+Name=Bäume pflanzen
+Category=524289
+Width=1
+Height=1
+Picture=0,0,35,35
+MaxUserSelect=20
+TimerCall=Seed

@@ -1,0 +1,27 @@
+[DefCore]
+id=CVFC
+Name=Vehicle Factory
+Version=4,9,5
+Category=1154
+MaxUserSelect=2
+Width=150
+Height=62
+Offset=-75,-31
+Value=500
+Mass=5000
+Components=METL=3;CRYS=1;WOOD=2;ROCK=2;CTIT=2;CALU=1;GLAS=1;
+Picture=0,62,120,64
+Vertices=6
+Entrance=25,6,32,26
+Exclusive=1
+VertexX=-74,-62,-28,42,73,74
+VertexY=30,-15,-31,-25,0,30
+VertexFriction=100,100,100,100,100,100
+LineConnect=39
+Construction=1
+ColorByOwner=1
+AttractLightning=1
+
+[Physical]
+Energy=100000
+ 

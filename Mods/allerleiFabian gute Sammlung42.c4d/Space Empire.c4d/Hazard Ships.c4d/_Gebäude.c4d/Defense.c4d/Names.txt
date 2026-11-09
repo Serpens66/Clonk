@@ -1,0 +1,2 @@
+DE:Verteidigungsanlage
+US:Defensebunker

@@ -1,0 +1,2 @@
+Versorgt jeden Clonk mit zusätzlicher Atemluft. 
+Ist nach etwas Zeit unter Wasser leer, füllt sich an Land aber selbstständig langsam wieder auf.

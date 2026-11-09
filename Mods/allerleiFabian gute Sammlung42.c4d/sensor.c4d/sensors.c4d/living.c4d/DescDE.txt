@@ -1,0 +1,7 @@
+Spürt Leben auf!
+
+Unterstützte Dinge aller Dinge des Sensorenpacks:
+Haubitze, Katapult, Luke, Große Luke, Geschützturm(teilweise), Fahrstuhl,Pumpe, Bohrturm, Tor, Wachturm (alt und neu), alle Eingänge ab-/aufschließen, neue Geschütze an den vorgesehenen Gebäuden anbringen.
+In einem Basisgebäude können die Sensoren über das Kontextmenü abgenommen werden, falls man nicht mehr dran kommt.
+
+Automatisches Zielen funktioniert aktuell nicht.

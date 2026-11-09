@@ -1,0 +1,4 @@
+Aktiviert zu Spielstart den computergesteuerterten Händler. Er bietet alle möglichen Waren zum Verkauf an und kauft auch bei Spielern - wenn der Preis stimmt.
+Je häufiger aktiviert, desto günstiger sind seine Waren.
+
+(besser nicht nutzen. stattdessen entscheiden, ob Regel "KI Händler NICHT erforschbar" aktiviert werden soll. Wenn diese nicht aktiv ist, kann der KI händler im laufe des spiels erforscht werden)

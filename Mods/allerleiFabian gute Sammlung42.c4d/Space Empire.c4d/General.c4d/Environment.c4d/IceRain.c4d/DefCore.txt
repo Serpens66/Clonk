@@ -1,0 +1,10 @@
+[DefCore]
+id=_ICR
+Name=IceRain
+Version=4,9,5
+MaxUserSelect=10
+Value=1
+Category=524289
+Picture=12,12,39,39
+TimerCall=DoMeteors
+Timer=10

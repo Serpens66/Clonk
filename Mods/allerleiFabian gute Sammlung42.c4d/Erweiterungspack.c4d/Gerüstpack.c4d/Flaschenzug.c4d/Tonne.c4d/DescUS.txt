@@ -1,0 +1,3 @@
+A small transporter that can be hooked onto the pulley block's hook.  It is also enterable, so that you can transport clonks if need be.
+
+Graphics from the Helipack (Robert Hierl).

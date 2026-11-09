@@ -1,0 +1,8 @@
+[Action]
+Name=Fading
+Procedure=NONE
+Length=1
+Delay=12
+FacetBase=1
+NextAction=Fading
+EndCall=EventFadeOut

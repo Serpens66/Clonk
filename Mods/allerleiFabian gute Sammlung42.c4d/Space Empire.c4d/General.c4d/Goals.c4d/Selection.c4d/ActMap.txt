@@ -1,0 +1,6 @@
+[Action]
+Name=Remind
+Procedure=NONE
+Delay=5000
+EndCall=Remind
+NextAction=Remind

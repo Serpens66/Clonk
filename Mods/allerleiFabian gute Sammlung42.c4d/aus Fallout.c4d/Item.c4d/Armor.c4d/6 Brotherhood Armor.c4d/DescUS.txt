@@ -1,0 +1,8 @@
+Made of Combat Armor Mark 2, Line kit, 2 Oil and 1 Acid Barrel.|
+Cost - 155. Mass - 25.|
+Normal 40% |
+Laser 70% |
+Fire 50% |
+Plasma 60% |
+Explosion 40% |
+Electric 60% |

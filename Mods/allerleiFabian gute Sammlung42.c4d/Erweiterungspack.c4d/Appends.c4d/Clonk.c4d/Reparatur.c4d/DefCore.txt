@@ -1,0 +1,11 @@
+[DefCore]
+id=REPA
+Name=Symbol
+Version=4,9,5
+Category=8388609
+Width=32
+Height=32
+Offset=-16,-16
+Picture=0,0,32,32
+TimerCall=Fading
+Timer=5

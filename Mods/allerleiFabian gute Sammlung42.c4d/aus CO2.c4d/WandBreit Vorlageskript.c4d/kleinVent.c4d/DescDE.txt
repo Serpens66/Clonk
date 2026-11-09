@@ -1,0 +1,4 @@
+Dekorationsobjekt.
+Belüftet muffige Stationskomplexe.
+
+Animation funzt nicht, wegen verkleinerung..deswegen erstmal deaktiviert

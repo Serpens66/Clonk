@@ -1,0 +1,3 @@
+PutOn=Anziehen
+AlreadyHasSuit=%s trägt bereits|einen Taucheranzug!
+PutOnSuit=Taucheranzug angezogen.

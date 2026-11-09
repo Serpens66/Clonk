@@ -1,0 +1,11 @@
+[DefCore]
+id=CL22
+Version=4,9,8
+Name=Coldness
+Category=C4D_Living
+Width=7
+Height=8
+Offset=-3,-20
+Picture=0,0,7,16
+NoGet=1
+NoSell=1

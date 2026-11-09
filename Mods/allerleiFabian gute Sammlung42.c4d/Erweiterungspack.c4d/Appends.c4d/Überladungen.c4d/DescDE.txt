@@ -1,0 +1,3 @@
+Die Objekte in diesem Ordner überladen einige bereits bestehende Objekte.
+
+Die Überladungen könnten häufig erspart werden, wenn es "#appentoDefCore" geben würde. :'(

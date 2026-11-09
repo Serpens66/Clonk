@@ -1,0 +1,2 @@
+Wenn aktiviert, sind Gebäude sofort und ohne Ressourcen fertig gebaut, nachdem man zu bauen anfängt.
+Für teilweisen Sofortbau die variable Regel Baustellenboost nehmen.

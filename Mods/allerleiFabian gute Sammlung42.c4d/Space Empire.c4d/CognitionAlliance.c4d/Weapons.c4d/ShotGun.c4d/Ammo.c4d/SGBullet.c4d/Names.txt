@@ -1,0 +1,2 @@
+DE:Gewehrkugel
+US:shotgunbullet

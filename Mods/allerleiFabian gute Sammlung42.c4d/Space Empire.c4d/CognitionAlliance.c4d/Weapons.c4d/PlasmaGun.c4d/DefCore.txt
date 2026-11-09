@@ -1,0 +1,19 @@
+[DefCore]
+id=CWPG
+Name=PlasmaGun
+Category=16
+MaxUserSelect=10
+Width=24
+Height=6
+Offset=-12,-3
+Value=60
+Mass=30
+Components=CALU=3;CTIT=2;CRYS=2
+Picture=24,0,100,80
+Vertices=3
+VertexX=8,-1,-8
+VertexY=3,-3, 3
+VertexFriction=100,100,100
+Rebuy=1
+Collectible=1
+ 

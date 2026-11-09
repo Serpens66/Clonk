@@ -1,0 +1,5 @@
+*bibber*
+*schwitz*
+
+In dem Objekt "Umweltschutz" wird je nach Temperatur "Warning()" oder "WarningX()" für alle Clonks im freien und ohne Schutz aktiviert.
+Sofern die Regel "tödliche Temperaturen" eingeschaltet ist.

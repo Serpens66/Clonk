@@ -1,0 +1,3 @@
+ENEMYS=Enemies
+ALLIED=Allies
+ANIMALS=Animals

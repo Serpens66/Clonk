@@ -1,0 +1,1 @@
+Das Maschinengewehr verhält sich je nach Siege Ammo Munition anders, die Explosiv-Munition feuert z.B. präzise Salven.

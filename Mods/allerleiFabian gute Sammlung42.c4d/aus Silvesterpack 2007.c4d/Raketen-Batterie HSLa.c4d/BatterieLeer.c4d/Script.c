@@ -1,0 +1,4 @@
+/*-- Batterie --*/
+
+#strict
+

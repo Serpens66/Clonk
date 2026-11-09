@@ -1,0 +1,8 @@
+Made of Metal Armor and 2 Metall.|
+Cost - 115. Mass - 35.|
+Normal 30% |
+Laser 75% |
+Fire 10% |
+Plasma 20% |
+Explosion 25% |
+Electric 0% |

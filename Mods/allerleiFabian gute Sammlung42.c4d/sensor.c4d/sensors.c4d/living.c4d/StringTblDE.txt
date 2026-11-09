@@ -1,0 +1,3 @@
+ENEMYS=feindliche Clonks
+ALLIED=befreundete Clonks
+ANIMALS=Tiere

@@ -1,0 +1,6 @@
+Standard=Einzelschuss
+Erweitert=Zwei Ladekammern
+
+KRFLUpgradeDesc=Erweitert das Ultra-Scharfschützengewehr mit einer zweiten Ladekammer. 
+
+KRFLUpgraded=Zweite Ladekammer eingebaut!

@@ -1,0 +1,2 @@
+Es werden wichtige Maßnahmen zur stärkung der Umwelt getroffen. Ihre Belastbarkeit wird um den Faktor 2,5/Spieleranzahl erhöht! (also insg. um den Faktor 2,5 wenn alle spieler dies erforscht haben).
+Zudem wachsen direkt nach der Erforschung einige neue Bäume, sofern noch Platz. (Um jeden bereits vorhandenen Baum, wachsen 2 neue Bäume)

@@ -1,0 +1,2 @@
+DE:Abwehrturm
+US:defense-tower

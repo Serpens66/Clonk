@@ -1,0 +1,2 @@
+Wenn aktiviert, bilden sich bei Regen KEINE Wolken, sondern die Tropfen kommen sozusagen aus dem Nichts.
+Dadurch läuft das Spiel eventuell stabiler.

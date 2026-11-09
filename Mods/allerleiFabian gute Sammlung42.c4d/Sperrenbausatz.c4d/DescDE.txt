@@ -1,0 +1,3 @@
+Mit einem Sperrenbausatz kann man eine Schachtsperre in einen Fahrstuhlschacht bauen.
+Außerdem ist die Sperre Wasserdicht und besitzt Anschlüsse die es erlauben, Energie durch die Sperre zu leiten. Es gibt auch noch Anschlüsse für Flüssigkeitstransporte: An den Roten können Abflußrohre einer Pumpe angeschlossen werden, die dann als zuleitung dienen.An den Blauen neue Leitungen die als Abflüsse dienen. Die Anschlüsse auf der rechten Seite(Grau) sind für Energie.
+Die Anschlüsse auf der linken Seite(2x Rot & Blau) für flüssigkeiten. Das Rechte Pärchen leitet Flüssigkeiten nach unten(Öl für kraftwerk), das Linke nach oben(Wasser aus Bergbauschächten).

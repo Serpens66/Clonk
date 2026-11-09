@@ -1,0 +1,1 @@
+If the last clonk of a player dies, it will be left a bag with the whole money of the player.

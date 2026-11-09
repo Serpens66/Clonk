@@ -1,0 +1,5 @@
+OnlyOneClonk=Es kann nur ein Clonk|in der Tonne sein!
+MustBeEmpty=Tonne muss leer sein!
+Full=Tonne ist voll!
+Hook=Einhaken
+Unhook=Aushaken

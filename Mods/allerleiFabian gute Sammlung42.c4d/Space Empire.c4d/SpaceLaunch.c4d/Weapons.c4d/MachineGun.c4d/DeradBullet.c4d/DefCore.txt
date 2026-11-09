@@ -1,0 +1,14 @@
+[DefCore]
+id=SMG3
+Name=MGshot
+Version=4,9,1,4
+Category=4
+Width=7
+Height=3
+Offset=-3,-1
+Mass=1
+Components=SMG3=1;
+Picture=0,0,7,3
+Vertices=1
+VertexFriction=1
+ 

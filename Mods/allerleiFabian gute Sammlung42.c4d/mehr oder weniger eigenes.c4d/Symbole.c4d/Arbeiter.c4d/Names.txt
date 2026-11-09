@@ -1,0 +1,3 @@
+DE:Arbeiter
+US:Brotherhood Armor
+RU:Броня Братства

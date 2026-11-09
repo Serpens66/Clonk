@@ -1,0 +1,1 @@
+Wenn ein Clonk stirb, wird ein neuer Clonk an einem zufälligen Ort relauncht.

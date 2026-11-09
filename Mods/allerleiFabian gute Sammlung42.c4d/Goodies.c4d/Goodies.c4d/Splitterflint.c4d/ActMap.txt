@@ -1,0 +1,13 @@
+[Action]
+Name=JumpingUp
+Procedure=NONE
+Length=1
+Delay=30
+Facet=0,6,6,6
+NextAction=Exploding
+StartCall=None
+
+[Action]
+Name=Exploding
+Procedure=NONE
+StartCall=Exploding

@@ -1,0 +1,11 @@
+[Action]
+Name=Activated
+Delay=185
+FacetBase=1
+NextAction=TimeOver
+
+[Action]
+Name=TimeOver
+FacetBase=1
+StartCall=Boom
+ 

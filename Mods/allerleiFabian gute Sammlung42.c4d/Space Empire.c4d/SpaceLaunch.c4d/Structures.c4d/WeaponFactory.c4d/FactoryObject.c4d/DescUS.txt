@@ -1,0 +1,2 @@
+Component of the weapon factory:
+Production and storing of unfinished objects.

@@ -1,0 +1,3 @@
+Absolut verbuggt bei Verwendung mit Fahrzeugen. Der andere Fahrstuhl geht wenigstens manchmal, aber dieser hier garnicht... obwohl beide dassselbe skript nutzen.
+
+Leistungsfähiger Transporter für vertikale Schächte, ausgerüstet mit einem HighTech-Bohrsystem.

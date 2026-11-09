@@ -1,0 +1,2 @@
+Bauteil für Waffen.
+Der Schaft ist ein Bauteil eines Gewehrs, welches entweder alle Hauptbaugruppen miteinander verbindet oder aber rein als Griffmoglichkeit und Schulterstutze dient.

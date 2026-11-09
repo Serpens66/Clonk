@@ -1,0 +1,6 @@
+TxtHorizontal=Geradeaus schauen
+TxtUp=Nach oben schauen
+TxtDown=Nach unten schauen
+TxtDiagUp=Nach mit-oben schauen
+TxtDiagDown=Nach mit-unten schauen
+TxtUseTelescope=Fernrohr benutzen

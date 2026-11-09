@@ -1,0 +1,2 @@
+DE:Bohranlage
+US:Automatic Derrick

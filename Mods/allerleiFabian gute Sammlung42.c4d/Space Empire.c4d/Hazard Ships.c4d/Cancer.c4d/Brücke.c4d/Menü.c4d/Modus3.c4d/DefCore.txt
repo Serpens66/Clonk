@@ -1,0 +1,6 @@
+[DefCore]
+id=CB_3
+Name=Schadensbericht
+Category=1
+Picture=0,0,35,35
+ 

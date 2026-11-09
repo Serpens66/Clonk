@@ -1,0 +1,4 @@
+TxtSleep=Schlafen?
+TxtWakeUp=%s aufwecken
+TxtYes=Ja, %s
+TxtAtLeastOneClonk=Es muss mindestens ein Clonk wach bleiben.

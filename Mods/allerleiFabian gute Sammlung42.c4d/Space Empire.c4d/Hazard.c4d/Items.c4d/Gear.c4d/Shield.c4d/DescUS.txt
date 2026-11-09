@@ -1,0 +1,2 @@
+A shield generator for a single person. Use it by pressing double dig.
+It shields only but effectively against energy weapons.

@@ -1,0 +1,4 @@
+Nahrungsbedarf: 	200%
+Forschungskosten:	100%
+Revolutionszeit:  	150%
+Verschmutzung:  	150%

@@ -1,0 +1,2 @@
+Hilfsobjekt für die Verbrennung von Müll oder allgemein aktivität von Industriegebäuden. 
+Es erzeugt ein Hintergrundobjekt, welches für eine gewisse Zeit stärker zur Umweltverschmutzung beiträgt, aber dann komplett verschwindet.

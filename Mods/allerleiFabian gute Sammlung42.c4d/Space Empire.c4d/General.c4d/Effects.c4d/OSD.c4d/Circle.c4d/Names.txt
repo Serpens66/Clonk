@@ -1,0 +1,2 @@
+DE:OSD-Kreis
+US:OSD Circle

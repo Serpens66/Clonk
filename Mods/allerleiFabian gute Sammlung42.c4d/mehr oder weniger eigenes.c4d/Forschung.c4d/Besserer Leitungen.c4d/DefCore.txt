@@ -1,0 +1,8 @@
+[DefCore]
+id=IMLO
+Name=Verbesserte Leitungen
+Version=4,9,5
+Value=1
+Category=1040
+Picture=0,0,36,32
+MaxUserSelect=1

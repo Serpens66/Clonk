@@ -1,0 +1,16 @@
+[DefCore]
+id=BA35
+Name=Basement
+Category=2
+Width=35
+Height=8
+Offset=-17,-4
+Value=1
+Mass=10
+Components=ROCK=2;
+SolidMask=0,0,35,8,0,0
+Vertices=2
+VertexX=-16,16
+VertexY=-5,-5
+VertexFriction=100,100
+Construction=1

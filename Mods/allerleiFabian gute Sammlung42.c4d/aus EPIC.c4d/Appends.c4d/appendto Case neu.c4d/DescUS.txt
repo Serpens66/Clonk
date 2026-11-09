@@ -1,0 +1,1 @@
+Appendto to make it possible for elevator to drop its case when cables are cut off.

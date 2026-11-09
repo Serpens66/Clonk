@@ -1,0 +1,5 @@
+[DefCore]
+id=STPO
+Name=PlayerOffers
+Category=1
+Picture=0,0,1,1

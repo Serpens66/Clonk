@@ -1,0 +1,10 @@
+[DefCore]
+id=SNOR
+Name=Snow-Rule
+Version=4,9,1,4
+Value=1
+Category=65
+MaxUserSelect=1
+Picture=0,0,64,64
+TimerCall=Snowing
+Timer=6

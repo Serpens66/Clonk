@@ -1,0 +1,2 @@
+DE:MG-Munition
+US:MG-Munition

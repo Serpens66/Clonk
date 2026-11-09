@@ -1,0 +1,2 @@
+DE:Plasmaschuss
+US:Plasmashot

@@ -1,0 +1,17 @@
+[Action]
+Name=Travel
+Procedure=FLOAT
+NextAction=Travel
+FacetBase=1
+Length=1
+Delay=1
+StartCall=Traveling
+
+[Action]
+Name=Attaching
+Procedure=ATTACH
+NextAction=Attaching
+FacetBase=1
+Length=1
+Delay=30
+StartCall=Eat

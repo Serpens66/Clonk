@@ -1,0 +1,2 @@
+A gate.
+Can be controlled with sensors!

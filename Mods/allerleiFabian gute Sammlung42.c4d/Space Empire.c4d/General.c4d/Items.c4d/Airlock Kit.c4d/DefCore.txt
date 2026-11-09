@@ -1,0 +1,20 @@
+[DefCore]
+id=AILK
+Version=4,9,5
+Name=Luftschleusen Bausatz
+Category=3600
+MaxUserSelect=10
+Width=8
+Height=6
+Offset=-4,-3
+Value=15
+Mass=15
+Components=GLAS=3;METL=1;
+Picture=8,0,80,60
+PictureFE=8,0,80,60
+Vertices=1
+VertexY=1
+VertexFriction=50
+Rebuy=1
+Collectible=1
+ 

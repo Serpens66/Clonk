@@ -1,0 +1,68 @@
+Die Träger der Tucan Klasse stellen das Rückgrat jeder größeren Luftstreitmacht dar. Ihre Jäger leisten Aufklärung, Geleitschutz, können Offensivaktionen durchführen und BodenTruppen decken.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, somit lassen sich die einzelnen Teile des Schiffes begehen: die Brücke, die MGs, der Hangar und das Arsenal.
+
+Brücke:
+
+-Die Steuerung der Antriebssysteme erfolgt einzig und allein von der Brücke aus.
+
+-Die Höhenregulierung erfolgt per [Auf] und [Ab], die Steuerung des Horizontaltriebwerks über [Rechts] und [Links].
+
+-Um das Schiff zu stoppen per Kontextmenü den Schwebemodus aktivieren, es werden dann alle Triebwerke außer dem Antigrav booster heruntergefahren.
+
+Waffensysteme:
+
+-Der Tucan verfügt über 2 Bord-MGs in den Kanzeln sowie 3 Andockstationen für Predatorjäger, standardmäßig sind hiervon 2 besetzt.
+
+-Über das Kontextmenü können die einzelnen Schützenpositionen begangen werden. Die Waffensteuerung erscheint dann jeweils im Inventar.
+
+-Die Kanzel-MGs werden dann via [Werfen] durchgeladen und im geladenen Zustand abgefeuert.
+
+-Das Schwenken der Geschütze geschieht mittels [Rechts] und [Links], der Servomotor wird mittels [Oben] und [Unten] gestoppt.
+
+Hangar:
+
+-Nach betreten des Hangars wird über [Graben] die Dockauswahl getroffen. Grün bedeutet Jäger gedockt und 100% funktional. Gelb - Jäger gedockt, jedoch beschädigt. Rot - Andockstation leer. Es kann außerdem die Startrichtung eingestellt werden.
+
+-Im Menü der Dockstation lässt sich nun ein Statusbericht abfragen, der Jäger betreten und Starten, ein neuer Jäger Asemblieren oder gelandete Jäger Einladen.
+
+-Jäger lassen sich auch mit einer KI ausstatten und dann starten, um so Truppenverluste zu minimieren.
+
+-Verlassen über doppelt-[Unten].
+
+Arsenal:
+
+-Hier können sich Piloten mit Munition bestücken.
+
+-Mittels [Graben] gelangt man in das Kaufmenü. Es können dort 100 Projektile bzw. 3 Raketen zum Preis von Clunkern gekauft werden.
+
+-Verlassen über doppelt-[Unten].
+
+Notfallrettungssystem:
+
+-Falls die Cougar übermäßigen Strukturschaden genommen haben sollte wird alle verfügbare Energie in das Antigrav-Boostertriebwerk gespeist. Dies führt zu einem gebremsten freien Fall, der es der geschulten Mannschaft ermöglicht rechtzeitig abzuspringen.
+
+
+
+Anmerkungen:
+
+-Gedockte Predatoren werden automatisch repariert, wobei Dock1 die höchste Priorität hat, Dock3 die geringste.
+
+-Die Tucan ist unterwassertauglich, die Predatoren nicht. Sie kann also zum sicheren nautischem Transport eines Predatorgeschwaders genutzt werden.
+
+-Aufgrund seiner Calamari-Phasenpanzerung ist der Tucan EMP-Fest und somit für Einsätze in Ionenstürmen geeignet.
+
+-Der Tucan sollte immer in Vollbesetzung geflogen werden (2 Kanoniere, 1 Steuermann, 2 Piloten), um höchste Kampfkraft und Effizienz zu gewährleisten.
+
+-Falls der Tucan einen Strukturschaden von über 90% aufweist ist sollte über eine Notlandung nachgedacht werden (Explosionsgefahr).
+
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

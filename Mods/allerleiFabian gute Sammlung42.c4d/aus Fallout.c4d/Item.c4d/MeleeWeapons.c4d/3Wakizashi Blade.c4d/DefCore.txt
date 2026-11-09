@@ -1,0 +1,22 @@
+[DefCore]
+id=SW03
+Version=4,9,5
+Name=Wakizashi Blade
+Category=3600
+MaxUserSelect=10
+Width=10
+Height=8
+Offset=-5,-4
+Value=80
+Mass=15
+Components=METL=3;ABRL=3;OBRL=1;
+Picture=10,0,75,53
+Vertices=2
+VertexX=-5,5
+VertexY=4,-4
+VertexFriction=40,40
+Rebuy=1
+Collectible=1
+Rotate=1
+Timer=10
+TimerCall=Ticking

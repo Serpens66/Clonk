@@ -1,0 +1,3 @@
+In den variablen Einstellungen werden die Chancen für das zurückbekommen eines Bausatzes bzw. der Baustoffe bei Abriss eines Gebäudes eingestellt.
+
+Bringt nichts es außerhalb der variablen Einstellungen zu aktivieren.

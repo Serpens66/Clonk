@@ -1,0 +1,3 @@
+A medium bomb with a 3-second-timer.
+
+Activate with double-dig and throw it away.

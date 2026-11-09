@@ -1,0 +1,14 @@
+[Particle]
+Name=PlasmaSpark
+MaxCount=200
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+CollisionFn=Die
+Face=0,0,1,1,0,0
+Delay=100
+Repeats=1
+GravityAcc=50
+VertexCount=1
+AlphaFade=8
+Additive=1

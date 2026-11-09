@@ -1,0 +1,2 @@
+Baugrafik sichtbar vorm Bau von JimiRaynor.
+appendto deaktiviert und script in objekt bausatz geschrieben.

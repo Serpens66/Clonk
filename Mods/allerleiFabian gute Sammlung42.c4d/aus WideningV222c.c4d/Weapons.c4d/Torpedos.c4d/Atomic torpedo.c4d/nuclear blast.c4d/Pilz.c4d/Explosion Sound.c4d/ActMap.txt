@@ -1,0 +1,10 @@
+[Action]
+Name=FADE_OUT
+Procedure=NONE
+NextAction=FADE_OUT
+StartCall=fade_out
+Delay=1
+Length=1
+Sound=Nuke1
+Facet=0,0,0,0
+

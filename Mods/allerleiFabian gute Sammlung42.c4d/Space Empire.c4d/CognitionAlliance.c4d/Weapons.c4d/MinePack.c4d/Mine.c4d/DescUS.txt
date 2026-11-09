@@ -1,0 +1,1 @@
+A simple mine. Throw it on the ground for activation. An EMP discharges it.

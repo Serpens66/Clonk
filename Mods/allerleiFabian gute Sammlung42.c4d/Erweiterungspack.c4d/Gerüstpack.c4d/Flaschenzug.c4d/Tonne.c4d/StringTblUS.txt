@@ -1,0 +1,5 @@
+OnlyOneClonk=It can be only one Clonk|in the Container!
+MustBeEmpty=Container must be empty!
+Full=Container is full!
+Hook=Hook
+Unhook=Unhook

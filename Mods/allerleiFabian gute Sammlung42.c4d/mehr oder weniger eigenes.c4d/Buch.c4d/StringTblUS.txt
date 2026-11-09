@@ -1,0 +1,3 @@
+TxtObject=Knowledge collection about the coal tower and the pertinent objects...
+TxtEmptyBook=The book is empty.
+MsgGuidance=Can be pressed in the coal tower to compressed green material.

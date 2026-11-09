@@ -1,0 +1,2 @@
+Hook=%s einhaken
+Unhook=%s aushaken

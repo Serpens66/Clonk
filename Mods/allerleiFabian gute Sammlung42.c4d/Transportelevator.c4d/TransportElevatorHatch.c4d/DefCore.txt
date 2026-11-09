@@ -1,0 +1,27 @@
+[DefCore]
+id=BEKP
+Name=Transportelevatorklappe
+Version=4,9,5
+Category=1154
+MaxUserSelect=2
+Width=132
+Height=8
+Offset=-66,-4
+Value=125
+Mass=150
+Components=WOOD=4;METL=1;
+Picture=26,0,80,8
+Vertices=2
+VertexX=-41, 41
+VertexY=  2,  2
+VertexFriction=50,50
+BlastIncinerate=75
+Construction=1
+TopFace=0,0,132,8
+HorizontalFix=1
+Timer=1
+TimerCall=Timerr
+
+[Physical]
+Energy=100000
+ 

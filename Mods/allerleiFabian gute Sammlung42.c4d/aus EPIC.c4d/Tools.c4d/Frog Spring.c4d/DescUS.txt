@@ -1,0 +1,1 @@
+Use this to jump over obstacles, and jump into bases. Does NOT take fall damage when using this, but still can be hurt by jumping INTO walls and cealings.

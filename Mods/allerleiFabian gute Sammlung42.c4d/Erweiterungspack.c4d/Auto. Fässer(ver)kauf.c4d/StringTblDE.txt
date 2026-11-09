@@ -1,0 +1,7 @@
+On=Ein
+Off=Aus
+Water=Wasser
+Oil=Öl
+Lava=Lava
+Acid=Säure
+SaleOf=Verkauf von...

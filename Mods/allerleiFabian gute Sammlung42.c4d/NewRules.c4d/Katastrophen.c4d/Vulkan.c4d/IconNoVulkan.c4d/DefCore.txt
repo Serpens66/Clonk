@@ -1,0 +1,5 @@
+[DefCore]
+id=_NOU
+Name=Icon
+Category=1
+Picture=0,0,32,30

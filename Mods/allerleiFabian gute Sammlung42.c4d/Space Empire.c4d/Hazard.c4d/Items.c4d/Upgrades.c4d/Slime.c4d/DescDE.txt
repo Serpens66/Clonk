@@ -1,0 +1,6 @@
+Mit diesem Aufsatz können einige Waffen den Bioschleim der Aliens selber verschießen.
+Verbessert werden können:
+-Sturmpistole
+-Granatenwerfer
+-Flammenwerfer
+-Minigun

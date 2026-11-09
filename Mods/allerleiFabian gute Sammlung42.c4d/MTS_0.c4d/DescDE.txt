@@ -1,0 +1,53 @@
+V.1.0: Christoph Bultman(Urauthor)
+V.1.1: Kevin Porebski aka JimiRaynor
+
+Das MagnetTransportSystem ist als eine Ergänzung des beliebten SpaceLaunch-Packs konzipiert.
+Zur Installation einfach in den SL-Ordner kopieren, das MTS ist dann in jedem SL-Szenario
+verfügbar. 
+
+Enthalten in V.1.0:
+---------------------------
+-Magnetsphäre
+-Weiche
+-Bahnhof
+
+Enhalten in V.1.1
+---------------------------
+-alles auf SE Stand gebracht
+-im Banhof können Feldweichen gebaut werden
+-im Bahnhof können Feldweichen gedreht werden
+-Sphären finden jetzt öfter Weichen
+-Weichen haben ein neuen Look
+-36 Weicheneinstellungen
+-schnellere Sphären
+
+Enhalten in V.1.1a
+---------------------------
+-Bug behoben für mehrere Spieler
+-Bessere Schrift
+-Bisschen übersichtlicher hoffe ich :)
+
+Enhalten in V.1.1b
+---------------------------
+-Sphäre noch schneller gemacht um genauere Resultate zu erhalten
+-neue 4.Strecke hinzugefügt
+
+Enhalten in V.1.1c
+---------------------------
+-Sphären fliegen perfekt(oder nahezu)
+-kleinen Sound Bug behoben
+-Nachrichten sind nur noch für einen selber sichtbar
+-Hilfsobjekte sind nur noch für einen selbst sichtbar
+-Feldweichen geben keine Siedlungspunkte mehr
+
+Enhalten in V.1.1d
+---------------------------
+-Regel für unendliche magnetische Energie
+
+Enhalten in V.1.1e
+---------------------------
+-Fehler behoben bei Streckenwechsel
+-beim Streckenwechsel wird nochmal angedockt(nicht einfach weiter geflogen)
+
+
+

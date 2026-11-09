@@ -1,0 +1,11 @@
+[DefCore]
+id=SEL1
+Name=Selection
+Version=4,9,5
+Category=8388609
+Width=320
+Height=120
+Offset=-160,-60
+Picture=0,0,320,120
+Vertices=1
+ 

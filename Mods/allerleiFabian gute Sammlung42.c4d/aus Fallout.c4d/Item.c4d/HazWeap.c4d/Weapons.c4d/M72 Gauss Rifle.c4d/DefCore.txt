@@ -1,0 +1,18 @@
+[DefCore]
+id=SC_2
+Name=M72 Gauss Rifle
+Version=4,9,5
+Category=3600
+MaxUserSelect=5
+Width=26
+Height=6
+Offset=-14,-3
+Value=260
+Mass=9
+Components=WC_0=6;WC_1=1;WC_2=1;WC_3=3;
+Picture=0,7,170,50
+Vertices=1
+VertexY=+2
+VertexFriction=100
+Rebuy=1
+Collectible=1

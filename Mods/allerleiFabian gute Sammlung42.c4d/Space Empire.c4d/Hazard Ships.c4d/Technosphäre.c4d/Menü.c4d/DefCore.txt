@@ -1,0 +1,6 @@
+[DefCore]
+id=A56B
+Name=Modus
+Category=1
+Picture=0,0,35,35
+ 

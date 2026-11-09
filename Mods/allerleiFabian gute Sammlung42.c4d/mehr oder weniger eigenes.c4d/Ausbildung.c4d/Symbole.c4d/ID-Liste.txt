@@ -1,0 +1,15 @@
+ID-Liste der Symbole
+
+S__1	=	Schwimmen
+S__2	=	Atem
+S__3	=	Erfahrung
+S__4	=	Gestorben
+S__5	=	Alter
+S__6	=	Gespielte Runden
+S__7	=	Clonk
+S__8	=	Spieler
+S__9	=	Zurück
+S_10	=	Klettern
+S_11	=	Hangeln
+S_12	=	Kämpfen
+S_13	=	Zaubern

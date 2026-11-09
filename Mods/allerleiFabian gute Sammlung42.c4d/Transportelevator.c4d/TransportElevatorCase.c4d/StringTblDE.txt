@@ -1,0 +1,10 @@
+TxtDown=Abwärts
+TxtUp=Aufwärts
+TxtStop=Anhalten
+TxtPutGet=Ablegen/Nehmen
+TxtDrillshaft=Schachbohrung
+TxtPermanentmode=Dauerbetrieb
+TxtPermanentmodeon=Dauerbetrieb eingeschaltet
+TxtPermanentmodeoff=Dauerbetrieb ausgeschaltet
+TxtPermanentModeTurnOn=Dauerbetrieb ein
+TxtPermanentModeTurnOff=Dauerbetrieb aus

@@ -1,0 +1,26 @@
+[DefCore]
+id=CHBB
+Name=Verbrannte Köhlerei
+Category=2
+Width=63
+Height=52
+Offset=-31,-26
+Value=35
+Mass=2000
+Components=ROCK=5;WOOD=3;
+Picture=0,0,63,52
+Vertices=4
+VertexX=-27,27,-30,29
+VertexY=-4,-2,25,25
+VertexFriction=50,50,100,100
+Entrance=-9,10,20,16
+Collection=-7,-12,26,11
+Exclusive=1
+BlastIncinerate=50
+Construction=1
+ConstructTo=CHBU
+Grab=1
+Rotate=1
+
+[Physical]
+Energy=100000

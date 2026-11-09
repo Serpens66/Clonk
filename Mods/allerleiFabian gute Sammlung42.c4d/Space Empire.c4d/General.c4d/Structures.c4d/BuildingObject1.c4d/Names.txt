@@ -1,0 +1,2 @@
+DE:Gebäude-Objekt
+US:Building Object

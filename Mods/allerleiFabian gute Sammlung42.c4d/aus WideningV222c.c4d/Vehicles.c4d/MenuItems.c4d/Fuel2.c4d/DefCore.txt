@@ -1,0 +1,11 @@
+[DefCore]
+id=8P2A
+Name=MenuItem
+Category=1
+Width=35
+Height=35
+Offset=-17,-17
+Value=0
+Mass=0
+Picture=0,0,35,35
+ 

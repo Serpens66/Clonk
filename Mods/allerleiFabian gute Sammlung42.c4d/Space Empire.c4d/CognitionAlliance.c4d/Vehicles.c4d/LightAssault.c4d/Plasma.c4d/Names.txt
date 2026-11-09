@@ -1,0 +1,2 @@
+DE:Plasmawaffe
+US:Plasma weapon

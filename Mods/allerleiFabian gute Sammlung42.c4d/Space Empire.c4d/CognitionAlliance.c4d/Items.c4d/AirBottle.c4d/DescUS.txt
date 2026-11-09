@@ -1,0 +1,1 @@
+Gives the clonk an extra amount of breath. Filles itself outside of the water.

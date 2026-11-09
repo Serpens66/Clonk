@@ -1,0 +1,2 @@
+DE:Hand Grenade
+US:Hand Grenade

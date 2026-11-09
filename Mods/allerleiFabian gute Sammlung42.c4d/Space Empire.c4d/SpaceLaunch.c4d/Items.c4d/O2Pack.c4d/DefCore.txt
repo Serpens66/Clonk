@@ -1,0 +1,20 @@
+[DefCore]
+id=SO2P
+Name=O2Pack
+Version=4,9,5
+Category=16
+MaxUserSelect=5
+TimerCall=CheckBreath
+Components=CALU=2; CTIT=1;
+Value=10
+Mass=10
+Width=14
+Height=6
+Offset=-7,-3
+Picture=0,6,120,104
+Vertices=2
+VertexX=0,0
+VertexY=3,-3
+VertexFriction=100,100
+Rebuy=1
+Collectible=1

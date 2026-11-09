@@ -1,0 +1,10 @@
+[Action]
+Name=Wear
+Procedure=ATTACH
+Directions=2
+FlipDir=1
+NextAction=Wear
+Length=1
+Delay=1
+FacetBase=1
+StartCall=Check

@@ -1,0 +1,10 @@
+[DefCore]
+id=NB9Z
+Name=Nebel
+Version=4,9,1,4
+Category=65
+MaxUserSelect=10
+Picture=0,0,40,40
+NeededGfxMode=1
+TimerCall=Timerr
+Timer= 1

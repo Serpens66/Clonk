@@ -1,0 +1,5 @@
+[Action]
+Name=Shine
+Procedure=ATTACH
+NextAction=Hold
+FacetBase=0

@@ -1,0 +1,2 @@
+DE:Spielregeln auswählen
+US:Select rules

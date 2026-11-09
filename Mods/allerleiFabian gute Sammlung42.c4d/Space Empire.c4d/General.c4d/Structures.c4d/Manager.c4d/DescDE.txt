@@ -1,0 +1,1 @@
+Übernimmt die Verwaltung von Unterobjekten der Gebäuden (Licht, Energiesymbole).

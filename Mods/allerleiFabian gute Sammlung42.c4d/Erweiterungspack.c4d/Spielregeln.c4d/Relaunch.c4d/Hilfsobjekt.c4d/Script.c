@@ -1,0 +1,3 @@
+#strict
+
+local Player,Relaunchs;

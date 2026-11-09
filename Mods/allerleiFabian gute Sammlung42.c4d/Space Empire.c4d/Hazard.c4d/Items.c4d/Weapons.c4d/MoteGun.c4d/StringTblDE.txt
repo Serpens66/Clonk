@@ -1,0 +1,7 @@
+Railgun=Strahl
+Shockwave=Schockwelle
+RailgunStructure=nur Gebäude, Strahl
+
+KLASUpgradeDesc=Erweitert die Partikelkanone mit einem Hochleistungslaser.
+
+KLASUpgraded=Partikelkanone mit einem|Hochleistungslaser erweitert.

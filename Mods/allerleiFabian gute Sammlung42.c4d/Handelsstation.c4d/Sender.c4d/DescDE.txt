@@ -1,0 +1,1 @@
+Dieser Sender sagt allen Handelsstationen, dass sie diesen Clonk gleich beim Betreten zu seiner eigenen Handelsstation beamen soll.

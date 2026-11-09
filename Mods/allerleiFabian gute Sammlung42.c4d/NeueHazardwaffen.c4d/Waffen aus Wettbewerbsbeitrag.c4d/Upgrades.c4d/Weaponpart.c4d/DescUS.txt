@@ -1,0 +1,3 @@
+This upgrade containes two functions:
+It can convert particles randomly into other projectiles.
+It creates laser spheres wich send out lasers. 

@@ -1,0 +1,2 @@
+A large factory for big objects like vehicles.
+To equip military vessels with weapons, place them in front of the building and in the factory-menu there will be a new point.

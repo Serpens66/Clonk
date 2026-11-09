@@ -1,0 +1,3 @@
+Advent, Advent, ein Lichtlein brennt.
+Dasselbe wie Light, nur mit Sichtradius 500 anstelle von 200.
+Die globalen Funktionen haben eine 2 am schluss.

@@ -1,0 +1,6 @@
+TxtElevatorLockTurnOn=Elevator lock on
+TxtElevatorLockTurnOff=Elevator lock off
+TxtElevatorLockOn=Elevator lock|turned on
+TxtElevatorLockOff=Elevator lock|turned off
+TxtElevatorLockDesc=The Elevator can be locked in its current position.
+TxtDrillshaft=Drill shaft

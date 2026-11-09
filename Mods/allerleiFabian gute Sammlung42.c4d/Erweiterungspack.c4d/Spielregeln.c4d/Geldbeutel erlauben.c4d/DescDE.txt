@@ -1,0 +1,1 @@
+Wenn der letzte Clonk eines Spielers stirbt, wird das gesammtes Geld des Spielers in einem Beutel hinterlassen.

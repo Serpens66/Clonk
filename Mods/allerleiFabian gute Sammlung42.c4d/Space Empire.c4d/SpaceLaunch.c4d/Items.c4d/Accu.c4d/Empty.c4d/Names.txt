@@ -1,0 +1,2 @@
+DE:Empty Power Accumulator
+US:Empty Power Accumulator

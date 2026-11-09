@@ -1,0 +1,7 @@
+Regelt die nötige Erfahrung für die Ausbildung der Clonks.
+0: Standardwerte
+1: keine Erfahrung
+2: halber Standard
+3: doppelter Standard
+
+Als Regel deaktiviert, nur noch "Ausbildungszeit" als Regel aktiv, was das Ziel für die variable Ausbildungseinstellungen ist.

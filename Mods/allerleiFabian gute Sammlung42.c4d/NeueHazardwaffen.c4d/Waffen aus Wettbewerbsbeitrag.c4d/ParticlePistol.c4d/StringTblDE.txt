@@ -1,0 +1,11 @@
+Standard=Partikelschuss
+Super=Streuschuss
+Laser=Laserkugel
+
+KLASUpgradeDesc=Erweitert den Schussmechanismus mit einem Streuschussaufsatz.
+
+KLASUpgraded=Schussmechanismus mit|Streuschussaufsatz erweitert.
+
+STRHUpgradeDesc=Erweitert den Schussmechanismus mit einem Laserkugelkonverter.
+
+STRHUpgraded=Schussmechanismus mit|Laserkugelkonverter erweitert.

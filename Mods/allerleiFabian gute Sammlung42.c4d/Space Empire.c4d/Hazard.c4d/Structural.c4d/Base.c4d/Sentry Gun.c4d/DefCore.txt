@@ -1,0 +1,21 @@
+[DefCore]
+id=SEGU
+Version=4,9,8,2
+Name=Sentry Gun
+Category=1154
+Timer=1
+TimerCall=Activity
+Width=36
+Height=21
+Offset=-18,-10
+Vertices=3
+VertexX=0,-17,17
+VertexY=4,-9,-9
+VertexFriction=20,100,100
+Value=90
+Mass=170
+Components=METL=6
+Picture=0,24,64,59
+TopFace=0,0,36,21,0,0
+Construction=1
+BlastIncinerate=110

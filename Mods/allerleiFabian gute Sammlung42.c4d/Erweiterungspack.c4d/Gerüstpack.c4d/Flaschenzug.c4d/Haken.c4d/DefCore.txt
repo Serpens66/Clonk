@@ -1,0 +1,25 @@
+[DefCore]
+id=FHKN
+Name=Haken
+Version=4,9,5
+# Tools müssen Fahrzeuge (und erforschbar)  sein!
+Category=4
+ContactCalls=1
+Width=5
+Height=10
+Offset=-3,-5
+Value=5
+Mass=3
+Picture=5,0,18,35
+Vertices=3
+VertexX=-1,0,0
+VertexY=2,-5,4
+VertexCNAT=26,4,8
+VertexFriction=50,50,50
+BorderBound=7
+UprightAttach=8
+HorizontalFix=1
+TimerCall=TimerCall
+ 
+[Physical]
+Float=150

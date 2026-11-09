@@ -1,0 +1,9 @@
+[Action]
+Name=Exhaust
+Procedure=NONE
+Sound=GasExhaust
+Length=50
+Delay=2
+FacetBase=1
+PhaseCall=GasExhaust
+EndCall=Empty

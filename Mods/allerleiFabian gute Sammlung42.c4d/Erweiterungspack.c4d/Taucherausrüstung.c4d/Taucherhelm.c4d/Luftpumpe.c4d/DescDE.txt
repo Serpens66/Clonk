@@ -1,0 +1,1 @@
+Versorgt einen Clonk mit Luft. Im Kontextmenü kann der Taucherhelm an die Luftpumpe angeschlossen werden.

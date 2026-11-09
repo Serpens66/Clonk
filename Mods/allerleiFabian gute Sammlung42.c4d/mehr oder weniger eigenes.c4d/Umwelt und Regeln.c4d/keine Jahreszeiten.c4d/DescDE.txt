@@ -1,0 +1,4 @@
+Wenn aktiviert, passt sich die Umgebung NICHT an die Jahreszeit bzw. Temperatur an.
+Nur visuelle Effekte, keine Auswirkung auf Spielverlauf.
+
+Arbeitet mit dem Grafikwechsel für Umweltschäden zusammen, dh. um eventuelle Lags zu verhindern, muss beides deaktiviert sein.

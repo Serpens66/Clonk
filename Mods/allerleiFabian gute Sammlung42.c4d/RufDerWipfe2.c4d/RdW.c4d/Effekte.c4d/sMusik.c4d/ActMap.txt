@@ -1,0 +1,6 @@
+[Action]
+Name=Initialize
+Length=1
+Delay=1
+NextAction=IDLE
+EndCall=Initialized

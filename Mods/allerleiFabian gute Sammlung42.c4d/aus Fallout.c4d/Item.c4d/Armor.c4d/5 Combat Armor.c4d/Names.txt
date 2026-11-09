@@ -1,0 +1,3 @@
+DE:Kampf-Rьstung
+US:Combat Armor
+RU:Боевая Броня

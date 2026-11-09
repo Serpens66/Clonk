@@ -1,0 +1,6 @@
+[Action]
+Name=Effekt
+Length=7
+Delay=5
+Facet=0,0,15,15
+EndCall=Weg

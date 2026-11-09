@@ -1,0 +1,8 @@
+[DefCore]
+id=STAT
+Name=Statusleiste
+Category=1
+Width=200
+Height=20
+Offset=-100,-10
+Picture=0,0,200,20

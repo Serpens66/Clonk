@@ -1,0 +1,6 @@
+TxtHorizontal=Look horizontal
+TxtUp=Look up
+TxtDown=Look down
+TxtDiagUp=Look diagonally upwards
+TxtDiagDown=Look diagonally downwards
+TxtUseTelescope=Use telescope

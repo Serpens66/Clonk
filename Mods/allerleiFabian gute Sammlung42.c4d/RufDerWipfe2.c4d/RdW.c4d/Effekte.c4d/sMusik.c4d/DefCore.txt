@@ -1,0 +1,8 @@
+[DefCore]
+id=SMUS
+Name=Auto-Musik
+Category=1
+MaxUserSelect=1
+Picture=0,0,35,35
+Timer=100
+TimerCall=CheckPlayList

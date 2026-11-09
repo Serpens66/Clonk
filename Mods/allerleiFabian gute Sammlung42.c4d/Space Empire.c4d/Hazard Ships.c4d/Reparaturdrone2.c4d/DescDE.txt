@@ -1,0 +1,5 @@
+deaktiviert, weil sie nicht repariert
+
+Die Drone unterstützt, nachdem sie von diesem mit einer Waffe ausgerüstet worden ist, den Clonk im Kampf. Außerdem enthält diese Version ein Reparatursystem für Predatoren.
+
+-Sie repariert den Predator ihres Besitzers.

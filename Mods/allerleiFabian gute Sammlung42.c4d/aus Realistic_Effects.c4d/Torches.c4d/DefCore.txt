@@ -1,0 +1,10 @@
+[DefCore]
+id=TS9Z
+Name=Torches
+Version=4,9,1,3
+Category=65
+MaxUserSelect=3
+Picture=0,0,40,40
+//Timer=2
+//TimerCall=FogofWar
+NeededGfxMode=1

@@ -1,0 +1,1 @@
+Contains the money of an eliminated player.

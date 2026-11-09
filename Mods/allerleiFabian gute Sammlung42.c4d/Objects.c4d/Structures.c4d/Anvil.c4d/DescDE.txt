@@ -1,0 +1,4 @@
+Mit dem Amboss lassen sich verschiedene Handwaffen sowie Bausätze herstellen. Umweltschaden des Gebäudes= 10.
+Anfassen und Doppelklick auf Graben. Der Clonk sollte das benötigte Material bei sich oder im Amboss hinterlegt haben.
+Mit einer chance von 1 zu 20 entsteht dabei MetalSchrott.
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=10.

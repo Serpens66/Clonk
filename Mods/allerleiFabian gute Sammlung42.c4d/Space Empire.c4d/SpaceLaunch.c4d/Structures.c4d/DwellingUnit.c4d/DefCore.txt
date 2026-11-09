@@ -1,0 +1,27 @@
+[DefCore]
+id=SDWU
+Name=DwellingUnit
+Version=4,9,5
+Category=1154
+MaxUserSelect=5
+Width=80
+Height=48
+Offset=-40,-24
+Value=150
+Mass=2000
+Components=METL=2;WOOD=5;GLAS=1;
+Picture=0,78,105,80
+Vertices=4
+VertexX= 22,-35,-35,34
+VertexY=-18, -7, 24,24
+VertexFriction=50,50,100,100
+Entrance=0,-3,18,26
+Exclusive=1
+Base=1
+LineConnect=4
+Construction=1
+ColorByOwner=1
+AttractLightning=1
+
+[Physical]
+Energy=100000

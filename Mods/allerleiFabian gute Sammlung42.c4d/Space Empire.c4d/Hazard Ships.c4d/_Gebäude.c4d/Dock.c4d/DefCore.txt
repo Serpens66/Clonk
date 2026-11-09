@@ -1,0 +1,22 @@
+[DefCore]
+id=SDC_
+Name=Kleines Dock
+Version=4,9,5
+Category=4
+MaxUserSelect=10
+Width=80
+Height=70
+Offset=-40,-35
+Value=300
+Mass=2500
+Components=METL=30;
+Picture=0,0,80,70
+TopFace=0,0,80,70
+SolidMask=80,0,80,70
+NoBurnDecay=1
+StretchGrowth=0
+Vertices=4
+VertexX=40,-40,40,-40
+VertexY=35,35,-35,-35
+VertexFriction=100,100,100,100
+ 

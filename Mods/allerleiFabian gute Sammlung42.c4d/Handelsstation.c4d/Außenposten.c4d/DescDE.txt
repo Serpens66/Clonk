@@ -1,0 +1,2 @@
+Von dem Außenposten aus kann man auf die eigene Handelsstation zugreifen und Objekte hin und her transferieren.
+Durch Category deaktiviert.

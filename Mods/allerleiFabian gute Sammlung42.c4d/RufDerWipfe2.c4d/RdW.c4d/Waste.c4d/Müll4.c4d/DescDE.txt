@@ -1,0 +1,4 @@
+Gewöhnlicher Hausmüll,der bei allen möglichen Aktivitäten so anfällt. Bis zu 10 Stück können zu einem Müllsack verpackt werden.
+Umweltschädigend=15
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend. 
+Kann in Müllverbrennungsanlage verbrannt werden.

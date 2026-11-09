@@ -1,0 +1,9 @@
+Mit dem Schildupgrade kann man Schilde für Gebäude bauen. Einfach das Schildupgrade-Paket nehmen und vor einem Gebäude aktivieren, sollte aber immer etwa in der Mitte sein.
+
+Zum Schild selbst:
+Wenn das Gebäude mit Schild zerstört oder abgerissen wird, entfernt sich auch der Schild. 
+Zudem kann der Schild aber auch einzeln abgerissen werden, man bekommt eine Energiezelle zurück.
+
+Der Schild hindert alle Geschosse (Gesamtgeschwindigkeit > 75), außer die eigenen das Ziel zu erreichen. Das Schild bietet maximalen Schutz bei Angriffen aus der Ferne, wenig aber wenn der Feind zu Fuß kommt (wenn Geschosse zu langsam sind).  Zu schnelle Geschosse können auch nicht abgewehrt werden.
+Die Lebensdauer des Schildes ist begrenzt. Für jedes einzelne Geschoss auf das Schild verringern sich die restlichen Lebenspunkte vom Schild, wodurch viele einzelne Geschosse seine Energie schnell aufbrauchen.
+Der Schild reagiert nicht auf den Strahl der Partikelkanone!

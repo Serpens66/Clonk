@@ -1,0 +1,13 @@
+[DefCore]
+id=DUUU
+Name=Dunkelheit
+Category=8388609
+Width=69
+Height=69
+Offset=-35,-35
+Picture=0,0,69,69
+TopFace=0,0,69,69
+StretchGrowth=1
+Oversize=1
+TimerCall=Suchen
+Timer=1

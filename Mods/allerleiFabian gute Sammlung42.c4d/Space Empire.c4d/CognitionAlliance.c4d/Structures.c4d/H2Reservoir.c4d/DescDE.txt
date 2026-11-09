@@ -1,0 +1,1 @@
+Erzeugt Wasserstoff aus der Luftfeuchtigkeit, der als Energiespeicher dient, aber auch in Gasflaschen abgefüllt werden kann.

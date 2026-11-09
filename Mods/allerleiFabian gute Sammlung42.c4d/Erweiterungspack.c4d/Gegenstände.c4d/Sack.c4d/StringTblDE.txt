@@ -1,0 +1,14 @@
+PutOn=Anlegen
+AlreadyHasBag=%s trägt bereits|einen Sack oder Ähnliches!
+BagPutOn=Sack angelegt.
+Bag=Sack
+Contents=Inhalt
+Insert=%s hineinlegen
+UnpackBag=Sack in %s entpacken
+Deposit=Sack ablegen
+BagIsEmpty=Der Sack ist leer.
+Get=%s holen
+BagIsFull=Sack ist voll!
+BagDeposited=Sack abgelegt.
+AutoCollectOn=Auto. Einpacken: Ein
+AutoCollectOff=Auto. Einpacken: Aus

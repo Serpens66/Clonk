@@ -1,0 +1,10 @@
+[DefCore]
+id=S_12
+Name=Symbol Kämpfen
+Version=4,9,5
+Category=1
+Width=16
+Height=16
+Offset=-8,-8
+Components=S_12=1;
+Picture=1,0,26,34

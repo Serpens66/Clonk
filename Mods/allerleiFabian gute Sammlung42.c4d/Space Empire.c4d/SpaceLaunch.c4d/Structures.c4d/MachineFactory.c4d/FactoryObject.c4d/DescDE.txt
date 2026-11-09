@@ -1,0 +1,1 @@
+Teilobjekt der Maschinenfabrik: Herstellung und Aufbewahrung unfertiger Objekte.

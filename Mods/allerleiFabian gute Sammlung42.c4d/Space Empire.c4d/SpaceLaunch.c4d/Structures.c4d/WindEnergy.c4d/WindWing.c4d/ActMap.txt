@@ -1,0 +1,8 @@
+[Action]
+Name=Turn
+Procedure=ATTACH
+Facet=0,0,59,59
+Delay=10
+NextAction=Turn
+StartCall=Wind2Turn
+ 

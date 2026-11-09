@@ -1,0 +1,11 @@
+[Particle]
+Name=WindSpark
+MaxCount=100000
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+Face=0,0,12,12,-6,-6
+Delay=1000
+Repeats=2
+GravityAcc=0
+Attach=1

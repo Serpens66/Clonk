@@ -1,0 +1,1 @@
+Hilfsobjekt zur Fernsteuerung von Fahrzeugen. Clonks können die Kontrolle über eigene Fahrzeuge übernehmen, wenn diese in unmittelbarer Nähe sind und kein Clonk an Bord ist. Dazu einfach im Kontextmenü des Clonks den entsprechenden Menüeintrag auswählen.

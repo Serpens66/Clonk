@@ -1,0 +1,3 @@
+Der Random-Flint kann die Sprengkraft von einem normalen Feuerstein, bis hin zu einem Macro-Flint haben. 
+Erw‰hnenswert w‰re auﬂerdem, dass er nicht immer beim Aufprall explodiert. Je h‰ufiger er irgendwo aufschl‰gt, desto eher explodiert er.
+Welche Explosionskraft er hat, weiﬂt du erst, wenn er explodiert.

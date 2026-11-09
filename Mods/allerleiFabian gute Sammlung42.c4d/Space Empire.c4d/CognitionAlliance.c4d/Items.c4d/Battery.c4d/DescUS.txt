@@ -1,0 +1,4 @@
+A small, mobile energy-unit.
+Fuel for many electronic items.
+
+Can be emptied in the energy-center.

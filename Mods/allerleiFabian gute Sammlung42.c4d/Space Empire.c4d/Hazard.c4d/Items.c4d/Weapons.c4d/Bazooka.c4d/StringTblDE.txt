@@ -1,0 +1,13 @@
+Missile=Raketen
+HMissile=WärmesuchRaketen
+MissileStructure=nur Gebäude, Raketen
+HMissileStructure=nur Gebäude, MilitärsuchRaketen
+Bunker=Autom. Raketennachschub
+RCMissile=Lenkraketen
+RCMissileStructure=nur Gebäude, Lenkraketen
+
+KLASUpgradeDesc=Rüstet die Raketen mit einem automatischen Zielverfolgungssystem aus.
+KRFLUpgradeDesc=Rüstet die Raketen mit einem Lenksystem aus.
+
+KLASUpgraded=Raketenwerfer mit automatischen|Zielverfolgungssystem ausgerüstet.
+KRFLUpgraded=Raketenwerfer mit Lenksystem ausgerüstet.

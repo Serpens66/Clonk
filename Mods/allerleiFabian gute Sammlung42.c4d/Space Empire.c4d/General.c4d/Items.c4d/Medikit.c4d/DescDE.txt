@@ -1,0 +1,1 @@
+Heilt einen Clonk wieder komplett. Aktivierung durch Doppelklick auf Graben.

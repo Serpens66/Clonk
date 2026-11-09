@@ -1,0 +1,8 @@
+Made of Dead Wipf.|
+Cost - 10. Mass - 10.|
+Normal 20% |
+Laser 25% |
+Fire 10% |
+Plasma 10% |
+Explosion 20% |
+Electric 40% |

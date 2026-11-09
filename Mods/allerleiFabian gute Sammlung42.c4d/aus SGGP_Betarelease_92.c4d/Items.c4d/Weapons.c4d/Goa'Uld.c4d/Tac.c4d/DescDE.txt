@@ -1,0 +1,3 @@
+Das Tac ist eine kleine Kugel, welche wenn sie einmal aktiviert ist auf alle feindlichen Lebewesen schießt.
+Leider geht sie schnell kaputt bei EMP oder Schaden.
+Sie hat eine begrenzte Energie und zerstört sich somit nach 100 schüssen selbst.

@@ -1,0 +1,5 @@
+[Action]
+Name=Shine
+Facet=0,0,150,150
+NextAction=Shine
+Procedure=FLOAT

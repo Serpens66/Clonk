@@ -1,0 +1,3 @@
+Nicht beim Start aktivieren, sondern wenn dann nur manuell während spiel, um Nebel zu entfernen. Dieser wird aber auch automatisch entfernt.
+Entfernt die Nebelerzeuger Regel und sämtlichen Nebel in 50 Frames schritten.
+Kann an Bedingungen geknüpft werden.

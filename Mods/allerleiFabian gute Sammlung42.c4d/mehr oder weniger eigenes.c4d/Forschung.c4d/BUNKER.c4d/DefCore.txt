@@ -1,0 +1,9 @@
+[DefCore]
+id=BBUN
+Name=Bunker!
+Category=1040
+Width=1
+Height=1
+Picture=0,0,700,500
+MaxUserSelect=1
+ 

@@ -1,0 +1,9 @@
+Ermöglicht genauere Zieltechniken und verbesserte Waffentechnologie.
+Verbessert werden kann:
+-Bazooka 
+-Sturmpistole
+-Energiegewehr
+-Granatenwerfer
+-Mine
+-Schweißbrenner
+-Partikelkanone

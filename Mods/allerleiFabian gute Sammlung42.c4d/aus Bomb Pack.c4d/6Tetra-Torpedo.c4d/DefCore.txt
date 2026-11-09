@@ -1,0 +1,25 @@
+[DefCore]
+id=TRP2
+Name=Tetra Torpedo
+Version=4,9,5
+Category=3600
+MaxUserSelect=1
+Width=32
+Height=9
+Offset=-16,-4
+Value=140
+Mass=50
+Components=METL=2;EFL2=1;SPHR=7;
+Picture=0,9,76,48
+Vertices=2
+VertexX=-12,12
+VertexY=1,1
+VertexCNAT=8,10
+VertexFriction=100,100
+Rebuy=1
+Collectible=1
+Fragile=1
+
+[Physical]
+Swim=200000
+ 

@@ -1,0 +1,7 @@
+Ein Versuch den Regen etwas besser zu steuern, als es in scenario.txt moeglich ist.
+
+Erstellt ab und zu Regenwolken.
+Wenn Antilag, dann keine Wolken, sondern nur Regentropfen.
+Schnee kommt häufiger vor, als Regen, weil Regen meistens nervt.
+Blitze der Wolken werden nach den Szenarioeinstellungen gebildet.
+Wenn es über 40°C ist, "regnet" es Sand, Sandsturm.

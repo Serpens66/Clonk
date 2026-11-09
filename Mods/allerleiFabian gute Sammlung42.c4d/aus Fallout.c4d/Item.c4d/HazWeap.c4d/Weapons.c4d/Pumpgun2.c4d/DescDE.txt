@@ -1,0 +1,3 @@
+Die abgesägte Schrotflinte kann zwei Schüsse schnell hintereinander abgeben und muss dann lange nachladen.
+
+Benötigt Schrotkugeln ({{SHTM}})

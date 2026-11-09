@@ -1,0 +1,2 @@
+DE:Alien-Waffenupgrades
+US:Alien weapon upgrades

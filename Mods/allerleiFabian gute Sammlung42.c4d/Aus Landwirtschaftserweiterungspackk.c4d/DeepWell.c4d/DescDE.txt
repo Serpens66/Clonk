@@ -1,0 +1,5 @@
+Dieses Gebäude erschließt sehr tief (außerhalb der Karte) liegende Vorkommen von Flüssigkeiten, die mit Hilfe einiger Pumpen abgepumpt werden können. 
+Das Material kann je nach Wunsch festgelegt werden, allerdings ist das keine Garantie, dass auch exakt dieses Material gefunden wird. 
+Deshalb emphiehlt es sich, wenn das Gemisch mit Hilfe der Tanks gefiltert wird.
+
+Dieses Gebäude kann nur am unteren Rand der Karte gebaut werden!

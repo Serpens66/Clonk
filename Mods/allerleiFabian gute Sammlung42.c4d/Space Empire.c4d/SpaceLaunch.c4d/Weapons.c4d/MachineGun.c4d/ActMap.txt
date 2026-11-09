@@ -1,0 +1,15 @@
+[Action]
+Name=ShootAmmo
+Delay=2
+EndCall=FireAmmo
+NextAction=ShootAmmo
+
+[Action]
+Name=Reload1
+Delay=4
+NextAction=Idle
+
+[Action]
+Name=Reload2
+Delay=20
+NextAction=Idle

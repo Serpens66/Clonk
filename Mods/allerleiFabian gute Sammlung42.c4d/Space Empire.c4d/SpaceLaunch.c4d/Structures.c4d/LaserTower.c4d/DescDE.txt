@@ -1,0 +1,3 @@
+Verteidigt das Gebiet automatisch gegen Clonks und verschiedene heranfliegende Projektile (Geschosse, Flints, Meteore, Raketen, etc.).
+Auf Graben kann der Schussmodus gewechselt, oder der Laserturm ein-/ausgeschaltet werden, z.b um Munition zu sparen.
+Benötigt Energie und Energiezellen als Munition.

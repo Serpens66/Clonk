@@ -1,0 +1,8 @@
+Made of Combat Armor, Line kit, Oil Barrel and 5 Battery.|
+Cost - 200. Mass - 85.|
+Normal 40% |
+Laser 80% |
+Fire 60% |
+Plasma 40% |
+Explosion 50% |
+Electric 40% |

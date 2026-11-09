@@ -1,0 +1,3 @@
+Fixes list of all objects that you can trade with.
+
+This object can also get cluttered for scenarios.

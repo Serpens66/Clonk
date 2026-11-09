@@ -1,0 +1,2 @@
+DE:Kull Rüstung
+US:Kull Armor

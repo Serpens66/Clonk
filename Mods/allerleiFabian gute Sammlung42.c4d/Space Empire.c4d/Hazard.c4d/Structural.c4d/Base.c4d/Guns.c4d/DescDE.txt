@@ -1,0 +1,1 @@
+Hilfsobjekt zur Steuerung aller Geschütze über die Konsole (weil spiel abstürzt wenn einzelnes Geschütz bedient wird, welches EMP hat)

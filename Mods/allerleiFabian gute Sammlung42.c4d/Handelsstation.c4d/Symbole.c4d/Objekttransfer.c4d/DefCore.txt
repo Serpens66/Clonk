@@ -1,0 +1,7 @@
+[DefCore]
+id=OTTR
+Name=Objekttransfer
+Category=1
+Picture=0,0,66,66
+
+ 

@@ -1,0 +1,16 @@
+[DefCore]
+id=ELC3
+Version=4,9,5
+Name=Shot
+Category=4
+Width=20
+Height=18
+Offset=-10,-9
+Rotate=1
+Vertices=1
+VertexFriction=1
+StretchGrowth=1
+IncompleteActivity=1
+
+[Physical]
+Float=100000

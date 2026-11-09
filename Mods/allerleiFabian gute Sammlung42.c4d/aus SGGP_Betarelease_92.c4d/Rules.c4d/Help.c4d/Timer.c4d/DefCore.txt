@@ -1,0 +1,15 @@
+[DefCore]
+id=TIMR
+Name=Timer
+Version=4,9,5
+Category=60817409
+MaxUserSelect=10
+Width=49
+Height=28
+Offset=-25,-41
+Vertices=1
+VertexY=1
+VertexFriction=20
+Timer=38
+TimerCall=Timer
+ 

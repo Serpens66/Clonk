@@ -1,0 +1,7 @@
+[DefCore]
+id=SEVN
+Name=Sieben
+Category=1
+Picture=0,0,34,34
+
+ 

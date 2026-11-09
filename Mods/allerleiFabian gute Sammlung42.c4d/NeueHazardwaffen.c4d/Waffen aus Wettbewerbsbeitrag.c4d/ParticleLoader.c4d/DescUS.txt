@@ -1,0 +1,1 @@
+A alien rifle wich shoots particles that cast some little particles if they hit. Those little particels make extra damage.

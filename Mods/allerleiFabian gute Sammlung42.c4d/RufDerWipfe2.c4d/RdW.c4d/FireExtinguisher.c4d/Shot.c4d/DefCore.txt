@@ -1,0 +1,17 @@
+[DefCore]
+id=SFES
+Version=4,9,1,3
+Name=Löschschaum
+Category=8
+Width=4
+Height=4
+Offset=-2,-2
+Components=SFES=1;
+Picture=0,0,4,4
+Vertices=2
+VertexX=-1,0
+VertexY=-1,0
+VertexFriction=80,80
+Float=1
+Rotate=1
+Mass=0

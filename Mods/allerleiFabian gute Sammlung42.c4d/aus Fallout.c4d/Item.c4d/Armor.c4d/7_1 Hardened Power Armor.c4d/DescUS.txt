@@ -1,0 +1,8 @@
+Made of Power Armor, Big parts and Acid Barrel.|
+Cost - 300. Mass - 100.|
+Normal 50% |
+Laser 90% |
+Fire 70% |
+Plasma 50% |
+Explosion 60% |
+Electric 50% |

@@ -1,0 +1,8 @@
+[Action]
+Name=Counting
+Procedure=NONE
+Length=3
+Delay=18
+Facet=0,0,5,8
+PhaseCall=Countdown
+EndCall=Detonation

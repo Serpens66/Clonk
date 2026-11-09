@@ -1,0 +1,7 @@
+Ein sehr starkes Scharfschützengewehr mit sehr niedriger Schussfrequenz, aber extrem schnellen Kugeln, denen man kaum ausweichen kann.
+Reichweite: 1500.
+Kann nicht aus der Hüfte abgeschossen werden, aber während des versteckens.
+
+Benötigt Sniperkugeln und verbraucht davon 2 Stück bei einem Schuss.
+Aufrüstbar mit:
+-Waffenteil (fügt eine zweite Ladekammer hinzu, sodass 2 Schuss vor dem Nachladen abgegeben werden können.)

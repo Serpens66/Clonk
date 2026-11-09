@@ -1,0 +1,12 @@
+besser munition doch in normaler chemiefabrik herstellbar machen, da dies hier zu umständlich ist.
+
+Mit diesem Gebäude kannst du Munition herstellen.
+Fasse das Gebäude an und lege die Rohstoffe hinein.
+
+Kugel=Metall
+Energie=Kristall
+Benzin=Öl
+Granate=Superflint
+Rakete=Schiesspulver
+
+Die Munitionsart muss natürlich vorher erforscht sein.

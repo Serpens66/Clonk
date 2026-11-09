@@ -1,0 +1,23 @@
+[DefCore]
+id=_U2B
+Name=Verbrannte Müllverbrennung
+Version=4,9,7,5
+Category=2
+Width=116
+Height=60
+Offset=-58,-30
+Value=35
+Mass=3400
+Components=_Y1A=2;METL=1;ROCK=8;
+Vertices=4
+VertexX=-55,55,-55,55
+VertexY=-30,-30,30,30
+VertexFriction=50,50,100,100
+Exclusive=0
+ContactIncinerate=3
+BlastIncinerate=10
+ConstructTo=_U2A
+Construction=1
+Rotate=1
+Basement=0
+ 

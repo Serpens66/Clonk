@@ -1,0 +1,27 @@
+[DefCore]
+id=SMBS
+Name=MainBase
+Version=4,9,5
+Category=1154
+MaxUserSelect=2
+Width=100
+Height=48
+Offset=-50,-24
+Value=250
+Mass=4800
+Components=METL=2;WOOD=3;CTIT=2;GLAS=1;CALU=1;CRYS=1;ROCK=2;
+Picture=125,0,105,80
+Vertices=5
+VertexX=-20, 42,45,-47,-45
+VertexY=-19,-14,24, 24, -8
+VertexFriction=50,50,100,100,50
+Entrance=-27,-4,28,28
+Exclusive=1
+Base=1
+LineConnect=39
+Construction=1
+ColorByOwner=1
+AttractLightning=1
+
+[Physical]
+Energy=100000

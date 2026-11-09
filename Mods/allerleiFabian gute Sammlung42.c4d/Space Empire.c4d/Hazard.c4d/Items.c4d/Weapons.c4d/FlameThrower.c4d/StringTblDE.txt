@@ -1,0 +1,12 @@
+FlameThrower=Flammenwerfer
+FlameBall=Flammenball
+SlimeThrower=Chemische Keule
+FlameThrowerStructure=Geb‰ude, Pflanzen, Eis Flammenwerfer
+FlameBallStructure=Geb‰ude, Pflanzen, Eis Flammenball
+SlimeThrowerStructure=nur Geb‰ude, Chemische Keule
+
+KSLMUpgradeDesc=Bringt eine Chemische Keule an
+KRFLUpgradeDesc=Erlaubt es, einen konzentrierten Feuerstoﬂ abzufeuern
+
+KSLMUpgraded=Chemische Keule angebracht!
+KRFLUpgraded=Flammenball-Aufsatz angebracht!

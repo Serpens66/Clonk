@@ -1,0 +1,7 @@
+Erstellt FogofWar und gibt den Clonks Sichtradius:
+
+1 = Sichtradius nach Tag/Nacht und Oberfläche/Untergrund
+2 = " nur nach Tag/Nacht
+3= immer derselbe Sichtradius.
+
+OberflächeTag=400, OberflächeNacht=200, TunnelTag=120, TunnelNacht=80, Standard=300.

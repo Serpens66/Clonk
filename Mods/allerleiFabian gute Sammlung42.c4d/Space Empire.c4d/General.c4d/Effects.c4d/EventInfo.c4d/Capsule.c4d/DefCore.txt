@@ -1,0 +1,8 @@
+[DefCore]
+id=SE15
+Name=EventInfo
+Category=10485761
+Width=36
+Height=24
+Offset=-18,-12
+Picture=0,0,36,24

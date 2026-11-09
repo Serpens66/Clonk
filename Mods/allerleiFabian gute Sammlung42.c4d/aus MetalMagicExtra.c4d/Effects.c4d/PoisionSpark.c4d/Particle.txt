@@ -1,0 +1,14 @@
+[Particle]
+Name=PoisionSpark
+MaxCount=300
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+Face=0,0,60,60,-30,-30
+Delay=3
+Repeats=2
+Reverse=1
+GravityAcc=0
+AlphaFade=0
+Additive=0
+Attach=1

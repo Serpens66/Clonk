@@ -1,0 +1,12 @@
+[DefCore]
+id=FM9I
+Name=Markierung
+Version=4,9,5
+Category=8388609
+Width=6
+Height=6
+Offset=-3,-3
+Picture=6,0,64,64
+Vertices=1
+VertexY=1
+VertexFriction=20

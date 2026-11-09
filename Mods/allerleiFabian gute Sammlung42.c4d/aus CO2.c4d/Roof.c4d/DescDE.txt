@@ -1,0 +1,3 @@
+Zum vollständigem Abschließen von Aufgängen. 
+(Nicht bauen, wenn kein Aufgang vorhanden, da man sich sonst einschließt!)
+Bietet 500HP Schutz vor Gegnern, welche das Eindringen über einen Aufgang versuchen.

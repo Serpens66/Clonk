@@ -1,0 +1,2 @@
+Component of different factories:
+Production and storing of unfinished objects.

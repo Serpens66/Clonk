@@ -1,0 +1,2 @@
+DE:Stahlmantelprojektil
+US:Bullet

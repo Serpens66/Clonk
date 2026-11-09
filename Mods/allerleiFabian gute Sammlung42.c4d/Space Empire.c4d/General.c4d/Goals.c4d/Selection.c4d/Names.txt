@@ -1,0 +1,2 @@
+DE:Spielzielauswahl
+US:Goal Selection

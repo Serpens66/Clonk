@@ -1,0 +1,13 @@
+[DefCore]
+id=STW3
+Name=Electroweapon
+Category=1026
+Width=40
+Height=32
+Offset=-20,-16
+Value=60
+Picture=0,0,105,105
+Vertices=1
+VertexX=0
+VertexY=38
+ 

@@ -1,0 +1,1 @@
+Hilfsobjekt - aktiviert das automatische Ausfahren der Landestützen, wenn nötig.

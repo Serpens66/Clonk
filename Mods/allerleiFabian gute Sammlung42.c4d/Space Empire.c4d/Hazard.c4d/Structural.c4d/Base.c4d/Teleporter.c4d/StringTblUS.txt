@@ -1,0 +1,7 @@
+NoTarget=No target inputted.
+TargetInactive= Target deactivated.
+BeamMeUp=Beam.
+TurnOn=Activate teleporter.
+TurnOff=Deactivate teleporter
+SearchTarget=Set target.
+ChooseTarget=Choose %s.

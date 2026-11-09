@@ -1,0 +1,16 @@
+[Action]
+Name=Blast
+Procedure=FLOAT
+Delay=3
+Length=8
+Facet=0,0,32,32
+NextAction=Blast2
+
+[Action]
+Name=Blast2
+Procedure=FLOAT
+Delay=3
+Length=8
+Facet=0,32,32,32
+NextAction=Blast
+EndCall=Remove

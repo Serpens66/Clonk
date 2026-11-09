@@ -1,0 +1,25 @@
+[DefCore]
+id=KCMB
+Version=4,9,8
+Name=Verbranntes Rekrutierungslager
+Category=C4D_Structure
+Width=100
+Height=55
+Offset=-50,-26
+Vertices=5
+VertexX=-49,-49,13,13,55
+VertexY=-21,26,-21,25,25
+VertexFriction=50,50,100,100,75
+Value=54
+Mass=3000
+Components=KMSH=3;ROCK=8;
+Picture=0,0,100,55
+Entrance=-17,10,23,18
+Exclusive=1
+ContactIncinerate=15
+BlastIncinerate=20
+Construction=1
+//ConstructTo=KA_S
+//Grab=1
+Rotate=1
+Float=1

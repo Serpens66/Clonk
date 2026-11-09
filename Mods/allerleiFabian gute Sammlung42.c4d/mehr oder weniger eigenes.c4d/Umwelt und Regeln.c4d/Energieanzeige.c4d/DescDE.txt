@@ -1,0 +1,1 @@
+Wenn aktiv, zeigen Energieproduzenten und Verbraucher ihre aktuellen Energiewerte an.

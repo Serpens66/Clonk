@@ -1,0 +1,2 @@
+DE:Torhaus
+US:Guard tower

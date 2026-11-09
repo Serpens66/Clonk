@@ -1,0 +1,13 @@
+[DefCore]
+id=CPG1
+Name=Plasmacannon1
+Category=1026
+Width=33
+Height=24
+Offset=-16,-12
+Value=45
+Picture=0,24,120,105
+Vertices=1
+VertexX=0
+VertexY=12
+ 

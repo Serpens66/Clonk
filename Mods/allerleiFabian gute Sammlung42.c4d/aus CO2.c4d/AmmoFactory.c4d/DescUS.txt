@@ -1,0 +1,8 @@
+Allows you to produce ammonition: Grab the building and put in the ressources:
+Bullets = Metal
+Energy  = Crystal
+Fuel    = Oil
+Grenades= Superflint
+Rocket  = Gunpowder
+
+There is also another object you can get if you put in a different ressource! Maybe you'll find out which one.

@@ -1,0 +1,2 @@
+DE:Hangar
+US:Fighter bay

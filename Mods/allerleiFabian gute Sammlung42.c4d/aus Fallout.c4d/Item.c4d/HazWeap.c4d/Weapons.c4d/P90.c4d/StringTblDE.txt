@@ -1,0 +1,6 @@
+Standard=Schnellfeuer
+Bettershot= Schnellf. Stahlmantelpr.
+
+KRFLUpgradeDesc=Erweitert die P90 mit Stahlmantelprojektilen. 
+
+KRFLUpgraded=Stahlmantel-Funktion eingebaut!

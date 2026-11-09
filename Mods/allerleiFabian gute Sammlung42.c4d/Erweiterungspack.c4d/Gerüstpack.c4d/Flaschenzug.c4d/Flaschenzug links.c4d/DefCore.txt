@@ -1,0 +1,21 @@
+[DefCore]
+id=GRS2
+Name=Flaschenzug (links)
+Version=4,9,5
+Category=2
+Width=88
+Height=58
+Offset=-44,-29
+Value=40
+Mass=100
+#Components=WOOD=1;METL=1;
+SolidMask=0,0,0,0
+TopFace=0,58,88,58
+Picture=88,0,100,58
+Vertices=4
+VertexX=-31,43,-5,-20
+VertexY=-28,28,28,28
+VertexFriction=100,100,100,100
+Exclusive=1
+BlastIncinerate=150
+Construction=1

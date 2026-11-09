@@ -1,0 +1,3 @@
+Upper limit of a transport pit and supply station for the lift.
+
+Attention: If there is not enough energy, the lift can crash and explode at impact!

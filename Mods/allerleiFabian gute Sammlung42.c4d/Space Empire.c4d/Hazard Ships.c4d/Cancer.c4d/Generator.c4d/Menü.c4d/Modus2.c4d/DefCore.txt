@@ -1,0 +1,6 @@
+[DefCore]
+id=CG_2
+Name=Transfer
+Category=1
+Picture=0,0,35,35
+ 

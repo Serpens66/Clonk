@@ -1,0 +1,6 @@
+[Action]
+Name=Break
+Length=1
+Delay=2
+Facet=0,0,6,6
+EndCall=Destroy

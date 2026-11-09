@@ -1,0 +1,15 @@
+[DefCore]
+id=HSGN
+Version=4,9,8,2
+Name=HazardSign
+Category=1026
+Width=64
+Height=64
+Offset=-32,-32
+Picture=0,0,64,64
+Construction=1
+Mass=500
+Components=WOOD=1
+Vertices=4
+VertexX=-32,32,-32,32
+VertexY=-32,-32,32,32

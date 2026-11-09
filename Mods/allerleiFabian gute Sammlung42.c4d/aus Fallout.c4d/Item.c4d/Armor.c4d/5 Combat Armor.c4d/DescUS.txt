@@ -1,0 +1,8 @@
+Made of Big parts, Leather Jacket and Acid Barrel.|
+Cost - 85. Mass - 20.|
+Normal 40% |
+Laser 60% |
+Fire 30% |
+Plasma 50% |
+Explosion 40% |
+Electric 50% |

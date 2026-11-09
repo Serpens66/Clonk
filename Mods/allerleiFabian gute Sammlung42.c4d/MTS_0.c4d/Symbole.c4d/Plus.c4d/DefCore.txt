@@ -1,0 +1,6 @@
+[DefCore]
+id=SY_6
+Name=Plus
+Version=4,9,5
+Category=1
+Picture=0,0,16,16

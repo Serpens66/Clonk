@@ -1,0 +1,5 @@
+Leuchtet den Weg in dunklen Gängen und wärmt, Sichtradius 130. Aufstellen mit doppel-graben. 
+Außerdem muss die Fackel mit Holz versorgt werden, da sie sonst, wenn kein Holz mehr zum verbrennen vorhanden ist, ausgeht. Kann mit graben ausgemacht werden.
+Kann auch mit anfassen und doppel-graben entfernt werden, allerdings bekommt man dann nur ein Stück Holz und das Holz welches man schon paratgelegt hat zurück.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

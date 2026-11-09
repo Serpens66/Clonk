@@ -1,0 +1,3 @@
+DE:Power-Rьstung
+US:Power Armor
+RU:Силовая Броня

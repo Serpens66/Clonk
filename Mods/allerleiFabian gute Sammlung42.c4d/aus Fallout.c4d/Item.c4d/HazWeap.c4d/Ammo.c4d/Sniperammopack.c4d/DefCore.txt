@@ -1,0 +1,18 @@
+[DefCore]
+id=SNI_
+Version=4,9,8,2
+Name=Standard Ammo
+Category=C4D_Object|C4D_SelectMaterial|C4D_SelectKnowledge|C4D_SelectHomebase
+MaxUserSelect=50
+Width=10
+Height=6
+Offset=-5,-3
+Vertices=1
+VertexY=1
+VertexFriction=20
+Value=21
+Mass=5
+Components=METL=1;GUNP=1;WC_0=1;
+Picture=0,6,64,64
+Rebuy=1
+Collectible=1

@@ -1,0 +1,3 @@
+Enthält die verschiedenen Gerüstkonstruktionen. Ausserdem ist ein Flaschenzug enthalten, mit dem du Clonks und andere Materialien in luftige Höhen transportieren kannst. Das Grundgerüst kann beliebig verändert und mit anderen Gerüsten verbunden werden.
+So kannst du beispielsweise Gegner von deiner Basis fernhalten, Regenwasser stauen, neue Bauplätze in der Luft erschliessen, usw...
+Wenn die Gerüste abgerissen werden, erhälst du den Bausatz wieder zurück.

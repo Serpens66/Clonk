@@ -1,0 +1,15 @@
+[DefCore]
+id=SACA
+Version=4,9,5
+Name=Accu
+Category=2
+Width=13
+Height=13
+Offset=-6,-6
+Value=10
+Mass=10
+Picture=0,0,13,13
+Vertices=1
+VertexX=-4
+VertexY=-65
+VertexFriction=100

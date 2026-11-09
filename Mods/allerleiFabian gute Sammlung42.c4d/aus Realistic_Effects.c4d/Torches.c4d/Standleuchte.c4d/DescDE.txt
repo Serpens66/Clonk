@@ -1,0 +1,3 @@
+Spendet Licht und 200 Sichtradius. (vgl: 400 sichtradius hat ein clonk am tag an der Oberfläche)
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

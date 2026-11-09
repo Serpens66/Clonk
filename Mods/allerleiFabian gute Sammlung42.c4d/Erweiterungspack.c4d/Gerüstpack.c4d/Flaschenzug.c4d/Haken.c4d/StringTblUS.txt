@@ -1,0 +1,2 @@
+Hook=Hook %s
+Unhook=Unhook %s

@@ -1,0 +1,2 @@
+Ermittelt Framerate und steuert die Effekte.
+Naja... eigentlich nicht.

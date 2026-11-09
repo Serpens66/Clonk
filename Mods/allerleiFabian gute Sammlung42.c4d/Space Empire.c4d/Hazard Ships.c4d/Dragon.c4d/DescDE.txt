@@ -1,0 +1,47 @@
+NICHT GUT
+
+Der Dragon Antigravpanzer ist der Alptraum eines jeden Infanteriesquads. Sein leistungsstarker Firebreath Doppelflammenwerfer, seine Gatling und Streugranatenkanone in Kombination mit dickster Panzerung machen ihn zu einem wahren Ungetüm.
+
+Steuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lassen sich die Waffen aktivieren, die Antigravtriebwerke zünden/abschalten, zur Turmsteuerung schalten oder der Ausstieg betätigen.
+
+-Bei gezündeten Triebwerken erfolgt die Steuerung des Neigungswinkels über [Rechts] und [Links].
+
+-Mit doppelt [Oben] wird der Booster gezündet, der den Panzer auf höhen bis zu 20m bringen, oder stürze aus größeren höhen abdämpfen kann.
+
+Waffensysteme:
+
+-Der Dragon verfügt über massivste Bewaffnung: 2xFlammenwerfer, 1xGatling, 1xStreugranatenmörser.
+
+-Über das Kontextmenü kann die Waffenwahl vorgenommen werden. Die Bordkanone erscheint dann im Inventar.
+
+-Das gewählte Waffensystem wird dann via [Werfen] aktiviert.
+
+-Es gilt zu beachten das der Fahrer Passende Munition mitführen muss um die Bewaffnung zu laden. Der Flammenwerfer benötigt Benzin, die Gatling verbraucht Projektilmunition und der Streugranatenwerfer Granaten.
+
+Notfallrettungssystem:
+
+-In akuten Gefahrensituationen kann der Fahrer das Steuermodul absprengen. Es enthält Schubraketen die es sicher zu Boden bringen. Nach der Landung aktiviert sich der Technologysafe(tm) Selbstzerstörungsmechanismus. Es bleiben dem Fahrer 6 Sekunden um sich zu entfernen.
+
+-Der Pilot kann die Kapsel per Schubdüsen bedingt steuern. Per doppelt[Graben] wird sie manuell zersprengt.
+
+Anmerkungen:
+
+-Der Dragon ist unterwassertauglich, es ist dem antigravsystem jedoch nicht möglich auf Wasser zu fahren.
+
+-Der Booster zündet nicht unterwasser.
+
+-Die Bordelektronik ist sehr empfindlich gegen EMP, ein Treffer führt zum Totalausfall aller Systeme, inklusive des Triebwerks.
+
+-Falls der Dragon einen Strukturschaden von über 90% aufweist ist sollte über einen Absprung nachgedacht werden (Explosionsgefahr).
+
+-Beim Fall aus größeren höhen möglichst gerade aufkommen, oder per booster abbremsen, da sonst Strukturschaden droht.
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

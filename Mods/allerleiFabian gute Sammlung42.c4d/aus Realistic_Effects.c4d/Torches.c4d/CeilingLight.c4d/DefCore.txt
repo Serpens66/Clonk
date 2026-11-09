@@ -1,0 +1,17 @@
+[DefCore]
+id=CLG3
+Version=4,9,8,2
+Name=Ceiling light
+Category=1026
+Width=9
+Height=4
+Offset=-4
+Value=5
+Components=GLAS=1
+Picture=0,0,9,4
+Construction=1
+Mass=100
+Vertices=4
+VertexX=-4,4,-4,4
+VertexY=-4,-4,4,4
+TimerCall=CheckNight

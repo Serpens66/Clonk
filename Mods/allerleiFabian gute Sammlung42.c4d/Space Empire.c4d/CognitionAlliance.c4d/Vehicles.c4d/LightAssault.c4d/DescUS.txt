@@ -1,0 +1,1 @@
+A very manoverable battlevehicle. Can be equipped with a choosable primary weapon in the vehicle factory.

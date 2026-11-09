@@ -1,0 +1,14 @@
+Adjustment=Ausrichtung?
+Right=Nach Rechts
+Left=Nach Links
+Up=Nach oben
+Down=Nach unten
+NoAdjustment=Keine Ausrichtung
+Normal=Normal
+Fence=Zaun
+ExternalWallLeft=Aussenwand links
+ExternalWallRight=Aussenwand rechts
+ExternalWalls=Aussenwände
+OpenTrapdoor=Dachklappe öffnen
+CloseTrapdoor=Dachklappe schliessen
+TearOff=Abreissen

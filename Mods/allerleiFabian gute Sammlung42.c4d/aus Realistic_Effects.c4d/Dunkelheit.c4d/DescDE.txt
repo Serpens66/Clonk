@@ -1,0 +1,7 @@
+Einfach nur eine Art "schleiher" der vor der Sicht der spieler platziert wird.
+Dies wird gemacht um zusätzlich zur Veränderung der Gamma Werte, die Sicht in der Nacht zu verdunkeln.
+Denn macht man es nur mit Gamma, wird auch das Baumenü unlesbar. 
+Dieser Schleiher legt sich hingegen nicht über das Baumenü, wodurch dies lesbar bleibt.
+
+Allerdings kann es durch das additivive Zeichnen zu Lags kommen, besonders wenn noch einige Lichtobjekte dazukommen.
+Deswegen ist dies durch den Dunkelheitsgrad oder die Regel konstante Helligkeit abschaltbar.

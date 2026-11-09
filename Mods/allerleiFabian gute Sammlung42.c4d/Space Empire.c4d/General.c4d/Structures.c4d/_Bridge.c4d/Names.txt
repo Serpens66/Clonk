@@ -1,0 +1,2 @@
+DE:Brückenteil
+US:Bridge Segment

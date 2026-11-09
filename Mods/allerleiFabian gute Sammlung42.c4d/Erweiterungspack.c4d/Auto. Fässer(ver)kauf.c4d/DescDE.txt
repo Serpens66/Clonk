@@ -1,0 +1,1 @@
+Wenn sich der Clonk in einer Basis befindet, kannst du ihm per Kontextmenü den Befehl geben, automatisch volle Fässer zu verkaufen und neue Fässer zu kaufen.

@@ -1,0 +1,1 @@
+Diese Objekte dienen der Anzeige von HP-, Energie- oder Fortschrittswerten, wahlweise als Balken- oder Textanzeige.

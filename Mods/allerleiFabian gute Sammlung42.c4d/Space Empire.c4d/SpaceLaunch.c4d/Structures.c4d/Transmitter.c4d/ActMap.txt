@@ -1,0 +1,17 @@
+[Action]
+Name=Transmitting
+Procedure=NONE
+Length=12
+Delay=2
+Facet=24,0,24,22
+NextAction=Transmitting
+StartCall=Transmit
+
+[Action]
+Name=Wait
+Procedure=NONE
+Length=1
+Delay=10
+Facet=0,0,24,22
+NextAction=Wait
+EndCall=CheckEnergy

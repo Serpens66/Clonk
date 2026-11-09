@@ -1,0 +1,4 @@
+TurnOff=Ausschalten
+TurnOn=Anschalten
+Repair=Reparieren
+Arm=Bewaffnen/Entwaffnen

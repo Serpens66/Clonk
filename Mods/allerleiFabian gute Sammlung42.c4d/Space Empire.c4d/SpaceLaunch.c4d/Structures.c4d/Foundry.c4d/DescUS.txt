@@ -1,0 +1,3 @@
+Manufactures ore into metal and generates electricity through combustion of materials.
+
+Switch between metal and energy production with the dig key.

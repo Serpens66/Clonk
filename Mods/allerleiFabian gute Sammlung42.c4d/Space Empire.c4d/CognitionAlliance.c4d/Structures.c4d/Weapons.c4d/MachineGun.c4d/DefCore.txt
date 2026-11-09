@@ -1,0 +1,13 @@
+[DefCore]
+id=CMG1
+Name=Machinegun
+Category=1026
+Width=54
+Height=34
+Offset=-27,-17
+Value=35
+Picture=0,34,120,86
+Vertices=1
+VertexX=0
+VertexY=9
+ColorByOwner=1

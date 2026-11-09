@@ -1,0 +1,4 @@
+Listet auf "Anfassen"->"Werfen" alle ein- und ausgehenden Stromleitungen auf. 
+Außerdem lassen sich Energieverbraucher einzeln vom Netz nehmen, was bei Dauerverbrauchern (z.B. Pumpen) Strom sparen lässt um sie für andere Gebäude zur Verfügung zu haben.
+Bis zu 20 Batterien können als Energiespeicher eingeladen werden. Ist Energie über, werden sie aufgeladen, wird Energie benötigt, entladen.
+Dient außerdem der übersichtlichen Stromnetzplanung.

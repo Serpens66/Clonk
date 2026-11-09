@@ -1,0 +1,4 @@
+Diese Regel erzeugt in 150 Frame Intervallen 1 Nebelobjekt, bis es maximal 10 stück sind.
+Kann z.b an Bedingungen geknüpft werden.
+
+Nebel kann, besonders im zusammenspiel mit Lichteffekten, zu starkem Lagg führen!

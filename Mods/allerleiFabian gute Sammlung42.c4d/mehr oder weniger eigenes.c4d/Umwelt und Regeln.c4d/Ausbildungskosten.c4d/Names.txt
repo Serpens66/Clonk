@@ -1,0 +1,2 @@
+DE:Ausbildungskosten
+US:A new object

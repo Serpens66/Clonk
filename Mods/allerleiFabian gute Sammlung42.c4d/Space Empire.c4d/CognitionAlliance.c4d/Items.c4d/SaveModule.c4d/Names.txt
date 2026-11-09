@@ -1,0 +1,2 @@
+DE:Energiemodul
+US:Energy-module

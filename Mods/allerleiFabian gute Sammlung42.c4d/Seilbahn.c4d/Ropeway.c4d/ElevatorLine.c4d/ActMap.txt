@@ -1,0 +1,6 @@
+[Action]
+Name=Connect
+Procedure=CONNECT
+Delay=5
+FacetBase=1
+NextAction=Hold

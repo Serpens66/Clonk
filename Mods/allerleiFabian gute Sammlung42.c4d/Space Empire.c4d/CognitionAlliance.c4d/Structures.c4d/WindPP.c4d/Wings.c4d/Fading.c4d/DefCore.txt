@@ -1,0 +1,15 @@
+[DefCore]
+id=CWPF
+Name=WingFading
+Version=4,9,5
+Category=4
+Width=51
+Height=51
+Offset=-25,-25
+Picture=0,0,51,51
+Vertices=1
+VertexX=0
+VertexY=0
+Rotate=1
+NoStabilize=1
+ 

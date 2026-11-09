@@ -1,0 +1,7 @@
+[DefCore]
+id=MELD
+Name=Meldung
+Category=1
+Picture=0,0,60,60
+
+ 

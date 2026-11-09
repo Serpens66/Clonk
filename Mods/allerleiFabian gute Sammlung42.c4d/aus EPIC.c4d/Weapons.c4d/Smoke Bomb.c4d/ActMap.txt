@@ -1,0 +1,13 @@
+[Action]
+Name=Activated
+Delay=5
+Facet=0,6,6,6
+NextAction=Activated
+Sound=Fusing
+PhaseCall=SmokeAss
+
+[Action]
+Name=TimeOver
+FacetBase=1
+StartCall=RemoveBomb
+ 

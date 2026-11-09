@@ -1,0 +1,5 @@
+[DefCore]
+id=FRZE
+Name=Fahrzeuge
+Category=1
+Picture=0,0,31,31

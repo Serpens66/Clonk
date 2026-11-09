@@ -1,0 +1,4 @@
+Füllt ein einstellbares Rechteck auf. Dies dauert, je nach Größe des Rechtecks, einige Zeit.
+Alle Materialien, die im Menü stehen können verwendet werden, zum Auffüllen einfach hineinlegen.
+!!Achtung: Sandklumpen werden ZUFÄLLIG zu Sand oder FlySand!!
+Das Füllen benötigt Energie, die durch ein Kabel oder Batterien zugeführt werden kann.

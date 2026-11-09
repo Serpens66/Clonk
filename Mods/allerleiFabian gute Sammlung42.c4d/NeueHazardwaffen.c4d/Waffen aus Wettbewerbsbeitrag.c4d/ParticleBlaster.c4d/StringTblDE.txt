@@ -1,0 +1,9 @@
+Standard=Blaster
+Super=Superschuss
+Tripple=Trippleschuss
+Doubleblast=Doppelschuss
+MEGA=Megaschuss
+
+KLASUpgradeDesc=Verstärkt den Schussmechanismus.
+
+KLASUpgraded=Schussmechanismus verstärkt.

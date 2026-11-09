@@ -1,0 +1,5 @@
+Entfernt Angriffsregeln, wenn eine bestimmte Anzahl an Feinden gestorben ist.
+1 mal aktiviert -> 1 Monster muss getötet werden
+2 mal aktiviert -> 5 Monster müssen getötet werden
+3 mal aktiviert -> 10 Monster müssen getötet werden
+usw.

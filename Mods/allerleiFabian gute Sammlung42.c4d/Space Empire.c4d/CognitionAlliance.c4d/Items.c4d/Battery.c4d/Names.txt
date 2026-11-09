@@ -1,0 +1,2 @@
+DE:Akku
+US:Accu

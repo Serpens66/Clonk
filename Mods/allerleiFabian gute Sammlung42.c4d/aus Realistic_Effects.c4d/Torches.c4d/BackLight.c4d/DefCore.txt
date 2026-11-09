@@ -1,0 +1,17 @@
+[DefCore]
+id=BLG3
+Version=4,9,8,2
+Name=Background Light
+Category=1026
+Width=20
+Height=15
+Offset=-10,-7
+Value=15
+Mass=200
+Components=GLAS=2
+Picture=20,0,64,64
+Vertices=4
+VertexX=-10,10,-10,10
+VertexY=-7,-7,7,7
+Construction=1
+TimerCall=CheckNight

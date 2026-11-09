@@ -1,0 +1,2 @@
+DE:Windkraftwerk
+US:wind power plant

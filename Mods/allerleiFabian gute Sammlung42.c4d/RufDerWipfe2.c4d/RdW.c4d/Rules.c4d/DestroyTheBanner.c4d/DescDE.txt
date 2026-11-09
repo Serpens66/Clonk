@@ -1,0 +1,1 @@
+Ein Spieler ist eliminiert, wenn sein Banner vernichtet wurde.

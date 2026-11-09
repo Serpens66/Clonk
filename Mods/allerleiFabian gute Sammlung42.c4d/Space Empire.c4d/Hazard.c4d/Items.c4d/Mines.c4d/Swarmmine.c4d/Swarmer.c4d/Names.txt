@@ -1,0 +1,2 @@
+DE:Schwärmer der Schwarmmine
+US:Swarmer

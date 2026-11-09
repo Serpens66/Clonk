@@ -1,0 +1,8 @@
+Made of 3 Dead Wipf, 2 Wood and 4 Metal.|
+Cost - 70. Mass - 8.|
+Normal 25% |
+Laser 20% |
+Fire 20% |
+Plasma 10% |
+Explosion 20% |
+Electric 30% |

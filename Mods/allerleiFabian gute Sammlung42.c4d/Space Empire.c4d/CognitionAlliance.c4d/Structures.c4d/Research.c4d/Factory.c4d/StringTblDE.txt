@@ -1,0 +1,8 @@
+TxtResearchs=Erforschen: %s
+Txtsdeveloped=%s erforscht!
+TxtNothingelsetoresearc=Keine Forschungsziele mehr in dieser Kategorie.
+TxtResearch=Forschen
+TxtContinuedevelopement=Forschung an %s fortsetzen
+TxtCancelresearch=Forschung abbrechen
+TxtAlreadyDeveloped=%s wurde|bereits erforscht!
+NotEnoughMoney=Nicht genug Geld!

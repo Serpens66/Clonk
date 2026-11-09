@@ -1,0 +1,69 @@
+Die Cancer Basisschiffe stellen die Operationsbasen von Prof.Mings Terrornetz dar. Diese Finsteren Festungen der Lüfte verfügen über mehr als genug Mittel um ganze Planeten in Angst und Schrecken zu versetzen.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, somit lassen sich die einzelnen Teile des Schiffes begehen: die Brücke, der Generatorraum, der Teleporterraum, die Plasmaflaks, und die Scorpions.
+
+Brücke:
+
+-Die Steuerung der Antriebssysteme erfolgt einzig und allein von der Brücke aus.
+
+-Die Höhenregulierung erfolgt per [Auf] und [Ab], die Steuerung des Horizontaltriebwerks über [Rechts] und [Links].
+
+-Um das Schiff zu stoppen per Kontextmenü den Schwebemodus aktivieren, es werden dann alle Triebwerke außer dem Antigrav booster heruntergefahren.
+
+-Hier kann ebenfalls die Schadensabfrage durchgeführt werden.
+
+Waffensysteme:
+
+-Der Cancer verfügt über 2 Plasmaflaks in den Kanzeln sowie 2 Andockstationen für Scorpion Interceptoren, sowie einen mächtigen Antimaterie-Blaster.
+
+-Über das Kontextmenü können die einzelnen Schützenpositionen begangen werden. Die Waffensteuerung erscheint dann jeweils im Inventar.
+
+-Die Plasmaflaks werden dann via [Werfen] durchgeladen und im geladenen Zustand abgefeuert.
+
+-Das Schwenken der Geschütze geschieht mittels [Rechts] und [Links], der Servomotor wird mittels [Oben] und [Unten] gestoppt.
+
+Teleporter:
+
+-Statt herkömmlichen Ein- und Ausgängen verfügt der hermetisch gesicherte Cancer über eine Teleporterstation.
+
+-Der Teleporter verfügt über 2 verschiedene Modis.
+
+-BeamDown befördert den befehlgebenden Clonk per Teleporterstrahl direkt auf die Oberfläche unterhalb des Schiffs.
+
+-BeamUp aktiviert die Abtastung. Sobald sich ein Befreundeter Haz-Clonk unter dem Schiff befindet wird dieser heraufgebeamt.
+
+-Zudem ist oben auf dem Schiff noch ein Reciever für Scorpionlandungen und Schiffstransfers installiert. Dieser fängt befreundete eingehende Teleporterstrahlen auf und leitet den Reisenden Clonk in das Schiff weiter.
+
+Generator:
+
+-Der Generator steuert die Spezialsysteme des Cancer: Die Nanitengeneration,  Den Scorpiontransfer, Den Antimaterieblaster, Die BrainMachine.
+
+-Der Generator besitzt ein Maximum von 5000 Energieeinheiten(EEH), sein prozentualer Füllstand und die Anzahl der zur Verfügung stehenden Naniten kann per Kontextmenü abgefragt werden.
+
+-Nanitengenerator: Zur Reparatur des Schiffes und der Angedockten Scorpions können Naniten Erzeugt werden. Kosten:1500EEH/20Stück. Standardmäßig enthält der Cancer 25 Naniten.
+
+-Scorpiontransfer: Falls ein Schiff verlorengegangen ist kann mittels Warptechnologie ein Werksfrischer Scorpion in ein freies Dock gewarpt werden. Kosten:3500EEH/Scorpion.
+
+-Antimaterieblaster: Die Hauptwaffe des Schiffs. Verfügt über genug Feuerkraft um alles unterhalb des Schiffes mit einem Treffer zu vaporisieren. Kosten:4000EEH/Schuss.
+
+-BrainMachine: Implantiert eine BRAIN-KI in einen gedockten Scorpion. Dieser fliegt los und greift selbstständig Ziele an. Kosten:1000EEH/KI.
+
+-Zudem kann noch Energie in Form von Energiezellen entnommen werden. Diese können dann in den Flaks oder den Scorpions zum Einsatz gebracht werden.
+
+-Der Generator regeneriert automatisch mit konstanter Rate Energie.
+
+Notfallrettungssystem:
+
+-Der Brückenkommandant sowie der Generatorverwalter werden bei Zerstörung des Schiffes in einer Technosphäre ausgeworfen.
+
+
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

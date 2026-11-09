@@ -1,0 +1,9 @@
+[Action]
+Name=Cut
+Procedure=NONE
+Length=300
+Delay=1
+Facet=0,50,10,16,15,34
+FacetBase=1
+PhaseCall=Sounds
+EndCall=Cut

@@ -1,0 +1,15 @@
+[Action]
+Name=FadeIn
+Length=1
+Delay=1
+FacetBase=1
+NextAction=FadeIn
+StartCall=FadingIn
+
+[Action]
+Name=Search
+Length=1
+Delay=37
+FacetBase=1
+NextAction=Search
+StartCall=Searching

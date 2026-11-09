@@ -1,0 +1,31 @@
+Mit Sensoren lassen sich alle möglichen Dinge automatisieren!
+Durch das Sensor-Grundobjekt lassen sich leicht neue Sensoren scripten!
+
+Anleitung:
+  siehe Anleitung.txt
+
+Rechtliches:
+  siehe Info.txt
+
+Erweiterung:
+  siehe Lebewesen-Sensor für ein Sensor-Beispiel
+  siehe Statur für ein Sensor-Ziel-Beispiel
+
+
+Viel Spaß!
+
+Version: 0.9 OPEN BETA
+Bugs bitte Melden!
+
+
+Henry Kielmann
+aka [na:skar]
+
+Kontakt: henry@kielcomm.de
+
+
+
+
+serpens:
+Unterstützte Dinge aller Dinge des Sensorenpacks:
+Haubitze, Katapult, Luke, Große Luke, Geschützturm(teilweise), Fahrstuhl,Pumpe, Bohrturm, Tor, Wachturm (alt und neu), alle Eingänge ab-/aufschließen.

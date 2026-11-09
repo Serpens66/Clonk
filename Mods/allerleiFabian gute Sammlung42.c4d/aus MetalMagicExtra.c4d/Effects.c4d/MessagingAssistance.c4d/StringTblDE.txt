@@ -1,0 +1,9 @@
+OnChurchEnter=In der Kirche kann man einen Clonk zu einem Priester und einen Ritter zu einem Paladin aufwerten. Ausserdem kann man hier die so genannten Kirchenwunder gegen Geld kaufen.
+OnHoligonIngotCollect=Mit dem Holigonbarren können mystische Gegenstände gebaut werden (Zweihänder, Stab). Auch wird er am Altar gebraucht, wenn man mit einem Paladin ein Wiederbelebungswunder zaubern will.
+OnHavingSpellDelay=Der Paladin kann den selben Zauber nicht direkt hintereinander zaubern. Er benötigt etwas Zeit, um die Zauber aufzuladen.
+OnStartPraying=Durch das Beten kann man seine Karmaenergie stetig erhöhen.|Jeder zusätzlich betende Clonk bringt jedoch nur noch die Hälfte an Karmaenergiezuwachs. Es lohnt sich also nicht, über 4 betende Clonks zu haben.
+OnStaffCollect=Der Stab von Cra-Kla-Zoth kann zu einem Elementarstab mit speziellen Zaubern aufgewertet werden.
+OnEnemySainthood=Dieses Heiligtum gehört dem Gegner und wird dich mit Blitzen angreifen. Du kannst es aber einnehmen, indem du dich auf es stellst und abwartest.
+OnFriendlySainthood=Dieses Heiligtum gehört deinem Team und wird dich heilen, bis es vom Gegner eingenommen wird.
+OnCultsiteMenu=An der Kultstätte kannst du mystische Tieren beschwören, die zu deiner Kirche passen. Sie kosten Alchemiezutaten und können entweder gesteuert werden, sind bereitbar oder folgen dir von alleine.
+OnMagicRoomEnter=In dem Magiezimmer können Magier zu Magi aufgewertet werden. Ausserdem kann man hier magische Gegenstände bauen.

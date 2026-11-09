@@ -1,0 +1,15 @@
+[DefCore]
+id=SMON
+Name=Moon
+Version=4,9,1,4
+Category=C4D_Vehicle|C4D_Background|C4D_Parallax
+Width=64
+Height=64
+Offset=-32,-32
+Picture=0,0,64,64
+TimerCall=CheckLight
+Timer=200
+BorderBound=1
+
+[Physical]
+Float=100

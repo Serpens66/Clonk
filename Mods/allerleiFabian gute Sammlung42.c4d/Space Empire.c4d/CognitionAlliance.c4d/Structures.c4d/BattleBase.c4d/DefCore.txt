@@ -1,0 +1,27 @@
+[DefCore]
+id=CBBS
+Name=BattleBase
+Version=4,9,1,3
+Category=1154
+MaxUserSelect=5
+Width=110
+Height=40
+Offset=-55,-20
+Value=250
+Mass=4000
+Components=METL=1;CRYS=1;WOOD=3;ROCK=1;CTIT=4;CALU=3;GLAS=2;PSTC=2;
+Picture=0,40,116,70
+Vertices=5
+VertexX=  0,-55,-55,55, 55
+VertexY=-20,-20, 20,20,-20
+VertexFriction=100,100,100,100,100
+Exclusive=1
+Entrance=-21,-5,25,25
+Base=1
+ColorByOwner=1
+LineConnect=39
+Construction=1
+AttractLightning=1
+
+[Physical]
+Energy=100000

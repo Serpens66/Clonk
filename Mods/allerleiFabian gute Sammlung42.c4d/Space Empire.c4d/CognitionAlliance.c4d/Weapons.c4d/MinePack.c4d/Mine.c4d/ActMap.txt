@@ -1,0 +1,8 @@
+[Action]
+Name=Ready
+Procedure=NONE
+Delay=2
+Length=1
+Facet=10,0,10,3
+EndCall=CheckTarget
+NextAction=Ready

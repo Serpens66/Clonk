@@ -1,0 +1,6 @@
+Kleine, fliegende Mutanten, deren Bestimmung eigentlich das transportieren und anzünden von Sprengstoff war. 
+
+Art: Mutant
+Herkunftsort: Forschungslabor für erweiterte Waffenentwicklung
+Stärken: Explodieren beim Tot, können fliegen
+Schwächen: Sehr leicht zerstörbar

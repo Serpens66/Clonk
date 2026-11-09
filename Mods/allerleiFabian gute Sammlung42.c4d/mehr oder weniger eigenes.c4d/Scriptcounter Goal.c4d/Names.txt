@@ -1,0 +1,2 @@
+DE:ScriptGoal
+US:Hunt

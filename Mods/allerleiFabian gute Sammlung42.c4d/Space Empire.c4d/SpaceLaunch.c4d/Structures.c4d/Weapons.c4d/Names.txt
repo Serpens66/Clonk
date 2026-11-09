@@ -1,0 +1,2 @@
+DE:Gebäudewaffen
+US:building weapons

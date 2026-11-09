@@ -1,0 +1,2 @@
+Alien-Würmer greifen an!
+Diese Regel platziert in der Nähe von Gebäuden Würmer, so lange bis es so viele Würmer wie die Anzahl dieser Regel sind.

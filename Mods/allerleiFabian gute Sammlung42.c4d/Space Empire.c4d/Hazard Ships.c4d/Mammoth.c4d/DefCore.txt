@@ -1,0 +1,31 @@
+[DefCore]
+id=MAM_
+Name=Mammoth
+Version=4,9,5
+Category=3332
+TimerCall=Ownerkontrolle
+MaxUserSelect=1
+Width=150
+Height=70
+Offset=-75,-35
+Value=2200
+Mass=400
+Components=METL=17;CRYS=22;CALU=19;CTIT=28;SURO=22;GLAS=5;
+Vertices=10
+VertexX=  0,  0, 60,-60, 0 , 72, -72, 50, -50,0
+VertexY=25, 12, 25, 25, -25, 15,  15, -5,  -5,0
+VertexCNAT=4,8,8,8,64,1,2,4,4,64
+VertexFriction=20,20,35,35,35,35,35,35
+ContactCalls=1
+Rebuy=1
+Entrance=-10,10,20,25
+ColorByOwner=1 
+BorderBound=7
+Rotate=1
+Grab=1
+CollectionLimit=1
+NoStabilize=1
+
+
+
+

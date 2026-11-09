@@ -1,0 +1,1 @@
+Scripterweiterungen von Standardobjekten, um sie in der Raffinerie herstellen zu können.

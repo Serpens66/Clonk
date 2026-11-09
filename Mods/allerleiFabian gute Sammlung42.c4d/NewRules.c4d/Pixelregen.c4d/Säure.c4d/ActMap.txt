@@ -1,0 +1,14 @@
+[Action]
+Name=Do1
+Delay=1
+EndCall=DoIt1
+
+[Action]
+Name=Do2
+Delay=1
+EndCall=DoIt2
+
+[Action]
+Name=Do3
+Delay=1
+EndCall=DoIt3

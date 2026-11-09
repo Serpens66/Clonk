@@ -1,0 +1,3 @@
+NoRules=Keine Spielregeln vorhanden.
+DisposeOf=%s entfernen
+Add=%s hinzufügen

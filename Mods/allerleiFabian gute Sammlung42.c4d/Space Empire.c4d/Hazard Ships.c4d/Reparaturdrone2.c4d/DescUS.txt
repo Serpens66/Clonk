@@ -1,0 +1,1 @@
+The support/repair drone supports the clonk in battles if it is armed with a weapon. This version also includes a repair system.

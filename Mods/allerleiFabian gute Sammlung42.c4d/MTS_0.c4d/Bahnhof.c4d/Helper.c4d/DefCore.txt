@@ -1,0 +1,16 @@
+[DefCore]
+id=NFWH
+Name=Helper
+Category=1
+MaxUserSelect=10
+Timer=40
+TimerCall=Magicway
+Width=6
+Height=6
+Offset=-3,-3
+Mass=10
+Components=NFWH=1;
+Picture=6,0,64,64
+PictureFE=6,0,64,64
+ColorByOwner=1
+ 

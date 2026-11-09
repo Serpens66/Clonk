@@ -1,0 +1,8 @@
+Mit dem großen Schildupgrade lässt sich ein doppelt so großer Schild erstellen, welcher zudem unabhängig von Gebäuden ist.
+
+Zum Schild selbst:
+Der Schild kann einzeln abgerissen werden, man bekommt zwei Energiezellen zurück.
+
+Der Schild hindert alle Geschosse (Gesamtgeschwindigkeit > 75), außer die Eigenen das Ziel zu erreichen. Das Schild bietet maximalen Schutz bei Angriffen aus der Ferne, wenig aber wenn der Feind zu Fuß kommt (wenn Geschosse zu langsam sind).  Zu schnelle Geschosse können auch nicht abgewehrt werden.
+Die Lebensdauer des Schildes ist begrenzt. Für jedes einzelne Geschoss auf das Schild verringern sich die restlichen Lebenspunkte vom Schild, wodurch viele einzelne Geschosse seine Energie schnell aufbrauchen.
+Der Schild reagiert nicht auf den Strahl der Partikelkanone!

@@ -1,0 +1,22 @@
+Starker Schutz für den bewaffneten Zweikampf. Anlegen durch Doppelklick auf Graben.
+
+Resistenzen:
+Nahkampf 30% 
+Projektile 30% 
+Energie -20% 
+Feuer 5% 
+Bio/Partikel 5% 
+Explosion 10% 
+Stahl-Scharfschützenprojektile 5% 
+
+Fertigkeiten:      Standardwert:
+HP        +5.000  150.000
+Kampf     +5.000   80.000
+Werfen        +0   50.000
+Springen  -  500   40.000
+Laufen    -  500   80.000
+Klettern  -  500   60.000
+Hangeln   -  500   60.000
+Schwimmen -2.000   90.000
+Atem      -  500  100.000
+Graben    -2.000   60.000

@@ -1,0 +1,6 @@
+[DefCore]
+id=RAL3
+Name=Licht ausschalten
+Category=1
+Picture=12,0,64,64
+ 

@@ -1,0 +1,9 @@
+[Action]
+Name=Floating
+Facet=0,0,26,24
+Delay=1
+Directions=1
+Length=12
+FacetTopFace=1
+NextAction=Floating
+

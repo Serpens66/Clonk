@@ -1,0 +1,3 @@
+Variiere den Energieverbrauch.
+Klappt zurzeit nur für die Zukunfts Factory Gebäude.
+Variable Regel.

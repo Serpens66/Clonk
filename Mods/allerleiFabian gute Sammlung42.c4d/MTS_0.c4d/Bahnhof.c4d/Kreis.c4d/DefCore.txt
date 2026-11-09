@@ -1,0 +1,13 @@
+[DefCore]
+id=HCIR
+Name=Kreis
+Category=8388609
+Width=20
+Height=20
+Offset=-10,-10
+Mass=10
+Components=_NEW=1;
+Picture=0,0,20,20
+PictureFE=0,0,20,20
+ColorByOwner=1
+ 

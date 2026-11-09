@@ -1,0 +1,5 @@
+[DefCore]
+id=_ZF3
+Name=Gebäude-Licht Funktionen
+Picture=0,0,64,64
+Category=1

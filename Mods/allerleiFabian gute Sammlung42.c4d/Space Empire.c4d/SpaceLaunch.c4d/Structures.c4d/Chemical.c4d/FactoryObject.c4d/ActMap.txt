@@ -1,0 +1,17 @@
+[Action]
+Name=Process
+Delay=1
+NextAction=Process
+EndCall=Process
+
+[Action]
+Name=Wait
+Delay=10
+NextAction=Wait
+EndCall=Waiting
+
+[Action]
+Name=CheckEnergy
+Delay=10
+NextAction=CheckEnergy
+EndCall=CheckEnergy

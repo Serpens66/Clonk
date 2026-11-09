@@ -1,0 +1,3 @@
+Fabrik für Fahrzeuge und schwere Waffen. Umweltschaden des Gebäudes= 20.
+Mit einer Chance von 1 zu 3 entsteht dabei Metallschrott.
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=40.

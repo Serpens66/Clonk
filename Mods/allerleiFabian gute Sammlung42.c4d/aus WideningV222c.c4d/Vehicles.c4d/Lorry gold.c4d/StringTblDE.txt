@@ -1,0 +1,2 @@
+TxtControl=Steuerung
+TxtLorryisfull=Lore ist|voll.

@@ -1,0 +1,2 @@
+Breite Hintergrundwand für einen Bunker.
+In Fundament ist eine Bodenklappe einbaubar.

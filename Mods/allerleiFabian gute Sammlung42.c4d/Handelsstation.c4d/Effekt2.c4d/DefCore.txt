@@ -1,0 +1,12 @@
+[DefCore]
+id=EFKT
+Name=Effekt
+Category=2
+Width=10
+Height=10
+Offset=-5,-5
+Picture=0,0,10,10
+Exclusive=1
+
+[Physical]
+Float=1600

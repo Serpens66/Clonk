@@ -1,0 +1,2 @@
+DE:Fighters
+US:Fighters

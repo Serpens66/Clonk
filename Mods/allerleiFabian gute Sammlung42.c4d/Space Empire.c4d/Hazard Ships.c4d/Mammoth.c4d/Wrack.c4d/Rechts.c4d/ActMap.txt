@@ -1,0 +1,9 @@
+[Action]
+Name=Destroyed
+Procedure=NONE
+Length=1
+Directions=2
+Facet=0,0,120,60
+Delay=5
+NextAction=Destroyed
+StartCall=Effects

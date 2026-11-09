@@ -1,0 +1,16 @@
+[Action]
+Name=Fire
+Procedure=NONE
+Length=1
+Delay=10
+FacetBase=1
+NextAction=Reload
+StartCall=Firing
+
+[Action]
+Name=Reload
+Procedure=NONE
+Length=1
+Delay=16
+Facet=0,0,45,34
+NextAction=Fire

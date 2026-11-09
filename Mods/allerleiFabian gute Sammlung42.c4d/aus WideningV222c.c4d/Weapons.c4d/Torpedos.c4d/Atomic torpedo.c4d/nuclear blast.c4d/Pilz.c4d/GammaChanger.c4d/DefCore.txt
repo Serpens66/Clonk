@@ -1,0 +1,8 @@
+[DefCore]
+id=_GVC
+Name=Gammawertwechsler
+Version=4,9,1,4
+Category=1
+TimerCall=GmVal
+Timer=1
+NeededGfxMode=1

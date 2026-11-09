@@ -1,0 +1,9 @@
+Bouncing=Abprallend
+
+BouncingStructure=nur Gebäude, Abprallend 
+
+KSLMUpgradeDesc=Ersetzt den Schussmechanismus durch abprallende Schüsse.
+
+KSLMUpgraded=Schussmodus durch|abprallende Schüsse ersetzt.
+
+StandardStructure=nur Gebäude, Standard

@@ -1,0 +1,13 @@
+Diese Regel regelt, wie belastbar die Umwelt ist und ab wieviel Abgasen/Müll usw. die höchste Verschmutzungsstufe erreicht ist und Katastrophen usw. kommen (es gibt 5 Verschmutzungsstufen).
+
+Wenn es diese Regel nicht im Spiel gibt, liegt der globalnature Wert bei 1500 pro Spieler.
+Wenn 1 mal aktiviert: 700/Spieler
+2: 1000/Spieler
+3: 1800/Spieler
+4: 2200/Spieler
+5: 2600/Spieler
+6: 99999999/Spieler , also quasi ohne Umweltverschmutzung.
+
+
+
+Mittlerweile ist das hier nur noch ein hilfsobjekt.

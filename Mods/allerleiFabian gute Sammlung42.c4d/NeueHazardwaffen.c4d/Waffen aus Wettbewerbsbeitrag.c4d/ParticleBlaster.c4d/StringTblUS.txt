@@ -1,0 +1,9 @@
+Standard=Particle fire
+Super=Super fire
+Tripple=Tripple fire
+Doubleblast=Double fire
+MEGA=Mega fire
+
+KLASUpgradeDesc=Upgrades the  fire mechanism.
+
+KLASUpgraded=Fire mechanism upgraded.

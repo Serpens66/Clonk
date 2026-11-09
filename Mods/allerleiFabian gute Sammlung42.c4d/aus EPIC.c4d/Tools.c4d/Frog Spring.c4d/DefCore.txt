@@ -1,0 +1,21 @@
+[DefCore]
+id=DK8Z
+Name=Frog Spring
+Version=4,9,5
+Category=3600
+MaxUserSelect=10
+Width=10
+Height=14
+Offset=-5,-7
+Value=7
+Mass=15
+Components=METL=2
+Picture=10,0,78,60
+Vertices=4
+VertexX=-4,4,4,-4
+VertexY=-3,3,-3,3
+VertexFriction=50,50,50,50
+Rebuy=1
+Rotate=1
+Collectible=1
+ 

@@ -1,0 +1,17 @@
+[Action]
+Name=working
+Procedure=NONE
+Length=35
+Delay=2
+Facet=0,0,30,24
+NextAction=working
+EndCall=Transmit
+
+[Action]
+Name=wait
+Procedure=NONE
+Length=1
+Delay=10
+Facet=0,0,30,24
+NextAction=wait
+EndCall=Transmit

@@ -1,0 +1,8 @@
+[DefCore]
+id=LIGT
+Name=Lichteffekt
+Category=1
+Width=15
+Height=15
+Offset=-8,-8
+Picture=45,0,15,15

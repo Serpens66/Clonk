@@ -1,0 +1,29 @@
+[DefCore]
+id=CWPP
+Name=Wind Power Plant
+Version=4,9,1,3
+Category=1154
+MaxUserSelect=10
+Width=30
+Height=54
+Offset=-15,-27
+Value=350
+Mass=800
+Components=METL=1CTIT=1;CALU=1;GLAS=1;
+Picture=0,54,75,120
+Vertices=5
+VertexX=  0,-12,  9,16,-16
+VertexY=-14,-21,-21,32, 32
+VertexFriction=100,100,100,100,100
+Grab=2
+Exclusive=1
+NoPushEnter=1
+LineConnect=19
+ColorByOwner=1
+Construction=1
+TimerCall=TransmitEnergy
+Timer=5
+AttractLightning=1
+
+[Physical]
+Energy=100000

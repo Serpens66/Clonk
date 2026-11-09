@@ -1,0 +1,2 @@
+Mit "doppelgraben" auswählen. Mit "hoch" lesen.
+Um seinen Text besser zu formatieren, kann "<br>" für einen Zeilenvorschub benutzt werden. Man kann auch ein Bild auf dem Schild darstellen. Dazu schreibt man am Anfang einfach { {!<ID>} }, wobei <ID> durch eine Objekt-ID ersetzt wird, ohne Leerzeichen. Also z.b { {!<GOLD>} } ( die zeichen <> weglassen). Und wenn ein Bild vom Objekt im Text auftauchen soll, dann noch zusätzlich das ! weglassen, z.b. { {<ID>} }.

@@ -1,0 +1,8 @@
+[DefCore]
+id=LOOC
+Name=Stabilere Schlösser
+Version=4,9,5
+Value=1
+Category=1040
+Picture=15,0,60,34
+MaxUserSelect=1

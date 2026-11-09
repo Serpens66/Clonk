@@ -1,0 +1,2 @@
+Wenn aktiv, bekommen alle Clonks unter Wasser, denen der Atem ausgeht und welche nicht gerade angewählt sind, den Befehl "Up", damit sie auftauchen.
+Verhindert ungewolltes ertrinken, wenn ein Clonk unter Wasser vergessen wird, oder Richtung Wasser geschickt und vergessen wird, oft fällt er dann ins Wasser ohne aufzutauchen.

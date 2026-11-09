@@ -1,0 +1,26 @@
+[DefCore]
+id=EH8Z
+Version=4,9,8
+Name=Potted plant
+Category=2576
+MaxUserSelect=20
+Width=12
+Height=18
+Offset=-7,-9
+Vertices=3
+VertexX=-5,5
+VertexY=7,7,-5
+VertexFriction=30,30,30
+Value=5
+Mass=15
+Timer=200
+TimerCall=Check
+Components=WOOD=2
+Picture=12,0,63,78
+ContactIncinerate=1
+BlastIncinerate=5
+Rebuy=1
+Collectible=1
+Rotate=1
+Float=1
+NoBurnDecay=1

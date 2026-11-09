@@ -1,0 +1,2 @@
+DE:Taucherhelm
+US:Diving helmet

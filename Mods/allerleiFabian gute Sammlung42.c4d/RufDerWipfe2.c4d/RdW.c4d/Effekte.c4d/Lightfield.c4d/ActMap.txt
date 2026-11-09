@@ -1,0 +1,16 @@
+[Action]
+Name=IgnoreDay
+Delay=5
+FacetBase=0
+NextAction=IgnoreDay
+Facet=0,0,300,300
+Length=6
+FacetTopFace=1
+PhaseCall=Light
+Procedure=NONE
+
+[Action]
+Name=Eidel
+Length=1
+Delay=0
+NextAction=HOLD

@@ -1,0 +1,15 @@
+[DefCore]
+id=SCR1
+Version=4,9,8,2
+Name=Screen
+Category=1026
+Width=40
+Height=40
+Offset=-20,-20
+Picture=0,0,40,40
+Construction=1
+Mass=500
+Components=METL=2
+Vertices=4
+VertexX=-20,20,-20,20
+VertexY=-20,-20,20,20

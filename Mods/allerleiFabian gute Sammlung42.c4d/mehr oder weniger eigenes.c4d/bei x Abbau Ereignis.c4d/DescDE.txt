@@ -1,0 +1,7 @@
+Immer wenn weitere x% Material abgebaut wurden (Pixel UND Klumpen), passiert etwas dem technischen Fortschritt des besten Spielers entsprechend. 
+Z.b Katastrophen und Monsterangriffe jeglicher Art. (evlt noch positive Ereignisse einbauen?).
+
+Sinnvoll kombinieren mit dem Ziel Goldabbau.
+Bedenke, dass bestimmte Materialien sich umwandeln können. Z.b Lava zu Asche und Wasser zu Eis. Säure versickert leicht im Boden und Oel brennt schnell. Also vorsicht bei fluessigem Material.
+
+Variabel einzustellende Regel! (dh. mit dem regelchooser und nicht ueber die anzahl der objekte)

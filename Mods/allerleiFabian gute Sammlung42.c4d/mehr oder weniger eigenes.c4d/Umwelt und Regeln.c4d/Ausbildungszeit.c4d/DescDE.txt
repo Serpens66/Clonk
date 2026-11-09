@@ -1,0 +1,13 @@
+Variable Einstellungen:
+Hier kannst du die Details zur Clonkausbildung festlegen.
+
+
+Einstellung im Editor ohne variable Einstellungen:
+Regelt die Zeitdauer für die Ausbildung der Clonks.
+0: Standardwerte
+1: Sofort fertig
+2: halber Standard
+
+
+..............
+(doppelt geht nicht, weil zu kompliziert in umsetzung)

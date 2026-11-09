@@ -1,0 +1,17 @@
+[Action]
+Name=StartWorking
+Procedure=NONE
+Length=6
+Delay=2
+Facet=0,0,90,70
+NextAction=EndWorking
+
+[Action]
+Name=EndWorking
+Procedure=NONE
+Length=6
+Delay=2
+Facet=0,0,90,70
+Reverse=1
+NextAction=Idle
+EndCall=CheckStatus2

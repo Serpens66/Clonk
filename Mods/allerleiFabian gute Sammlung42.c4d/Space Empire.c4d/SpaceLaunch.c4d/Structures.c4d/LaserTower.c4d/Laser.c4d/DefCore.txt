@@ -1,0 +1,13 @@
+[DefCore]
+id=SLSR
+Name=Laser
+Version=4,9,5
+Category=4
+Width=5
+Height=101
+Offset=-2,-50
+Picture=10,0,5,40
+Rotate=1
+IncompleteActivity=1
+NoStabilize=1
+ColorByOwner=1

@@ -1,0 +1,15 @@
+[Particle]
+Name=GSpark
+MaxCount=300
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+CollisionFn=Bounce
+Face=0,0,30,30,-15,-15
+VertexCount=1
+Delay=0
+Repeats=1
+GravityAcc=20
+AlphaFade=2
+Additive=1
+RByV=1

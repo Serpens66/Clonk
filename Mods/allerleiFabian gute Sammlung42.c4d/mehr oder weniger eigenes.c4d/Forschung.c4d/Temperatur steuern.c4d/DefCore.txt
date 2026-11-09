@@ -1,0 +1,8 @@
+[DefCore]
+id=TMST
+Name=Temperatur steuern
+Version=4,9,5
+Value=1
+Category=1040
+Picture=0,0,35,35
+MaxUserSelect=1

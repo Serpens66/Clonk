@@ -1,0 +1,12 @@
+[Action]
+Name=Travel
+Procedure=NONE
+Length=30
+Delay=1
+Facet=0,0,48,48,-24,-24
+NextAction=Remove
+PhaseCall=Travel
+
+[Action]
+Name=Remove
+StartCall=Remove

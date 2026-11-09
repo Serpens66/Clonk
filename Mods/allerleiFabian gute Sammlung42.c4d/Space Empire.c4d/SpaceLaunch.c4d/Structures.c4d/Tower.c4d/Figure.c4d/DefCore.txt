@@ -1,0 +1,13 @@
+[DefCore]
+id=STOF
+Name=Figure
+Category=2
+MaxUserSelect=10
+Width=16
+Height=14
+Offset=-8,-7
+Picture=0,0,16,14
+Vertices=1
+VertexX=0
+VertexY=0
+ 

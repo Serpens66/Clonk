@@ -1,0 +1,1 @@
+Helps the Hazardclonk to be more agile while being in the air, even if the technology to fly is not researched yet.

@@ -1,0 +1,2 @@
+Schaltet alle Lichter ab, außer die fürs Feuer.
+Sorgt eventuell für ein stabileres Spiel.

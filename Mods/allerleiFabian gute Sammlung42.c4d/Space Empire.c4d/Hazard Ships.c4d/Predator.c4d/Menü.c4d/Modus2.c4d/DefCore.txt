@@ -1,0 +1,6 @@
+[DefCore]
+id=M26G
+Name=Antrieb
+Category=1
+Picture=0,0,35,35
+ 

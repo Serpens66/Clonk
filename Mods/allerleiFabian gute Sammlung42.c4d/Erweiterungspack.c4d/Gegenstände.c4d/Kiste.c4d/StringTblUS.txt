@@ -1,0 +1,14 @@
+PutOn=Put on
+AlreadyHasBag=%s is already|wearing a bag!
+BagPutOn=Bag put on.
+Bag=Bag
+Contents=Contents
+Insert=Insert %s
+UnpackBag=Bag unpack in %s
+Deposit=Deposit the bag
+BagIsEmpty=The bag is empty.
+Get=Get %s
+BagIsFull=Bag is full!
+BagDeposited=Bag deposited.
+AutoCollectOn=Auto. pack up: On
+AutoCollectOff=Auto. pack up: Off

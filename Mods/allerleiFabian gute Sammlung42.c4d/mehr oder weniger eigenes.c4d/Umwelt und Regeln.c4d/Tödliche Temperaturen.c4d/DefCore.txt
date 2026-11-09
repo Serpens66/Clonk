@@ -1,0 +1,9 @@
+[DefCore]
+id=KLI_
+Name=Toedliche Temperaturen
+Version=4,9,5
+Category=524289
+Width=1
+Height=1
+Picture=0,0,7,16
+MaxUserSelect=1

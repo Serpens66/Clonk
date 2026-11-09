@@ -1,0 +1,7 @@
+Das Chemiefaß wird mit 10 Chemieabfallsportionen gefüllt.
+Kann über doppelgraben entpackt werden.
+
+Entsteht bei chemischen oder biologischen Produktionsprozessen, bis zu 10 Stück können in ein Chemiefass zusammengefasst werden. Beim Aufprall könnten schädliche Substanzen in die Umwelt freigesetzt werden und es bleibt nur noch Schlacke übrig. 
+Umweltschädigend=40
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend.
+Kann in Müllverbrennungsanlage verbrannt werden.

@@ -1,0 +1,3 @@
+Steuert die Rundenerfüllungsüberprüfung.
+Diese geänderte Version wurde speziell für Star Empires umgeschrieben und ermöglicht die Spielzielüberprüfung für jeden Spieler unabhängig.
+Außerdem muss jetzt nur noch eine bestimmte Anzahl an Zielen erfüllt werden, die sich mit der Spielzielauswahl festlegen lässt.

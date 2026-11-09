@@ -1,0 +1,2 @@
+Gestell für ein stationäres Geschütz.
+Alle Geschütze können über eine Konsole (muss extra gebaut werden) bewaffnet und gesteuert werden.

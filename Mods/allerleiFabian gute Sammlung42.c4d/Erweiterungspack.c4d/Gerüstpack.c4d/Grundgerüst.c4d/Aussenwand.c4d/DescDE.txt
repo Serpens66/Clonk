@@ -1,0 +1,1 @@
+Ein unwichtiges Objekt, das den TopFace der rechten Aussenwand simuliert.

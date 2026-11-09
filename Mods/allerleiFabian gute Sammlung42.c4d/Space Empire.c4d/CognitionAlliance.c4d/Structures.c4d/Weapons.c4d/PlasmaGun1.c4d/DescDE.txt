@@ -1,0 +1,4 @@
+Die Plasmakanone feuert auf gegnerische Clonks und Fahrzeuge. Sie besitzt eine hohe Schussrate, hat 650 Reichweite.
+Benötigt Energie und Partikelbehälter als Munition.
+
+Kann nach Erforschung in manchen Geschütztürmen und Basen gekauft werden.

@@ -1,0 +1,2 @@
+DE:Maschinenpistole
+US:Sub Machinegun

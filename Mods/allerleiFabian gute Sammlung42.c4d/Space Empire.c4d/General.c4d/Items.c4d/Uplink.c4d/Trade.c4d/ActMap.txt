@@ -1,0 +1,9 @@
+[Action]
+Name=Turn
+Procedure=ATTACH
+Length=10
+Delay=3
+Facet=0,0,24,16
+NextAction=Turn
+PhaseCall=Heal
+ 

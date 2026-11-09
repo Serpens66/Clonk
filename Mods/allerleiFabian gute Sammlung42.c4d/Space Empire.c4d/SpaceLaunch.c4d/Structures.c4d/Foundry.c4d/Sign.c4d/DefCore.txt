@@ -1,0 +1,14 @@
+[DefCore]
+id=SFDS
+Name=InfoSign
+Version=4,9,5
+TimerCall=Check
+Timer=6
+Category=2
+Width=14
+Height=14
+Offset=-7,-7
+Picture=0,0,14,14
+Vertices=1
+VertexX=-31
+VertexY=-41

@@ -1,0 +1,1 @@
+Dieses Objekt erlaubt es das Overlay eines Objektes in ausgedehnter Form auf einer festgelegten Fläche zu Zeigen. Dabei wird es nicht ausgeblendet wenn es sich eigentlich bereits außerhalb des Randes vom Bildschirm eines Spielers befindet.

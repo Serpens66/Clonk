@@ -1,0 +1,4 @@
+Eine Fabrikanlage, in der man chemische und explosive Dinge herstellen kann. Auch Rohstoffumwandlungen sind hier möglich. 
+Umweltschaden des Gebäudes= 10 bis 20.
+Mit einer Chance von 1 zu 15 entsteht hier Chemieabfall, mit 1 zu 25 Metalschrott und mit 1 zu 10 Haushaltsmüll (die Hazardclonks machen halt Dreck...).
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=10.

@@ -1,0 +1,2 @@
+DE:Projektil leuchtend gegen Gebäude
+US:Bullet

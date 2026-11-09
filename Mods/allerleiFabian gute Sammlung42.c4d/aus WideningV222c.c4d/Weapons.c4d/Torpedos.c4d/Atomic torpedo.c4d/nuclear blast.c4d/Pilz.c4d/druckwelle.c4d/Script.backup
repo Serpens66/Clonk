@@ -1,0 +1,68 @@
+/*--- ATOM DRUCKWELLE ---*/
+
+#strict
+
+protected Initialize:
+	SetAction("GO");
+	local rechts_oder_links;
+	local old;
+	local count;
+	count=1;
+	return(1);
+	
+
+
+/*ContactLeft:
+	free();
+	return(1);
+ContactRight:
+	free();
+	return(1);*/
+
+protected CheckHindernis:
+	--count;
+             //if(LessThan(count,0)) if(Equal(GetX(),old)) free();
+	//Message("%d",this(),GetCon());
+
+	if(LessThan(count,0))
+	{
+		if(Equal(GetComDir(),0))
+		{
+			free();
+			set_dir();
+		}
+		if(Equal(GetX(),old))
+		{	
+			free();
+			set_dir();
+		}
+	}
+	if(LessThan(GetCon(),250)) SetVar(2,Div(GetCon(),10)+1);
+	DoCon(Var(2));
+
+
+
+
+	SetPhysical("Walk",GetPhysical("Walk")-Div(GetPhysical("Walk"),40),2);
+	//if(LessThan(GetPhysical("Walk"),100000)) RemoveObject();
+	old=GetX();
+	return(1);
+
+
+nach_rechts:
+	rechts_oder_links=1;
+	set_dir();
+	return(1);
+nach_links:
+	rechts_oder_links=2;
+	set_dir();
+	return(1);
+
+protected set_dir:
+	if(Equal(rechts_oder_links,1)) SetComDir(COMD_Right());
+	if(Equal(rechts_oder_links,2)) SetComDir(COMD_Left());
+	return(1);
+privat free:
+	
+	FreeRect(GetX()-(52*GetCon()/100),GetY()-(102*GetCon()/100),104*GetCon()/100,104*GetCon()/100);
+	return(1);

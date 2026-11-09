@@ -1,0 +1,1 @@
+in System Datei des Packs ist ein appendto an alles um das abschließen/aufschließen zu ermöglichen, weshalb hier überall die Variable "andere" gesetzt werden muss, wodurch dann eben nicht (nur) schließen, sondern auch andere Dinge möglich sind.

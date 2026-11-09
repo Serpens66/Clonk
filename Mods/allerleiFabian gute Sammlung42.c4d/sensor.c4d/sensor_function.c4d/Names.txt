@@ -1,0 +1,2 @@
+DE:Sensor-Funktionen
+US:Sensor-Functions

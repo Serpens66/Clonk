@@ -1,0 +1,1 @@
+If this rule is activated, you can instruct in the rule menu that a Clonk, which you don't need straight, to sleep. Sleeping Clonks aren't selectable, it can only again be selected, if you wake up the clonk in the rule menu again.

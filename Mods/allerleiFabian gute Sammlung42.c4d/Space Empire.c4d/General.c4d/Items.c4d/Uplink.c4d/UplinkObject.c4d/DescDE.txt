@@ -1,0 +1,1 @@
+Ein Stück Script, das von beiden Sorten von Uplinks benutzt wird.

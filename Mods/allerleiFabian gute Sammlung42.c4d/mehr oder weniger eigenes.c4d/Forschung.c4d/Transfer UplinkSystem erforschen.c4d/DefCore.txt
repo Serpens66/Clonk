@@ -1,0 +1,8 @@
+[DefCore]
+id=UUU1
+Name=Uplink Transfer 
+Version=4,9,5
+Value=1
+Category=1040
+Picture=24,0,92,60
+MaxUserSelect=1

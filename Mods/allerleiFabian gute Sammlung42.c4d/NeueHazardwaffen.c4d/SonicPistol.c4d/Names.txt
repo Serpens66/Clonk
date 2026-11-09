@@ -1,0 +1,2 @@
+DE:Schallpistole
+US:Sonic pistol

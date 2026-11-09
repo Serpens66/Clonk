@@ -1,0 +1,2 @@
+Diese Hilfsregel stellt sehr viele vitale Systeme für das SGGP zur verfügung. Ausserdem kann der Host in ihr einige Sachen einstellen.
+Sie muss in SGGP-Maps immer aktiv sein!

@@ -1,0 +1,15 @@
+[DefCore]
+id=CVFH
+Name=Hangar
+Version=4,9,5
+Category=2
+Width=62
+Height=38
+Offset=-31,-19
+Picture=682,0,62,38
+Vertices=1
+VertexX=0
+VertexY=20
+ColorByOwner=1
+TimerCall=RepairVehicles
+Timer=100

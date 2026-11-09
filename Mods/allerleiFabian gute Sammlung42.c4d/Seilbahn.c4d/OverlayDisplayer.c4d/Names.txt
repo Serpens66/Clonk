@@ -1,0 +1,2 @@
+DE:Overlay-Zeiger
+US:Overlay displayer

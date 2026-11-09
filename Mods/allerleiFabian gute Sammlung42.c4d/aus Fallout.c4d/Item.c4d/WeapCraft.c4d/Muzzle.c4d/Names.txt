@@ -1,0 +1,3 @@
+DE:Mьndung
+US:Muzzle
+RU:ƒуло

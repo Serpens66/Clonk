@@ -1,0 +1,2 @@
+DE:Bazookageschütz
+US:Bazooka cannon

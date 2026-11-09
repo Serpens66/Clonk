@@ -1,0 +1,5 @@
+Dieser Sprengsatz verseucht mehr als er vernichtet. Sobald sein 30s-Timer abgelaufen ist, kommt es zur Explosion und es wird enorme Strahlung freigesetzt.
+
+Der Umwelt schadet so eine Explosion natürlich auch. Wenn soviele A-Bomben, wie Spieler vorhanden, gezündet wurden, dann sinkt die Umweltbelastbarkeit auf 90% von dem Wert davor usw.
+
+Durch Anfassen + Doppelgraben wird der Timer aktiviert und kann (nur vom Besitzer) auch wieder abgeschaltet werden.

@@ -1,0 +1,9 @@
+[Action]
+Name=BURN
+Procedure=NONE
+NextAction=BURN
+Delay=5
+Length=1
+Facet=30,0,80,30,-21,0
+
+

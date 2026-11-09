@@ -1,0 +1,5 @@
+Verarbeitet Erze zu Metall oder erzeugt Strom durch Verbrennung von Materialien. Wechsel zwischen den beiden Betriebsmodi mit der Graben-Taste. 
+Metall-Modus:
+Es wird Metall produziert, indem Kohle, Holz oder Öl verbrannt oder Energie genutzt wird. Mit einer Chance von 1 zu 10 entsteht dabei auch das Abfallprodukt Schlacke. Kann 5 Metallschrott mit Brennmaterial zu 1 Metall und 10Schlacke schmelzen.
+Energie-Modus:
+Durch die Verbrennung von Kohle, Holz oder Öl wird Strom erzeugt. 

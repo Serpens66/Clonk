@@ -1,0 +1,5 @@
+[Action]
+Name=Reload
+Procedure=NONE
+Delay=25
+NextAction=Idle

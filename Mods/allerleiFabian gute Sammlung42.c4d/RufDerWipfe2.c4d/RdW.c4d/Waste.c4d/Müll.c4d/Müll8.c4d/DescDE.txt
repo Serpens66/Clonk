@@ -1,0 +1,8 @@
+In diesem Kasten stecken 10 Portionen von Müllschlacke.
+Kann über doppelgraben entpackt werden.
+
+Schlackenbgeschreibung:
+Entsteht bei Verhüttung von Erzen. Kaum umweltschädigend..., bis zu 10 Stück können in einen Schlackenkasten zusammengefasst werden.
+Umweltschädigend=5
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend.
+Kann in Müllverbrennungsanlage verbrannt werden.

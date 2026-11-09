@@ -1,0 +1,7 @@
+[DefCore]
+id=LIST
+Name=Liste
+Category=1
+Picture=0,0,34,34
+
+ 

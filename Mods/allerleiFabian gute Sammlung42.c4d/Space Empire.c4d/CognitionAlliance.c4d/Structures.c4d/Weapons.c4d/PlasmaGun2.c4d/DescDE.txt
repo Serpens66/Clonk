@@ -1,0 +1,4 @@
+Die verbesserte Plasmakanone feuert zwei durchschlagendere Plasmageschosse ab, besitzt aber eine größere Ladezeit als das Standardmodell und hat nur eine Reichweite von 500.
+Benötigt Energie und Partikelbehälter als Munition.
+
+Kann nach Erforschung in manchen Geschütztürmen und Basen gekauft werden.

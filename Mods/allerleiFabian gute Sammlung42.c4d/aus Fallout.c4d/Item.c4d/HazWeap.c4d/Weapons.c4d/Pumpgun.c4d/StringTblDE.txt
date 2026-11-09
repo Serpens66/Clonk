@@ -1,0 +1,6 @@
+Standard=Schrotflintenfeuer
+Automatik=Automatische Schrotflinte
+
+KRFLUpgradeDesc=Erweitert die Shotgun zur Automatik-Shotgun 
+
+KRFLUpgraded=Automatik-Funktion eingebaut!

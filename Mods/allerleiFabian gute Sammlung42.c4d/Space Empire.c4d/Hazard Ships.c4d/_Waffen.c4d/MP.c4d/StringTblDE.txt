@@ -1,0 +1,8 @@
+Standard=Automatik
+Quickshot=Hoch-Geschwindigkeit
+StandardStructure=Automatik, Gebäude
+QuickshotStructure=Hoch-Geschwindigkeit, Gebäude
+
+KRFLUpgradeDesc=Ersetzt den Schussmechanismus durch einen hochgeschwindigkeits Mechanismus.
+
+KRFLUpgraded=Schussmechanismus durch einen hochgeschwindigkeits Mechanismus ersetzt.

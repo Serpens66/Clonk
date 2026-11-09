@@ -1,0 +1,2 @@
+Standard=Sonic wave
+Schock=Schock wave

@@ -1,0 +1,2 @@
+DE:Bu-WandHoch-1,5fachBreit
+US:Hangar left

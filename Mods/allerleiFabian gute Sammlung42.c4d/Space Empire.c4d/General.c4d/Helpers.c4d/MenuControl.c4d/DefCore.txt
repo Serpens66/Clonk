@@ -1,0 +1,8 @@
+[DefCore]
+id=SMEC
+Name=MenuControl
+Category=1
+Picture=0,0,1,1
+TimerCall=Check
+Timer=3
+ 

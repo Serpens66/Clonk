@@ -1,0 +1,11 @@
+[Action]
+Name=Reload1
+NextAction=Idle
+Length=1
+Delay=15
+
+[Action]
+Name=Reload2
+NextAction=Idle
+Length=1
+Delay=45

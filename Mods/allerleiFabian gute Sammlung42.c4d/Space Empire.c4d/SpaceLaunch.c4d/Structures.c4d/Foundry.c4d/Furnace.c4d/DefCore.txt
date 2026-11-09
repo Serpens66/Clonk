@@ -1,0 +1,14 @@
+[DefCore]
+id=SFNC
+Name=Furnace
+Version=4,9,5
+Category=2
+TimerCall=Production
+Timer=4
+Width=28
+Height=28
+Offset=-14,-14
+Picture=0,0,40,35
+Vertices=1
+VertexX=2
+VertexY=-35

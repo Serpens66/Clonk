@@ -1,0 +1,1 @@
+A platform that can be extended from the pulley block so that you can safley drop whatever is hooked onto it.

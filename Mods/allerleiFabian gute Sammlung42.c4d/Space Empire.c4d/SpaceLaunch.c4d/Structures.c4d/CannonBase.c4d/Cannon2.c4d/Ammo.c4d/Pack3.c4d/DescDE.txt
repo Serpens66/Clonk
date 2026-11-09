@@ -1,0 +1,3 @@
+Enthält 10 Schuss für das Bazookageschütz der Geschützplattform.
+Erzeugt radioaktive Strahlung und ein kleine EMP Feld beim Aufprall. Der Radius davon hängt von der verwendeten Munitionsmenge ab.
+

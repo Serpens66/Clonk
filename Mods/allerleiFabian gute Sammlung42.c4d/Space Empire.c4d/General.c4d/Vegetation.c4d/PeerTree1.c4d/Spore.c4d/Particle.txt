@@ -1,0 +1,14 @@
+[Particle]
+Name=Spore
+MaxCount=500
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+Face=0,0,8,8,-4,-4
+Delay=100
+Repeats=1
+GravityAcc=100
+FadeOutLen=25
+FadeOutDelay=3
+AlphaFade=3
+Additive=1

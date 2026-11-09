@@ -1,0 +1,21 @@
+[DefCore]
+id=CABO
+Name=Air Bottle
+Category=3600
+MaxUserSelect=8
+Width=7
+Height=10
+Offset=-3,-5
+Value=32
+Mass=30
+Timer=9
+TimerCall=CheckBreath
+Components=METL=2; GLAS=1;
+Picture=0,6,120,104
+Vertices=2
+VertexX=0,0
+VertexY=5,-4
+VertexFriction=100,100
+Rebuy=1
+Collectible=1
+ 

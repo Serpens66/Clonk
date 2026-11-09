@@ -1,0 +1,30 @@
+[DefCore]
+id=PRE_
+Name=Predator
+Version=4,9,5
+Category=3332
+MaxUserSelect=3
+Width=51
+Height=51
+Offset=-25,-25
+Value=500
+Mass=80
+Components=METL=5;CTIT=5;CALU=3;SURO=5;CRYS=2;GLAS=1;
+Vertices=8
+VertexX= 0,  0,16,-16,16,-16,7,-7
+VertexY=25,-20,11, 11,0, 0,-10,-10
+VertexCNAT=8,4,1,2,1,2,1,2
+VertexFriction=20,20,35,35,35,35,35,35
+ContactCalls=1
+Rebuy=1
+Entrance=-10,0,20,25
+ColorByOwner=1 
+BorderBound=7
+Rotate=1
+Grab=1
+CollectionLimit=1
+NoStabilize=1
+
+
+
+

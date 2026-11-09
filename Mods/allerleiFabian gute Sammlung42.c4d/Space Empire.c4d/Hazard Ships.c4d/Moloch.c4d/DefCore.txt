@@ -1,0 +1,29 @@
+[DefCore]
+id=MOO_
+Name=Moloch
+Version=4,9,5
+Category=4104
+MaxUserSelect=10
+Width=37
+Height=37
+Offset=-18,-18
+Value=250
+Mass=80
+Components=MOL=1;
+Vertices=8
+VertexX= 0,  0,16,-16,10,-10,7,-7
+VertexY=18,-18,11, 11,-3, -3,-10,-10
+VertexCNAT=8,4,1,2,1,2,1,2
+VertexFriction=20,20,35,35,35,35,35,35
+ContactCalls=1
+Rebuy=1
+ContactIncinerate=1
+Entrance=-10,0,20,25
+ColorByOwner=1 
+BorderBound=7
+Rotate=1
+
+
+
+
+

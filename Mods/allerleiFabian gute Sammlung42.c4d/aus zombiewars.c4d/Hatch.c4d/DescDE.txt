@@ -1,0 +1,1 @@
+Eine Einstiegsluke in den Untergrund. Gräbt beim Bauen ein kleines Loch und verschließt es. Kann über anfassen und graben in unterschiedliche Modi geschaltet werden und auch über Sensoren gesteuert werden (dabei Modus beachten).

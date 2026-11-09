@@ -1,0 +1,6 @@
+Standard=Particle fire
+Laser=Double fire
+
+KLASUpgradeDesc=Upgrades the fire machanism for a harder shot.
+
+KLASUpgraded=Fire mechanism upgraded.

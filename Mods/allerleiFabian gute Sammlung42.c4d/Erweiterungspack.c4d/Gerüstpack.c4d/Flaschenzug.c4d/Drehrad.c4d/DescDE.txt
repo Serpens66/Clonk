@@ -1,0 +1,6 @@
+Mit dem Drehrad lässt sich der Flaschenzug bedienen.
+
+Steuerung:
+[Links]/[Rechts]: Hoch/Runter.
+[Graben]: Anhalten.
+[Hoch]: Menü aufrufen.

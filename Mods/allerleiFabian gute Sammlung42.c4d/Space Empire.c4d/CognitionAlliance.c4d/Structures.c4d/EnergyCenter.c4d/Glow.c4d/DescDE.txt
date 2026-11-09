@@ -1,0 +1,1 @@
+Ein Lichteffekt, der den Batteriefüllstand anzeigt.

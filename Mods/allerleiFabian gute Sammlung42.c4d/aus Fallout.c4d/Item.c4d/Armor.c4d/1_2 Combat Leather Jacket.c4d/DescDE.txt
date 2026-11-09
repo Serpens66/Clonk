@@ -1,0 +1,24 @@
+Die verstärkte Lederjacke ist besonders gut für den Nahkampf geeignet.
+
+Nahkampf 70% 
+Projektile 8% 
+Energie 1% 
+Feuer 8% 
+Bio/Partikel 1% 
+Explosion 8% 
+Stahl/Scharfschützenprojektile 1% 
+
+Fertigkeiten:   
+HP        +8.000  
+Kampf     +30.000  
+Werfen    +    0   
+Springen  +    0   
+Laufen    +2.000   
+Klettern  +2.000   
+Hangeln   +2.000   
+Schwimmen -3.000   
+Atem      +    0  
+Graben    +2.000  
+
+
+

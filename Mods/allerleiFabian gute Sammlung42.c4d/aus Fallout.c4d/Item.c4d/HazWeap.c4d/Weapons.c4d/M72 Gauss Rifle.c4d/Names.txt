@@ -1,0 +1,2 @@
+DE:M72 Ultra-Scharfschützengewehr
+US:M72 Gauss Rifle

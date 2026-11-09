@@ -1,0 +1,2 @@
+DE:ContentRifle
+US:Content rifle

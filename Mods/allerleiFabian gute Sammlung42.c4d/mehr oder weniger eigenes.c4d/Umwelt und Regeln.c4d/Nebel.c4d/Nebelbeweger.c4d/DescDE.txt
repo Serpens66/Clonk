@@ -1,0 +1,1 @@
+Der Nebel wird hierdurch abhängig von der Windgeschwindigkeit bewegt, auch der Verschmutzungsnebel.

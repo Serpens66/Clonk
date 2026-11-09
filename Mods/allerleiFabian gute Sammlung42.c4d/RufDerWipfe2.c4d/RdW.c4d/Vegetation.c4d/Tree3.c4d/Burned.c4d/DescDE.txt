@@ -1,0 +1,3 @@
+Kann gefällt und zu Holz zersägt werden.
+Liefert weniger Holz.
+Ein toter Baum liefert -1 Umweltschaden.

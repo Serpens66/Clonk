@@ -1,0 +1,8 @@
+Ähnlich dem frühen Geschützturm.
+Die Geschützplattform dient zum Angriff oder auch zur manuellen Verteidigung, je nachdem welche Waffe gewählt wird (Graben-Taste). Es wird Munition benötigt!. Mit der Oben-Taste übernimmt der Clonk die Steuerung der Kanone:
+ - links, rechts: langsam drehen
+ - 2x links, rechts: schnell drehen
+ - oben: anhalten
+ - 2x oben: Schusskraft
+ - graben: Munition
+ - werfen: Feuer frei!

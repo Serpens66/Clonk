@@ -1,0 +1,47 @@
+Das Mammoth APC ist das Fahrzeug der terranischen Allianz um schnelle Landungen in heißen Zonen durchzuführen. Es besitzt 2 Geschützkanzeln um die Landeaktion zu decken.
+
+Steuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lassen sich die Antigravtriebwerke zünden/abschalten, die Pods betreten oder der Ausstieg betätigen.
+
+-Bei gezündeten Triebwerken erfolgt die Steuerung des Neigungswinkels über [Rechts] und [Links].
+
+-Mittels [Werfen] wird ein unter dem Mammoth befindlicher Dragon oder Lander ein- oder ausgeklinkt.
+
+-Mit doppelt [Oben] wird die Turbine gezündet, die das Fahrzeug zum Flug befähigt.
+
+Waffensysteme:
+
+-Das Mammoth verfügt über massivste Bewaffnung: 2 Geschützkanzeln mit jeweils 2xFlammenwerfer, 1xGatling (funktioniert nicht!!), 1xStreugranatenmörser.
+
+-Über das Kontextmenü kann die Waffenwahl vorgenommen werden. Die Bordkanone erscheint dann im Inventar.
+
+-Das gewählte Waffensystem wird dann via [Werfen] aktiviert.
+
+-Es gilt zu beachten das der Fahrer Passende Munition mitführen muss um die Bewaffnung zu laden. Der Flammenwerfer benötigt Benzin, die Gatling verbraucht Projektilmunition und der Streugranatenwerfer Granaten.
+
+Notfallrettungssystem:
+
+-In akuten Gefahrensituationen können der Pilot und die Bordschützen per Pod aussteigen. Er enthält Schubraketen die es sicher zu Boden bringen. Nach der Landung aktiviert sich der Technologysafe(tm) Selbstzerstörungsmechanismus. Es bleiben dem Fahrer 6 Sekunden um sich zu entfernen.
+
+-Der Pilot kann die Kapsel per Schubdüsen bedingt steuern. Per doppelt[Graben] wird sie manuell zersprengt.
+
+Anmerkungen:
+
+-Der Mammoth ist unterwassertauglich, es ist dem antigravsystem jedoch nicht möglich auf Wasser zu fahren.
+
+-Der Booster zündet nicht unterwasser.
+
+-Beim ausstieg des Piloten wird der Mammoth zerstört.
+
+-Falls der Dragon einen Strukturschaden von über 90% aufweist ist sollte über einen Absprung nachgedacht werden (Explosionsgefahr).
+
+-Beim Fall aus größeren höhen möglichst gerade aufkommen, oder per booster abbremsen, da sonst Strukturschaden droht.
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

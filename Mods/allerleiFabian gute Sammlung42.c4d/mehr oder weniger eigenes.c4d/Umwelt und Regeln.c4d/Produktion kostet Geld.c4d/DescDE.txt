@@ -1,0 +1,3 @@
+Produktionskosten in Clunker. Regelt den Faktor, wieviel Clunker eine Produktion kosten soll. Wenn Produktionen nur Clunker und keine baustoffe kosten sollen, sollte zusätzlich noch die statische Regel für keine Produktionsmaterialien aktiviert werden.
+
+Bringt nichts es außerhalb der variablen Einstellungen zu aktivieren.

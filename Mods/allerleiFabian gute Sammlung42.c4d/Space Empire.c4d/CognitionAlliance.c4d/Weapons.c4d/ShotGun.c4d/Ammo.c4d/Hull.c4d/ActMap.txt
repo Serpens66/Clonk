@@ -1,0 +1,6 @@
+[Action]
+Name=Erasing
+Procedure=NONE
+Delay=30
+Facet=0,0,3,3
+EndCall=Remove

@@ -1,0 +1,26 @@
+[DefCore]
+id=SMFC
+Name=MachineFactory
+Version=4,9,5
+Category=1154
+MaxUserSelect=2
+Width=120
+Height=64
+Offset=-60,-32
+Value=250
+Mass=5500
+Components=METL=1;CRYS=1;WOOD=2;ROCK=1;CTIT=2;CALU=2;GLAS=2;
+Picture=0,98,120,72
+Entrance=16,2,30,30
+Vertices=5
+VertexX= -3, 54,54,-55,-55
+VertexY=-18,-18,32, 32, -5
+VertexFriction=50,50,100,100,50
+Exclusive=1
+LineConnect=39
+Construction=1
+ColorByOwner=1 
+AttractLightning=1
+
+[Physical]
+Energy=100000

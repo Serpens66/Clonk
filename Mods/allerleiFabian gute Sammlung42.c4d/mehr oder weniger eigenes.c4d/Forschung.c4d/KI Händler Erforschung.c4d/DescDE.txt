@@ -1,0 +1,4 @@
+Forschung "Freier Händler":
+Er bietet alle möglichen Waren zum Verkauf an und kauft auch bei Spielern - wenn der Preis stimmt. Funktioniert mit dem Uplink-System.
+
+Für jeden Spieler, der dies erforscht gibt es einen Händler mehr und dadurch werden die Angebote vom Händler immer günstiger. Es können aber maximal 5 freie Händler, bzw. soviele Händler wie Spieler vorhanden sind, sein.

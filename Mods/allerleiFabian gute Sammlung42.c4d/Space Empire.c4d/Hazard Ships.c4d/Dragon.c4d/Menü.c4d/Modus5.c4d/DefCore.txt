@@ -1,0 +1,6 @@
+[DefCore]
+id=MDR5
+Name=Schadenskontrolle
+Category=1
+Picture=0,0,35,35
+ 

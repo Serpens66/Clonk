@@ -1,0 +1,1 @@
+Launch control for ballistic missles.

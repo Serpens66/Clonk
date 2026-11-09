@@ -1,0 +1,6 @@
+Gewissermaßen eine Alarmanlage.
+Dieser Beobachtungsturm dient als kleiner Stützpunkt vor der Basis. Man kann Clonks auf eine Tragfläche bringen und sich von dort aus verteidigen. 
+
+Außerdem kann der Turm eine Nachricht senden wenn ein Gegner die durch den Turm gekennzeichnete Grenze überschreitet und man kann in der nähe gesichtete gegnerische Clonks beobachten.
+
+Version 1.95

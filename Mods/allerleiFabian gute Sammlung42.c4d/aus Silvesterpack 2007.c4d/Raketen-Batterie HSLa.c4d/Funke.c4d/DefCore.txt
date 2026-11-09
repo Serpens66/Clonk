@@ -1,0 +1,17 @@
+[DefCore]
+id=HSL1
+Name=Funke
+Category=16
+Width=6
+Height=6
+Offset=-3,-3
+Value=10
+Mass=0
+Components=_NEW=1;
+Picture=6,0,52,48
+Vertices=1
+VertexY=1
+VertexFriction=20
+Rotate=1
+Timer=1
+TimerCall=Effect

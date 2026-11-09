@@ -1,0 +1,1 @@
+Nach Erforschung kann im Luftregenerator die Temperatur gesteuert werden.

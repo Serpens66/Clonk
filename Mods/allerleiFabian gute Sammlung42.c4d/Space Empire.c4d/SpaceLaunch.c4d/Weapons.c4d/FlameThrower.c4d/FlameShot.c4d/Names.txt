@@ -1,0 +1,2 @@
+DE:Feuerball
+US:Fire ball

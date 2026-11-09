@@ -1,0 +1,19 @@
+[DefCore]
+id=WC_3
+Version=4,9,8,2
+Name=Big parts1
+Category=3600
+MaxUserSelect=10
+Width=8
+Height=6
+Offset=-4,-3
+Vertices=5
+VertexX=0,-4,-4,4,4
+VertexY=1,-3,2,-3,2
+VertexFriction=50,50,50,50,50
+Value=60
+Mass=10
+Components=METL=3;LNKT=1;
+Picture=10,0,47,46
+Rebuy=1
+Collectible=1

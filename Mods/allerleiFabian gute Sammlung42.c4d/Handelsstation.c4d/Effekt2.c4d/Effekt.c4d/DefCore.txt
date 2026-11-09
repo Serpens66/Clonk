@@ -1,0 +1,9 @@
+[DefCore]
+id=EFK2
+Name=Effekt
+Category=1
+Width=10
+Height=10
+Offset=-5,-5
+Picture=0,0,10,10
+Exclusive=1

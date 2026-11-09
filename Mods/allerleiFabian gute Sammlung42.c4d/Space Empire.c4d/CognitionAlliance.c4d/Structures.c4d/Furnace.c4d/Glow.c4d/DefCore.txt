@@ -1,0 +1,16 @@
+[DefCore]
+id=CLE2
+Name=Glow
+Category=2
+MaxUserSelect=10
+Width=90
+Height=46
+Offset=-45,-23
+Value=10
+Mass=10
+Components=METL=1;
+Picture=630,0,90,46
+Vertices=1
+VertexX=1
+VertexY=-5
+VertexFriction=100 

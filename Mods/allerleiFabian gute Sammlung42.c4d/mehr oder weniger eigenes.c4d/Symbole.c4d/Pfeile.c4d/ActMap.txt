@@ -1,0 +1,9 @@
+[Action]
+Name=Pfeil
+Directions=2
+FlipDir=1
+Length=4
+Delay=0
+Facet=0,0,64,64
+FacetBase=0
+NextAction=Pfeil

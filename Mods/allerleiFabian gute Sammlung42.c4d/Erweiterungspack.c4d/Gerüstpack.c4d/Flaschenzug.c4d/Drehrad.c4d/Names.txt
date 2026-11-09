@@ -1,0 +1,2 @@
+DE:Drehrad
+US:Turning wheel

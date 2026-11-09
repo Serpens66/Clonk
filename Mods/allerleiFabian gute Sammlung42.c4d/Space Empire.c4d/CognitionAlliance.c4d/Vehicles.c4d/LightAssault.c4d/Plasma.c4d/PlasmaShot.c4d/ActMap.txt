@@ -1,0 +1,9 @@
+[Action]
+Name=Flying
+Procedure=NONE
+Delay=2
+Length=10
+Facet=0,0,8,3
+FacetBase=1
+PhaseCall=Flight
+NextAction=Flying

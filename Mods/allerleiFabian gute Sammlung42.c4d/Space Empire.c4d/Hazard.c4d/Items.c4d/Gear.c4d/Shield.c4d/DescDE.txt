@@ -1,0 +1,6 @@
+Resistenzen:
+Energie 60% 
+
+Ein Schildgenerator für die Einzelperson. Anlegen durch Doppelklick auf Graben.
+Er schützt ausschließlich aber effektiv gegen Energiewaffen.
+Das Shuttle und der Panzer können ebenfalls mit diesem Schild ausgerüstet werden.

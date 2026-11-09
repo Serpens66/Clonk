@@ -1,0 +1,11 @@
+Einstellungen für visuelle Effekte, die den Spielfluss beeinflussen.
+
+Es werden alle vereinfachungen aktiviert:
+
+FI_R //kein leuchtendes feuer -> in allen LGFL TurnOff() ausführen
+SES_ //keine Jahreszeitengrafiken
+UMG_ //keine Umweltschädengrafiken
+WOL_ //keine Wolken
+KOHE //konstante Helligkeit 
+NOLI //keine Lichteffekte(außer feuer) -> in allen IsLight() außer LGFL TurnOff() ausführen
+NOSM //no smoke (evtl mit änderung der global smoke fkt? so auch weißen rauch?)

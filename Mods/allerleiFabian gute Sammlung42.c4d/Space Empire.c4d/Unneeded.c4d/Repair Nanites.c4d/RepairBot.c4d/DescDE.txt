@@ -1,0 +1,1 @@
+Ein winziger Roboter, der Gebäude und Fahrzeuge repariert. Leider sehr empfindlich und nicht wasserverträglich.

@@ -1,0 +1,17 @@
+Standard=Partikelfeuer
+Laser=Scharfschuss
+Doppel=Doppelschuss
+Zufall=Zufallsschuss 
+LaserShot=Laserkugel
+
+KLASUpgradeDesc=Verstärkt und präzisiert den Schussmechanismus.
+
+KLASUpgraded=Schussmechanismus|verstärkt und präzisert.
+
+KRFLUpgradeDesc=Verstärkt den Schussmechanismus durch einen Zweiten.
+
+KRFLUpgraded=Schussmechanismus durch einen|Weiteren verstärkt.
+
+STRHUpgradeDesc=Bringt den Partikel-Projektil-Konverter an.
+
+STRHUpgraded=Schussmechanismus durch einen|Partikel-Projektil-Konverter erweitert.

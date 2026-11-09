@@ -1,0 +1,23 @@
+[DefCore]
+id=S_PA
+Version=4,9,8
+Name=Power Armor
+Category=3600
+MaxUserSelect=10
+Width=15
+Height=12
+Offset=-7,-6
+Vertices=2
+VertexX=-3,4
+VertexY=-4,3
+VertexFriction=50,50
+Components=S_CA=1;ADM3=5;OBRL=1;LNKT=1
+Value=200
+Mass=85
+Picture=0,18,60,60
+Rebuy=1
+Collectible=1
+Float=1
+NoComponentMass=1
+TimerCall=Fertigkeit
+Timer=1

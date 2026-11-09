@@ -1,0 +1,25 @@
+[DefCore]
+id=KAHN
+Name=Kaputte Alte Handelsstation
+Category=2
+MaxUserSelect=1
+Width=59
+Height=58
+Offset=-30,-29
+Value=1500
+Mass=400
+Components=;ROCK=6;WOOD=1;
+Picture=0,0,59,58
+Entrance=2,11,11,18
+Vertices=4
+VertexX=-30,-30,30,30
+VertexY=-29,29,-29,29
+VertexFriction=100,100,100,100
+Construction=1
+ColorByOwner=1
+Exclusive=1
+BlastIncinerate=75
+ConstructTo=AEHN
+Rotate=0
+ContainBlast=1
+TimerCall=Remove

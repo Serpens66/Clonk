@@ -1,0 +1,2 @@
+DE:Fernrohr-Sichtfenster
+US:Telescope view window

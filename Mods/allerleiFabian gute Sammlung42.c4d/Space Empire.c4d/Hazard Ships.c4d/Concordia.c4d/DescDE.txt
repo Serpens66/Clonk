@@ -1,0 +1,64 @@
+Die Kreuzer der Concordia Klasse sind die schwerste Angriffswaffe die die terranischen Luftstreitkräfte zu bieten haben. Mit ihren mächtigen Rocketeer 6-Fach Raketenwerfern können sie auch weit entfernte Ziele mit leichtigkeit ausschalten.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Rechts] erreicht, somit lassen sich die einzelnen Teile des Schiffes begehen: die Brücke, die Geschütze und das Arsenal.
+
+Brücke:
+
+-Die Steuerung der Antriebssysteme erfolgt einzig und allein von der Brücke aus.
+
+-Die Höhenregulierung erfolgt per [Auf] und [Ab], die Steuerung des Horizontaltriebwerks über [Rechts] und [Links].
+
+-Um das Schiff zu stoppen per Kontextmenü den Schwebemodus aktivieren, es werden dann alle Triebwerke außer dem Antigrav booster heruntergefahren.
+
+-Um zurück auf das Hauptdeck oder auf das Oberdeck zu gelangen im Kontextmenü den entsprechenden Eintrag wählen.
+
+Waffensysteme:
+
+-Die Concordia verfügt über 2 Bord-MGs in den Kanzeln, 2 Rocketeer-Raketenabschussbatterien und ein Luft-Boden-Geschütz.
+
+-Über das Kontextmenü können die einzelnen Schützenpositionen begangen werden. Die Waffensteuerung erscheint dann jeweils im Inventar.
+
+-Die Kanzel-MGs werden dann via [Werfen] durchgeladen und im geladenen Zustand abgefeuert.
+
+-Das Schwenken der Geschütze geschieht mittels [Rechts] und [Links], der Servomotor wird mittels [Oben] und [Unten] gestoppt.
+
+-In den Schützenpositionen kann per Doppel-[Graben] der Schussmodus gewechselt werden, um Raketen zu verschießen.
+
+Arsenal:
+
+-Hier können sich die Schützen mit Munition bestücken.
+
+-Mittels [Graben] gelangt man in das Kaufmenü. Es können dort 100 Projektile bzw. 3 Raketen zum Preis von Clunkern gekauft werden.
+
+-Verlassen über doppelt-[Unten].
+
+Notfallrettungssystem:
+
+-Falls die Concordia übermäßigen Strukturschaden genommen haben sollte wird alle verfügbare Energie in das Antigrav-Boostertriebwerk gespeist. Dies führt zu einem gebremsten freien Fall, der es der geschulten Mannschaft ermöglicht rechtzeitig abzuspringen.
+
+
+
+Anmerkungen:
+
+-Die Concordia kann als Flaggschiff dienen, d.h. durch bestücken mit einer Flagge sind alle Funktionalitäten einer Heimatbasis in das Schiff integriert.
+
+-Die Concordia ist unterwassertauglich.
+
+-Die Rocketeers haben eine enorme Reichweite, dieser Vorteil sollte genutzt werden.
+
+-Aufgrund seiner Calamari-Phasenpanzerung ist die Concordia EMP-Fest und somit für Einsätze in Ionenstürmen geeignet.
+
+-Die Concordia sollte immer in Vollbesetzung geflogen werden (3 Kanoniere, 1 Steuermann), um höchste Kampfkraft und Effizienz zu gewährleisten.
+
+-Falls die Concordia einen Strukturschaden von über 90% aufweist ist sollte über eine Notlandung nachgedacht werden (Explosionsgefahr).
+
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

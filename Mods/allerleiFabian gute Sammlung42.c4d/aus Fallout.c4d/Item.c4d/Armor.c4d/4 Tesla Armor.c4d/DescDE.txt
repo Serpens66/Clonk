@@ -1,0 +1,16 @@
+Bietet perfekten Schutz vor Energiewaffen jeglicher Art. Allerdings wirkt sie sich negativ auf den Schutz vor Projektilen aus.
+
+Nahkampf 0% 
+Projektile -30% 
+Energie 100% 
+Feuer 0% 
+Bio/Partikel 10% 
+Explosion 0% 
+Stahl/Scharfschützenprojektile -40% 
+
+Hat Nachtsicht.
+
+Energie freisetzen:
+Der Clonk setzt die in der Rüstung gespeicherte Energie frei, welchen allen Feinden in der Nähe kontinuierlich Schaden zufügt. 
+
+

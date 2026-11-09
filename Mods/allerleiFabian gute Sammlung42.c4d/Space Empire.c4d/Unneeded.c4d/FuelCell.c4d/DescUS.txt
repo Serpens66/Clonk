@@ -1,0 +1,1 @@
+A big fuel cell power plant that converts hydrogen to energy. It contains an own tank for hydrogen wich you can fill or use to fill empty gas-bottles.

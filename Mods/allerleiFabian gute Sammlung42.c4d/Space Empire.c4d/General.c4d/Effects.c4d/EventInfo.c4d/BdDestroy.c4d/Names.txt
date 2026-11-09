@@ -1,0 +1,2 @@
+DE:Gebäude zerstört
+US:Building destroyed

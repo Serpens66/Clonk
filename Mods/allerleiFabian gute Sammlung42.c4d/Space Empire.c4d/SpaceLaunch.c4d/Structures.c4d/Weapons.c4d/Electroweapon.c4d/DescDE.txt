@@ -1,0 +1,4 @@
+Die schwere Elektrowaffe ist vor allem zur effektiven Verteidigung eines kleinen Bereichs gegen Fahrzeuge und Clonks einsetzbar.
+Benötigt Energie und Energiezellen als Munition.
+
+Kann nach Erforschung in manchen Geschütztürmen gekauft werden.

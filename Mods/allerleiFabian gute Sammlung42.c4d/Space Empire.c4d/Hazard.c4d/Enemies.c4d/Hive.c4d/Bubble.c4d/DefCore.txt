@@ -1,0 +1,13 @@
+[DefCore]
+id=HBBL
+Version=4,9,8,2
+Name=Bubble
+Category=C4D_Vehicle
+Width=40
+Height=40
+Offset=-20,-20
+Rotate=1
+TimerCall=BubbleBobble
+Timer=1
+Oversize=1
+StretchGrowth=1

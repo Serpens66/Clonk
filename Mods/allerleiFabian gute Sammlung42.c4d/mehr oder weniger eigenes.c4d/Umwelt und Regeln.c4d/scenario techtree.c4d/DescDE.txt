@@ -1,0 +1,9 @@
+Muss vor Spielstart in scenario.txt eingestellt sein! Aktivieren im Spiel könnte Fehler verursachen.
+
+Szenario Forschungsbaum.
+Wenn eingestellt, dann wird der von diesem Pack erstellte Forschungsbaum nicht verwendet, sondern es gilt die übliche abhängigkeit, bzw. neue Objekte haben evlt keine Abhängigkeit.
+
+Sinnvoll bei Missionen die durch den neuen Forschungsbaum zu einfach/schwer werden würden.
+
+Alle Forschungen kosten (5) und dauern (50) gleichlang, da kein Forschungsbaum mehr existiert, der sie nach Rang sortiert. Ein Multiplikator dieser Werte kann in den variablen Einstellungen gemacht werden.
+Im Szenario Skript kann eine Liste der verbotenen Forschungen erstellt werden, sodass zb alle zukunftsdinge nicht erforschbar sind.

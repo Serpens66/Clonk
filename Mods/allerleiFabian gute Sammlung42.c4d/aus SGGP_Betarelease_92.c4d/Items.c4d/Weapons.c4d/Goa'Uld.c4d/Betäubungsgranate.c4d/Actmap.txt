@@ -1,0 +1,7 @@
+[Action]
+Name=Scharf
+Delay=100
+Length=1
+FacetBase=1
+EndCall=Exploden
+Sound=ControlRate

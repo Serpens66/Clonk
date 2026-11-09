@@ -1,0 +1,14 @@
+[DefCore]
+id=SLVT
+Name=LavaTank
+Version=4,9,5
+Category=2
+Width=3
+Height=27
+Offset=-1,-13
+Picture=36,0,70,70
+Vertices=1
+VertexX=55
+VertexY=-24
+TimerCall=CheckFill
+Timer=10

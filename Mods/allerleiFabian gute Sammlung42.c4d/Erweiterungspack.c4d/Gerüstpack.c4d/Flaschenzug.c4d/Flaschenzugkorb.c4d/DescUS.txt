@@ -1,0 +1,1 @@
+This is the elevator basket for the pulley block.  It is put on the pulley via the pulley block's menu. Before you can install the elevator basket, you must research it.

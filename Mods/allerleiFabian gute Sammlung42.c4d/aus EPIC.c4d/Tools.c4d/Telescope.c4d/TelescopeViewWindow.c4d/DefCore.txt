@@ -1,0 +1,8 @@
+[DefCore]
+id=AQ5P
+Name=TelescopeWindow
+Version=4,9,8
+Category=8
+Picture=0,0,1,1
+VertexFriction=100
+NoBreath=1

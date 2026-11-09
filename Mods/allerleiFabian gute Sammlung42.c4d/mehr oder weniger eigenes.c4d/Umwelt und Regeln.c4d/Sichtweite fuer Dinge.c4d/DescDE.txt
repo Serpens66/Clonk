@@ -1,0 +1,2 @@
+Gebäude und Fahrzeuge erzeugen für ihren Besitzer im Kriegsnebel einen Sichtradius.
+Ohne diese Regel haben nur Clonks und Lichtobjekte Sichtradien.

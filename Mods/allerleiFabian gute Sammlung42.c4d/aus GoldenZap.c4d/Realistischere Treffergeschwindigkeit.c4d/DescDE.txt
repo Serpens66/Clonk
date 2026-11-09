@@ -1,0 +1,2 @@
+Bei Treffer verlieren Flugobjekte realisitischer an Geschwindigkeit und fallen nach Treffer dadurch früher wieder zu Boden.
+(z.b beobachtbar, wenn man ein Tier mit Stein oderso abwirft)

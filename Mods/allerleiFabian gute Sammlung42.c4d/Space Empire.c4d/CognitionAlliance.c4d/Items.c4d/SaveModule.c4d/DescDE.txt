@@ -1,0 +1,1 @@
+Speichert größere Mengen Energie und dient als interner Erweiterungsspeicher für Gebäude, doch Vorsicht: bei einer Beschädigung setzt es einen EMP frei!

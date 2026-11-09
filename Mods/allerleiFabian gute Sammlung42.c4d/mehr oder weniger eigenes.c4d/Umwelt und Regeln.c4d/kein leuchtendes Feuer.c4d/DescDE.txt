@@ -1,0 +1,2 @@
+Wenn aktiviert leuchtet das Feuer in der Nacht nicht mehr. Auch keine Fackeln und Lagerfeuer.
+Sorgt eventuell für ein stabileres Spiel.

@@ -1,0 +1,9 @@
+[DefCore]
+id=PPP2
+Name=Normale Physics
+Version=4,9,5
+Category=524289
+Width=1
+Height=1
+Picture=200,0,55,60
+MaxUserSelect=1

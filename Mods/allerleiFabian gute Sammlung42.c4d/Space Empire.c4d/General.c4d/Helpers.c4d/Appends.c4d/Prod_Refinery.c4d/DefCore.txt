@@ -1,0 +1,8 @@
+[DefCore]
+id=CA02
+Name=Append_02
+Version=4,9,1,3
+Category=1
+Width=1
+Height=1
+Picture=0,0,1,1

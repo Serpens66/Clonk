@@ -1,0 +1,2 @@
+Beim Beenden des Grabvorgangs brechen ggf. entstandene, blockierende Tunnelstuecke weg. So kann man nun z.B. senkrecht auf einen Gang zugraben. Ohne diese Regel beendet der Clonk seinen Grabvorgang und man haengt in der Luft, da der Durchlass zu klein ist. Mit dieser Regel brechen die blockierenden Stuecke heraus und der Clonk faellt in den darunter liegenden Tunnel.
+Script.c beinhaltet die entsprechenden Parameter. Diese koennen im eigenen Szenario passend ueberladen werden.

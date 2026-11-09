@@ -1,0 +1,6 @@
+[DefCore]
+id=T20G
+Name=Brücke
+Category=1
+Picture=0,0,35,35
+ 

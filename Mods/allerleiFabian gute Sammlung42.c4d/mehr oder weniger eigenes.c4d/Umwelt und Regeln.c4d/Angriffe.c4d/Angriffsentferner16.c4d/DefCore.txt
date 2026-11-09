@@ -1,0 +1,9 @@
+[DefCore]
+id=AA14
+Name=Angriffsentferner
+Version=4,9,5
+Category=524289
+Width=1
+Height=1
+Picture=20,5,60,150
+MaxUserSelect=1

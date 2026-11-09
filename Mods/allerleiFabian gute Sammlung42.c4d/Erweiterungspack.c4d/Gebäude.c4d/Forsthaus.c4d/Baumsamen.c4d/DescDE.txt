@@ -1,0 +1,1 @@
+Es kann an einer beliebigen Stelle ein Baum gepflanzt werden indem man den Samen durch Doppelklick auf Graben aktiviert.

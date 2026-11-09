@@ -1,0 +1,2 @@
+Leitet Energie unsichtbar und auch durch festes Material zu anderen Gebäuden und erweitert damit das Energienetz.
+Seine Reichweite lässt sich mit der Werfen-Taste anzeigen.

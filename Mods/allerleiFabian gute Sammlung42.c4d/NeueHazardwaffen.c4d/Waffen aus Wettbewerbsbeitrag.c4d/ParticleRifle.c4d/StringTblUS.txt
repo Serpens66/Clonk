@@ -1,0 +1,17 @@
+Standard=Particle fire
+Laser=Sniper shot
+Doppel=Double shot
+Zufall=Random shot
+LaserShot=Laser sphere
+
+KLASUpgradeDesc=Upgrades the fire mechanism.
+
+KLASUpgraded=Fire machanism|upgraded.
+
+KRFLUpgradeDesc=Extends the fire machanism by a second one.
+
+KRFLUpgraded=Fire machanism|extended by a second one.
+
+STRHUpgradeDesc=Mounts the particel-to-projectile-converter.
+
+STRHUpgraded=Particel-to-projectile-converter|mounted.

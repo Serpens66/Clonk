@@ -1,0 +1,3 @@
+Wenn diese Regel aktiviert ist, lässt sich der KI Händler garnicht erforschen (handelssystem uplink)
+
+Das ist z.b sinnvoll, wenn man möchte, dass alle Objekte immer selbst hergestellt, oder vom Mitspieler gekauft werden müssen. Und man nicht möchte, dass jemand mit vielen Clunkern sich einfach alles zusammenkauft, denn das ist meist langweilig.

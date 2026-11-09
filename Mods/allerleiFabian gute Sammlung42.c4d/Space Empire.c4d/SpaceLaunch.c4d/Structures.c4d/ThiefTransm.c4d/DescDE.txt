@@ -1,0 +1,2 @@
+Zapft die Energie gegnerischer Transmitter in Reichweite ab und leitet sie ins eigene Energienetz.
+Die Reichweite lässt sich mit der Werfen-Taste anzeigen.

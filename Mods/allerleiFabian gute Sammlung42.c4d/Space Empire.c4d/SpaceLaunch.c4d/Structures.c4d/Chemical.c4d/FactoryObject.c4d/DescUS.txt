@@ -1,0 +1,2 @@
+Component of the chemical factory:
+Production and storing of unfinished objects.

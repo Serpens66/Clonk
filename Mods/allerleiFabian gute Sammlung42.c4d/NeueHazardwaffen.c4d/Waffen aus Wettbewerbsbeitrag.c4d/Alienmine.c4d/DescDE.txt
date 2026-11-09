@@ -1,0 +1,5 @@
+Die Alienmine verschleudert beim Auslösen Partikel, die Wurfschaden anrichten und nach kurzer Verzögerung explodieren. Durch Aufrüsten wird die Sprengkraft verstärkt. 
+Aufrüstbar mit:
+-Laserupgrade       (+3)
+-Waffenteile        (+4)
+-Partikelkonverter (+5)

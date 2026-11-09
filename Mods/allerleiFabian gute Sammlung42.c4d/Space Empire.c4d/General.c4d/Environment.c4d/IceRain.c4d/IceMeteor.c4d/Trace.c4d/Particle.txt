@@ -1,0 +1,11 @@
+[Particle]
+Name=IceTrace
+MaxCount=100
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+Face=0,0,12,12,-6,-6
+Delay=1
+Repeats=1
+VertexCount=0
+

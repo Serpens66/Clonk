@@ -1,0 +1,4 @@
+CtxNightVisionOn=Turn nightvision on
+CtxNightVisionOff=Turn nightvision off
+CtrlActivateDesc=Buckle
+AlreadyWears=%s already wears|that kind of gear!

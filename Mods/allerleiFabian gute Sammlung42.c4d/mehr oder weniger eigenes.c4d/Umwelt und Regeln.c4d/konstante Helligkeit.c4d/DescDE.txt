@@ -1,0 +1,2 @@
+Wenn aktiviert, dann ist der Bildschirm immer gleich hell, egal welche Tageszeit.
+Sorgt eventuell für ein stabileres Spiel.

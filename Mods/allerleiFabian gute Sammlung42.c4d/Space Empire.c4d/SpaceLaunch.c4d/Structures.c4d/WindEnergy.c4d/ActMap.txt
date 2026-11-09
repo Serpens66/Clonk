@@ -1,0 +1,7 @@
+[Action]
+Name=Stand
+Procedure=NONE
+Length=1
+Delay=1000
+Facet=25,0,25,94
+NextAction=Stand

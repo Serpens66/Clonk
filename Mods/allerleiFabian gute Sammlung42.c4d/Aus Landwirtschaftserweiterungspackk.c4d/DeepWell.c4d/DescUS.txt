@@ -1,0 +1,1 @@
+This building allows your pumps to pump liquid from very deep places. You can specify which liquid should be searched for.

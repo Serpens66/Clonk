@@ -1,0 +1,26 @@
+Version 1.95
+
+Neu in Version 1.95
+- Der Beobachtungsturm wurde komplett für die GWE 4 optimiert (auch mit 32 Bit Grafik).
+- Ein kleiner Fehler in dem Vertex oben rechts wurde behoben (auch bei dem verbrannten Beobachtungsturm).
+- Der Niedergang verschwindet nun auch wenn der Beobachtungsturm zerstört wird.
+
+Neu in Version 1.9
+- Bug bei dem Suchen nach einem verfeindeten Clonk behoben.
+- Man kann nun ein/ausstellen ob die Nachricht kommen soll.
+- Man kann in der nähe gesichtete Gegner beobachten.
+
+Neu in Version 1.7
+- Es kommt auch eine Nachricht von wem der Clonk ist.
+- Der Turm hat einen Niedergang der den Abstieg zurück in das Treppenhaus ermöglicht.
+- Die Plattform hat einen kleinen Abfluss, damit das (Regen-)Wasser abfliesen kann.
+- Auf 'Springen' kommt ein Menü in dem man entweder seinen Clonk oder ein anderes Objekt auf die Plattform bringen kann.
+- Verfeindete Clonks können nicht in den Beobachtungsturm.
+
+Danke auch an:
+"Floh" wegen der Abluss Idee und "Horus" wegen dem "Objekt auf die Plattform bringen" Skript den ich etwas verändert habe.
+
+Autor:
+Tim Wölfle
+tim.woelfle@epost.de
+http://www.timwoelfle.de

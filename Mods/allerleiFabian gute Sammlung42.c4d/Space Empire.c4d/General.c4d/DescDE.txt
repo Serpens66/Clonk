@@ -1,0 +1,1 @@
+Dieser Ordner enthält von beiden Parteien gemeinsam genutzte Objekte wie Spielziele und -regeln, Effekte, Hilfsobjekte und Lebewesen.

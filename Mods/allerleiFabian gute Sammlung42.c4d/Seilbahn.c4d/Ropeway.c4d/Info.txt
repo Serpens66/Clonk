@@ -1,0 +1,2 @@
+Die Graphik für die Seilbahn ist aus dem E.P.I.C.-Projekt auf CCF in Form eines Titles aufgenommen worden. (www.clonkforge.net/pr.php?pr=1138)
+Die Anpassung der Graphik und der Script der Seilbahn wurde von mir selbstständig erledigt.

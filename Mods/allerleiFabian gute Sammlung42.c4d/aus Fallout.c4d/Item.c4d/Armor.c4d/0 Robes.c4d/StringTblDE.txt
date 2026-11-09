@@ -1,0 +1,2 @@
+CtxNightVisionOn=Assassinengeschick einsetzen
+CtxNightVisionOff=Assassinengeschick aussetzen

@@ -1,0 +1,16 @@
+[DefCore]
+id=HN0D
+Version=4,9,8
+Name=HangarGate
+Category=C4D_StaticBack
+Width=6
+Height=118
+Offset=-3,-59
+Vertices=2
+VertexY=-59,59
+VertexFriction=100,100
+Value=30
+Mass=100
+Components=METL=8
+SolidMask=0,0,6,118
+Picture=0,0,6,118

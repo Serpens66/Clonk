@@ -1,0 +1,22 @@
+[DefCore]
+id=DFB_
+Name=Verteidigungsanlage
+Version=4,9,5
+Category=4
+MaxUserSelect=10
+Width=80
+Height=70
+Offset=-40,-35
+Value=400
+Mass=2500
+Components=METL=30;
+Picture=0,0,80,70
+TopFace=80,0,80,70
+SolidMask=160,0,80,70
+NoBurnDecay=1
+StretchGrowth=0
+Vertices=6
+VertexX=-3, 21,38,-38,30,-30
+VertexY=-27,-3,30,30,35,35
+VertexFriction=100,100,100,100
+ 

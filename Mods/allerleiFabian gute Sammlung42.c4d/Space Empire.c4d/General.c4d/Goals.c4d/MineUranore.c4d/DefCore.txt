@@ -1,0 +1,10 @@
+[DefCore]
+id=GUMI
+Name=Uranoremine
+Version=4,9,5
+Value=100
+Category=33
+Width=1
+Height=1
+Picture=0,0,70,70
+MaxUserSelect=8

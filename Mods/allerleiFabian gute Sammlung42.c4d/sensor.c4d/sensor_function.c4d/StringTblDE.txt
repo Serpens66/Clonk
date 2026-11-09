@@ -1,0 +1,16 @@
+ADD_TARGET=Ziel hinzufügen
+ADD_TARGET_DESC=Fügt ein neues Ziel ein! Dazu solltest du dich direkt vor dem gewünschtem Objekte befinden.
+DEL_TARGET=Ziel löschen
+DEL_TARGET_DESC=Löscht ein vorher hinzugefügtes Ziel.
+ATTACH_WALL=An Wand anbringen
+ATTACH_WALL_DESC=Den Sensor an der Wand befestigen.
+ATTACH_OBJECT=An Objekt befestigen
+ATTACH_OBJECT_DESC=Den Sensor an einem Objekt befestigen.
+DETACH=Abnehmen
+ATTACH=anbringen
+DETACH_DESC=Den Sensor von Wand oder Objekt abnehmen.
+FALSE=inaktiv
+TRUE=aktiv
+FINISHED=Fertig!
+ATTACH_SKY=Hier schweben lassen
+ATTACH_SKY_DESC= Den Sensor hier in der Luft schweben lassen. (wenn nichts da zum befestigen)

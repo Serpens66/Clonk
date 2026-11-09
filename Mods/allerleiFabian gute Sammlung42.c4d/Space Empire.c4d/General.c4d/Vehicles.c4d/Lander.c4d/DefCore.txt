@@ -1,0 +1,16 @@
+[DefCore]
+id=VEHL
+Name=VehicleLander
+Category=1
+Width=1
+Height=1
+Picture=0,0,1,1
+Vertices=3
+VertexX=-15,0,15
+VertexY=18,18,18
+VertexCNAT=8,8
+BorderBound=1
+ContactCalls=1
+TimerCall=ResetPosition
+Timer=3
+ 

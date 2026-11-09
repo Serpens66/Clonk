@@ -1,0 +1,20 @@
+[DefCore]
+id=DKIT
+Version=4,9,5
+Name=Drone Kit
+Category=3600
+MaxUserSelect=10
+Width=8
+Height=6
+Offset=-4,-3
+Value=200
+Mass=15
+Components=METL=1;CTIT=1;CALU=1;CRYS=3;
+Picture=8,0,80,60
+PictureFE=8,0,80,60
+Vertices=1
+VertexY=1
+VertexFriction=50
+Rebuy=1
+Collectible=1
+ 

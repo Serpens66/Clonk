@@ -1,0 +1,1 @@
+An rule which let the snow fall down just like an effect.

@@ -1,0 +1,19 @@
+[DefCore]
+id=2X2H
+Name=2x2 Holzoverlay
+Version=4,9,5
+Category=1
+MaxUserSelect=0
+Width=24
+Height=24
+Offset=-12,-12
+Value=0
+Mass=0
+Components=2X2H;
+Picture=24,0,24,24
+Vertices=1
+VertexY=1
+VertexFriction=20
+Rebuy=0
+Collectible=0
+ 

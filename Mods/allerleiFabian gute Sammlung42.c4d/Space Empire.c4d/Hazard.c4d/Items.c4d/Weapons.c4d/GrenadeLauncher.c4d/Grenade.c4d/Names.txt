@@ -1,0 +1,2 @@
+DE:Granate (Granatwerfer)
+US:Grenade

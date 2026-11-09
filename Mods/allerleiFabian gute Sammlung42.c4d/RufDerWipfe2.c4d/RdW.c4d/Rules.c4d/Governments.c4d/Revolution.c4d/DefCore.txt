@@ -1,0 +1,12 @@
+[DefCore]
+id=REVO
+Name=Revolution
+Category=1
+Width=20
+Height=20
+Offset=-10,-10
+Picture=0,20,35,35
+Vertices=1
+VertexY=30
+TimerCall=RevCheck
+TopFace=0,0,20,20

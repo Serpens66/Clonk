@@ -1,0 +1,8 @@
+[DefCore]
+id=FSAV
+Version=4,9,8
+Name=Fensterspeicher
+Category=1
+TimerCall=Check
+Width=1
+Height=1

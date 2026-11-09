@@ -1,0 +1,3 @@
+Sorgt für düstere Atmosphäre.
+
+Wird nicht mehr verwendet, ist nur noch drin, damit nicht alle Bezüge in anderen Objekten entfernt werden muessen.

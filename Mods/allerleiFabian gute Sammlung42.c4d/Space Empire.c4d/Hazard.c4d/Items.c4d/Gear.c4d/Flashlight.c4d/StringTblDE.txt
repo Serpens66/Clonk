@@ -1,0 +1,2 @@
+CtxNightVisionOn=Taschenlampe einschalten
+CtxNightVisionOff=Taschenlampe ausschalten

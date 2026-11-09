@@ -1,0 +1,3 @@
+Eine Fabrikanlage zur Herstellung von Wasserstoff aus Wasser mithilfe von Strom.
+
+Um Wasserstoff herzustellen, schließe zunächst eine Versorgungsleitung mit Wasser an. Dann benötigst du noch eine gute Stromzufuhr und los gehts.

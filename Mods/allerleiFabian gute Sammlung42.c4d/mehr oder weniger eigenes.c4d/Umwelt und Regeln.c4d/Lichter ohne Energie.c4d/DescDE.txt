@@ -1,0 +1,1 @@
+Wenn aktiviert, verbrauchen Fackeln und Co kein Feuerholz und elektronische Lampen keine Energie.

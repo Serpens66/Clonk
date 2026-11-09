@@ -1,0 +1,1 @@
+Haut dem Gegner alle Objekte aus dem Inventar, und schleudert ihn ein bisschen. Zum kurzfristigen Entwaffnen praktisch, um die Waffen zu klauen besser erschießen.

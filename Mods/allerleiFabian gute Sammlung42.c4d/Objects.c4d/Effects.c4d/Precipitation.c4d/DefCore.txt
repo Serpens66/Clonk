@@ -1,0 +1,10 @@
+[DefCore]
+id=FX__
+Version=4,9,8
+Name=Wolke
+Category=C4D_Vehicle
+Width=100
+Height=1
+Mass=1
+Picture=0,0,64,64
+// original id FXP1, aber wegen Überladung durch RdW umbenannt, damit keine überladungfehlermeldung mehr

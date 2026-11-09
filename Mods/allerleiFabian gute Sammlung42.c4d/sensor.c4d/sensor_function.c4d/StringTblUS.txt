@@ -1,0 +1,13 @@
+ADD_TARGET=Add target
+ADD_TARGET_DESC=Add target
+DEL_TARGET=Delete target
+DEL_TARGET_DESC=delete target
+ATTACH_WALL=Attach to the wall
+ATTACH_WALL_DESC=Attach to the wall
+ATTACH_OBJECT=Attach to the object
+ATTACH_OBJECT_DESC=Attach the sensor to an object.
+DETACH=Detach
+DETACH_DESC=Of visible sensor on the object
+FALSE=False
+TRUE=True
+FINISHED=Finished

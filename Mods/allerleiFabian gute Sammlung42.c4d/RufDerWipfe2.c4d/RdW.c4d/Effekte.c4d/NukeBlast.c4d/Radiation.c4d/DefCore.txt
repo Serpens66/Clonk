@@ -1,0 +1,8 @@
+[DefCore]
+id=_Y4D
+Name=Radioaktivität
+Category=1
+Width=3
+Height=3
+Offset=-2,-2
+Picture=0,0,38,38

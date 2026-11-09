@@ -1,0 +1,7 @@
+[DefCore]
+id=_TWO
+Name=Zwei
+Category=1
+Picture=0,0,34,34
+
+ 

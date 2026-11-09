@@ -1,0 +1,1 @@
+Part of the foundry: shows the current production.

@@ -1,0 +1,3 @@
+NoGoals=There aren't goals.
+DisposeOf=Dispose of %s
+Add=Add %s

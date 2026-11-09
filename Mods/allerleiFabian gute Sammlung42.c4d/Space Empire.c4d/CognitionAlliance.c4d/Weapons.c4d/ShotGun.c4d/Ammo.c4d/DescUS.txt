@@ -1,0 +1,2 @@
+A ammo pack for the shotgun.
+Contains 5 bullets.

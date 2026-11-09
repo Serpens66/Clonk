@@ -1,0 +1,5 @@
+[DefCore]
+id=SEND
+Name=Send
+Category=1
+Picture=0,0,30,30

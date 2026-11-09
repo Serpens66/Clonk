@@ -1,0 +1,5 @@
+Kleine Sturmwaffe der Aliens, im Normalfeuer-Modus fehlt die nötige Durchschlagskraft. Aufrüsten ist daher sehr zu empfehlen. Bio-Schaden.
+
+Aufrüstbar mit:
+-Laser (Fünffach-Schuss)
+-Partikelkonv. (Laserstreu mit Energieschaden)

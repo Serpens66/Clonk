@@ -1,0 +1,4 @@
+Graebt der Clonk waehrend des Grabvorgangs ueber einen anderen Tunnel / Hoehle etc. und ist die Erdschicht zwischen dem Grabenden und dem Freiraum zu duenn, so bricht dieser zusammen. Script.c beinhaltet die entsprech
+enden Parameter. Diese koennen im eigenen Szenario passend ueberladen werden.
+Je oefter diese Regel angewaehlt wird, desto duenner darf die Erde sein, ehe der Clonk durchbricht.
+Sollte immer mit 'Aufbrechende Tunnelenden' verwendet werden.

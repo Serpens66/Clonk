@@ -1,0 +1,5 @@
+[DefCore]
+id=SY1M
+Name=Bild1
+Category=1
+Picture=0,0,20,20

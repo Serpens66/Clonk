@@ -1,0 +1,3 @@
+DE:Messer
+US:Knife
+RU:Нож

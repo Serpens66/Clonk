@@ -1,0 +1,4 @@
+Hier können Spieler fortschrittliche Baupläne erforschen. Umweltschaden des Gebäudes= 15.
+Auf "Graben" kann außerdem die aktuelle Temperatur und der Umweltverschmutzungsgrad eingesehen werden.
+Mit einer Chance 1 zu 7 Haushaltsmüll (die Clonks machen halt Dreck...).
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=10.

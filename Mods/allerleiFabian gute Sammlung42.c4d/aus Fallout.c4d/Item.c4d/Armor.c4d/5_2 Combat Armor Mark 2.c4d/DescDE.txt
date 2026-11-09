@@ -1,0 +1,55 @@
+Nahkampf 15% 
+Projektile 15% 
+Energie 15% 
+Feuer 15% 
+Bio/Partikel 15% 
+Explosion 15% 
+Stahl/Scharfschützenprojektile 5% 
+
+Ausgerüstet:   Marsch:
+HP      +20.000   +0
+Kampf   +15.000   +0
+Werfen  +     0   +10.000
+Springen- 3.500    +13.500
+Laufen  -10.000   +20.000
+Klettern -6.000    +14.000
+Hangeln -6.000    +14.000
+Swim -8.000   +23.000
+Atem    -8.000   +23.000
+Graben  -8.000     +20.000
+
+Hat Nachtsicht.
+----------------------------------
+
+
+
+
+
+
+Auswirkungen auf Fertigkeiten:
+HP        +20.000    Standardwert: 150.000
+Kampf     +15.000    Standardwert:  80.000
+Werfen    +     0    Standardwert:  50.000
+Springen  - 3.500    Standardwert:  40.000
+Laufen    -10.000    Standardwert:  80.000
+Klettern  -6.000     Standardwert:  60.000
+Hangeln   -6.000     Standardwert:  60.000
+Schwimmen -8.000     Standardwert:  90.000
+Atem      -8.000     Standardwert: 100.000
+Graben    -10.000    Standardwert:  60.000
+
+Nachtsicht:
+Licht und vergrößerter Sichtradius.
+
+Gewaltmarsch:
+kurzeitiger Effekt, welcher den Clonk schneller macht. Muss sich vor erneutem Einsatz wieder aufladen:
+Werfen    +10.000     Standardwert:  50.000
+Springen  +13.500     Standardwert:  40.000
+Laufen    +20.000     Standardwert:  80.000
+Klettern  +14.000     Standardwert:  60.000
+Hangeln   +14.000     Standardwert:  60.000
+Schwimmen +23.000     Standardwert:  90.000
+Atem      +23.000     Standardwert: 100.000
+Graben    +20.000     Standardwert:  60.000
+
+Die verstärkte Kampfrüstung ist ein Allrounder. Man muss aber kleinere Abzüge in der Wendigkeit hinnehmen.

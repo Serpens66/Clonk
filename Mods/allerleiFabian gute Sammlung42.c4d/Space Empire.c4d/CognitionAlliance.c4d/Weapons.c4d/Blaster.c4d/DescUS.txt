@@ -1,0 +1,5 @@
+A small weapon for the clonk/clonk-battle.
+
+Needs no ammo.
+Overload with duble-dig, so that it explodes after 5 seconds.
+The weapon can be thrown during the countdown or can be disloaded again by duble-dig.

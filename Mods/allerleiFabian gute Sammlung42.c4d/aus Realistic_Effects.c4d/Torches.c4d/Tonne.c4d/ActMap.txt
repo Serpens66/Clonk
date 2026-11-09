@@ -1,0 +1,12 @@
+[Action]
+Name=Burn
+Procedure=NONE
+Directions=2
+FlipDir=1
+Length=4
+Delay=3
+Facet=8,0,8,20
+NextAction=Burn
+PhaseCall=Smoking
+
+

@@ -1,0 +1,6 @@
+[DefCore]
+id=CG_6
+Name=KI-Scorpion
+Category=1
+Picture=0,0,35,35
+ 

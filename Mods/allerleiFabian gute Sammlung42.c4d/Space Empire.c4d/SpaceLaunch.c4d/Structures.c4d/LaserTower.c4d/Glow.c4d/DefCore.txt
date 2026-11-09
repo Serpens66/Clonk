@@ -1,0 +1,14 @@
+[DefCore]
+id=SLTG
+Name=LaserGlow
+Version=4,9,5
+Category=2
+Width=90
+Height=68
+Offset=-45,-34
+Picture=270,0,90,68
+Vertices=1
+VertexX=0
+VertexY=-17
+TimerCall=Check
+Timer=1

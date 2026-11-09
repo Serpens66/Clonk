@@ -1,0 +1,3 @@
+Erleichtert den Transport größerer Materialmengen. Fasst bis zu 50 Objekte.
+
+Behebt einen kleinen Fehler der Lore.

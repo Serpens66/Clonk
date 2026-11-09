@@ -1,0 +1,15 @@
+[Action]
+Name=Left
+Procedure=NONE
+Length=1
+Delay=0
+Facet=0,0,16,16
+NextAction=Left
+
+[Action]
+Name=Right
+Procedure=NONE
+Length=1
+Delay=0
+Facet=16,0,16,16
+NextAction=Right

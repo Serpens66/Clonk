@@ -1,0 +1,3 @@
+NoEnvironment=Keine Umweltobjekte vorhanden.
+DisposeOf=%s entfernen
+Add=%s hinzufügen

@@ -1,0 +1,20 @@
+[DefCore]
+id=HTC2
+Name=Groﬂe Luke
+Category=1026
+MaxUserSelect=1
+Width=34
+Height=20
+Offset=-17,-8
+Value=40
+Mass=100
+Components=METL=2
+Vertices=2
+VertexX=-16,15
+VertexY=11,11
+VertexFriction=150,150
+Grab=2
+TimerCall=CheckArea
+Timer=1
+Construction=1
+BlastIncinerate=100

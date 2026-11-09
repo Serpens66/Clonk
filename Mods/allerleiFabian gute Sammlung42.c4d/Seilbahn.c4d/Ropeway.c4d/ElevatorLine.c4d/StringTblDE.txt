@@ -1,0 +1,5 @@
+MsgNoConnectType=%s kann nicht an|%s angeschlossen werden.
+MsgConnect=%s an|%s angeschlossen
+MsgAlreadyConnected=Jeweilge Seite|ist bereits belegt.
+MsgTooDeep=Verbindung ungeeignet:|Seilbahn liegt zu tief.
+MsgTooNear=Verbindung ungeeignet:|Stationen liegen zu nah beieinander.

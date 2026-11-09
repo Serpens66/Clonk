@@ -1,0 +1,1 @@
+Entfernt Angriffsregeln, wenn eine bestimmte Anzahl an Feinden gestorben ist.

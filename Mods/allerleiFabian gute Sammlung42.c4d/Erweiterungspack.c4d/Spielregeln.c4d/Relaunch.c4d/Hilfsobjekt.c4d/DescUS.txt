@@ -1,0 +1,1 @@
+Stores the remaining relaunchs of a player.

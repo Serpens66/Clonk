@@ -1,0 +1,15 @@
+Mit dem Pinguinanzug verwandelt der Clonk sich in einen perfekten Schwimmer und Taucher und kann sogar unter Wasser arbeiten (bauen, graben, fällen). Außerdem überlebt er in extremer Kälte.
+
+Fertigkeiten:     Standardwert:
+HP        +     0  150.000
+Kampf     + 2.000   80.000
+Werfen    +     0   50.000
+Springen  +     0   40.000
+Laufen    -15.000   80.000
+Klettern  - 8.000   60.000
+Hangeln   - 8.000   60.000
+Schwimmen +50.000   90.000
+Atem   +1.000.000   100.000
+Graben    -15.000   60.000
+
+Hat Nachtsicht.

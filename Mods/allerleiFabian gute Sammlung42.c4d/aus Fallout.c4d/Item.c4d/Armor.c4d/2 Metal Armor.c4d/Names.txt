@@ -1,0 +1,3 @@
+DE:Titan-Rьstung
+US:Metal Armor
+RU:Металлическая Броня

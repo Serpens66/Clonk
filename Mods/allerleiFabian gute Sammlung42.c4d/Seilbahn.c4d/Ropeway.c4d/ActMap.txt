@@ -1,0 +1,10 @@
+[Action]
+Name=Ready
+Procedure=FLOAT
+Facet=28,0,28,56
+NextAction=Hold
+
+[Action]
+Name=Line
+Procedure=NONE
+Facet=86,0,5,6,-2,-3

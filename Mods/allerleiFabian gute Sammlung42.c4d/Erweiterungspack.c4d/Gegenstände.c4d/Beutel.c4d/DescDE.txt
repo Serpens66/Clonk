@@ -1,0 +1,2 @@
+Kann bis zu 2 Objekte beinhalten und erleichtert somit den Transport von kleineren Materialmengen.
+Kann mit doppel-[Graben] angelegt werden und dann durch das Kontextmenü verwaltet werden.

@@ -1,0 +1,7 @@
+Regelt die Kosten für die Ausbildung der Clonks.
+0: Standardwerte
+1: keine Kosten 
+2: halber Standard
+3: doppelter Standard
+
+Als Regel deaktiviert, nur noch "Ausbildungserfahrung" als Regel aktiv, was das Ziel für die variable Ausbildungseinstellungen ist.

@@ -1,0 +1,3 @@
+Fasst bis zu 60 Gegenstände oder ein Fahrzeug und kann vom Flaschenzug in die Höhe gehoben werden (Haken bis zum Container runterlassen und mit [Hoch] Menü aufrufen).
+
+Graphik stammt ursprünglich aus dem HeliPack (Robert Hierl).

@@ -1,0 +1,1 @@
+Scripterweiterungen von Standardobjekten, um sie in der Fahrzeug- bzw. Maschinenfabrik herstellen zu können.

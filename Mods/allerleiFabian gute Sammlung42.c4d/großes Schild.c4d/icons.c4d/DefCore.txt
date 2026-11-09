@@ -1,0 +1,5 @@
+[DefCore]
+id=SGN1
+Name=Icons
+Category=1
+Picture=0,0,35,35

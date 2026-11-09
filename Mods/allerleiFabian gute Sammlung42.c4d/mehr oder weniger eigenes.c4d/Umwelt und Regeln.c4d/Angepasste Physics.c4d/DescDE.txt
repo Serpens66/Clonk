@@ -1,0 +1,6 @@
+Wenn aktiviert, hat jeder neue Clonk CLNK relativ niedrige Werte und kann im Ausbildungscamp immer weiter verbessert werden.
+Eine Aktivierung dieser Regel mitten während des Spiels hat keine Auswirkung auf vorher vorhandene Clonks!
+Fortschritte gelten natürlich nur für das aktive Spiel.
+
+Wenn nicht aktiviert, haben die Clonks normale Physikwerte, wie sie in der DefCore definiert, bzw. durch faire/nicht faire Clonks definiert werden. Im Ausbildungscamp werden keine Werte verbessert, sondern nur das Aussehen verändert, bzw. die Hazardfähigkeiten und -Werte übernommen. 
+Heißt jede weitere Ausbildung nach Stufe 5 wäre beim Soldaten nur ein optischer Effekt. Beim Arbeiter gibt es allerdings bessere Arbeiterfähigkeiten.

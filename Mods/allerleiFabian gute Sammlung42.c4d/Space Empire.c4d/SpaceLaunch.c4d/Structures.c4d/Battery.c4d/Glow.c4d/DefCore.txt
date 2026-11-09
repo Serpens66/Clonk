@@ -1,0 +1,12 @@
+[DefCore]
+id=SBTG
+Name=BatteryGlow
+Version=4,9,5
+Category=2
+Width=35
+Height=40
+Offset=-17,-20
+Picture=665,0,35,40
+Vertices=1
+VertexX=0
+VertexY=-39

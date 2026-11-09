@@ -1,0 +1,2 @@
+DE:Fortschritts-Balken
+US:Progress bar

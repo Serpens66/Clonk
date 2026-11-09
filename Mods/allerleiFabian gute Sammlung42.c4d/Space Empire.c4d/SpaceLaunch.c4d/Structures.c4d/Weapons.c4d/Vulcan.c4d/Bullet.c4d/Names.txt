@@ -1,0 +1,2 @@
+DE:Vulcan-Kugel
+US:Vulcan bullet

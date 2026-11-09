@@ -1,0 +1,2 @@
+DE:Verfolger-Bombe
+US:Target-Bomb

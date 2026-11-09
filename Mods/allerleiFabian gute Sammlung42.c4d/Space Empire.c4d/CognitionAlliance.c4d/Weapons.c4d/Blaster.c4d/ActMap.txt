@@ -1,0 +1,14 @@
+[Action]
+Name=Reload
+Procedure=NONE
+Facet=0,0,15,5
+Delay=25
+NextAction=Idle
+
+[Action]
+Name=Overload
+Procedure=NONE
+Facet=0,0,15,5
+Delay=30
+NextAction=Overload
+EndCall=Over_Load

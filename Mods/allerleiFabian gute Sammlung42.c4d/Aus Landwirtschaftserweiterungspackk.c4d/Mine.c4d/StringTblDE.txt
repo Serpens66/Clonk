@@ -1,0 +1,6 @@
+TxtProduction=Produktion
+TxtWrongPlacement=Falscher Bauplatz!|Es kann nur ganz unten gebaut werden!|Aktuelle Tiefe: %d|Obere Grenze: %d
+TxtSelectRess=Rohstoff auswählen
+TxtProductionDefault=Alle
+TxtProductionDefaultDesc=Baut alle Rohstoffe ab. Mehr als eine spezialisierte Suche.
+TxtProductionRessDesc=Baut besonders viel %s ab, dafür weniger andere Rohstoffe.|Je wertvoller der Rohstoff ist, desto unwahrscheinlicher ist der Fund.|Wahrscheinlichkeit~%d/%d

@@ -1,0 +1,2 @@
+DE:Durchbruch von duennen Schichten beim Graben
+US:break through while digging

@@ -1,0 +1,39 @@
+Tja... Irgendwie... Ja, also...
+
+Gut, ich hab Regeln draus gemacht, mir ist sonst nix eingefallen.
+Regeln aktivieren und im Spiel über das Menü aufrufen.
+
+Mein Gedanke dahinter:
+Da hab ich Clonk gespielt und irgendwie halt alles funktioniert, ich hab mich gefreut, aber irgendwie wars doch fad.
+Da hab ich mir gedacht, ein Monster oder ein Erdbeben oder was auch immer wär echt geil.
+
+Dann ist mir noch "Sim City" (das erste, ur alte, falls das noch wer kennt) eingefallen. Da hats so nen Katastrophe-Knopf gegeben, mit dem man welche hat machen können.
+Hab ich mir gedacht, das will ich in Clonk auch.
+Dazu ist mir nur die möglichkeit durch Regeln eingefallen.
+
+Ja, Moster kann man herholen (hab ich für sinnvoller gehalten), alle anderen wiederholen sich regelmäßig.
+Hab noch an nen Zufallsgenerator gedachht, aber man kann eh nie mitzählen, also kommen sie halt so wie sie kommen.
+
+Sind eh alle beschrieben.
+
+Zu den Stufen:
+0: Aus
+1: Wenig
+2: Mittel (halbe Zeit)
+3: Viel (wieder halbe Zeit)
+
+Update 2.0:
+Beim ganzen Regen gilt:
+0: Aus
+1: Leicht (1 Pixel/Frame)
+2: Normal (5 Pixel/Frame)
+3: Stark (10 Pixel/Frame)
+
+Außnahme Lava -> Zusatz:
+bei 1: 1/20 Chance auf Lavabrocken und nach einem Lavabrocken 10 Frames Pause
+bei 2: 1/10 Chance auf Lavabrocken
+bei 3: 1/5 Chance auf Lavabrocken
+
+Kommentar:
+Ich hab alle durchgetestet und es passt alles.
+-> Deswegen hat auch der Lavaregen eine Sonderregel und am längsten gedauert, da ich da die Stufe 1 so lang überarbeitet habe, bis es gepasst hat und ausgeglichen war.

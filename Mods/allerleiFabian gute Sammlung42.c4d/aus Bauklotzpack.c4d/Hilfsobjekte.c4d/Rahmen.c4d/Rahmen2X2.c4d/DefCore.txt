@@ -1,0 +1,18 @@
+[DefCore]
+id=RAH1
+Name=Rahmen 2X2
+Version=4,9,5
+Category=16
+MaxUserSelect=0
+Width=22
+Height=22
+Offset=-11,-11
+Value=0
+Mass=10
+Components=RAH1=1;
+Picture=0,0,22,22
+Vertices=4
+VertexX=-11,-11,10,10
+VertexY=10,-11,10,-11
+VertexFriction=20,20,20,20
+ColorByOwner=1

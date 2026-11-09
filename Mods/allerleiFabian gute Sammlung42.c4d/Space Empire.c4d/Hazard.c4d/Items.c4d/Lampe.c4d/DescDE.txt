@@ -1,0 +1,2 @@
+Leuchtet im Dunkeln und sorgt für Licht. Kann man über anfassen verschieben.
+Sichtradius 200.

@@ -1,0 +1,2 @@
+Enthält 10 Schuss für das Bazookageschütz der Geschützplattform.
+Gibt kurz vor dem Aufprall mehrere kleinere Sprengköpfe frei. Die Anzahl der Cluster hängt von der verwendeten Munitionsmenge ab, 3*Menge.

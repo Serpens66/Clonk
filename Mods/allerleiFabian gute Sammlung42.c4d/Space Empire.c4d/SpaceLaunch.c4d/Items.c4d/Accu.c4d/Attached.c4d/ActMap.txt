@@ -1,0 +1,17 @@
+[Action]
+Name=HighNRG
+Procedure=ATTACH
+Length=1
+Delay=20
+Facet=0,0,13,13
+NextAction=HighNRG
+StartCall=CheckEnergy
+
+[Action]
+Name=LowNRG
+Procedure=ATTACH
+Length=1
+Delay=20
+Facet=0,15,13,13
+NextAction=LowNRG
+StartCall=CheckEnergy

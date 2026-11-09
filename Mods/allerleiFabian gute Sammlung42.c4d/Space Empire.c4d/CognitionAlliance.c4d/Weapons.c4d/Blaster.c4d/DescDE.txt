@@ -1,0 +1,5 @@
+Eine kleine Waffe für den Clonk/Clonk-Kampf.
+
+Benötigt keine Munition.
+Kann man durch doppelgraben überlasten, so dass sie nach 5 Sekunden explodiert.
+Die Waffe kann während des Countdowns weggeworfen oder mit doppelgraben wieder entladen werden.

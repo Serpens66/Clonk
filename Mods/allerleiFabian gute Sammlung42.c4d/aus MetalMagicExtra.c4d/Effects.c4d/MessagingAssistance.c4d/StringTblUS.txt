@@ -1,0 +1,9 @@
+OnChurchEnter=In the church you can upgrade a Knight to a paladin. Also you can buy the so-called church wonders here for money.
+OnHoligonIngotCollect=With the holigon ingot you can produce mystic artefacts (Two-Hand-Sword,Magic Staff). Also it is needed in the altar if you want to cast the revival wonder with the paladin.
+OnHavingSpellDelay=The paladin cannot cast the same spell two times fast in a row. He needs some time to reload the spell.
+OnStartPraying=With praying you can fill your Karma Energy steadily. But every additional praying clonk only does the half of Karma Energy increasing. So it is senseless to have more than 4 praying clonks.
+OnStaffCollect=The staff of Cra-Kla-Zoth can be upgraded to a elementary staff with special spells.
+OnEnemySainthood=This sainthood belongs to you enemies and will attack you with lightnings. You can conquer it standing in front of it and waiting.
+OnFriendlySainthood=This sainthood belongs to you team and will heal you, until the enemies conquer it.
+OnCultsiteMenu=On the cultside you can summon mystic creatures belonging to your church. The need alchemical ingredients and can either be controlled, ridden or follow you on their own.
+OnMagicRoomEnter=In the magic room magic clonks can be upgraded to mages. Also you can build magic items here.

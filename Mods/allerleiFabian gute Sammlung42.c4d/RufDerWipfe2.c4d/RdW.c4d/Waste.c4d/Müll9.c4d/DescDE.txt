@@ -1,0 +1,4 @@
+Ensteht bei der Produktion von Brennstäbe... sollte möglichst bald entsorgt werden.
+Umweltschädigend=50
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend. 
+Kann in Müllverbrennungsanlage verbrannt werden, setzt aber kurzzeitg Strahlung frei.

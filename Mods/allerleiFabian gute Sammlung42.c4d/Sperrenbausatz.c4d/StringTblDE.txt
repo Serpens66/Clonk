@@ -1,0 +1,2 @@
+TxtCreateconstructionsi=Schachtsperre bauen
+TxtNoconstructionplansa=Errichten der Schachtsperre nicht möglich.

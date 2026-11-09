@@ -1,0 +1,1 @@
+Wenn aktiviert, wird für Produktion in Fabriken usw. kein Material benötigt.

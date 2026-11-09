@@ -1,0 +1,3 @@
+Ein kleines aber robustes humanoides Wesen, gewitzt und flink, wenn gekonnt gesteuert.
+
+Allerlei kleine Erweiterungen.

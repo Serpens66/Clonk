@@ -1,0 +1,3 @@
+A strong energy-weapon that fires plasma-shots to the enemy.
+
+Needs accus.

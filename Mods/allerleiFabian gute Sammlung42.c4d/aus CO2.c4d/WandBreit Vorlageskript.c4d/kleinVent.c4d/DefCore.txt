@@ -1,0 +1,15 @@
+[DefCore]
+id=VEN5
+Version=4,9,8,2
+Name=Ventilator
+Category=C4D_StaticBack
+Width=64
+Height=64
+Offset=-32,-32
+Picture=0,0,32,32
+Construction=1
+Mass=500
+Components=METL=2
+Vertices=4
+VertexX=-32,32,-32,32
+VertexY=-32,-32,32,32

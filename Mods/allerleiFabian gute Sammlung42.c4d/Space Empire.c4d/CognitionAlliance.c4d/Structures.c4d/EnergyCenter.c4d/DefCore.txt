@@ -1,0 +1,27 @@
+[DefCore]
+id=CENC
+Name=Energy Center
+Category=1154
+MaxUserSelect=10
+Width=75
+Height=56
+Offset=-37,-28
+TimerCall=CheckEnergy
+Timer=5
+Value=10
+Mass=2000
+Components=METL=2;CALU=2;CRYS=2;WOOD=1;CTIT=1;GLAS=1;PSTC=1;
+Picture=0,56,100,89
+Vertices=7
+VertexX=0,-37,-12,20,38,38,-37
+VertexY=0,-27,-27,-27,-27,27,27
+VertexFriction=100,100,100,100,100,100,100
+Exclusive=1
+Entrance=-16,0,21,28
+LineConnect=304
+ColorByOwner=1
+Construction=1
+AttractLightning=1
+
+[Physical]
+Energy=100000

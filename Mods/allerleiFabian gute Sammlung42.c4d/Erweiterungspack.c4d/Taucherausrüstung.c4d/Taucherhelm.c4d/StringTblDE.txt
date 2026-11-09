@@ -1,0 +1,3 @@
+PutOn=Anziehen
+AlreadyHasHelmet=%s trägt bereits|einen Taucherhelm!
+PutOnHelmet=Taucherhelm angelegt.

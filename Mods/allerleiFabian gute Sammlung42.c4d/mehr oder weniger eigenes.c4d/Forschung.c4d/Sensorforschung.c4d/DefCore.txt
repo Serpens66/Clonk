@@ -1,0 +1,9 @@
+[DefCore]
+id=SSEE
+Name=Sensorforschung
+Category=1040
+Width=1
+Height=1
+Picture=0,0,200,160
+MaxUserSelect=1
+ 

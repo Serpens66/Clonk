@@ -1,0 +1,23 @@
+Die verst. Titan Rüstung ist quasi undurchdringlich für Projektile. 
+
+Nahkampf 30% 
+Projektile 90% 
+Energie -10% 
+Feuer -20% 
+Bio/Partikel -10% 
+Explosion 1% 
+Stahl/Scharfschützenprojektile 50% 
+
+Fertigkeiten:    
+HP       +40.000  
+Kampf     +1.000    
+Werfen    -5.000   
+Springen  -5.000   
+Laufen    -5.000   
+Klettern  -5.000    
+Hangeln   -5.000    
+Schwimmen -12.000   
+Atem      -5.000   
+Graben    -5.000   
+ 
+Bei Feuer/Energie/Bio/Partikel könnte es aber etwas brenzlig werden.

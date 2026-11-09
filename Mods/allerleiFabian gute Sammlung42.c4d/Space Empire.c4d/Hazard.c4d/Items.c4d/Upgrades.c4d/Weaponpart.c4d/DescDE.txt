@@ -1,0 +1,8 @@
+Teil einer ehemaligen Waffe. Lässt sich an andere Waffen anbringen.
+Verbessern lassen sich:
+- Granatenwerfer
+- Pumpgun
+- Mine
+- Maschinenpistole
+- Sturmpistole
+- Flammenwerfer

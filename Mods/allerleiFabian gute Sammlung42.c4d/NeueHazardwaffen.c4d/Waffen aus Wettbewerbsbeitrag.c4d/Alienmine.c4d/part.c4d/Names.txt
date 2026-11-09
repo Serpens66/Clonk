@@ -1,0 +1,2 @@
+DE:Alienminen Splitter
+US:A new object

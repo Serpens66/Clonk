@@ -1,0 +1,14 @@
+[DefCore]
+id=CHAR
+Name=DynString
+Version=4,9,5
+Category=58720257
+MaxUserSelect=0
+Width=32
+Height=32
+Offset=-16,-16
+Picture=32,128,98,32
+Oversize=1
+StretchGrowth=1
+IncompleteActivity=1
+ 

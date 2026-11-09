@@ -1,0 +1,11 @@
+Standard=Particle shot
+Super=Spread shots
+Laser=Laser sphere
+
+KLASUpgradeDesc=Allows to fire spread particle shots.
+
+KLASUpgraded=Spread particle shot|attachment mounted.
+
+STRHUpgradeDesc=Allows to fire laser spheres.
+
+STRHUpgraded=Laser sphere|attachment mounted.

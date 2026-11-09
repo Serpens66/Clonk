@@ -1,0 +1,3 @@
+Im Spielregel-Menü können die Spielziele eingestellt werden.
+Nur verwenden, wenn man wirklich weiß was man tut!!
+Ansonsten lieber die Settings im Kontextmenü des ersten Spielers verwenden!

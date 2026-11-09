@@ -1,0 +1,5 @@
+Absolut verbuggt bei Verwendung mit Fahrzeugen. Der andere Fahrstuhl geht wenigstens manchmal, aber dieser hier garnicht... obwohl beide dassselbe skript nutzen.
+
+Obergrenze eines Transportschachtes und Versorgungsstation für den Schwebelift.
+
+Achtung: Wenn zuwenig Energie geliefert wird, kann der Lift abstürzen und beim Aufprall explodieren!

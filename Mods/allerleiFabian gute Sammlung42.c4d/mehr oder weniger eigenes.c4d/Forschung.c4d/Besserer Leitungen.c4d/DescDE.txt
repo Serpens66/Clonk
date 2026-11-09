@@ -1,0 +1,2 @@
+Nach Erforschung können die Stromleitungen mehr Strom pro Zeiteinheit transportieren (1/2 mal der Energie auf Lager, anstelle von 1/3).
+Manche Gebäude, besonders die Zukunftsgebäude, verbrauchen mehr Strom, als eine einzelne Leitung in der Zeit transportieren kann. Daher sind oft mehrere Leitungen nötig.

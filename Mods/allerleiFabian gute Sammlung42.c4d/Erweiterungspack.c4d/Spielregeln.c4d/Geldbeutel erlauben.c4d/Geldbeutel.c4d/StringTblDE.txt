@@ -1,0 +1,2 @@
+ShowMoney=In diesem Geldbeutel|befanden sich %d C.
+IsEmpty=Dieser Geldbeutel|ist leer.

@@ -1,0 +1,7 @@
+[Action]
+Name=Shine
+Length=12
+Facet=72,0,64,64
+NextAction=Shine
+PhaseCall=ResetPhase
+Procedure=FLOAT

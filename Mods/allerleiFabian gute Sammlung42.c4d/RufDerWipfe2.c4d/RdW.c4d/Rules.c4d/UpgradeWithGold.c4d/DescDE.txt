@@ -1,0 +1,1 @@
+Man benötigt Geld zum ausbauen von Gebäuden. Sollte aktiviert werden wenn "Baumaterial" deaktiviert ist.

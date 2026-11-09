@@ -1,0 +1,8 @@
+[DefCore]
+id=SY_9
+Version=4,9,5
+Name=Rechts
+Category=1
+Picture=0,0,16,16
+PictureFE=0,0,16,16
+ 

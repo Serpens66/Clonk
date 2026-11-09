@@ -1,0 +1,2 @@
+Die Änderungen in der Clonkdatei, also die Verstecken und Tod vortäuschen Fähigkeiten wurden aus EPIC übernommen und der rest gelöscht. Sind also bereits in diesem Pack in dem Object Clonk mit drin.
+Hier kommt unter anderem noch das appendto für das halten der Items in der Hand rein.

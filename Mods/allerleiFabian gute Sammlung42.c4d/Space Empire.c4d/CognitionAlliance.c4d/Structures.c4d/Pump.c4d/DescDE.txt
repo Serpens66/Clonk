@@ -1,0 +1,1 @@
+Zuständig für den Transport von Flüssigkeiten. Funktioniert genauso wie die Standardpumpe.

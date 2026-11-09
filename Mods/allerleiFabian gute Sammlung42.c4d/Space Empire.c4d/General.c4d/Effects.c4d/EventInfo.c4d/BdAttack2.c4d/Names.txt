@@ -1,0 +1,2 @@
+DE:Gebäude wird angegriffen
+US:Building is being attacked

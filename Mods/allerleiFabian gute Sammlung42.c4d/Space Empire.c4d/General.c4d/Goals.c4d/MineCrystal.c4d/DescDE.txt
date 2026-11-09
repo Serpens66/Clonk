@@ -1,0 +1,2 @@
+Es muss eine bestimmte Menge Kristall abgebaut und verkauft werden.
+Je häufiger das Spielziel ausgewählt ist, desto weniger muss abgebaut werden.

@@ -1,0 +1,7 @@
+[Action]
+Name=Shine
+Length=9
+Delay=1000
+Facet=0,40,300,300
+NextAction=Shine
+PhaseCall=ResetPhase

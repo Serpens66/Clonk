@@ -1,0 +1,4 @@
+Nahkampfwaffen werden während des Rangeln mit einem feindlichen Clonk mit "doppelgraben" eingesetzt. 
+Der Schaden und Zeit bis ihr die Waffe erneut einsetzen könnt, hängt von dem "Fight", bzw. von den Beweglichkeitswerten Werten eures Clonk ab.
+
+Short knife works fine. Apparently, the tip was specially sharpened to increase the power of penetrating attacks.

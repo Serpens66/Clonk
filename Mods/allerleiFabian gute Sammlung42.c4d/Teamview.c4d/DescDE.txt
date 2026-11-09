@@ -1,0 +1,1 @@
+Wenn Kriegsnebel vorhanden, wird hierdurch der Sichtbereich zwischen allen nichtfeindlichen Clonks geteilt.

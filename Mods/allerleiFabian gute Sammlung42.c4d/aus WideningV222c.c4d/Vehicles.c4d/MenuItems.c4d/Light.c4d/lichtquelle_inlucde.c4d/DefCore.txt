@@ -1,0 +1,15 @@
+[DefCore]
+id=LICH
+Name=LichtquellenInclude
+Version=4,9,5
+Category=3
+MaxUserSelect=1
+Width=6
+Height=6
+Offset=-3,-3
+Value=10
+Mass=10
+Components=_NEW=1;
+Picture=6,0,64,64
+
+ 

@@ -1,0 +1,5 @@
+[DefCore]
+id=_BUY
+Name=Buy
+Category=1
+Picture=0,0,48,48

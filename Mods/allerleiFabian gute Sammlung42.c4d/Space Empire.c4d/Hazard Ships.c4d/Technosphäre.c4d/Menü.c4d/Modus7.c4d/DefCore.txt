@@ -1,0 +1,6 @@
+[DefCore]
+id=M77G
+Name=Tarnung
+Category=1
+Picture=0,0,35,35
+ 

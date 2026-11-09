@@ -1,0 +1,2 @@
+Ein Zeitzünder, dessen Zündzeit eingestellt werden kann.
+Für den Plastiksprengstoff.

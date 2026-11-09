@@ -1,0 +1,6 @@
+Standard=Spread shots
+Automatik=Automatic Shotgun
+
+KRFLUpgradeDesc=Allows you to shoot grenadefragments
+
+KRFLUpgraded=grenadefragment attachment mounted!

@@ -1,0 +1,15 @@
+[DefCore]
+id=C_S3
+Name=Shotgunbullet
+Category=4
+Width=3
+Height=1
+Offset=-2,-1
+Mass=5
+Components=C_S3=1;
+Picture=0,0,3,1
+Vertices=1
+VertexX=0
+VertexY=0
+VertexFriction=100
+ 

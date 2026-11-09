@@ -1,0 +1,13 @@
+[Action]
+Name=Be
+Procedure=NONE
+FacetBase=1
+
+[Action]
+Name=Wrecked
+Procedure=NONE
+Length=1
+Delay=1
+Facet=0,70,80,70
+NextAction=Wrecked
+StartCall=Burn

@@ -1,0 +1,4 @@
+Das MG feuert automatisch auf Clonks und gegnerische Fahrzeuge.
+Benötigt Energie und Munitionskisten(Projektile) als Munition.
+
+Kann nach Erforschung in manchen Geschütztürmen gekauft werden.

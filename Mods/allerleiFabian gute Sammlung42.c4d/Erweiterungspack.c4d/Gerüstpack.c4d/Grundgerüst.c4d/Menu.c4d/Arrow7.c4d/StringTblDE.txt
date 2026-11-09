@@ -1,0 +1,2 @@
+OpenFlap=Dachklappe öffnen
+CloseFlap=Dachklappe schliessen

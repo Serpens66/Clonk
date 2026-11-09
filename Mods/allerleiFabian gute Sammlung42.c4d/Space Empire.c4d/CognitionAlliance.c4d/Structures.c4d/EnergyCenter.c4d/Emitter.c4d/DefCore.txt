@@ -1,0 +1,15 @@
+[DefCore]
+id=CAN1
+Name=Energy Emitter
+Category=4
+MaxUserSelect=10
+Width=35
+Height=20
+Offset=-17,-10
+Value=10
+Mass=10
+Picture=0,0,35,20
+Vertices=1
+VertexX=0
+VertexY=12
+ 

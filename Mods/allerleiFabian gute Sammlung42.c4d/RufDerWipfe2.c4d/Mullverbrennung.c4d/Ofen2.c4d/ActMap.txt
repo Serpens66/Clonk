@@ -1,0 +1,7 @@
+[Action]
+Name=IgnoreDay
+Procedure=FLOAT
+Length=5
+Delay=5
+Facet=0,0,5,5,0,5
+NextAction=IgnoreDay

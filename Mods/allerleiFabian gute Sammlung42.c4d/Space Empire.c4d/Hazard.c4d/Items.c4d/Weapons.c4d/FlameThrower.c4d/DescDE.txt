@@ -1,0 +1,6 @@
+Gefürchtet im Nahkampf, röstet der Flammenwerfer jeden Feind der ihm zu nahe kommt gut durch.
+Im zweiten Modus werden nur Gebäude, Pflanzen und Eis getroffen. Eis/Schnee kann also geschmolzen werden.
+
+Aufrüstbar mit:
+- Waffenteil
+- Bioaufsatz

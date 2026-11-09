@@ -1,0 +1,5 @@
+Erstellt eine Barriere in der Mitte der Karte. 
+Diese ist nicht passierbar und hat den Zweck zu verhindern, dass Clonks/Geschosse vor Ablauf der Zeit hindurchkommen.
+Die meisten Dinge werden zurückgeschleudert. Kommt doch was hindurch, wird es in der Mitte der Barriere vernichtet.
+
+Variable Regel.

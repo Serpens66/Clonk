@@ -1,0 +1,1 @@
+Ermöglicht Waffenrotation, obwohl gefeuert wird.

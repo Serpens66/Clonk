@@ -1,0 +1,2 @@
+DE:Vulcan-Geschütz
+US:Vulcano Turret

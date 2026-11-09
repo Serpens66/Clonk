@@ -1,0 +1,16 @@
+[Action]
+Name=Active
+Procedure=NONE
+Directions=1
+Delay=1
+FacetBase=1
+NextAction=Active
+StartCall=Exhaust
+Sound=Gas
+
+[Action]
+Name=Break
+Length=7
+Delay=2
+Facet=58,0,6,6
+EndCall=Destroy

@@ -1,0 +1,15 @@
+[Action]
+Name=SmallShot
+Procedure=NONE
+Length=14
+Delay=1
+Facet=0,5,10,5
+NextAction=SmallShot
+
+[Action]
+Name=BigShot
+Procedure=NONE
+Length=7
+Delay=2
+Facet=0,0,20,5,-5,0
+NextAction=BigShot

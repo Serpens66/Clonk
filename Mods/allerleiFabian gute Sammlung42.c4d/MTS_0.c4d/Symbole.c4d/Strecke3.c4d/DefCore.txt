@@ -1,0 +1,15 @@
+[DefCore]
+id=SY_3
+Name=Strecke 3
+Version=4,9,5
+Category=8388609
+Width=14
+Height=14
+Offset=-7,-7
+Vertices=1
+VertexX=0
+VertexY=0
+VertexFriction=100
+Value=0
+Picture=14,0,35,35
+ColorByOwner=1

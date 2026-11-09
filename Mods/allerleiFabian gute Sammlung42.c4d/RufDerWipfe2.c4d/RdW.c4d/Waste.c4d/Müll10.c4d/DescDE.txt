@@ -1,0 +1,4 @@
+Ensteht bei allerlei Prozessen in Werkstätten und Fertigungsfabriken...
+Umweltschädigend=25
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend. 
+Kann in Müllverbrennungsanlage verbrannt werden. Kann außerdem zu neuem Metall geschmolzen werden. 5 Metalschrott werden ein Metall und 10 Schlacke.

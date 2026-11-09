@@ -1,0 +1,2 @@
+Activate the stone and jump.
+The effect kicks you into the headed direction.

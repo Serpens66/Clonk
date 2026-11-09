@@ -1,0 +1,54 @@
+Die Technosphäre ist ein High-Tech Raumfahrzeug dessen Rumpf mit den neuesten technischen Errungenschaften gefüllt ist. Dazu gehören ein optisches Tarnkappensystem, Reperaturnaniten sowie ein Hyperraumantrieb.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lässt sich die Schwebeposition aktivieren, die Spezialfunktionen erreichen, der Ausstieg betätigen und die Geschützkanzel betreten.
+
+-Die Steuerung des Antigrav antriebs erfolgt über die Richtungspfeile.
+
+Waffensysteme:
+
+-Der Technosphäre verfügt als Arsenal über einen Puls-Laser, eine Railgun sowie einen EMP-Raketenwerfer.
+
+-Auf die Waffensysteme lässt sich nur über die Geschützkanzel zugreifen.
+
+-Über das Kontextmenü kann dort die Waffenwahl vorgenommen werden. Die Bordkanone erscheint dann im Inventar.
+
+-Das gewählte Waffensystem wird dann via [Werfen] aktiviert.
+
+-Es gilt zu beachten das der Schütze passende Munition mitführen muss um die Bewaffnung zu laden. Die Railgun und der Pulslaser verbrauchen Energiezellen. Der EMP-Raketenwerfer schlichte Raketen, die durch das Waffensystem modifiziert werden.
+
+Bordsysteme:
+
+-Die Technosphäre verfügt über ein begrenztes, wiederaufladbares Energiereservoir, welches zum verwenden der Bordsysteme angezapft wird.
+
+-Durch Einnehmen und Halten der Schwebeposition kann im Antriebssystem nicht benötigte Energie zum Laden des Speichers genutzt werden. Das Reservoir läd sich dann langsam wieder auf.
+
+-Zudem übernehmen in der Schwebeposition Naniten die Reparatur des Schiffes.
+
+-Das Tarnsystem verbraucht bei Aktivierung 20 Energie-Eiheiten(EE). Zudem wird dann kontinuierlich Energie verbraucht. Ist das Reservoir erschöpft wird das Schiff enttarnt.
+
+-Das Warpsystem besteht aus 2 Komponenten. Dem Antrieb und einem Bojenwerfer, mit dem die Zielkoordinaten des Sprungvorgangs gesetzt werden. Kosten für das Starten einer Boje: 20EE.
+
+-Befindet sich eine Boje des Schiffes im Raum kann sich die Sphäre per Warpantrieb jederzeit dorthin Teleportieren. Kosten des Sprungvorgangs: 50EE.
+
+
+Anmerkungen:
+
+-Die Sphäre ist unterwassertauglich.
+
+-Es kann sich aufgrund der Enge im inneren der Sphäre jeweils nur ein Mannschaftsmitglied in jeder der beiden einnehmbaren Positionen befinden.
+
+-Um eventuelle Verfolger abzuschütteln empfiehlt es sich das Tarnsystem zu nutzen. Waffensysteme sind auch getarnt aktiv.
+
+-Die Sphäre verfügt über ein Elektromagnetisches Phasenschild im Rumpf, welches sie unempfindlich gegenüber EMP angriffen macht.
+
+-Falls die Sphäre einen Strukturschaden von über 90% aufweist ist sollte über einen Absprung nachgedacht werden (Explosionsgefahr).
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

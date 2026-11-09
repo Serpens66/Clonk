@@ -1,0 +1,3 @@
+Wenn aktiviert, bekommen Clonks über 30°C und unter -30°C Schaden, sofern sie sich nicht in einer Flüssigkeit oder bei einer Wärmequelle befinden, bzw. einen Schutzanzug anhaben.
+Außerdem gibt es bei starker Kälte ab und zu Eismeteoriten und Clonks können bei unter -40°C festfrieren.
+Bei über 40°C gibts mehr Schaden für Clonks, Bäume verdursten und Waldbrandgefahr.

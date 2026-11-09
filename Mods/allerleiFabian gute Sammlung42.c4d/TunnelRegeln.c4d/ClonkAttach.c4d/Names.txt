@@ -1,0 +1,2 @@
+DE:kontrolliert die Effekte
+US:controls effects

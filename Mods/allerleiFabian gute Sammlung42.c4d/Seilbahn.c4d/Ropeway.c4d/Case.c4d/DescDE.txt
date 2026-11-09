@@ -1,0 +1,3 @@
+Die Seilbahn dient als Transport zwischen zwei voneinander liegenden Punkten. Sie fährt automatisch zu wartenden Clonks, kann aber auch in den Dauerbetrieb geschaltet werden.
+
+Zwei Exemplare können mit einem Leitungsbausatz miteinander verbunden werden, dabei sollte der Winkel dazwischen nicht zu groß bzw. die jeweilge Seite noch nicht belegt sein.

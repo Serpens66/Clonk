@@ -1,0 +1,14 @@
+[Action]
+Name=Off
+NextAction=Hold
+FacetBase=1
+Procedure=ATTACH
+
+[Action]
+Name=On
+NextAction=On
+FacetBase=1
+Delay=2
+Sound=Horn03
+StartCall=On
+Procedure=ATTACH

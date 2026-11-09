@@ -1,0 +1,2 @@
+DE:Shuttle zerstört
+US:Shuttle destroyed

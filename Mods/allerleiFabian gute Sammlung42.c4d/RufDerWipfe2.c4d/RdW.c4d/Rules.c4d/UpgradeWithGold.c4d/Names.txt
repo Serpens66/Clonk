@@ -1,0 +1,2 @@
+DE:Geld-Upgrade
+US:Money-Upgrade

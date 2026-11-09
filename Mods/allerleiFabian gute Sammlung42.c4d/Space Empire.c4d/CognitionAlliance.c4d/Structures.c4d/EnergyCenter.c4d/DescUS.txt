@@ -1,0 +1,3 @@
+The energy center saves energy for times of need and transmits it to receivers without wires.
+
+In this center, you can fill or empty batteries, but remember that the energy decreases over the time.

@@ -1,0 +1,3 @@
+DE:Pinguin-Anzug
+US:Brotherhood Armor
+RU:Броня Братства

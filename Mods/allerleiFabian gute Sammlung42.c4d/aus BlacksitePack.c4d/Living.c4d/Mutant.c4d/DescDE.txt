@@ -1,0 +1,8 @@
+Kampfverhalten lieber mit EnemyAI machen!
+
+Enstellter, hässlicher (Na ja ein bisschen vielleicht), aggressiver Mutant, der nun andere Clonks terrorisiert.
+
+Art: Mutant,Clonk
+Herkunftsort: Area-52
+Stärken: Intelligent, können Waffen benutzen.
+Schwächen: Sehr schwach auf Distanz.

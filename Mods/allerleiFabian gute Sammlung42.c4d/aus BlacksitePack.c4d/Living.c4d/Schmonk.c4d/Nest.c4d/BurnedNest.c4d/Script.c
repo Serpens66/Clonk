@@ -1,0 +1,3 @@
+/*-- Drachenhorst --*/
+
+#strict

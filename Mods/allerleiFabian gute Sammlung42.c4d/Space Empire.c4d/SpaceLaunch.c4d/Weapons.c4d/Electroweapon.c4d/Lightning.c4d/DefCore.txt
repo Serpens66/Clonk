@@ -1,0 +1,15 @@
+[DefCore]
+id=SLGH
+Name=Lightning
+Version=4,9,1,4
+Category=16
+Width=25
+Height=200
+Offset=-12,-100
+Picture=0,0,25,100
+Vertices=1
+Rotate=1
+NoStabilize=1
+IncompleteActivity=1
+TimerCall=Fading
+Timer=1

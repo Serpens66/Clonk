@@ -1,0 +1,15 @@
+[Action]
+Name=Wait
+Procedure=ATTACH
+Delay=25
+FacetBase=1
+NextAction=Wait
+EndCall=FindTarget
+
+[Action]
+Name=GetReady
+Procedure=ATTACH
+Delay=1
+FacetBase=1
+NextAction=Wait
+EndCall=Fire

@@ -1,0 +1,4 @@
+1.Modus: Gräbt ein einstellbares Rechteck frei. 
+2.Modus: Füllt ein einstellbares Rechteck mit Material auf.
+
+Benötigt Energie, die durch ein Kabel oder Batterien zugeführt werden kann.

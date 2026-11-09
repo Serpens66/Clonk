@@ -1,0 +1,8 @@
+Made of Combat Armor, Oil and Acid Barrel.|
+Cost - 105. Mass - 25.|
+Normal 40% |
+Laser 65% |
+Fire 35% |
+Plasma 50% |
+Explosion 45% |
+Electric 55% |

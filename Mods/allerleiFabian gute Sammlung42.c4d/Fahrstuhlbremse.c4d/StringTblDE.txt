@@ -1,0 +1,6 @@
+TxtElevatorLockTurnOn=Fahrstuhlbremse ein
+TxtElevatorLockTurnOff=Fahrstuhlbremse aus
+TxtElevatorLockOn=Fahrstuhlbremse|eingeschaltet
+TxtElevatorLockOff=Fahrstuhlbremse|ausgeschaltet
+TxtElevatorLockDesc=Arretiert den Fahrstuhl in seiner aktuellen Position
+TxtDrillshaft=Schachtbohrung

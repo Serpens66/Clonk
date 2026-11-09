@@ -1,0 +1,8 @@
+Made of Big parts, Leather Jacket, 3 Crystal and 2 Metal.|
+Cost - 125. Mass - 35.|
+Normal 20% |
+Laser 90% |
+Fire 10% |
+Plasma 80% |
+Explosion 20% |
+Electric 80% |

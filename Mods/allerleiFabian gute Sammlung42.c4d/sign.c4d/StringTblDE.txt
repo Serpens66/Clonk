@@ -1,0 +1,5 @@
+PROTECT=Schützen
+PROTECT_DESC=Der Text kann nicht mehr verändert werden.
+PROTECTED=Der Text kann nicht verändert werden!
+WRITE=Schreiben
+WRITE_DESC=Den Text des Schildes verändern.

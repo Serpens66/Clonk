@@ -1,0 +1,9 @@
+Standard=Dauerfeuer
+Laser=Laser
+
+StandardStructure=nur Gebäude, Dauerfeuer
+LaserStructure=nur Gebäude, Laser
+
+KLASUpgradeDesc=Erweitert das Energiegewehr mit einem Hochleistungslaser.
+
+KLASUpgraded=Energiegewehr mit einem|Hochleistungslaser erweitert.

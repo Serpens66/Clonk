@@ -1,0 +1,2 @@
+The new basement-types.
+The number after the ID BSxx represents the basement´s width divided by 5.

@@ -1,0 +1,31 @@
+[DefCore]
+id=CGC_
+Name=Cougar
+Version=4,9,5
+Category=3332
+TimerCall=Ownerkontrolle
+MaxUserSelect=1
+Width=120
+Height=50
+Offset=-60,-25
+Value=1500
+Mass=300
+Components=METL=9;CRYS=4;CALU=8;CTIT=6;SURO=8;
+Picture=0,50,120,50
+Vertices=14
+VertexX=0 ,25,-25,45,-45,49,-45,27,-30, 15,-19,0  ,50,-54
+VertexY=26,26, 26,20, 20,5, 5, 0,  0,-15,-15,-25,12, 12
+VertexCNAT=8,8,8, 16, 16,16, 16,16, 16,  4,  4,  4, 64, 64
+VertexFriction=20
+Entrance=-10,0,20,15
+TopFace=121,0,117,49
+SolidMask=242,0,117,49
+NoBurnDecay=1
+StretchGrowth=0
+ContainBlast=1
+ColorByOwner=1
+BorderBound=3
+
+[Physical]
+Energy=100000
+Float=75

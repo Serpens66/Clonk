@@ -1,0 +1,17 @@
+[DefCore]
+id=RKB2
+Name=Raketen-Batterie 
+Category=3600
+MaxUserSelect=8
+Width=6
+Height=6
+Offset=-3,-3
+Value=10
+Mass=10
+Components=GUNP=1
+Picture=6,5,64,59
+Vertices=1
+VertexY=1
+VertexFriction=20
+Rebuy=1
+Collectible=1

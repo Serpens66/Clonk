@@ -1,0 +1,2 @@
+Taps the energy of enemy transmitters in range and conducts them in your own powerweb.
+The range can be shown with the throw key.

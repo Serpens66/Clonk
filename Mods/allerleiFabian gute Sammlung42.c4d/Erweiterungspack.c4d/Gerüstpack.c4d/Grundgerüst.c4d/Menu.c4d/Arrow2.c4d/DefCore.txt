@@ -1,0 +1,8 @@
+[DefCore]
+id=LMM2
+Name=MenuItemLoam2
+Category=1
+Width=1
+Height=1
+Picture=0,0,50,50
+ 

@@ -1,0 +1,3 @@
+Standardwaffe.
+
+Kann Kugeln ({{STAM}}) und Stahlmantelkugeln ({{SSTM}}) verschieﬂen.

@@ -1,0 +1,2 @@
+Contains liquid.
+May be connected to pumps, sprinkler or other tanks.

@@ -1,0 +1,7 @@
+Direction=Richtung?
+Right=Nach Rechts
+Left=Nach Links
+Adjustment=Ausrichtung?
+Down=Nach unten
+NoAdjustment=Keine Ausrichtung
+FirstPullUp=%s muss zuerst|hochgelassen werden!

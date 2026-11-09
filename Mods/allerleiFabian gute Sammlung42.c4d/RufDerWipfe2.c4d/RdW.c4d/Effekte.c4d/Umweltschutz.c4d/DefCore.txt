@@ -1,0 +1,10 @@
+[DefCore]
+id=_Z2A
+Name=Umweltschutz
+Value=1
+Version=4,9,7,5
+Category=1
+MaxUserSelect=1
+Picture=0,0,64,64
+TimerCall=CheckPollution
+Timer=3

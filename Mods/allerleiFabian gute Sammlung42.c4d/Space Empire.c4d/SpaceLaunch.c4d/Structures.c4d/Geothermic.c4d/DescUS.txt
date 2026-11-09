@@ -1,0 +1,1 @@
+With this you can use geothermic power in form of lava. With a pump or barrels you can transport lava in the geothermic power plant, where it is used to generate electricity.

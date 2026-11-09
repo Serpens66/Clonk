@@ -1,0 +1,1 @@
+A small door that is used to stop enemies just running past your stands.

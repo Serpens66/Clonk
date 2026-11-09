@@ -1,0 +1,6 @@
+[DefCore]
+id=RAL2
+Name=Licht einschalten
+Category=1
+Picture=12,0,64,64
+ 

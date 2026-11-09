@@ -1,0 +1,11 @@
+[Action]
+Name=Attach
+FacetBase=1
+Procedure=ATTACH
+NextAction=Hold
+
+[Action]
+Name=Wall
+FacetBase=1
+Procedure=FLOAT
+NextAction=Hold

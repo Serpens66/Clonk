@@ -1,0 +1,2 @@
+Die Weiche bestimmt den Kurs, den eine Magnetsphäre je nach ihrer Streckennummer einschlagen soll.
+Die Richtung lässt sich in 35 Stufen einstellen.

@@ -1,0 +1,5 @@
+[DefCore]
+id=JP2_
+Version=4,9,8,2
+Name=Jetpack2
+Category=C4D_StaticBack

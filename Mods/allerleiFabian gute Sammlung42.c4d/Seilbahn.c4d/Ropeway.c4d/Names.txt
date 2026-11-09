@@ -1,0 +1,2 @@
+DE:Seilbahn
+US:Ropeway

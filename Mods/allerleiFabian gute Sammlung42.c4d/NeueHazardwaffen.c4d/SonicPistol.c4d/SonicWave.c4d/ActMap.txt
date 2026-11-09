@@ -1,0 +1,15 @@
+[Action]
+Name=TravelLeft
+Procedure=FLOAT
+NextAction=TravelLeft
+Facet=0,0,20,20
+Length=4
+Delay=1
+
+[Action]
+Name=TravelRight
+Procedure=FLOAT
+NextAction=TravelRight
+Facet=0,20,20,20
+Length=4
+Delay=1

@@ -1,0 +1,2 @@
+DE:Schwimmen
+US:Swim

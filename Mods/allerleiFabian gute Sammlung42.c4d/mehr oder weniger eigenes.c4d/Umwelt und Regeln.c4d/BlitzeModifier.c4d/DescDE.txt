@@ -1,0 +1,1 @@
+Variabel, zum Einstellen der Blitzwahrscheinlichkeit von Wolken.

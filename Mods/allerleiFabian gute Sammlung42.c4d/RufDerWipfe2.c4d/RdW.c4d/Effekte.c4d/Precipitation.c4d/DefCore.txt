@@ -1,0 +1,10 @@
+[DefCore]
+id=FXP1
+Version=4,9,5
+Name=Wolke
+Category=C4D_Foreground|C4D_Vehicle
+Width=100
+Height=50
+Mass=1
+Picture=0,0,64,64
+Vertices=0

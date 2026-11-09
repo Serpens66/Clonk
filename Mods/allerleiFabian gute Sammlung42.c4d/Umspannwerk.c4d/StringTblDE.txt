@@ -1,0 +1,3 @@
+TxtNoEntry=Umspannwerk
+TxtFrom=Eingehende Leitungen
+TxtTo=Ausgehende Leitungen

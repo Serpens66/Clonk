@@ -1,0 +1,2 @@
+Enthält 10 Schuss für das Bazookageschütz der Geschützplattform.
+Explodiert beim Aufprall mit der größe von 10*Munitionsmenge, wobei maximal 5 aufeinmal verwendet werden können.

@@ -1,0 +1,3 @@
+Legt die Liste aller Objekte fest, mit denen gehandelt werden kann.
+
+Dieses Objekt kann für Szenarien überladen werden.

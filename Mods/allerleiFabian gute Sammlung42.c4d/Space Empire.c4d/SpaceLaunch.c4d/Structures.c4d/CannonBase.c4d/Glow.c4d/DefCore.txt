@@ -1,0 +1,13 @@
+[DefCore]
+id=SCBG
+Name=CannonBaseGlow
+Version=4,9,5
+Category=2
+Width=115
+Height=36
+Offset=-57,-18
+Picture=0,0,115,36
+Vertices=1
+VertexX=-28
+VertexY=-15
+ColorByOwner=1

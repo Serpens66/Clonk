@@ -1,0 +1,1 @@
+Regelobjekte sowie der Regelauswähler mit dem sich dass Spiel konfigurieren lässt.

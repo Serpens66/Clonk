@@ -1,0 +1,3 @@
+A destructive bomb equipped with a 10 second-timer. Buildings are its favourite targets.
+
+Activation/Deactivation with double-dig

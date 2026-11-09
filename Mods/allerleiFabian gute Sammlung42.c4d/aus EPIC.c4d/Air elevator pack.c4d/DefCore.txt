@@ -1,0 +1,21 @@
+[DefCore]
+id=E18Z
+Name=Air elevator pack
+Version=4,9,5
+Category=3600
+MaxUserSelect=10
+Width=8
+Height=6
+Offset=-4,-3
+Value=25
+Mass=15
+Components=LOAM=3;CNKT=1;FLNT=1;WOOD=4;METL=2;
+Picture=8,0,80,60
+Vertices=4
+VertexX=-4,4,4,-4
+VertexY=-3,3,-3,3
+VertexFriction=50,50,50,50
+Rebuy=1
+Rotate=1
+Collectible=1
+ 

@@ -1,0 +1,13 @@
+[Particle]
+Name=StippelFetzen
+MaxCount=500
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+CollisionFn=Stop
+Repeats=0
+AlphaFade=1
+GravityAcc=70
+Face=0,0,3,3,-1,-1
+VertexCount=1
+RByV=1

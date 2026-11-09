@@ -1,0 +1,7 @@
+Standard=Propanbrenner
+Lasershot=Laserschneider
+
+KLASUpgradeDesc=Ersetzt den Propanbrenner durch|einen Laser.
+
+KLASUpgraded=Propanbrenner durch|einen Laser ersetzt.
+

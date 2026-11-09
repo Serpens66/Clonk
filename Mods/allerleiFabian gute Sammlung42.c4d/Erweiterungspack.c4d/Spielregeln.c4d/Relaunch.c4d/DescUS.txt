@@ -1,0 +1,1 @@
+If a Clonk die, he will be relaunched at a random place.

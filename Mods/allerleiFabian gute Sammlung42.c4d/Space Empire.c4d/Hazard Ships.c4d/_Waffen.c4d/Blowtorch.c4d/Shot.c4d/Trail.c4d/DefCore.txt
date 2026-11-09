@@ -1,0 +1,14 @@
+[DefCore]
+id=BTT_
+Version=4,9,5
+Name=Trail
+Category=4
+Width=2
+Height=2
+Offset=-1,-1
+Rotate=0
+IncompleteActivity=1
+BorderBound=7
+
+[Physical]
+Float=100000

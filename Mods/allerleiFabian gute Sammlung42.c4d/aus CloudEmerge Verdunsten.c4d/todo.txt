@@ -1,0 +1,9 @@
+todo:
+
+todo somewhen:
+- unterschiedlich dichte Wolken, dunke Wolken
+- Nacht: dunkle wolken
+- Verdunkeln des Hintergrundes bei starkem Gewitter, Normal bei Sonnenschein
+- "Nebelfetzen" bleiben in Bäumen hängen und Bilden einen Nebelwald, bis man garnix mehr sieht, diese haben keinen Phasecall, da sie nicht abregnen.
+- Umweltobjekt: Wolkenhintergrund mit dem Wind bewegen
+

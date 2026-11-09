@@ -1,0 +1,27 @@
+[DefCore]
+id=TAMB
+Version=4,9,9
+Name=middle Base
+Category=C4D_Structure|C4D_SelectBuilding|C4D_SelectKnowledge
+MaxUserSelect=1
+Width=120
+Height=30
+Offset=-60,-15
+Vertices=7
+VertexX=-15,-60,-60,60,60,-60,60
+VertexY=-15,-15,15,-15,15,0,0
+VertexFriction=50,50,50,50,50,50
+Value=300
+Mass=7000
+Components=WOOD=3;METL=8;ROCK=4;
+Picture=0,0,120,30
+Entrance=-6,-5,33,21
+Exclusive=1
+Base=1
+LineConnect=C4D_LiquidInput
+Construction=1
+BlastIncinerate=1000
+AutoContextMenu=1
+
+[Physical]
+Energy=1000000

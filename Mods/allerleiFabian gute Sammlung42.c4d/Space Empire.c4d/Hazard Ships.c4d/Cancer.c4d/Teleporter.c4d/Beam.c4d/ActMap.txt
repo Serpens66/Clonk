@@ -1,0 +1,13 @@
+[Action]
+Name=Up
+Delay=1
+FacetBase=1
+NextAction=Up
+StartCall=TravelUp
+
+[Action]
+Name=Down
+Delay=1
+FacetBase=1
+NextAction=Down
+StartCall=TravelDown

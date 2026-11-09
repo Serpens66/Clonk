@@ -1,0 +1,15 @@
+[DefCore]
+id=SAM3
+Version=4,9,5
+Name=NuclearAmmo
+Category=16
+Width=5
+Height=13
+Offset=-2,-6
+Mass=3
+Components=SAM3=1;
+Picture=5,0,65,35
+Vertices=1
+VertexFriction=100
+Rotate=1
+Projectile=1

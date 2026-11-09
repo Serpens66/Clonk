@@ -1,0 +1,8 @@
+[DefCore]
+id=SSKY
+Name=StarSky
+Version=4,9,5
+Category=3145729
+Width=300
+Height=300
+Picture=0,0,35,35

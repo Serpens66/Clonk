@@ -1,0 +1,4 @@
+CtxNightVisionOn=Nachtsichtgerät einschalten
+CtxNightVisionOff=Nachtsichtgerät ausschalten
+CtxFertigkeitOn=Gewaltmarsch einsetzen
+CtxFertigkeitOff=Gewaltmarsch beenden

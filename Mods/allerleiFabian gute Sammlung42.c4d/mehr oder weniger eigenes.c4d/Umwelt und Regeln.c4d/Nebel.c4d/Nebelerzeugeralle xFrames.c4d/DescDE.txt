@@ -1,0 +1,5 @@
+Diese Regel erzeugt ab und an Nebel, welcher auch wieder verschwindet.
+Genauer: Alle 20.000Frames wird mit einer Chance von 1 zu 3 zwischen 1 und 6 Nebelobjekte erzeugt. Diese Werden dann alle 3000Frames mit einer Chance von 1 zu 3 wieder entfernt.
+Auﬂerdem wird der Nebel hierdurch abh‰ngig von der Windgeschwindigkeit bewegt, auch der Verschmutzungsnebel.
+
+Er arbeitet mit den Objekten Nebelerzeuger, Nebelentferner alle x frames und Nebelentferner zusammen.

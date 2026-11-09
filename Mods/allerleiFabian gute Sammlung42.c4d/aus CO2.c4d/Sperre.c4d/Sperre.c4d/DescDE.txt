@@ -1,0 +1,1 @@
+Zeichnet eine unüberschreitbare Partikellinie in der Mitte der landschaft, durch die man nicht durchkommt. Sozusagen ein Aufbau-Zwang!

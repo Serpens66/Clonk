@@ -1,0 +1,8 @@
+[Action]
+Name=Travel
+Procedure=NONE
+Delay=1
+Length=8
+Facet=0,0,7,27
+NextAction=Travel
+PhaseCall=Travel

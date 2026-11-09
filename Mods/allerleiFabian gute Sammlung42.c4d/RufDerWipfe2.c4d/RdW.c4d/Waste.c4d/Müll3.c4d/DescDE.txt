@@ -1,0 +1,4 @@
+Ein toter Clonk, schadet der Umwelt stark. Kann mit Anfassen und Doppelgraben hochgehievt werden.
+Umweltschädigend=40
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend. 
+Kann in Müllverbrennungsanlage verbrannt werden.

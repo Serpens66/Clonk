@@ -1,0 +1,5 @@
+[DefCore]
+id=_ZF9
+Name=Gebäude-Funktionen
+Picture=0,0,64,64
+Category=1

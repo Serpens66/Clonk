@@ -1,0 +1,2 @@
+Relaunched=The %s %s of %s was relaunched.
+Remaining=Remaining relaunchs of %s: %d.

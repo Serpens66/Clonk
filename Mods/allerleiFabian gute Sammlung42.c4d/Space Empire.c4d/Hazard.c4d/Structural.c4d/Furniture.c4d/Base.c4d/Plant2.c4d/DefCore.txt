@@ -1,0 +1,16 @@
+[DefCore]
+id=PLT2
+Version=4,9,8,2
+Name=Plant2
+Category=1026
+Width=30
+Height=50
+Offset=-15,-25
+Vertices=2
+VertexY=23,-23
+VertexFriction=100,100
+Value=50
+Mass=20
+Components=WOOD=1
+Picture=0,0,30,50
+Construction=1

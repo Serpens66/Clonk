@@ -1,0 +1,16 @@
+[DefCore]
+id=SWWF
+Name=WindWingFading
+Version=4,9,5
+Category=4
+Width=59
+Height=59
+Offset=-29,-29
+Picture=0,0,59,59
+Vertices=1
+VertexX=0
+VertexY=0
+ColorByOwner=1
+Rotate=1
+NoStabilize=1
+ 

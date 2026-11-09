@@ -1,0 +1,61 @@
+Der Predator Jäger besticht durch sein schnittiges Design, seine beachtenswerte Wendigkeit und seine durchschlagkräftige Bewaffnung.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lassen sich die Waffen aktivieren, die Triebwerke zünden/abschalten, die Gleitkuven ausfahren oder der Ausstieg betätigen.
+
+-Bei gezündeten Triebwerken erfolgt die Schubregelung über [Auf] und [ab], die Steuerung des Neigungswinkels über [Rechts] und [Links].
+
+-Um zu landen, bei niedriger höhe und Geschwindigkeit parallel über eine einigermaßen ebene Fläche fliegen und die Gleitkuven ausfahren. Vorsicht, das Ausfahren der Gleitkuven deaktiviert den Antrieb.
+
+Waffensysteme:
+
+-Der Predator verfügt als Arsenal über eine Bord-Gatling sowie einen integrierten 2-Schuss Raketenwerfer.
+
+-Über das Kontextmenü kann die Waffenwahl vorgenommen werden. Die Bordkanone erscheint dann im Inventar.
+
+-Das gewählte Waffensystem wird dann via [Werfen] aktiviert.
+
+-Es gilt zu beachten das der Pilot Passende Munition mitführen muss um die Bewaffnung zu laden. Die Gatling verbraucht Projektilmunition und der Raketenwerfer Raketen.
+
+Landung:
+
+-Geschwindigkeit mittels [Unten] verringern. [Unten] kann gedrückt gehalten werden um den Bremsvorgang zu beschleunigen.
+
+-Landebahn(eine möglichst ebene Fläche) oder Tucan im langsamen horizontalflug anfliegen.
+
+-In einer Höhe von maximal 2-3 Clonks die Gleitkuven ausfahren.
+
+Notfallrettungssystem:
+
+-In akuten Gefahrensituationen kann der Pilot das Cockpit absprengen. Es enthält Schubraketen die es sicher zu Boden bringen. Nach der Landung aktiviert sich der Technologysafe(tm) Selbstzerstörungsmechanismus. Es bleiben dem Piloten 6 Sekunden um sich zu entfernen.
+
+-Der Pilot kann die Kapsel per Schubdüsen bedingt steuern. Per doppelt[Graben] wird sie manuell zersprengt.
+
+Anmerkungen:
+
+-Der Jäger ist nicht unterwassertauglich.
+
+-Der Jäger wird oft im Zusammenhang mit dem Tucan-Trägerschiff eingesetzt, welches als mobile Basis für Predatorstaffeln dient.
+
+-Bei Landung wird um Fehlzündern vorzubeugen sämtliche im Jäger befindliche Munition entschärft und dem Piloten übergeben.
+
+-Um eventuelle Verfolger abzuschütteln empfiehlt es sich enge Maneuver zu fliegen, indem man bei voller geschwindigkeit innerhalb einer geflogenen kurve das Triebwerk für kurze Zeit deaktiviert.
+
+-Die Avionik ist sehr empfindlich gegen EMP, ein Treffer führt zum Totalausfall aller Systeme, inklusive des Triebwerks.
+
+-Raketen sollten nicht bei Hochgeschwindigkeitsflügen ausgeklinkt werden, da ihr Suchkopf sonst vom eigenen Triebwerk gestört wird.
+
+-Je schwerer der Schaden am Jäger desto schlechter seine Flugeigenschaften.
+
+-Falls der Jäger einen Strukturschaden von über 90% aufweist ist sollte über einen Absprung nachgedacht werden (Explosionsgefahr).
+
+-Man sollte sich von den Levelbegrenzungen fernhalten um unliebsamen Überraschungen vorzubeugen.
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

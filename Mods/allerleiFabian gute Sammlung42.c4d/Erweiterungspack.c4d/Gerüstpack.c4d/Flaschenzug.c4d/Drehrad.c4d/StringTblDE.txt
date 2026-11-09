@@ -1,0 +1,10 @@
+Repair=Flaschenzug reparieren (10 C.)
+FloorDrawOut=Boden ausfahren
+FloorDrawIn=Boden einziehen
+Fasten=%s befestigen
+Buy=Hilfsclonk kaufen (10 C.)
+Release=Hilfsclonk entlassen
+TearOff=Flaschenzug abreissen
+NotEnoughMoney=Nicht genug Geld!
+Released=Hilfsclonk entlassen.
+Turn=Flaschenzug drehen

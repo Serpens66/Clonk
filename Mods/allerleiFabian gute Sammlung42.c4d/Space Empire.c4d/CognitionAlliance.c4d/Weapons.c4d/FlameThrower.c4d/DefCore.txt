@@ -1,0 +1,19 @@
+[DefCore]
+id=CWFT
+Name=Flame Thrower
+Category=16
+MaxUserSelect=5
+Width=28
+Height=15
+Offset=-14,-7
+Value=50
+Mass=10
+Components=METL=1;CALU=2;CTIT=2;
+Picture=28,0,120,75
+Vertices=3
+VertexX=-13,0,13
+VertexY=7,-7,7
+VertexFriction=100,100,100
+Rebuy=1
+Collectible=1
+ 

@@ -1,0 +1,14 @@
+[DefCore]
+id=QQWW
+Name=Append
+Category=1
+Width=0
+Height=0
+Offset=-1,-1
+Value=10
+Mass=10
+Components=QQWW=1;
+Picture=0,0,1,1
+Vertices=1
+VertexY=1
+VertexFriction=20

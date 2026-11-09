@@ -1,0 +1,6 @@
+A gasbottle with hydrogen.
+
+Open the ventile with double-dig.
+
+ATTENTION
+If the bottle is damaged, the gas will exit it!

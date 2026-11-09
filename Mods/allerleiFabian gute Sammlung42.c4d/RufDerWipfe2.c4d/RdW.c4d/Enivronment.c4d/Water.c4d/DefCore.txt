@@ -1,0 +1,8 @@
+[DefCore]
+id=GRLV
+Name=EnvironmentDryGround
+Value=1
+Version=4,9,5
+Category=65
+MaxUserSelect=1
+Picture=0,0,64,64

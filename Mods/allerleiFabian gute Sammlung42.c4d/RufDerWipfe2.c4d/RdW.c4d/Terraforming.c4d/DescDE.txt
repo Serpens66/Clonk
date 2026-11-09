@@ -1,0 +1,10 @@
+Noch nicht fertig.
+Muss auch überlegt werden, wie Umweltschutz dann dagegen anarbeitet...
+
+Wenn erforscht, kann man im Luftregenerator zusätzliche Eigenschaften der Erde regeln.
+Dazu gehören: Regen (wasser, schnee, eis, säure, asche, lava), Katastrophen (Meteoriten,Biltze,Erdbeben,Vulkane), Klima (also die Temperatur, auf welche sich das Klima von selbst hält), Meeresspiegel anpassen, Bäume pflanzen (wenn aktiv vermehren sich alle Bäume alle x min), Bäume/Gräser krankmachen, Bäume töten, Bäume heilen, Nebel/Verschmutzung ein/ausschalten. 
+
+Tag /NAcht wechsel auch mit SetTime ermöglichen?
+
+Temp wechsel nun separat als Forschung ermöglicht.
+Ich denke der Rest wäre zu krass.

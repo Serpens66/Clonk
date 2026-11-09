@@ -1,0 +1,21 @@
+Nahkampf 0% 
+Projektile 0%
+Energie 20%
+Feuer -40%
+Bio/Partikel 70%
+Explosion -10%
+Stahlmantelprojektile/Scharfschützenmunition 0% 
+
+Fähigkeit:         
+HP        + 0.000   
+Kampf     -50.000    
+Werfen    +60.000   
+Springen  +20.000    
+Laufen    +40.000    
+Klettern  +20.000    
+Hangeln   +20.000    
+Schwimmen +20.000    
+Atem      -20.000    
+Graben    +10.000    
+
+Achtung, bei Einsatz verliert der Clonk Lebenspunkte.

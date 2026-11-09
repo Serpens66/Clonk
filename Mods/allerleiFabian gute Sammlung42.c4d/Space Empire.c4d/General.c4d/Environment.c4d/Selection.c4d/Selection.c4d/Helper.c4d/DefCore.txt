@@ -1,0 +1,11 @@
+[DefCore]
+id=SEL2
+Name=Helper
+Version=4,9,5
+Category=8388609
+Width=160
+Height=100
+Offset=-80,-50
+Picture=0,0,160,100
+Vertices=1
+VertexY=-18

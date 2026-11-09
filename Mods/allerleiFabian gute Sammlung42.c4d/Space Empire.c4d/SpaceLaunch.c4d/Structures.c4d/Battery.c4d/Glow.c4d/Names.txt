@@ -1,0 +1,2 @@
+DE:Emergency Power Supply
+US:Emergency Power Supply

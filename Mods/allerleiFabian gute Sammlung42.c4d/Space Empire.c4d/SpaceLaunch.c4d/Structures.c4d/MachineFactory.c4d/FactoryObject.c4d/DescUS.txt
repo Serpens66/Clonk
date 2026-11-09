@@ -1,0 +1,2 @@
+Component of the machine factory:
+Production and storing of unfinished objects.

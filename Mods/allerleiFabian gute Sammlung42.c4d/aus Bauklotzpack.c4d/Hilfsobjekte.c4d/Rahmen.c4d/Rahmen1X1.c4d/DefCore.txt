@@ -1,0 +1,19 @@
+[DefCore]
+id=RAH3
+Name=Rahmen 1X1
+Version=4,9,5
+Category=16
+MaxUserSelect=0
+Width=11
+Height=11
+Offset=-5,-5
+Value=0
+Mass=10
+Components=RAH3=1;
+Picture=0,0,11,11
+Vertices=8
+VertexX=-5,0,5,-5,5,-5,0,5
+VertexY=-5,-5,-5,0,0,5,5,5
+VertexFriction=50,50,50,50,50,50,50,50
+VertexCNAT=5,4,6,1,2,9,8,10
+ColorByOwner=1

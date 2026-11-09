@@ -1,0 +1,3 @@
+Die Handelstation ist ein wichtiges Gebäude für den Handel und Kommunikation mit Mitspielern.
+Hier können Käufe/Verkäufe erstellt und angenommen, sowie Geld verschickt/empfangen werden. 
+Mit der später verfügbaren Forschung "Transfer Handelsstation" können sogar Clonks zu der fremden Handelsstation transferiert werden, was jedoch etwas dauert.

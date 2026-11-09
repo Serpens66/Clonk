@@ -1,0 +1,1 @@
+Allows weapon rotation while firing.

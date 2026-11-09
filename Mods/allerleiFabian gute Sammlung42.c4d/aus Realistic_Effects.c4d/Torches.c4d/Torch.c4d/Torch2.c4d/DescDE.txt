@@ -1,0 +1,3 @@
+Befestigte Fackel. Leuchtet den Weg in dunklen Gängen.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

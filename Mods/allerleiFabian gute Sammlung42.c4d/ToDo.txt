@@ -1,0 +1,291 @@
+Fürs normale Spiel: es sollen Alle Materialien wie erde, sand erz, holz, Gold usw. kaufbar sein, damit nichts ausgehen kann.
+Gleichzeitig soll man aber auch nicht nur kaufen, veredlen und verkaufen, sondern selbst Dinge abbauen. 
+Deswegen wäre es am sinnvollsten, für diese Materialien, zb durch eine Regel, den Kaufpreis zu verdoppeln, sodass diese nur gekauft werden, wenn wirklich nötig.
+machen zb über: CalcValue(object pInBase, int iForPlayer) (problem es gilt fuer kauf und verkauf)
+oder über Sale(int iPlr) bzw Buy(int iPlr) callback. Wird nach Kauf bzw verkauf durchgeführt in gehandelten objekt selbst. Also dort könnte man einen geldcheck einbauen 
+und zusätzliches Geld abziehen. und wenn nicht genug da, dann das objekt direkt wieder verkaufen, mit meldung, dass es doppelt so teuer ist.
+
+Einbauen, dass in einem gebäude, zb forthaus, Bäume ausgepresst werden können zu wasser und x ?
+
+Wenn Spiel geladen wird ist Sichtweite bis zum nächsten Tag/Nacht wechsel zu groß, zumindest bei Szenario settings.
+
+variable regel zum einstellen der Reparaturkosten. aktuell damage/2
+
+fuer die neue ferngesteuerte raktee der bazooka noch erdexplosion einstellbar machen
+
+Monsterangriffe fehler vorbeugen:
+Die erstellten Monster in Array abspeichern und nur diese dann hinterher löschen. keine anderen die evlt vorher da waren.
+Soll der Zaehler beim Tod eines Monsters alle zählen, oder nur die erstellten? Wäre dof wenn zu anfang schon 5 monster da sind, ein angriff mit 5 Monstern aufeinmal kommt (und weil schon 5 da sind, keine neuen mehr erstellt), man tötet die 5 anfangsmonster und muss nun fünf weitere töten...
+Außerdem vor erstellen der Monster prüfen, ob dort freie Fläche ist. In Höhlenmaps würden alle gespawnten monster sofort feststecken. 
+Wenn also nach x Frames immernoch kein monster gespwnt ist, weil nichts frei, dann Regel mit Fehler message "nicht in höhlen" oderso entfernen.
+
+Im zusammenhang mit KOHE und dunkelheitsgrad, die Lichtintensität von Lichtern bei Nacht steuern.
+Also wenn dunkelgrad 100%, dann starkes Licht, damit man was sieht.
+wenn 50%, dann nicht so starkes Licht, weil sonst übertrieben.
+Wenn KOHE, dann evlt automatisch schon kein Licht mehr? Oder muss man dann halt einfach die statische regel für keine lichter aktivieren? Wir machen schwaches Licht. undwenn garkien licht gewollt, dann muss man das selbst noch einstellen.
+Lichtstärke natürlich auch prüfen und balancen. 
+Außerdem auch bei Lagerfeuer und Fackellicht (LGFL in RdW) während Spiel vom Besitzer die Intensität verstellbar machen, so wie es bei hazardlicht schon der fall ist.
+
+
+System Dateien von RdW nochmal durchgehen, ob alle davon gebraucht werden bzw evblt sogar probleme bereiten koennten
+In SGGP das system clonk append deaktiviert. Sollte in ordnung sein, aber hier info, falls es probleme gibt.
+
+Hazard Minigun mit Waffenteil die BetterBullets verschießen.
+
+Warenliste handelsliste uplink updaten?
+
+Energeizentrum quasi als Umspannwerk der Zukunft. Man kann sagen wohin nicht geliefert werden soll, und auch ob an alle nicht-feindlichen Spieler.
+Das Zentrum kann z.b bis zu 10.000 Energie oderso laen und mit jedem akku mehr. 
+Es schickt Energie an alle Konsumer die einen Transmitter in reichweite haben, angefangen mit dem ,der am wenigesten energie hat.
+Genauso sammelt es alle energie von produzenten, die einen trasnm in reichweite haben
+Prüfen ob geschlossene Transmitterkette geht am besten mit einer Fkt , welche prüft ob Energiezentrum in nähe, dann true. Wenn nicht, dann sich selbst in Liste eintragen und diese Fkt von nächstem Transmittern in der Nähe aufrufen. dieser gibt dann entweder an nächsten transmitter weiter, returned true, oder wenn weder weiterer transmitter, noch zentrum in nähe, dann false...Problem nur, was wenn 2 Transmitter in der Nähe von einem transmitter sind? An welchen gibt er den Aufruf weiter?  hm... so ganz klappts noch nicht
+anstelle des transmitter objekts, das energierealy nehmen ,aber in transmitter umbennennen. und alten transmitter leoschen (aber so dass diebtransmitter weiter funzt)
+muss auhc weiterhin reichweite anzeigen lassen können
+
+Die Akku Objekte (CNBF) werden denke ich nicht gebraucht (im H2 und Energiezentrum gebäude dann ersetzen, zb. durch Batterie)
+Das Energiemodul in Kombi mit dem energiezentrum reicht als Energiespeicher aus. Jegliche Energie wird dann halt dort hin tranferiert.
+bzw Energiemodul dafür sorgen, dass es nur 1000 bringt und maximal 1 in jedem Gebäude, außer in Energiezentrum, da koennen es dann 10 bis 20 sein.
+Iwie dafür sorgen, dass wenn mehr energiemodule als moeglich in gebäude sind, dennoch die erlaubte anzahl an modulen arbeitet.
+
+
+bei sevenkeys scenario steht das spiel ein paar sekunden, nachdem zum ersten mal die settings fertig sind. Ist nur bei diesem szenario so, komisch...
+
+
+leitungen auf doppelgraben koennen zurzeit nur abgenommen werden, wenn nichts dabei. ist fuer clonks doof, die mehrere sachen tragen koennen
+-> ist glaub ich nicht lösbar, da auf abnehmen von Leitungen keinen einfluss -.- 
+
+- Die Regel, dass über allen Gebäuden die geladenene Energie angezegit wird ausbauen
+evlt auch dazu, wieviel pro Frame produziert wird
+
+- die KI händler verboten regel sorgt zurzeit noch dafuer dass getresearchbase33 ihn selbst returend. allerdings werden diese garnicht mehr verwendet, sondern die liste. wobei in forschungslabor skript erst getresearchbase, dann getresearchbasex und dann liste abgefragt wird, alles wird glaube ich auch verwendet.
+
+- baubares wasserfass zum kühlen muss auch iwie ohne wasser funzen, für Maps, wo es kein Wasser gibt. 
+
+- protected func UpdateTransferZone() // wird beim Spielstand laden ausgeführt
+{
+    ScheduleCall (0, "UpdatePortrait",200); // nach 200 frames die portraits der clonks aktualisieren.
+}
+sowas in der Art fuer andere Dinge machen, die beim Laden aktualisiert werden muessen.
+in Fahrstuhlkorb gibts: /* Bei Laden von alten Spielständen: Locals zurückkopieren */
+
+
+- wenn clunkerproduktion, bei abbruch die clunker zurückgeben.
+
+- taucherhelm grafik verschwindet nach betreten eines gebäudes? 
+
+- glühendes metall kühlt schneller ab, als ein Produktionsprozess evlt dauert. -> Evlt im ambos die materialien erst voll verbrauchen und falls abbruch, wieder neu erstellen, anstatt Verbrauch erst am ende zu machen.
+- bei rafinerie usw ist das schon schwiergier, weil der materialverbrauch ja den prozess bestimmt... 
+-> glühendes metall wird erstmal fast nirgends mehr verwendet, glaub nur noch bei Sense.
+
+- Wenn erforscht, sollte Gold auch per contextmenü in 5er Klumpen gestackt werden, um z.b den Goldabbau zu beschleunigen. evtl mit hilfsmittel lore, dass man zb. eine lore mit 10 Gold in eine lore mit 2*5er Gold verwandeln kann.
+
+- die axtzerkleinerung von Bäumen sollte natürlich auch abbrechbar sein, zb mit graben dann die action beenden.
+
+- fuer den leichteren Bunkerbau, könnte man verschiedene Sets erforschbar machen. so könnte man dann einen großen bunkerkomplex bauen, ohne jedes Teil einzeln und richtig zu platzieren, also einen vorgefertigten Bunker. muss man nur noch schauen, wie man das mit dem Platzbedarf usw vorher macht... 
+
+- im Melee als regel besser mindestens für die ersten 15 minuten, einen baustellenboost einstellen, damit man in der Vorbereitung schneller seine basis aufbauen kann. wobei man sich ja auch einfach bauarbeiter kaufen kann...
+
+- schildupgrade groß und klein kosten zurzeit 50 clunker. teurer machen. , jetzt 100 und 200, schauen ob so gut oder weiter anpassen.
+
+- Kakteen sollten sich nur vermehren, wenn in einem gewissen Radius nicht mehr als x Kakteen bereits sind. (jetzt auf 10 kakteen in radius 300 beschränkt, schauen ob ausreichend.)
+
+- beim KI händler skript die ganzen neuen fehlenden Items zufuegen.
+
+- je mehr Dinge additiv gezeichnet werden (zb. lichter) desto mehr laggt es. 
+Damit das Bau-/Kaufmenü in der Nacht sichtbar ist, habe ich die Gamma Verdunklung im Rdw Time Objekt reduziert
+und stattdessen ein schwarzes Rechteck vor das Sichtfeld des Spielers platziert (im "aus realistic" teil),
+welches je nach Zeit komplett oder nur teilweise durchsichtig ist.
+Dadurch sind die Menüs nachts zwar wieder gut sichtbar, während es dennoch dunkel ist, aber
+dadurch wird noch mehr additiv gezeichnet, wodurch schon bei geringer Lichterzahl Laggs auftreten =/
+(deswegen kann mit der variablen Einstellung Dunkelheitsgrad auf 50, dieses Rechteck weggelassen werden. Dann braucht man auch kein Licht mehr und es wird trotzdem dunkler.)
+
+- evlt noch Jahreszeit fuer ersten Spieler ändern können
+
+- meeresspiegeländerung in umweltschutz objekt noch verbessern. Aktuell wird davon ausgegangen, dass alle DRAI objekte auf derselben höhe liegen, also nur ein yPos Wert gespeichert.  Dies am besten in Array oderso machen, mit individuellen Positionen, falls mehrere große gewässer, die nicht auf derselben höhe sind.
+
+- Von manchen Dingen verschwindet die Grafik nach kurzer Zeit. Zb. von Segu die Waffe, oder von Straßenschild das Bild, Taucherhelm usw... 
+
+- verb. Drone vom Hazardpack übernehmen. darauf achten dass keine evlt verbesserungen vom hazardship pack verloren gehen
+
+- brennstäbe plutonium uran atomkraftwerk balancen
+
+- die MeleeWeapons evtl auch außerhalb des rangelns verwendbar machen, so wie das Kicken des Hazardclonks. balancen
+
+- Waffenkomponenten balancen. Die Waffenteile nutzen. Baumaterial fuer Waffen
+
+- in Luft Regenerator die Temperatursteuerung erforschbar machen (terraforming?)
+
+- Magnetsphäre verbessern, sodass 1. Bedienung leichter und 2. die Sphäre automatisch Objekte aus definierten Gebäuden oder definiertem Bereich (nicht stuck) ein und ausladen kann, wenn X Objekte (nicht) vorhanden sind. So dass man quasi eine automatische Route hat und z.b dafür sorgen kann, dass sobald X erz auf Lager, ein Teil davon eingeschmolzen und in die basis transportiert wird, oder alle Türme immer X munition haben usw.
+
+- evlt fehlen noch ein paar objekte in den sichtradius system dateien
+
+- Mutant Kampfverhalten lieber wie hazard über EnemyAI regeln. Auch weil sie dadurch, dass sie owner-1 haben, bei nofriendly fire, den spieler nicht treffen können.
+
+- magier vom magierangriff verbessern, bisher nur wenige Zauber.
+
+- Regen variabel einstellbar machen. Wie häufig (z.b 0 bis 20 = nie bis sehr oft. und dazu noch durchschnittliche Dauer in Frames)
+
+- Wassertonne wird zum kühlen bei Hitze verwendet. Dort am besten noch Verbrauch von Wasser einprogrammieren, der mit Wasserfässern, wobei man die Fässer wiederbekommt, wiederbefüllt werden kann (oder mit wasserleitung).  Dann normale Wasserfässer aus der hitze funktion im clonk streichen, höchstens wenn der clonk das wasserfass dabei hat.
+
+- je nach forschungsstand neue kaufbare dinge verfügbar machen? Aber es darf nicht zuviel kaufbar sein, nur das nötigste
+
+- evlt neuerungen aus dem neuen hazardpack übernehmen (umständlich, da ich selbst vele kleine ändeurngen im hazardpack gemacht hab)
+
+- machen, was in "aufeinmal machen.txt" drin steht (zb. baumaterial und energieverbrauch festlegen) 
+
+- alles auf savegamekompatibilität untersuchen. Gibt vermutlich viele Fehler, wenn ein Savegame geladen wird...  evlt mit UpdateTransferZone lösen?
+
+- Standleuchte Energieverbrauch einbauen.
+
+1) aus RdW das musik effekt skript nehmen, um fuer passende musik je nach jahreszeit oder krieg
+zu sorgen
+
+2) evlt jede einzelne technologie ein und aus schaltbar machen. Dies muss dann natürlich auch bei den bedingungen des forschungsbaums berücksichtigt werden. (wenn etwas nicht erforschbar sein soll, einfach sich selbst als bedingung nehmen)
+
+3) verstecken, kicken und tot stellen in Kaserne erlernbar machen. evlt auch waffen benutzen, zielen, salto usw.
+
+4) In Hydrowerk Tank soll wasser wie in den normalen Tank gepumpt werden können
+
+5) H2Speicher balancen
+
+6) EMP Effekt bei allen elektronischen Gebäuden zufügen (besonders automatische kampftürme, aber nicht zu lange ausschalten) , evlt beispiel an deckenlicht
+
+-  Sensoren oder zumindest Kartenlesegeräte usw. könnten mit Kabelschneider hackbar sein, sodass die Feinde sie dann auch bedienen können.
+
+-  korrekte Einstellungen auch bei laufzeitbeitritt... 
+
+- Auftragshaus fertigstellen.  die "bring mir X aufträge" fehlen noch. sowohl finden, als auch selbst herstellen.
+
+- mehrere Forschunbsbäume basteln, die je nach einstellung verwendet werden.
+Also z.b wenn man ohne Zukuftsgebäude spielen will, sollten dennoch ein paar der späteren Dinge iwann erforschbar sein (z.b einige Flints,  Ausbildungscamp,  Tiefbrunnen und Bergewerk)
+Und oder ich finde eine gute möglichkeit, während des Spiels den Forschungsbaum zu verändern (sodass es mit dem Mitteln im spiel einfach möglich ist änderungen zu machen und nicht 100jahre dauert)
+
+- KIspawnschwierigkeitwaehlbar() {return(1);} // wird vom Regelwählerobjekt abgefragt. Falls wahr, kann ein schwierigkeitsgrad gewählt werden.  fertigstellen
+
+- ausbildungseinstellungen: Aktuell ists so, dass die Kostne und erfahrung, die man in den einstlelungen machen kann, als standardwert gesetzt werden.
+Dieser standardwert wird dann noch mit 0 , 0.5 oder 1 multipliziert, je nach menge der aktiven Regeln PP1P und PP3P. 
+Diese PP regeln sind aktuell aber als variable regelobjekte deklariert. D.h man kann sie nicht als statische objekte einstellen. der chooser kommt nicht damit zurecht
+wenn eine Regel beides sein soll.  Ich denke aber die  0 bis 1 multiplikation kann weggelassen werden.
+
+- Gras als brennstoff in lagerfeuer, fackel und tonne einbauen
+
+- Goldbonus als variable Regel gestalten.
+
+- Geldbonus sollte nicht für Scriptspieler gelten! (da zb. Geldsack bei tot aller clonks fallengelassen wird)
+
+- Baumversteck + Flagge heilt verletzten Clonk nicht. Rest einer basis funzt aber.
+
+- Grundwasserverdunsten funzt nicht fehlerfrei? Jedenfalls während spiel wert erhöht, aber wasser in erde nicht schneller verdunstet.
+
+- Gastank und Flasche sollten auch bei "no friendly fire" selbst zerstörbar sein.
+
+- Ritterclonk KI zubehör verschwindet nach deren Tod nicht. Bei hazrad klappt das aber..(auch wenn nach inherited nochmal entfernt wird, reicht das scheinbar nicht fuer schild und speer...)
+
+- Skriptspeler sollten kein Startgeld bekommen, oder zu beginn des spiels bzw beim spawnen von skirptclonks ihr gold auf 0 setzen.
+-> Geldbeutelregel erstmal entfernt
+
+- irgendein KI clonk, dessen items noch nicht entfernt werden, hatte eine holzbrücke dabei ?!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ERROR: Object call: No function "ConDesc" in object "Gürtel groß Allrounder #1100"!
+ by: ContextUseEquipment(Branno #822) (obj Branno #822) (allerleiFabian gute Sammlung36.c4d\Space Empire.c4d\Hazard.c4d\Libraries.c4d\Functionalities.c4d\UseGear.c4d\Script.c:85)
+ by: MenuCommand in allerleiFabian gute Sammlung36.c4d\Space Empire.c4d\Hazard.c4d\Crew.c4d\HazardClonk.c4d\Script.c (obj Branno #822)
+-> wenn Rüstung und Gürtel gleichzeitig angelegt und ausrüstung aktivieren wählen
+
+
+KI weicht auch eigenen geschossen aus. Ist nur sinnvoll, wenn teamschaden an ist.
+Daher kontrolle einbauen, ob teamschaden oder nicht und wenn nicht, dann owner checken.  -> erledigt?
+
+bei KI check einbauen, ob Contained(). wenn contained, dann eben nach unten drücken, damit gebäude verlassen wird. -> erledigt?
+
+
+deko projektor licht nach savegame laden verschoben
+
+
+bei Spielstart ab und zu sehr niedrige FPS werte, die dauerhaft als höchstwert fungieren...
+start maximal fps liegt nicht an regeln... und auch nicht an enviremonet? kriegsnebel vermutlich auch nicht, da auch ohne häufiger 33fps als maximal
+-> liegt an keinen funktionen... 
+
+schaden aller waffen nochmal testen, ob balanced
+
+die Waste funktion im unweltschutz noch verbessern, da dort jeder spieler einzeln durchgegangen wird (weil abhängig davon, was er erforscht hat)
+dort auch die anderen Forschungskontrolllen in checkpolution verbessern, also mit for schleife.
+
+in terraforming oder forsthaus ein "schnelles wachstum" zauber oderso, wodurch in bestimmten BEreich pflanzen schneller wachsen
+bzw "dünger" einbauen. 
+
+teleporter über konsole auch für "nicht-feinde" freischaltbar, sodass diese sie zumindest als Ziel wählen können -> erledigt?
+
+artillerie geschütz -> energieanzeige einbauen
+
+leichter jäger munitionsverbrauch einbauen?
+
+geschützplattform wie den geschützturm zu sensoren zufügen?  normaler geschützturm schießt nicht automatisch...
+
+Saboteurclonk KI zufügen, welcher z.b mit KEttensäge militärgebäude angreift
+
+wenn ein worm einen clonk gefressen hat, kann man explosive dinge drinnen ablegen und dann explodiert wurm - teilweise erledgit fuer dinge mit explodesize
+
+kosten für munitionskauf in tucan sinnvoll anpassen-> erledigt?
+
+Kosten für alle zukunftsdinge iwie per script anpassen?  Je nach dem, mit welchem Forschungsstand begonnen wurde. Denn beginnt man am anfang und gelant nach stunden 
+zu den zukunftsgebäuden, hat man vermutlich sehr viele Clunker. Beginnt man aber in der Zukunft, hat man vermutlich eher weniger Clunker.
+
+reichweite für materialteleporter begrenzen und besser kein materalisieren vor Eingängen.
+
+eine "Bombe" bauen, welche per Zünder gezündet werden kann, auch während sie geworfen wird (sollte auch per Katapult usw gehen.. oder sie muss selbst fliegen können)
+Sie soll bei explosion keinen Schaden machen, sondern nur kreisförmig x Partikel entfernen. Die Anzahl der PArtikel ist recht klein, sodass sie bei explosion auf festen untergrund kaum was wegnimmt.
+Aber wenn sie in der nähe von vielen Fusselpartikeln explodiert, entfernt sie diese fussel.
+
+
+
+ist SEGU angreifbar/zerstörbar? 
+
+Habe konsole so eingestellt, dass nur alle Segus gleichzeitig an-ausgeschaltet und bewaffnet werden können.
+Es erscheint aber ein Pfeil bei auswahl über einer Segu, die anderen sind nicht wählbar.
+Doch wieder so ändern, dass alle einzeln einstellbar sind? 
+
+Segu hat kein Scahdenssymbol bei beschädigung. vermtulich weil zerstörung in script geregelt. (dazu am besten in DefCore einen Wert leicht über den im script einstellen, dann passt das)
+
+
+
+
+
+Es gibt von Hazard und von E.P.I.C neue Versionen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

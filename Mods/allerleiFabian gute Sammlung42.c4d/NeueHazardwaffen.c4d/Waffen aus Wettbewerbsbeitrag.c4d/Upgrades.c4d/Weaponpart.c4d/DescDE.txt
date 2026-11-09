@@ -1,0 +1,8 @@
+Aufrüstungsaufsatz für Partikelwaffen.
+Fügt manchen Waffen Energieschaden in Form von Laserstreuung hinzu (siehe Waffenbeschreibung)
+
+Aufgerüstet werden kann:
+-Partikelblaster
+-Partikelpistole (Laserstreuung)
+-Partikelgewehr (Laserstreuung)
+-Sturmpistole

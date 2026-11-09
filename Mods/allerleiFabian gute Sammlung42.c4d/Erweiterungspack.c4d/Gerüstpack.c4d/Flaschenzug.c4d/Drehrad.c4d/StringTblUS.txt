@@ -1,0 +1,10 @@
+Repair=Repair pulley-block (10 C.)
+FloorDrawOut=Draw out Floor
+FloorDrawIn=Draw in Floorn
+Fasten=Fasten %s
+Buy=Buy Helperclonk (10 C.)
+Release=Release Helperclonk
+TearOff=Tear off pulley-block
+NotEnoughMoney=Not enough money!
+Released=Helperclonk released.
+Turn=Turn pulley-block

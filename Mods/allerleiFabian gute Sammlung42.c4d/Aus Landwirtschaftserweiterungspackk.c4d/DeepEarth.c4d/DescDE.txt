@@ -1,0 +1,1 @@
+Manipuliert die außerhalb der Karte befindlichen Rohstoffe, die die Mine und die Pump sammeln können.

@@ -1,0 +1,1 @@
+This device Teleports you to a Random Destination within it's Range.

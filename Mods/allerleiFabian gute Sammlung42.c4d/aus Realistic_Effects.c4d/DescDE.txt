@@ -1,0 +1,17 @@
+Die Effekte aus meinen dynamischen Welten zum selber benutzen und noch ein paar mehr.
+Natürlich dürfen die Umweltobjekte in diesem Pack für Eure Zwecke benutzt werden, dafür ist dieses Objektpack ja auch da :)
+Es wär jedoch nett, wenn dann erwähnt würde, dass das benutzte Umweltobjekt von mir stammt.
+
+Die Effekte "Nebel", "Verschmutzung" und "Dunkelheit" lassen sich schlecht kombiniert benutzen, sieht halt scheiße aus.
+Außerdem laufen alle Umweltobjekte außer "Bäume" nur auf New_Gfx (wegen Partikeln).
+
+Änderungen v1.23:
+-Bäume kompatibel mit CE, unter GWE4 tritt nicht mehr der extrem tödliche Fehler auf
+
+............................................................
+
+letztes Update: 04. September 2004
+
+Autor
+Tobias Zwick (Newton)
+newton@abide.de

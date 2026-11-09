@@ -1,0 +1,7 @@
+TxtConfig=Settings
+TxtSelectLiquid=Select Liquid
+TxtConfigDefault=Default
+TxtProductionDefaultDesc=Produces all liquids. Produces more and totally randomly.
+TxtProductionLiquidDesc=Produces more %s but less in total.|The higher the value, the lower the chance to find it.|Chance~%d/%d
+TxtWrongPlacement=Wrong Placement!|It can be build only next to the lower map border!|Current Depth: %d|Upper limit: %d
+TxtDepth=Depth:|%dm

@@ -1,0 +1,3 @@
+Wenn aktiviert, verändert sich die Umgebung grafisch NICHT, wenn die Umwelt verschmutzt ist. (Bäume, Gras, VerschmutzungsNebel)
+
+Arbeitet mit dem Grafikwechsel für Jahreszeiten zusammen, dh. um eventuelle Lags zu verhindern, muss beides deaktiviert sein.

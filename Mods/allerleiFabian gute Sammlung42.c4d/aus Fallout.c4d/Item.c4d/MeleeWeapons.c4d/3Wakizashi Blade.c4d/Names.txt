@@ -1,0 +1,3 @@
+DE:Wakizashi Klinge
+US:Wakizashi Blade
+RU:Клинок Вакидзаси

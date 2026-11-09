@@ -1,0 +1,13 @@
+[DefCore]
+id=SCN2
+Name=BazookaCannon
+Version=4,9,5
+Category=1026
+Width=68
+Height=52
+Offset=-34,-39
+Value=50
+Picture=0,0,67,60
+Vertices=1
+VertexX=-30
+VertexY=15

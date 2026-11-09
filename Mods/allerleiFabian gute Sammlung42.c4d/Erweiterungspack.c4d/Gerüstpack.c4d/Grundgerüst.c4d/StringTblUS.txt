@@ -1,0 +1,14 @@
+Adjustment=Adjustment?
+Right=To the right
+Left=To the left
+Up=Upward
+Down=Downward
+NoAdjustment=No adjustment
+Normal=Normal
+Fence=Fence
+ExternalWallLeft=External wall (left)
+ExternalWallRight=External wall (right)
+ExternalWalls=External walls
+OpenTrapdoor=Open trapdoor
+CloseTrapdoor=Close trapdoor
+TearOff=Tear off

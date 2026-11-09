@@ -1,0 +1,4 @@
+Mit diesem Gürtel lässt sich mehr Munition tragen.
+
+Effekt:
+1,5 mal soviele Projektile tragbar.

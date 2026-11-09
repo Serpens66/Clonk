@@ -1,0 +1,13 @@
+[DefCore]
+id=STW1
+Name=Machinegun
+Category=1026
+Width=30
+Height=25
+Offset=-15,-12
+Value=25
+Picture=0,0,70,70
+Vertices=1
+VertexX=0
+VertexY=32
+ 

@@ -1,0 +1,5 @@
+Spendet Licht aus dem Hintergrund.
+
+Braucht keine Energie, kann aber nur im Bunker gebaut werden.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

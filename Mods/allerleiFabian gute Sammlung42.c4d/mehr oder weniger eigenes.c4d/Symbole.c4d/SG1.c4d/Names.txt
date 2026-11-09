@@ -1,0 +1,3 @@
+DE:SG1 Uniform
+US:Brotherhood Armor
+RU:Броня Братства

@@ -1,0 +1,1 @@
+Advent, Advent, ein Lichtlein brennt. OHNE Sichtradius, für Objekte, die leuchten, aber weniger als 200Sichtradius haben sollen. (sichtradius dann bei Objekt selbst einstellen)

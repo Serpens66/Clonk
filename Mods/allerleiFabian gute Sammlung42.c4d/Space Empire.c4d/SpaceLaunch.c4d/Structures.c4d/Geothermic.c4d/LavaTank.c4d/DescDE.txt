@@ -1,0 +1,1 @@
+Teilobjekt des Geothermalwerks: Überwacht den Füllstand und die Energieerzeugung.

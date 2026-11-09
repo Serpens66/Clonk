@@ -1,0 +1,12 @@
+[DefCore]
+id=LZD4
+Name=Jumper
+Version=4,9,5
+Category=C4D_StaticBack|C4D_Parallax|C4D_Foreground|C4D_MouseIgnore|C4D_IgnoreFoW|C4D_Living
+Width=10
+Height=10
+Offset=-5,-5
+Oversize=1
+StretchGrowth=1
+Timer=1
+TimerCall=Disappear

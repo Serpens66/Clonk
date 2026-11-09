@@ -1,0 +1,1 @@
+Ermöglicht jedem Spieler individuell die Auswahl der Seite: SLC oder CoAl. Außerdem kann Spieler 1 genaue Spieloptionen festlegen - dies wird jedoch verhindert, wenn das Objekt 2x ausgewählt ist.

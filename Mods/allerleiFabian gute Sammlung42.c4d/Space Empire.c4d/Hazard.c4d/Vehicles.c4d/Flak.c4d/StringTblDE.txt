@@ -1,0 +1,6 @@
+Auto=Automatikfeuer
+Single=Einzelschuss
+Raketen=Auto-Raketenfeuer
+TxtFire=Feuer!
+TxtLeft=Nach links
+TxtRight=Nach rechts

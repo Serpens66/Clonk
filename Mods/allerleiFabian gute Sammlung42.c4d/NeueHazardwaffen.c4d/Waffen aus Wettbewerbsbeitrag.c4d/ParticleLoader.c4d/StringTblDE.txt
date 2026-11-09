@@ -1,0 +1,6 @@
+Standard=Partikelfeuer
+Laser=Doppelfeuer
+
+KLASUpgradeDesc=Verstärkt den Schussmechanismus.
+
+KLASUpgraded=Schussmechanismus verstärkt.

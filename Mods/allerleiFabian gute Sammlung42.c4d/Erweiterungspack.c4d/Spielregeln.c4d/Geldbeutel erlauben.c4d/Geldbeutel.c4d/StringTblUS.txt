@@ -1,0 +1,2 @@
+ShowMoney=In this purse|were %d C.
+IsEmpty=This purse|is empty.

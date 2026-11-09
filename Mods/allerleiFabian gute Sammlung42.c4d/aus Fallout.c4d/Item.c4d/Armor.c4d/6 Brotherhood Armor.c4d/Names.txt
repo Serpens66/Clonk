@@ -1,0 +1,3 @@
+DE:Spezialeinheiten-Uniform
+US:Brotherhood Armor
+RU:Броня Братства

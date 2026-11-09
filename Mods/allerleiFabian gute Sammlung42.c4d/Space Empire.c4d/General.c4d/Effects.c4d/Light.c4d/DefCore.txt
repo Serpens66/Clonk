@@ -1,0 +1,11 @@
+[DefCore]
+id=LGHT
+Name=Light
+Category=1
+Width=220
+Height=220
+Offset=-110,-110
+Picture=0,0,220,220
+TopFace=0,0,220,220
+Vertices=1
+StretchGrowth=1

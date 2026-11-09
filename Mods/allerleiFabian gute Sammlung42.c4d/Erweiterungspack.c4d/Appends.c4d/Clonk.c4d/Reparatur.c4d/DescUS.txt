@@ -1,0 +1,1 @@
+If a building takes damage, this symbol appears over the building.

@@ -1,0 +1,19 @@
+[DefCore]
+id=EW3V
+Name=Grafische Explosion
+Category=16
+Width=32
+Height=32
+Offset=-16,-17
+Mass=1
+Picture=0,0,32,32
+Vertices=1
+VertexY=16
+VertexFriction=100
+StretchGrowth=1
+IncompleteActivity=1
+Oversize=1
+BlitMode=1
+
+[Physical]
+Float=100

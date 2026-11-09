@@ -1,0 +1,65 @@
+Update Nr. 12:
+- Testszenario hinzugefügt.
+- Gerüstpack vollständig ins Englische übersetzt (Major_Sephiroth).
+- Flaschenzug drehbar gemacht.
+- Schlaf-Regel hinzugefügt.
+- Schadenssymbol wenn Gebäude Schaden nehmen.
+- Kleine Bugs behoben.
+
+Update Nr. 11:
+- Beutel: Es kann eingestellt werden, dass aufgenommene Gegenstände direkt in den Beutel verschoben werden.
+- Forsthaus in's Pack aufgenommen
+- Kohleturm optimiert
+- Düngerbeutel entfernt
+- Messer auf Doppel-[Graben] verwendbar
+- Sägewerk -> Grünabfall
+- Auto. Fässer(ver)kauf optimiert (es muss sich kein Clonk mehr in der Hütte befinden)
+
+Update Nr. 10:
+- In der Chemiefabrik lassen sich Lehmklumpen pressen (Dank an die Person, die mir diese Idee per E-Mail geschickt hat).
+- Seegräser lassen sich nun immer einsammeln, sobald sie einmal geerntet wurden (Dank an Dornick).
+- Bug mit dem Wachstum der Seegräser behoben (Dank an Element).
+
+Update Nr. 9:
+- Bug in der Seegrasvermehrung behoben (Dank an Michael14).
+- Düngerbeutel hinzugefügt.
+
+Update Nr. 8:
+- Relaunch-Regel hinzugefügt.
+- Kohleturm hinzugefügt.
+- Seegräser vermehren sich nun.
+- Dank an Theisi für die vielen Bug-Meldungen!
+
+Update Nr. 7:
+- Englisch-Übersetzung. Es wird bestimmt sehr viele Fehler im englischen Text haben, aber ich dachte mir, eine Übersetzung mit Fehlern ist besser als gar keine. ;) Fehler bitte melden! ;)
+
+Update Nr. 6:
+- Anemone hinzugefügt (Graphik von DukeaufDune).
+- Stichstärke des Messer reduziert.
+- Leitungsbug behoben (Dank an Hobby-Clonk).
+- 2 Bugs behoben (Dank an Element).
+
+Update Nr. 5:
+- Wenn eine Leitung reisst, geht der Leitungsbausatzt nicht mehr verloren.
+- Der Clonk kann über das Kontextmenü Gebäude abreissen und Reperaturen erledigen.
+- In der Chemiefabrik können Beton und Flüssig-Granit aus Steinen hergestellt werden.
+- Der Taucherclonk hinterlässt den Anzug wenn er stirbt.
+- Wasserfass-Bug behoben.
+- Animation und neuer Sound für das Messer.
+
+Update Nr. 4:
+- Beutel hinzugefügt.
+- Chemie (In der Chemiefabrik können Öl zerlegt und Kristalle gepresst werden). Vielleicht habt ihr weitere Ideen?
+- Ein kleiner Fehler der Lore wurde behoben.
+
+Update Nr. 3:
+- Das Wasserfass kostet nun gleichviel wie ein normales Fass -> Man macht keine Verluste mehr, wenn man Wasser verkauft (War ja auch unlogisch).
+- Messer hinzugefügt. ;) Es fehlt noch eine Graphik, in der der Clonk mit dem Messer herumfuchtelt.
+
+Update Nr. 2:
+- Einige Dinge wurden verbessert und einige kleine Fehler behoben. (Dank an Element). ;)
+
+Update Nr. 1:
+- Clonks mit Taucherhelm können nun schneller nach unten tauchen.
+- Kleiner Bug im Taucherhelmscript behoben.
+- Zauber ("Gegenstand herbeizaubern") hinzugefügt.

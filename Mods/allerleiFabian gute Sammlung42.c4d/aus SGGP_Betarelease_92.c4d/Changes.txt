@@ -1,0 +1,166 @@
+********************
+***              ***
+***Von 8 auf 9:  ***
+***              ***
+********************
+ADD:
+-UAV + UAV Kontrollstation hinzugefügt.
+-Stargateoverloader hinzugefügt.
+-Großer Akku für Ta'Uri hinzugefügt.
+-Passwortabfrage beim GDO eingebaut.
+-Neue Gaterampe: die Stargate-Universe-Offworld-Gate-Rampe.
+-Iris-Kit für Installation eines Iris-Schild am Gate.
+-DHD kann (wenn vorhanden) eine Iris am Gate bedienen.
+-Anwahlprogramm für den Laptop hinzugefügt.
+-Der Kawoosh löscht nun auch einsammelbare Objekte.
+-Der Kawoosh fügt Fahrzeugen sehr starken schaden zu.
+-Hitzesystem fürs Stargate.
+
+FIX:
+-Unschönheiten in diversten Scripts und kleine fehler behoben.
+-Leitungsbausatz am Laserturm anschließbar.
+-Kawoosh tötet jetzt an der richtigen stelle.
+-Kleine anpassungen an den Waffen fürs balancing.
+-Kull kann jetzt Munition aufsammeln
+-Munition in der Kull-Handgelenkswaffe wird nicht mehr und mehr.
+-Name des Gates wird im DHD Menü angezeigt und kann beim Wahlcomputer abgefragt werden.
+-Namensänderung am DHD wird angezeigt.
+-Wahlcomputerhack beim Laptop gefixt.
+-Die Feuer an der Stargate-Außenrampe brennen nichtmehr unterwasser.
+-Diverse Gebäude zerstörbar gemacht.
+-Ringtransporter braucht angemessen viel Bauplatz.
+-Handaktivator verschwindet nicht beim Ablegen.
+-Feuersound für FLAK Geschütz hinzugefügt.
+-Energieverbrauch für Flakgeschütz hinzugefügt.
+-Kull verliert langsam Lebensenergie.
+-Kullrüstung schützt zu 1% nicht vor Explosionsschäden.
+-Tac hat begrenzte Energie und zerstört sich nach 100 Schüssen selbst.
+-Wraith kostet jetzt 120.
+
+
+********************
+***              ***
+***Von 7.1 auf 8:***
+***              ***
+********************
+ADD:
+-ZPM Konsole
+-Jumperdock
+-Große Wraithbasis
+-NEUES GATESYSTEM
+-NEUE  GATEGRAPHIKEN
+-Cooler Effekt, an der Steinrampe >:D
+-Schweißbrenner
+-Wraithdart
+-Flak Geschütz für die Wraith
+-Naquadahzelle für Stabwaffe
+-Kull
+-Kull-Handgelenkswaffe
+-Kull-Rüstung
+-Anti Kull Waffe (Kull-Disruptor)
+-Handaktivator für Ringtransporter
+
+FIX:
+-Jumperdrohen lenken ENDLICH KOMPLETT richtig.
+-Alle Gatebugs
+-Entfernung der Ordnertitles, was die Packgröße entscheident minimiert.
+-Projektilwaffen richten keinen Schaden mehr am Schild an.
+-Wraithdart kann Stargate anwählen.
+-GDO ist über Contextmenü bedienbar.
+-Objekte im Erdreich werden nichtmehr durch den Schildgenerator bewegt.
+
+
+********************
+***              ***
+***Von 7 auf 7.1:***
+***              ***
+********************
+
+CHANGES:
+Graphiken:
+-Kleine Anpassungen allgemein
+-ENDLICH richtige Clonkgraphiken
+Scripts:
+-DNS Manipulatorfehler behoben
+-Beschreibung der Tel'tak Fluchtkapsel verbessert
+-Script des Tel'tak selbstzerstörers verbessert und Kristall eingefügt
+-VIELE andere Dinge
+
+*******************
+***             ***
+***Von 6 auf 7: ***
+***             ***
+*******************
+
+ADD:
+-Erd-Material "Naquadah" hinzugefügt
+-Goa'Uld Waffenfabrik eingefügt
+-Kleine Ta'Uri Basis hinzugefügt
+-Mittlere Ta'Uri Basis hinzugefügt
+-Große Ta'Uri Basis hinzugefügt
+-Menschenwaffenfabrik hinzugefügt
+-Akku für Ta'Uri hinzugefügt
+-C4 Hinzugefügt
+-Laptop hat viele neue Programme wie Gate anwählen oder Passwort hacken
+-Ringtransporter Hinzugefügt
+-Tel'tak hinzugefügt
+-Tac
+-Asgard Kern
+-Asgard Materieconverter
+-Asgard DNS Manipulator
+-Große Lutfschläuse
+-Sicherheitstür
+-E-Off
+
+CHANGES:
+Graphiken:
+-Neue Clonkgraphiken (Vorerst ersetzt durch verschidene Hazard Graphiken)
+-Neue Graphiken für Nanitenspritze
+-Neue Graphiken für Laptop
+-Neue Graphiken für Naquadah
+-Neue Graphiken für Lebenszeichendetektor
+Scripts:
+-Preise der Objekte angepasst
+-Sarkophag heilt nun schneller
+-Helferregel verbessert
+-Wahlcomputer und DHD brauchen Baumaterial
+-Wahlcomputer braucht Strom
+-Drohnen lenken wieder richtig
+-Allgemeine andere Eigenschaften angepasst
+-Man ist nun geschützt, wenn man im Jumper ist und durch Säure oder Lava fliegt
+-Ausrüstungsgegenstände können nichtmehr für Erdreich ausgewählt werden.
+
+
+*******************
+***             ***
+***Von 5 auf 6: ***
+***             ***
+*******************
+Add:
+-Neues Jumpermenü
+-SGGP Upperboard und Logo
+-Wahlcomputer
+-GDO
+-Wraith
+-Wraith Stunner
+-Wraith Granate
+-Autobau Regel
+-AntiIris Regel
+-Kein FoW Regel
+-Kein Kristall entfernen
+-Kein Gateumbenennen
+
+Bugfixes:
+-Rassenwahlclonk
+-Jumperbugs
+-Allgemeine Waffensteuerung
+-Allgemein an SGGP Clonks
+-Gate
+-DHD
+-Helferregel
+-Werferfix eingefügt
+
+Gelöscht:
+-Unnütze Helfer
+-Erholung
+-Tim

@@ -1,0 +1,8 @@
+[DefCore]
+id=ERIT
+Name=AI-Trader Erforschung
+Version=4,9,5
+Value=1
+Category=1040
+Picture=0,0,70,70
+MaxUserSelect=1

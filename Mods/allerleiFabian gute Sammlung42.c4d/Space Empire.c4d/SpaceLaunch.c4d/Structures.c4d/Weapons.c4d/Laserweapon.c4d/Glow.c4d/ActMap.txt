@@ -1,0 +1,6 @@
+[Action]
+Name=Glow
+Procedure=ATTACH
+Delay=100
+Facet=0,0,5,24
+NextAction=Glow

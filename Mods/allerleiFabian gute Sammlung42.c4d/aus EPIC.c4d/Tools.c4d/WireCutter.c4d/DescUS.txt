@@ -1,0 +1,1 @@
+Activate with a double click 'dig' to cut metal wire, elevator cables(causes elevator to fall down when someone grabs elevator) and other things.

@@ -1,0 +1,1 @@
+A trapdoor. Can be used from underneath with the stand's menu, or from on it by the context menu.

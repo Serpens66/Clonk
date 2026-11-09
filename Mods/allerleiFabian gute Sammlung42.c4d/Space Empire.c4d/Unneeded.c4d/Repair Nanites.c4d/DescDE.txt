@@ -1,0 +1,1 @@
+Ein Paket mit 10 winzigen Micro-Robots, die beschädigte Gebäude und Fahrzeuge wieder instand setzen können.

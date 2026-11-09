@@ -1,0 +1,16 @@
+[DefCore]
+id=SSUN
+Name=Sun
+Version=4,9,8
+Category=C4D_Vehicle|C4D_Background|C4D_Parallax
+Width=150
+Height=150
+Offset=-75,-75
+Picture=0,0,150,150
+TimerCall=CheckLight
+Timer=200
+BorderBound=1
+Rotate=1
+
+[Physical]
+Float=100

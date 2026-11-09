@@ -1,0 +1,2 @@
+DE:Leichter Jäger
+US:Interceptor

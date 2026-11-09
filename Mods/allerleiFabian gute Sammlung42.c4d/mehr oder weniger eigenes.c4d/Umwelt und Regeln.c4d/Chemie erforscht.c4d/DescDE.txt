@@ -1,0 +1,6 @@
+Wenn aktiv, haben alle Spieler alle chemischen Baupläne zu Beginn erforscht. 
+Dies beinhalten zb. Lehm, Beton, Sand, Glas Herstellung, aber auch Kohle zu Kristallen pressen und ähnliche Umwandlungsverfahren.
+Auch der Kohlenmeiler, Forsthaus und die Chemiefabrik sind erforscht, in letzterer koennen alle chemiebaupläne gebaut werden (was sonst nicht moeglich waere).
+Plutonium Umwandlung gehört nicht dazu.
+
+Kann durch Entfernung der Regel nicht mehr rückgängig gemacht werden, außer wenn keine SzenarioForschung aktiv und das Startzeitalter verändert wird!

@@ -1,0 +1,17 @@
+EventInfo-Meldungen:
+
+ SE00   "Gebäude wird angegriffen"
+ SE01   "Gebäude zerstört"
+ SE02   "Clonk verloren"
+ SE03   "Strahlungsquelle entdeckt"
+ SE04   "Nuklearexplosion geortet"
+ SE05   "EMP wurde ausgelöst"
+ SE07   "Produktion abgeschlossen"
+ SE08   "Ware verkauft"
+ SE10   "Shuttle wird angegriffen"
+ SE11   "Shuttle zerstört"
+ SE15   "Landekapsel im Anflug"
+ SE16   "Nachschub im Anflug"
+
+
+EventInfos für CoAl am besten dann nach dem Muster CExx. *find*

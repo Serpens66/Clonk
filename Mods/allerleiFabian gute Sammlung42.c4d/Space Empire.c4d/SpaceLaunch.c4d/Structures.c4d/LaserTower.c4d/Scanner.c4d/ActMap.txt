@@ -1,0 +1,16 @@
+[Action]
+Name=Active
+Procedure=ATTACH
+Delay=1
+Length=14
+Facet=20,0,20,9
+NextAction=Wait
+
+[Action]
+Name=Wait
+Procedure=ATTACH
+Delay=10
+Length=1
+Facet=0,0,20,9
+NextAction=Wait
+EndCall=CheckEnergy

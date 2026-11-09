@@ -1,0 +1,8 @@
+[Action]
+Name=LOOP
+Procedure=NONE
+NextAction=LOOP
+StartCall=countdown
+Delay=1
+Facet=6,6,2,2
+

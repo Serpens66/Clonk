@@ -1,0 +1,9 @@
+Wie der Name schon sagt, schützt dieser Mantel besonders gut gegen Feuer :)
+
+Nahkampf 2% 
+Projektile 5% 
+Energie -10% 
+Feuer 70% 
+Bio/Partikel -10% 
+Explosion 50% 
+Stahl/Scharfschützenprojektile 0% 

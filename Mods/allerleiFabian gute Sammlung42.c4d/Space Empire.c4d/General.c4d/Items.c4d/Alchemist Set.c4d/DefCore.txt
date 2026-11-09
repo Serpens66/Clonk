@@ -1,0 +1,20 @@
+[DefCore]
+id=_AS_
+Version=4,9,5
+Name=Alchemist's Set
+Category=16
+MaxUserSelect=5
+Width=8
+Height=6
+Offset=-4,-3
+Value=250
+Mass=15
+Components=IBLO=20;IBON=20;ICRS=20;ISPH=20;IGOL=20;IICE=20;ILOA=20;IMUS=20;INEC=20;IPRL=20;IASH=20;IROC=20;IHOL=20;
+Picture=8,0,80,60
+PictureFE=8,0,80,60
+Vertices=1
+VertexY=1
+VertexFriction=50
+Rebuy=1
+Collectible=1
+ 

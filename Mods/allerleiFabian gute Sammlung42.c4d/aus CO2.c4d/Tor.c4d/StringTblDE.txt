@@ -1,0 +1,6 @@
+TxtLeftgate=Linkes Tor bedienen
+TxtRightgate=Rechtes Tor bedienen
+TxtLeftgate=Linkes Tor
+TxtRightgate=Rechtes Tor
+RepairRight=Rechtes Tor reparieren
+RepairLeft=Linkes Tor reparieren

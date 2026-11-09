@@ -1,0 +1,6 @@
+Aufgeladen fasst sie bis zu 100 Energieeinheiten.
+Das Umspannwerk kann die Batterien zum Speichern überflüssiger Energie nutzen und entlädt die Batterien wieder, wenn Energie woanders benötigt wird.
+Lädt elektrische Geräte auf. Sie liefert drei Schüsse für das Blitzgeschütz, wird dabei aber zerstört.
+
+Die Batterie wird nun nie mehr entfernt, sondern hat einfach Energie von 0 bis 100. Diese Energie wird dann entsprechend aufgebraucht.
+Aktuelle Energie einsehbar durch Aktivieren, oder durch Energieanzeige-Regel.

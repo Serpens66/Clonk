@@ -1,0 +1,75 @@
+Notizen darüber, wie Energie bisher genutzt wird:
+
+Alte Objekte:
+
+(Energy bzw. Energie synonym)
+
+Alle können nur ein Maximum von 100 Energy (bzw 100.000) tragen. (hängt vermutlich mit [Physical]Energy=100000 in Defcore zusammen.)
+wenn in actmap ein Call zu einer fkt welche dann energie macht oder verbraucht,
+ gilt das für eine animationsphase, welche Delay*Length dauert.
+
+Alle Objekte verlieren dauerhaft Energie, auch beim Stillstehen.
+Dieser Effekt ist schon recht groß, grob geschätzt 1 Energy pro 10 Frames,
+sowohl für verbraucher, als auch produzenten
+Um das zu verhindern muss man wohl Energy_Holder bei LineConnect in Defcore zufügen
+
+
+Die Übertragungsrate von Energie über Leitungen ist im Leitungsskript geregelt, aktuell zu finden im umpsannwerkordner.
+Dort ist aktuell eine maximale Übertragung von 33,3 Energie alle 10 Frames eingestellt, also 3,3 Energie pro Frame.
+Man koennte dies z.b durch Forschung noch erhöhen.
+Wireless schickt alles was geht alle 5 Frames
+
+Fahrstuhl:
+Alle 25 Frames wird 25000 Energie verbraucht.
+(energycheck arbeitet mit diesen höheren werten. GetEnergy mit den kleineren)
+-> Alle 25 Frames 25 Energy verbraucht. 1 Energie pro Frame
+(genauso transportfahrtuhl)
+Metallfahrstuhl braucht 30.000
+
+Forschung:
+EnergyUsage direkt in ActMap. Vermutlich Energie fuer eine gesamte Animation.
+Research0 dauert 50 Frames, alle anderen nur noch 25 Frames, alle haben 1000 EnergyUsage.
+1000 (bzw. 1) Energie pro 25 bzw 50 Frames
+
+Windmühle:
+Alle 15 Frames wird bis zu 75 Energie erstellt. -> 5 Energie pro Frame
+Problem bei der Leitungsübertragung ist allerdings,
+dass nur 3,33 pro Frame übertragen wird.
+es reicht jedenfalls nicht aus, um ein Zukunftsgebäude pausenlos zu betreiben
+obwohl die Energie der Windmühle immer ausreichend ist 
+(weil halt weniger übertragen wird, als erstellt wird)
+
+Dynamo:
+Alle 20 Frames wird 25 bzw. 50 Energie erstellt.
+
+Seilbahnen verbrauchen nun 20.000 energie pro .. hmm schwer zu sagen, sieht nach pro Frame aus, aber in timer skript steht noch was von GetActTime() % 25, was auch immer das heißt..
+
+Kraftwerk:
+50 Energy pro 8 Frames -> 6.25 Energie pro Frame
+
+
+
+Sauglore: alle 10 Frames 30 Energy. -> 3 Energie pro Frame
+Materialsauger : 1 Energie pro Frame
+
+Luftregenerator: 3000 Energie pro 9 Frames fuer filtern und 10000 energie pro 9 Frames fuer Temperatur.
+
+
+
+
+Factory Objekt:
+Das Factory Objekt verbraucht den im Process im skript definierten Wert, pro Frame.
+Bei den Zukunftsgebäuden ist das zurzeit ganze 5 energie und 0.25 Energie bei alten werkstatt und alte Chemiefabrik.
+Die Original Werkstatt hat ursprünglich 0.5 Energie pro 8 Frames gebraucht.
+
+ERstes Zukunftswindrad:
+Alle 10 Frames bis zu 75 Energie -> 7,5 Energie pro Frame
+Zweites Zukunftswindrad:
+lle 10 Calls bis zu 100 Energie -> 10 Energie pro Frames
+
+
+Atomwerk:
+100 Energie alle 3 Frames. -> 33.33 pro Frame
+
+Die "Energie fehlt" anzeige wird vom Maanger Objekt gemacht, dazu muss es mit Init(this(),1) eigestellt werden.
+

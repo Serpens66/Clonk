@@ -1,0 +1,8 @@
+Spendet Licht und Wärme.
+
+Anfassen und Holz reinlegen, hält 10000Frames pro Holz.
+Oder Kohle, hält 15000Frames pro Kohle, wobei erst das Holz verbrannt wird.
+Hält länger und spendet mehr Licht als eine Fackel.
+Mit Anfassen und Graben kann es zb. tagsüber ausgemacht werden, um Holz zu sparen.
+
+Bei zuvielen Lichtern im Bild, kann es zu lags kommen. Dann am besten die Regel "konstante Helligkeit" aktivieren.

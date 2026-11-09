@@ -1,0 +1,26 @@
+[DefCore]
+id=CCHF
+Name=Forschungs Labor
+Version=4,9,1,3
+Category=1154
+MaxUserSelect=3
+Width=80
+Height=72
+Offset=-40,-36
+Value=250
+Mass=2900
+Components=METL=2;WOOD=2;ROCK=2;GLAS=1;
+Picture=0,72,116,110
+Entrance=-33,11,24,25
+Vertices=6
+VertexX=-14,-41,-41, 41, 39, 24
+VertexY=-28, 10, 37, 37,-28,-37
+VertexFriction=100,100,100,100,100,100
+Exclusive=1
+LineConnect=39
+Construction=1
+ColorByOwner=1 
+AttractLightning=1
+
+[Physical]
+Energy=100000

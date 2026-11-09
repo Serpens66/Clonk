@@ -1,0 +1,1 @@
+Der HazardClonk kann jetzt Munition aus seinem Speicher nehemen und anderen Clonks geben!

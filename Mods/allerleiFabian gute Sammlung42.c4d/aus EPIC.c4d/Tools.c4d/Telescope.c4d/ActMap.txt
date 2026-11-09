@@ -1,0 +1,7 @@
+[Action]
+Name=Checker
+Delay=1
+FacetBase=1
+StartCall=Checker
+NextAction=Checker
+

@@ -1,0 +1,1 @@
+Wenn aktiv, können keine Leitungen an feindlichen Gebäuden angebracht oder von ihnen abgenommen werden.

@@ -1,0 +1,3 @@
+Wird diese Regel aktiviert, kannst du im Regelmenü einstellen, dass ein Clonk, den du gerade nicht brauchst, schlafen soll. Schlafende Clonks sind nicht anwählbar, sie können erst wieder angewählt werden wenn du sie im Regelmenü wieder aufgeweckt hast.
+
+Sinnvoll um Clonks, die gerade nicht gebraucht werden, zu "deaktivieren".

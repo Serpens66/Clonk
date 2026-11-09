@@ -1,0 +1,10 @@
+[DefCore]
+id=VEHS
+Name=VehicleStopper
+Category=1
+Width=1
+Height=1
+Picture=0,0,1,1
+TimerCall=StopEngines
+Timer=2
+ 

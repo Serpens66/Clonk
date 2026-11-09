@@ -1,0 +1,4 @@
+Ein Gewehr der Aliens. Verschießt Partikel, die beim Auftreffen Schaden zufügen und abprallen. Dies verursacht zusätzlichen Schaden durch herumfliegende Objekte. Bio-Schaden.
+
+Aufrüstbar mit:
+-Laserupgrade

@@ -1,0 +1,13 @@
+[DefCore]
+id=SMG4
+Name=MG_Bullet
+Version=4,9,1,4
+Category=4
+Width=3
+Height=5
+Offset=-1,-2
+Mass=1
+Picture=0,0,3,5
+Vertices=1
+Rotate=1
+NoStabilize=1

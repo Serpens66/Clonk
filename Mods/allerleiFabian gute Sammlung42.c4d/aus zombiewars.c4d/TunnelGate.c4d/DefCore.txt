@@ -1,0 +1,25 @@
+[DefCore]
+id=TG6B
+Name=Tunnel Gate
+Category=1026
+MaxUserSelect=2
+Width=14
+Height=26
+Offset=-7,-13
+Picture=14,26,24,26
+Value=32
+Mass=100
+Components=METL=1
+Vertices=4
+VertexX=-3,4,-3,4
+VertexY=-12,-12,13,13
+VertexFriction=150,150,150,150
+Grab=2
+TimerCall=CheckArea
+Timer=1
+Construction=1
+BlastIncinerate=80
+LineConnect=C4D_PowerInput|C4D_PowerOutput|C4D_PowerConsumer
+
+[Physical]
+Energy=100000

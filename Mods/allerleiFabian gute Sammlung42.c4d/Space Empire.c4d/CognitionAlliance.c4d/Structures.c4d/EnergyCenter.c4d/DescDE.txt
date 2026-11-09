@@ -1,0 +1,3 @@
+Das Energiezentrum speichert Energie für Notzeiten und sendet sie kabellos an Empfänger.
+
+Hier kannst du auch Akkus auffüllen oder leeren, doch Vorsicht, denn die Füllung verschwindet mit der Zeit.

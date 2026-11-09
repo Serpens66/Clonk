@@ -1,0 +1,3 @@
+Aus 3Lehmklumpen können lange Wände und Brücken gebaut werden.
+
+Die baubare Brücke/Wand wird genau 3mal so lang, wie sie es bei normalen Lehm wird.

@@ -1,0 +1,2 @@
+Bauteil für Waffen.
+Als Mündung einer Waffe bezeichnet man das vordere Ende des Laufs, also die Stelle, an der das Geschoss die Waffe verlasst.

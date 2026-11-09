@@ -1,0 +1,22 @@
+ChoosingPlayer=%s konfiguriert jetzt das Spiel. 
+Choosing=%s konfiguriert gerade das Spiel. 
+Goals=Spielziele:
+Rules=Regeln: 
+Environments=Umgebungswahl: 
+CreateRules=Spielregeln
+CreateEnvironment=Spielumgebung
+Difficulty=Schwierigkeitsgrad
+Technology=Technologiestufe
+DarknessChose=Intensität der Dunkelheit
+GoalChose=Spielziel konfigurieren
+RuleInfo=Spielregel einstellen
+EnvironmentInfo=Umgebung einstellen
+Finished=Fertig
+Wind=Windströmungen berechnen
+
+#nix weiter
+Emptiness=Die Leere
+YourBrain=Dein Gehirn
+Nothing=Nichts
+Freezer=Der Kühlschrank
+Space=Die unendliche Weite

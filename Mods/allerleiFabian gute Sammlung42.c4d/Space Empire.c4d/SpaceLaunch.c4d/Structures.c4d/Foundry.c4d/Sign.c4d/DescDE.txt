@@ -1,0 +1,1 @@
+Teil des Hochofens: zeigt die aktuelle Produktion.

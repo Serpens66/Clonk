@@ -1,0 +1,9 @@
+[DefCore]
+id=ECLD
+Name=EnvironmentCloud
+MaxUserSelect=1
+Value=1
+Category=65
+Picture=0,0,50,50
+TimerCall=DoClouds
+Timer=3

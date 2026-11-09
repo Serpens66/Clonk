@@ -1,0 +1,26 @@
+Nahkampf 40% 
+Projektile 40% 
+Energie 40% 
+Feuer 40% 
+Bio/Partikel 40% 
+Explosion 40% 
+Stahl/Scharfschützenprojektile 20% 
+
+Fertigkeiten:    
+HP        +50.000  
+Kampf     +40.000 
+Werfen    +     0  
+Springen  - 8.000 
+Laufen    -26.000 
+Klettern  -12.000 
+Hangeln   -12.000 
+Schwimmen -17.000    
+Atem      -17.000   
+Graben    -16.000 
+
+Hat Nachtsicht.
+
+Fähigkeit: Kurzzeitig unsterblich!
+--------------
+Die Power Kampfrüstung ist ein Allrounder. Man muss aber heftige Abzüge in der Wendigkeit hinnehmen.
+

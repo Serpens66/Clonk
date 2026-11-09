@@ -1,0 +1,2 @@
+- Flaschenzug:
+  -> Auto. zu Tonnen (wenn Hilfsclonk)

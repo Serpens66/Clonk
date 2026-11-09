@@ -1,0 +1,3 @@
+Großer, breiter Baum. Kann gefällt und zu Holz zersägt werden.
+Bäume sind wichtig für die Umwelt, sie filtern Schadstoffe und gleichen so Umweltschäden aus.
+Ein Baum liefert -10 Umweltschaden.

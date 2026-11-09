@@ -1,0 +1,15 @@
+[Action]
+Name=NoBridge
+Procedure=NONE
+Length=1
+Delay=350
+Facet=0,0,14,14
+NextAction=NoBridge
+
+[Action]
+Name=Bridge
+Procedure=NONE
+Length=1
+Delay=350
+Facet=0,14,14,14
+NextAction=Bridge

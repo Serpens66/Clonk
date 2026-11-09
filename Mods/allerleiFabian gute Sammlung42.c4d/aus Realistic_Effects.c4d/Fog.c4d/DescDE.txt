@@ -1,0 +1,6 @@
+Dieses Umweltobjekt sorgt für Vernebelung ;)
+Der Nebel überdeckt alles, d.h. in einigen besonders nebeligen Gebieten kann die Sicht gar so schlecht sein, dass man sich noch nicht einmal mehr selbst sehen kann.
+
+Wenn in Verbindung mit Nebelbeweger verwendet, dann bewegt sich der Nebel.
+
+Nebel kann, besonders im zusammenspiel mit Lichteffekten, zu starkem Lagg führen!

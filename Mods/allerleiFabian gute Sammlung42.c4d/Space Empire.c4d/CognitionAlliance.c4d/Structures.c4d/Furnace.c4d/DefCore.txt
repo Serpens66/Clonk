@@ -1,0 +1,27 @@
+[DefCore]
+id=CFUR
+Name=Furnace
+Category=1154
+MaxUserSelect=10
+Width=105
+Height=56
+Offset=-52,-28
+Value=300
+Mass=2400
+Components=METL=2;CRYS=2;WOOD=2;ROCK=2;CTIT=1;CALU=1;GLAS=1;
+Picture=0,56,110,82
+Vertices=6
+VertexX=0,-42,-51, 50, 40, 20
+VertexY=0,-25, 27, 27,  3,-15
+VertexFriction=100, 100, 100, 100, 100, 100
+Exclusive=1
+Entrance=-22, 1, 23, 27
+LineConnect=23
+ColorByOwner=1
+Construction=1
+TimerCall=TransmitEnergy
+Timer=5
+AttractLightning=1
+
+[Physical]
+Energy=100000

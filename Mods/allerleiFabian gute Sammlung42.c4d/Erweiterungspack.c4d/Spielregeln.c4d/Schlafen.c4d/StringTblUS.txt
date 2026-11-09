@@ -1,0 +1,4 @@
+TxtSleep=Sleep?
+TxtWakeUp=Wake up %s
+TxtYes=Yes, %s
+TxtAtLeastOneClonk=It must remain awake at least one Clonk.

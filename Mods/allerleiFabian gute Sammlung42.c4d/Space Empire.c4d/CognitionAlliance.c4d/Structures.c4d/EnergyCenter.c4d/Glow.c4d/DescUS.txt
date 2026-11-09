@@ -1,0 +1,1 @@
+A light effect which shows the battery´s fill level.

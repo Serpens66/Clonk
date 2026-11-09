@@ -1,0 +1,21 @@
+[DefCore]
+id=S_CJ
+Version=4,9,8
+Name=Combat Leather Jacket
+Category=3600
+MaxUserSelect=10
+Width=15
+Height=12
+Offset=-7,-6
+Vertices=2
+VertexX=-3,4
+VertexY=-4,3
+VertexFriction=50,50
+Components=METL=3;DWPF=1;
+Value=38
+Mass=7
+Picture=0,18,60,60
+Rebuy=1
+Collectible=1
+Float=1
+NoComponentMass=1

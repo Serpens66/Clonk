@@ -1,0 +1,7 @@
+Direction=Direction?
+Right=To the right
+Left=To the left
+Adjustment=Adjustment?
+Down=Downward
+NoAdjustment=No adjustment
+FirstPullUp=%s must fist|be pulled up!

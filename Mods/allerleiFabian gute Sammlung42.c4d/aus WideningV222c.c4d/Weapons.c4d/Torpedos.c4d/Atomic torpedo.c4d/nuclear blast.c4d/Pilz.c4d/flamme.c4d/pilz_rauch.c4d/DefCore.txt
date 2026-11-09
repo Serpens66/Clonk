@@ -1,0 +1,19 @@
+[DefCore]
+id=ABPR
+Name=Static Rauch
+Category=1
+
+Value=10
+Mass=10
+Width=62
+Height=60
+Offset=-31,-30
+Picture=0,0,62,60
+Vertices=0
+
+Float=1
+
+Oversize=1
+StretchGrowth=1
+
+[Physical]

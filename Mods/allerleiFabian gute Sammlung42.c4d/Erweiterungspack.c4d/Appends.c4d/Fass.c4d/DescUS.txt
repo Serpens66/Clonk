@@ -1,0 +1,3 @@
+To fill, submerge in liquid.
+
+A water barrel has now the same value as an empty barrel. So you don't have losses if you sale water.

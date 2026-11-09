@@ -1,0 +1,8 @@
+[DefCore]
+id=S_O1
+Name=Soeldner Stufe 5 anheuern 
+Version=4,9,5
+Value=1
+Category=1040
+Picture=5,0,64,64
+MaxUserSelect=1

@@ -1,0 +1,4 @@
+Diese weiterentwickelte Version des Maschinengewehrs feuert energetisch geladenene Geschosse und erzielt damit eine weit größere Wirkung. 
+Benötigt Energie und Benzin als Munition.
+
+Kann nach Erforschung in manchen Geschütztürmen gekauft werden.

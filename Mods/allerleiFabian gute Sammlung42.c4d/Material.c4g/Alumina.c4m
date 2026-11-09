@@ -1,0 +1,17 @@
+[Material]
+Name=Alumina
+Color=132,82,30,224,156,30,252,220,24
+Shape=3
+Density=50
+Friction=75
+DigFree=1
+BlastFree=1
+Blast2Object=CALO
+Dig2Object=CALO
+Dig2ObjectRatio=300
+Blast2ObjectRatio=300
+MaxAirSpeed=100
+MaxSlide=1
+Placement=40
+TextureOverlay=Swirl
+OverlayType=8

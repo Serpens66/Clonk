@@ -1,0 +1,18 @@
+[DefCore]
+id=CLVM
+Version=4,9,8,2
+Name=Vending machine
+Category=1026
+Width=30
+Height=40
+Offset=-15,-20
+Vertices=2
+VertexX=-15,13
+VertexY=19,19
+VertexFriction=100,100
+Picture=0,0,30,40
+BlastIncinerate=100
+BurnTo=CLVB
+Components=METL=1
+Mass=500
+Construction=1

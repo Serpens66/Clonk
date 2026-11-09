@@ -1,0 +1,11 @@
+[DefCore]
+id=LOR2
+Name=Helper
+Version=4,9,5
+Value=1
+Width=4
+Height=4
+Offset=-2,-2
+Category=1
+MaxUserSelect=0
+Picture=3,0,32,32

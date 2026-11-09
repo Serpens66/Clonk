@@ -1,0 +1,20 @@
+[DefCore]
+id=WBAS
+Name=Fundament für Wetterkontrollstation
+Version=4,9,1
+Category=2
+Width=160
+Height=8
+Offset=-80,-4
+Value=1
+Mass=150
+Components=ROCK=16;
+SolidMask=0,0,160,8,0,0
+Vertices=2
+VertexX=-75,75
+VertexY=-5,-5
+VertexFriction=100,100
+Construction=1
+
+[Physical]
+Energy=200000

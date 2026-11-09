@@ -1,0 +1,19 @@
+Standard=Einzelschuss
+GrenadeLauncher=Granatenwerfer
+Laser=Laser
+Slime=Biowerfer
+StandardStructure=nur Gebäude, Einzelschuss
+GrenadeLauncherStructure=nur Gebäude, Granatenwerfer
+LaserStructure=nur Gebäude, Laser
+Teleport=Translocator
+
+
+KLASUpgradeDesc=Erweitert die Sturmpistole mit einem Laser.
+KSLMUpgradeDesc=Erweitert die Sturmpistole mit einem Biowerfer.
+KRFLUpgradeDesc=Erweitert die Sturmpistole mit einem Granatwerfer.
+PARTUpgradeDesc=Fügt den Translocator Mechanismus hinzu.
+
+KLASUpgraded=Sturmpistole mit|einen Laser erweitert.
+KSLMUpgraded=Sturmpistole mit|Biowerfer erweitert.
+KRFLUpgraded=Sturmpistole mit|Granatwerfer erweitert.
+TeleportUpgraded=Translocator hinzugefügt.

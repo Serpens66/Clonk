@@ -1,0 +1,6 @@
+/*-- Eisbaum --*/
+
+#strict
+
+#include TREE
+

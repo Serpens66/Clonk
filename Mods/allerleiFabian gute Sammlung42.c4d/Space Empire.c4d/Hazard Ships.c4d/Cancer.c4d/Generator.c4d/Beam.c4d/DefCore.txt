@@ -1,0 +1,21 @@
+[DefCore]
+id=CBB_
+Name=Beam
+Version=4,9,5
+Category=4
+Width=25
+Height=25
+Offset=-12,-12
+Value=50
+Mass=20
+Vertices=4
+VertexX= 6,-6,3,-3
+VertexY= 10,10,-10,-10
+VertexCNAT=8,8,4,4
+VertexFriction=20,20,15,10
+ContactCalls=1
+Entrance=-10,-10,20,20
+ColorByOwner=1
+BorderBound=7
+Rotate=0
+CollectionLimit=1

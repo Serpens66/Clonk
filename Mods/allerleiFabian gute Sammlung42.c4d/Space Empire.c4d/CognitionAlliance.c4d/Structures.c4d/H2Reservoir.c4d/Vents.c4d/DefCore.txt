@@ -1,0 +1,15 @@
+[DefCore]
+id=VNNN
+Name=Ventillators
+Category=4
+MaxUserSelect=10
+Width=36
+Height=13
+Offset=-18,-6
+Value=10
+Mass=10
+Picture=0,0,36,13
+Vertices=1
+VertexX=-19
+VertexY=-7
+ 

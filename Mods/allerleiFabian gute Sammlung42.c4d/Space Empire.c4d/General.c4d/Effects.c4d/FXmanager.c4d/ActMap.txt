@@ -1,0 +1,5 @@
+[Action]
+Name=Init
+Delay=1
+NextAction=Idle
+EndCall=PostInit

@@ -1,0 +1,2 @@
+DE:Nuclear Siege Ammo
+US:Nuclear Siege Ammo

@@ -1,0 +1,2 @@
+Heals a Clonk completely.
+Activate with double-click on dig.

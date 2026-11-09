@@ -1,0 +1,16 @@
+[DefCore]
+id=SCWS
+Name=Scorpion-Waffensystem
+Version=4,9,5
+Category=4
+Width=22
+Height=7
+Offset=-11,-4
+Mass=20
+Components=METL=2;ENAP=1;KRFL=1;
+Picture=0,0,64,64
+Vertices=2
+VertexX=-10,10
+VertexY=3,3
+VertexFriction=100,100
+Collectible=1

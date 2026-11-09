@@ -1,0 +1,7 @@
+TxtConfig=Einstellungen
+TxtSelectLiquid=Flüssigkeit auswählen
+TxtConfigDefault=Standard
+TxtProductionDefaultDesc=Produziert alles. Ohne Spezialisierung. 
+TxtProductionLiquidDesc=Fördert besonders viel %s, dafür weniger andere Flüssigkeinte.|Je wertvoller eine Flüssigkeit ist, desto unwahrscheinlicher ist der Fund.|Wahrscheinlichkeit~%d/%d
+TxtWrongPlacement=Falscher Bauplatz!|Es kann nur ganz unten gebaut werden!|Aktuelle Tiefe: %d|Obere Grenze: %d
+TxtDepth=Tiefe:|%dm

@@ -1,0 +1,7 @@
+[Action]
+Name=Float
+Procedure=FLOAT
+Delay=100
+Length=1
+FacetBase=1
+NextAction=Hold

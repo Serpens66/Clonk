@@ -1,0 +1,6 @@
+Im Spielregel-Menü können die Umweltobjekte eingestellt werden.
+Nur verwenden, wenn man wirklich weiß was man tut!!
+Ansonsten lieber die Settings im Kontextmenü des ersten Spielers verwenden!
+
+Hinweis:
+Einige Umweltobjekte, wie z.B. Meeresspiegel, können nicht rückgängig gemacht werden...

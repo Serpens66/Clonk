@@ -1,0 +1,2 @@
+Zaubert einen zufälligen Gegenstand herbei.
+Über DefCore Category deaktiviert, da ein zufälliger Gegenstand aus diesem Pack viel zu unberechenbar ist.

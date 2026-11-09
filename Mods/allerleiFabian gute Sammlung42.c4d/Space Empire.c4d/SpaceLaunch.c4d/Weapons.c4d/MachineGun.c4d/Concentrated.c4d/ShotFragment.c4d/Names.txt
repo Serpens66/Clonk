@@ -1,0 +1,2 @@
+DE:Schussfragment
+US:Shot fragment

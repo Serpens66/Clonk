@@ -1,0 +1,20 @@
+# Control Descs
+CtrlInventoryDesc=Inventar auswählen
+AmmoBag=Munitionsgürtel
+CtxObjectInfo=Objektinfo
+CtxHelpMessagesOn=Hilfen an
+CtxHelpMessagesOff=Hilfen aus
+CtxGuard=Bewachen
+CtxConstructionDesc=Bauauftrag
+CtxConstructionMaterial=Baumaterial
+CtxHomeDesc=Zurück zur Basis
+CtxRelease=Entlassen
+CtxChop=Fällen
+CtxFeignDeath=Tod vortäuschen
+CtxRise=Aufstehen
+CtxHide=Verstecken
+CtrlMenuDesc=Menü
+TxtDescend=Abspringen
+TxtEnergysupply=Energieversorgung
+TxtPermanentModeTurnOn=Dauerbetrieb ein
+TxtPermanentModeTurnOff=Dauerbetrieb aus

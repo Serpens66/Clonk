@@ -1,0 +1,3 @@
+TxtObject=Wissenssammlung zum Thema Umwelt und Umweltschutz...
+TxtEmptyBook=Das Buch ist leer.
+MsgGuidance=Achte auf die Umwelt. 

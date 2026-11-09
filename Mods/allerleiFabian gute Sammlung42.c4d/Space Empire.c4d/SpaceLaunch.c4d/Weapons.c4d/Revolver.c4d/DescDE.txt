@@ -1,0 +1,2 @@
+Eine einfache Waffe für den schnellen Clonk-zu-Clonk-Kampf.
+Umschalten zwischen den beiden Schussmodi mit Doppelgraben.

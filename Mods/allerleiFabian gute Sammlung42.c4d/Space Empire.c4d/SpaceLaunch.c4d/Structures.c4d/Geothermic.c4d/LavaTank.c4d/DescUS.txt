@@ -1,0 +1,2 @@
+Part of the geothermic power plant:
+controls the fuel level and the power generation.

@@ -1,0 +1,3 @@
+Beißer: Wächst aus, wenn man ihm ein Goldstück hinlegt.
+
+Danach greift er jedes Lebewesen in Reichweite an, macht 100.000Schaden und verschlingt zusätzlich deren getragene Items. Mjam..

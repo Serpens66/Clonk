@@ -1,0 +1,5 @@
+[DefCore]
+id=STMY
+Name=SetMoney
+Category=1
+Picture=0,0,48,48

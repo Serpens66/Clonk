@@ -1,0 +1,11 @@
+[DefCore]
+id=NBL3
+Name=Nebel Erzeuger alle x Frames
+Version=4,9,5
+Category=524289
+Width=1
+Height=1
+Picture=0,0,40,40
+MaxUserSelect=1
+TimerCall=DoNebel
+Timer=20000

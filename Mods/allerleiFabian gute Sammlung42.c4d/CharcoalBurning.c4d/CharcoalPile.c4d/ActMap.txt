@@ -1,0 +1,15 @@
+[Action]
+Name=Burning
+Delay=8
+FacetBase=1
+NextAction=Burning
+StartCall=Burning
+Sound=Fire
+
+[Action]
+Name=Burning2
+Delay=8
+FacetBase=1
+NextAction=Burning2
+StartCall=Burning2
+Sound=Fire

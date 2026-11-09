@@ -1,0 +1,10 @@
+[DefCore]
+id=S__2
+Name=Symbol Atem
+Version=4,9,5
+Category=1
+Width=16
+Height=16
+Offset=-8,-8
+Components=S__2=1;
+Picture=0,0,25,29

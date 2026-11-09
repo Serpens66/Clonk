@@ -1,0 +1,6 @@
+Eher nicht am anfang einstellen, wird durch "umweltschutzobjekt" automatisch geregelt.
+
+Es entstehen Eismeteoriten, wenn es kälter als -30°C ist und noch mehr, wenn es unter -40°C ist.
+Die Stärke richtet sich nach der Menge dieses Umweltobjekts:
+Anzahl/20 ist die Chance für einen Meteor alle 10 Frames bei zwischen -30 und -40°C.
+Anzahl/10 ist es ab -40°C.

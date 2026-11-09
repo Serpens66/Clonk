@@ -1,0 +1,10 @@
+[DefCore]
+id=EFEC
+Name=Effector
+Category=1
+MaxUserSelect=1
+Width=0
+Height=0
+Picture=0,0,35,35
+TimerCall=ControlEffects
+Timer=10

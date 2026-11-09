@@ -1,0 +1,17 @@
+[Particle]
+Name=EMSpark
+MaxCount=50000
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+Face=0,0,32,32,-16,-16
+Delay=500
+Repeats=50
+Reverse=1
+GravityAcc=0
+VertexCount=1
+VertexY=50
+FadeOutLen=4
+FadeOutDelay=500
+AlphaFade=10
+Additive=1

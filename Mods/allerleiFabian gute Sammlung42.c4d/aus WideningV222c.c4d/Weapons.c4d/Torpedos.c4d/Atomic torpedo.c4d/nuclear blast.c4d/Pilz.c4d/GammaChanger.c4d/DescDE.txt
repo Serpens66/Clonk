@@ -1,0 +1,6 @@
+Sorgt für einen weichen Übergang beim Wechseln des Gammawertes.
+
+Funzt nur mit NewGfx!
+
+
+Anmerkung: Dieses Objekt stammt aus Newtons Timer-Funktionen

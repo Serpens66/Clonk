@@ -1,0 +1,51 @@
+Der Scorpion Jäger ist ein high-tech Abfangjäger aus den Labors des Dr.Ming.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lassen sich die Waffen aktivieren, die Triebwerke zünden/abschalten, die Tarnung aktivieren oder der Ausstieg betätigen.
+
+-Bei gezündeten Triebwerken erfolgt die Schubregelung über [Auf] und [ab], die Steuerung des Neigungswinkels über [Rechts] und [Links].
+
+-Landen durch betätigen des Ausstiegs bei gezündetem Triebwerk. Hierdurch wird der Pilot zu Boden gebeamt, und das schiff in die nächste Cancer-Battlestation teleportiert.
+
+Waffensysteme:
+
+-Der Scorpion verfügt als Arsenal über eine 2-Wege Plasmakanone, deren Plasmastrom entweder über die Buggeschütze oder den Heckstachel geleitet werden kann.
+
+-Über das Kontextmenü kann die Kanalisierung vorgenommen werden. Die Bordkanone erscheint dann im Inventar.
+
+-Das gewählte Waffensystem wird dann via [Werfen] aktiviert.
+
+-Der Stachel visiert automatisch feindliche ziele an, solange sie sich in Reichweite befinden. Ein Signalton zeigt die Erfassung eines neuen Ziels an bzw. den Verlust der Aufschaltung.
+
+-Es gilt zu beachten das der Pilot Passende Munition mitführen muss um die Bewaffnung zu laden. Es werden Energiezellen benötigt um Plasma zu erzeugen.
+
+Notfallrettungssystem:
+
+-Um rasch das Fahrzeug zu verlassen den Ausstieg betätigen, hierdurch wird der Pilot zu Boden teleportiert.
+
+Anmerkungen:
+
+-Der Jäger ist unterwassertauglich.
+
+-Um eventuelle Verfolger abzuschütteln empfiehlt es sich enge Maneuver zu fliegen, indem man bei voller geschwindigkeit innerhalb einer geflogenen kurve das Triebwerk für kurze Zeit deaktiviert.
+
+-Das Tarnsystem hält zwar nur kurz vor, macht es jedoch möglich Überraschungsangriffe zu fliegen oder Verfolgern zu entkommen.
+
+-Vorsicht: Die Tarnung ist lediglich in der lage das Schiff optisch unsichtbar zu machen, Wärme- und EM-Signaturen bleiben erhalten!
+
+-Die Avionik ist sehr empfindlich gegen EMP, ein Treffer führt zum Totalausfall aller Systeme, inklusive des Triebwerks.
+
+-Je schwerer der Schaden am Jäger desto schlechter seine Flugeigenschaften.
+
+-Falls der Jäger einen Strukturschaden von über 90% aufweist ist sollte über einen Absprung nachgedacht werden (Explosionsgefahr).
+
+-Man sollte sich von den Levelbegrenzungen fernhalten um unliebsamen Überraschungen vorzubeugen.
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

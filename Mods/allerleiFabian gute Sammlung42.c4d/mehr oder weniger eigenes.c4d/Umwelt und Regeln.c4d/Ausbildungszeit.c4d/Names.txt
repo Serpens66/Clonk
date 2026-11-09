@@ -1,0 +1,2 @@
+DE:Ausbildung
+US:A new object

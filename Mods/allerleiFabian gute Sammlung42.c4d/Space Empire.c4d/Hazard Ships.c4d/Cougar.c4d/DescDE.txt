@@ -1,0 +1,52 @@
+Die Cougar Klasse ist eine leichte Fregatte die eingesetzt wird um Bodenoperationen zu decken und begrenzte Luftraumüberwachung zu leisten.
+
+Flugsteuerung:
+
+-Das Kontextmenü wird über [Graben] erreicht, hier lassen sich die einzelnen Sektionen begehen, Schadenskontrollen realisieren, die Fregatte in den Schwebezustand überführen oder der Ausstieg betätigen.
+
+-Die Höhenregulierung erfolgt per [Auf] und [Ab], die Steuerung des Horizontaltriebwerks über [Rechts] und [Links].
+
+-Um das Schiff zu stoppen per Kontextmenü den Schwebemodus aktivieren, es werden dann alle Triebwerke außer dem Antigrav booster heruntergefahren.
+
+Waffensysteme:
+
+-Die Cougar verfügt über 2 Bord-MGs in den Kanzeln sowie eine ausfahrbare Scavenger-Startvorrichtung.
+
+-Über das Kontextmenü können die einzelnen Schützenpositionen begangen werden. Die Waffensteuerung erscheint dann jeweils im Inventar.
+
+-Die Kanzel-MGs werden dann via [Werfen] durchgeladen und im geladenen Zustand abgefeuert.
+
+-Das Schwenken der Geschütze geschieht mittels [Rechts] und [Links], der Servomotor wird mittels [Oben] und [Unten] gestoppt.
+
+-Das Scavenger Abschussystem wird ausgefahren alsbald der Bordschütze die Leitstelle einnimmt. Durch betätigen der [Werfen]-Taste wird im Rumpf eine Scavenger assembliert und dann zur Rampe transportiert.
+
+-Durch erneutes aktivieren der [Werfen]-Taste wird das Geschoß ausgeklinkt und kurz darauf gestartet. Es kann nun mittels [Rechts] und [Links] in seiner Bahn beeinflusst werden, zum stabilisieren der Flugbahn [Oben] oder [Unten] verwenden.
+
+-Die Scavenger-Rakete detoniert sobald sie mit der Umwelt kollidiert, ihre Treibstoffreserven aufgebraucht sind (ca.10sek Flugzeit) oder sie mittels [Graben] von der Zentrale aus gesprengt wird.
+
+-Es gilt zu beachten das der Pilot Passende Munition mitführen muss um die Bewaffnung zu laden. Die Bord MGs verbrauchen Projektilmunition und die Scavengervorrichtung 3 Raketen pro Marschflugkörper.
+
+Notfallrettungssystem:
+
+-Falls die Cougar übermäßigen Strukturschaden genommen haben sollte wird alle verfügbare Energie in das Antigrav-Boostertriebwerk gespeist. Dies führt zu einem gebremsten freien Fall, der es der geschulten Mannschaft ermöglicht rechtzeitig abzuspringen.
+
+
+
+Anmerkungen:
+
+-Die Cougar ist unterwassertauglich.
+
+-Aufgrund ihrer Calamari-Phasenpanzerung ist die Cougar EMP-Fest und somit für Einsätze in Ionenstürmen geeignet.
+
+-Die Cougar sollte immer in Vollbesetzung geflogen werden (2 Kanoniere, 1 Steuermann, 1 Funkwaffenoffizier), um höchste Kampfkraft und Effizienz zu gewährleisten.
+
+-Falls die Cougar einen Strukturschaden von über 90% aufweist ist sollte über eine Notlandung nachgedacht werden (Explosionsgefahr).
+
+
+
+Credits:
+
+Projektdesign: Mace
+
+
+

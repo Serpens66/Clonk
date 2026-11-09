@@ -1,0 +1,2 @@
+DE:Flagship
+US:Flagship

@@ -1,0 +1,3 @@
+Conducts energy invisibly to other buildings even through solid material and therefore increases the energy net´s range.
+The range can be shown with the throw key.
+

@@ -1,0 +1,2 @@
+DE:MG-Kugel
+US:MG-Bullet

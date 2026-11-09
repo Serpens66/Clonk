@@ -1,0 +1,1 @@
+Zeigt Energiewerte an.

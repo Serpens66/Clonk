@@ -1,0 +1,8 @@
+[Action]
+Name=ActiveDetonation
+Procedure=NONE
+Length=1
+Delay=26
+Facet=0,0,12,8
+NextAction=ActiveDetonation
+EndCall=Countdown

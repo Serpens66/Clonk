@@ -1,0 +1,117 @@
+Version 1.1
+
+Zweck:
+Ermöglich den Handel zwischen allen Spielern.
+Wichtig:
+Um mit einem Spieler zu Handeln, benötigen beide Spieler eine Handelsstation!
+
+Das Aktionsmenü:
+Mit 'Hoch' in der Station kommt man in das Aktionsmenü. Dort hat man diese Auswahlmöglichkeiten:
+Eine Verkaufsliste erstellen
+Von einem anderem Spieler Kaufen (Verkaufsliste)
+Geld an einen anderen Spieler geben
+Meldung an einen anderen Spieler leiten
+Spieler als 'Spam' einrichten
+
+Eine Verkaufsliste erstellen:
+Wenn man diesen Eintrag angewählt hat, kann man zwischen "Objekte","Fahrzeuge" und "Liste angucken" wählen.
+Wenn man "Objekte" oder "Fahrzeuge" auswählt, kommt noch eine Liste, wo alle Definitionen der entsprechenden Kategorie aufgelistet sind.
+Nun muss man das Objekt wählen, das man in die Verkaufsliste eintragen will.
+Dannach muss man den Preis angeben. Jetzt ist der Eintrag gespeichert, und ist für andere Spieler im "Kaufen" - Menü anwählbar.
+Wählt man ein Objekt, das bereits in der Verkaufsliste gespeichert ist, kann man diesen Eintrag bearbeiten.
+Wählt man "Liste angucken", so kann man alle Objekte sehen, die in der Verkaufsliste gespeichert sind. Wählt man dort ein Objekt an, so kann man diesen Eintrag bearbeiten.
+
+Von einem anderem Spieler Kaufen:
+Wurde man als Spam eingerichtet, so kann man nicht kaufen!
+Wenn man von einem anderen Spieler kauft, ist es nötig, das dieser Spieler eine Verkaufsliste aufgebaut hat.
+Erst muss man den Spieler wählen, von dem man kaufen will, und dann den entsprechenden Eintrag in der Verkaufsliste anwählen.
+Die Kosten werden dann auf das Konto des anderen Spielers transferiert. (Das Geld geht von dem eigenem Konto weg)
+
+Geld an einen anderen Spieler geben:
+Erst muss man den Spieler wählen, an den man das Geld geben will, und dann den Betrag eingeben, den man geben will.
+Wenn man mit dem Häkchen bestätigt, wird das Geld, das man eingegeben hat von dem eigenem Konto auf das Konto des anderem transferiert.
+
+Meldung an einen anderen Spieler leiten: (Nützlich für Netzwerkspiele)
+Zuerst wählt man den Spieler aus, bei dem die Meldung erscheinen soll, dann die Meldung.
+Es gibt vier Arten von Meldungen:
+1. Beschwerde über zu hohen Preis
+2. Verkaufsvorschlag
+3. Um Geld 'betteln'
+4. Vorrat erschöpft
+
+Beschwerde über zu hohen Preis:
+Als erstes wählt man das Objekt aus der Verkaufsliste des Spielers.
+Dann schlägt man einen neuen Preis vor, und bestätigt.
+Nun erhält der Spieler die Nachricht, dass jemand sich über hohe Preise beschwert hat, und sieht den neuen Preisvorschlag.
+
+Verkaufsvorschlag:
+Wenn man ein Objekt brauch, aber niemand dies in der Verkaufsliste hat, so kann man an einen anderen Spieler eine Meldung senden, wo ein neuer Verkaufsvorschlag drinnen ist.
+Wenn man das Objekt in der Liste gewählt hat, dann kommt bei dem angewähltem Spieler die Meldung, dass jemand einen Verkaufsvorschlag mit dem gewähltem Objekt gemacht hat.
+
+Um Geld 'betteln':
+Wenn man in Geldnot ist, kann man bei einem Spieler die Meldung anzeigen, dass man einen bestimmten Geldbetrag benötigt.
+Wenn man den Geldbetrag eingegeben hat, dann kommt bei den gewähltem Spieler die Meldung, dass jemand einen Geldbetrag benötigt.
+
+Vorrat erschöpft:
+Ist ein Objekt das in der Liste eines Spielers steht ausverkauft, so kann man ihm die Meldung senden, dass ein Objekt aus seiner Verkaufsliste nicht mehr verfügbar ist.
+Erst wählt man wie im "Kaufen" - Menü den Eintrag aus der Verkaufsliste des Spielers, und dann kommt bei dem gewähltem Spieler die Meldung, dass das gewählte Objekt nicht mehr verfügbar ist.
+
+Spieler als 'Spam' einrichten:
+Das Wort 'Spam' kommt sicherlich einigen aus ihren E-Mail Konten bekannt vor!
+Wenn man einen Spieler als Spam einrichtet, dann kann er bei dem Spieler, der ihn als Spam eingerichtet hat, nichts mehr kaufen.
+
+Erweiterungen aus Version 1.2:
+
+Aktionsmenü:
+Clonk transferieren
+
+Clonk transferieren:
+Wurde man als Spam eingerichtet, so kann man den Clonk nicht hintransferieren!
+Erst muss man den zu transferierenden Clonk auswählen (Alle Clonks die in der Handelsstation sind, kann man anwählen.) Wenn man ihn gewählt hat, dann nurnoch den Spieler auswählen, und schon ist man in der Handelsstation dieses Spielers.
+Wenn der Clonk transferiert ist, hat er bekommt er einen Sender, der sich nach 5 Minuten auflöst. Wenn man mit diesem Sender eine fremde Handelsstation betritt, dann aktiviert sich der Sender automatisch, und transferiert den Clonk zu seiner eigenen Handelsstation.
+
+Erweiterungen aus Version 1.3:
+
+Neue Station:
+Bei dieser Station habe ich nur eine neue Grafik erstellt, und die Eingangstöne ein wenig geändert, damit die Station alt wirkt.
+Der Script ist sonst der gleiche.
+Wichtig:
+Man kann immer nur EINE Station bauen, egal von welcher Sorte sie ist.
+Beide Stationssorten funktionieren auch wenn die eine alt, und die andere normal ist.
+
+Erweiterungen aus Version 1.4:
+
+Bugs behoben:
+Wenn man etwas gekauft hat, dann ist der Wähler wieder auf den Ersten eintrag zurückgesprungen.
+Unnötiger Script, keine Beschreibung und kein Name in der Names.txt - Das war der Bug in der Kaputten alten Handelsstation.
+
+Zusätzlicher Effekt:
+Noch zu dem Lichteffekt kommt ein Blitzeffekt.
+
+Neue Icons:
+Für alle Wichtigen Steuerobjekte habe ich ein Icon gemacht, welches die Grafik des Objekts im Miniformat anzeigt.
+
+Erweiterungen aus Version 1.5:
+Neues Gebäude: Außenposten:
+Mit dem Außenposten kann man von jeder Position aus der Landschaft auf die Handelsstation zugreifen. Wenn man Objekte in den Außenposten legt, kann man diese Objekte in die Handelsstation transferieren. (Das geht von Handelsstation zu Außenposten.) Lebewesen können nicht transferiert werden.
+
+Erweiterungen aus Version 1.6:
+Neuer Effekt: Flugkugel:
+Die Flugkugel fliegt von einer Handelsstation zur anderen.
+Bei einem Transfer kommt der Clonk in diesen Effekt rein.
+
+Sender:
+Der Sender, den man bekommt, wenn man sich zu einer anderen Handelsstation transferiert, hat nun eine Laufzeit von 6 Minuten.
+
+Bugs behoben:
+Außenposten hat nun ein Fundament.
+Fundamente werden gleich beim erstellen einer Baustelle erstellt.
+Es werden nurnoch Handelsstationen, die fertig gebaut sind, als Handelsstation anerkannt.
+Fundamente werden werden beim zerstören der Station entfernt.
+
+Erweiterungen aus Version 1.7:
+Der Flugkugeleffekt ist jetzt sozusagen Lieferant für alles. Gekaufte Objekte müssen erst mit diesem Effekt 'angereist' kommen. Genauso läft das auch bei einem Transfer mit dem Außenposten und bei der Geldüberweisung.
+Sounds für Flugkugeleffekt eingefügt.
+Man kann seine Clonks nun auch aus dem Außenposten in die Handelsstation transferieren, und auch wieder zurück. Jeder Außenposten bekommt einen Indexwert, damit man sie von anderen Außenposten unterscheiden kann.
+
+By Mega - Clonker

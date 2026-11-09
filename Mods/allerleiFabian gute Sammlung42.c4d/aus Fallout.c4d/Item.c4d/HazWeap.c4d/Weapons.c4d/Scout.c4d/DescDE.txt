@@ -1,0 +1,6 @@
+Ein starkes Scharfschützengewehr mit niedriger Schussfrequenz, Reichweite 1000.
+Kann nicht aus der Hüfte abgeschossen werden, aber während des Versteckens.
+
+Benötigt Sniperkugeln.
+Aufrüstbar mit:
+-Waffenteil (fügt eine zweite Ladekammer hinzu, sodass 2 Schuss vor dem Nachladen abgegeben werden können.)

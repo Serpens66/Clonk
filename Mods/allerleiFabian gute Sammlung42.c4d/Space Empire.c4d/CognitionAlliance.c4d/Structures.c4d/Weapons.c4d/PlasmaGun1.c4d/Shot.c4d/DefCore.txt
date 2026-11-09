@@ -1,0 +1,13 @@
+[DefCore]
+id=CPS1
+Name=Plasmashot1
+Version=4,9,1,4
+Category=4
+Width=4
+Height=12
+Offset=-2,-6
+Mass=1
+Picture=0,0,4,12
+Vertices=1
+Rotate=1
+NoStabilize=1

@@ -1,0 +1,2 @@
+Hilfsobjekt zur Anzeige von Gebäuden vor dem Bau.
+Rest in Conkit selbst geschrieben.

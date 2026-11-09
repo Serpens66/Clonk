@@ -1,0 +1,2 @@
+DE:Schlafen
+US:Sleep

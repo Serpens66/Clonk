@@ -1,0 +1,2 @@
+DE:Blasterschuss
+US:blaster shot

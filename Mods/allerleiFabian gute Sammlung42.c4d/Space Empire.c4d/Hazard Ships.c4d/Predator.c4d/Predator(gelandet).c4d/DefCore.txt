@@ -1,0 +1,23 @@
+[DefCore]
+id=PRL_
+Name=Predator(Gelandet)
+Version=4,9,5
+Category=4
+Width=50
+Height=50
+Offset=-25,-25
+Value=500
+Mass=80
+Vertices=8
+VertexX=   0 ,  0,15,-15,17,-17,  7, -7
+VertexY=   25,-20,11, 11,-5, -5,-10,-10
+VertexCNAT=8 ,  4, 1,  2, 1,  2,  1,  2
+VertexFriction=20,20,15,15,15,15,35,35
+ContactCalls=1
+Rebuy=1
+Entrance=-10,0,20,25
+ColorByOwner=1
+BorderBound=7
+Rotate=1
+Grab=1
+CollectionLimit=1

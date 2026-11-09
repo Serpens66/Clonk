@@ -1,0 +1,1 @@
+Speichert Energie und gibt sie bei Bedarf wieder ab.

@@ -1,0 +1,7 @@
+[Action]
+Name=Process
+Length=1
+Delay=5
+FacetBase=1
+NextAction=Process
+StartCall=Wasting

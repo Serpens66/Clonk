@@ -1,0 +1,1 @@
+Zeigt die Energiemenge an, die die Geschützplattform geladen hat.

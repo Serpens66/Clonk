@@ -1,0 +1,8 @@
+[DefCore]
+id=_BAL
+Name=Stärkung der Umwelt
+Category=1040
+Width=1
+Height=1
+Picture=0,0,35,35
+ 

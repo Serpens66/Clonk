@@ -1,0 +1,2 @@
+DE:Ereignis-Info
+US:Event info

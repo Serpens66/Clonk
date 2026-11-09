@@ -1,0 +1,11 @@
+[Action]
+Name=Fire
+Delay=1
+NextAction=Fire
+StartCall=Firing
+
+[Action]
+Name=Reload
+NextAction=Idle
+Length=1
+Delay=30

@@ -1,0 +1,5 @@
+TurnOff=Turn On
+TurnOn=Turn Off
+Repair=Repair
+Arm=Bewaffnen
+Unarm=Bewaffnung entfernen

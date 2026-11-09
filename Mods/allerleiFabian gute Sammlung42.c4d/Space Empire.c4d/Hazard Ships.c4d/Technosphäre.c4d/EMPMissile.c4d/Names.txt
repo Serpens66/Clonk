@@ -1,0 +1,2 @@
+DE:EMP-Suchrakete
+US:EMP-Homing missile

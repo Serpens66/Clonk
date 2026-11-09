@@ -1,0 +1,6 @@
+[Action]
+Name=Radiate
+Delay=30
+NextAction=Radiate
+EndCall=Radiate
+Sound=Geiger

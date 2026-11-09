@@ -1,0 +1,7 @@
+[DefCore]
+id=MNMD
+Name=Vorrat erschöft
+Category=1
+Picture=0,0,34,34
+
+ 

@@ -1,0 +1,9 @@
+[DefCore]
+id=APEC
+Version=4,9,1,4
+Name=#appendtoElevatorCase
+Category=1
+Width=1
+Height=1
+Offset=0,0
+Picture=0,0,1,1

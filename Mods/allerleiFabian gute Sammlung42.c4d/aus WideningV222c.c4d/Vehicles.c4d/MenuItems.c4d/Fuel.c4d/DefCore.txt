@@ -1,0 +1,12 @@
+[DefCore]
+id=8P2M
+Name=MenuItem
+Category=1
+Width=35
+Height=35
+Offset=-17,-17
+Value=0
+Mass=0
+Components=WOOD=1;
+Picture=0,0,35,35
+ 

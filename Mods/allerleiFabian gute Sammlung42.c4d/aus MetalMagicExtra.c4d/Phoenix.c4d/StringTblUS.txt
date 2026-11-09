@@ -1,0 +1,4 @@
+TxtMovement=Move
+TxtAttack=Bite
+TxtLeave=Retransform
+MsgCultsite=%s will be summoned at the cultsite.

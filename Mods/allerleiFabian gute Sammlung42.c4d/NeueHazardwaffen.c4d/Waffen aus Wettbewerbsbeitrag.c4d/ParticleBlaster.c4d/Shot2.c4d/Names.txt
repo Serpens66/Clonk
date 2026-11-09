@@ -1,0 +1,2 @@
+DE:Schuss2 Partikelblaster
+US:Ammo

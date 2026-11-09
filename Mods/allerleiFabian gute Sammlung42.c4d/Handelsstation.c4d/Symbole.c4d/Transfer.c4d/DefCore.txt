@@ -1,0 +1,7 @@
+[DefCore]
+id=TRAN
+Name=Transfer
+Category=1
+Picture=0,0,69,69
+
+ 

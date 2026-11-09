@@ -1,0 +1,10 @@
+[DefCore]
+id=S_22
+Name=Symbol schieben
+Version=4,9,5
+Category=1
+Width=16
+Height=16
+Offset=-8,-8
+Components=S_11=1;
+Picture=2,2,40,36

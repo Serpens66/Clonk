@@ -1,0 +1,9 @@
+[DefCore]
+id=EVSC
+Version=4,9,5
+Name=Umweltobjekte auswählen
+Category=524289
+MaxUserSelect=1
+Width=1
+Height=1
+Picture=0,0,35,35

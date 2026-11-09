@@ -1,0 +1,2 @@
+DE:Energie Anzeige
+US:energy display

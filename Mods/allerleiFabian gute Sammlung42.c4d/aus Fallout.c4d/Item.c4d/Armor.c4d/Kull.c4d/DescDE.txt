@@ -1,0 +1,25 @@
+UNFERTIG
+
+Nahkampf 25% 
+Projektile 25% 
+Energie 25% 
+Feuer 25% 
+Bio/Partikel 25% 
+Explosion 25% 
+Stahl/Scharfschützenprojektile 10% 
+
+Ausgerüstet:  Standard:  Marsch:
+HP      +30.000  150.000  +0
+Kampf   +20.000   80.000  +0
+Werfen  +     0   50.000  +15.000
+Springen- 5.000   40.000  +15.000
+Laufen  -15.000   80.000  +25.000
+Klettern -8.000   60.000  +16.000
+Hangeln -8.000   60.000  +16.000
+Swim -10.000  90.000  +25.000
+Atem    -10.000  100.000  +25.000
+Graben  -15.000   60.000  +25.000
+
+Nachtsicht.
+----------------------------------
+Die Spezialeinheit-Rüstung ist ein Allrounder. Man muss aber mittlere Abzüge in der Wendigkeit hinnehmen.

@@ -1,0 +1,3 @@
+Kann in der Landschaft plaziert werden und entfernt Flüssigkeiten.
+
+Ein bissel modifiziert...

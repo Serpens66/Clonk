@@ -1,0 +1,1 @@
+A relais-station which enlarges the range of the wireless energy-net. Equipped with a small energy buffer.

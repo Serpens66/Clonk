@@ -1,0 +1,2 @@
+Die neuen Fundamenttypen.
+Die Nummer hinter der ID BSxx ist die Fundamentbreite dividiert durch 5.

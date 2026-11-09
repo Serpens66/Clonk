@@ -1,0 +1,17 @@
+[DefCore]
+id=ABSR
+Name=StaticSmoke
+Category=9
+
+Value=10
+Mass=10
+Width=62
+Height=60
+Offset=-31,-30
+Picture=0,0,62,60
+Vertices=0
+
+IncompleteActivity=1
+Oversize=1
+StretchGrowth=1
+Float=1

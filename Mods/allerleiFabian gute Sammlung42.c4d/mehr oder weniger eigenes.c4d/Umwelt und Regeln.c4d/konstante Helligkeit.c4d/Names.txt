@@ -1,0 +1,2 @@
+DE:konstante Helligkeit
+US:A new object

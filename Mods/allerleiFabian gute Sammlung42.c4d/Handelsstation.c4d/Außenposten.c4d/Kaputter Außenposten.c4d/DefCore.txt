@@ -1,0 +1,24 @@
+[DefCore]
+id=KAPN
+Name=Kaputter Auﬂenposten
+Category=2
+MaxUserSelect=1
+Width=44
+Height=39
+Offset=-22,-20
+Value=500
+Mass=100
+Components=;ROCK=2;METL=2;
+Picture=0,0,44,39
+Vertices=4
+VertexX=-22,-22,22,22
+VertexY=-20,20,-20,20
+VertexFriction=100,100,100,100
+Construction=1
+ColorByOwner=1
+Exclusive=1
+BlastIncinerate=75
+ConstructTo=ANPN
+Rotate=0
+ContainBlast=1
+TimerCall=Remove

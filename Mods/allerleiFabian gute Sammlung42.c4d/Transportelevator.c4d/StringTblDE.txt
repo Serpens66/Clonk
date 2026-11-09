@@ -1,0 +1,2 @@
+TxtPermanentModeTurnOn=Dauerbetrieb ein
+TxtPermanentModeTurnOff=Dauerbetrieb aus

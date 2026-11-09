@@ -1,0 +1,6 @@
+Aliens aus einer Fernen Galaxie, die durch Wurmlöcher in die Welt der Clonks gesogen wurden. Sie sind sehr aggressiv, und greifen mit ihren Metallscheren am Mund andere Lebewesen an.
+
+Art: Alien
+Herkunftsort: Ferner Planet, wahrscheinlich Mars
+Stärken: Sehr schnell, schnelle Vermehrung
+Schwächen: Sehr schwach, können leicht brennen

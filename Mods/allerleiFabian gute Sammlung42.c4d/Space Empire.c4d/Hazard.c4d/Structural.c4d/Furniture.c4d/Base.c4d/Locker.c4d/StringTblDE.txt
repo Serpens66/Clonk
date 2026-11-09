@@ -1,0 +1,2 @@
+MsgLocked=Geschlossen
+

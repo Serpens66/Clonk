@@ -1,0 +1,12 @@
+[DefCore]
+id=OILR
+Name=Öl Herstellung
+Version=4,9,5
+Category=1040
+Width=1
+Height=1
+Offset=0,0
+Value=25
+Mass=50
+Components=COAL=10;BARL=1;
+Picture=8,0,60,80

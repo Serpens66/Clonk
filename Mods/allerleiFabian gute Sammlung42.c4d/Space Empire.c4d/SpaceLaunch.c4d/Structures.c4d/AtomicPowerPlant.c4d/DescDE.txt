@@ -1,0 +1,3 @@
+Erzeugt Strom aus Brennstäben (aus Uranerz), dabei ensteht radioaktives Plutonium und Atommüll als Abfallprodukt, dem man nicht zu nahe kommen sollte. Vorsicht: Eine Explosion des Reaktors wirkt sich nicht gerade gesundheitsfördernd aus!
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=100.
+Umweltschaden des Gebäudes= 20 bis 70.

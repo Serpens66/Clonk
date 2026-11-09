@@ -1,0 +1,8 @@
+Made of Combat Leather Jacket and 6 Metall.|
+Cost - 100. Mass - 35.|
+Normal 30% |
+Laser 75% |
+Fire 10% |
+Plasma 20% |
+Explosion 25% |
+Electric 0% |

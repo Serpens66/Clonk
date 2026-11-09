@@ -1,0 +1,2 @@
+DE:Realistischere Treffergeschwindigkeit
+US:A new object

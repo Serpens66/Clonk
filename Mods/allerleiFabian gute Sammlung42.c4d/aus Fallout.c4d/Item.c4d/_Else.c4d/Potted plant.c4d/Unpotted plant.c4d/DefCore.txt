@@ -1,0 +1,19 @@
+[DefCore]
+id=EI8Z
+Version=4,9,8
+Name=Unpotted plant
+Category=C4D_Object
+Width=12
+Height=18
+Offset=-7,-9
+Vertices=3
+VertexX=-5,5
+VertexY=7,7,-5
+VertexFriction=30,30,30
+Timer=50
+TimerCall=Plant
+Mass=12
+Components=EI8Z=1
+Picture=12,0,63,78
+Rotate=1
+Float=1

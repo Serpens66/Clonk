@@ -1,0 +1,1 @@
+Erstellt alle x Frames mit einer Chance von 1 zu y die Nebelentfernerregel. 

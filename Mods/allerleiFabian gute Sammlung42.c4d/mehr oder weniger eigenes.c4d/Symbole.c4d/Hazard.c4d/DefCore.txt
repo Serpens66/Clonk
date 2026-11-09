@@ -1,0 +1,21 @@
+[DefCore]
+id=S_XY
+Version=4,9,8
+Name=Brotherhood Armor
+Category=1
+MaxUserSelect=10
+Width=15
+Height=12
+Offset=-7,-6
+Vertices=2
+VertexX=-3,4
+VertexY=-4,3
+VertexFriction=50,50
+Components=S_C2=1;OBRL=2;ABRL=1;LNKT=1
+Value=155
+Mass=25
+Picture=20,0,110,145
+Rebuy=1
+Collectible=1
+Float=1
+NoComponentMass=1

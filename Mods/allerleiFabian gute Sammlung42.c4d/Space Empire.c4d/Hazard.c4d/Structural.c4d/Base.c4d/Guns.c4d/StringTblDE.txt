@@ -1,0 +1,4 @@
+TurnOn=Geschütze einschalten
+TurnOff=Geschütze ausschalten
+Arm= Bewaffnen/Entwaffnen
+Unarm=Entwaffnen

@@ -1,0 +1,2 @@
+DE:Stahlmantelkugeln
+US:Bullets

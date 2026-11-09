@@ -1,0 +1,4 @@
+Entsteht bei chemischen oder biologischen Produktionsprozessen, bis zu 10 Stück können in ein Chemiefass zusammengefasst werden. Beim Aufprall könnte es sich in Schlacke verwandeln, setzt dabei aber für kurze Zeit den 4fachen Schadenswert frei.
+Umweltschädigend=50
+Wenn vergraben (Erde oder ähnliches darauf geschüttet), nur halb so schädigend.
+Kann in Müllverbrennungsanlage verbrannt werden.

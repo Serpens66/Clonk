@@ -1,0 +1,9 @@
+[Action]
+Name=Fade
+Procedure=ATTACH
+Facet=0,0,59,59
+Delay=1
+Length=4
+NextAction=Fade
+EndCall=Remove
+ 

@@ -1,0 +1,10 @@
+[DefCore]
+id=S_10
+Name=Symbol Klettern
+Version=4,9,5
+Category=1
+Width=16
+Height=16
+Offset=-8,-8
+Components=S_10=1;
+Picture=0,0,26,30

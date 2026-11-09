@@ -1,0 +1,8 @@
+[DefCore]
+id=DYYN
+Name=Verbesserter Dynamo
+Version=4,9,5
+Value=1
+Category=1040
+Picture=0,44,64,64
+MaxUserSelect=1

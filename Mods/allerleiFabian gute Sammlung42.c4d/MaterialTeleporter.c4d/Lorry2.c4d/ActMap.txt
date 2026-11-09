@@ -1,0 +1,11 @@
+[Action]
+EnergyUsage=100
+Name=NeedEnergy
+Length=2
+FacetBase=1
+NextAction=Idle
+
+
+
+
+

@@ -1,0 +1,5 @@
+[DefCore]
+id=MBGD
+Name=Kohle Her
+Category=1
+Picture=0,0,44,44

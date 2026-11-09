@@ -1,0 +1,14 @@
+[Particle]
+Name=Snow
+MaxCount=3000
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+CollisionFn=Die
+Face=0,0,32,32,-16,-16
+Delay=0
+Repeats=1
+RByV=1
+GravityAcc=0
+VertexCount=1
+#Parallaxity=75,100

@@ -1,0 +1,8 @@
+[Action]
+Name=Glowing
+Procedure=ATTACH
+Length=1
+Delay=5
+Facet=0,0,115,36
+NextAction=Glowing
+EndCall=UpdateGlow

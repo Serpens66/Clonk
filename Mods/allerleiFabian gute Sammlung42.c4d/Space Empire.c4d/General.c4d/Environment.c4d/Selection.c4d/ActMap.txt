@@ -1,0 +1,13 @@
+[Action]
+Name=Init
+Procedure=NONE
+Delay=1
+NextAction=Active
+EndCall=PostInit
+
+[Action]
+Name=Active
+Procedure=NONE
+Delay=5
+NextAction=Active
+EndCall=Check

@@ -1,0 +1,2 @@
+Zum Verlegen von Energieleitungen und Rohren. Anwendung: vor einem Versorgergebäude 'Leitung anschließen' wählen, dann vor das Zielgebäude laufen und wieder 'Leitung anschließen' wählen. Die erste an eine Pumpe angeschlossene Leitung wird immer ein Zuflussrohr, die zweite ein Abflussrohr.
+Energieleitungen haben eine begrenzte Kapazität. So kann es sein, dass bei hohen Energieverbrauchern mehrere Leitungen benötigt werden, damit die Übertragungsrate der Verbrauchsrate näher kommt.

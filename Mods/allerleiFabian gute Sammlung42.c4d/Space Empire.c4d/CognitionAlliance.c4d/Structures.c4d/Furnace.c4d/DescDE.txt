@@ -1,0 +1,8 @@
+Kann aus Holz, Kohle, Öl, Wasserstoffflasche und Leichen Strom erzeugen. 
+(andere Müllarten werden noch hinzugefügt)
+
+
+noch hinzufügen:
+
+Umweltschaden des Gebäudes= 10 bis 20.
+Außerdem verbleibt der schädliche Rauch der Produktion eine Zeit lang (ca.2min) in der Umwelt und sorgt für diese Zeit pro hergestelltem Objekt für einen Umweltschaden=10.

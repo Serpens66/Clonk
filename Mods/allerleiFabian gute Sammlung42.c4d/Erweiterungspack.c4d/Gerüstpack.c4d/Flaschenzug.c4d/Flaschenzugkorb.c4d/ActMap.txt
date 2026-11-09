@@ -1,0 +1,16 @@
+[Action]
+Name=Ride
+Procedure=FLOAT
+Delay=25
+FacetBase=1
+NextAction=Ride
+Sound=Elevator
+
+[Action]
+Name=Wait
+Procedure=FLOAT
+Length=1
+Delay=100
+FacetBase=1
+NextAction=Wait
+EndCall=Waiting

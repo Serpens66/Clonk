@@ -1,0 +1,2 @@
+DE:Schnee (schneegrafiken in Objects von Newton)
+US:New object folder

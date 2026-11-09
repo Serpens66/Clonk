@@ -1,0 +1,2 @@
+DE:Waffenteil (Upgrade)
+US:Weaponpart
