@@ -1,6 +1,6 @@
 /*-- Streifen --*/
 
-#strict
+#strict 3
 
 local width,dir;
 
@@ -10,11 +10,14 @@ protected func Initialize() {
 
 public func Set(int iWidth, int iRGB, bool bDir)
 {
+  iWidth ??= 0;
+  iRGB ??= 0;
+  bDir ??= false;
   width = iWidth;
   dir = !!bDir;
-  SetShape(-width/2, -4, width, 8);
-  var w = 1000*iWidth/8;
-  SetObjDrawTransform(w,(1+dir*-2)*1000,0,0,1000,0,0,0);
+  SetShape(-(width ?? 0)/2, -4, width, 8);
+  var w = 1000*(iWidth ?? 0)/8;
+  SetObjDrawTransform(w,(1+(dir ?? 0)*-2)*1000,nil,nil,1000,nil,nil,nil);
   // Farbe
   SetColorDw(iRGB);
 }
@@ -28,5 +31,5 @@ public func UpdateTransferZone()
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("Set(%d,%d,%d)", width, GetColorDw(), dir);
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%d,%d,%d)", width, GetColorDw(), dir);
 }

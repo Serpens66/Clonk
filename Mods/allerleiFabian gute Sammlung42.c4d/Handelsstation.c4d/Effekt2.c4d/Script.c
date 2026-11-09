@@ -1,66 +1,73 @@
 /*-- Effekt --*/
 
-#strict
+#strict 3
 
 local Target, XDir, YDir, Modus, value, Player;
 
-SetTarget:
-  Target=Par(0);
+func SetTarget(...) {
+  Target=Par(nil);
   Modus=Par(1);
   value=Par(2);
   Player=Par(3);
   SetAction("Fly");
   return(1);
+}
 
-Pos:
-  CreateObject(EFK2,0,5);
+func Pos(...) {
+  CreateObject(EFK2,nil,5);
   SetR( Angle(GetX(),GetY() , GetX(Target),GetY(Target) ) );
 //Bewegen:
-  XDir = +Sin(GetR(),10);
-  YDir = -Cos(GetR(),10);
+  XDir = +(Sin(GetR(),10) ?? 0);
+  YDir = -(Cos(GetR(),10) ?? 0);
   SetXDir(XDir);
   SetYDir(YDir);
-  if(Distance(GetX(),GetY() , GetX(Target),GetY(Target)) < 40)
+  if((Distance(GetX(),GetY() , GetX(Target),GetY(Target)) ?? 0) < 40)
     Action();
   return(1);
+}
 
-Action:
-  if(Modus==0)
+func Action(...) {
+  if(Equal(Modus, nil))
     return(ModeOne());
-  if(Modus==1)
+  if(Equal(Modus, 1))
     return(ModeTwo());
-  if(Modus==2)
+  if(Equal(Modus, 2))
     return(ModeThree());
   return(1);
+}
 
-ModeOne:
+func ModeOne(...) {
   var obj;
-  while(obj=FindObject(0,0,0,0,0,0,0,0,this(),0))
+  while(obj=FindObject(nil,nil,nil,nil,nil,nil,nil,nil,this(),nil))
 {
-    Exit(obj,0,0);
+    Exit(obj,nil,nil);
     SetPosition(GetX(Target),GetY(Target),obj);
 }
   Ready();
   return(1);
+}
 
-ModeTwo:
+func ModeTwo(...) {
   var obj;
-  while(obj=FindObject(0,0,0,0,0,0,0,0,this(),0))
+  while(obj=FindObject(nil,nil,nil,nil,nil,nil,nil,nil,this(),nil))
 {
-    Exit(obj,0,0);
+    Exit(obj,nil,nil);
     Enter(Target,obj);
     SetPosition(GetX(Target),GetY(Target),obj);
 }
   Ready();
   return(1);
+}
 
-ModeThree:
-  SetWealth(Player,GetWealth(Player)+value);
+func ModeThree(...) {
+  SetWealth(Player,(GetWealth(Player) ?? 0)+(value ?? 0));
   Ready();
   return(1);
+}
 
-Ready:
+func Ready(...) {
   ObjectCall(Target,"Effekt");
   Sound("Effekt");
   RemoveObject();
   return(1);
+}

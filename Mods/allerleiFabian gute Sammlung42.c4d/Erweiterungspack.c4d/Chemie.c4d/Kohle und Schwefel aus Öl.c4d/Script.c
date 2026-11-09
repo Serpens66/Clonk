@@ -1,6 +1,6 @@
 /*-- Kohle und Schwefel aus Öl --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -10,11 +10,11 @@ protected func Initialize()
 private func Splitting()
 {
   var i= 2;
-  while(i--) Enter(Contained(),CreateObject(COAL,0,0,GetOwner()));
+  while(S42MigrationStep(i, -1, true)) Enter(Contained(),CreateObject(COAL,nil,nil,GetOwner()));
   i= 2;
-  while(i--) Enter(Contained(),CreateObject(SPHR,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(BARL,0,0,GetOwner()));
-  RemoveObject(0,1);
+  while(S42MigrationStep(i, -1, true)) Enter(Contained(),CreateObject(SPHR,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(BARL,nil,nil,GetOwner()));
+  RemoveObject(nil,1);
 }
 
 public func IsChemicalProduct() { return(1); }

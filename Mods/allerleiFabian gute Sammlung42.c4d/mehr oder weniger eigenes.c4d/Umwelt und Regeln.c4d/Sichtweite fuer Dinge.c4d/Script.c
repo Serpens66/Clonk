@@ -1,6 +1,6 @@
 /*-- Sichtweite fuer Dinge --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

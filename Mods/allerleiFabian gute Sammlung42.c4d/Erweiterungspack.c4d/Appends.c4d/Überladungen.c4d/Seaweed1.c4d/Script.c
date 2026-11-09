@@ -1,6 +1,6 @@
 /*-- Seegras --*/
 
-#strict
+#strict 3
 
 local Collectible;
 
@@ -8,10 +8,10 @@ protected func CheckEnvironment()
 {
   if(!Random(ReproductionRate())) Reproduction();
   if (GBackLiquid())
-    if (GetAction() eq "Dry")
+    if (!!SEqual(GetAction(), "Dry"))
       return(StartWiggle());
   if (!GBackLiquid())
-    if (GetAction() eq "Wiggle")
+    if (!!SEqual(GetAction(), "Wiggle"))
       return(StartDry());
   return(1);
 }
@@ -38,19 +38,19 @@ protected func Construction()
 public func Reproduction()
 {
   var iSize= ReproductionAreaSize();
-  var iOffset= iSize /-2;
-  if(ObjectCount(GetID(),iOffset,iOffset,iSize,iSize)< MaxTreeCount())
+  var iOffset= (iSize ?? 0) /-2;
+  if((ObjectCount(GetID(),iOffset,iOffset,iSize,iSize) ?? 0)< (MaxTreeCount() ?? 0))
     {
     var obj= PlaceVegetation(GetID(),iOffset,iOffset,iSize,iSize,10);
     return(1);
     }
-  return(0);
+  return(nil);
 }
 
 private func Growing()
 {
   DoCon(+1);
-  if(GetCon()< 100) ScheduleCall(this(),"Growing",100);
+  if((GetCon() ?? 0)< 100) ScheduleCall(this(),"Growing",100);
 }
 
 protected func RejectEntrance()

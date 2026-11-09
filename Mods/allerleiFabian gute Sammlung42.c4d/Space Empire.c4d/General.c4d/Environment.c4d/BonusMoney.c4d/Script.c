@@ -1,6 +1,6 @@
 /*-- Geldbonus --*/
 
-#strict
+#strict 3
 
 local strength;
 
@@ -22,7 +22,7 @@ protected func Initialize()
 
 public func IncStrength()
 {
-  ++strength;
+  S42MigrationStep(strength, 1);
 }
 
 
@@ -34,13 +34,13 @@ protected func DoBonus()
   var i = GetPlayerCount();
   while (i) 
   {
-    --i;
+    S42MigrationStep(i, -1);
     if (!GetPlayerName(i)) continue;
     // Kontostand erhöhen
-   if (GetWealth(i)<9800)
+   if ((GetWealth(i) ?? 0)<9800)
 {
-    DoWealth(i, +strength);
-    DoScore(i, -strength);
+    DoWealth(i, +(strength ?? 0));
+    DoScore(i, -(strength ?? 0));
 }
   }
 }

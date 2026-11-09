@@ -1,6 +1,6 @@
 /*-- Drain --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -11,6 +11,6 @@ protected func Initialize()
 private func Draining()
 {
   if (GBackLiquid())
-    ExtractMaterialAmount(0, 0, GetMaterial(), 20);
+    ExtractMaterialAmount(nil, nil, GetMaterial(), 20);
   return(1);
 }

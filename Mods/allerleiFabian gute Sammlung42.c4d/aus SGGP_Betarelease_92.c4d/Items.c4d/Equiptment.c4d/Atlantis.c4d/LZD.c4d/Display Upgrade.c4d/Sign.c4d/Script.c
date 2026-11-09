@@ -1,6 +1,6 @@
 /* Marke */
 
-#strict
+#strict 3
 
 local time;
 local name;
@@ -16,11 +16,11 @@ func Disappear()
 {
   Message("%v",this(),GetName(name));
   
-  time --;
-  if (time == 0)
+  S42MigrationStep(time , -1, true);
+  if (Equal(time, nil))
   {
     RemoveObject();
-    return();
+    return;
   }
   return(1);
 }

@@ -2,34 +2,38 @@
 
 local min, sec;
 
-#strict
+#strict 3
 
-Hit:
+func Hit(...) {
   Sound("RockHit*");
   return(1);
+}
 
 
 //Zeitverlauf:
 
-Initialize:
+func Initialize(...) {
   min=6;
-  sec=0;
+  sec=nil;
   Message("@%d:%d",this(),min,sec);
   return(1);
+}
 
-Testen:
+func Testen(...) {
   if(!sec)
 {
-    min--;
+    S42MigrationStep(min, -1, true);
 //5 Minuten abgelaufen:
     if(!min)
       return(Weg());
     sec=60;
 }
-  sec--;
+  S42MigrationStep(sec, -1, true);
   Message("@%d:%d",this(),min,sec);
   return(1);
+}
 
-Weg:
+func Weg(...) {
   RemoveObject();
   return(1);
+}

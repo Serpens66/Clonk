@@ -1,25 +1,26 @@
 /*-- Brustwehr --*/
 
-#strict
+#strict 3
 
 public func AttachTo(object pTarget, int iDir)
 {
+  iDir ??= 0;
   SetAction("Attach", pTarget);
   SetDir(iDir);
-  SetSolidMask(4, 15 * GetDir(), 3, 14);
+  SetSolidMask(4, 15 * (GetDir() ?? 0), 3, 14);
   return(1);
 }
 
 private func CheckTarget()
 {
   // Anderes Bauteil im Hintergrund
-  if (FindCastlePart(0, +1))
+  if (FindCastlePart(nil, +1))
     return(RemoveObject());
 
   // Wand ist zersört worden
   if (!GetActionTarget())
     return(RemoveObject());
-  if (!(GetActionTarget()->GetOCF() & OCF_Fullcon()) || !GetActionTarget()->~CastlePartWidth())
+  if (Or(!((GetActionTarget()->GetOCF() ?? 0) & (OCF_Fullcon ?? 0)), !GetActionTarget()->~CastlePartWidth()))
     return(RemoveObject());
   return(1);
 }
@@ -32,33 +33,37 @@ public func CastleChange()
 private func FindCastlePart(int iOffsetX, int iOffsetY)
 {
   // Anderes Bauteil in entsprechender Richtung suchen
+  iOffsetX ??= 0;
+  iOffsetY ??= 0;
   var pPart;
-  while (pPart = FindObject(0, iOffsetX, iOffsetY, 0,0, 0,0,0, NoContainer(), pPart))
+  while (pPart = FindObject(nil, iOffsetX, iOffsetY, nil,nil, nil,nil,nil, NoContainer(), pPart))
     if (pPart->~CastlePartWidth())
       return(pPart);
   // Keins gefunden
-  return(0);
+  return(nil);
 }
   
 private func FindStaircase(int iOffsetX, int iOffsetY)
 {
   // Anderes Treppenhaus in entsprechender Richtung suchen
+  iOffsetX ??= 0;
+  iOffsetY ??= 0;
   var pPart;
-  while (pPart = FindObject(0, iOffsetX, iOffsetY, 0,0, 0,0,0, NoContainer(), pPart))
-    if (pPart->GetOCF() & OCF_Fullcon())
+  while (pPart = FindObject(nil, iOffsetX, iOffsetY, nil,nil, nil,nil,nil, NoContainer(), pPart))
+    if ((pPart->GetOCF() ?? 0) & (OCF_Fullcon ?? 0))
       if (pPart->~IsStaircase())
       	return(pPart);
   // Keins gefunden
-  return(0);
+  return(nil);
 }
 
 /* Transfer */
 
 protected func UpdateTransferZone()
 {
-  SetTransferZone(-18 + 15 * GetDir(), -15, 20, 30);
+  SetTransferZone(-18 + 15 * (GetDir() ?? 0), -15, 20, 30);
   // SolidMasks alter Burgen anpassen
-  return(SetSolidMask(4, 14 * GetDir(), 3, 14));
+  return(SetSolidMask(4, 14 * (GetDir() ?? 0), 3, 14));
 }
 
 protected func ControlTransfer(object pClonk, int iTx, int iTy)
@@ -68,40 +73,42 @@ protected func ControlTransfer(object pClonk, int iTx, int iTy)
   //          der Clonk sich nie wirklich durch die Transferzone
   //          der Brustwehr bewegen soll.
 
+  iTx ??= 0;
+  iTy ??= 0;
   var pStairs;
   
   // Clonk ist unterhalb der Brustwehr...
-  if (pClonk->GetY() > GetY() + 15)
+  if ((pClonk->GetY() ?? 0) > (GetY() ?? 0) + 15)
     // ...und will nach oben hinter die Brustwehr
-    if (iTy < GetY() + 15)    
-    	if (((GetDir() == 0) && (iTx > GetX())) || ((GetDir() == 1) && (iTx < GetX() - 2)))
+    if ((iTy ?? 0) < (GetY() ?? 0) + 15)
+        if (Or((And((Equal(GetDir(), nil)), ((iTx ?? 0) > (GetX() ?? 0)))), (And((Equal(GetDir(), 1)), ((iTx ?? 0) < (GetX() ?? 0) - 2)))))
         // Soll durch das darunterliegende Treppenhaus aufsteigen
-        if (pStairs = FindStaircase(10 - 20 * GetDir(), 10))
+        if (pStairs = FindStaircase(10 - 20 * (GetDir() ?? 0), 10))
         {
-        	AddCommand(pClonk, "MoveTo", 0, pStairs->GetX(), iTy);
-        	AddCommand(pClonk, "MoveTo", 0, pStairs->GetX(), pStairs->GetY());
-        	return(0);
+                AddCommand(pClonk, "MoveTo", nil, pStairs->GetX(), iTy);
+                AddCommand(pClonk, "MoveTo", nil, pStairs->GetX(), pStairs->GetY());
+                return(nil);
        	}
 
   // Clonk ist oberhalb der Brustwehr...
-  if (pClonk->GetY() < GetY() + 15)
+  if ((pClonk->GetY() ?? 0) < (GetY() ?? 0) + 15)
     // ...und will nach unten
-    if (iTy > GetY() + 14)
+    if ((iTy ?? 0) > (GetY() ?? 0) + 14)
       // Soll durchs Treppenhaus gehen
-      if (pStairs = FindStaircase(10 - 20 * GetDir(), 10))
+      if (pStairs = FindStaircase(10 - 20 * (GetDir() ?? 0), 10))
       {
-      	AddCommand(pClonk, "MoveTo", 0, pStairs->GetX(), iTy);
-      	return(0);
+        AddCommand(pClonk, "MoveTo", nil, pStairs->GetX(), iTy);
+        return(nil);
      	}
     
   // Clonk will direkt horizontal durch die Transferzone (ungewöhnlich)
-  if (Inside(pClonk->GetY() - GetY(), -14, +14))
-    if (Inside(iTy - GetY(), -14, +14))
+  if (Inside((pClonk->GetY() ?? 0) - (GetY() ?? 0), -14, +14))
+    if (Inside((iTy ?? 0) - (GetY() ?? 0), -14, +14))
       // Soll er drübersteigen
       {
-      	AddCommand(pClonk, "MoveTo", 0, GetX(), GetY());
-      	return(0);
+        AddCommand(pClonk, "MoveTo", nil, GetX(), GetY());
+        return(nil);
       }
 
-  return(0);
+  return(nil);
 }

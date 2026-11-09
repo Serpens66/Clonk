@@ -1,6 +1,6 @@
 /*-- Maschinengewehr --*/
 
-#strict
+#strict 3
 
 local target, aimphase, phase, restshots;
 local energyneed,buildingg;
@@ -21,14 +21,14 @@ public func Init(building, mode, vx, vy, direction)
 buildingg=building;
   SetAction("Wait", building);
   if (mode) energyneed = 20;
-       else energyneed = 0;
-  SetVertex(0,0, GetVertex(0,0)+vx);
-  SetVertex(0,1, GetVertex(0,1)+vy);
+       else energyneed = nil;
+  SetVertex(nil,nil, (GetVertex(nil,nil) ?? 0)+(vx ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1) ?? 0)+(vy ?? 0));
   // Ausrichtung
-  if (direction == 0)
-    if (GetX() < LandscapeWidth()/2) direction = +1;
+  if (Equal(direction, nil))
+    if ((GetX() ?? 0) < (LandscapeWidth() ?? 0)/2) direction = +1;
                                 else direction = -1;
-  if (direction < 0) phase = 40;
+  if ((direction ?? 0) < 0) phase = 40;
                 else phase = 8;
   SetPhase(phase);
 }
@@ -36,7 +36,7 @@ buildingg=building;
 protected func Destruction()
 {
   var obj;
-  while (obj = FindObject(SMGF, 0,0,0,0, 0,"Show",this()))
+  while (obj = FindObject(SMGF, nil,nil,nil,nil, nil,"Show",this()))
     RemoveObject(obj);
 }
 
@@ -55,8 +55,8 @@ protected func Waiting()
 private func CheckTurnLeft()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (--phase < 0) phase = 47;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, -1) < 0) phase = 47;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -66,8 +66,8 @@ private func CheckTurnLeft()
 private func CheckTurnRight()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (++phase > 47) phase = 0;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, 1) > 47) phase = nil;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -77,15 +77,15 @@ private func CheckTurnRight()
 private func FireBullet(cannon)
 {
   // Kugel abschiessen
-  var bullet = CreateObject(SMG4,0,0,GetOwner());
-  var angle = phase*15/2 + Random(13)-6;
-  var xdir = +Sin(angle, 100);
-  var ydir = -Cos(angle, 100);
+  var bullet = CreateObject(SMG4,nil,nil,GetOwner());
+  var angle = (phase ?? 0)*15/2 + (Random(13) ?? 0)-6;
+  var xdir = +(Sin(angle, 100) ?? 0);
+  var ydir = -(Cos(angle, 100) ?? 0);
   var xofs = GetXoffset(phase,cannon);
   var yofs = GetYoffset(phase);
-  bullet->Launch(GetX()+xofs, GetY()+yofs, xdir,ydir, angle);
+  bullet->Launch((GetX() ?? 0)+(xofs ?? 0), (GetY() ?? 0)+(yofs ?? 0), xdir,ydir, angle);
   // Mündungsfeuer
-  CreateObject(SMGF)->Config(this(), xofs,yofs, phase*15/2);
+  CreateObject(SMGF)->Config(this(), xofs,yofs, (phase ?? 0)*15/2);
 }
 
 protected func Firing()
@@ -93,9 +93,9 @@ protected func Firing()
   // Phase resetten
   SetPhase(phase);
   // beide Kanonen schiessen je eine MG-Kugel
-  --restshots;
+  S42MigrationStep(restshots, -1);
   var cannon;
-  for (cannon; cannon < 2; ++cannon)
+  for (cannon; (cannon ?? 0) < 2; S42MigrationStep(cannon, 1))
     FireBullet(cannon);
   // genug geballert?
   if (restshots) return(1);
@@ -110,8 +110,8 @@ private func ResetAimPhase()
 {
   // Energieverbrauch
   var building = GetActionTarget();
-  if (GetEnergy(building) < energyneed)
-    return(0);
+  if ((GetEnergy(building) ?? 0) < (energyneed ?? 0))
+    return(nil);
   // Ziel suchen
   target = GetTargetCrew(500);                    // verfeindeter Clonk
   if (!target) target = GetTargetVehicle(500);    // gegnerisches Fahrzeug
@@ -119,16 +119,16 @@ private func ResetAimPhase()
   if (!target) target = GetOtherThreats(500); // feindliche Raumgleiter, gefährliche tiere und aliens
   if (!target) return(1);
   // Ausrichtungswinkel
-  var angle = Angle(GetX(),GetY(), GetX(target)+GetXDir(target), GetY(target)+GetYDir(target));
-  aimphase = ((angle*2 + 7) / 15) % 48;
+  var angle = Angle(GetX(),GetY(), (GetX(target) ?? 0)+(GetXDir(target) ?? 0), (GetY(target) ?? 0)+(GetYDir(target) ?? 0));
+  aimphase = (((angle ?? 0)*2 + 7) / 15) % 48;
   // passt die Ausrichtung schon?
-  if (phase == aimphase)
+  if (Equal(phase, aimphase))
   {
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(STAP,0,0,0,0,0,0,0,buildingg);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(STAP,nil,nil,nil,nil,nil,nil,nil,buildingg);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
  munitionspack->~RestAmmoreduzieren(Munitionsverbrauch()); // restmunition im Paket wird pro Salve reduziert
     // Feuern!
@@ -138,14 +138,14 @@ if(munitionspack)
     // Sound
     Sound("AutoGun*");
     // Energieverbrauch
-    DoEnergy(-energyneed, building);
+    DoEnergy(-(energyneed ?? 0), building);
     return(1);
 }
   // neu ausrichten
-  if ((phase < aimphase) ^ Inside(phase-aimphase, -24, +24))
+  if ((((phase ?? 0) < (aimphase ?? 0)) ?? 0) ^ (Inside((phase ?? 0)-(aimphase ?? 0), -24, +24) ?? 0))
   {
     SetAction("TurnLeft");
-    SetPhase((48-phase) % 48);
+    SetPhase((48-(phase ?? 0)) % 48);
     return(1);
   }
   SetAction("TurnRight");
@@ -161,7 +161,7 @@ private func GetShotsPerAttack()  { return(7); }
 private func InitLocals()
 {
   // X-Werte          // mehr X-Werte     // Y-Werte
-  Local(0)  = -4;     Local(24) = -4;     Local(48) = -11;
+  Local(nil)  = -4;     Local(24) = -4;     Local(48) = -11;
   Local(1)  = -3;     Local(25) = -5;     Local(49) = -11;
   Local(2)  = -2;     Local(26) = -6;     Local(50) = -11;
   Local(3)  = -1;     Local(27) = -7;     Local(51) = -10;
@@ -181,7 +181,7 @@ private func InitLocals()
   Local(17) = +5;     Local(41) = -11;    Local(65) = +9;
   Local(18) = +3;     Local(42) = -10;    Local(66) = +9;
   Local(19) = +2;     Local(43) = -9;     Local(67) = +10;
-  Local(20) = 0;      Local(44) = -8;     Local(68) = +10;
+  Local(20) = nil;      Local(44) = -8;     Local(68) = +10;
   Local(21) = -1;     Local(45) = -7;     Local(69) = +10;
   Local(22) = -2;     Local(46) = -6;     Local(70) = +11;
   Local(23) = -3;     Local(47) = -5;     Local(71) = +11;
@@ -192,8 +192,8 @@ private func GetXoffset(phase, cannon)
   // rechte Kanone
   if (cannon)
   { 
-    phase = (48-phase) % 48;
-    return(-Local(phase)-1);
+    phase = (48-(phase ?? 0)) % 48;
+    return(-(Local(phase) ?? 0)-1);
   }
   // linke Kanone
   return(Local(phase));
@@ -202,15 +202,16 @@ private func GetXoffset(phase, cannon)
 private func GetYoffset(phase)
 {
   // auf Phase zwischen 0 und 24 zurückrechnen
-  if (phase > 24)
-    phase = (48-phase) % 48;
-  return(Local(phase+48));
+  if ((phase ?? 0) > 24)
+    phase = (48-(phase ?? 0)) % 48;
+  return(Local((phase ?? 0)+48));
 }
 
 
 /* Energieverbrauch */
 
-public EnergyNeed: return(energyneed);
+public func EnergyNeed(...) { return(energyneed);
+}
 
 
 //Munitionsverbrauch eingebaut

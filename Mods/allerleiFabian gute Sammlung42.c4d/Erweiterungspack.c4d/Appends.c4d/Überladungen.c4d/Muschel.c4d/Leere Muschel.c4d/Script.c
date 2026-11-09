@@ -1,6 +1,6 @@
 /*-- Leere Muschel --*/
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -9,5 +9,5 @@ protected func Hit()
 
 private func Perle()
 {
-  if(InLiquid() && !Random(5)) ChangeDef(SHEL);
+  if(And(InLiquid(), !Random(5))) ChangeDef(SHEL);
 }

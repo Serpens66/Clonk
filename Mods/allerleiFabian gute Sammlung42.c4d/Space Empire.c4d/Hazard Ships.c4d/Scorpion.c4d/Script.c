@@ -1,6 +1,6 @@
 /* Scorpion-Raumjäger */
 
-#strict
+#strict 3
 
 public func IsHazardShip()  { return(true); }
 public func IsBulletTarget(){ return(true); }
@@ -27,7 +27,7 @@ protected func Initialize()
 {
   if(!Random(10)) saboteur =1; // jeder 10te Jäger greift Militärgebäude an
   //Spike Erstellen
-  turret=CreateObject(SCS_,0,0,GetOwner());
+  turret=CreateObject(SCS_,nil,nil,GetOwner());
   ObjectSetAction(turret,"Attaching",this());
   SetActionData(256 + 1 , turret);
   turret->Bezug(this());
@@ -46,49 +46,49 @@ func Bezug(_cancer)
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))  return(1);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))  return(1);
   if(brain) return(1);
-  return(0);
+  return(nil);
 }
 
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 //Schaden & Aufprall
 func ContactTop()
 {
-  if (GetXDir()>15)  return(Explosion());
-  if (GetYDir()>15)  return(Explosion());
+  if ((GetXDir() ?? 0)>15)  return(Explosion());
+  if ((GetYDir() ?? 0)>15)  return(Explosion());
   return(1);
 }
 
 func ContactBottom()
 {
-  if (GetXDir()>20)  return(Explosion());
-  if (GetYDir()>20)  return(Explosion());
+  if ((GetXDir() ?? 0)>20)  return(Explosion());
+  if ((GetYDir() ?? 0)>20)  return(Explosion());
   return(1);
 }
 
 func ContactLeft()
 {
-  if (GetYDir()>25)  return(Explosion());
-  if (GetXDir()>25)  return(Explosion());
-  if (GetXDir()<-25) return(Explosion());
-  if (GetXDir()>10)  return(Funken());
-  if (GetXDir()<-10) return(Funken());
+  if ((GetYDir() ?? 0)>25)  return(Explosion());
+  if ((GetXDir() ?? 0)>25)  return(Explosion());
+  if ((GetXDir() ?? 0)<-25) return(Explosion());
+  if ((GetXDir() ?? 0)>10)  return(Funken());
+  if ((GetXDir() ?? 0)<-10) return(Funken());
   return(1);
 }
 
 func ContactRight()
 {
-  if (GetYDir()>25)  return(Explosion());
-  if (GetXDir()>25)  return(Explosion());
-  if (GetXDir()<-25) return(Explosion());
-  if (GetXDir()>10)  return(Funken());
-  if (GetXDir()<-10) return(Funken());
+  if ((GetYDir() ?? 0)>25)  return(Explosion());
+  if ((GetXDir() ?? 0)>25)  return(Explosion());
+  if ((GetXDir() ?? 0)<-25) return(Explosion());
+  if ((GetXDir() ?? 0)>10)  return(Funken());
+  if ((GetXDir() ?? 0)<-10) return(Funken());
   return(1);
 }
 
@@ -109,32 +109,34 @@ func Removal()
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   Removal();
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(40);
-  else FakeExplode(40,0,0,40); //eine explosion, die kein schaden auf der erde macht
+  else FakeExplode(40,nil,nil,40); //eine explosion, die kein schaden auf der erde macht
   return(1);
 }
 
 public func OnDmg(int iDmg, int iType)
 { 
   //Mögliche Resistenzen berücksichtigen
-  if(iType & DMG_Projectile)
+  iDmg ??= 0;
+  iType ??= 0;
+  if((iType ?? 0) & (DMG_Projectile ?? 0))
     return(90);
-  if(iType & DMG_Fire)
+  if((iType ?? 0) & (DMG_Fire ?? 0))
     return(80);
-  if(iType & DMG_Explosion)
+  if((iType ?? 0) & (DMG_Explosion ?? 0))
     return(80);
-  if(iType & DMG_Energy)
+  if((iType ?? 0) & (DMG_Energy ?? 0))
     return(40);
-  if(iType & DMG_Bio)
+  if((iType ?? 0) & (DMG_Bio ?? 0))
     return(50);
 }
 
 func Damage()
 {
-  if(GetDamage()<100) return(0);
+  if((GetDamage() ?? 0)<100) return(nil);
   Explosion();
   return(1);
 }
@@ -142,28 +144,32 @@ func Damage()
 public func EMPShock()
 {
   //Nicht zweimal.
-  if( GetEffect("Damaged", this())) return(0);
+  if( GetEffect("Damaged", this())) return(nil);
   EMPDamaged = 1;
   SetAction("EMP");
   if(heat) RemoveObject(heat);
   AddEffect("Damaged", this(), 190, 20, this(), GetID());
-  SetEntrance(0);
+  SetEntrance(nil);
   return(1);
 }
 
 public func FxDamagedStart(object pTarget, int iEffectNumber, int iTemp)
 {
+iEffectNumber ??= 0;
+iTemp ??= 0;
 }
 
 public func FxDamagedTimer(object pTarget, int iEffectNumber)
 {
+  iEffectNumber ??= 0;
   if(! Contained())
     CreateParticle("PxSpark", RandomX(-2, 2), RandomX(2, 2), RandomX(-2, 2), 4, 30, RGB(187, 214, 224));
 }
 
 public func FxDamagedStop(object pTarget, int iEffectNumber)
 {
-  EMPDamaged = false;
+  iEffectNumber ??= 0;
+  EMPDamaged = nil;
   SetAction("Gelandet");
   SetEntrance(1);
 }
@@ -171,40 +177,40 @@ public func FxDamagedStop(object pTarget, int iEffectNumber)
 //Flugkontrolle
 func Fliegen()
 {
-  if (speed<50) speed=50;
+  if ((speed ?? 0)<50) speed=50;
   SetXDir(Cos(Sum(GetR(),270),speed));
   SetYDir(Sin(Sum(GetR(),270),speed));
-  if(!tarn) CreateParticle("Thrust",Cos( GetR() + 270 , -20),Sin( GetR() + 270, -20),GetXDir()/2,GetYDir()/2,RandomX(70,90),RGBa(50,50,250,60),0,0);
+  if(!tarn) CreateParticle("Thrust",Cos( (GetR() ?? 0) + 270 , -20),Sin( (GetR() ?? 0) + 270, -20),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(70,90),RGBa(50,50,250,60),nil,nil);
 
 //Tarnung  
   if(tarn) 
   {
-  energy-=1;
-  if(energy<0) Enttarnen();
+  S42MigrationAssign(energy, "-=", 1);
+  if((energy ?? 0)<0) Enttarnen();
   }
   
   if(!tarn) 
   {
-  if(energy<200) energy+=1; 
+  if((energy ?? 0)<200) S42MigrationAssign(energy, "+=", 1);
   }
 
 //Schaden sichtbar machen
-  if(GetDamage()>=20)
-  CreateParticle("Smoke2",Cos( GetR() + 270 , -20),Sin( GetR() + 270, -20),GetXDir()/2,GetYDir()/2,GetDamage()*2,RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=50)
-  CreateParticle("Smoke2",Cos( GetR() + 270 , -10+Random(20)),Sin( GetR() + 270, -10+Random(20)),GetXDir()/2,GetYDir()/2,GetDamage(),RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=80)
+  if((GetDamage() ?? 0)>=20)
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , -20),Sin( (GetR() ?? 0) + 270, -20),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,(GetDamage() ?? 0)*2,RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=50)
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , -10+(Random(20) ?? 0)),Sin( (GetR() ?? 0) + 270, -10+(Random(20) ?? 0)),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,GetDamage(),RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=80)
   {
-  CreateParticle("Thrust",Cos( GetR() + 270 , Random(10)),Sin( GetR() + 270, Random(10)),GetXDir()/2,GetYDir()/2,RandomX(70,90),RGBa(255,200,200,60),0,0);
-  CreateParticle("Smoke2",Cos( GetR() + 270 , Random(10)),Sin( GetR() + 270, Random(10)),GetXDir()/2,GetYDir()/2,RandomX(30,50),RGBa(220,200,180,0),0,0);
+  CreateParticle("Thrust",Cos( (GetR() ?? 0) + 270 , Random(10)),Sin( (GetR() ?? 0) + 270, Random(10)),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(70,90),RGBa(255,200,200,60),nil,nil);
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , Random(10)),Sin( (GetR() ?? 0) + 270, Random(10)),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(30,50),RGBa(220,200,180,nil),nil,nil);
   }
-  if(GetDamage()>=90)
-  if(Random(250-GetDamage()*2)==1) DoDamage(1);
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if((GetDamage() ?? 0)>=90)
+  if(Equal(Random(250-(GetDamage() ?? 0)*2), 1)) DoDamage(1);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   SetOwner(GetOwner(pilot));
   SetOwner(GetOwner(pilot),turret);
-  SetEntrance(0); 
+  SetEntrance(nil);
   }
   return(1);
 }
@@ -212,17 +218,17 @@ func Fliegen()
 func Gelandet()
 {
 //Schaden sichtbar machen
-  if(GetDamage()>=50)
-  CreateParticle("Smoke2",Cos( GetR() + 270 , -10+Random(20)),Sin( GetR() + 270, -10+Random(20)),GetXDir()/2,GetYDir()/2,GetDamage(),RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=80)
+  if((GetDamage() ?? 0)>=50)
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , -10+(Random(20) ?? 0)),Sin( (GetR() ?? 0) + 270, -10+(Random(20) ?? 0)),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,GetDamage(),RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=80)
   {
-  CreateParticle("Smoke2",Cos( GetR() + 270 , Random(10)),Sin( GetR() + 270, Random(10)),GetXDir()/2,GetYDir()/2,RandomX(30,50),RGBa(220,200,180,0),0,0);
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , Random(10)),Sin( (GetR() ?? 0) + 270, Random(10)),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(30,50),RGBa(220,200,180,nil),nil,nil);
   }
 //Besitzer zuweisen
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) 
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   SetOwner(GetOwner(pilot));
-  SetEntrance(0); 
+  SetEntrance(nil);
   return(1);
   }
 }
@@ -236,8 +242,8 @@ func ContainedUp()
     Sound("Error");
     return(1);
   }
-  if (speed<120)  speed+=5;
-  SetRDir(0);
+  if ((speed ?? 0)<120)  S42MigrationAssign(speed, "+=", 5);
+  SetRDir(nil);
   return(1);
 }
 
@@ -249,8 +255,8 @@ func ContainedDown()
     Sound("Error");
     return(1);
   }
-  if (speed>50)   speed-=5;
-  SetRDir(0);
+  if ((speed ?? 0)>50)   S42MigrationAssign(speed, "-=", 5);
+  SetRDir(nil);
   return(1);
 }
 
@@ -263,7 +269,7 @@ func ContainedLeft()
     return(1);
   }
   if (SEqual(GetAction(),"Gelandet")) return(1);
-  SetRDir(-7+GetDamage()/40);
+  SetRDir(-7+(GetDamage() ?? 0)/40);
   return(1);
 }
 
@@ -276,7 +282,7 @@ func ContainedRight()
     return(1);
   }
   if (SEqual(GetAction(),"Gelandet")) return(1);
-  SetRDir( 7-GetDamage()/40);
+  SetRDir( 7-(GetDamage() ?? 0)/40);
   return(1);
 }
 
@@ -291,7 +297,7 @@ func ContainedThrow()
     return(1);
   }
   if(!waffensys) Waffensystem();
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   if(brain) pilot=brain;
   ObjectCall(waffensys,"ControlThrow",pilot);
   return(1);
@@ -299,10 +305,10 @@ func ContainedThrow()
 
 func Waffensystem()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   if(waffensys=CreateContents(SCWS, pilot))
   {
-  while(GetID(Contents(0,pilot))!=SCWS)   ShiftContents(pilot);
+  while(!Equal(GetID(Contents(nil,pilot)), SCWS))   ShiftContents(pilot);
   }
   if(brain) waffensys=CreateContents(SCWS, brain);
   waffensys->Bezug(this(),turret);  
@@ -318,21 +324,21 @@ func ContainedDig()
     Sound("Error");
     return(1);
   }
-  CreateMenu(SCR_,Par(0),0,0,0,0);
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s","Waffenmodi",M16G,Par(0));  //Waffenmodi
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s","Tarnung",M77G,Par(0)); //Tarnung
-  AddMenuItem("%s","Triebwerk",M26G,Par(0));   //Triebwerk
-  AddMenuItem("%s","Schadenskontrolle",M56G,Par(0),0,0,0);
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(0));  //Licht ein
-  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(0));  //Licht aus
-  AddMenuItem("%s","Ausstieg",M46G,Par(0),0,0,"Auf dem Boden normaler Ausstieg. In der Luft Schleudersitz!");    //Ausstieg
-  SelectMenuItem(7,Par(0)); 
+  CreateMenu(SCR_,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s","Waffenmodi",M16G,Par(nil));  //Waffenmodi
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s","Tarnung",M77G,Par(nil)); //Tarnung
+  AddMenuItem("%s","Triebwerk",M26G,Par(nil));   //Triebwerk
+  AddMenuItem("%s","Schadenskontrolle",M56G,Par(nil),nil,nil,nil);
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(nil));  //Licht ein
+  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(nil));  //Licht aus
+  AddMenuItem("%s","Ausstieg",M46G,Par(nil),nil,nil,"Auf dem Boden normaler Ausstieg. In der Luft Schleudersitz!");    //Ausstieg
+  SelectMenuItem(7,Par(nil));
   return(1);
 }
 
@@ -367,9 +373,9 @@ func Triebwerk()
   if(heat) RemoveObject(heat);
   return(SetAction("Gelandet"));
   }
-  if (SEqual(GetAction(),"Gelandet") || SEqual(GetAction(),"Attaching"))
+  if (Or(SEqual(GetAction(),"Gelandet"), SEqual(GetAction(),"Attaching")))
   {
-  heat=CreateObject(PRQ_,Cos( GetR() + 270 , -20),Sin( GetR() + 270, -20),GetOwner());
+  heat=CreateObject(PRQ_,Cos( (GetR() ?? 0) + 270 , -20),Sin( (GetR() ?? 0) + 270, -20),GetOwner());
   ObjectSetAction(heat,"Attaching",this());
   SetAction("Fliegen");
   }
@@ -383,19 +389,19 @@ func Tarnung()
   Enttarnen();
   return(1);
   }
-  if(energy<100)
+  if((energy ?? 0)<100)
   {
   Message("Nicht genug Energie.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
-  SetVisibility(VIS_Allies | VIS_Owner);
+  SetVisibility((VIS_Allies ?? 0) | (VIS_Owner ?? 0));
   SetClrModulation(RGBa(180,180,255,100));
-  SetVisibility(VIS_Allies | VIS_Owner,turret);
+  SetVisibility((VIS_Allies ?? 0) | (VIS_Owner ?? 0),turret);
   SetClrModulation(RGBa(180,180,255,100),turret);
-  if(GetOwner()==-1) SetVisibility(VIS_None);
-  if(GetOwner()==-1) SetVisibility(VIS_None,turret);
-  energy-=20;
+  if(Equal(GetOwner(), -1)) SetVisibility(VIS_None);
+  if(Equal(GetOwner(), -1)) SetVisibility(VIS_None,turret);
+  S42MigrationAssign(energy, "-=", 20);
   Nofx();
   Sound("Cloak1",this());
   tarn=1;
@@ -403,11 +409,11 @@ func Tarnung()
 
 func Enttarnen()
 {
-  tarn=0;
+  tarn=nil;
   SetVisibility(VIS_All);
-  SetClrModulation(RGBa(255,255,255,0));
+  SetClrModulation(RGBa(255,255,255,nil));
   SetVisibility(VIS_All,turret);
-  SetClrModulation(RGBa(255,255,255,0),turret);
+  SetClrModulation(RGBa(255,255,255,nil),turret);
   Nofx();
   Sound("Cloak2",this());
   return(1);
@@ -422,14 +428,14 @@ func Nofx()
 
 func Ausstieg()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   DoAmmo(STAM, GetAmmo(STAM,waffensys), pilot); 
   DoAmmo(MIAM, GetAmmo(MIAM,waffensys), pilot); 
   if(waffensys) RemoveObject(waffensys);
   if(SEqual(GetAction(),"Fliegen")) return(Teleport());
   Sound("Airlock1");
   Exit(pilot);
-  pilot=0;
+  pilot=nil;
   SetAction("Gelandet");
   SetEntrance(1);
   return(1);
@@ -441,20 +447,20 @@ func Teleport()
   var Beam;
   Beam=CreateContents(SCB_);
   Enter(Beam,pilot);
-  Exit(Beam,0,0,0,0,20,0);
+  Exit(Beam,nil,nil,nil,nil,20,nil);
   Beam->Down();
   Sound("Cloak2",this());
   if(cancer=FindObject(CAN_)) if(!Hostile(GetOwner(cancer),GetOwner(this())))
   {
   if(cancer->Scorpcheck1())
   {
-  SetRDir(0);
+  SetRDir(nil);
   Nofx();
   return(cancer->Scorpdock1(this()));
   }
   if(cancer->Scorpcheck2())
   {
-  SetRDir(0);
+  SetRDir(nil);
   Nofx();
   return(cancer->Scorpdock2(this()));
   }
@@ -467,7 +473,7 @@ func Teleport()
 
 func Schadenskontrolle()
 {
-  Message("Schaden: %d%.Energie: %d%.",this(),GetDamage(),energy/2);
+  Message("Schaden: %d%.Energie: %d%.",this(),GetDamage(),(energy ?? 0)/2);
   return(1);
 }
 
@@ -476,7 +482,7 @@ func Schadenskontrolle()
 func Brain(_brain) 
 {
 brain=_brain;
-SetEntrance(0);
+SetEntrance(nil);
 }
 
 func Saboteurjaeger() {return(saboteur);}
@@ -490,12 +496,13 @@ func Waffe() { return(waffensys); }
 func Tarned(& tarned, & energized)
  {
  tarned=tarn;
- energized=(energy>100);
+ energized=((energy ?? 0)>100);
  return(1);
  }
 
 func TurretOwner(_owner) { return(SetOwner(_owner,turret)); }
 
 
-public IsVehicleProduct: return(1);
+public func IsVehicleProduct(...) { return(1);
+}
 

@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #appendto CAN_
 #appendto CCD_
 #appendto TCN_

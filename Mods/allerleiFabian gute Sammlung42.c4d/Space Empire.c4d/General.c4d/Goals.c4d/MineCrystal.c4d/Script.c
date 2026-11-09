@@ -1,9 +1,12 @@
 /*-- Kristallmine --*/
 
-#strict
+#strict 3
 #include GGMI
 
-private MatObjsCount:  return(ObjectCount(CRYS));
-private MatPixelCount: return(GetMaterialCount(Material("Crystal")));
-private MatName:       return("Kristall");
+private func MatObjsCount(...) {  return(ObjectCount(CRYS));
+}
+private func MatPixelCount(...) { return(GetMaterialCount(Material("Crystal")));
+}
+private func MatName(...) {       return("Kristall");
+}
 

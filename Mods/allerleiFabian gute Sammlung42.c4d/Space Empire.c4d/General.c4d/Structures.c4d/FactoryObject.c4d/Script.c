@@ -1,6 +1,6 @@
 /*-- Fabrik-Objekt --*/
 
-#strict
+#strict 3
 
 local Factory;                         // Objektzeiger
 local Product, Endless;                // Herstellung
@@ -13,7 +13,7 @@ private func ProductionEndCall(productID)
 {
   // überladen, wenn bei Fertigstellung was anderes passieren soll
   var obj = CreateContents(productID, Factory);
-  if (!obj) return(0);
+  if (!obj) return(nil);
   Sound("Pshshsh");
   return(1);
 }
@@ -37,14 +37,14 @@ if (fact==C_F3) CreateContents(CHWS,Factory);  //Raumschifffabrik (muss in dem s
 protected func Initialize()
 {
   // Produktion zurücksetzen
-  Product = 0;
-  Endless = 0;
+  Product = nil;
+  Endless = nil;
 }
 
 public func Init(par_factory)
 {
   Factory = par_factory;
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) // von alter WErkstatt und alter chemiefabrik 
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) // von alter WErkstatt und alter chemiefabrik
     NeededEnergy = 1000; // dieser wert ist absolut im verhältnis zur max energie von 100.000, wenn bei doenergie der dritte parameter wahr ist, geht das. Nur bei GetEnergy gibts sowas nicht, deswehalb muss da dann weiterhin fuer 1 , also 1000 geprüft werden 
   else  // wenn wert hier verändert wird, darauf achten dass die Berechnungen weiter unten davon ausgehen, dass fuer alte gebäude absolut und für neue gebäude prozent verwendet wird
     NeededEnergy = 5; // in Prozent, als 5% von 100.000
@@ -74,9 +74,9 @@ public func KeyDig(caller)
     GrabNeededComponents();
     // Anzeigestring aufbauen
     var str = "";
-    if (Endless) str = Format("%s (endlos)", GetName(0,Product));
-            else str = Format("%s", GetName(0,Product));
-    if (NextStepPT == FullPT)
+    if (Endless) str = Format("%s (endlos)", GetName(nil,Product));
+            else str = Format("%s", GetName(nil,Product));
+    if (Equal(NextStepPT, FullPT))
       str = Format("%s|Benötigtes Material vorhanden", str);
     else
     {
@@ -84,22 +84,22 @@ public func KeyDig(caller)
       str = Format("%s|Noch benötigt:", str);
       var i = -1;
       var objID, components, used;
-      while (objID = GetComponent(0,++i,0,Product))
+      while (objID = GetComponent(nil,S42MigrationStep(i, 1),nil,Product))
       {
-        components = GetComponent(objID,0,0,Product);
+        components = GetComponent(objID,nil,nil,Product);
         used = ContentsCount(objID);
-        if (used < components)
-          str = Format("%s|%dx %s", str, components-used, GetName(0,objID));
+        if ((used ?? 0) < (components ?? 0))
+          str = Format("%s|%dx %s", str, (components ?? 0)-(used ?? 0), GetName(nil,objID));
       }
     }
     PlayerMessage(GetOwner(Factory), str, Factory);
   }
   // Auftragsmenü öffnen
-  CreateMenu(GetID(Factory),caller,0,0,GetName(Factory),0,1);
+  CreateMenu(GetID(Factory),caller,nil,nil,GetName(Factory),nil,1);
   if (Product)
     AddMenuItem("Abbruch","StopProduction",SYF1,caller);
-  AddMenuItem("Herstellung...",     "OpenProductionMenu",SYF2,caller,0,caller);
-  AddMenuItem("Endlosproduktion...","OpenProductionMenu",SYF3,caller,0,caller);
+  AddMenuItem("Herstellung...",     "OpenProductionMenu",SYF2,caller,nil,caller);
+  AddMenuItem("Endlosproduktion...","OpenProductionMenu",SYF3,caller,nil,caller);
 }
 
 
@@ -115,23 +115,23 @@ protected func SelectProduction(productID, factor)
   // Auswahl getroffen
   StopProduction();
   var owner;
-  if (factor && GetType(factor)==C4V_C4Object())
+  if (And(factor, Equal(GetType(factor), C4V_C4Object)))
   {
       owner = GetOwner(factor);
-      factor = 0;
+      factor = nil;
   }
   else
       owner = GetOwner();
   
-  ProdCost = 0;
+  ProdCost = nil;
   if(GetLength(hashSpielRegeln))
-      ProdCost = GetValue(0,productID) * HashGet(hashSpielRegeln, "Produktionskosten")/200;
+      ProdCost = (GetValue(nil,productID) ?? 0) * (HashGet(hashSpielRegeln, "Produktionskosten") ?? 0)/200;
   // geld pruefen und abziehen
   if(ProdCost)
   {
-      if(GetWealth(owner)< ProdCost)
-        return(Message("Nicht genug Geld",this()),Sound("Error"));
-      SetWealth(owner,GetWealth(owner)- ProdCost);
+      if((GetWealth(owner) ?? 0)< (ProdCost ?? 0))
+        return(S42MigrationFirst(Message("Nicht genug Geld",this()),Sound("Error")));
+      SetWealth(owner,(GetWealth(owner) ?? 0)- (ProdCost ?? 0));
       Sound("Cash");
   }
   
@@ -148,28 +148,28 @@ private func NewProduction(productID, factor)
   if (factor) ProdFactor = factor;
          else 
              if(GetLength(hashSpielRegeln)) ProdFactor = HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit"); else ProdFactor = 100;    // Standard: 100%
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) ProdFactor*15/10; // in den alten Produktionsgebäuden, dauert das produzieren 1.5 mal länger
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) (ProdFactor ?? 0)*15/10; // in den alten Produktionsgebäuden, dauert das produzieren 1.5 mal länger
   // alles auf Anfang
-  CurrentPT = 0;
-  NextStepPT = 0;
-  FullPT = 0;
-  CompMenge = 0;
-  ProdMass = 0;
+  CurrentPT = nil;
+  NextStepPT = nil;
+  FullPT = nil;
+  CompMenge = nil;
+  ProdMass = nil;
   // Produktionszeit berechnen
   var i = -1;
   var j, obj;
-  while (obj = GetComponent(0,++i,0,Product))
-    for (j = 0; j < GetComponent(obj,0,0,Product); ++j)
+  while (obj = GetComponent(nil,S42MigrationStep(i, 1),nil,Product))
+    for (j = nil; (j ?? 0) < (GetComponent(obj,nil,nil,Product) ?? 0); S42MigrationStep(j, 1))
     {   // Wert wird mit 10 multipliziert, weil die Action Delay von 10 auf 1 reduziert wurde, damit noch kuerzere Produktionszeiten moeglich sein (vorher war das niedrigste 10 * componentenmenge Frames)
-        FullPT += (GetDefCoreVal("Mass","DefCore",obj) * ProdFactor / 100) * 10; // die Masse der Komponenten für das Produkt wird aufsummiert... für jede componente ein produktionsschritt. d.h wenn hier änderung, muss auch änderung in schritte gemacht werden
-        CompMenge++; // zaehlen, wieviele componenten wir insg haben
+        S42MigrationAssign(FullPT, "+=", ((GetDefCoreVal("Mass","DefCore",obj) ?? 0) * (ProdFactor ?? 0) / 100) * 10); // die Masse der Komponenten für das Produkt wird aufsummiert... für jede componente ein produktionsschritt. d.h wenn hier änderung, muss auch änderung in schritte gemacht werden
+        S42MigrationStep(CompMenge, 1, true); // zaehlen, wieviele componenten wir insg haben
     }
-  ProdMass = ((GetDefCoreVal("Mass","DefCore",Product) * ProdFactor / 100)/CompMenge)*10; // die Masse des Produkts aufteilen auf die Zahl der Componenten (wenn eine deziamlzahl rauskommt wird sie automatisch gerundet)
-  for(var a = 1; a<=CompMenge; a++)
+  ProdMass = (((GetDefCoreVal("Mass","DefCore",Product) ?? 0) * (ProdFactor ?? 0) / 100)/(CompMenge ?? 0))*10; // die Masse des Produkts aufteilen auf die Zahl der Componenten (wenn eine deziamlzahl rauskommt wird sie automatisch gerundet)
+  for(var a = 1; (a ?? 0)<=(CompMenge ?? 0); S42MigrationStep(a, 1, true))
   {
-      FullPT += ProdMass;    // die gerundete Masse für jede componente draufrechnen 
+      S42MigrationAssign(FullPT, "+=", (ProdMass ?? 0));    // die gerundete Masse für jede componente draufrechnen
   }
-  if(FullPT < CompMenge) FullPT = CompMenge; // es darf minimal die Zahl der Komponenten sein, weil sonst die noetigen Komponenten nicht abgefragt werden.
+  if((FullPT ?? 0) < (CompMenge ?? 0)) FullPT = CompMenge; // es darf minimal die Zahl der Komponenten sein, weil sonst die noetigen Komponenten nicht abgefragt werden.
   // Update für Fortschrittsanzeige
   ShowInfoBar(IBRP, Factory, CurrentPT, FullPT, -1);
   // und gleich anfangen
@@ -181,10 +181,10 @@ private func ContinueProduction()
   // Rohstoffe verarbeiten
   GrabNeededComponents();
   // Produktionspause nötig?
-  if ((CurrentPT < FullPT) && (CurrentPT == NextStepPT))
+  if (And(((CurrentPT ?? 0) < (FullPT ?? 0)), (Equal(CurrentPT, NextStepPT))))
   {
     // bei Endlos: Produktion noch gar nicht begonnen?
-    if (!NextStepPT && Endless)
+    if (And(!NextStepPT, Endless))
       return(StopProduction());
     // warten und evtl. einen Clonk was besorgen lassen
     SetAction("Wait");
@@ -192,7 +192,7 @@ private func ContinueProduction()
     return(1);
   }
   // weiter mit der Herstellung
-  if (GetAction() eq "Wait")
+  if (!!SEqual(GetAction(), "Wait"))
     SetAction("Process");
 }
 
@@ -212,12 +212,12 @@ public func StopProduction()
       }
   }
   // Produktion beendet
-  Product = 0;
-  CurrentPT = 0;
-  NextStepPT = 0;
-  FullPT = 0;
-  CompMenge = 0;
-  ProdMass = 0;
+  Product = nil;
+  CurrentPT = nil;
+  NextStepPT = nil;
+  FullPT = nil;
+  CompMenge = nil;
+  ProdMass = nil;
   // Anzeige ausblenden
   DisappearInfoBar(IBRP, Factory);
   SetAction("Idle");
@@ -229,12 +229,12 @@ private func GrabNeededComponents()
   var i = -1;
   var obj, objID;
   var components, used;
-  while (objID = GetComponent(0,++i,0,Product))
+  while (objID = GetComponent(nil,S42MigrationStep(i, 1),nil,Product))
   {
-    components = GetComponent(objID,0,0,Product);
+    components = GetComponent(objID,nil,nil,Product);
     used = ContentsCount(objID);
     // genug davon da?
-    while (used < components)
+    while ((used ?? 0) < (components ?? 0))
     {
       if(FindObject(QWER))  // wenn Regel kein Produktionsmaterial aktiviert ist, dann nötige Ressource einfach erzeugen
         CreateContents(objID,Factory,1); //// wenn Produktion abgebrochen wird, muss das so erstellte material gelöscht werden
@@ -243,17 +243,17 @@ private func GrabNeededComponents()
       if (!obj)  break;    
       // hier herein verschieben
       Enter(this(),obj);
-      var addiert = 0;
-      addiert += (GetDefCoreVal("Mass","DefCore",objID) * ProdFactor / 100)*10;
-      addiert += ProdMass;
-      if(addiert<1) 
-          NextStepPT += 1;
+      var addiert = nil;
+      S42MigrationAssign(addiert, "+=", ((GetDefCoreVal("Mass","DefCore",objID) ?? 0) * (ProdFactor ?? 0) / 100)*10);
+      S42MigrationAssign(addiert, "+=", (ProdMass ?? 0));
+      if((addiert ?? 0)<1)
+          S42MigrationAssign(NextStepPT, "+=", 1);
       else
       {
-          NextStepPT += (GetDefCoreVal("Mass","DefCore",objID) * ProdFactor / 100)*10;
-          NextStepPT += ProdMass;
+          S42MigrationAssign(NextStepPT, "+=", ((GetDefCoreVal("Mass","DefCore",objID) ?? 0) * (ProdFactor ?? 0) / 100)*10);
+          S42MigrationAssign(NextStepPT, "+=", (ProdMass ?? 0));
       }
-      ++used;
+      S42MigrationStep(used, 1);
     }
   }
 }
@@ -263,23 +263,23 @@ private func FindNeededComponent()
   // herausfinden, was noch benötigt wird
   var i = -1;
   var objID;
-  while (objID = GetComponent(0,++i,0,Product))
-    if (ContentsCount(objID) < GetComponent(objID,0,0,Product))
+  while (objID = GetComponent(nil,S42MigrationStep(i, 1),nil,Product))
+    if ((ContentsCount(objID) ?? 0) < (GetComponent(objID,nil,nil,Product) ?? 0))
       return(objID);
-  return(0);
+  return(nil);
 }
 
 protected func AutoAcquire()
 {
   // Clonk in der Fabrik suchen
-  var clonk = FindObject(0, 0,0,0,0, OCF_CrewMember(),"",0, Factory);
-  if (!clonk) return(0);
+  var clonk = FindObject(nil, nil,nil,nil,nil, OCF_CrewMember,"",nil, Factory);
+  if (!clonk) return(nil);
   // was wird gebraucht?
   var objID = FindNeededComponent();
-  if (!objID) return(0);
+  if (!objID) return(nil);
   // Befehle geben
-  SetCommand(clonk, "Acquire", 0,0,0,0, objID);             // Rohstoff besorgen
-  AppendCommand(clonk, "Put", Factory,0,0,0,1000, objID);   // und in die Fabrik legen
+  SetCommand(clonk, "Acquire", nil,nil,nil,nil, objID);             // Rohstoff besorgen
+  AppendCommand(clonk, "Put", Factory,nil,nil,nil,1000, objID);   // und in die Fabrik legen
   return(1);
 }
 
@@ -293,11 +293,11 @@ protected func CheckEnergy()
       
   // genug Energie, um weiterzumachen?
   var gebrauchteEnergie = NeededEnergy;
-  if(GetLength(hashSpielRegeln) && !(GetID(Factory)==WRKS || GetID(Factory)==CHEM)) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
-    gebrauchteEnergie = ((NeededEnergy*HashGet(hashSpielRegeln, "EnergieverbrauchNeue"))/100); 
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) gebrauchteEnergie=gebrauchteEnergie/1000; // nochmal durch 1000 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
-  if(gebrauchteEnergie<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
-  if (NeedEnergy() && (GetEnergy(Factory) < gebrauchteEnergie))
+  if(And(GetLength(hashSpielRegeln), !(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))))) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
+    gebrauchteEnergie = (((NeededEnergy ?? 0)*(HashGet(hashSpielRegeln, "EnergieverbrauchNeue") ?? 0))/100);
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) gebrauchteEnergie=(gebrauchteEnergie ?? 0)/1000; // nochmal durch 1000 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
+  if((gebrauchteEnergie ?? 0)<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
+  if (And(NeedEnergy(), ((GetEnergy(Factory) ?? 0) < (gebrauchteEnergie ?? 0))))
     return(1);
   // Energie reicht
   SetAction("Process");
@@ -310,7 +310,7 @@ private func Waiting()
   // Materialien suchen, um weiter produzieren zu können
   GrabNeededComponents();
   // welche gefunden?
-  if (CurrentPT < NextStepPT)
+  if ((CurrentPT ?? 0) < (NextStepPT ?? 0))
     SetAction("Process");
 }
 
@@ -319,34 +319,34 @@ private func Process()
   if(FindObject(ENNN)) // wenn Regel, dass Energie angezeigt werden soll
       Message(Format("%v",GetEnergy(Factory)),Factory);
   // Clonk muss bei WRKS und CHEM im Gebäude sein, damit produziert wird
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) 
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM)))
   {
       // Clonk in der Fabrik suchen
-      var clonk = FindObject(0, 0,0,0,0, OCF_CrewMember(),"",0, Factory);
-      if (!clonk) return(0);
+      var clonk = FindObject(nil, nil,nil,nil,nil, OCF_CrewMember,"",nil, Factory);
+      if (!clonk) return(nil);
   }
   // noch genug Energie da?
   var gebrauchteEnergie = NeededEnergy;
-  if(GetLength(hashSpielRegeln) && !(GetID(Factory)==WRKS || GetID(Factory)==CHEM)) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
-    gebrauchteEnergie = (NeededEnergy*HashGet(hashSpielRegeln, "EnergieverbrauchNeue"))/100;
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) gebrauchteEnergie=gebrauchteEnergie/1000; // nochmal durch 1000 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
-  if(gebrauchteEnergie<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
-  if (NeedEnergy() && (GetEnergy(Factory) < gebrauchteEnergie))
+  if(And(GetLength(hashSpielRegeln), !(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))))) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
+    gebrauchteEnergie = ((NeededEnergy ?? 0)*(HashGet(hashSpielRegeln, "EnergieverbrauchNeue") ?? 0))/100;
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) gebrauchteEnergie=(gebrauchteEnergie ?? 0)/1000; // nochmal durch 1000 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
+  if((gebrauchteEnergie ?? 0)<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
+  if (And(NeedEnergy(), ((GetEnergy(Factory) ?? 0) < (gebrauchteEnergie ?? 0))))
     return(SetAction("CheckEnergy"));
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) gebrauchteEnergie=NeededEnergy; // wieder eigentlichen Wert von 250 setzen, denn DoEnergie kann mit absolten werten rechnen
-  DoEnergy(-gebrauchteEnergie, Factory,1); // mir dritten wert wahr, damit 250 von 100.000 genommen wird
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) gebrauchteEnergie=NeededEnergy; // wieder eigentlichen Wert von 250 setzen, denn DoEnergie kann mit absolten werten rechnen
+  DoEnergy(-(gebrauchteEnergie ?? 0), Factory,1); // mir dritten wert wahr, damit 250 von 100.000 genommen wird
   
   // weiter mit der Herstellung, bis Arbeitsschritt fertig
-  if (CurrentPT < NextStepPT)
+  if ((CurrentPT ?? 0) < (NextStepPT ?? 0))
   {
-    ++CurrentPT;
+    S42MigrationStep(CurrentPT, 1);
     // Update für Fortschrittsanzeige
-    ShowInfoBar(IBRP, Factory, CurrentPT,FullPT, 0,1);
+    ShowInfoBar(IBRP, Factory, CurrentPT,FullPT, nil,1);
     return(DoSmoke());
   }
   
   // nächsten Schritt anfangen
-  if (CurrentPT < FullPT)
+  if ((CurrentPT ?? 0) < (FullPT ?? 0))
     return(ContinueProduction());
 
   // komplett fertig
@@ -356,26 +356,26 @@ private func Process()
   // Komponenten löschen
   var i = -1;
   var j, objID;
-  while (objID = GetComponent(0,++i,0,Product))
+  while (objID = GetComponent(nil,S42MigrationStep(i, 1),nil,Product))
   {
-    j = GetComponent(objID,0,0,Product) + 1;
-    while (--j)
+    j = (GetComponent(objID,nil,nil,Product) ?? 0) + 1;
+    while (S42MigrationStep(j, -1))
     {
       obj = FindContents(objID);
       if (obj) RemoveObject(obj);
     }
     // gefüllte Fässer: leeres Fass als Ersatz
-    if (objID==WBRL || objID==SBRL || objID==OBRL ||
-        objID==ABRL || objID==LBRL || objID==DBRL)
+    if (Or(Or(Or(Or(Or(Equal(objID, WBRL), Equal(objID, SBRL)), Equal(objID, OBRL)),
+        Equal(objID, ABRL)), Equal(objID, LBRL)), Equal(objID, DBRL)))
     {
-      j = GetComponent(objID,0,0,Product) + 1;
-      while (--j)
+      j = (GetComponent(objID,nil,nil,Product) ?? 0) + 1;
+      while (S42MigrationStep(j, -1))
         CreateContents(BARL,Factory);
     }
   }
   // Meldung, dass fertig
-  if (FullPT >= 150*10) // mal 10, weil action delay nun 1 statt 10
-    CreateObject(SE07,0,0,GetOwner()); 
+  if ((FullPT ?? 0) >= 150*10) // mal 10, weil action delay nun 1 statt 10
+    CreateObject(SE07,nil,nil,GetOwner());
   // bei Endlosproduktion: gleich weiter
   if (Endless) NewProduction(Product, ProdFactor);
           else StopProduction();
@@ -391,14 +391,15 @@ private func DoSmoke()
 func EnoughEnergy() // wird in hauptgebäudeskripten evlt noch überladen, dies zumindest in allen factory objekten entfernen
 {
     var gebrauchteEnergie = NeededEnergy;
-  if(GetLength(hashSpielRegeln) && !(GetID(Factory)==WRKS || GetID(Factory)==CHEM)) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
-    gebrauchteEnergie = (NeededEnergy*HashGet(hashSpielRegeln, "EnergieverbrauchNeue"))/100;
-  if(GetID(Factory)==WRKS || GetID(Factory)==CHEM) gebrauchteEnergie=gebrauchteEnergie/100; // nochmal durch 100 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
-  if(gebrauchteEnergie<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
-  return(GetEnergy(Factory) >= gebrauchteEnergie);
+  if(And(GetLength(hashSpielRegeln), !(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))))) // nur bei den zukunftsgebäuden, da alle anderen alten Gebäude das per process usw machen
+    gebrauchteEnergie = ((NeededEnergy ?? 0)*(HashGet(hashSpielRegeln, "EnergieverbrauchNeue") ?? 0))/100;
+  if(Or(Equal(GetID(Factory), WRKS), Equal(GetID(Factory), CHEM))) gebrauchteEnergie=(gebrauchteEnergie ?? 0)/100; // nochmal durch 100 teilen, weil der Wert fuer alte gebäude 250 ist, und GetEnergy nur die prozentzahlen kennt
+  if((gebrauchteEnergie ?? 0)<1) gebrauchteEnergie=1; // mind. 1, (da 0.25 wohl zu 0 gerundet wird) wenn ohne energie sein soll, dann soll die energieregel abgeschaltet werden
+  return((GetEnergy(Factory) ?? 0) >= (gebrauchteEnergie ?? 0));
 }
 
 /* Eigenschaften */
 
-private NeedEnergy: return(FindObject(ENRG));
+private func NeedEnergy(...) { return(FindObject(ENRG));
+}
 

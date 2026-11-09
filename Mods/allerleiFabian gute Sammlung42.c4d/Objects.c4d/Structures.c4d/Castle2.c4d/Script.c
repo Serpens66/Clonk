@@ -1,6 +1,6 @@
 /*-- Burg --*/
 
-#strict
+#strict 3
 
 #include BAS8
 #include DOOR

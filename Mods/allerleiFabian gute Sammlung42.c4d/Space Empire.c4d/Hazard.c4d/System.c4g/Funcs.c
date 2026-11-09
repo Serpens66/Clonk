@@ -1,15 +1,19 @@
-#strict 2
+#strict 3
 
 global func Chance(int chance) { // chance from 0 to 100%
-	return Random(100) < chance;
+	chance ??= 0;
+	return (Random(100) ?? 0) < (chance ?? 0);
 }
 
 global func Normalize(int iAngle, int iStart, int iPrecision) {
+  iAngle ??= 0;
+  iStart ??= 0;
+  iPrecision ??= 0;
   if(!iPrecision) iPrecision = 1;
-  var iEnd = iPrecision*360+iStart;
+  var iEnd = (iPrecision ?? 0)*360+(iStart ?? 0);
   
-  while(iAngle<iStart) iAngle += iPrecision*360;
-  while(iAngle>=iEnd) iAngle -= iPrecision*360;
+  while((iAngle ?? 0)<(iStart ?? 0)) S42MigrationAssign(iAngle, "+=", (iPrecision ?? 0)*360);
+  while((iAngle ?? 0)>=(iEnd ?? 0)) S42MigrationAssign(iAngle, "-=", (iPrecision ?? 0)*360);
 
   return iAngle;
 }
@@ -19,32 +23,32 @@ global func CheckVisibility(object Obj1, object Obj2) {	// if Owner of Obj2 can 
 		Obj2 = this;
 		
 	var vis = GetVisibility(Obj1);
-	if(vis != VIS_All) {
+	if(!S42MigrationEqual(vis, VIS_All)) {
 		var own1 = GetOwner(Obj1);
 		var own2 = GetOwner(Obj2);
 	
 		// VIS Owner
-		if(vis & VIS_Owner)
-			if(own1 == own2)
+		if((vis ?? 0) & (VIS_Owner ?? 0))
+			if(S42MigrationEqual(own1, own2))
 				return true;
 		// VIS Enemies
-		if(vis & VIS_Enemies)
+		if((vis ?? 0) & (VIS_Enemies ?? 0))
 			if(Hostile(own1,own2))
 				return true;
 		// VIS Allies
-		if(vis & VIS_Allies)
+		if((vis ?? 0) & (VIS_Allies ?? 0))
 			if(!Hostile(own1,own2))
 				return true;
 		// VIS Local
-		if(vis & VIS_Local) {
-			var lo = own2/32;
-			var bit = 1 << own2%32;
+		if((vis ?? 0) & (VIS_Local ?? 0)) {
+			var lo = (own2 ?? 0)/32;
+			var bit = 1 << (own2 ?? 0)%32;
 			// man, kompliziert...
-			if(bit & Local(lo,Obj1))
+			if((bit ?? 0) & (Local(lo,Obj1) ?? 0))
 				return true;
 		}
 		// sonst gibt es keine Modi
-		return false;
+		return nil;
 	}
 	return true;
 }

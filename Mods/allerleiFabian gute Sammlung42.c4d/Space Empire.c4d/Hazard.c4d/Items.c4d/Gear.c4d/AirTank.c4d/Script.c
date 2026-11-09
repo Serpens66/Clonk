@@ -1,6 +1,6 @@
 /*-- Atemflasche --*/
 
-#strict
+#strict 3
 #include GEAR
 
 /* Status */
@@ -29,7 +29,7 @@ public func GearEffectReset(object pClonk)
 public func FxAirTankTimer(object pClonk)
 {
   // clonk needs air?
-  if(Inside(pClonk->GetBreath(), 1, pClonk->GetPhysical("Breath")/1000-1))
+  if(Inside(pClonk->GetBreath(), 1, (pClonk->GetPhysical("Breath") ?? 0)/1000-1))
   {
     // Breath!
     pClonk->DoBreath(1);

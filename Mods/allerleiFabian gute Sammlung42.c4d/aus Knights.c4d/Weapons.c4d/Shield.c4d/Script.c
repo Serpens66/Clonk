@@ -1,6 +1,6 @@
 /*-- Schild --*/
 
-#strict
+#strict 3
 
 /* Status */
 public func IsShield()
@@ -10,16 +10,16 @@ public func IsShield()
 
 // Nur beim Schild selbst Grafikname angeben,
 // damit alte Überladungen noch das alte Prinzip verwenden 
-public func GetShieldGraphics() { if(GetID()==SHIE) return("Shield"); }
+public func GetShieldGraphics() { if(Equal(GetID(), SHIE)) return("Shield"); }
 
 /* Anlegen */
 public func Activate(pKnight)
 {      
   [$CtrlActivateDesc$]             
   // Der Clonk kann dieses Objekt nicht verwenden
-  if (!pKnight->~CanUse(GetID())) return(0);
+  if (!pKnight->~CanUse(GetID())) return(nil);
   // Ritter trägt schon ein Schild
-  if (pKnight->~HasShield()) return(0);
+  if (pKnight->~HasShield()) return(nil);
   // Versuchen als Grafik anzulegen
   if(GetShieldGraphics())
    if(pKnight->~WearShield(this(), GetShieldGraphics()))

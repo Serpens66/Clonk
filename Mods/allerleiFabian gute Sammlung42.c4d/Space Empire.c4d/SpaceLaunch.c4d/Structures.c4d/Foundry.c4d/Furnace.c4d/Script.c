@@ -1,6 +1,6 @@
 /*-- Schmelzofen-Objekt --*/
 
-#strict
+#strict 3
 
 local foundry, mode, working;
 local materialtime, burntime;
@@ -38,17 +38,18 @@ public func SwitchMode()
 
 public func ShowBurnInfo()
 {
-  if (burntime)     ShowInfoBar(IBRE, foundry, Min(burntime,1000),        1000, 10,0,3);
-  if (materialtime) ShowInfoBar(IBRP, foundry, prodtime-materialtime, prodtime, 10,1,1);
+  if (burntime)     ShowInfoBar(IBRE, foundry, Min(burntime,1000),        1000, 10,nil,3);
+  if (materialtime) ShowInfoBar(IBRP, foundry, (prodtime ?? 0)-(materialtime ?? 0), prodtime, 10,1,1);
 }
 
 public func DoFill(diff)
 {
-  if (burntime >= 3000) return(0);
-  burntime = Min(burntime + diff*15, 3000);
+  if ((burntime ?? 0) >= 3000) return(nil);
+  burntime = Min((burntime ?? 0) + (diff ?? 0)*15, 3000);
 }
 
-public GetMode: return(mode);
+public func GetMode(...) { return(mode);
+}
 
 
 /* Produktion */
@@ -56,14 +57,14 @@ public GetMode: return(mode);
 protected func Production()
 {
   // EMP?
-  if (HasEMP(foundry)) return(0);
+  if (HasEMP(foundry)) return(nil);
   // Metall- oder Energiemodus
-  if (working) --working;
+  if (working) S42MigrationStep(working, -1);
   if (mode) MaterialMode();
        else EnergyMode();
   // Anzeigen updaten
-  ShowInfoBar(IBRE, foundry, Min(burntime,3000), 3000, 0,0,3);
-  ShowInfoBar(IBRP, foundry, 200-materialtime,    200, 0,1,1);
+  ShowInfoBar(IBRE, foundry, Min(burntime,3000), 3000, nil,nil,3);
+  ShowInfoBar(IBRP, foundry, 200-(materialtime ?? 0),    200, nil,1,1);
   return(1);
 }
 
@@ -83,14 +84,14 @@ private func MaterialMode()
   // Brennstoff verbrauchen
   if (burntime)
   {
-    materialtime = Max(materialtime-4, 0);   // viermal so schnell
-    burntime = Max(burntime-4, 0);
+    materialtime = Max((materialtime ?? 0)-4, nil);   // viermal so schnell
+    burntime = Max((burntime ?? 0)-4, nil);
   }
   else   // zur Not geht auch Energie
   {
-    if (GetEnergy(foundry) < 10) return(1);   // zuwenig Energie
+    if ((GetEnergy(foundry) ?? 0) < 10) return(1);   // zuwenig Energie
     DoEnergy(-10,foundry);
-    --materialtime;
+    S42MigrationStep(materialtime, -1);
   }
   // Herstellung
   if (!materialtime)
@@ -111,16 +112,16 @@ private func TryMaterial(ore, prod, time)
 {
   // Erz finden
   var obj = FindContents(ore,foundry);
-  if (!obj) return(0);
-if (GetID(obj)==MTWS && !(ContentsCount(MTWS,foundry)>4)) {return(0);};
+  if (!obj) return(nil);
+if (And(Equal(GetID(obj), MTWS), !((ContentsCount(MTWS,foundry) ?? 0)>4))) {return(nil);};
   // Material verbrennen
   if (!burntime)
     if (!TryBurnFuel())             // kein Brennmaterial:
-      if (GetEnergy(foundry) < 30)  // zur Not muss Energie her
+      if ((GetEnergy(foundry) ?? 0) < 30)  // zur Not muss Energie her
         return(1);
   // Erz verbrauchen, indem es hier herein kommt
   Enter(this(),obj);
-if(GetID(obj)==MTWS){Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));};
+if(Equal(GetID(obj), MTWS)){Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));Enter(this(),FindContents(MTWS,foundry));};
   product = prod;
   materialtime = time;
   return(1);
@@ -134,7 +135,7 @@ private func EnergyMode()
   // Materialherstellung beenden
   if (materialtime)
   {
-    materialtime = 0;
+    materialtime = nil;
     // Anzeige löschen
     DisappearInfoBar(IBRP, foundry);
     // Erz wieder rausrücken
@@ -147,7 +148,7 @@ private func EnergyMode()
     if (!TryBurnFuel())
       return(1);
   // Brennstoff verbrauchen
-  --burntime;
+  S42MigrationStep(burntime, -1);
   // Energie erzeugen
   DoEnergy(+10,foundry);
   foundry->DoSmoke();
@@ -171,18 +172,18 @@ private func TryBurnFuel()
 {
   // Material finden
   var fuel = GetFuelMaterial();
-  if (!fuel) return(0);
+  if (!fuel) return(nil);
   // Ölfass?
-  if (GetID(fuel)==OBRL)
+  if (Equal(GetID(fuel), OBRL))
   {
-    burntime += fuel->GetAmount()*15;  // max. 3000
+    S42MigrationAssign(burntime, "+=", (fuel->GetAmount() ?? 0)*15);  // max. 3000
     ChangeDef(BARL,fuel);
     return(burntime);
   }
   // Benzinkanister, Holz oder Kohle
-  if (GetID(fuel)==GCAN)  burntime += 3000;
-  if (GetID(fuel)==WOOD)  burntime += 300;
-  if (GetID(fuel)==COAL)  burntime += 400;
+  if (Equal(GetID(fuel), GCAN))  S42MigrationAssign(burntime, "+=", 3000);
+  if (Equal(GetID(fuel), WOOD))  S42MigrationAssign(burntime, "+=", 300);
+  if (Equal(GetID(fuel), COAL))  S42MigrationAssign(burntime, "+=", 400);
   RemoveObject(fuel);
   return(1);
 }
@@ -190,21 +191,23 @@ private func TryBurnFuel()
 
 /* Action-Calls */
 
-protected WorkingOff:
+protected func WorkingOff(...) {
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy(foundry)),foundry);
   // Ofen anmachen?
   if (working)
     SetAction("StartProcess");
   return(1);
+}
 
-protected WorkingOn:
+protected func WorkingOn(...) {
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy(foundry)),foundry);
   // Ofen ausmachen?
   if (!working)
     SetAction("EndProcess");
   return(1);
+}
 
 
 /* Aufruf durch die Anzeige */
@@ -220,7 +223,7 @@ public func GetSignInfo()
     return(1);                      // keine Energie!
   }
   // Energieproduktion
-  if (burntime && working)
+  if (And(burntime, working))
     return(4);                     // Produktion von Energie
   return(1);                       // Leere Anzeige
 }
@@ -233,8 +236,8 @@ public func EnoughEnergy()
   if (!mode)         return(1);    // Energieproduktion
   if (!materialtime) return(1);    // nichts in Produktion
   if (burntime)      return(1);    // Brennmaterial vorhanden
-  if (GetEnergy(foundry) >= 10) return(0); // oder Energie vorhanden?
+  if ((GetEnergy(foundry) ?? 0) >= 10) return(nil); // oder Energie vorhanden?
   // NoEnergy-Symbol anzeigen
-  return(0);
+  return(nil);
 }
 

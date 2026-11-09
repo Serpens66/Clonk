@@ -1,6 +1,6 @@
 /*-- Verbessertet Dynamo --*/
 
-#strict
+#strict 3
 
 // wird direkt in Dynamo Objekt gemacht
 

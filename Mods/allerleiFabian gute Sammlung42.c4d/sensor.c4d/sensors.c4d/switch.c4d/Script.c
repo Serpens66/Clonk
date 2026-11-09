@@ -1,6 +1,6 @@
 /*-- Schalter --*/
 
-#strict
+#strict 3
 #include SENS
 
 // Zielobjekte
@@ -27,15 +27,15 @@ public func ActivateEntrance(pObj)
 public func ControlThrow(pClonk)
 {
 	last_user = pClonk;
-	if(GetState(state,0)==1)
+	if(Equal(GetState(state,nil), 1))
 	{
 		SetGraphics ("OFF");
-		SetState(state,0,2);//Aus
+		SetState(state,nil,2);//Aus
 	}
 	else
 	{
 		SetGraphics ();
-		SetState(state,0,1);//An
+		SetState(state,nil,1);//An
 	}
 	Sound("Grab");
 	TriggerActions();

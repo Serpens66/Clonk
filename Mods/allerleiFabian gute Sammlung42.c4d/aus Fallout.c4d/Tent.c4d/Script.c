@@ -1,6 +1,6 @@
 /* Zelt */
 
-#strict
+#strict 3
 
 local flag;
 local flagOwn;
@@ -18,7 +18,7 @@ private func DoorClosed()
 {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
       GrabContents(obj);
 }
@@ -26,7 +26,7 @@ private func DoorClosed()
 
 public func Unpack()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
   SetAction("Unpack");
   Sound("TN_Pack");
   return(1);
@@ -36,7 +36,7 @@ private func Unpacked()
 {
   SetEntrance(1);
   
-  var clonk = FindObject2(Find_OCF(OCF_CrewMember()), 
+  var clonk = FindObject2(Find_OCF(OCF_CrewMember),
                           Find_Action("Push"),
                           Find_ActionTarget(this()));
   
@@ -48,7 +48,7 @@ private func Unpacked()
 
 private func Packed()
 { 
-  CreateObject(TB5B, 0, 15, GetOwner());
+  CreateObject(TB5B, nil, 15, GetOwner());
   RemoveObject();
   return(1);
 }
@@ -57,32 +57,32 @@ public func CanPack()
 {
   while(Contents())
   {
-    if (GetOCF(Contents()) & OCF_Living() && !GetAlive(Contents()))
+    if (And((GetOCF(Contents()) ?? 0) & (OCF_Living ?? 0), !GetAlive(Contents())))
     {
       // Leichen aus dem Zelt werfen
       Exit(Contents());
     }
-    else return(false);
+    else return(nil);
   }
   return(true);
 }
 
 protected func ControlDigDouble()
 {
-  if (GetAction() ne "Idle") return(0);
+  if (!SEqual(GetAction(), "Idle")) return(nil);
   
   if (!CanPack())
   {
     Message("$Empty$", this());
     Sound("Error");
-    return(0);
+    return(nil);
   }
-  SetEntrance(0);
+  SetEntrance(nil);
   
   // Attachte Objekte (Flaggen, etc.) loswerden
   var obj;
-  while(obj = FindObject(0, 0,0,0,0, 0, 0, this(), 0, obj) )
-    if(obj->GetProcedure() S= "ATTACH")
+  while(obj = FindObject(nil, nil,nil,nil,nil, nil, nil, this(), nil, obj) )
+    if(!!SEqual(obj->GetProcedure(), "ATTACH"))
     {   
       obj->SetAction("Idle");
       flag = GetID(obj);       // Speichern
@@ -92,7 +92,7 @@ protected func ControlDigDouble()
 
   SetAction("Pack");
   Sound("TN_Pack");
-  CreateObject(flag, 0, 0, flagOwn);     // und wiederherstellen!
+  CreateObject(flag, nil, nil, flagOwn);     // und wiederherstellen!
   return(1);
 }
 

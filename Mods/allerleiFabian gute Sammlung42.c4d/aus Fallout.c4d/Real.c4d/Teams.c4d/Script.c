@@ -1,6 +1,6 @@
 /*-- Clonks können mehr tragen --*/
 
-#strict
+#strict 3
 
 protected func Activate(iByPlayer)
 {
@@ -21,10 +21,10 @@ func Join(iPlr)
   var pClonk= GetCursor(iPlr);
 
   CreateMenu(GetID(), pClonk, this());
-  while(MaxTeamNum>1)
+  while((MaxTeamNum ?? 0)>1)
   {
-	MaxTeamNum--;
-    var TxtOwner= GetTaggedPlayerName(Global(10000+MaxTeamNum*2-1)-1);
+	S42MigrationStep(MaxTeamNum, -1, true);
+    var TxtOwner= GetTaggedPlayerName((Global(10000+(MaxTeamNum ?? 0)*2-1) ?? 0)-1);
     if(!TxtOwner) TxtOwner= "";
 	AddMenuItem(Format("Bündnis %d, %s",MaxTeamNum,TxtOwner), Format("JoinTeam(%d,%d)",iPlr,MaxTeamNum), 4, pClonk);
   }
@@ -34,32 +34,32 @@ func Join(iPlr)
 func JoinTeam(iPlr,iTeam)
 {
   Leave(iPlr);
-  if(!Global(10000+iTeam*2-1)) Global(10000+iTeam*2-1) = iPlr+1;//Besitzer
-  Global(1000+iPlr)= iTeam;
-  Global(10000+iTeam*2)+=2^(iPlr+1);//Teammitgleid hinzufügen
+  if(!Global(10000+(iTeam ?? 0)*2-1)) Global(10000+(iTeam ?? 0)*2-1) = (iPlr ?? 0)+1;//Besitzer
+  Global(1000+(iPlr ?? 0))= iTeam;
+  S42MigrationAssign(Global(10000+(iTeam ?? 0)*2), "+=", 2^((iPlr ?? 0)+1));//Teammitgleid hinzufügen
   return(1);
 }
 
 func Leave(iPlr)
 {
-  var iTeam= Global(1000+iPlr);
-  if(Global(10000+iTeam*2-1)=iPlr+1) Global(10000+iTeam*2-1) = 0;//keinen Besitzer
-  Global(1000+iPlr)= 0;
-  Global(10000+iTeam*2)-=2^(iPlr+1);//Teammitgleid herusnehmen
+  var iTeam= Global(1000+(iPlr ?? 0));
+  if(Global(10000+(iTeam ?? 0)*2-1)=(iPlr ?? 0)+1) Global(10000+(iTeam ?? 0)*2-1) = nil;//keinen Besitzer
+  Global(1000+(iPlr ?? 0))= nil;
+  S42MigrationAssign(Global(10000+(iTeam ?? 0)*2), "-=", 2^((iPlr ?? 0)+1));//Teammitgleid herusnehmen
   return(1);
 }
 
 /*Auswirkungen*/
 func Timer()
 {
-  for(var iPlr= GetPlayerCount(); iPlr; iPlr--)
+  for(var iPlr= GetPlayerCount(); iPlr; S42MigrationStep(iPlr, -1, true))
   {
-   if(!Global(1000+iPlr-1))
+   if(!Global(1000+(iPlr ?? 0)-1))
    {
-    for(var iCrewNum= GetCrewCount(iPlr-1);iCrewNum;iCrewNum--) SetColorDw(GetPlrColorDw(iPlr-1),GetCrew(iPlr-1,iCrewNum-1));
+    for(var iCrewNum= GetCrewCount((iPlr ?? 0)-1);iCrewNum;S42MigrationStep(iCrewNum, -1, true)) SetColorDw(GetPlrColorDw((iPlr ?? 0)-1),GetCrew((iPlr ?? 0)-1,(iCrewNum ?? 0)-1));
     return(1);
    }
-   for(var iCrewNum= GetCrewCount(iPlr-1);iCrewNum;iCrewNum--) SetColor(Global(1000+iPlr-1),GetCrew(iPlr-1,iCrewNum-1));
+   for(var iCrewNum= GetCrewCount((iPlr ?? 0)-1);iCrewNum;S42MigrationStep(iCrewNum, -1, true)) SetColor(Global(1000+(iPlr ?? 0)-1),GetCrew((iPlr ?? 0)-1,(iCrewNum ?? 0)-1));
   }
   return(1);
 }

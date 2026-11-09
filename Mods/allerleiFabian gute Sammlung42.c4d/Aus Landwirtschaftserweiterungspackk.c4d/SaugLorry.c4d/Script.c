@@ -1,6 +1,6 @@
 /*-- Lore --*/
 
-#strict 2
+#strict 3
 #include CXEC // Energieversorgung
 
 local dSuckAmount;
@@ -33,61 +33,61 @@ private func ControlElevator(string szCommand, object pObject)
 {
 	var pElev;
 	// Objekte an dieser Position überprüfen
-	while (pElev = FindObject(0, +1, +1, 0, 0, OCF_Grab, 0, 0, NoContainer(), pElev))
+	while (pElev = FindObject(nil, +1, +1, nil, nil, OCF_Grab, nil, nil, NoContainer(), pElev))
 		if (pElev->~IsElevator())
 			return ObjectCall(pElev, szCommand, pObject);
-	return 0;
+	return nil;
 }
 
 private func ControlElevatorMovement(string szCommand, object pObject)
 {
 	var pElev;
 	// Objekte an dieser Position überprüfen
-	while (pElev = FindObject(0, +1, +1, 0, 0, OCF_Grab, 0, 0, NoContainer(), pElev))
+	while (pElev = FindObject(nil, +1, +1, nil, nil, OCF_Grab, nil, nil, NoContainer(), pElev))
 		if (pElev->~IsElevator())
-			if (GetComDir() == COMD_Stop)
+			if (S42MigrationEqual(GetComDir(), COMD_Stop))
 				return ObjectCall(pElev, szCommand, pObject);
-	return 0;
+	return nil;
 }
 
 private func ControlElevatorStop(string szCommand, object pObject)
 {
 	var pElev;
 	// Objekte an dieser Position überprüfen
-	while (pElev = FindObject(0, +1, +1, 0, 0, OCF_Grab, 0, 0, NoContainer(), pElev))
+	while (pElev = FindObject(nil, +1, +1, nil, nil, OCF_Grab, nil, nil, NoContainer(), pElev))
 		if (pElev->~IsElevator())
-			if (GetComDir(pElev) != COMD_Stop)
+			if (!S42MigrationEqual(GetComDir(pElev), COMD_Stop))
 			{
 				ObjectCall(pElev, szCommand, pObject);
 				SetComDir(COMD_Stop, pObject);
 				SetComDir(COMD_Stop);
 				return 1;
 			}
-	return 0;
+	return nil;
 }
 
 protected func Saugen()
 {
-	var pLine = FindObject(DPIP, 0, 0, 0, 0, 0, "Connect", this);
+	var pLine = FindObject(DPIP, nil, nil, nil, nil, nil, "Connect", this);
 	if (!pLine)
-		return 0;
+		return nil;
 	var pPumpTarget = GetActionTarget(1, pLine);
-	if (pPumpTarget == this)
-		return 0;
+	if (S42MigrationEqual(pPumpTarget, this))
+		return nil;
 	if (!EnergyCheck(40))
-		return 0;
+		return nil;
 	DoEnergy(-30);
-	var dPump = 0, dX = -3, dY = 0, dMat;
-	while (++dX < 3)
+	var dPump = nil, dX = -3, dY = nil, dMat;
+	while (S42MigrationStep(dX, 1) < 3)
 	{
-		dY = 0;
-		while (++dY < 15)
+		dY = nil;
+		while (S42MigrationStep(dY, 1) < 15)
 		{
 			dMat = ExtractLiquid(dX, dY);
-			if (dMat == -1)
+			if (S42MigrationEqual(dMat, -1))
 				continue;
 			ObjectInsertMaterial(dMat, pPumpTarget);
-			if (++dPump >= dSuckAmount)
+			if (S42MigrationStep(dPump, 1) >= (dSuckAmount ?? 0))
 				return 1;
 		}
 	}

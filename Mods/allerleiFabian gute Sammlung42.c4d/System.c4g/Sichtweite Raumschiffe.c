@@ -1,7 +1,7 @@
 /*-- Sichtradius appendto Raumschiffe --*/
 
 
-#strict 2
+#strict 3
 
 #appendto CVLA
 #appendto FLAK
@@ -22,7 +22,7 @@
 func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-feindlichen Spielern ebenfalls diesen sichtradius mithilfe eines hilfsobjekts zu geben
 {
     if(FindObject(SSSI)) return(100);
-    return(0);
+    return(nil);
 }
 
 public func Completion(a,b,c,d)

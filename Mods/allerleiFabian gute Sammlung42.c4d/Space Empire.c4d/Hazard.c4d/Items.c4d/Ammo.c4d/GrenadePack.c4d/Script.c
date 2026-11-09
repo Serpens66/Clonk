@@ -1,6 +1,6 @@
 /*-- Granatenpack --*/
 
-#strict
+#strict 3
 #include STAP
 
 protected func Hit()

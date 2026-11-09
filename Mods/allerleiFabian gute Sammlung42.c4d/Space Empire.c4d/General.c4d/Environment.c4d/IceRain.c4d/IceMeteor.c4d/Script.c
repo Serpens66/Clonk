@@ -1,6 +1,6 @@
 /*-- Eisbrocken --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -9,8 +9,8 @@ protected func Initialize()
 
 private func Effects()
 {
-  CastParticles("PxSpark", 3,40, 0,0, 40,60, RGBa(0,0,255,128), RGBa(0,255,255,0));
-  CreateParticle("IceTrace", 0,0, 0,0, 60, RGBa(255,255,255,0));
+  CastParticles("PxSpark", 3,40, nil,nil, 40,60, RGBa(nil,nil,255,128), RGBa(nil,255,255,nil));
+  CreateParticle("IceTrace", nil,nil, nil,nil, 60, RGBa(255,255,255,nil));
 }
 
 protected func Hit()
@@ -27,5 +27,6 @@ public func Destroy()
   RemoveObject();
 }
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

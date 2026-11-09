@@ -1,6 +1,6 @@
 /*-- Helper --*/
 
-#strict
+#strict 3
 
 /*
 local
@@ -26,29 +26,29 @@ ShowReckt();
 return(1);}
 
 func Pruefen(){
-if(Local(10)==1){SetAction("An");}
-if(Local(10)==0){SetAction("Aus");}
-if(Local(11)>0){
+if(Equal(Local(10), 1)){SetAction("An");}
+if(Equal(Local(10), nil)){SetAction("Aus");}
+if((Local(11) ?? 0)>0){
 SetAction("An");
-Local(11)--;
-if(Local(0))return(1);
-if(Local(10,Local(0))==this())return(1);
+S42MigrationStep(Local(11), -1, true);
+if(Local(nil))return(1);
+if(Equal(Local(10,Local(nil)), this()))return(1);
 }
 //return(RemoveObject());}
 return(1);}
 
 func ShowReckt(){
-if(Local(12)>0){Local(12)--; return(1);}
+if((Local(12) ?? 0)>0){S42MigrationStep(Local(12), -1, true); return(1);}
 Local(12)=2;
-DrawParticleLine("Mark",Local(1)-GetX(),Local(6)-GetY(),Local(1)+Local(2)-GetX(),Local(6)-GetY(),20,20,RGB(255,255,0),RGB(255,255,0),0);
-DrawParticleLine("Mark",Local(1)-GetX(),Local(6)+Local(3)-GetY(),Local(1)+Local(2)-GetX(),Local(6)+Local(3)-GetY(),20,20,RGB(255,255,0),RGB(255,255,0),0);                                    
+DrawParticleLine("Mark",(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),20,20,RGB(255,255,nil),RGB(255,255,nil),nil);
+DrawParticleLine("Mark",(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),20,20,RGB(255,255,nil),RGB(255,255,nil),nil);
 
-DrawParticleLine("Mark",Local(1)-GetX(),Local(6)-GetY(),Local(1)-GetX(),Local(6)+Local(3)-GetY(),20,20,RGB(255,255,0),RGB(255,255,0),0);
-DrawParticleLine("Mark",Local(1)+Local(2)-GetX(),Local(6)-GetY(),Local(1)+Local(2)-GetX(),Local(6)+Local(3)-GetY(),20,20,RGB(255,255,0),RGB(255,255,0),0); 
+DrawParticleLine("Mark",(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),20,20,RGB(255,255,nil),RGB(255,255,nil),nil);
+DrawParticleLine("Mark",(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),20,20,RGB(255,255,nil),RGB(255,255,nil),nil);
 
-CreateParticle("Mark",Local(1)-GetX(),Local(6)-GetY(),0,0,50,RGB(255,0,0));
-CreateParticle("Mark",Local(1)-GetX(),Local(6)+Local(3)-GetY(),0,0,50,RGB(255,0,0));
+CreateParticle("Mark",(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),nil,nil,50,RGB(255,nil,nil));
+CreateParticle("Mark",(Local(1) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),nil,nil,50,RGB(255,nil,nil));
 
-CreateParticle("Mark",Local(1)+Local(2)-GetX(),Local(6)-GetY(),0,0,50,RGB(255,0,0));
-CreateParticle("Mark",Local(1)+Local(2)-GetX(),Local(6)+Local(3)-GetY(),0,0,50,RGB(255,0,0));
+CreateParticle("Mark",(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)-(GetY() ?? 0),nil,nil,50,RGB(255,nil,nil));
+CreateParticle("Mark",(Local(1) ?? 0)+(Local(2) ?? 0)-(GetX() ?? 0),(Local(6) ?? 0)+(Local(3) ?? 0)-(GetY() ?? 0),nil,nil,50,RGB(255,nil,nil));
 return(1);}

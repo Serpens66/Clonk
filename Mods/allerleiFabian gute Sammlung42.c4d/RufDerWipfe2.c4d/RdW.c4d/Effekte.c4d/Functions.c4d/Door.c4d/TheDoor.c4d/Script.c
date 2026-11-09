@@ -1,27 +1,27 @@
 /*-- Tür --*/
 
-#strict
+#strict 3
 
 local Target,X,Y;
 
 public func IsOpen()
 {
-  if(GetAction() eq "DoorOpen") return true;
-  if(GetAction() eq "OpenDoor") return true;
-  return false;
+  if(!!SEqual(GetAction(), "DoorOpen")) return true;
+  if(!!SEqual(GetAction(), "OpenDoor")) return true;
+  return nil;
 }
 
 public func IsReallyOpen()
 {
-  if(GetAction() eq "DoorOpen") return true;
-  return false;
+  if(!!SEqual(GetAction(), "DoorOpen")) return true;
+  return nil;
 }
 
 public func Open()
 {
   var iPhase=1;
-  if(GetAction() eq "CloseDoor")
-    iPhase=GetActMapVal("Length", "OpenDoor")-GetPhase();
+  if(!!SEqual(GetAction(), "CloseDoor"))
+    iPhase=(GetActMapVal("Length", "OpenDoor") ?? 0)-(GetPhase() ?? 0);
   SetAction("OpenDoor");
   SetPhase(iPhase);
 }
@@ -32,21 +32,21 @@ public func Set(pTarget,iX,iY)
   SetAction("DoorOpen");
   X=iX;
   Y=iY;
-  SetPosition(GetX(pTarget)+iX,GetY(pTarget)+iY);
+  SetPosition((GetX(pTarget) ?? 0)+(iX ?? 0),(GetY(pTarget) ?? 0)+(iY ?? 0));
 }
 
 public func Check()
 {
   // An Gebäude anpassen
   SetCon(GetCon(Target));
-  if(GetCon()<80)
+  if((GetCon() ?? 0)<80)
     SetGraphics("Damage");
   else
     SetGraphics("");
     
   // Position nur neusetzen wenn Fullcon
-  if(GetCon()==100)
-    SetPosition(GetX(Target)+X,GetY(Target)+Y);
+  if(Equal(GetCon(), 100))
+    SetPosition((GetX(Target) ?? 0)+(X ?? 0),(GetY(Target) ?? 0)+(Y ?? 0));
 }
 
 public func SetState(iState)
@@ -62,7 +62,7 @@ private func OpenEntrance()
 
 private func CloseEntrance()
 {
-  Target->SetEntrance(0);
+  Target->SetEntrance(nil);
 }
 
 private func SoundOpenDoor()

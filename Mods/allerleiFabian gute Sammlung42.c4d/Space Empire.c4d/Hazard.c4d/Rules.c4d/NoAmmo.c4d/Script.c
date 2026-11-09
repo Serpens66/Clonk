@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 protected func Activate(iPlr) {
   MessageWindow(GetDesc(),iPlr);

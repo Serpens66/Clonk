@@ -1,15 +1,15 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
-protected Initialize:
+protected func Initialize(...) {
 	local counter;
 	local initilized;
 	local wait;	
 	wait=10;
 	local raucherzeugung;
 	raucherzeugung=10;
-	if(initilized != 1)
+	if(!Equal(initilized, 1))
 	{
 		counter=50;
 		SetAction("Pre");		
@@ -18,19 +18,20 @@ protected Initialize:
 		DoCon(400);
 		local alpha;
 		local material_gegeben;
-		material_gegeben=GetMaterial(0,70);
+		material_gegeben=GetMaterial(nil,70);
 		SetClrModulation(RGBa(255,255,255,40));
 		
-		alpha=0;
+		alpha=nil;
 		ruttel_wirkung=2;
 		links_rechts=1;
 	}
 	initilized=1;
 	return(1);
+}
 
-protected start:
-	--counter;	
-	if(And(counter<20,counter>10))
+protected func start(...) {
+	S42MigrationStep(counter, -1);
+	if(And((counter ?? 0)<20,(counter ?? 0)>10))
 	{
 		CastPXS(MaterialName(material_gegeben),100,100,-50,-120);
 		CastPXS(MaterialName(material_gegeben),100,100,50,-120);
@@ -38,41 +39,45 @@ protected start:
 	fade_out();
 	if(Equal(links_rechts,1))
 	{
-		SetPosition(GetX()-Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)-(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=2;
 		return(1);
 	}
 	if(Equal(links_rechts,2))
 	{
-		SetPosition(GetX()+Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)+(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=1;
 		return(1);
 	}
 	 
 	return(1);
-private wait1:
-	--wait;
-	if(wait<0) SetAction("WACHSE");
+}
+private func wait1(...) {
+	S42MigrationStep(wait, -1);
+	if((wait ?? 0)<0) SetAction("WACHSE");
 	return(1);
+}
 	
 
-private fade_out:
-	--raucherzeugung;
-	if(raucherzeugung <0)
+private func fade_out(...) {
+	S42MigrationStep(raucherzeugung, -1);
+	if((raucherzeugung ?? 0) <0)
 	{
-		ObjectCall(CreateObject(ABPR,Random(40)-17,60),"start");
+		ObjectCall(CreateObject(ABPR,(Random(40) ?? 0)-17,60),"start");
 		raucherzeugung=2;
 	}	
-	if(GetAction() S= "Off") if(Random(1) == 1) SetPhase(1);
+	if(!!SEqual(GetAction(), "Off")) if(Equal(Random(1), 1)) SetPhase(1);
 	
-	++alpha;
-	SetVar(0,alpha/22*10);
-	SetClrModulation(RGBa(255,255,255,Var(0)));
-	if(Var(0)>100)
+	S42MigrationStep(alpha, 1);
+	SetVar(nil,(alpha ?? 0)/22*10);
+	SetClrModulation(RGBa(255,255,255,Var(nil)));
+	if((Var(nil) ?? 0)>100)
 	{
 		RemoveObject();
 	}
-	if(alpha>500) DoCon((GetCon()/1000)-1-Random(Random(4)));
+	if((alpha ?? 0)>500) DoCon(((GetCon() ?? 0)/1000)-1-(Random(Random(4)) ?? 0));
 	return(1);
+}
 
-nicht_markieren: return(1);
+func nicht_markieren(...) { return(1);
+}

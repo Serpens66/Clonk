@@ -1,6 +1,6 @@
 /* Kleines Kraftfeld (Zauber) */
 
-#strict 2
+#strict 3
 
 public func Activate(pCaster, pCaster2)
 {
@@ -11,11 +11,11 @@ public func Activate(pCaster, pCaster2)
       pCaster = Contained(pCaster);
   // Effekt prüfen
   var iChkEff;
-  if (iChkEff = CheckEffect("FFBridgePSpell", pCaster, 150)) { RemoveObject(); return (iChkEff!=-1); }
+  if (iChkEff = CheckEffect("FFBridgePSpell", pCaster, 150)) { RemoveObject(); return (!S42MigrationEqual(iChkEff, -1)); }
   // Kraftfeld erstellen
-  ObjectSetAction(CreateObject(FRCS,0,50,GetOwner()),"Field",pCaster);
-  CastParticles("MSpark", 5, 50, 0,0, 100, 200, RGBa(100,100,255,128), RGBa(0,0,255,0));
-  CreateParticle("MSpark", 0,0, 1000, RGBa(50,50,255,150));
+  ObjectSetAction(CreateObject(FRCS,nil,50,GetOwner()),"Field",pCaster);
+  CastParticles("MSpark", 5, 50, nil,nil, 100, 200, RGBa(100,100,255,128), RGBa(nil,nil,255,nil));
+  CreateParticle("MSpark", nil,nil, 1000, RGBa(50,50,255,150));
   RemoveObject();
   return true;
 }

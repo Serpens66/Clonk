@@ -1,6 +1,6 @@
 /*-- Zeltpack --*/
 
-#strict
+#strict 3
 
 public func Activate(pClonk)
 {
@@ -8,7 +8,7 @@ public func Activate(pClonk)
   // Effekt
   Sound("TentPack");
   // Zelt erzeugen
-  var pTent = CreateObject(TENT,0,Min(11, LandscapeHeight()-GetY()-1),GetOwner(pClonk) );
+  var pTent = CreateObject(TENT,nil,Min(11, (LandscapeHeight() ?? 0)-(GetY() ?? 0)-1),GetOwner(pClonk) );
   // Zelt ins Aufbaustadium versetzen
   pTent->BeginCon();
   // Bau beginnen lassen

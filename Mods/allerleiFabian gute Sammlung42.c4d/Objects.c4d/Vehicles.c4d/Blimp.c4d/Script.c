@@ -1,6 +1,6 @@
 /*-- Luftschiff --*/
 
-#strict
+#strict 3
 
 local turn_end_dir, mlight;
 
@@ -10,83 +10,89 @@ private func TurnStart()
 {
   // Alle Clonks die das Luftschiff anfassen registrieren
   var controllers = FindObjects(Find_Action("Push"), Find_ActionTarget(this()));
-  AddEffect("IntTurn", this(), 1, 1, this(), 0, controllers);
+  AddEffect("IntTurn", this(), 1, 1, this(), nil, controllers);
 }
 
 protected func FxIntTurnStart(object target, int number, int temp, array controllers)
 {
-  if(temp) return(0);
+  number ??= 0;
+  temp ??= 0;
+  if(temp) return(nil);
 
   // Alle luftschiffanfassenden Clonks
-  EffectVar(0, target, number) = controllers;
+  EffectVar(nil, target, number) = controllers;
   // Deren initiale Position auf dem Luftschiff...
   EffectVar(1, target, number) = CreateArray(GetLength(controllers));
   // ... die hier ermittelt wird
-  for(var i = 0; i < GetLength(controllers); ++ i)
-    EffectVar(1, target, number)[i] = controllers[i]->GetX() - GetX();
+  for(var i = nil; (i ?? 0) < (GetLength(controllers) ?? 0); S42MigrationStep( i, 1))
+    EffectVar(1, target, number)[(i ?? 0)] = (controllers[(i ?? 0)]->GetX() ?? 0) - (GetX() ?? 0);
 }
 
 protected func FxIntTurnTimer(object target, int number, int time)
 {
   // Laenge der Turn-Action bestimmen
+  number ??= 0;
+  time ??= 0;
   var delay = GetActMapVal("Delay", "Turn");
   var phases = GetActMapVal("Length", "Turn");
   // Schon vorbei
-  if(time == delay * phases) return(-1);
+  if(Equal(time, (delay ?? 0) * (phases ?? 0))) return(-1);
   // Eine Sinus-Kurve von -90 bis +90 Grad hernehmen um die neue Position
   // der Clonks auf dem Luftschiff zu bestimmen.
-  var sin_phase = (time * 180 / (phases * delay)) - 90;
-  var pos_phase = Sin(sin_phase, 50) + 50;
+  var sin_phase = ((time ?? 0) * 180 / ((phases ?? 0) * (delay ?? 0))) - 90;
+  var pos_phase = (Sin(sin_phase, 50) ?? 0) + 50;
   // Clonkpositionen anpassen
-  var controller_count = GetLength(EffectVar(0, target, number));
-  for(var i = 0; i < controller_count; ++ i)
+  var controller_count = GetLength(EffectVar(nil, target, number));
+  for(var i = nil; (i ?? 0) < (controller_count ?? 0); S42MigrationStep( i, 1))
   {
-    var controller = EffectVar(0, target, number)[i];
-    var pos = EffectVar(1, target, number)[i];
+    var controller = EffectVar(nil, target, number)[(i ?? 0)];
+    var pos = EffectVar(1, target, number)[(i ?? 0)];
 
     // Koennte sein, dass ein Controller verloren geht
     if(!controller) continue;
     // Koennte auch sein, dass er kein Controller mehr ist
-    if(controller->GetAction() ne "Push" || controller->GetActionTarget() != this())
+    if(Or(!SEqual(controller->GetAction(), "Push"), !Equal(controller->GetActionTarget(), this())))
     {
       // Dann nichts mehr mit ihm anstellen, selbst wenn er das Luftschiff
       // wieder anfaesst - er koennte es an einer anderen Position tun und
       // dann beamen wir ihn komisch auf dem Luftschiff rum. Lieber nicht.
-      EffectVar(0, target, number)[i] = 0;
+      EffectVar(nil, target, number)[(i ?? 0)] = nil;
       continue;
     }
 
     // Dir anpassen wenn Haelfte der Turn-Action vorbei
-    if(time == delay * phases / 2)
+    if(Equal(time, (delay ?? 0) * (phases ?? 0) / 2))
       controller->SetDir(GetDir());
 
     // Neue Position ermitteln (Sinusfoermig um den Luftschiff-Mittelpunkt)
-    var pos_t = -pos * 2;
-    controller->SetPosition(GetX() + pos - (pos*2 * pos_phase / 100), controller->GetY());
+    var pos_t = -(pos ?? 0) * 2;
+    controller->SetPosition((GetX() ?? 0) + (pos ?? 0) - ((pos ?? 0)*2 * (pos_phase ?? 0) / 100), controller->GetY());
   }
 }
 
 protected func FxIntTurnStop(object target, int number, bool temp)
 {
-  if(temp) return(0);
-  var length = GetLength(EffectVar(0, target, number));
+  number ??= 0;
+  temp ??= false;
+  if(temp) return(nil);
+  var length = GetLength(EffectVar(nil, target, number));
 
   // Nochmal alle Controller durchgehen
-  for(var i = 0; i < length; ++ i)
+  for(var i = nil; (i ?? 0) < (length ?? 0); S42MigrationStep( i, 1))
   {
-    var object = EffectVar(0, target, number)[i];
-    var pos = EffectVar(1, target, number)[i];
+    var object = EffectVar(nil, target, number)[(i ?? 0)];
+    var pos = EffectVar(1, target, number)[(i ?? 0)];
 
     // Und an fertige Position tun, zur Sicherheit, wenn es noch Controller sind
     if(!object) continue;
-    if(object->GetAction() S= "Push" && object->GetActionTarget() == this())
-      object->SetPosition(GetX() - pos, object->GetY());
+    if(And(!!SEqual(object->GetAction(), "Push"), Equal(object->GetActionTarget(), this())))
+      object->SetPosition((GetX() ?? 0) - (pos ?? 0), object->GetY());
   }
 }
 
 private func TurnEnd()
 {
-  if(turn_end_dir != -1)
+  if(!Equal(turn_end_dir, -1))
   {
     SetDirection(turn_end_dir);
     turn_end_dir = -1;
@@ -97,8 +103,9 @@ private func TurnEnd()
 
 private func DoDirection(int comdir)
 {
+  comdir ??= 0;
   var cur_comdir = GetComDir();
-  if(GetAction() S= "FloatIdle") cur_comdir = COMD_Stop;
+  if(!!SEqual(GetAction(), "FloatIdle")) cur_comdir = COMD_Stop;
 
   cur_comdir = ComDirTransform(cur_comdir, comdir);
   //while(cur_comdir == COMD_Stop)
@@ -109,15 +116,16 @@ private func DoDirection(int comdir)
 
 private func ClearDir(bool fX)
 {
-  if(fX && GetXDir())
+  fX ??= false;
+  if(And(fX, GetXDir()))
   {
-    if(GetXDir() > 0) SetXDir(GetXDir() - 1);
-    else SetXDir(GetXDir() + 1);
+    if((GetXDir() ?? 0) > 0) SetXDir((GetXDir() ?? 0) - 1);
+    else SetXDir((GetXDir() ?? 0) + 1);
   }
-  if(!fX && GetYDir())
+  if(And(!fX, GetYDir()))
   {
-    if(GetYDir() > 0) SetYDir(GetYDir() - 1);
-    else SetYDir(GetYDir() + 1);
+    if((GetYDir() ?? 0) > 0) SetYDir((GetYDir() ?? 0) - 1);
+    else SetYDir((GetYDir() ?? 0) + 1);
   }
 }
 
@@ -126,12 +134,13 @@ private func SetDirection(int comdir)
   // Richtungsaenderung nach oben/unten geht auch mit "Turn", aber eine
   // ComDir-Aenderung, die wieder eine Turn-Action erfordern wuerde muss
   // warten, bis die jetzige Turn-Action fertig ist.
-  if(GetAction() S= "Turn")
+  comdir ??= 0;
+  if(!!SEqual(GetAction(), "Turn"))
   {
     turn_end_dir = comdir;
-    if(comdir == COMD_Stop || (ComDirLike(comdir, COMD_Right) && GetDir() == DIR_Left) || (ComDirLike(comdir, COMD_Left) && GetDir() == DIR_Right))
+    if(Or(Or(Equal(comdir, COMD_Stop), (And(ComDirLike(comdir, COMD_Right), Equal(GetDir(), DIR_Left)))), (And(ComDirLike(comdir, COMD_Left), Equal(GetDir(), DIR_Right)))))
     {
-      return(0);
+      return(nil);
     }
   }
 
@@ -139,11 +148,11 @@ private func SetDirection(int comdir)
   SetComDir(comdir);
 
   // Angebrachte Action setzen
-  if(GetAction() ne "Turn" && GetAction() ne "WaterLaunch")
+  if(And(!SEqual(GetAction(), "Turn"), !SEqual(GetAction(), "WaterLaunch")))
   {
-    if(comdir != COMD_Stop && GetAction() ne "FloatPropel")
+    if(And(!Equal(comdir, COMD_Stop), !SEqual(GetAction(), "FloatPropel")))
       SetAction("FloatPropel");
-    if(comdir == COMD_Stop && GetAction() ne "FloatIdle")
+    if(And(Equal(comdir, COMD_Stop), !SEqual(GetAction(), "FloatIdle")))
       SetAction("FloatIdle");
   }
 
@@ -151,11 +160,11 @@ private func SetDirection(int comdir)
   ClearScheduleCall(this(), "ClearDir");
   // Wenn Bewegung in nur eine Richtung, dann Bewegung in die andere
   // Richtung aufgeben (macht FLOAT-Prozedur nicht automagisch)
-  if(comdir == COMD_Down || comdir == COMD_Up)
+  if(Or(Equal(comdir, COMD_Down), Equal(comdir, COMD_Up)))
     ScheduleCall(this(), "ClearDir", 1, Abs(GetXDir()), true);
-  if(comdir == COMD_Left || comdir == COMD_Right || comdir == COMD_Stop)
+  if(Or(Or(Equal(comdir, COMD_Left), Equal(comdir, COMD_Right)), Equal(comdir, COMD_Stop)))
   {
-    ScheduleCall(this(), "ClearDir", 1, Abs(GetYDir()), false);
+    ScheduleCall(this(), "ClearDir", 1, Abs(GetYDir()), nil);
 
     // Bei Bewegung nur in X-Richtung ein wenig schaukeln
     if(!GetEffect("IntWindYDir", this()))
@@ -167,13 +176,13 @@ private func SetDirection(int comdir)
       RemoveEffect("IntWindYDir", this());
   }
 
-  if(ComDirLike(comdir, COMD_Right) && GetDir() == DIR_Left)
+  if(And(ComDirLike(comdir, COMD_Right), Equal(GetDir(), DIR_Left)))
   {
     SetDir(DIR_Right);
     SetAction("Turn");
   }
 
-  if(ComDirLike(comdir, COMD_Left) && GetDir() == DIR_Right)
+  if(And(ComDirLike(comdir, COMD_Left), Equal(GetDir(), DIR_Right)))
   {
     SetDir(DIR_Left);
     SetAction("Turn");
@@ -181,12 +190,15 @@ private func SetDirection(int comdir)
 
   // Beim Landen auf COMD_Down lassen, sonst hopst das Luftschiff schnell
   // wieder in die Luft
-  if(comdir == COMD_Stop && GBackSolid(0, GetObjHeight()/2+2))
+  if(And(Equal(comdir, COMD_Stop), GBackSolid(nil, (GetObjHeight() ?? 0)/2+2)))
     SetComDir(COMD_Down);
 }
 
 protected func ControlUpdate(object controller, int comdir, bool dig, bool throw)
 {
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   SetDirection(comdir);
 }
 
@@ -194,8 +206,8 @@ protected func ControlUp(object controller)      // hoch
 {
   [$TxtAscend$]
   ClearCommand();
-  if (GetAction()S="DropOff") return(0);
-  if (GetAction()S="WaterLand") SetAction("WaterLaunch");
+  if (!!SEqual(GetAction(), "DropOff")) return(nil);
+  if (!!SEqual(GetAction(), "WaterLand")) SetAction("WaterLaunch");
 
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
     DoDirection(COMD_Up);
@@ -204,7 +216,7 @@ protected func ControlUp(object controller)      // hoch
 protected func ControlDownSingle(object controller)  // runter
 {
   [$TxtDescend$|Method=Classic]
-  if (GetAction()S="DropOff") return(0);
+  if (!!SEqual(GetAction(), "DropOff")) return(nil);
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
     ClearCommand();
@@ -225,8 +237,8 @@ protected func ControlRight(object controller)       // rechts
 
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
-    if (GetAction()S="DropOff") return(0);
-    if (GetAction()S="Turn") return(0);
+    if (!!SEqual(GetAction(), "DropOff")) return(nil);
+    if (!!SEqual(GetAction(), "Turn")) return(nil);
     SetAction("FloatPropel");
     DoDirection(COMD_Right);
   }
@@ -239,8 +251,8 @@ protected func ControlLeft(object controller)        // links
 
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
-    if (GetAction()S="DropOff") return(0);
-    if (GetAction()S="Turn") return(0);
+    if (!!SEqual(GetAction(), "DropOff")) return(nil);
+    if (!!SEqual(GetAction(), "Turn")) return(nil);
     SetAction("FloatPropel");
     DoDirection(COMD_Left);
   }
@@ -249,12 +261,14 @@ protected func ControlLeft(object controller)        // links
 protected func ControlCommand(string szCommand,object pTarget,int iX,int iY)
 {
   // Pilot läßt los
-  if (szCommand S= "UnGrab")
-    return(0,ClearCommand(),NoPilotCheck());
+  iX ??= 0;
+  iY ??= 0;
+  if (!!SEqual(szCommand, "UnGrab"))
+    return(S42MigrationFirst(nil,ClearCommand(),NoPilotCheck()));
   // Bewegungskommando vom Piloten
-  if (szCommand S= "MoveTo")
+  if (!!SEqual(szCommand, "MoveTo"))
     return(SetCommand(this(),szCommand,pTarget,iX,iY));
-  return(0);
+  return(nil);
 }
 
 private func ClearCommand() { SetCommand(this(),"None"); }
@@ -271,15 +285,15 @@ protected func Initialize()
 
 protected func FxIntWindXDirTimer()
 {
-  if(GetAction() ne "FloatIdle" && GetAction() ne "WaterLand") return(-1);
-  if(GetContact(0, -1, 8)) return;
-  SetXDir(BoundBy(GetWind()/4, Max(GetXDir() - 2, -10), Min(GetXDir() + 2, 10)));
+  if(And(!SEqual(GetAction(), "FloatIdle"), !SEqual(GetAction(), "WaterLand"))) return(-1);
+  if(GetContact(nil, -1, 8)) return;
+  SetXDir(BoundBy((GetWind() ?? 0)/4, Max((GetXDir() ?? 0) - 2, -10), Min((GetXDir() ?? 0) + 2, 10)));
 }
 
 protected func FxIntWindYDirTimer()
 {
-  if(GBackSolid(0, GetObjHeight()/2+2)) return(-1);
-  SetYDir(BoundBy(GetYDir() + RandomX(-GetYDir()) - 1 + Random(3), Max(GetYDir() - 1, -3), Min(GetYDir() + 1, 3)));
+  if(GBackSolid(nil, (GetObjHeight() ?? 0)/2+2)) return(-1);
+  SetYDir(BoundBy((GetYDir() ?? 0) + (RandomX(-(GetYDir() ?? 0)) ?? 0) - 1 + (Random(3) ?? 0), Max((GetYDir() ?? 0) - 1, -3), Min((GetYDir() ?? 0) + 1, 3)));
 }
 
 private func FloatProcess()
@@ -287,7 +301,7 @@ private func FloatProcess()
   if(!GetEffect("IntWindXDir", this()))
     AddEffect("IntWindXDir", this(), 1, 5, this());
 
-  if(!GetEffect("IntWindYDir", this()) && !GBackSolid(0, GetObjHeight()/2+2))
+  if(And(!GetEffect("IntWindYDir", this()), !GBackSolid(nil, (GetObjHeight() ?? 0)/2+2)))
   {
     AddEffect("IntWindYDir", this(), 1, 10, this());
   }
@@ -311,36 +325,36 @@ private func CheckCommandAction()
 {
   // Propeller an für Kommando
   if (GetCommand()) 
-    if (GetAction()S="FloatIdle") 
+    if (!!SEqual(GetAction(), "FloatIdle"))
       SetAction("FloatPropel");
   // Wenden nach rechts
-  if (GetAction() eq "FloatPropel")
+  if (!!SEqual(GetAction(), "FloatPropel"))
     if (Inside(GetComDir(),COMD_UpRight,COMD_DownRight)) 
-      if (GetDir()==DIR_Left)
+      if (Equal(GetDir(), DIR_Left))
         { SetAction("Turn"); SetDir(DIR_Right); return(true); }
   // Wenden nach links
-  if (GetAction() eq "FloatPropel")
+  if (!!SEqual(GetAction(), "FloatPropel"))
     if (Inside(GetComDir(),COMD_DownLeft,COMD_UpLeft)) 
-      if (GetDir()==DIR_Right)
+      if (Equal(GetDir(), DIR_Right))
         { SetAction("Turn"); SetDir(DIR_Left); return(true); }
   // Anhalten wenn Ziel erreicht
-  if(!GetCommand() && !GetComDir())
+  if(And(!GetCommand(), !GetComDir()))
     SetDirection(COMD_Stop);
-  return(0);  
+  return(nil);
 }   
 
 private func NoPilotCheck()
 {
-  if (!FindObject(0,0,0,0,0,0,"Push",this())) 
+  if (!FindObject(nil,nil,nil,nil,nil,nil,"Push",this()))
     return(FloatIdleDown());
-  return(0);
+  return(nil);
 }
 
 private func FloatIdleDown()
 {
-  if (GetAction()ne"FloatIdle")
+  if (!SEqual(GetAction(), "FloatIdle"))
     SetAction("FloatIdle");
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
   ClearCommand();
   return(1);
 }
@@ -352,7 +366,7 @@ protected func RejectCollect(id idObject, object pObj)
   // Pfeile vertragen sich nicht mit einem Luftschiff
   if (DefinitionCall(idObject,"IsArrow") )
    // Nur, wenn der Pfeil sich auch bewegt
-   if(GetXDir(pObj) || GetYDir(pObj))
+   if(Or(GetXDir(pObj), GetYDir(pObj)))
   {
     // bei brennendem Pfeil anzünden
     if(OnFire(pObj)) Incinerate();

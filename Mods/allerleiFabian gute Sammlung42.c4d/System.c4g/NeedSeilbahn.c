@@ -1,18 +1,22 @@
 /*-- Diese Funktionen werden für die Seilbahn benötigt --*/
 
-#strict 2
+#strict 3
 
-global func GetObjOffset(object pObject, int iEntryNr) { return(GetObjectVal("Offset",0,pObject,iEntryNr)); }
+global func GetObjOffset(object pObject, int iEntryNr) { iEntryNr ??= 0;
+    return(GetObjectVal("Offset",nil,pObject,iEntryNr)); }
 
 global func AbsRotation(int iRotation, int iType, int iPrec)
 {
+  iRotation ??= 0;
+  iType ??= 0;
+  iPrec ??= 0;
   if(!iPrec) iPrec = 1;
-  iRotation %= 360*iPrec;
+  S42MigrationAssign(iRotation, "%=", 360*(iPrec ?? 0));
   if(iType) {
-    if(iRotation <= -180*iPrec) iRotation += 360*iPrec;
-    else if(iRotation > 180*iPrec) iRotation -= 360*iPrec;
+    if((iRotation ?? 0) <= -180*(iPrec ?? 0)) S42MigrationAssign(iRotation, "+=", 360*(iPrec ?? 0));
+    else if((iRotation ?? 0) > 180*(iPrec ?? 0)) S42MigrationAssign(iRotation, "-=", 360*(iPrec ?? 0));
   }
   else
-    if(iRotation < 0) iRotation += 360*iPrec;
+    if((iRotation ?? 0) < 0) S42MigrationAssign(iRotation, "+=", 360*(iPrec ?? 0));
   return(iRotation);
 }

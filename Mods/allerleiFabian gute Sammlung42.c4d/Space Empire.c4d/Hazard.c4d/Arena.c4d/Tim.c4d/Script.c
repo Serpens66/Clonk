@@ -1,6 +1,6 @@
 /*-- TIM --*/
 
-#strict
+#strict 3
 
 local spawn;
 
@@ -9,7 +9,7 @@ func SpawnOk()
 {
   if(!Contents())
     return(RemoveObject());
-  if(Contents()->GetOwner() == NO_OWNER)
+  if(Equal(Contents()->GetOwner(), NO_OWNER))
     return(RemoveObject());
   spawn = true;
   // Last man standing: no spawn hiding
@@ -32,6 +32,6 @@ public func Spawn()
   if(!Contents()) return(RemoveObject());
 
   AddSpawnEffect(Contents(), Contents()->GetColorDw());
-  RemoveObject(0,1);
+  RemoveObject(nil,1);
   return(1);
 }

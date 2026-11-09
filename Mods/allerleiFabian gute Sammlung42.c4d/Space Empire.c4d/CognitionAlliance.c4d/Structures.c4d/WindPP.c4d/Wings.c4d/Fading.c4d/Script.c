@@ -1,6 +1,6 @@
 /*-- Fading-Effekt --*/
 
-#strict
+#strict 3
 
 
 /* Initialisierung */

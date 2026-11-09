@@ -1,6 +1,6 @@
 /*-- Sequium Door --*/
 
-#strict
+#strict 3
 
 #include GBDR
 
@@ -8,7 +8,7 @@ local pathfree;
 
 public func Initialize() 
 {
-	pathfree = false;
+	pathfree = nil;
 	SetAction("Closed");
 	_inherited();
 	// not destroyable
@@ -17,16 +17,16 @@ public func Initialize()
 
 public func OnOpen()
 {
-	if(GetAction() eq "Open" || GetAction() eq "Opened") return();
+	if(Or(!!SEqual(GetAction(), "Open"), !!SEqual(GetAction(), "Opened"))) return;
 	SetAction("Open");
 	Sound("SequiumDoorOpen");
 }
 
 public func OnClose()
 {
-	if(GetAction() eq "Closed" || GetAction() eq "Close") return();
+	if(Or(!!SEqual(GetAction(), "Closed"), !!SEqual(GetAction(), "Close"))) return;
 	SetAction("Close");
-	SetSolidMask(5, 0, 8, 30, 5, 0);
+	SetSolidMask(5, nil, 8, 30, 5, nil);
 	Sound("SequiumDoorClose");
 }
 
@@ -42,5 +42,5 @@ public func Serialize(array& extra)
 {
 	_inherited(extra);
 	if (pathfree)
-		extra[GetLength(extra)] = "SetPathFree()";
+		extra[(GetLength(extra) ?? 0)] = "SetPathFree()";
 }

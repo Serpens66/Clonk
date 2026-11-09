@@ -1,151 +1,156 @@
 /* --- Array Mathematik --- */
 
-#strict 2
+#strict 3
 
 global func ArrayMathAddArray(& anArray, array anArrayAdd)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) != GetLength(anArrayAdd))
+	if (!S42MigrationEqual(GetLength(anArray), GetLength(anArrayAdd)))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((IsNumeric(anArray[i])) && (IsNumeric(anArrayAdd[i])))
-			anArray[i] += anArrayAdd[i];
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((IsNumeric(anArray[(i ?? 0)])) && (IsNumeric(anArrayAdd[(i ?? 0)])))
+			S42MigrationAssign(anArray[(i ?? 0)], "+=", (anArrayAdd[(i ?? 0)] ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathAddInt(& anArray, int dAdd)
 {
-	if (GetType(anArray) != C4V_Array)
+	dAdd ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if (IsNumeric(anArray[i]))
-			anArray[i] += dAdd;
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (IsNumeric(anArray[(i ?? 0)]))
+			S42MigrationAssign(anArray[(i ?? 0)], "+=", (dAdd ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathSubArray(& anArray, array anArraySub)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) != GetLength(anArraySub))
+	if (!S42MigrationEqual(GetLength(anArray), GetLength(anArraySub)))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((IsNumeric(anArray[i])) && (IsNumeric(anArraySub[i])))
-			anArray[i] -= anArraySub[i];
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((IsNumeric(anArray[(i ?? 0)])) && (IsNumeric(anArraySub[(i ?? 0)])))
+			S42MigrationAssign(anArray[(i ?? 0)], "-=", (anArraySub[(i ?? 0)] ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathSubInt(& anArray, int dSub)
 {
-	if (GetType(anArray) != C4V_Array)
+	dSub ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if (IsNumeric(anArray[i]))
-			anArray[i] -= dSub;
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (IsNumeric(anArray[(i ?? 0)]))
+			S42MigrationAssign(anArray[(i ?? 0)], "-=", (dSub ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathMulArray(& anArray, array anArrayMul)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) != GetLength(anArrayMul))
+	if (!S42MigrationEqual(GetLength(anArray), GetLength(anArrayMul)))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((IsNumeric(anArray[i])) && (IsNumeric(anArrayMul[i])))
-			anArray[i] *= anArrayMul[i];
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((IsNumeric(anArray[(i ?? 0)])) && (IsNumeric(anArrayMul[(i ?? 0)])))
+			S42MigrationAssign(anArray[(i ?? 0)], "*=", (anArrayMul[(i ?? 0)] ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathMulInt(& anArray, int dMul)
 {
-	if (GetType(anArray) != C4V_Array)
+	dMul ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if (IsNumeric(anArray[i]))
-			anArray[i] *= dMul;
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (IsNumeric(anArray[(i ?? 0)]))
+			S42MigrationAssign(anArray[(i ?? 0)], "*=", (dMul ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathDivArray(& anArray, array anArrayDiv)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) != GetLength(anArrayDiv))
+	if (!S42MigrationEqual(GetLength(anArray), GetLength(anArrayDiv)))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((GetType(anArray[i]) == C4V_Int) && (GetType(anArrayDiv[i]) == C4V_Int) && (anArrayDiv[i] != 0))
-			anArray[i] /= anArrayDiv[i];
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((S42MigrationEqual(GetType(anArray[(i ?? 0)]), C4V_Int)) && (S42MigrationEqual(GetType(anArrayDiv[(i ?? 0)]), C4V_Int)) && (!S42MigrationEqual(anArrayDiv[(i ?? 0)], nil)))
+			S42MigrationAssign(anArray[(i ?? 0)], "/=", (anArrayDiv[(i ?? 0)] ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathDivInt(& anArray, int dDiv)
 {
-	if (GetType(anArray) != C4V_Array)
+	dDiv ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!dDiv)
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if (IsNumeric(anArray[i]))
-			anArray[i] /= dDiv;
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (IsNumeric(anArray[(i ?? 0)]))
+			S42MigrationAssign(anArray[(i ?? 0)], "/=", (dDiv ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathModArray(& anArray, array anArrayMod)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetLength(anArray) != GetLength(anArrayMod))
+	if (!S42MigrationEqual(GetLength(anArray), GetLength(anArrayMod)))
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((IsNumeric(anArray[i])) && (IsNumeric(anArrayMod[i])) && (anArrayMod[i] != 0))
-			anArray[i] %= anArrayMod[i];
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((IsNumeric(anArray[(i ?? 0)])) && (IsNumeric(anArrayMod[(i ?? 0)])) && (!S42MigrationEqual(anArrayMod[(i ?? 0)], nil)))
+			S42MigrationAssign(anArray[(i ?? 0)], "%=", (anArrayMod[(i ?? 0)] ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArrayMathModInt(& anArray, int dMod)
 {
-	if (GetType(anArray) != C4V_Array)
+	dMod ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!dMod)
 		return -1;
-	if (GetLength(anArray) == 0)
+	if (S42MigrationEqual(GetLength(anArray), nil))
 		return GetLength(anArray);
-	for (var i = 0; i < GetLength(anArray); i++)
-		if (IsNumeric(anArray[i]))
-			anArray[i] %= dMod;
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (IsNumeric(anArray[(i ?? 0)]))
+			S42MigrationAssign(anArray[(i ?? 0)], "%=", (dMod ?? 0));
 	return GetLength(anArray);
 }
 
 global func ArraySum(array danArray)
 {
-	var dResult = 0;
+	var dResult = nil;
 	for (var dValue in danArray) 
-		dResult += dValue;
+		S42MigrationAssign(dResult, "+=", (dValue ?? 0));
 	return dResult;
 }
 
 //Ist eine Zahl
 global func IsNumeric(xValue)
 {
-	return (xValue == 0) || (GetType(xValue) == C4V_Int);
+	return (S42MigrationEqual(xValue, nil)) || (S42MigrationEqual(GetType(xValue), C4V_Int));
 } 

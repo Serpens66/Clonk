@@ -1,12 +1,12 @@
 /*---- Jaffa ----*/
 
-#strict
+#strict 3
 #include CLNK
 #include HZCK
 
 public func Zated()
 {
-  if(GetAction() eq "Lie")
+  if(!!SEqual(GetAction(), "Lie"))
   {
    SetAction("Lie");
    EMPShockEffect(50);
@@ -19,6 +19,9 @@ public func Zated()
 
 protected func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 {
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   if(Control2Contents("ControlUpdate", comdir, dig, throw)) return(1);
   if(ControlLadder("ControlUpdate", comdir, dig, throw)) return(1);
 

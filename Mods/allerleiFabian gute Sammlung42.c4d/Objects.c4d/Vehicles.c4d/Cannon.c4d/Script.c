@@ -1,6 +1,6 @@
 /*-- Haubitze --*/
 
-#strict
+#strict 3
 
 /* Initialisierung */
 
@@ -14,6 +14,7 @@ protected func Initialize()
 
 protected func ControlConf(int conf)
 {
+  conf ??= 0;
   if(AimStdConf(conf))
     Sound("CatapultSet");
 }
@@ -37,6 +38,7 @@ public func ControlDown()
 
 public func ControlUpdate(object clonk, int comdir) // Zielen: JnR
 {
+  comdir ??= 0;
   AimUpdate(clonk, comdir, 4, "ControlConf");
 }
 
@@ -52,7 +54,7 @@ public func ControlThrow(pClonk)    // Feuern / Inhalt
   var pThing;
   if (pThing = pClonk->Contents())
     if (AllowLoad(GetID(pThing)))
-      return(0);
+      return(nil);
   // Abfeuern wenn mˆglich, sonst Objekt herausnehmen
   return(Fire());
 }
@@ -60,8 +62,10 @@ public func ControlThrow(pClonk)    // Feuern / Inhalt
 public func ControlCommand(string szCommand,object pTarget,int iX,int iY)
 {
   // Feuern
-  if(szCommand eq "MoveTo")
-    if(Distance(GetX(),GetY(),iX,iY)>50)
+  iX ??= 0;
+  iY ??= 0;
+  if(!!SEqual(szCommand, "MoveTo"))
+    if((Distance(GetX(),GetY(),iX,iY) ?? 0)>50)
     {
       HaltPushers();
       return(FireAt(iX,iY));
@@ -74,28 +78,29 @@ private func HaltPushers()
 {
   var pClonk;
   // Alle Clonks die die Haubitze anfassen, sollen stoppen
-  while(pClonk=FindObject(0,0,0,0,0,0,"Push",this(),0,pClonk))
-    SetComDir(COMD_Stop(),pClonk);
+  while(pClonk=FindObject(nil,nil,nil,nil,nil,nil,"Push",this(),nil,pClonk))
+    SetComDir(COMD_Stop,pClonk);
 }
 
 public func Fire(bool fAuto)
 {
   // Schieﬂpulver und Projektil suchen
+  fAuto ??= false;
   var pGunpowder=FindContents(GUNP), pProjectile=FindOtherContents(GUNP);
   // Schieﬂpulver oder Projektil fehlt
-  if (!pGunpowder || !pProjectile) 
+  if (Or(!pGunpowder, !pProjectile))
   {
     Sound("Click");
-    return(0);
+    return(nil);
   }
   // Schieﬂpulver verbrauchen
   RemoveObject(pGunpowder);
 
   // Austritt berechnen
-  var iX = (GetPhase()+3)*(GetDir()*2-1);
-  var iY = GetPhase()-14;
-  var iAngle = BoundBy(GetPhase()*5-5,0,90);
-  var iXDir = Sin(iAngle,32*(GetDir()*2-1));
+  var iX = ((GetPhase() ?? 0)+3)*((GetDir() ?? 0)*2-1);
+  var iY = (GetPhase() ?? 0)-14;
+  var iAngle = BoundBy((GetPhase() ?? 0)*5-5,nil,90);
+  var iXDir = Sin(iAngle,32*((GetDir() ?? 0)*2-1));
   var iYDir = Cos(iAngle,-18);
 
   // Projektil abfeuern
@@ -103,13 +108,13 @@ public func Fire(bool fAuto)
 
   // Sicht verfolgen (wenn kein automatischer Schuss)
   if(!fAuto)
-    if(GetPlrViewMode(GetController())!=2)
+    if(!Equal(GetPlrViewMode(GetController()), 2))
       SetPlrView(GetController(),pProjectile);
   // Sound
   Sound("Blast2");
   // Rauch
-  for (var i = 0; i < 6; ++i) 
-    Smoke(iX+RandomX(-5,+5),iY+RandomX(-5,+5),RandomX(5,12));
+  for (var i = nil; (i ?? 0) < 6; S42MigrationStep(i, 1))
+    Smoke((iX ?? 0)+(RandomX(-5,+5) ?? 0),(iY ?? 0)+(RandomX(-5,+5) ?? 0),RandomX(5,12));
   // Erfolgreich geschossen
   return(1);
 }
@@ -118,14 +123,17 @@ public func Fire(bool fAuto)
 
 public func FireAt(int iX,int iY,int fAuto)
 {
+  iX ??= 0;
+  iY ??= 0;
+  fAuto ??= 0;
   var iAngle;
   // Zielwinkel
   iAngle = Angle(GetX(),GetY(),iX,iY);
   // Bei grˆﬂerer Distanz hˆher zielen
-  if(Inside(iX-GetX(),+1,+300))
-     iAngle -= Abs(iX-GetX())/12;
-  if(Inside(iX-GetX(),-300,-1))
-     iAngle += Abs(iX-GetX())/12;
+  if(Inside((iX ?? 0)-(GetX() ?? 0),+1,+300))
+     S42MigrationAssign(iAngle, "-=", (Abs((iX ?? 0)-(GetX() ?? 0)) ?? 0)/12);
+  if(Inside((iX ?? 0)-(GetX() ?? 0),-300,-1))
+     S42MigrationAssign(iAngle, "+=", (Abs((iX ?? 0)-(GetX() ?? 0)) ?? 0)/12);
   // Zielen
   AimToAngle(iAngle);
   // Feuern
@@ -135,12 +143,13 @@ public func FireAt(int iX,int iY,int fAuto)
 public func AimToAngle(int iAngle)
 {
   // Winkel anpassen
-  while(iAngle > 180) iAngle-=360;
+  iAngle ??= 0;
+  while((iAngle ?? 0) > 180) S42MigrationAssign(iAngle, "-=", 360);
   // Richtung
-  if(iAngle > 0) SetDir(DIR_Right());
-  if(iAngle < 0) SetDir(DIR_Left());
+  if((iAngle ?? 0) > 0) SetDir(DIR_Right);
+  if((iAngle ?? 0) < 0) SetDir(DIR_Left);
   // Zielrichtung
-  SetPhase(BoundBy( 19*Abs(iAngle)/90, 0,18));
+  SetPhase(BoundBy( 19*(Abs(iAngle) ?? 0)/90, nil,18));
 }
     
 /* Laden */
@@ -155,20 +164,20 @@ protected func RejectCollect(id idObj, object pObj)
 private func AllowLoad(id idObj)
 {
   // Noch jede Menge Platz
-  if (ContentsCount() < 9) return(1);
+  if ((ContentsCount() ?? 0) < 9) return(1);
   // Niemals mehr als 10 Objekte laden: Wird gebraucht, wenn aus ControlThrow aufgerufen!
-  if (ContentsCount() >= 10) return(0);
+  if ((ContentsCount() ?? 0) >= 10) return(nil);
   // Nicht mehr als 9 Schieﬂpulver laden (Idiotenschutz)
-  if (idObj == GUNP)
+  if (Equal(idObj, GUNP))
   {
-    if (ContentsCount(GUNP) == 9)
-      return(0);
+    if (Equal(ContentsCount(GUNP), 9))
+      return(nil);
   }
   // Nicht mehr als 9 Projektile laden, wenn noch Platz f¸r Pulver gebraucht wird
   else
   {
-    if (ContentsCount(GUNP) == 0)
-      return(0);
+    if (Equal(ContentsCount(GUNP), nil))
+      return(nil);
   }
   // Laden o.k.
   return(1);

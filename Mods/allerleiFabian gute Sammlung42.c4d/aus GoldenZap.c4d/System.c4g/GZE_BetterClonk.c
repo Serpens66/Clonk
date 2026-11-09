@@ -1,4 +1,4 @@
-#strict 2
+#strict 3
 #appendto CLNK
 
 
@@ -6,24 +6,24 @@
 
 public func ControlThrow() 
 {	
-	if (GetPlrDownDouble(GetOwner())) return(0);	
+	if (GetPlrDownDouble(GetOwner())) return(nil);
 	// Träger bereit zum Werfen?
     
     var pCrew,i=1; // i bei 1 starten, weil der befehl nicht nochmal an den hauptclonk geschickt werden soll
-    if (Contents(0) && (GetAction() == "HoldJump" || GetAction() == "Jump")) 
+    if (Contents(nil) && (S42MigrationEqual(GetAction(), "HoldJump") || S42MigrationEqual(GetAction(), "Jump")))
         if (SetAction("JumpThrow"))  
         { 
-            while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+            while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
             {
-                if (Contents(0,pCrew) && (GetAction(pCrew) == "HoldJump" || GetAction(pCrew) == "Jump")) 
+                if (Contents(nil,pCrew) && (S42MigrationEqual(GetAction(pCrew), "HoldJump") || S42MigrationEqual(GetAction(pCrew), "Jump")))
                     pCrew->SetAction("JumpThrow");
             }
             return(1); 
         }
 
         // wenn Speer, dann richtig werfen
-        if(GetID(Contents(0)) == SPER)
-        return(Throwing(Contents(0)));
+        if(S42MigrationEqual(GetID(Contents(nil)), SPER))
+        return(Throwing(Contents(nil)));
 
 	return(_inherited());
 }
@@ -31,12 +31,12 @@ public func ControlThrow()
 public func ControlLeft() 
 {
 	var pCrew,i=1; // i bei 1 starten, weil der befehl nicht nochmal an den hauptclonk geschickt werden soll   
-    if (GetAction() == "HoldJump" || GetAction() == "Jump")
+    if (S42MigrationEqual(GetAction(), "HoldJump") || S42MigrationEqual(GetAction(), "Jump"))
     {
         SetDir(DIR_Left);
-        while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+        while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
         {
-            if (GetAction(pCrew) == "HoldJump" || GetAction(pCrew) == "Jump")
+            if (S42MigrationEqual(GetAction(pCrew), "HoldJump") || S42MigrationEqual(GetAction(pCrew), "Jump"))
                 SetDir(DIR_Left,pCrew);
         }
     }        
@@ -46,12 +46,12 @@ public func ControlLeft()
 public func ControlRight() 
 {
 	var pCrew,i=1; // i bei 1 starten, weil der befehl nicht nochmal an den hauptclonk geschickt werden soll   
-    if (GetAction() == "HoldJump" || GetAction() == "Jump")
+    if (S42MigrationEqual(GetAction(), "HoldJump") || S42MigrationEqual(GetAction(), "Jump"))
     {
         SetDir(DIR_Right);
-        while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+        while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
         {
-            if (GetAction(pCrew) == "HoldJump" || GetAction(pCrew) == "Jump")
+            if (S42MigrationEqual(GetAction(pCrew), "HoldJump") || S42MigrationEqual(GetAction(pCrew), "Jump"))
                 SetDir(DIR_Right,pCrew);
         }
     }        
@@ -60,5 +60,5 @@ public func ControlRight()
 
 func ExitItem() 
 {
-	return (Throwing(Contents(0)));
+	return (Throwing(Contents(nil)));
 }

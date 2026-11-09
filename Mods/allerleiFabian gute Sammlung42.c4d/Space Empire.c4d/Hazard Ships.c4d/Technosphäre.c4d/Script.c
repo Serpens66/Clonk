@@ -1,6 +1,6 @@
 /*-- Technosphäre --*/
 
-#strict
+#strict 3
 
 public func IsHazardShip()  { return(true); }
 public func IsBulletTarget(){ return(true); }
@@ -13,9 +13,9 @@ func Ownerkontrolle()
 {
 var owner,obj;
 for (obj in FindObjects(Find_Or(Find_Container(this()),Find_Container(heat),Find_Container(leitstand),Find_Container(schild))) )
-if(obj->~IsClonk() && GetController()==-1) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
+if(And(obj->~IsClonk(), Equal(GetController(), -1))) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
   {owner=GetOwner(obj);
-  if(GetOwner(obj)!=GetOwner(this()))
+  if(!Equal(GetOwner(obj), GetOwner(this())))
     {
   Sound("BipBipBip");
   Message("%v geht in den Besitz von %v über.",this(),GetName(this()),GetPlayerName(owner));
@@ -36,13 +36,13 @@ func Initialize() {
 
   SetEntrance(1);
 
-  heat=CreateObject(PRQ_,0,0,GetOwner());
+  heat=CreateObject(PRQ_,nil,nil,GetOwner());
   ObjectSetAction(heat,"Attaching",this());
 
-  leitstand=CreateObject(TSG_,0,0,GetOwner());
+  leitstand=CreateObject(TSG_,nil,nil,GetOwner());
   ObjectSetAction(leitstand,"Attaching",this());
 
-  schild=CreateObject(TSS_,0,0,GetOwner());
+  schild=CreateObject(TSS_,nil,nil,GetOwner());
   ObjectSetAction(schild,"Attaching",this());
 
   energie=10000;
@@ -54,15 +54,15 @@ func Initialize() {
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -71,48 +71,50 @@ protected func RejectCollect()
 public func OnDmg(int iDmg, int iType)
 { 
   //Mögliche Resistenzen berücksichtigen
-  if(iType & DMG_Projectile)
+  iDmg ??= 0;
+  iType ??= 0;
+  if((iType ?? 0) & (DMG_Projectile ?? 0))
     return(80);
-  if(iType & DMG_Fire)
+  if((iType ?? 0) & (DMG_Fire ?? 0))
     return(90);
-  if(iType & DMG_Explosion)
+  if((iType ?? 0) & (DMG_Explosion ?? 0))
     return(-10);
-  if(iType == DMG_Energy) {
+  if(Equal(iType, DMG_Energy)) {
     DoEnergy(iDmg, this(), true);
     return(-100);
     }
-  if(iType & DMG_Bio)
+  if((iType ?? 0) & (DMG_Bio ?? 0))
     return(50);
 }
 
 func Damage()
 {
-  if(GetDamage()<100) return(0);
-  counter=0;
-  SetEntrance(0);
+  if((GetDamage() ?? 0)<100) return(nil);
+  counter=nil;
+  SetEntrance(nil);
   SetAction("Down");
   return(1);
 }
 
 func Down()
 {
-  counter++;
-  if(counter>300) Explosion();
+  S42MigrationStep(counter, 1, true);
+  if((counter ?? 0)>300) Explosion();
   Schaden();
 }
 
 func Schaden()
 {
   //Schaden sichtbar machen
-  if(GetDamage()>=20)
-  Sparks(GetDamage()/20,RGB(0,50,255),RandomX(-20,20),RandomX(-15,15));
-  if(GetDamage()>=80)
+  if((GetDamage() ?? 0)>=20)
+  Sparks((GetDamage() ?? 0)/20,RGB(nil,50,255),RandomX(-20,20),RandomX(-15,15));
+  if((GetDamage() ?? 0)>=80)
   {
-  CreateParticle("Thrust",-5+Random(10) ,-5+Random(10),GetXDir()/2,+2,RandomX(70,90),RGBa(0,150,200,60),0,0);
-  CreateParticle("Smoke2",-10+Random(30) ,-10+Random(30),GetXDir()/2,+5,RandomX(80,120),RGBa(220,200,180,0),0,0);
+  CreateParticle("Thrust",-5+(Random(10) ?? 0) ,-5+(Random(10) ?? 0),(GetXDir() ?? 0)/2,+2,RandomX(70,90),RGBa(nil,150,200,60),nil,nil);
+  CreateParticle("Smoke2",-10+(Random(30) ?? 0) ,-10+(Random(30) ?? 0),(GetXDir() ?? 0)/2,+5,RandomX(80,120),RGBa(220,200,180,nil),nil,nil);
   }
-  if(GetDamage()>=90)
-  if(Random(250-GetDamage()*2)==1) DoDamage(1);
+  if((GetDamage() ?? 0)>=90)
+  if(Equal(Random(250-(GetDamage() ?? 0)*2), 1)) DoDamage(1);
 }
 
 func Hit()
@@ -131,10 +133,10 @@ func Removal()
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   Removal();
- if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(40); else FakeExplode(40,0,0,40);
+ if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(40); else FakeExplode(40,nil,nil,40);
   return(1);
 }
 
@@ -142,43 +144,43 @@ func Explosion()
 
 func ContainedUp()
 {
-  return(SetComDir(COMD_Up()));
+  return(SetComDir(COMD_Up));
 }
 
 func ContainedDown()
 {
-  return(SetComDir(COMD_Down()));
+  return(SetComDir(COMD_Down));
 }
 
 func ContainedRight()
 {
-  return(SetComDir(COMD_Right()));
+  return(SetComDir(COMD_Right));
 }
 
 func ContainedLeft()
 {
-  return(SetComDir(COMD_Left()));
+  return(SetComDir(COMD_Left));
 }
 
 //Menüsteuerung
 func ContainedDig()
 {
-  CreateMenu(A56B,Par(0),0,0,0,0);
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(leitstand->Besetzt())    AddMenuItem("%s","Geschuetzkanzel",M17H,Par(0));  //Geschützkanzel
-  if(!(leitstand->Besetzt())) AddMenuItem("%s","Geschuetzkanzel",M17G,Par(0)); 
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s","System",M37G,Par(0)); //Systemfähigkeiten
-  AddMenuItem("%s","Schwebe",M27G,Par(0));   //Schwebe
-  AddMenuItem("%s","Statuskontrolle",M57G,Par(0)); //Anzeige Energie
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(0));  //Licht ein
-  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(0));  //Licht aus
-  AddMenuItem("%s","Ausstieg",M47G,Par(0));    //Ausstieg
-  SelectMenuItem(7,Par(0)); 
+  CreateMenu(A56B,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(leitstand->Besetzt())    AddMenuItem("%s","Geschuetzkanzel",M17H,Par(nil));  //Geschützkanzel
+  if(!(leitstand->Besetzt())) AddMenuItem("%s","Geschuetzkanzel",M17G,Par(nil));
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s","System",M37G,Par(nil)); //Systemfähigkeiten
+  AddMenuItem("%s","Schwebe",M27G,Par(nil));   //Schwebe
+  AddMenuItem("%s","Statuskontrolle",M57G,Par(nil)); //Anzeige Energie
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(nil));  //Licht ein
+  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(nil));  //Licht aus
+  AddMenuItem("%s","Ausstieg",M47G,Par(nil));    //Ausstieg
+  SelectMenuItem(7,Par(nil));
   return(1);
 }
 
@@ -206,10 +208,10 @@ func Fliegen()
   Getarnt();
 
   //Eintritt nur für eine Person
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   //SetOwner(GetOwner(pilot));
-  SetEntrance(0); 
+  SetEntrance(nil);
   }
   return(1);
 }
@@ -218,19 +220,19 @@ func Gelandet()
 {
   //Schwebe
   if(GetDamage()) if(!Random(100)) Reparatur();  
-  if (counter>3600) counter=0;
-  counter+=50;
-  if(GetXDir()>0)  SetXDir(GetXDir()-2);  
-  if(GetXDir()<0)  SetXDir(GetXDir()+2);
-  SetYDir(Sin(counter,18,10),0,10);
+  if ((counter ?? 0)>3600) counter=nil;
+  S42MigrationAssign(counter, "+=", 50);
+  if((GetXDir() ?? 0)>0)  SetXDir((GetXDir() ?? 0)-2);
+  if((GetXDir() ?? 0)<0)  SetXDir((GetXDir() ?? 0)+2);
+  SetYDir(Sin(counter,18,10),nil,10);
   Schaden();
   Getarnt();
-  if(energie<10000) energie++;
+  if((energie ?? 0)<10000) S42MigrationStep(energie, 1, true);
   //Eintritt nur für eine Person
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   //SetOwner(GetOwner(pilot));
-  SetEntrance(0); 
+  SetEntrance(nil);
   }
   return(1);
 }
@@ -242,10 +244,10 @@ func Wasser()
   Schaden();
   Getarnt();
   //Eintritt nur für eine Person
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   //SetOwner(GetOwner(pilot));
-  SetEntrance(0); 
+  SetEntrance(nil);
   }
   return(1);
 }
@@ -254,7 +256,7 @@ func Wasser()
 public func Reparatur()
 {
   DoDamage(-3);
-  CastParticles("PxSpark",Random(20)-10,Random(20)-10,0,10,30,40, RGB(187, 214, 224), RGB(200, 224, 250));
+  CastParticles("PxSpark",(Random(20) ?? 0)-10,(Random(20) ?? 0)-10,nil,10,30,40, RGB(187, 214, 224), RGB(200, 224, 250));
   if(!Random(2)) Sound("PRReparatur1");
   if(!Random(1)) Sound("PRReparatur2");
   Sound("PRReparatur3");
@@ -268,9 +270,9 @@ func Geschuetzkanzel()
   {
   Message("Kanzel besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(leitstand,pilot);
   SetEntrance(1);
   Sound("Airlock1");
@@ -283,7 +285,7 @@ func Schwebe()
   if (SEqual(GetAction(),"Gelandet")) return(SetAction("Fliegen"));
   if (SEqual(GetAction(),"Fliegen"))  return(SetAction("Gelandet"));
   {
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   return(SetAction("Gelandet"));
   }
   return(1);
@@ -292,10 +294,10 @@ func Schwebe()
 
 func Ausstieg()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Sound("Airlock1");
-  Exit(pilot,0,20);
-  pilot=0;
+  Exit(pilot,nil,20);
+  pilot=nil;
   SetEntrance(1);
   return(1);
 }
@@ -304,7 +306,7 @@ func Ausstieg()
 func Statuskontrolle()
 {
 
-  Message("S:%d% E:%d%",this(),GetDamage(),energie/100);
+  Message("S:%d% E:%d%",this(),GetDamage(),(energie ?? 0)/100);
 
   return(1);
 }
@@ -312,8 +314,8 @@ func Statuskontrolle()
 
 func System()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
-  CreateMenu(A56B ,pilot,0,0,0,0);
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
+  CreateMenu(A56B ,pilot,nil,nil,nil,nil);
   AddMenuItem("%s","Tarnung",M77G,pilot);   //Tarnung
   AddMenuItem("%s","Warp",M97G,pilot);      //Warpen
   AddMenuItem("%s","Warpboje",M87G,pilot);  //Tarnung
@@ -327,18 +329,18 @@ func Tarnung()
   Enttarnen();
   return(1);
   }
-  if(energie<2000)
+  if((energie ?? 0)<2000)
   {
   Message("Nicht genug Energie.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   RemoveObject(schild);
-  SetVisibility(VIS_Allies | VIS_Owner);
+  SetVisibility((VIS_Allies ?? 0) | (VIS_Owner ?? 0));
   SetClrModulation(RGBa(180,180,255,100));
-  SetVisibility(VIS_Allies | VIS_Owner,leitstand);
+  SetVisibility((VIS_Allies ?? 0) | (VIS_Owner ?? 0),leitstand);
   SetClrModulation(RGBa(180,180,255,100),leitstand);
-  energie-=2000;
+  S42MigrationAssign(energie, "-=", 2000);
   Nofx();
   Sound("Cloak1",this());
   tarn=1;
@@ -349,8 +351,8 @@ func Getarnt()
 {
   if(tarn) 
   {
-  energie-=5;
-  if(energie<0) Enttarnen();
+  S42MigrationAssign(energie, "-=", 5);
+  if((energie ?? 0)<0) Enttarnen();
   }
   return(1);
 }
@@ -358,13 +360,13 @@ func Getarnt()
 
 func Enttarnen()
 {
-  tarn=0;
-  schild=CreateObject(TSS_,0,0,GetOwner());
+  tarn=nil;
+  schild=CreateObject(TSS_,nil,nil,GetOwner());
   ObjectSetAction(schild,"Attaching",this());
   SetVisibility(VIS_All);
-  SetClrModulation(RGBa(255,255,255,0));
+  SetClrModulation(RGBa(255,255,255,nil));
   SetVisibility(VIS_All,leitstand);
-  SetClrModulation(RGBa(255,255,255,0),leitstand);
+  SetClrModulation(RGBa(255,255,255,nil),leitstand);
   Nofx();
   Sound("Cloak2",this());
   return(1);
@@ -376,20 +378,20 @@ func Warp()
   {
   Sound("Error");
   Message("Keine Warpboje gesetzt.", this());
-  return(0);
+  return(nil);
   }
-  if(energie<5000)
+  if((energie ?? 0)<5000)
   {
   Message("Nicht genug Energie.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Sound("DeEnergize");
-  energie-=5000;
+  S42MigrationAssign(energie, "-=", 5000);
   Nofx();
   SetPosition(GetX(boje),GetY(boje));
-  SetXDir(0);
-  SetYDir(0);
+  SetXDir(nil);
+  SetYDir(nil);
   Nofx();
   return(1);
 }
@@ -399,13 +401,13 @@ func Warp()
 func Warpboje()
 {
   if(boje) boje->Hit();
-  if(energie<2000)
+  if((energie ?? 0)<2000)
   {
   Message("Nicht genug Energie.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
-  energie-=2000;
+  S42MigrationAssign(energie, "-=", 2000);
   boje=CreateObject(TSB_);
   Sound("DeEnergize");
   return(1);
@@ -424,7 +426,8 @@ func Nofx()
 
 
 
-public IsVehicleProduct: return(1);
+public func IsVehicleProduct(...) { return(1);
+}
 
 
 

@@ -2,12 +2,15 @@
 
 local obj, cost;
 
-#strict
+#strict 3
 
-SetSaver:
-  obj=Par(0);
+func SetSaver(...) {
+  obj=Par(nil);
   cost=Par(1);
   return(1);
+}
 
-Object: return(obj);
-Preis: return(cost);
+func Object(...) { return(obj);
+}
+func Preis(...) { return(cost);
+}

@@ -1,6 +1,6 @@
 /* Kraftfeldbruecke - Segment */
 
-#strict 2
+#strict 3
 #include FCWS
 
 private func CheckStuck()
@@ -11,12 +11,12 @@ private func CheckStuck()
   {
     iX=GetX(pClonk);
     iY=GetY(pClonk);
-    while(Stuck(pClonk) && Inside(GetY(pClonk)-GetY(),-20,20))
+    while(Stuck(pClonk) && Inside((GetY(pClonk) ?? 0)-(GetY() ?? 0),-20,20))
     {
-      if(!(iYChange=BoundBy(GetY(pClonk)-GetY(),-1,1))) iYChange=1;
+      if(!(iYChange=BoundBy((GetY(pClonk) ?? 0)-(GetY() ?? 0),-1,1))) iYChange=1;
       // Zur Sicherheit...
-      if(!Inside(GetY(pClonk)+iYChange,-100,LandscapeHeight())) break;
-      SetPosition(GetX(pClonk),GetY(pClonk)+iYChange,pClonk);
+      if(!Inside((GetY(pClonk) ?? 0)+(iYChange ?? 0),-100,LandscapeHeight())) break;
+      SetPosition(GetX(pClonk),(GetY(pClonk) ?? 0)+(iYChange ?? 0),pClonk);
     }
     // verschieben fehlgeschlagen: rückgängig machen
     if(Stuck(pClonk)) SetPosition(iX,iY,pClonk);

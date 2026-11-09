@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 #appendto CLNK //hier weitere Definitionen nach dem Muster #appdento ID einfügen
 
@@ -19,8 +19,8 @@ protected func ControlDigSingle() {
 	if(_inherited())
 		return(1);
 
-if(!(TunnelRules_iBreakOpen||TunnelRules_iBreakThrough)) //keine Regel gesetzt
-	return(0);
+if(!(Or(TunnelRules_iBreakOpen, TunnelRules_iBreakThrough))) //keine Regel gesetzt
+	return(nil);
 
 if(TunnelRules_iEffect) //wurde der alte Effekt noch nicht entfernt?
 	RemoveEffect("TunnelRules",this()); //weg damit
@@ -36,22 +36,22 @@ if(TunnelRules_iBreakOpen)
 		iEffectTimer = 60; //ansonsten eilt es nicht, nur zum Entfernen gebraucht
 	}
 
-TunnelRules_iEffect = AddEffect ("TunnelRules", this(), 1, iEffectTimer, this(), 0);
-return(0); //freigeben zum Graben
+TunnelRules_iEffect = AddEffect ("TunnelRules", this(), 1, iEffectTimer, this(), nil);
+return(nil); //freigeben zum Graben
 }
 
 private func Digging()
 {
 
 // beim Brueckenbau nichts machen
-if(GetAction(this()) eq "Bridge")
+if(!!SEqual(GetAction(this()), "Bridge"))
 return(_inherited());
 
 	if(TunnelRules_iBreakOpen)
 		{
 			if(TunnelRules_iBOLock)	
-				TunnelRules_iBOLock--;
-			EffectVar (0, this(), TunnelRules_iEffect)=GetXDir(); 
+				S42MigrationStep(TunnelRules_iBOLock, -1, true);
+			EffectVar (nil, this(), TunnelRules_iEffect)=GetXDir();
 			EffectVar (1, this(), TunnelRules_iEffect)=GetYDir(); 
 		}
 
@@ -67,22 +67,22 @@ return(_inherited());
 private func TunnelRules_checkBreakThrough()
 {
 
-	var iSearchStartY=GetObjHeight(this())/2+1;
+	var iSearchStartY=(GetObjHeight(this()) ?? 0)/2+1;
 	var iCount;
 
-	for(var iToleranz=-1;iToleranz<2;iToleranz++)
+	for(var iToleranz=-1;(iToleranz ?? 0)<2;S42MigrationStep(iToleranz, 1, true))
 	{	
 	
-	iCount=0;
-	for(Var()=0;Var()<TunnelRules_iBTDist;Var()++)
+	iCount=nil;
+	for(Var()=nil;(Var() ?? 0)<(TunnelRules_iBTDist ?? 0);S42MigrationStep(Var(), 1, true))
 	{
-		if(!GBackSolid(iToleranz,iSearchStartY+Var())) 
+		if(!GBackSolid(iToleranz,(iSearchStartY ?? 0)+(Var() ?? 0)))
 			{
 			
-			iCount++;
-			if(iCount>TunnelRules_iBTdefHole) //genug Luft um als Hoehle zu gelten			
+			S42MigrationStep(iCount, 1, true);
+			if((iCount ?? 0)>(TunnelRules_iBTdefHole ?? 0)) //genug Luft um als Hoehle zu gelten
 				{
-				ShakeFree(GetX(),GetY()+iSearchStartY/2,TunnelRules_iBTShakeFree);
+				ShakeFree(GetX(),(GetY() ?? 0)+(iSearchStartY ?? 0)/2,TunnelRules_iBTShakeFree);
 				return(1);			
 				}
 			}
@@ -97,31 +97,31 @@ private func TunnelRules_checkBreakThrough()
 private func TunnelRules_doBreakOpen(xs,ys){
 
 //Gänge nach oben und gerade Gänge interessieren nicht
-	if(!ys>0) 
-		return(0);
+	if((!ys ?? 0)>0)
+		return(nil);
 
 
-	if(xs<0) //graben nach links
+	if((xs ?? 0)<0) //graben nach links
 		Var()=-1;
 
 
-	if(xs==0) //graben nach unten
-		Var()=0;
+	if(Equal(xs, nil)) //graben nach unten
+		Var()=nil;
 
-	if(xs>0) //graben nach rechts
+	if((xs ?? 0)>0) //graben nach rechts
 		Var()=1;
 
-var iSearchStartY=GetObjHeight(this())/2+1;
-var iSearchXSize=GetObjWidth(this())/4;
+var iSearchStartY=(GetObjHeight(this()) ?? 0)/2+1;
+var iSearchXSize=(GetObjWidth(this()) ?? 0)/4;
 
-for(var x=-iSearchXSize;x<iSearchXSize;x++)
-	for(var y=iSearchStartY;y<iSearchStartY+TunnelRules_iBOSearchSize;y++)
+for(var x=-(iSearchXSize ?? 0);(x ?? 0)<(iSearchXSize ?? 0);S42MigrationStep(x, 1, true))
+	for(var y=iSearchStartY;(y ?? 0)<(iSearchStartY ?? 0)+(TunnelRules_iBOSearchSize ?? 0);S42MigrationStep(y, 1, true))
  		if(!GBackSolid(x,y)) //Treffer?
 		{
-		ShakeFree (GetX()+(iSearchStartY/2)*Var(),GetY()+iSearchStartY/2,TunnelRules_iBOShakeFree);
+		ShakeFree ((GetX() ?? 0)+((iSearchStartY ?? 0)/2)*(Var() ?? 0),(GetY() ?? 0)+(iSearchStartY ?? 0)/2,TunnelRules_iBOShakeFree);
 		return(1);
 		}
-return(0);
+return(nil);
 }
 
 //Effekt
@@ -130,20 +130,20 @@ return(0);
 protected func FxTunnelRulesTimer(pTarget, iEffectNumber)
 {
 
-if (GetAction(pTarget) ne "Dig")
+if (!SEqual(GetAction(pTarget), "Dig"))
 	{
 		if(!TunnelRules_iBreakOpen)
 			return(TunnelRules_RemoveEffect());
 
 		if(!TunnelRules_iBOLock)
-			TunnelRules_doBreakOpen(EffectVar (0, this(), TunnelRules_iEffect),EffectVar (1, this(), TunnelRules_iEffect));
+			TunnelRules_doBreakOpen(EffectVar (nil, this(), TunnelRules_iEffect),EffectVar (1, this(), TunnelRules_iEffect));
 		return(TunnelRules_RemoveEffect());
 	}
 }
 
 private func TunnelRules_RemoveEffect()
 {
-	TunnelRules_iEffect=0;
+	TunnelRules_iEffect=nil;
 	return(-1);
 }
 

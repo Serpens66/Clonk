@@ -1,6 +1,6 @@
 /*-- Verbrannter Wachturm --*/
 
-#strict
+#strict 3
 
 #include BAS3
 

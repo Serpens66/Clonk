@@ -1,13 +1,13 @@
 /*-- Mündungsfeuer --*/
 
-#strict
+#strict 3
 
 public func Config(target, px, py, angle)
 {
   SetAction("Show", target);
   SetR(angle);
-  SetVertex(0,0, GetVertex(0,0,target) - px);
-  SetVertex(0,1, GetVertex(0,1,target) - py);
+  SetVertex(nil,nil, (GetVertex(nil,nil,target) ?? 0) - (px ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1,target) ?? 0) - (py ?? 0));
 }
 
 public func Remove()

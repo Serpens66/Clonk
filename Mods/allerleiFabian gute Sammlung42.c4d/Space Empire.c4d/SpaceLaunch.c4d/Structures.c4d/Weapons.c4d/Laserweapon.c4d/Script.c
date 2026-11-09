@@ -1,6 +1,6 @@
 /*-- Laserwaffe --*/
 
-#strict
+#strict 3
 
 local target;
 local energyneed,buildingg;
@@ -16,9 +16,9 @@ public func Init(building, mode, vx, vy)
 buildingg=building;
   SetAction("Wait", building);
   if (mode) energyneed = 20;
-       else energyneed = 0;
-  SetVertex(0,0, GetVertex(0,0)+vx);
-  SetVertex(0,1, GetVertex(0,1)+vy);
+       else energyneed = nil;
+  SetVertex(nil,nil, (GetVertex(nil,nil) ?? 0)+(vx ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1) ?? 0)+(vy ?? 0));
 }
 
 
@@ -38,7 +38,7 @@ protected func FindTarget()
   if (obj)
     return(GetReadyToFire(obj));
   // oder auch nicht
-  return(0);
+  return(nil);
 }
 
 private func GetTargetZap(Range)     // Zaps auch angreifen
@@ -46,13 +46,13 @@ private func GetTargetZap(Range)     // Zaps auch angreifen
   var obj;
   while (1)
   {
-    obj = FindObject(ZAP1, 0,0,-1,-1, 0,0,0,NoContainer(),obj);
+    obj = FindObject(ZAP1, nil,nil,-1,-1, nil,nil,nil,NoContainer(),obj);
     if (!obj) break;
-    if (ObjectDistance(obj) > Range) return(0);
+    if ((ObjectDistance(obj) ?? 0) > (Range ?? 0)) return(nil);
     if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
       return(obj);
   }
-  return(0);
+  return(nil);
 }
 
 
@@ -61,8 +61,8 @@ private func GetTargetZap(Range)     // Zaps auch angreifen
 public func GetReadyToFire(par_target)
 {
   // genug Energie?
-  if (GetEnergy(GetActionTarget()) < energyneed)
-    return(0);
+  if ((GetEnergy(GetActionTarget()) ?? 0) < (energyneed ?? 0))
+    return(nil);
   target = par_target;
   CreateObject(SLSG)->Init(this());
   SetAction("GetReady");
@@ -71,28 +71,28 @@ public func GetReadyToFire(par_target)
 public func Fire()
 {
   // Ziel noch da und in Reichweite?
-  if (!target || Contained(target))
-    return(0);
+  if (Or(!target, Contained(target)))
+    return(nil);
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(ENAP,0,0,0,0,0,0,0,buildingg);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(ENAP,nil,nil,nil,nil,nil,nil,nil,buildingg);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
  munitionspack->~RestAmmoreduzieren(Munitionsverbrauch()); // restmunition im Paket wird um 1 pro Salve reduziert
 
   // Laserstrahlen erzeugen
   DoEnergy(-10);
-  var color = RGB(255,192+Random(64),0);
-  DrawLaser(GetX()-12, GetY()-23, GetX(target), GetY(target), color);
-  DrawLaser(GetX()+7, GetY()-23, GetX(target), GetY(target), color);
-  DrawLaser(GetX()+8, GetY()-12, GetX()+7, GetY()-22, color);
+  var color = RGB(255,192+(Random(64) ?? 0),nil);
+  DrawLaser((GetX() ?? 0)-12, (GetY() ?? 0)-23, GetX(target), GetY(target), color);
+  DrawLaser((GetX() ?? 0)+7, (GetY() ?? 0)-23, GetX(target), GetY(target), color);
+  DrawLaser((GetX() ?? 0)+8, (GetY() ?? 0)-12, (GetX() ?? 0)+7, (GetY() ?? 0)-22, color);
   Sound("LaserShot3");
   // Geschosse werden gleich zerstört
   if (target->~IsProjectile())
     return(target->~Destroy());
   // Zaps sofort killen
-  if (GetID(target) == ZAP1)
+  if (Equal(GetID(target), ZAP1))
     return(RemoveObject(target));
   // alles andere beschädigen
   DoDmg(5,DMG_Energy,target);
@@ -115,29 +115,30 @@ public func DrawLaser(x0, y0, x1, y1, color)
     angle = Angle(x0,y0,x1,y1);
     dist = Min(50, Distance(x0,y0,x1,y1));
     // geht noch ein ganzes Stück rein?
-    if (dist < 50) break;
+    if ((dist ?? 0) < 50) break;
     // nächstes Stück zeichnen
     laserline = CreateObject(SLSR);
     SetPosition(x0, y0, laserline);
     SetColorDw(color, laserline);
     SetR(angle, laserline);
     // zum nächsten Punkt
-    x0 += Sin(angle, dist);
-    y0 -= Cos(angle, dist);
+    S42MigrationAssign(x0, "+=", (Sin(angle, dist) ?? 0));
+    S42MigrationAssign(y0, "-=", (Cos(angle, dist) ?? 0));
   }
-  if (!dist) return(0);
+  if (!dist) return(nil);
   // Endstück
   laserline = CreateObject(SLSR);
-  var mx = (x0 + x1 + (50 * (x0-x1) + dist/2) / dist + 1) / 2;
-  var my = (y0 + y1 + (50 * (y0-y1) + dist/2) / dist + 1) / 2;
+  var mx = ((x0 ?? 0) + (x1 ?? 0) + (50 * ((x0 ?? 0)-(x1 ?? 0)) + (dist ?? 0)/2) / (dist ?? 0) + 1) / 2;
+  var my = ((y0 ?? 0) + (y1 ?? 0) + (50 * ((y0 ?? 0)-(y1 ?? 0)) + (dist ?? 0)/2) / (dist ?? 0) + 1) / 2;
   SetPosition(mx, my, laserline);
   SetColorDw(color, laserline);
   SetR(angle, laserline);
-  SetCon(50+dist, laserline);
+  SetCon(50+(dist ?? 0), laserline);
 }
 
 
 /* Energieverbrauch */
 
-public EnergyNeed: return(energyneed);
+public func EnergyNeed(...) { return(energyneed);
+}
 

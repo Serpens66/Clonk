@@ -1,6 +1,6 @@
 /*-- Glüheffekt --*/
 
-#strict
+#strict 3
 
 local step, alpha;
 
@@ -9,7 +9,7 @@ local step, alpha;
 
 public func Init(building)
 {
-  step = 0;
+  step = nil;
   SetAction("Glow", building);
   // anfangs nicht zu sehen
   alpha = 255;
@@ -21,12 +21,12 @@ public func Init(building)
 
 private func Check()
 {
-  ++step;
-  if (step <= 5)  alpha -= 51;
-            else  alpha += 100;
+  S42MigrationStep(step, 1);
+  if ((step ?? 0) <= 5)  S42MigrationAssign(alpha, "-=", 51);
+            else  S42MigrationAssign(alpha, "+=", 100);
   // im Wertebereich bleiben
-  if (alpha < 0)   alpha = 0;
-  if (alpha > 255) return(RemoveObject());
+  if ((alpha ?? 0) < 0)   alpha = nil;
+  if ((alpha ?? 0) > 255) return(RemoveObject());
   SetClrModulation(RGBa(255,255,255,alpha));
 }
 

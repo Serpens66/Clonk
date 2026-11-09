@@ -1,17 +1,17 @@
 /*-- Brennende Tonne :D --*/
 
-#strict
+#strict 3
 
 local light;
 local mlight, mlight2, reicht,genug,brennstoff;  //"reicht" nur für anzeigedauer der nachricht
 
 public func BrennLicht() {
   if (!mlight) return(1); 
-  if(Local(2) == 2) { Local(1)++; Local(1)++; Local(1)++;  }
-    else { Local(1)--; Local(1)--; Local(1)--; Local(1)--; Local(1)--;  Local(1)--; }
-  mlight -> ChangeSize(200 + Local(1));
-  if(Local(1) > 15) Local(2) = 1;
-  if(Local(1) < -5) Local(2) =2;
+  if(Equal(Local(2), 2)) { S42MigrationStep(Local(1), 1, true); S42MigrationStep(Local(1), 1, true); S42MigrationStep(Local(1), 1, true);  }
+    else { S42MigrationStep(Local(1), -1, true); S42MigrationStep(Local(1), -1, true); S42MigrationStep(Local(1), -1, true); S42MigrationStep(Local(1), -1, true); S42MigrationStep(Local(1), -1, true);  S42MigrationStep(Local(1), -1, true); }
+  mlight -> ChangeSize(200 + (Local(1) ?? 0));
+  if((Local(1) ?? 0) > 15) Local(2) = 1;
+  if((Local(1) ?? 0) < -5) Local(2) =2;
   return(1); }
   
 
@@ -22,7 +22,7 @@ func Initialize()
 
 protected func Completion()  
 {
-  SetCategory(C4D_Vehicle()); // vehicle reicht, ohne foreground und ist dennoch noch abreißbar wegen construction
+  SetCategory(C4D_Vehicle); // vehicle reicht, ohne foreground und ist dennoch noch abreißbar wegen construction
 
   Incincinerate();
   if (!FindObject(NELI))
@@ -50,33 +50,33 @@ func Ejection(obj) // wenn etwas die verlässt
 
 private func Smoking() 
 {
-  Smoke(Random(3), Random(3), Random(5) + 3);
+  Smoke(Random(3), Random(3), (Random(5) ?? 0) + 3);
   if(!Random(2))
-    CreateParticle("Fire" ,RandomX(-2,2),-15,RandomX(-1,1)+GetWind()/80,-6,50,RGB(255,255,255));
+    CreateParticle("Fire" ,RandomX(-2,2),-15,(RandomX(-1,1) ?? 0)+(GetWind() ?? 0)/80,-6,50,RGB(255,255,255));
   else
-    CreateParticle("Fire2",RandomX(-2,2),-15,RandomX(-1,1)+GetWind()/80,-6,50,RGB(255,255,255));
+    CreateParticle("Fire2",RandomX(-2,2),-15,(RandomX(-1,1) ?? 0)+(GetWind() ?? 0)/80,-6,50,RGB(255,255,255));
 }
 
 
 public func ControlDig()
 {
-  if(GetAction() S= "Burn") {if (!FindObject(NELI)) if(Random(3)) CreateContents(WOOD)->~DoCon(-1);return(Extinguishsh());} // erstelle ein neues holz, denn bei erneutem anzünden wird direkt eines verbraucht.
-if(genug==1)  {Incincinerate();
+  if(!!SEqual(GetAction(), "Burn")) {if (!FindObject(NELI)) if(Random(3)) CreateContents(WOOD)->~DoCon(-1);return(Extinguishsh());} // erstelle ein neues holz, denn bei erneutem anzünden wird direkt eines verbraucht.
+if(Equal(genug, 1))  {Incincinerate();
   return(this());};
-if(genug==0) {PlayerMessage(GetOwner(),"Nicht genug Feuerholz",this());return();}
+if(Equal(genug, nil)) {PlayerMessage(GetOwner(),"Nicht genug Feuerholz",this());return;}
 }
 
 
 public func Incincinerate()
 {
-  if(GetAction() S= "Burn") return 0;
+  if(!!SEqual(GetAction(), "Burn")) return nil;
  
-  light=CreateObject(LGFL,0,0,-1);   // Lichtschein aus RdW
+  light=CreateObject(LGFL,nil,nil,-1);   // Lichtschein aus RdW
     if(light)
-      light->~Init(this(),0,-6,500,RGB(75,60,10),true);
+      light->~Init(this(),nil,-6,500,RGB(75,60,10),true);
 
     SetAction("Burn"); 
-    SetPlrViewRange(FogViewRange(),0,1);    
+    SetPlrViewRange(FogViewRange(),nil,1);
     if(FindContents(WOOD)){
     BurnWood();return(1);}
     if(FindContents(COAL))
@@ -86,8 +86,8 @@ public func Incincinerate()
 
 func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-feindlichen Spielern ebenfalls diesen sichtradius mithilfe eines hilfsobjekts zu geben
 {
-    if(GetAction() S= "Burn") return(200); // wenn es brennt
-    else return(0);
+    if(!!SEqual(GetAction(), "Burn")) return(200); // wenn es brennt
+    else return(nil);
 }
 
 func Destruction()
@@ -100,49 +100,49 @@ return(_inherited());
 
 protected func CheckContents() 
 {
-if (!(GetOCF(this()) & OCF_Construct))  // nur wenn fertig gebaut
+if (!((GetOCF(this()) ?? 0) & (OCF_Construct ?? 0)))  // nur wenn fertig gebaut
  {
 
-if(GetAction() S= "Burn")
+if(!!SEqual(GetAction(), "Burn"))
   {if(InLiquid())
     Extinguishsh();};
 
  if (!FindObject(NELI))  // wenn energie verbrucht wird
   {
-     if (ContentsCount(WOOD)==0 && ContentsCount(COAL)==0 && reicht <=10 ) {PlayerMessage(GetOwner(),"Das letzte Stueck wird verbrannt",this()); ++reicht ;};
-    if (ContentsCount(WOOD)>=1 || ContentsCount(COAL)>=1) {reicht=0;};
+     if (And(And(Equal(ContentsCount(WOOD), nil), Equal(ContentsCount(COAL), nil)), (reicht ?? 0) <=10) ) {PlayerMessage(GetOwner(),"Das letzte Stueck wird verbrannt",this()); S42MigrationStep(reicht, 1) ;};
+    if (Or((ContentsCount(WOOD) ?? 0)>=1, (ContentsCount(COAL) ?? 0)>=1)) {reicht=nil;};
 
-    if(brennstoff==WOOD)
-      if(GetActTime()>12000 && ContentsCount(WOOD)==0 && ContentsCount(COAL)==0)
+    if(Equal(brennstoff, WOOD))
+      if(And(And((GetActTime() ?? 0)>12000, Equal(ContentsCount(WOOD), nil)), Equal(ContentsCount(COAL), nil)))
           Extinguishsh();
        // { SetAction("Idle");
       // Sound("Pshshsh");
         // if(light)
           // RemoveObject(light);TurnLightOff();}
 
-    if(brennstoff==COAL)
-      if(GetActTime()>20000 && ContentsCount(COAL)==0 && ContentsCount(WOOD)==0)
+    if(Equal(brennstoff, COAL))
+      if(And(And((GetActTime() ?? 0)>20000, Equal(ContentsCount(COAL), nil)), Equal(ContentsCount(WOOD), nil)))
           Extinguishsh();
        // { SetAction("Idle");
       // Sound("Pshshsh");
         // if(light)
           // RemoveObject(light);TurnLightOff();}
 
-      if (ContentsCount(WOOD)==0 && ContentsCount(COAL)==0) genug=0;
-      if (ContentsCount(WOOD)>=1 || ContentsCount(COAL)>=1) genug=1;
+      if (And(Equal(ContentsCount(WOOD), nil), Equal(ContentsCount(COAL), nil))) genug=nil;
+      if (Or((ContentsCount(WOOD) ?? 0)>=1, (ContentsCount(COAL) ?? 0)>=1)) genug=1;
    }
  else genug=1;
 
-  if (mlight && !LightNeeded)  TurnLightOff();
-  if(GetAction() S= "Burn") {  if (!mlight && LightNeeded)  TurnLightOn();}
+  if (And(mlight, !LightNeeded))  TurnLightOff();
+  if(!!SEqual(GetAction(), "Burn")) {  if (And(!mlight, LightNeeded))  TurnLightOn();}
   
  if (!FindObject(NELI))  // wenn energie verbrucht wird
   {
-        if(brennstoff==WOOD)
-    if(GetActTime()>12000 && ContentsCount(WOOD)>=0) {BurnWood();SetAction("Idle");SetAction("Burn"); return();} // -> erst alles Holz verbrennen, dann die Kohle
+        if(Equal(brennstoff, WOOD))
+    if(And((GetActTime() ?? 0)>12000, (ContentsCount(WOOD) ?? 0)>=0)) {BurnWood();SetAction("Idle");SetAction("Burn"); return;} // -> erst alles Holz verbrennen, dann die Kohle
     
-    if(brennstoff==COAL)
-    if(GetActTime()>20000 && ContentsCount(COAL)>=0) {BurnCoal();SetAction("Idle");SetAction("Burn"); return();}
+    if(Equal(brennstoff, COAL))
+    if(And((GetActTime() ?? 0)>20000, (ContentsCount(COAL) ?? 0)>=0)) {BurnCoal();SetAction("Idle");SetAction("Burn"); return;}
   }
  }
 }
@@ -158,7 +158,7 @@ public func Extinguishsh()
     if(light)
       RemoveObject(light);
 TurnLightOff();
-SetPlrViewRange(FogViewRange(),0,1);
+SetPlrViewRange(FogViewRange(),nil,1);
   return(1);
 }
 
@@ -188,7 +188,7 @@ private func BurnWood()
 }
 
 
-protected func RejectCollect(def,pObj) { if(def!=WOOD && def!=COAL) return(1); }// außer Holz nichts aufnehmen
+protected func RejectCollect(def,pObj) { if(And(!Equal(def, WOOD), !Equal(def, COAL))) return(1); }// außer Holz nichts aufnehmen
 
 // private func CheckNight()
 // {

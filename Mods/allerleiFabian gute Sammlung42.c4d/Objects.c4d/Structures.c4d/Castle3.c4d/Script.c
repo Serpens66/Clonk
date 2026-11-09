@@ -1,6 +1,6 @@
 /*-- Schloss --*/
 
-#strict
+#strict 3
 
 #include BAS9
 #include DOOR
@@ -12,9 +12,9 @@ protected func Initialize()
 {
   // Niedergänge erzeugen
   entr_left = CreateObject(CSTE, -31, +12, GetOwner());
-  entr_left->Activate(this(), false);
+  entr_left->Activate(this(), nil);
   entr_right = CreateObject(CSTE, +5, -11, GetOwner());
-  entr_right->Activate(this(), false);
+  entr_right->Activate(this(), nil);
   UpdateTransferZone();
 }
 
@@ -88,7 +88,7 @@ protected func ContextRightPlatform(object pClonk)
 
 private func IsComplete()
 {
-  return (GetCon() >= 100); 
+  return ((GetCon() ?? 0) >= 100);
 }
 
 /* Türsteuerung */
@@ -108,35 +108,35 @@ private func SoundCloseDoor()
 protected func ControlTransfer(pObj, tx, ty)
 {
   // Feind? Guck doch selbst, wie du weiterkommst :P
-  if(Hostile(GetOwner(), GetOwner(pObj)) ) return(0);
+  if(Hostile(GetOwner(), GetOwner(pObj)) ) return(nil);
   
   // Abstieg von der linken Plattform
-  if(Inside(GetX(pObj), GetX()-45, GetX()-20) && Inside(GetY(pObj), GetY(), GetY()+20) )
-    if(ty > GetY()+20 )
+  if(And(Inside(GetX(pObj), (GetX() ?? 0)-45, (GetX() ?? 0)-20), Inside(GetY(pObj), GetY(), (GetY() ?? 0)+20)) )
+    if((ty ?? 0) > (GetY() ?? 0)+20 )
       return(HandleTransferDescendLeft(pObj, tx, ty) );
   // Abstieg von der rechten Plattform
-  if(Inside(GetX(pObj), GetX()-15, GetX()+15) && Inside(GetY(pObj), GetY()-22, GetY()-2) )
-    if(ty > GetY()-2 )
+  if(And(Inside(GetX(pObj), (GetX() ?? 0)-15, (GetX() ?? 0)+15), Inside(GetY(pObj), (GetY() ?? 0)-22, (GetY() ?? 0)-2)) )
+    if((ty ?? 0) > (GetY() ?? 0)-2 )
       return(HandleTransferDescendRight(pObj, tx, ty) );
   // Aufstieg zur linken Plattform
-  if(Inside(tx,GetX()-45, GetX()-20) && Inside(ty, GetY(), GetY()+20) )
+  if(And(Inside(tx,(GetX() ?? 0)-45, (GetX() ?? 0)-20), Inside(ty, GetY(), (GetY() ?? 0)+20)) )
     return(HandleTransferAscendLeft(pObj, tx, ty) );
   // Aufstieg zur rechten Plattform
-  if(Inside(tx,GetX()-15, GetX()+15) && Inside(ty, GetY()-22, GetY()-2) )
+  if(And(Inside(tx,(GetX() ?? 0)-15, (GetX() ?? 0)+15), Inside(ty, (GetY() ?? 0)-22, (GetY() ?? 0)-2)) )
     return(HandleTransferAscendRight(pObj, tx, ty) );
-  return(0);
+  return(nil);
 }
 
 private func HandleTransferAscendLeft(pObj, tx, ty)
 {
   // Schon am Ziel?
-  if(Inside(GetX(pObj), GetX()-45, GetX()-20) && Inside(GetY(pObj), GetY(), GetY()+20) )
-    return(0);
+  if(And(Inside(GetX(pObj), (GetX() ?? 0)-45, (GetX() ?? 0)-20), Inside(GetY(pObj), GetY(), (GetY() ?? 0)+20)) )
+    return(nil);
 
   // Turm betreten (wenn noch nicht geschehen) und nach links raus
-  AddCommand(pObj, "Call", this(), 0,0,0,0, "ContainedLeft");
-  if(Contained(pObj) != this() )
-    if(!(Inside(GetX(pObj), GetX()-15, GetX()+15) && Inside(GetY(pObj), GetY()-22, GetY()-2) ))
+  AddCommand(pObj, "Call", this(), nil,nil,nil,nil, "ContainedLeft");
+  if(!Equal(Contained(pObj), this()) )
+    if(!(And(Inside(GetX(pObj), (GetX() ?? 0)-15, (GetX() ?? 0)+15), Inside(GetY(pObj), (GetY() ?? 0)-22, (GetY() ?? 0)-2)) ))
       AddCommand(pObj, "Enter", this() );
     else
       AddCommand(pObj, "Enter", entr_right);
@@ -146,13 +146,13 @@ private func HandleTransferAscendLeft(pObj, tx, ty)
 private func HandleTransferAscendRight(pObj, tx, ty)
 {
   // Schon am Ziel?
-  if(Inside(GetX(pObj), GetX()-15, GetX()+15) && Inside(GetY(pObj), GetY()-22, GetY() - 2) )
-    return(0);
+  if(And(Inside(GetX(pObj), (GetX() ?? 0)-15, (GetX() ?? 0)+15), Inside(GetY(pObj), (GetY() ?? 0)-22, (GetY() ?? 0) - 2)) )
+    return(nil);
     
   // Turm betreten und nach rechts raus
-  AddCommand(pObj, "Call", this(), 0,0,0,0, "ContainedRight");
-  if(Contained(pObj) != this() )
-    if(!(Inside(GetX(pObj), GetX()-45, GetX()-20) && Inside(GetY(pObj), GetY(), GetY()+20) ))
+  AddCommand(pObj, "Call", this(), nil,nil,nil,nil, "ContainedRight");
+  if(!Equal(Contained(pObj), this()) )
+    if(!(And(Inside(GetX(pObj), (GetX() ?? 0)-45, (GetX() ?? 0)-20), Inside(GetY(pObj), GetY(), (GetY() ?? 0)+20)) ))
       AddCommand(pObj, "Enter", this() );
     else
       AddCommand(pObj, "Enter", entr_left);
@@ -162,8 +162,8 @@ private func HandleTransferAscendRight(pObj, tx, ty)
 private func HandleTransferDescendLeft(pObj, tx, ty)
 {
   // Nicht mehr auf der Plattform? Prima.
-  if(!(Inside(GetX(pObj), GetX()-45, GetX()-20) && Inside(GetY(pObj), GetY(), GetY()+20) ) || (Contained(pObj) == this()) )
-    return(0);
+  if(Or(!(And(Inside(GetX(pObj), (GetX() ?? 0)-45, (GetX() ?? 0)-20), Inside(GetY(pObj), GetY(), (GetY() ?? 0)+20)) ), (Equal(Contained(pObj), this()))) )
+    return(nil);
   
   return(AddCommand(pObj, "Enter", entr_left) );
 }
@@ -171,8 +171,8 @@ private func HandleTransferDescendLeft(pObj, tx, ty)
 private func HandleTransferDescendRight(pObj, tx, ty)
 {
   // Nicht mehr auf der Plattform? Prima.
-  if(!(Inside(GetX(pObj), GetX()-15, GetX()+15) && Inside(GetY(pObj), GetY()-22, GetY()-2) ) || (Contained(pObj) == this()) )
-    return(0);
+  if(Or(!(And(Inside(GetX(pObj), (GetX() ?? 0)-15, (GetX() ?? 0)+15), Inside(GetY(pObj), (GetY() ?? 0)-22, (GetY() ?? 0)-2)) ), (Equal(Contained(pObj), this()))) )
+    return(nil);
   
   return(AddCommand(pObj, "Enter", entr_right) );
 }

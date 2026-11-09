@@ -1,6 +1,6 @@
 /*-- Drehrad --*/
 
-#strict
+#strict 3
 
 local Flaschenzug,Tool,Hilfsclonk,Boden,TurnAround;
 
@@ -20,42 +20,42 @@ public func Init(pGeruest,pTool,pFloor)
 protected func ControlUp(pClonk)
 {
   [Menü]
-  if(GetCon() < 100) return();
-  if((GetOwner() != GetOwner(pClonk)) && (GetOwner()!= NO_OWNER())) return();
+  if((GetCon() ?? 0) < 100) return;
+  if(And((!Equal(GetOwner(), GetOwner(pClonk))), (!Equal(GetOwner(), NO_OWNER)))) return;
   CreateMenu(GetID(),pClonk);
   var obj= Flaschenzug;
-  if(!LocalN("Hlp_1a",obj) || !LocalN("Hlp_1b",obj) || !LocalN("Hlp_2",obj) || !LocalN("Hlp_3",obj) || !LocalN("Hlp_4a",obj)
-  || !LocalN("Hlp_4b",obj))
+  if(Or(Or(Or(Or(Or(!LocalN("Hlp_1a",obj), !LocalN("Hlp_1b",obj)), !LocalN("Hlp_2",obj)), !LocalN("Hlp_3",obj)), !LocalN("Hlp_4a",obj))
+  , !LocalN("Hlp_4b",obj)))
   {
-  AddMenuItem("$Repair$","Repair",CXCN,pClonk,0,pClonk);
+  AddMenuItem("$Repair$","Repair",CXCN,pClonk,nil,pClonk);
   }
   else
   {
-  if(Tool && ObjectCall(Tool,"CallStop_Menu")) ObjectCall(Tool,"Stop");
-  if(Tool && ObjectCall(Tool,"Condition_MenuItem")) AddMenuItem(Tool->~ GetMenuCaptain(),"UseTool",Tool->~ GetMenuItem(),pClonk);
+  if(And(Tool, ObjectCall(Tool,"CallStop_Menu"))) ObjectCall(Tool,"Stop");
+  if(And(Tool, ObjectCall(Tool,"Condition_MenuItem"))) AddMenuItem(Tool->~ GetMenuCaptain(),"UseTool",Tool->~ GetMenuItem(),pClonk);
   if(TurnedLeft())
     {
-    if(((GetAction(Boden) eq "EinziehenLinks") && (GetPhase(Boden)== 11)) || (GetAction(Boden) eq "Idle"))
-      AddMenuItem("$FloorDrawOut$","MoveFloor",LMM1,pClonk,0,1);
-    if((GetAction(Boden) eq "AusfahrenLinks") && (GetPhase(Boden)== 11))
+    if(Or((And((!!SEqual(GetAction(Boden), "EinziehenLinks")), (Equal(GetPhase(Boden), 11)))), (!!SEqual(GetAction(Boden), "Idle"))))
+      AddMenuItem("$FloorDrawOut$","MoveFloor",LMM1,pClonk,nil,1);
+    if(And((!!SEqual(GetAction(Boden), "AusfahrenLinks")), (Equal(GetPhase(Boden), 11))))
       AddMenuItem("$FloorDrawIn$","MoveFloor",LMM5,pClonk);
     }
   else
     {
-    if(((GetAction(Boden) eq "Einziehen") && (GetPhase(Boden)== 11)) || (GetAction(Boden) eq "Idle"))
-      AddMenuItem("$FloorDrawOut$","MoveFloor",LMM5,pClonk,0,1);
-    if((GetAction(Boden) eq "Ausfahren") && (GetPhase(Boden)== 11))
+    if(Or((And((!!SEqual(GetAction(Boden), "Einziehen")), (Equal(GetPhase(Boden), 11)))), (!!SEqual(GetAction(Boden), "Idle"))))
+      AddMenuItem("$FloorDrawOut$","MoveFloor",LMM5,pClonk,nil,1);
+    if(And((!!SEqual(GetAction(Boden), "Ausfahren")), (Equal(GetPhase(Boden), 11))))
       AddMenuItem("$FloorDrawIn$","MoveFloor",LMM1,pClonk);
     }
   var i,idDef;
-  while(idDef=GetDefinition(i++,C4D_Vehicle()))
+  while(idDef=GetDefinition(S42MigrationStep(i, 1, true),C4D_Vehicle))
    if(DefinitionCall(idDef,"IsTooool"))
-    if(GetID(Tool)!= idDef)
+    if(!Equal(GetID(Tool), idDef))
      AddMenuItem("$Fasten$","ChangeTool",idDef,pClonk);
-  if(!Hilfsclonk) AddMenuItem("$Buy$","Kaufen",KILC,pClonk,0,pClonk);
+  if(!Hilfsclonk) AddMenuItem("$Buy$","Kaufen",KILC,pClonk,nil,pClonk);
 	     else AddMenuItem("$Release$","Entlassen",REAC,pClonk);
   }
-  if(GetID(Flaschenzug) == GRS3)
+  if(Equal(GetID(Flaschenzug), GRS3))
     {
     AddMenuItem("$Turn$","Drehen",GRS2,pClonk);
     }
@@ -68,13 +68,13 @@ protected func ControlUp(pClonk)
 
 private func Repair(idItem,pClonk)
 {
-  if(GetWealth(GetOwner())< 10) return(Message("$NotEnoughMoney$",pClonk),Sound("CommandFailure1"));
-  SetWealth(GetOwner(),GetWealth(GetOwner())-10);
+  if((GetWealth(GetOwner()) ?? 0)< 10) return(S42MigrationFirst(Message("$NotEnoughMoney$",pClonk),Sound("CommandFailure1")));
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)-10);
   Sound("Cash");
   Sound("Build*");
   // Schaden beheben
-  DoDamage(-GetDamage(Flaschenzug),Flaschenzug);
-  DoDamage(-GetDamage());
+  DoDamage(-(GetDamage(Flaschenzug) ?? 0),Flaschenzug);
+  DoDamage(-(GetDamage() ?? 0));
   // Seile etc. evtl. neu spannen.
   Flaschenzug->~ CreateAccessories();
 }
@@ -90,7 +90,7 @@ private func MoveFloor(idItem,pOut)
   
   if(pOut)
     {
-    if((GetY(Tool)+10 > GetY(Boden)) && Tool) return(Message("Seil oder Tool im Weg!",this()));
+    if(And(((GetY(Tool) ?? 0)+10 > (GetY(Boden) ?? 0)), Tool)) return(Message("Seil oder Tool im Weg!",this()));
     if(TurnedLeft()) ObjectSetAction(Boden,"AusfahrenLinks");
 		else ObjectSetAction(Boden,"Ausfahren");    
     }
@@ -108,10 +108,10 @@ private func ChangeTool(idNewTool)
 
 private func Kaufen(idItem,pClonk)
 {
-  if(GetWealth(GetOwner())< 10) return(Message("$NotEnoughMoney$",pClonk),Sound("CommandFailure1"));
-  SetWealth(GetOwner(),GetWealth(GetOwner())-10);
+  if((GetWealth(GetOwner()) ?? 0)< 10) return(S42MigrationFirst(Message("$NotEnoughMoney$",pClonk),Sound("CommandFailure1")));
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)-10);
   Sound("Cash");
-  Hilfsclonk= CreateObject(CLNK,0,+10,GetOwner());
+  Hilfsclonk= CreateObject(CLNK,nil,+10,GetOwner());
   CreateContents(ROCK,Hilfsclonk);
   Message("Hilfsclonk gekauft.",Hilfsclonk);
   FadeInClonk(Hilfsclonk,255);
@@ -121,26 +121,26 @@ private func Kaufen(idItem,pClonk)
 private func Hilfsclonk_TimerCall(iNum)
 {
   var c= iNum;
-  if(!Hilfsclonk) return(0);
-  if(GetDamage(Hilfsclonk)> 80) return(Entlassen());
-  if((GetAction(Hilfsclonk) eq "Push") && (GetDir(Hilfsclonk)== DIR_Left())) SetDir(DIR_Right(),Hilfsclonk);
-  if(GetAction(Hilfsclonk) ne "Push") { SetCommand(Hilfsclonk,"Grab",this()); c++; }
-  if(c >= 30) return(Entlassen());
-  ScheduleCall(this(),"Hilfsclonk_TimerCall",35,0,c);
+  if(!Hilfsclonk) return(nil);
+  if((GetDamage(Hilfsclonk) ?? 0)> 80) return(Entlassen());
+  if(And((!!SEqual(GetAction(Hilfsclonk), "Push")), (Equal(GetDir(Hilfsclonk), DIR_Left)))) SetDir(DIR_Right,Hilfsclonk);
+  if(!SEqual(GetAction(Hilfsclonk), "Push")) { SetCommand(Hilfsclonk,"Grab",this()); S42MigrationStep(c, 1, true); }
+  if((c ?? 0) >= 30) return(Entlassen());
+  ScheduleCall(this(),"Hilfsclonk_TimerCall",35,nil,c);
 }
 
 private func FadeInClonk(pTarget,iAlpha)
 {
-  iAlpha= BoundBy(iAlpha-15,0,255);
+  iAlpha= BoundBy((iAlpha ?? 0)-15,nil,255);
   SetClrModulation(RGBa(255,255,255,iAlpha),pTarget);
   // Fertig
-  if(iAlpha== 0) return(SetCommand(pTarget,"Grab",this()),SetDir(DIR_Right(),pTarget),SetCategory(4,pTarget),SetAlive(0,pTarget));
-  ScheduleCall(this(),"FadeInClonk",1,0,pTarget,iAlpha);
+  if(Equal(iAlpha, nil)) return(S42MigrationFirst(SetCommand(pTarget,"Grab",this()),SetDir(DIR_Right,pTarget),SetCategory(4,pTarget),SetAlive(nil,pTarget)));
+  ScheduleCall(this(),"FadeInClonk",1,nil,pTarget,iAlpha);
 }
 
 private func Entlassen(fNoMsg)
 {
-  if(!Hilfsclonk) return();
+  if(!Hilfsclonk) return;
   SetCommand(Hilfsclonk,"UnGrab");
   if(!fNoMsg) Message("$Released$",Hilfsclonk); 
   FadeOutClonk(Hilfsclonk);
@@ -149,22 +149,22 @@ private func Entlassen(fNoMsg)
 private func FadeOutClonk(pTarget)
 {
   if(!GetClrModulation(pTarget)) SetClrModulation(RGB(255,255,255),pTarget);
-  SetClrModulation(DoRGBaValue(GetClrModulation(pTarget),Min(15,255-GetRGBValue(GetClrModulation(pTarget),0)),0),pTarget);
-  if(GetObjectBlitMode(pTarget) & 4) SetColorDw(DoRGBaValue(GetColorDw(pTarget),Min(15,255-GetRGBValue(GetColorDw(pTarget),0)),0),pTarget);
-  if(GetRGBValue(GetColorDw(pTarget),0)== 255 || GetRGBValue(GetClrModulation(pTarget),0)== 255)
-    RemoveObject(pTarget,ContentsCount(0,pTarget)-1);
+  SetClrModulation(DoRGBaValue(GetClrModulation(pTarget),Min(15,255-(GetRGBValue(GetClrModulation(pTarget),nil) ?? 0)),nil),pTarget);
+  if((GetObjectBlitMode(pTarget) ?? 0) & 4) SetColorDw(DoRGBaValue(GetColorDw(pTarget),Min(15,255-(GetRGBValue(GetColorDw(pTarget),nil) ?? 0)),nil),pTarget);
+  if(Or(Equal(GetRGBValue(GetColorDw(pTarget),nil), 255), Equal(GetRGBValue(GetClrModulation(pTarget),nil), 255)))
+    RemoveObject(pTarget,(ContentsCount(nil,pTarget) ?? 0)-1);
   else
-    ScheduleCall(this(),"FadeOutClonk",1,0,pTarget);
+    ScheduleCall(this(),"FadeOutClonk",1,nil,pTarget);
 }
 
 private func Drehen(idItem)
 {
-  if(!Flaschenzug) return(0);
+  if(!Flaschenzug) return(nil);
   Flaschenzug ->~ RemoveHelpers();
   Flaschenzug ->~ RemoveDrehrad();
   Flaschenzug ->~ RemoveTool();
   Flaschenzug ->~ RemoveBoden();
-  SetPosition(GetX(Flaschenzug),GetY(Flaschenzug) -1, Flaschenzug);
+  SetPosition(GetX(Flaschenzug),(GetY(Flaschenzug) ?? 0) -1, Flaschenzug);
   DoCon(-1, Flaschenzug);
 }
 
@@ -177,7 +177,7 @@ private func Abreissen()
 protected func ControlDig(pClonk)
 {
   [Anhalten]
-  if(GetCon() < 100) return();
+  if((GetCon() ?? 0) < 100) return;
   SetAction("Normal");
   if(!Hostile(GetController(pClonk),GetOwner())) SetPlrView(GetOwner(pClonk),Tool);
   Tool->~ DoControlDig(pClonk);
@@ -186,8 +186,8 @@ protected func ControlDig(pClonk)
 protected func ControlLeft(pClonk,pTurned)
 {
   [Bewegen]
-  if(TurnAround && !pTurned) return(ControlRight(pClonk,1));
-  if(GetCon() < 100) return();
+  if(And(TurnAround, !pTurned)) return(ControlRight(pClonk,1));
+  if((GetCon() ?? 0) < 100) return;
   SetAction("Work");
   if(!Hostile(GetController(pClonk),GetOwner())) SetPlrView(GetOwner(pClonk),Tool);
   Tool->~ DoControlUp(pClonk);
@@ -196,8 +196,8 @@ protected func ControlLeft(pClonk,pTurned)
 protected func ControlRight(pClonk,pTurned)
 {
   [Bewegen]
-  if(TurnAround && !pTurned) return(ControlLeft(pClonk,1));
-  if(GetCon() < 100) return();
+  if(And(TurnAround, !pTurned)) return(ControlLeft(pClonk,1));
+  if((GetCon() ?? 0) < 100) return;
   SetAction("Work");
   if(!Hostile(GetController(pClonk),GetOwner())) SetPlrView(GetOwner(pClonk),Tool);
   Tool->~ DoControlDown(pClonk);
@@ -206,21 +206,21 @@ protected func ControlRight(pClonk,pTurned)
 private func Working()
 {
   if(!IsOccupied()) return(ObjectCall(Tool,"Stop"));
-  if(GetContact(Tool,-1) & CNAT_Bottom) return(ObjectCall(Tool,"Stop"));
+  if((GetContact(Tool,-1) ?? 0) & (CNAT_Bottom ?? 0)) return(ObjectCall(Tool,"Stop"));
 }
 
 /*-- Status --*/
 
 public func IsOccupied()
 {
-  if(FindObject(0,0,0,0,0,0,"Push",this(),NoContainer())) return(1);
-  return(0);
+  if(FindObject(nil,nil,nil,nil,nil,nil,"Push",this(),NoContainer())) return(1);
+  return(nil);
   //if(IsOccupiedByPlayer() || IsOccupiedByHelper()) return(1);
 }
 
 public func TurnedLeft()
 {
-  return(GetID(Flaschenzug) == GRS2);
+  return(Equal(GetID(Flaschenzug), GRS2));
 }
 
 /*--------

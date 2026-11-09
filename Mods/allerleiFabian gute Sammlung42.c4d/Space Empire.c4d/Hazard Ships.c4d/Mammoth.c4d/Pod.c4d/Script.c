@@ -1,6 +1,6 @@
 /* Mammoth-Pod */
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -14,7 +14,7 @@ protected func Initialize()
 func Pod(max,min,start,mam,kap)
 {
   //Geschütz erstellen und anbringen
-  turret=CreateObject(DRG_,0,0,GetOwner());
+  turret=CreateObject(DRG_,nil,nil,GetOwner());
   ObjectSetAction(turret,"Attaching",this());
   turret->Rotinit(start,min,max);
   turret->Bezug(this());
@@ -22,25 +22,25 @@ func Pod(max,min,start,mam,kap)
   mammoth=mam;
   kaprot=kap;
   //Kapsel nicht benutzt
-  des=0;
+  des=nil;
 }
 
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Besetzt()
 {
   if(des) return(1);
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 func Removal()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   if(waffensys) RemoveObject(waffensys);
   if(turret) RemoveObject(turret);
@@ -75,7 +75,7 @@ func ContainedUp()
 func ContainedThrow() 
 {
   if(!waffensys) Waffensystem();
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   ObjectCall(waffensys,"ControlThrow",pilot);
   return(1);
 }
@@ -83,37 +83,37 @@ func ContainedThrow()
 //Menüsteuerung
 func ContainedDig()
 {
-  CreateMenu(DRA_,Par(0),0,0,0,0);
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s","Waffenmodi",MMA1,Par(0));  //Waffenmodi
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  if(mammoth->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(0)); //Podeinstieg
-  if(!(mammoth->Besetzt())) AddMenuItem("%s","Bridge",MMA3,Par(0)); //Podeinstieg
-  AddMenuItem("%s","Schadenskontrolle",MMA5,Par(0)); //Schaden
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s","Ausstieg",MMA4,Par(0));    //Ausstieg
-  SelectMenuItem(7,Par(0)); 
+  CreateMenu(DRA_,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s","Waffenmodi",MMA1,Par(nil));  //Waffenmodi
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  if(mammoth->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(nil)); //Podeinstieg
+  if(!(mammoth->Besetzt())) AddMenuItem("%s","Bridge",MMA3,Par(nil)); //Podeinstieg
+  AddMenuItem("%s","Schadenskontrolle",MMA5,Par(nil)); //Schaden
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s","Ausstieg",MMA4,Par(nil));    //Ausstieg
+  SelectMenuItem(7,Par(nil));
   return(1);
 }
 
 func Occp()
 {
   Sound("Error");
-  return(0);
+  return(nil);
 }
 
 func Waffensystem()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   if(waffensys=CreateContents(DRWS, pilot))
   {
-  while(GetID(Contents(0,pilot))!=DRWS)   ShiftContents(pilot);
+  while(!Equal(GetID(Contents(nil,pilot)), DRWS))   ShiftContents(pilot);
   }
   waffensys->Turret(turret);
   return(1);
@@ -137,7 +137,7 @@ func Waffenmodi()
 
 func Ausstieg()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   DoAmmo(STAM, GetAmmo(STAM,waffensys), pilot); 
   DoAmmo(GRAM, GetAmmo(GSAM,waffensys), pilot); 
   DoAmmo(GRAM, GetAmmo(GRAM,waffensys), pilot); 
@@ -151,7 +151,7 @@ func Kapsel()
 {
   kapsel=CreateContents(DRK_);
   Enter(kapsel,pilot);
-  Exit(kapsel,0,0,GetR(mammoth)+kaprot,GetXDir(mammoth)/10+kaprot/4,GetYDir(mammoth)/10-15,0);
+  Exit(kapsel,nil,nil,(GetR(mammoth) ?? 0)+(kaprot ?? 0),(GetXDir(mammoth) ?? 0)/10+(kaprot ?? 0)/4,(GetYDir(mammoth) ?? 0)/10-15,nil);
   ObjectSetAction(kapsel,"Start");
   Sound("Rocket");
   des=1;
@@ -160,13 +160,13 @@ func Kapsel()
 
 func Bridge()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   DoAmmo(STAM, GetAmmo(STAM,waffensys), pilot); 
   DoAmmo(GRAM, GetAmmo(GSAM,waffensys), pilot); 
   DoAmmo(GRAM, GetAmmo(GRAM,waffensys), pilot); 
   if(waffensys) RemoveObject(waffensys);
   Enter(mammoth,pilot);
-  pilot=0;
+  pilot=nil;
   return(1);
 }
 
@@ -177,7 +177,7 @@ func Schadenskontrolle()
   Message("Kein Schaden.",mammoth);
   return(1);
   }
-  Message("Schaden: %d%.",mammoth,GetDamage(mammoth)/3);
+  Message("Schaden: %d%.",mammoth,(GetDamage(mammoth) ?? 0)/3);
   return(1);
 }
 

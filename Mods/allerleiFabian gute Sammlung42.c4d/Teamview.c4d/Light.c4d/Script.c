@@ -1,4 +1,4 @@
-#strict
+#strict 3
 // Sichtradius Objekt fuer Teamsicht
 
 local AktuelleSichtweite;
@@ -10,7 +10,7 @@ func Initialize() {
 func TeamViewRangethisObject(Range) // is called from teamviewer object to give every view object a different viewrange
 {
     // Log(Format("Sicht auf %v setzen",Range));
-    if(AktuelleSichtweite!=Range)
+    if(!Equal(AktuelleSichtweite, Range))
     {
         AktuelleSichtweite = Range;
         SetPlrViewRange(Range,this(),1);
@@ -35,6 +35,6 @@ public func AttachTargetLost()
 
 func Check() {
   if(!GetActionTarget()) return(RemoveObject()); 
- if(GetAction(GetActionTarget()) eq "Dead") return(RemoveObject()); 
+ if(!!SEqual(GetAction(GetActionTarget()), "Dead")) return(RemoveObject());
  } 
  

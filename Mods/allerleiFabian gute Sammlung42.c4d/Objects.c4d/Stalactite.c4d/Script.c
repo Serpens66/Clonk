@@ -1,6 +1,6 @@
 /*-- Stalaktit --*/
 
-#strict
+#strict 3
 
 local phase;
 
@@ -11,9 +11,9 @@ func Initialize() {
 
 protected func Drop()
 {
-	if(Random(2) && FindObject(_CSN))
+	if(And(Random(2), FindObject(_CSN)))
 	{
-		CastPXS("Water", 1, 0, RandomX(-7,7), RandomX(-19,0));
+		CastPXS("Water", 1, nil, RandomX(-7,7), RandomX(-19,nil));
 		ScheduleCall(this, "DropSound", 20, 1);
 	}
 }

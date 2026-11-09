@@ -1,6 +1,6 @@
 /*-- Brückensegment --*/
 
-#strict
+#strict 3
 
 local is_locked;	// Ist im Boden verankert?
 
@@ -28,7 +28,7 @@ public func ControlDigDouble(caller) {
 
 private func Lock(quiet, dont_descend) {
   SetAction("Locked");
-  SetSolidMask(0, 11, 72, 3);
+  SetSolidMask(nil, 11, 72, 3);
   is_locked = 1;
 
   if (!quiet)
@@ -40,10 +40,10 @@ private func Lock(quiet, dont_descend) {
     var x = GetX(this());
     var y = GetY(this());
     
-    if(!PathFree(x,y,x,y+10)) // Solidmask im Weg?
+    if(!PathFree(x,y,x,(y ?? 0)+10)) // Solidmask im Weg?
       return 1;
-    if (!GBackSolid(0, 10))
-        SetPosition(GetX(), GetY()+10);
+    if (!GBackSolid(nil, 10))
+        SetPosition(GetX(), (GetY() ?? 0)+10);
     }
   return(1);
 }
@@ -51,16 +51,16 @@ private func Lock(quiet, dont_descend) {
 private func Release(quiet, dont_ascend) {
   SetAction("Idle");
   SetSolidMask();
-  is_locked = 0;
+  is_locked = nil;
 
   if (!quiet)
     Sound("Connect");
 
   // Aus der Erde lösen
   if (!dont_ascend) {
-    var ascend_pixels = 0;
-    while (Stuck() && (++ascend_pixels < 12))
-      SetPosition(GetX(), GetY()-1);
+    var ascend_pixels = nil;
+    while (And(Stuck(), (S42MigrationStep(ascend_pixels, 1) < 12)))
+      SetPosition(GetX(), (GetY() ?? 0)-1);
   }
 
   return(1);

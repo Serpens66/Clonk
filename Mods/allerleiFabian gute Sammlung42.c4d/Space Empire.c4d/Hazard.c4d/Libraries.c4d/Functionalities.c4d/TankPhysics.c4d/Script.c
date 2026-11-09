@@ -1,6 +1,6 @@
 /* Context Use drone functionality */
 
-#strict
+#strict 3
 
 /* Adds the tanks physics to the vehicle ----
 
@@ -81,8 +81,8 @@ local falling;
 
 protected func Initialize() {
 	stop = true;
-	speed = 0;
-	falling = false;
+	speed = nil;
+	falling = nil;
 	
 	AddEffect("Physics",this(),1,1,this());
 	
@@ -97,18 +97,18 @@ public func IsJumping() { return(GetEffect("JumpDelay",this())); }
 public func Jump() {
 	if(!IsTurning())
 		if(IsDriving())
-			if(!TopContact() && !LeftContact() && !RightContact())
+			if(And(And(!TopContact(), !LeftContact()), !RightContact()))
 				if(BottomContact())
 					if(!IsJumping()) {
-						var dir = (GetDir()*2-1)*1;
+						var dir = ((GetDir() ?? 0)*2-1)*1;
 						
-						var strx = JumpStrengthX() * dir;
+						var strx = (JumpStrengthX() ?? 0) * (dir ?? 0);
 						var stry = JumpStrengthY();
 						
-						SetXDir(+Sin(GetR(),stry)+Cos(GetR(),strx));
-						SetYDir(-Cos(GetR(),stry)+Sin(GetR(),strx));
+						SetXDir((+(Sin(GetR(),stry) ?? 0) ?? 0)+(Cos(GetR(),strx) ?? 0));
+						SetYDir(-(Cos(GetR(),stry) ?? 0)+(Sin(GetR(),strx) ?? 0));
 						SetRDir(dir);
-						AddEffect("JumpDelay",this(),1,1,this(),0,JumpDelay());
+						AddEffect("JumpDelay",this(),1,1,this(),nil,JumpDelay());
 						
 						OnJumpStart();
 						
@@ -118,20 +118,28 @@ public func Jump() {
 
 protected func FxJumpDelayTimer(object pTarget, int iEffectNumber, int iEffectTime) {
 	// Effekt
+	iEffectNumber ??= 0;
+	iEffectTime ??= 0;
 	pTarget->~ThrustEffect(iEffectTime);
 	
-	EffectVar(0,pTarget,iEffectNumber)--;
-	if(EffectVar(0,pTarget,iEffectNumber) <= 0) return(-1);
+	S42MigrationStep(EffectVar(nil,pTarget,iEffectNumber), -1, true);
+	if((EffectVar(nil,pTarget,iEffectNumber) ?? 0) <= 0) return(-1);
 }
 
 protected func FxJumpDelayStart(object pTarget, int iEffectNumber, int iTemp, int iTime) {
-	EffectVar(0,pTarget,iEffectNumber) = iTime;
+	iEffectNumber ??= 0;
+	iTemp ??= 0;
+	iTime ??= 0;
+	EffectVar(nil,pTarget,iEffectNumber) = iTime;
 }
 
-public func ThrustEffect(int iEffectTime) { }
+public func ThrustEffect(int iEffectTime) { iEffectTime ??= 0;
+    }
 
 protected func FxPhysicsTimer(object pTarget, int iEffectNumber, int iEffectTime) {
 	
+	iEffectNumber ??= 0;
+	iEffectTime ??= 0;
 	SetR(GetR());
 	
 	ContactCheck();			// Kontakt prüfen
@@ -139,11 +147,11 @@ protected func FxPhysicsTimer(object pTarget, int iEffectNumber, int iEffectTime
 	// on ground?
 	if(IsStuck()) {
 		StuckStop();
-		falling = false;
+		falling = nil;
 	}
 	else if(BottomContact()) {
 		if(falling) {
-			falling = false;
+			falling = nil;
 			OnJumpEnd();
 		}
 		// driving
@@ -163,99 +171,105 @@ protected func FxPhysicsTimer(object pTarget, int iEffectNumber, int iEffectTime
 
 public func BottomContact()	{
 	if(IsJumping()) {
-		if(GetEffect("JumpDelay",this(),0,6) < 10)
-			return(false);
+		if((GetEffect("JumpDelay",this(),nil,6) ?? 0) < 10)
+			return(nil);
 	}
-	return(groundm < VertexBottom() || groundl < VertexBottom() || groundr < VertexBottom());
+	return(Or(Or((groundm ?? 0) < (VertexBottom() ?? 0), (groundl ?? 0) < (VertexBottom() ?? 0)), (groundr ?? 0) < (VertexBottom() ?? 0)));
 }
-public func TopContact()	{ return(top < VertexTop()); }
-public func LeftContact()	{ return(left < VertexLeft()); }
-public func RightContact()	{ return(right < VertexRight()); }
-public func IsStuck()		{ return(groundm < VertexBottom()-15); }
+public func TopContact()	{ return((top ?? 0) < (VertexTop() ?? 0)); }
+public func LeftContact()	{ return((left ?? 0) < (VertexLeft() ?? 0)); }
+public func RightContact()	{ return((right ?? 0) < (VertexRight() ?? 0)); }
+public func IsStuck()		{ return((groundm ?? 0) < (VertexBottom() ?? 0)-15); }
 
 private func ContactCheck() {
 
 	right =	FindGround(-4,2);
-	top = FindGround(0,1);
+	top = FindGround(nil,1);
 	left =	FindGround(-4,3);
 	
-	groundm = GroundPos(0,0,xm,ym);
-	groundl = GroundPos(-12,0,xl,yl);
-	groundr = GroundPos(+12,0,xr,yr);
+	groundm = GroundPos(nil,nil,xm,ym);
+	groundl = GroundPos(-12,nil,xl,yl);
+	groundr = GroundPos(+12,nil,xr,yr);
 }
 
 protected func FindGround(int x, int dir, bool downisdown) {
+	x ??= 0;
+	dir ??= 0;
+	downisdown ??= false;
 	var xpos, ypos;
 	return(GroundPos(x,dir,xpos,ypos,downisdown));
 }
 
 protected func GroundPos(int x, int dir, &xpos, &ypos, bool downisdown) {
 
+	x ??= 0;
+	dir ??= 0;
+	downisdown ??= false;
 	var startx, starty, distx, disty, rev;
 
 	var r = GetR();
-	if(downisdown) r = 0;
+	if(downisdown) r = nil;
 	
 	// Ground that is further away than about 30px is not relevant for the tank
 	var dist;
 	// down = 0, up = 1, right = 2, left = 3
-	if(dir == 0) { dist = VertexBottom()*2; rev = 0; }
-	if(dir == 2) { dist = VertexRight()*2; rev = 0; }
-	if(dir == 1) { dist = -VertexTop()*2; rev = 1; }
-	if(dir == 3) { dist = -VertexLeft()*2; rev = 1; }
+	if(Equal(dir, nil)) { dist = (VertexBottom() ?? 0)*2; rev = nil; }
+	if(Equal(dir, 2)) { dist = (VertexRight() ?? 0)*2; rev = nil; }
+	if(Equal(dir, 1)) { dist = -(VertexTop() ?? 0)*2; rev = 1; }
+	if(Equal(dir, 3)) { dist = -(VertexLeft() ?? 0)*2; rev = 1; }
 	
 	// up or down
-	if(dir == 0 || dir == 1) {
+	if(Or(Equal(dir, nil), Equal(dir, 1))) {
 		startx = Cos(r,x);
 		starty = Sin(r,x);
-		distx = Sin(r,-dist);
+		distx = Sin(r,-(dist ?? 0));
 		disty = Cos(r,dist);
 	}
 	// left or right
-	if(dir == 2 || dir == 3) {
+	if(Or(Equal(dir, 2), Equal(dir, 3))) {
 		// a bit further down
-		startx = Sin(r,-x);
-		starty = Cos(r,+x);
+		startx = Sin(r,-(x ?? 0));
+		starty = Cos(r,+(x ?? 0));
 		distx = Cos(r,dist);
 		disty = Sin(r,dist);
 	}
 	
-	var i = 0;
-	var phase = 0;
+	var i = nil;
+	var phase = nil;
 	//  search...
-	while(Abs(i) <= Abs(dist)) {
-		var newx = startx+distx*i/dist;
-		var newy = starty+disty*i/dist;
+	while((Abs(i) ?? 0) <= (Abs(dist) ?? 0)) {
+		var newx = (startx ?? 0)+(distx ?? 0)*(i ?? 0)/(dist ?? 0);
+		var newy = (starty ?? 0)+(disty ?? 0)*(i ?? 0)/(dist ?? 0);
 
 		// landscape borders
-		if(GetX()+newx < 0 || GetX()+newx >= LandscapeWidth() || GetY()+newy >= LandscapeHeight()) {
-			if(phase == 0) { phase = 1; continue; }
+		if(Or(Or((GetX() ?? 0)+(newx ?? 0) < 0, (GetX() ?? 0)+(newx ?? 0) >= (LandscapeWidth() ?? 0)), (GetY() ?? 0)+(newy ?? 0) >= (LandscapeHeight() ?? 0))) {
+			if(Equal(phase, nil)) { phase = 1; continue; }
 			else break;
 		}
 		// sky found... keh
-		if(phase == 0) {
-			if(rev ^ GBackSolid(newx,newy)) { phase = 1; continue; }
-			++i;
+		if(Equal(phase, nil)) {
+			if((rev ?? 0) ^ (GBackSolid(newx,newy) ?? 0)) { phase = 1; continue; }
+			S42MigrationStep(i, 1);
 		}
 		// solid found... keh
-		if(phase == 1) {
-			if(rev ^ !GBackSolid(newx,newy)) break;
-			--i;
+		if(Equal(phase, 1)) {
+			if((rev ?? 0) ^ (!GBackSolid(newx,newy) ?? 0)) break;
+			S42MigrationStep(i, -1);
 		}
 	}
 
 	// i is our man!
-	var groundx = startx+distx*i/dist;
-	var groundy = starty+disty*i/dist;
+	var groundx = (startx ?? 0)+(distx ?? 0)*(i ?? 0)/(dist ?? 0);
+	var groundy = (starty ?? 0)+(disty ?? 0)*(i ?? 0)/(dist ?? 0);
 	
 	xpos = groundx;
 	ypos = groundy;
 	
-	if(rev) i = -i;
+	if(rev) i = -(i ?? 0);
 	
 	// if at the bottom and it is open: fall down
 	if(GetScenBottomOpen())
-		if(groundy+GetY()==LandscapeHeight())
+		if(Equal((groundy ?? 0)+(GetY() ?? 0), LandscapeHeight()))
 			return(1000);
 
 	// returns the y-pos where there is ground ... 1000 if not found
@@ -265,18 +279,21 @@ protected func GroundPos(int x, int dir, &xpos, &ypos, bool downisdown) {
 /*  Rotation and Position */
 
 public func SetRAt(int angle, int xoffs, int offs) {
+	angle ??= 0;
+	xoffs ??= 0;
+	offs ??= 0;
 	var r = GetR();
 	//rotate
-	var ox = Sin(r,offs)-Cos(r,xoffs);
-	var oy = Cos(r,offs)+Sin(r,xoffs);
+	var ox = (Sin(r,offs) ?? 0)-(Cos(r,xoffs) ?? 0);
+	var oy = (Cos(r,offs) ?? 0)+(Sin(r,xoffs) ?? 0);
 	SetR(angle);
-	var nx = Sin(GetR(),offs)-Cos(GetR(),xoffs);
-	var ny = Cos(GetR(),offs)+Sin(GetR(),xoffs);
+	var nx = (Sin(GetR(),offs) ?? 0)-(Cos(GetR(),xoffs) ?? 0);
+	var ny = (Cos(GetR(),offs) ?? 0)+(Sin(GetR(),xoffs) ?? 0);
 	
-	var xpos = nx-ox;
-	var ypos = -ny+oy;
+	var xpos = (nx ?? 0)-(ox ?? 0);
+	var ypos = -(ny ?? 0)+(oy ?? 0);
 	
-	SetPosition(GetX()+xpos,GetY()+ypos);
+	SetPosition((GetX() ?? 0)+(xpos ?? 0),(GetY() ?? 0)+(ypos ?? 0));
 }
 
 private func FixPosition() {
@@ -290,15 +307,15 @@ private func FixPosition() {
 	
 	// which point
 	var min = Min(groundl,Min(groundm,groundr));
-	var best = 0;
-	if(min == groundm) { ground = groundm-gp; best = 0; }
-	if(min == groundl) { ground = groundl-gp; best = -1; }
-	if(min == groundr) { ground = groundr-gp; best = +1;}
+	var best = nil;
+	if(Equal(min, groundm)) { ground = (groundm ?? 0)-(gp ?? 0); best = nil; }
+	if(Equal(min, groundl)) { ground = (groundl ?? 0)-(gp ?? 0); best = -1; }
+	if(Equal(min, groundr)) { ground = (groundr ?? 0)-(gp ?? 0); best = +1;}
 	
-	var groundx = Sin(GetR(),-ground);
+	var groundx = Sin(GetR(),-(ground ?? 0));
 	var groundy = Cos(GetR(),ground);
 	
-	SetPosition(GetX()+groundx,GetY()+groundy);
+	SetPosition((GetX() ?? 0)+(groundx ?? 0),(GetY() ?? 0)+(groundy ?? 0));
 	
 	// set r at the highest
 	/*var angle = 0;
@@ -315,59 +332,61 @@ private func FixPosition() {
 
 private func GetLandscapeAngle() {
 	var x1, y1, x2, y2;
-	var left = GroundPos(-XOffsToWheels(),0,x1,y1);
-	var right = GroundPos(+XOffsToWheels(),0,x2,y2);
-	var angle = Angle(x1,y1,x2,y2)-90;
+	var left = GroundPos(-(XOffsToWheels() ?? 0),nil,x1,y1);
+	var right = GroundPos(+(XOffsToWheels() ?? 0),nil,x2,y2);
+	var angle = (Angle(x1,y1,x2,y2) ?? 0)-90;
 	angle = Normalize(angle,-180);
 	return(angle);
 }
 
 private func CheckRotation(int angle) {
 	// checks desired rotation against max rotation
+	angle ??= 0;
 	var mrot = MaxRotation();
 	
-	if(GetDir() == DIR_Left) {
-		if(angle > mrot || angle < Min(-90,-mrot)) return(false);
+	if(Equal(GetDir(), DIR_Left)) {
+		if(Or((angle ?? 0) > (mrot ?? 0), (angle ?? 0) < (Min(-90,-(mrot ?? 0)) ?? 0))) return(nil);
 	}
 	else {
-		if(angle < -mrot || angle > Max(90,mrot)) return(false);
+		if(Or((angle ?? 0) < -(mrot ?? 0), (angle ?? 0) > (Max(90,mrot) ?? 0))) return(nil);
 	}
 	return(true);
 }
 
 private func FixR(bool d) {
+		d ??= false;
 		var angle = GetLandscapeAngle();
 
-		if(!d || CheckRotation(angle)) {
+		if(Or(!d, CheckRotation(angle))) {
 		
 			// max rotation
 			var mrot = MaxRotation();
 			if(mrot) {
-				if(GetDir() == DIR_Left) {
-					var buntstift = Min(-90,-mrot);
-					if(angle > mrot) angle = mrot;
-					else if(angle < buntstift) angle = buntstift;
+				if(Equal(GetDir(), DIR_Left)) {
+					var buntstift = Min(-90,-(mrot ?? 0));
+					if((angle ?? 0) > (mrot ?? 0)) angle = mrot;
+					else if((angle ?? 0) < (buntstift ?? 0)) angle = buntstift;
 				}
 				else {
 					var buntstift = Max(90,mrot);
-					if(angle < -mrot) angle = -mrot;
-					else if(angle > buntstift) angle = buntstift;
+					if((angle ?? 0) < -(mrot ?? 0)) angle = -(mrot ?? 0);
+					else if((angle ?? 0) > (buntstift ?? 0)) angle = buntstift;
 				}
 			}
 			var r = GetR();
-			SetRAt(angle,0,YOffsToWheels());
+			SetRAt(angle,nil,YOffsToWheels());
 
 		}
 }
 
 private func AngleDiff(a1,a2,p) {
 	if(!p) p=1;
-	a1 %= 360*p; a2 %= 360*p;
-	while(a1<0) a1+=360*p;
-	while(a2<0) a2+=360*p;
-	var r1 = Normalize(a2-a1,-180*p,p);
-	var r2 = Normalize(a2-a1-360*p,-180*p,p);
-	if(Abs(r1) < Abs(r2)) return(r1);
+	S42MigrationAssign(a1, "%=", 360*(p ?? 0)); S42MigrationAssign(a2, "%=", 360*(p ?? 0));
+	while((a1 ?? 0)<0) S42MigrationAssign(a1, "+=", 360*(p ?? 0));
+	while((a2 ?? 0)<0) S42MigrationAssign(a2, "+=", 360*(p ?? 0));
+	var r1 = Normalize((a2 ?? 0)-(a1 ?? 0),-180*(p ?? 0),p);
+	var r2 = Normalize((a2 ?? 0)-(a1 ?? 0)-360*(p ?? 0),-180*(p ?? 0),p);
+	if((Abs(r1) ?? 0) < (Abs(r2) ?? 0)) return(r1);
 	else return(r2);
 }
 
@@ -375,7 +394,7 @@ private func AngleDiff(a1,a2,p) {
 /* Standing */
 
 private func Stand() {
-	SetRDir(0);
+	SetRDir(nil);
 	
 	FixR(true);
 		
@@ -392,14 +411,14 @@ protected func Fall() {
 	// jumping into ceiling
 	if(TopContact()) {
 		var num;
-		if(num = GetEffect("JumpDelay",this(),0))
-			RemoveEffect(0,this(),num);
-		SetYDir(Max(GetYDir(0,1000),500),0,1000);
+		if(num = GetEffect("JumpDelay",this(),nil))
+			RemoveEffect(nil,this(),num);
+		SetYDir(Max(GetYDir(nil,1000),500),nil,1000);
 	}
-	SetYDir(GetYDir(0,1000)+GetGravity()*2,0,1000);
+	SetYDir((GetYDir(nil,1000) ?? 0)+(GetGravity() ?? 0)*2,nil,1000);
 	
-	if(LeftContact() || RightContact()) {
-		SetXDir(0);
+	if(Or(LeftContact(), RightContact())) {
+		SetXDir(nil);
 	}
 	
 	FixR(true);
@@ -433,48 +452,48 @@ protected func Fall() {
 
 /* Driving */
 
-public func IsDriving() { return(!stop || speed); }
-public func Go() { stop = false; OnGo(); }
+public func IsDriving() { return(Or(!stop, speed)); }
+public func Go() { stop = nil; OnGo(); }
 public func Stop() { stop = true; OnStop(); }
 
-public func IsTurning() { return(GetAction() eq TurnAction()); }
+public func IsTurning() { return(!!SEqual(GetAction(), TurnAction())); }
 
 private func Drive() {
 
 	if(!CheckRotation(GetLandscapeAngle())) StuckStop();
 
 	// stopping
-	if(stop) speed = Max(speed-BrakeStrengh(),0);
+	if(stop) speed = Max((speed ?? 0)-(BrakeStrengh() ?? 0),nil);
 	// driving
-	else speed = Min(speed+Acceleration(),MaxSpeed());
+	else speed = Min((speed ?? 0)+(Acceleration() ?? 0),MaxSpeed());
 	
 	// when turning
 	var curspeed = speed;
 	if(IsTurning()) {
 		var len = GetActMapVal("Length",TurnAction());
-		var turn = Abs((GetPhase()-len/2));
-		curspeed = Sin(turn*180/len,speed);
+		var turn = Abs(((GetPhase() ?? 0)-(len ?? 0)/2));
+		curspeed = Sin((turn ?? 0)*180/(len ?? 0),speed);
 	}
 	
 	// drive faster down, slower up 
 	//speed = Sin((GetR()*(GetDir()*2-1)+45),2*speed);
 	
 	// drive
-	var dir = (GetDir()*2-1);
-	SetXDir(Cos(GetR(),curspeed)*dir,0,1000);
-	SetYDir(Sin(GetR(),curspeed)*dir,0,1000);
+	var dir = ((GetDir() ?? 0)*2-1);
+	SetXDir((Cos(GetR(),curspeed) ?? 0)*(dir ?? 0),nil,1000);
+	SetYDir((Sin(GetR(),curspeed) ?? 0)*(dir ?? 0),nil,1000);
 	
 	// should we stop?
 	// stop if driving into a wall
-	if(LeftContact()) if(GetDir() == DIR_Left)		StuckStop();
-	if(RightContact()) if(GetDir() == DIR_Right)	StuckStop();
+	if(LeftContact()) if(Equal(GetDir(), DIR_Left))		StuckStop();
+	if(RightContact()) if(Equal(GetDir(), DIR_Right))	StuckStop();
 	// on the ceiling??
 	if(TopContact()) if(BottomContact())			StuckStop();
 }
 
 private func StuckStop() {
 	Stop();
-	speed = 0;
+	speed = nil;
 	SetXDir();
 	SetYDir();
 }

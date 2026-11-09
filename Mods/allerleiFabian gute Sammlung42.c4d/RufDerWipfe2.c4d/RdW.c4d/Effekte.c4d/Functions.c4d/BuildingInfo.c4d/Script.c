@@ -1,9 +1,9 @@
-#strict
+#strict 3
 
 public func ContextBuildingInfo(pClonk)
 {
   [Gebäude-Info|Image=_ZF9]
-  var szString=Format("{{%i}}%s|%s%d/%d HP %d/%d Energie",GetID(),GetName(),GetExtraInfo(),GetMaxDamage()-GetDamage(),GetMaxDamage(),GetEnergy(),GetPhysical("Energy")/1000);
+  var szString=Format("{{%i}}%s|%s%d/%d HP %d/%d Energie",GetID(),GetName(),GetExtraInfo(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),GetEnergy(),(GetPhysical("Energy") ?? 0)/1000);
   MessageWindow(szString, GetOwner(pClonk));
 }
 

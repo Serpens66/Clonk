@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 // #appendto CLNK // mal deaktivieren
 
@@ -12,7 +12,7 @@ func ContextRelease(pCaller)
 func findrule()
 {
 if(FindObject(HELP)) return(1);
-return(0);
+return(nil);
 }
 
 func IsBulletTarget()
@@ -27,13 +27,13 @@ func IsThreat()
 
 func ReRise()
 {
-	ObjectSetAction(this(),"FlatUp", 0,0, true); 
+	ObjectSetAction(this(),"FlatUp", nil,nil, true);
 }
 
 
 public func Zated()
 {
-  if(GetAction() eq "Dead")
+  if(!!SEqual(GetAction(), "Dead"))
   {
 //   SetAction("Dead",this());
    EMPShockEffect(50);

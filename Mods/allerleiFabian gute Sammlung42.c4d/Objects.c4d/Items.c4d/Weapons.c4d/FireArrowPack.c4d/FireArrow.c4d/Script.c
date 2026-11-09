@@ -1,6 +1,6 @@
 /*-- Brandpfeil --*/
 
-#strict
+#strict 3
 
 #include ARRW
 
@@ -12,10 +12,10 @@ public func Launch()
 
 public func HitTarget(pObject)
 {
- if(!_inherited(pObject))return(0);
+ if(!_inherited(pObject))return(nil);
  // Objekt moeglicherweise anzuenden?
  var iContactInc=GetDefCoreVal("ContactIncinerate","DefCore",GetID(pObject));
- if(iContactInc && !Random(iContactInc) && !Random(3))
+ if(And(And(iContactInc, !Random(iContactInc)), !Random(3)))
  {
   Incinerate(pObject);
  }
@@ -24,5 +24,5 @@ public func HitTarget(pObject)
 
 /* Pfeileigenschaften */
 public func PackTo() { return(FARP); }
-public func ArrowStrength() { return(2+Random(2)); }
+public func ArrowStrength() { return(2+(Random(2) ?? 0)); }
 public func ArrowTumbleRandom() { return(3); }

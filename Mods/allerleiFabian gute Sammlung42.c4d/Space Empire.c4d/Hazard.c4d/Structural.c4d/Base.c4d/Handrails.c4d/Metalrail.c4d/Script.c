@@ -1,6 +1,6 @@
 /*-- Metalrail --*/
 
-#strict
+#strict 3
 
 /* Grundobjekt für andere Rails */
 
@@ -26,16 +26,17 @@ static const RAIL_AltLinkage = 8;		// alternativer Geländerstil (wenn vorhanden)
 /* Status */
 
 public func Index(int index) {
-	if(index == 0) return("End1");
-	if(index == 1) return("Linkage1");
-	if(index == 2) return("Linkage2");
-	if(index == 3) return("Backing");
-	if(index == 4) return("End2");
+	index ??= 0;
+	if(Equal(index, nil)) return("End1");
+	if(Equal(index, 1)) return("Linkage1");
+	if(Equal(index, 2)) return("Linkage2");
+	if(Equal(index, 3)) return("Backing");
+	if(Equal(index, 4)) return("End2");
 }
 
-public func Left()		{ return(0); }
+public func Left()		{ return(nil); }
 public func Right()	{ return(4); }
-public func Linkage(i)	{ return(1+(!!i)); }
+public func Linkage(i)	{ return(1+((!!i) ?? 0)); }
 public func Backing()	{ return(3); }
 
 /* Öffentliches */
@@ -46,41 +47,43 @@ public func Set(a,b) { return(SetRailLength(a,b)); }
 // Die einfachste Art, ein Geländer auszurichten. Setzt eine bestimmte Länge Standardteile (Index 1)
 public func SetRailLength(int iLength, int iMod)
 {
+  iLength ??= 0;
+  iMod ??= 0;
   ClearRail();
   parttype = CreateArray();
   
-  var i = 0;
+  var i = nil;
   // Anfangspfosten setzen, falls kein Modifier gesetzt ist
-  if(!(iMod & RAIL_LeftOpen))
-    parttype[i++] = Left();
+  if(!((iMod ?? 0) & (RAIL_LeftOpen ?? 0)))
+    parttype[S42MigrationStep(i, 1, true)] = Left();
   else
-    iLength--;
+    S42MigrationStep(iLength, -1, true);
     
-  var support = false, now = false;
-  if(iMod & RAIL_Supported) 
-    if(Backing() != -1) {
+  var support = nil, now = nil;
+  if((iMod ?? 0) & (RAIL_Supported ?? 0))
+    if(!Equal(Backing(), -1)) {
       support = true;
     }
     
-  while(i < iLength+1) {
-    if(support && now) {
-	    parttype[i] = Backing();
-	    now = false;
-	    iLength++;
+  while((i ?? 0) < (iLength ?? 0)+1) {
+    if(And(support, now)) {
+	    parttype[(i ?? 0)] = Backing();
+	    now = nil;
+	    S42MigrationStep(iLength, 1, true);
 	}
     else {
-      if(iMod & RAIL_AltLinkage)
-        parttype[i] = Linkage(1);
+      if((iMod ?? 0) & (RAIL_AltLinkage ?? 0))
+        parttype[(i ?? 0)] = Linkage(1);
       else
-        parttype[i] = Linkage(0);
+        parttype[(i ?? 0)] = Linkage(nil);
       now = true;
     }
-    i++;
+    S42MigrationStep(i, 1, true);
   }
     
   // Endposten setzen, falls kein Modifier gesetzt ist
-  if(!(iMod & RAIL_RightOpen))
-    parttype[GetLength(parttype)] = Right();
+  if(!((iMod ?? 0) & (RAIL_RightOpen ?? 0)))
+    parttype[(GetLength(parttype) ?? 0)] = Right();
 
   DrawRail();
 }
@@ -88,25 +91,28 @@ public func SetRailLength(int iLength, int iMod)
 // Setzt eine Abfolge von Teilstücken, Anfang und Ende werden automatisch eingesetzt
 public func SetRail(array parts, bool nop)
 {
+  nop ??= false;
   ClearRail();
   parttype = CreateArray();
-  var i = 0, j = 0;
-  if(!nop) parttype[i++] = Left();
-  for( ; j < GetLength(parts) ; i++) {
-    parttype[i] = parts[j++];
+  var i = nil, j = nil;
+  if(!nop) parttype[S42MigrationStep(i, 1, true)] = Left();
+  for( ; (j ?? 0) < (GetLength(parts) ?? 0) ; S42MigrationStep(i, 1, true)) {
+    parttype[(i ?? 0)] = parts[S42MigrationStep(j, 1, true)];
   }
-  if(!nop) parttype[GetLength(parttype)] = Right();
+  if(!nop) parttype[(GetLength(parttype) ?? 0)] = Right();
   DrawRail();
 }
 
 // Manipuliert einzelne Teile (um z.B. Anfang oder Ende zu entfernen
 public func AdjustPart(int iPart, int iNewIndex)
 {
+  iPart ??= 0;
+  iNewIndex ??= 0;
   ClearRail();
   // Schütz vor Überlänge
-  if(GetLength(parttype) <= iPart || iPart < 0) return();
+  if(Or((GetLength(parttype) ?? 0) <= (iPart ?? 0), (iPart ?? 0) < 0)) return;
   // Manipulieren
-  parttype[iPart] = iNewIndex;
+  parttype[(iPart ?? 0)] = iNewIndex;
   DrawRail();
   return(1);
 }
@@ -130,31 +136,31 @@ protected func Initialize()
 protected func DrawRail()
 {
   // Gesamtlänge in Pixeln
-  var alength = 0;
+  var alength = nil;
   // Länge aktualisieren
   length = GetLength(parttype);
   // Einzelne Teile ansetzen
-  for(var i = 0, action, plength ; i < length ; i++)
+  for(var i = nil, action, plength ; (i ?? 0) < (length ?? 0) ; S42MigrationStep(i, 1, true))
   {
     // Aktion speichern
-    action = Index(parttype[i]);
+    action = Index(parttype[(i ?? 0)]);
     // X-Länge der Aktion
     plength = GetActMapVal("Facet", action, GetID(), 2);
     // Grafik einpflanzen
-    SetGraphics("Rail", this(), GetID(), i+1, 2, action);
+    SetGraphics("Rail", this(), GetID(), (i ?? 0)+1, 2, action);
     // Transformieren
-    SetObjDrawTransform(1000,0, 1000 * (plength/2 + alength), 0,1000,0,0, i+1);
+    SetObjDrawTransform(1000,nil, 1000 * ((plength ?? 0)/2 + (alength ?? 0)), nil,1000,nil,nil, (i ?? 0)+1);
     // Größe des Teils draufrechnen
-    alength += plength;
+    S42MigrationAssign(alength, "+=", (plength ?? 0));
   }
-  SetShape(0,-GetObjHeight(this())/2, alength, GetObjHeight(this()));
+  SetShape(nil,-(GetObjHeight(this()) ?? 0)/2, alength, GetObjHeight(this()));
 }
 
 // Bisheriges Löschen
 protected func ClearRail()
 {
-  for(var i = 0 ; i < GetLength(parttype) ; i++)
-    SetGraphics("", this(), 0, i+1);
+  for(var i = nil ; (i ?? 0) < (GetLength(parttype) ?? 0) ; S42MigrationStep(i, 1, true))
+    SetGraphics("", this(), nil, (i ?? 0)+1);
 }
 
 // Schutz vor Neuladen
@@ -169,5 +175,5 @@ protected func UpdateTransferZone()
 public func Serialize(array& extra)
 {
 	// TODO: true oder false für die Enden
-	extra[GetLength(extra)] = Format("SetRail(%v,1)", parttype);
+	extra[(GetLength(extra) ?? 0)] = Format("SetRail(%v,1)", parttype);
 }

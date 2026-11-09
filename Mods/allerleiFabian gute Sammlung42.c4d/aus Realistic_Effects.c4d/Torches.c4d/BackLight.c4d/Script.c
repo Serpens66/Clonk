@@ -1,6 +1,6 @@
 /*-- Hintergrundlicht --*/
 
-#strict
+#strict 3
 
 local pLight, bOn,mlight;
 local rot, gruen, blau,r,g,b,a, intensi,nunHSL, farbt,saett,hellig,h,s,l,standr,standg,standb,standa;
@@ -23,7 +23,7 @@ public func Light()
 
 protected func Completion() {
 FitToTop();
-SetCategory(C4D_StaticBack());
+SetCategory(C4D_StaticBack);
 	CreateLight();
 	TurnOn();
   SetPlrViewRange(FogViewRange(),this(),1); 
@@ -39,7 +39,7 @@ func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-fei
 public func FitToTop()
 {
   //Das Gestell passt sich selbst mal etwas besser zur Decke an.
-  var x = GetX(), y = GetY() -20;
+  var x = GetX(), y = (GetY() ?? 0) -20;
   
     SetPosition(x, y);
   
@@ -54,8 +54,8 @@ protected func CreateLight()
 
 private func CheckNight()
 {
-  if (!mlight && LightNeeded)  TurnLightOn();
-  if (mlight && !LightNeeded)  TurnLightOff();
+  if (And(!mlight, LightNeeded))  TurnLightOn();
+  if (And(mlight, !LightNeeded))  TurnLightOff();
 }
 
 
@@ -69,10 +69,10 @@ if(!blau) blau=standb;
 b=blau;
 if(!intensi) intensi=standa;
 a=intensi;
-r=BoundBy(r,0,255);
-g=BoundBy(g,0,255);
-b=BoundBy(b,0,255);
-a=BoundBy(a,0,255);
+r=BoundBy(r,nil,255);
+g=BoundBy(g,nil,255);
+b=BoundBy(b,nil,255);
+a=BoundBy(a,nil,255);
   var iColor;
 if(!nunHSL)  iColor = RGBa(r,g,b,a);
 if(nunHSL) {
@@ -82,9 +82,9 @@ if(!saett) saett=27;
 s=saett;
 if(!hellig) hellig=219;
 l=hellig;
-h=BoundBy(h,0,255);
-s=BoundBy(s,0,255);
-l=BoundBy(l,0,255);
+h=BoundBy(h,nil,255);
+s=BoundBy(s,nil,255);
+l=BoundBy(l,nil,255);
 iColor = HSLa(h,s,l,a);
            }
   mlight = AddLight(1000, iColor, this());
@@ -113,28 +113,28 @@ if(!hellig) hellig=219;
 l=hellig;
 
 //auf Standard zurücksetzen, wenn alle drei RGB Werte 1000
-if(iWert1==1000 && iWert2==1000 && iWert3==1000)
-{nunHSL=0;rot=standr;gruen=standg;blau=standb;intensi=standa;if(mlight) {RemoveObject(mlight);TurnLightOn();}return();}
+if(And(And(Equal(iWert1, 1000), Equal(iWert2, 1000)), Equal(iWert3, 1000)))
+{nunHSL=nil;rot=standr;gruen=standg;blau=standb;intensi=standa;if(mlight) {RemoveObject(mlight);TurnLightOn();}return;}
 
-if(iWert1) {nunHSL=0;rot=iWert1;}
-if(iWert2) {nunHSL=0;gruen=iWert2;}
-if(iWert3) {nunHSL=0;blau=iWert3;}
+if(iWert1) {nunHSL=nil;rot=iWert1;}
+if(iWert2) {nunHSL=nil;gruen=iWert2;}
+if(iWert3) {nunHSL=nil;blau=iWert3;}
 // intensität wird nur hinzuaddiert
 if(!intensi) {intensi=a;}
-if(iWert4) {intensi+=iWert4;intensi=BoundBy(intensi,1,255);Message("Durchsichtigkeit: %v",this(),intensi);}
+if(iWert4) {S42MigrationAssign(intensi, "+=", (iWert4 ?? 0));intensi=BoundBy(intensi,1,255);Message("Durchsichtigkeit: %v",this(),intensi);}
 if(!rot) {rot=r;}
 if(!gruen) {gruen=g;}
 if(!blau) {blau=b;}
 if(iWert5) {nunHSL=1;farbt=iWert5;} 
 if(iWert6) {nunHSL=1;saett=iWert6;}
 if(iWert7) {nunHSL=1;hellig=iWert7;}
-if(iWert8) {nunHSL=1;farbt+=iWert8;farbt=BoundBy(farbt,1,255);Message("Farbton: %v",this(),farbt);}
-if(iWert9) {nunHSL=1;saett+=iWert9;saett=BoundBy(saett,1,255);Message("Sättigung: %v",this(),saett);}
-if(iWert10) {nunHSL=1;hellig+=iWert10;hellig=BoundBy(hellig,1,255);Message("Helligkeit: %v",this(),hellig);}
+if(iWert8) {nunHSL=1;S42MigrationAssign(farbt, "+=", (iWert8 ?? 0));farbt=BoundBy(farbt,1,255);Message("Farbton: %v",this(),farbt);}
+if(iWert9) {nunHSL=1;S42MigrationAssign(saett, "+=", (iWert9 ?? 0));saett=BoundBy(saett,1,255);Message("Sättigung: %v",this(),saett);}
+if(iWert10) {nunHSL=1;S42MigrationAssign(hellig, "+=", (iWert10 ?? 0));hellig=BoundBy(hellig,1,255);Message("Helligkeit: %v",this(),hellig);}
 
-rot=BoundBy(rot,0,255);
-gruen=BoundBy(gruen,0,255);
-blau=BoundBy(blau,0,255);
+rot=BoundBy(rot,nil,255);
+gruen=BoundBy(gruen,nil,255);
+blau=BoundBy(blau,nil,255);
 
 //damit es aktualisiert wird:
 if(mlight) {RemoveObject(mlight);TurnLightOn();}
@@ -151,7 +151,7 @@ private func TurnLightOff()
 
 
 public func TurnOn() {
-	if(EMPShocked()) return();
+	if(EMPShocked()) return;
 	bOn = true;
 	SetAction("On");
 	if(Light())
@@ -161,13 +161,13 @@ public func TurnOn() {
 public func TurnOff() {
 	if(!SetAction("Off"))
 		SetAction("Idle");
-	bOn = false;
+	bOn = nil;
 	if(Light())
 		Light()->TurnOff();
 }
 
 public func Switch() {
-	if(GetAction() S= "On")
+	if(!!SEqual(GetAction(), "On"))
 		TurnOff();
 	else
 		TurnOn();
@@ -179,7 +179,7 @@ public func IsMachine() { return(true); }
 public func EMPShock()
 {
 	TurnOff();
-	EMPShockEffect(800+Random(200));
+	EMPShockEffect(800+(Random(200) ?? 0));
 }
 
 public func EMPShockEnd() {
@@ -193,6 +193,6 @@ public func EMPShockEnd() {
 
 public func Serialize(array& extra)
 {
-	if (GetAction() ne "On")
-		extra[GetLength(extra)] = "TurnOff()";
+	if (!SEqual(GetAction(), "On"))
+		extra[(GetLength(extra) ?? 0)] = "TurnOff()";
 }

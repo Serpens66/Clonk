@@ -1,6 +1,6 @@
 /*-- Predatorattacken --*/
 
-#strict
+#strict 3
 local maufeinmal,maktuell;
 
 func Activate()
@@ -16,16 +16,16 @@ protected func Initialize()
 {
   // Eigene Position festlegen
   SetPosition();
-DynMessage("Predator Invasion!",0,48,RGBa(27,53,23,0));
+DynMessage("Predator Invasion!",nil,48,RGBa(27,53,23,nil));
   return(1);
 }
 
 /* Predators */
 private func DoPredators()
 {
-  maufeinmal =ObjectCount(PRA_)+1;
+  maufeinmal =(ObjectCount(PRA_) ?? 0)+1;
   maktuell= ObjectCount(PRE_);
-  if (maktuell>=maufeinmal) return(1);
+  if ((maktuell ?? 0)>=(maufeinmal ?? 0)) return(1);
   var pPredator = CreateObject(PRE_, Random(LandscapeWidth()), 50, -1);
   CreateContents(BRA_,pPredator);
   SetR(-180, pPredator);

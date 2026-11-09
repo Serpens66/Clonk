@@ -1,51 +1,51 @@
 /* Mörser*/
 
-#strict
+#strict 3
   local iDamage, exploding, sound;
   
 public func Initialize()
 {
-  sound=0;
+  sound=nil;
   iDamage = 20;
   SetAction("Travel");
-  AddLight(100,RGB(255,127,0),this(),GLOW);
-  AddEffect("HitCheck", this(), 1,1, 0, SHT1,GetOwner());
+  AddLight(100,RGB(255,127,nil),this(),GLOW);
+  AddEffect("HitCheck", this(), 1,1, nil, SHT1,GetOwner());
 }
 
 private func Traveling()
 {
-  var aspeed=Sqrt(GetXDir()*GetXDir()+GetYDir()*GetYDir());
+  var aspeed=Sqrt((GetXDir() ?? 0)*(GetXDir() ?? 0)+(GetYDir() ?? 0)*(GetYDir() ?? 0));
   var phi=ArcSin(GetXDir(),aspeed); 
   SetR(phi);
   Smoking();
   SetPlrView(GetOwner(), this());
-  if(GetYDir()>40 && !sound)
+  if(And((GetYDir() ?? 0)>40, !sound))
   {
   Sound("Mortar");
   sound=1;
   }
-  if(!PathFree(GetX(), GetY(), GetX()+GetXDir(),GetY()+GetYDir())) Hit();
+  if(!PathFree(GetX(), GetY(), (GetX() ?? 0)+(GetXDir() ?? 0),(GetY() ?? 0)+(GetYDir() ?? 0))) Hit();
 }
 
 private func Smoking() {
 
-  var dist = Distance(0,0,GetXDir(),GetYDir());
-  var maxx = +Sin(GetR(),dist/10);
-  var maxy = -Cos(GetR(),dist/10);
+  var dist = Distance(nil,nil,GetXDir(),GetYDir());
+  var maxx = +(Sin(GetR(),(dist ?? 0)/10) ?? 0);
+  var maxy = -(Cos(GetR(),(dist ?? 0)/10) ?? 0);
   var ptrdist = 50;
 
-  for(var i=0; i<dist; i+=ptrdist) {
+  for(var i=nil; (i ?? 0)<(dist ?? 0); S42MigrationAssign(i, "+=", (ptrdist ?? 0))) {
 
-    var x = -maxx*i/dist;
-    var y = -maxy*i/dist;
+    var x = -(maxx ?? 0)*(i ?? 0)/(dist ?? 0);
+    var y = -(maxy ?? 0)*(i ?? 0)/(dist ?? 0);
 
 
     var rand = RandomX(-30,30);
-    var xdir = +Sin(GetR()+rand,20);
-    var ydir = -Cos(GetR()+rand,20);
+    var xdir = +(Sin((GetR() ?? 0)+(rand ?? 0),20) ?? 0);
+    var ydir = -(Cos((GetR() ?? 0)+(rand ?? 0),20) ?? 0);
 
-    CreateParticle("Thrust",x,y,GetXDir()/2,GetYDir()/2,RandomX(80,100),RGBa(255,200,200,60),0,0);
-    CreateParticle("Smoke2",x,y,xdir,ydir,RandomX(100,120),RGBa(220,200,180,0),0,0);
+    CreateParticle("Thrust",x,y,(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(80,100),RGBa(255,200,200,60),nil,nil);
+    CreateParticle("Smoke2",x,y,xdir,ydir,RandomX(100,120),RGBa(220,200,180,nil),nil,nil);
   }
 }
   
@@ -56,23 +56,23 @@ private func Hit() {
 }
 
 private func HitObject(object pObject) {
-  for(var i=RandomX(7,10); i>0; --i)
+  for(var i=RandomX(7,10); (i ?? 0)>0; S42MigrationStep(i, -1))
   {
-    var obj=CreateObject(CGFR, 0, 0, GetController());
-    var xdir = GetXDir()*1/4+RandomX(-40,40);
-    var ydir = GetYDir()*1/4+RandomX(-40,40);
-    var angle = Angle(0,0,xdir,ydir);
+    var obj=CreateObject(CGFR, nil, nil, GetController());
+    var xdir = (GetXDir() ?? 0)*1/4+(RandomX(-40,40) ?? 0);
+    var ydir = (GetYDir() ?? 0)*1/4+(RandomX(-40,40) ?? 0);
+    var angle = Angle(nil,nil,xdir,ydir);
 
     obj->SetExplodeSize(iDamage);
     SetSpeed(xdir, ydir, obj);
     if(!Random(2))
-      CreateSmokeTrail(RandomX(20,30),angle+RandomX(-30,30),0,0,this());
+      CreateSmokeTrail(RandomX(20,30),(angle ?? 0)+(RandomX(-30,30) ?? 0),nil,nil,this());
   }
   Explode(20);
 }
 
 public func Damage() {
-  if(GetDamage() > 20 && !exploding)
+  if(And((GetDamage() ?? 0) > 20, !exploding))
     Hit();
 }
 

@@ -1,6 +1,6 @@
 /* Kraftfeldwand (Objekt) */
 
-#strict 2
+#strict 3
 
 private func GetSegmentID() { return FCWS; }
 
@@ -8,9 +8,9 @@ protected func Initialize()
 {
   var pLast, pNext;
   
-  for (var i = 0; i < 7; i++)
+  for (var i = nil; (i ?? 0) < 7; S42MigrationStep(i, 1, true))
   {
-    var pNext = CreateObject(GetSegmentID(), 0, GetDefCoreVal("Offset", "DefCore", GetID(), 1) + i*GetDefCoreVal("Height", "DefCore", GetSegmentID()), NO_OWNER);
+    var pNext = CreateObject(GetSegmentID(), nil, (GetDefCoreVal("Offset", "DefCore", GetID(), 1) ?? 0) + (i ?? 0)*(GetDefCoreVal("Height", "DefCore", GetSegmentID()) ?? 0), NO_OWNER);
     pNext->SetAction("Field");
     if (pLast)
     {

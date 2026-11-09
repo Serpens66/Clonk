@@ -1,11 +1,11 @@
 /* Luftblase */
 
-#strict
+#strict 3
 
 protected func Shiver()
   {
   // Bewegung
-  SetXDir(Random(21) - 10);
+  SetXDir((Random(21) ?? 0) - 10);
   return(1);
 	}
 
@@ -13,9 +13,9 @@ protected func Initialize()
   {
   // Aktion setzen
   SetAction("Bubble");
-  SetComDir(COMD_Up());
+  SetComDir(COMD_Up);
   // Nicht in Flüssigkeit gestartet: gleich weg
-  if (!GBackLiquid(0,0)) 
+  if (!GBackLiquid(nil,nil))
     Remove();
   return(1);
   }

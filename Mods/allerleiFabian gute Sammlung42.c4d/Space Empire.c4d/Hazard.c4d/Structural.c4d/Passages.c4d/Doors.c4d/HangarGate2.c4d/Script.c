@@ -1,6 +1,6 @@
 /*-- Hangartor --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -25,7 +25,7 @@ protected func Opened()
 
 public func Close() // Zumachen
 {
-  var phase = 11-GetPhase();
+  var phase = 11-(GetPhase() ?? 0);
   SetAction("GateClose");
   SetPhase(phase);
   CheckSolidMask();
@@ -42,23 +42,25 @@ public func Stop() // Sofort stoppen
 
 public func ConsoleControl(int i)
 {
-  if(i == 1) return("$Open$");
-  if(i == 2) return("$Close$");
-  if(i == 3) return("$Stop$");
+  i ??= 0;
+  if(Equal(i, 1)) return("$Open$");
+  if(Equal(i, 2)) return("$Close$");
+  if(Equal(i, 3)) return("$Stop$");
 }
 
 public func ConsoleControlled(int i)
 {
-  if(i == 1 && GetAction() ne "GateOpen") Open();
-  if(i == 2 && GetAction() ne "GateClose") Close();
-  if(i == 3 && GetAction() ne "GateStill") Stop();
+  i ??= 0;
+  if(And(Equal(i, 1), !SEqual(GetAction(), "GateOpen"))) Open();
+  if(And(Equal(i, 2), !SEqual(GetAction(), "GateClose"))) Close();
+  if(And(Equal(i, 3), !SEqual(GetAction(), "GateStill"))) Stop();
 }
 
 private func StopSound() { Sound("Discharge"); }
 
 private func CheckSolidMask()
 {
-  SetSolidMask(10*GetPhase(), 0, 10, 60, 0, 0);
+  SetSolidMask(10*(GetPhase() ?? 0), nil, 10, 60, nil, nil);
 }
 
 /* Serialisierung */
@@ -66,7 +68,7 @@ private func CheckSolidMask()
 public func Serialize(array& extra)
 {
 	if (GetPhase()) {
-		extra[GetLength(extra)] = Format("SetPhase(%d)", GetPhase());
-		extra[GetLength(extra)] = "CheckSolidMask()";
+		extra[(GetLength(extra) ?? 0)] = Format("SetPhase(%d)", GetPhase());
+		extra[(GetLength(extra) ?? 0)] = "CheckSolidMask()";
 	}
 }

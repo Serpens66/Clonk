@@ -1,6 +1,6 @@
 /*--- Blitzgeschütz (angeschraubt) ---*/
 
-#strict
+#strict 3
 
 local energy;
 
@@ -16,9 +16,9 @@ private func EnergyPerShot() { return(350); } // Energiebedarf für einen Schuss
 public func ComEnter(object pObj)
 {
   // Batterien
-  if(GetID(pObj) == ADM3) return(ConvertBattery(pObj) );
+  if(Equal(GetID(pObj), ADM3)) return(ConvertBattery(pObj) );
   // Kristalle
-  if(GetID(pObj) == CRYS)
+  if(Equal(GetID(pObj), CRYS))
   {
     Sound("Electric");
     Enter(this(), pObj);
@@ -27,15 +27,16 @@ public func ComEnter(object pObj)
 
 private func EnergyTransfer()
 {
-  if(GetEnergy(GetActionTarget()) > 9) DrainEnergy(GetActionTarget(), 10);
+  if((GetEnergy(GetActionTarget()) ?? 0) > 9) DrainEnergy(GetActionTarget(), 10);
 }
 
 private func DrainEnergy(object pTower, int iLevel)
 {
   // Energie vom Turm abziehen
-  DoEnergy(-iLevel, pTower);
-  energy += iLevel;
-  if(energy > EnergyPerShot() )
+  iLevel ??= 0;
+  DoEnergy(-(iLevel ?? 0), pTower);
+  S42MigrationAssign(energy, "+=", (iLevel ?? 0));
+  if((energy ?? 0) > (EnergyPerShot() ?? 0) )
     ConvertEnergy();
 }
 
@@ -43,7 +44,7 @@ private func ConvertEnergy()
 {
   Sound("LightningLoad");
   CreateContents(CRYS);
-  energy -= EnergyPerShot();
+  S42MigrationAssign(energy, "-=", (EnergyPerShot() ?? 0));
 }
    
 private func ConvertBattery(object pBattery)
@@ -51,9 +52,9 @@ private func ConvertBattery(object pBattery)
   // Sounds
   Sound("Connect");
   Sound("LightningLoad");
-  for(var i = 0; i < 2; ++ i)
+  for(var i = nil; (i ?? 0) < 2; S42MigrationStep( i, 1))
     CreateContents(CRYS);
-  if(GetEnergy(pBattery)==100) // wenn vol augeladen, noch einen extra Crystall
+  if(Equal(GetEnergy(pBattery), 100)) // wenn vol augeladen, noch einen extra Crystall
     CreateContents(CRYS);
   RemoveObject(pBattery);
   // while(GetEnergy(pBattery)>=33) // zu einfach wieder nachzuladen, wenn Batterie nicht verbraucht wird, daher Ladung nun egal und Batterie weiterhin verbrauchen
@@ -69,7 +70,7 @@ private func ConvertBattery(object pBattery)
 public func LightningStrike()
 {
   // Nur wenn fertig gebaut
-  if(GetCon() < 100) return(0);
+  if((GetCon() ?? 0) < 100) return(nil);
   // Energiegewinnung
   CreateContents(CRYS);
   // Sound
@@ -79,58 +80,58 @@ public func LightningStrike()
 public func ComFire(object pClonk)
 {
   // SetRDir(0)
-  SetRDir(0);
+  SetRDir(nil);
   SetAction("Attaching",GetActionTarget());
   
   // Pruefen, ob genug Kristalle zur Verfuegung stehen
   var power;
-  var i = 0, obj;
+  var i = nil, obj;
   
-  while(obj = Contents(i ++) )
-    if(GetID(obj) == CRYS)
+  while(obj = Contents(S42MigrationStep(i , 1, true)) )
+    if(Equal(GetID(obj), CRYS))
     {
-      power += (GetCon(obj) - 50);
-      if(power >= 50)
+      S42MigrationAssign(power, "+=", ((GetCon(obj) ?? 0) - 50));
+      if((power ?? 0) >= 50)
         break;
     }
-  if(power < 50) return(Sound("Error") );
+  if((power ?? 0) < 50) return(Sound("Error") );
   
   // Kristalle verbrauchen. Beim Pruefen konnten die Kristalle
   // nicht gleichzeitig verbraucht werden, da, wenn die Energie
   // nicht ausreicht, eventuell bereits Kristalle geloescht worden waeren.
-  power = 0;
+  power = nil;
   // Von oben nach unten zaehlen, da Objekte geloescht werden.
   i = ContentsCount();
-  while(obj = Contents(-- i) )
-    if(GetID(obj) == CRYS)
+  while(obj = Contents(S42MigrationStep( i, -1)) )
+    if(Equal(GetID(obj), CRYS))
     {
       // Kraft des Kristalls zur Gesamtkraft hinzufeugen
-      power += (GetCon(obj) - 50);
+      S42MigrationAssign(power, "+=", ((GetCon(obj) ?? 0) - 50));
       // Mehr als noetig?
-      if(power > 50)
+      if((power ?? 0) > 50)
       {
         // Nur das was noetig ist dem Kristall abziehen
-        var con = (GetCon(obj) ) - power;
-        DoCon(-con, obj);
+        var con = ((GetCon(obj) ) ?? 0) - (power ?? 0);
+        DoCon(-(con ?? 0), obj);
       }
       else
         // Reicht noch nicht? Kristall ganz verbrauchen.
         RemoveObject(obj);
         
       // Genug power? Ok.
-      if(power >= 50)
+      if((power ?? 0) >= 50)
         break;
     }
 
   Sound("LightningCannon");
   
-  var lgt1=CreateObject(ADM4, 0, 0, -1);
+  var lgt1=CreateObject(ADM4, nil, nil, -1);
   lgt1->SetController(pClonk->GetController());
-  lgt1->ADM4::Activate(GetX(), GetY(), Sin(GetR(), 18), 4, -Cos(GetR(), 18), 4);
-  var lgt2=CreateObject(ADM4, 0, 0, -1);
+  lgt1->ADM4::Activate(GetX(), GetY(), Sin(GetR(), 18), 4, -(Cos(GetR(), 18) ?? 0), 4);
+  var lgt2=CreateObject(ADM4, nil, nil, -1);
   lgt2->SetController(pClonk->GetController());
-  lgt2->ADM4::Activate(GetX() + Sin(GetR() + 90, 5), GetY() + Cos(GetR() + 90, 5), Sin(GetR(), 18), 4, -Cos(GetR(), 18), 4);
+  lgt2->ADM4::Activate((GetX() ?? 0) + (Sin((GetR() ?? 0) + 90, 5) ?? 0), (GetY() ?? 0) + (Cos((GetR() ?? 0) + 90, 5) ?? 0), Sin(GetR(), 18), 4, -(Cos(GetR(), 18) ?? 0), 4);
   
-  CastParticles("Spark", Random(8) + 4, Random(35), Sin(GetR(), 18), -Cos(GetR(), 18) );
+  CastParticles("Spark", (Random(8) ?? 0) + 4, Random(35), Sin(GetR(), 18), -(Cos(GetR(), 18) ?? 0) );
 }
 

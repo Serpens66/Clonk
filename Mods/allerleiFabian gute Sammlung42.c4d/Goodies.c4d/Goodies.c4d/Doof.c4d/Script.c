@@ -1,23 +1,24 @@
-#strict
+#strict 3
 
 local zaeehler;
 
-Initialize:
-  SetLocal(0,-59);
+func Initialize(...) {
+  SetLocal(nil,-59);
   return(1);
+}
 
 
 func Hit()
 {
- ++ zaeehler;
- if(zaeehler<=10)
+ S42MigrationStep( zaeehler, 1);
+ if((zaeehler ?? 0)<=10)
 {
  var stein = CreateObject(ROCK);
- FakeExplode(5,stein,0,5);
-  if(Not(GBackSolid(0,-2))) SetYDir(Local());
-  if(GBackSolid(-2,0)) SetXDir(Mul(GetXDir(),-1));
-  if(GBackSolid(2,0))  SetXDir(Mul(GetXDir(),-1));
-  if(GreaterThan(Local(),-3)){SetYDir();SetPosition(GetX(),Sum(GetY(),1));SetLocal(0,-59);} //And(SetYDir(),SetPosition(GetX(),Sum(GetY(),1)),SetLocal(0,-59));
+ FakeExplode(5,stein,nil,5);
+  if(Not(GBackSolid(nil,-2))) SetYDir(Local());
+  if(GBackSolid(-2,nil)) SetXDir(Mul(GetXDir(),-1));
+  if(GBackSolid(2,nil))  SetXDir(Mul(GetXDir(),-1));
+  if(GreaterThan(Local(),-3)){SetYDir();SetPosition(GetX(),Sum(GetY(),1));SetLocal(nil,-59);} //And(SetYDir(),SetPosition(GetX(),Sum(GetY(),1)),SetLocal(0,-59));
 }
 else
 {
@@ -27,7 +28,8 @@ Explode(10);
 }
 }
 
-Activate:
- AssignVar(0,Contained());
- Incinerate(Var(0));
- return();
+func Activate(...) {
+ AssignVar(nil,Contained());
+ Incinerate(Var(nil));
+ return;
+}

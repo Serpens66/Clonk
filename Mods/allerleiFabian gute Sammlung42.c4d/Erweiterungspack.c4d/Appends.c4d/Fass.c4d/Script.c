@@ -1,15 +1,15 @@
 /*-- Fass --*/
 
-#strict
+#strict 3
 #include WBRL
 #appendto WBRL
 
 protected func CalcValue(a,b,c)
 {
-  if(GetID()== WBRL)
+  if(Equal(GetID(), WBRL))
     {
-    var iValueEmpty= GetValue(0,EmptyBarrelID());
-    var iValueFull= GetValue(0,GetID())+ 1;
-    return(iValueEmpty- 1+ ((iValueFull- iValueEmpty)* iFillLevel)/ BarrelMaxFill());
+    var iValueEmpty= GetValue(nil,EmptyBarrelID());
+    var iValueFull= (GetValue(nil,GetID()) ?? 0)+ 1;
+    return((iValueEmpty ?? 0)- 1+ (((iValueFull ?? 0)- (iValueEmpty ?? 0))* (iFillLevel ?? 0))/ (BarrelMaxFill() ?? 0));
     }
 }

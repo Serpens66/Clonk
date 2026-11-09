@@ -1,6 +1,6 @@
 /*-- Windkraftwerk --*/
 
-#strict
+#strict 3
 #include BOB2 // Gebäude-Hilfsobjekt
 #include XMTR // Transmitter
 
@@ -8,7 +8,7 @@ local basement, wing, manager;
 
 protected func Construction()
 {
-  basement = CreateObject(BS06,0,8,GetOwner());
+  basement = CreateObject(BS06,nil,8,GetOwner());
   return(1);
 }
 
@@ -28,7 +28,7 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(-1,-8,50);
 
@@ -43,7 +43,7 @@ protected func ControlUp()
 {
   [Statusabfrage]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),Abs(GetWind()),100,5,1);
   return(1);
 }
@@ -55,8 +55,8 @@ public func InfoBarSize() { return(2); }
 public func InfoBarPos() { return(8); }
 private func InfoBarText()
 {        
-  if (Par(0) == IBRE)       
-    return(Format("@Energieoutput:  %d%", (Par(1)*100)/Par(2)));
-  return(0);
+  if (Equal(Par(nil), IBRE))
+    return(Format("@Energieoutput:  %d%", ((Par(1) ?? 0)*100)/(Par(2) ?? 0)));
+  return(nil);
 }     
 

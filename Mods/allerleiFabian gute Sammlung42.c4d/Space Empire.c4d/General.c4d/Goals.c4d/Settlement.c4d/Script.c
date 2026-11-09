@@ -1,6 +1,6 @@
 /*-- Siedlung kooperativ --*/
 
-#strict
+#strict 3
 #include GOAL
 
 local score;
@@ -22,21 +22,21 @@ protected func Initialize()
 
 public func IncScore(amount)
 {
-  score += amount;
+  S42MigrationAssign(score, "+=", (amount ?? 0));
 }
 
 private func GetCoopValue()
 {
   // Siedlungspunkte zusammenzählen
   var pts, player, i;
-  for (i = 0; i < GetPlayerCount(); i++)
+  for (i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
   {
     player = GetPlayerByIndex(i);
     // Spieler nicht vorhanden?
     if (!GetPlayerName(player))
       continue;
     // dazu addieren
-    pts += GetPlrValueGain(player);
+    S42MigrationAssign(pts, "+=", (GetPlrValueGain(player) ?? 0));
   }
   return(pts);
 }
@@ -45,7 +45,7 @@ public func IsFulfilled()
 {
   if (!score)
     score = 250;
-  return(GetCoopValue() >= score);
+  return((GetCoopValue() ?? 0) >= (score ?? 0));
 }
 
 protected func Activate(player)

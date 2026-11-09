@@ -1,6 +1,6 @@
 /*-- Glas herstellen --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -9,9 +9,9 @@ protected func Initialize()
 
 private func Splitting()
 {
-  Enter(Contained(),CreateObject(GLAS,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(GLAS,0,0,GetOwner()));
-  RemoveObject(0,1);
+  Enter(Contained(),CreateObject(GLAS,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(GLAS,nil,nil,GetOwner()));
+  RemoveObject(nil,1);
 }
 
 public func IsChemicalProduct() { return(1); }

@@ -1,6 +1,6 @@
 /*-- Geschützplattform --*/
 
-#strict
+#strict 3
 #include BOB1
 
 local basement, manager;
@@ -11,19 +11,19 @@ local fill, glow, weapon;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(-10,-12);
   // Glühen
-  glow = CreateObject(SCBG,0,0,GetOwner());
+  glow = CreateObject(SCBG,nil,nil,GetOwner());
   glow->Init(this());
-  fill = 0;
+  fill = nil;
   return(1);
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS23,0,+8,GetOwner());
+  basement = CreateObject(BS23,nil,+8,GetOwner());
   return(1);
 }
 
@@ -61,33 +61,33 @@ protected func ContainedUp(caller)
 protected func ContainedDig(caller)
 {
   [Waffenwechsel]
-  CreateMenu(GetID(), caller, 0,2, "Waffenwechsel");
-  AddMenuItem("kein Geschütz", "ChangeWeapon", SYCC,caller, 0,0,0, 128,0, GetCost());
+  CreateMenu(GetID(), caller, nil,2, "Waffenwechsel");
+  AddMenuItem("kein Geschütz", "ChangeWeapon", SYCC,caller, nil,nil,nil, 128,nil, GetCost());
   if (GetPlrKnowledge(GetOwner(),SCN1))
-    AddMenuItem("Artilleriegeschütz","ChangeWeapon", SCN1,caller, 0,0,0, 128,0, GetCost(SCN1));
+    AddMenuItem("Artilleriegeschütz","ChangeWeapon", SCN1,caller, nil,nil,nil, 128,nil, GetCost(SCN1));
   if (GetPlrKnowledge(GetOwner(),SCN2))
-    AddMenuItem("Bazookageschütz",   "ChangeWeapon", SCN2,caller, 0,0,0, 128,0, GetCost(SCN2));
+    AddMenuItem("Bazookageschütz",   "ChangeWeapon", SCN2,caller, nil,nil,nil, 128,nil, GetCost(SCN2));
   return(1);
 }
 
 protected func ChangeWeapon(ID)
 {
   // nochmal das gleiche gewählt?
-  if (ID == SYCC)
-    ID = 0;
-  if (ID == GetID(weapon)) return(0);
-  if (!ID && !weapon)      return(0);
+  if (Equal(ID, SYCC))
+    ID = nil;
+  if (Equal(ID, GetID(weapon))) return(nil);
+  if (And(!ID, !weapon))      return(nil);
   // genug Geld da?
   var cost = GetCost(ID);
-  if (GetWealth(GetOwner()) < cost)
+  if ((GetWealth(GetOwner()) ?? 0) < (cost ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", this());
     Sound("Error");
-    return(0);
+    return(nil);
   }
   // bezahlen
-  DoWealth(GetOwner(), -cost);
-  if (cost > 0) Sound("UnCash");
+  DoWealth(GetOwner(), -(cost ?? 0));
+  if ((cost ?? 0) > 0) Sound("UnCash");
            else Sound("Cash");
   // alte Waffe weg
   if (weapon)
@@ -95,7 +95,7 @@ protected func ChangeWeapon(ID)
   // keine draufsetzen?
   if (!ID) return(1);
   // neue Waffe erzeugen
-  weapon = CreateObject(ID, 0,0, GetOwner());
+  weapon = CreateObject(ID, nil,nil, GetOwner());
   weapon->Init(this());
   return(1);
 }
@@ -103,12 +103,12 @@ protected func ChangeWeapon(ID)
 private func GetCost(ID)
 {
   // Waffe bereits verwendet?
-  if (!ID && !weapon)      return(0);
-  if (ID == GetID(weapon)) return(0);
+  if (And(!ID, !weapon))      return(nil);
+  if (Equal(ID, GetID(weapon))) return(nil);
   // Kostenberechnung
-  var cost = 0;
-  if (ID)     cost += GetValue(0,ID);         // neue Waffe kostet was
-  if (weapon) cost -= GetValue(weapon)*4/5;   // alte wird für 80% des Wertes verkauft
+  var cost = nil;
+  if (ID)     S42MigrationAssign(cost, "+=", (GetValue(nil,ID) ?? 0));         // neue Waffe kostet was
+  if (weapon) S42MigrationAssign(cost, "-=", (GetValue(weapon) ?? 0)*4/5);   // alte wird für 80% des Wertes verkauft
   return(cost);
 }
 
@@ -123,15 +123,17 @@ public func GetWeapon()
 protected func CheckEnergy()
 {
   // so viel Energie wie möglich aufnehmen
-  var fe = Min(GetEnergy(), GetMaxFill()-fill);
+  var fe = Min(GetEnergy(), (GetMaxFill() ?? 0)-(fill ?? 0));
   // Energie auffüllen
-  fill += fe;
-  DoEnergy(-fe);
+  S42MigrationAssign(fill, "+=", (fe ?? 0));
+  DoEnergy(-(fe ?? 0));
   return(1);
 }
 
-public GetFill: return(fill/3);
-public GetMaxFill: return(10000);
+public func GetFill(...) { return((fill ?? 0)/3);
+}
+public func GetMaxFill(...) { return(10000);
+}
 
 
 /* Energie überprüfen */
@@ -139,16 +141,19 @@ public GetMaxFill: return(10000);
 public func UseEnergy(value)
 {
   // genug Energie da?
-  if (fill < value) return(0);
+  if ((fill ?? 0) < (value ?? 0)) return(nil);
   // verbrauchen
-  fill -= value;
+  S42MigrationAssign(fill, "-=", (value ?? 0));
   return(1);
 }
 
 
 /* Eigenschaften */
 
-public IsEnergyConsumer: return(1);
-public InfoBarSize: return(5);
-public GetMaxDamage: return(150);
+public func IsEnergyConsumer(...) { return(1);
+}
+public func InfoBarSize(...) { return(5);
+}
+public func GetMaxDamage(...) { return(150);
+}
 

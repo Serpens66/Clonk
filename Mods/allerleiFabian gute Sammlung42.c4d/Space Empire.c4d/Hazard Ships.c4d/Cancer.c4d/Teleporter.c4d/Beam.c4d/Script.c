@@ -1,23 +1,23 @@
 /* Scorpion Beam */
 
-#strict
+#strict 3
 local pilot, counter;
 
 func Initialize()
 {
-  counter=0;
+  counter=nil;
   return(1);
 }
 
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 protected func Hit()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   AddSpawnEffect(pilot,RGBa(220,80,180,100));
   RemoveObject();
@@ -33,8 +33,8 @@ func Up()
 
 func TravelUp()
 {
-  counter++;
-  if(counter>100) Hit();
+  S42MigrationStep(counter, 1, true);
+  if((counter ?? 0)>100) Hit();
   Sparks (2, RGB(220,80,180), RandomX(-5,5), RandomX(-3,3));
   SetYDir(-60);
   return(1);
@@ -48,8 +48,8 @@ func Down()
 
 func TravelDown()
 {
-  counter++;
-  if(counter>100) Hit();
+  S42MigrationStep(counter, 1, true);
+  if((counter ?? 0)>100) Hit();
   Sparks (2, RGB(220,80,180), RandomX(-5,5), RandomX(-3,3));
   SetYDir(150);
   return(1);

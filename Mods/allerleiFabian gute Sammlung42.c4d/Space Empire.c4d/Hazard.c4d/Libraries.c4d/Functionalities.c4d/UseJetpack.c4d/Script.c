@@ -1,6 +1,6 @@
 /*-- Use Jetpack --*/
 
-#strict 2
+#strict 3
 
 /* Der Clonk kann das Jetpack mit dieser Funktionalität benutzen
      Dazu in ControlUpDouble, ControlRightDouble und ControlLeftDouble
@@ -14,28 +14,28 @@
 
 public func HasJetpack()
 {
-  return this->HasGear(0,JTPK);
+  return this->HasGear(nil,JTPK);
 }
 
 protected func ControlJetpack(string strControl) {
 
 	var jetpack = this->HasJetpack();
-	if(!jetpack) return false;
+	if(!jetpack) return nil;
 	
-	var ret = false;
+	var ret = nil;
 	
 	// up double
-	if(strControl == "ControlUpDouble") {
+	if(S42MigrationEqual(strControl, "ControlUpDouble")) {
 		ret = jetpack->ControlUpDouble(this());
 	}
 	
 	// right double
-	if(strControl == "ControlRightDouble") {
+	if(S42MigrationEqual(strControl, "ControlRightDouble")) {
 		ret = jetpack->ControlRightDouble(this());
 	}
 	
 	// left double
-	if(strControl == "ControlLeftDouble") {
+	if(S42MigrationEqual(strControl, "ControlLeftDouble")) {
 		ret = jetpack->ControlLeftDouble(this());
 	}
 	
@@ -46,13 +46,13 @@ protected func ControlJetpack(string strControl) {
 
 public func ReadyToFire() {
  
-	if(GetAction() == "JetpackFlight") return true;
+	if(S42MigrationEqual(GetAction(), "JetpackFlight")) return true;
  
 	return _inherited();
 }
 
 public func AimOverride() {
-	if(GetAction() == "JetpackFlight") return true;
+	if(S42MigrationEqual(GetAction(), "JetpackFlight")) return true;
 	
 	return _inherited();
 }

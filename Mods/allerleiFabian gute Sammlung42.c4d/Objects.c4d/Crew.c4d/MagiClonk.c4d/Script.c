@@ -1,6 +1,6 @@
 /*-- Zauberclonk --*/
 
-#strict
+#strict 3
 
 #include CLNK
 
@@ -21,16 +21,17 @@ public func MaxMagicPhysical()
 {
   // Maximal trainierbarer Magiewert eines Zauberclonks (Achtung: DefinitionCall für Infoobjekte!)
   // Physical-Wert der Ursprungsdefinition plus 50.000
-  return (GetPhysical("Magic", 0, 0, GetID()) + 50000);
+  return ((GetPhysical("Magic", nil, nil, GetID()) ?? 0) + 50000);
 }
 
 protected func GetFairCrewPhysical(string sPhysical, int iRank, & piVal)
 {
   // FairCrew-Zauberenergie: Rang 0 hat Basiswert. Rang 10 hat maximale Zauberenergie.
-  if (sPhysical eq "Magic")
+  iRank ??= 0;
+  if (!!SEqual(sPhysical, "Magic"))
     {
-    var iBase = GetPhysical("Magic", 0, 0, GetID());
-    piVal = iBase + (MaxMagicPhysical()-iBase)*BoundBy(iRank,0,10)/10;
+    var iBase = GetPhysical("Magic", nil, nil, GetID());
+    piVal = (iBase ?? 0) + ((MaxMagicPhysical() ?? 0)-(iBase ?? 0))*(BoundBy(iRank,nil,10) ?? 0)/10;
     return(true);
     }
   // Clonk-FairCrew-Physicalüberladungen
@@ -41,8 +42,8 @@ protected func GetFairCrewPhysical(string sPhysical, int iRank, & piVal)
 
 private func UpdatePhysical(string phys) 
 {
-  if (GetPhysical (phys, 1) < GetPhysical (phys, 0, 0, GetID ()))
-    SetPhysical (phys, GetPhysical (phys, 0, 0, GetID ()), 1);
+  if ((GetPhysical (phys, 1) ?? 0) < (GetPhysical (phys, nil, nil, GetID ()) ?? 0))
+    SetPhysical (phys, GetPhysical (phys, nil, nil, GetID ()), 1);
 }
 
 protected func Initialize(a,b,c)
@@ -72,8 +73,9 @@ protected func Destruction(a,b,c)
 protected func Recruitment(int iPlayer, a,b,c)
   {
   // Kombo nach Spieler-Default
+  iPlayer ??= 0;
   if (IsComboSystemEnabled())
-    iCombo = GetPlrExtraData(iPlayer, MCLK_ComboExtraDataName());
+    iCombo = GetPlrExtraData(iPlayer, MCLK_ComboExtraDataName);
   return (_inherited(iPlayer, a,b,c));
   }
   
@@ -95,21 +97,21 @@ protected func ControlSpecial(object pCaller)
   // Menüsystem: Schnellzauber
   
   // Keine Schnellzauber belegt
-  if (!Quickspells()) { DoCastError("$MsgNoQuickSpells$"); return(); }
+  if (!Quickspells()) { DoCastError("$MsgNoQuickSpells$"); return; }
   // Nicht bereit
-  if (!ReadyToMagic()) return(0, DoCastError(Format("$MsgNotReadyToMagic$", GetName())));
+  if (!ReadyToMagic()) return(S42MigrationFirst(nil, DoCastError(Format("$MsgNotReadyToMagic$", GetName()))));
   // Menü öffnen
   OpenEmptySpellMenu(MCMS, this, this, this, "");
-  for(var i=0; i < MaxQuickspells(); ++i)
+  for(var i=nil; (i ?? 0) < (MaxQuickspells() ?? 0); S42MigrationStep(i, 1))
   {
-    var idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),i));
+    var idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,i));
     if(IsQSID(idData))
       AddMenuItem("$MnuSlotQuickspell$: %s", "DoMagic", idData);
     else
       AddMenuItem("$MnuSlotQuickspell$: $MnuEmpty$", "Nothing", MCMX);
   }
   // in die Mitte
-  SelectMenuItem(MaxQuickspells()/2);
+  SelectMenuItem((MaxQuickspells() ?? 0)/2);
   return(1);
   }
 
@@ -119,7 +121,7 @@ protected func ControlSpecialDouble(object pCaller)
   // Zauberei abbrechen
   if (IsCasting()) AbortCasting();
   // Fertig; keine Behandlung
-  return();
+  return;
   }
 
 
@@ -137,53 +139,54 @@ public func ContextCombo(pByObject)
 {
   [$CtxCombo$|Image=MCMC|Condition=IsComboSystemEnabled]
   // Kombosystem ändern
-  iCombo = (iCombo+1) % 3;
+  iCombo = ((iCombo ?? 0)+1) % 3;
   // Meldung und Sound
   if(iCombo)
   {
-    var sMsg; if (iCombo == 2) sMsg = "$ChangedToCombo2$"; else sMsg = "$ChangedToCombo$";
+    var sMsg; if (Equal(iCombo, 2)) sMsg = "$ChangedToCombo2$"; else sMsg = "$ChangedToCombo$";
     PlayerMessage(GetOwner(),sMsg, this());
-    Sound("SpellSysCombo*", 0, 0, 0, GetOwner()+1);
-    CreateParticle("NoGravSpark", 0,0,  0,-6, 5*10, RGBa(255,255,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0, -5,-3, 5*10, RGBa(255,255,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0, -5, 3, 5*10, RGBa(255,255,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  5,-3, 5*10, RGBa(255,255,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  5, 3, 5*10, RGBa(255,255,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  0, 6, 5*10, RGBa(255,255,0, 0), this());
+    Sound("SpellSysCombo*", nil, nil, nil, (GetOwner() ?? 0)+1);
+    CreateParticle("NoGravSpark", nil,nil,  nil,-6, 5*10, RGBa(255,255,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil, -5,-3, 5*10, RGBa(255,255,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil, -5, 3, 5*10, RGBa(255,255,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  5,-3, 5*10, RGBa(255,255,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  5, 3, 5*10, RGBa(255,255,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  nil, 6, 5*10, RGBa(255,255,nil, nil), this());
   }
   else
   {
     PlayerMessage(GetOwner(),"$ChangedToMenu$", this());
-    Sound("SpellSysMenu*", 0, 0, 0, GetOwner()+1);
-    CreateParticle("NoGravSpark", 0,0,  0,-6, 5*10, RGBa(255,0,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0, -5,-3, 5*10, RGBa(255,0,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0, -5, 3, 5*10, RGBa(255,0,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  5,-3, 5*10, RGBa(255,0,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  5, 3, 5*10, RGBa(255,0,0, 0), this());
-    CreateParticle("NoGravSpark", 0,0,  0, 6, 5*10, RGBa(255,0,0, 0), this());
+    Sound("SpellSysMenu*", nil, nil, nil, (GetOwner() ?? 0)+1);
+    CreateParticle("NoGravSpark", nil,nil,  nil,-6, 5*10, RGBa(255,nil,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil, -5,-3, 5*10, RGBa(255,nil,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil, -5, 3, 5*10, RGBa(255,nil,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  5,-3, 5*10, RGBa(255,nil,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  5, 3, 5*10, RGBa(255,nil,nil, nil), this());
+    CreateParticle("NoGravSpark", nil,nil,  nil, 6, 5*10, RGBa(255,nil,nil, nil), this());
   }
  
   // Dies als Default für zukünftige Clonks
-  SetPlrExtraData(GetController(), MCLK_ComboExtraDataName(), iCombo);
+  SetPlrExtraData(GetController(), MCLK_ComboExtraDataName, iCombo);
 }
   
 public func ContextQuickspell(object pByObject, int iSelection)
 {
   [$CtxQuickspellDesc$|Image=MCMQ|Condition=NoCombo]
   // Clonk soll anhalten
-  SetComDir(COMD_Stop(), pByObject);
+  iSelection ??= 0;
+  SetComDir(COMD_Stop, pByObject);
   // Menü öffnen
   OpenEmptySpellMenu(MCMQ, this, this, this, "");
-  for(var i=0; i < MaxQuickspells(); ++i)
+  for(var i=nil; (i ?? 0) < (MaxQuickspells() ?? 0); S42MigrationStep(i, 1))
   {
-    var idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),i));
+    var idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,i));
     if(IsQSID(idData))
-      AddMenuItem(Format("$MnuSlotNumber$: %s", i+1, "%s"), "QuickspellEditMenu",idData,0,0,i);
+      AddMenuItem(Format("$MnuSlotNumber$: %s", (i ?? 0)+1, "%s"), "QuickspellEditMenu",idData,nil,nil,i);
     else
-      AddMenuItem(Format("$MnuSlotNumber$: $MnuEmpty$",i+1), "QuickspellEditMenu",MCMX,0,0,i);
+      AddMenuItem(Format("$MnuSlotNumber$: $MnuEmpty$",(i ?? 0)+1), "QuickspellEditMenu",MCMX,nil,nil,i);
   }
   // mittleren Spruch auswählen
-  SelectMenuItem(MaxQuickspells()/2);
+  SelectMenuItem((MaxQuickspells() ?? 0)/2);
   return(1);
 }
 
@@ -191,9 +194,9 @@ public func ContextMagic(object pByObject)
 {
   [$CtxMagicDesc$|Image=MCMS|Condition=ReadyToMagic]
   // Nicht bereit
-  if (!ReadyToMagic()) return(0, DoCastError(Format("$MsgNotReadyToMagic$", GetName())));
+  if (!ReadyToMagic()) return(S42MigrationFirst(nil, DoCastError(Format("$MsgNotReadyToMagic$", GetName()))));
   // Clonk soll anhalten
-  SetComDir(COMD_Stop(), pByObject);
+  SetComDir(COMD_Stop, pByObject);
   // Menü öffnen
   OpenSpellMenu(this, this, "$MnuCast$: %s", "DoMagic", GetOwner(), this, "$MnuNoSpells$", idLastSpell);
   return(1);
@@ -204,13 +207,13 @@ public func ContextMagic(object pByObject)
 public func ReadyToMagic()
 {
   // Im Zaubern auch OK, wenn der letzte Zauber schon durch ist
-  if (WildcardMatch(GetAction(), "*Magic") && GetPhase() > 5) return(true);
+  if (And(WildcardMatch(GetAction(), "*Magic"), (GetPhase() ?? 0) > 5)) return(true);
   // Nur wenn der Clonk steht, springt oder schwimmt, oder dies gleich tun wird
-  if (GetAction() ne "Walk" && GetAction() ne "Jump" &&
-      GetAction() ne "Swim" && GetAction() ne "Ride" && GetAction() ne "RideStill"
-      && GetAction() ne "KneelDown" && GetAction() ne "KneelUp" && GetAction() ne "FlatUp"
-      && GetAction() ne "Dive")
-    return(0);
+  if (And(And(And(And(And(And(And(And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Jump")),
+      !SEqual(GetAction(), "Swim")), !SEqual(GetAction(), "Ride")), !SEqual(GetAction(), "RideStill"))
+      , !SEqual(GetAction(), "KneelDown")), !SEqual(GetAction(), "KneelUp")), !SEqual(GetAction(), "FlatUp"))
+      , !SEqual(GetAction(), "Dive")))
+    return(nil);
   // Kann jetzt auch im Springen und in Gebäuden zaubern, dies sollten die Zauber 
   // aber berücksichtigen
   return(1);
@@ -222,10 +225,10 @@ protected func DoMagic(idSpell)
   idLastSpell = idSpell;  
   
   // Nicht bereit
-  if (!ReadyToMagic()) return(0, DoCastError(Format("$MsgNotReadyToMagic$", GetName())));
+  if (!ReadyToMagic()) return(S42MigrationFirst(nil, DoCastError(Format("$MsgNotReadyToMagic$", GetName()))));
   
   // Kein Mana/Zutaten
-  if (!CheckMagicRequirements(idSpell)) return();
+  if (!CheckMagicRequirements(idSpell)) return;
 
   // Zauberaktion starten: Dies zaubert direkt im Schwimmen; ansonsten setzt es die Magieaktivität, die verzögert zaubert
   return (SetMagicAction(idSpell));
@@ -234,23 +237,23 @@ protected func DoMagic(idSpell)
 public func ExecMagic(id idSpell)
 {
   // Weiterer Mana/Zutatencheck: Könnte während der Magieaktion Mana verloren haben
-  if (!CheckMagicRequirements(idSpell)) return();
+  if (!CheckMagicRequirements(idSpell)) return;
   
   // Kombosystem: Zaubernamen anzeigen
-  if (iCombo) PlayerMessage(GetController(), GetName(0, idSpell), this());
+  if (iCombo) PlayerMessage(GetController(), GetName(nil, idSpell), this());
   
   // Eventuelle Überbleibsel der letzten Zauberdaten zurücksetzen
-  pAimedSpellOrigin = 0;
+  pAimedSpellOrigin = nil;
 
   // Zauberobjekt erschaffen und aktivieren
-  var pSpell = CreateObject(idSpell,0,0,GetOwner());
-  if (!pSpell) return(); // Zauber fehlgeschlagen
+  var pSpell = CreateObject(idSpell,nil,nil,GetOwner());
+  if (!pSpell) return; // Zauber fehlgeschlagen
   if (!pSpell->~Activate(this()))
     // Zauber fehlgeschlagen
-    return(0);
+    return(nil);
 
   // Zauberenergie abziehen
-  DoMagicEnergy(-Value(idSpell));
+  DoMagicEnergy(-(Value(idSpell) ?? 0));
 
   // alchemische Zutaten abziehen
   if(ObjectCount(ALCO)) ReduceAlchem(idSpell);
@@ -264,18 +267,19 @@ public func ExecMagic(id idSpell)
 public func CheckMagicRequirements(id idSpell, bool fSilent)
 {
   // Nicht genug Zauberenergie
+  fSilent ??= false;
   var iNumCast=MCLK_UnlimitedCast, iNumCast2=MCLK_UnlimitedCast;
   if(!(iNumCast = CheckMana(idSpell)))
   {
     if (!fSilent) DoCastError("$MsgNotEnoughEnergy$");
-    return();
+    return;
   }
 
   // Nicht genug alchemische Komponenten
   if(ObjectCount(ALCO)) if(!(iNumCast2=CheckAlchem(idSpell,this())))
   {
     if (!fSilent) DoCastError(Format("$MsgNotEnoughIngredients$", GetNeededAlcStr(idSpell,this())));
-    return();
+    return;
   }
   
   // Zaubern OK
@@ -285,22 +289,22 @@ public func CheckMagicRequirements(id idSpell, bool fSilent)
 private func SetMagicAction(id idForSpell)
 {
   // Im Schwimmen direkt zaubern
-  if (GetAction() eq "Swim" && idForSpell)
+  if (And(!!SEqual(GetAction(), "Swim"), idForSpell))
     return (ExecMagic(idForSpell));
   idCurSpell = idForSpell;
   // Im Sprung
-  if (GetAction() eq "Jump" || GetAction() eq "Hold") 
+  if (Or(!!SEqual(GetAction(), "Jump"), !!SEqual(GetAction(), "Hold")))
     return(SetAction("JumpMagic"));
   // Beim Reiten
   if (IsRiding())
     return(SetAction("RideMagic", GetActionTarget()));
   // Bei KNEEL erstmal nicht; EndCall der KNEEL-Aktivität spricht den Zauber
-  if (GetAction() eq "KneelDown" || GetAction() eq "KneelUp" || GetAction() eq "FlatUp")
+  if (Or(Or(!!SEqual(GetAction(), "KneelDown"), !!SEqual(GetAction(), "KneelUp")), !!SEqual(GetAction(), "FlatUp")))
     return(true);
   // Bei Dive Übergangsaktion
-  if (GetAction() eq "Dive")
+  if (!!SEqual(GetAction(), "Dive"))
     {
-    var iPhase = Min(8-GetPhase(), 6);
+    var iPhase = Min(8-(GetPhase() ?? 0), 6);
     SetAction("DiveBack");
     SetPhase(iPhase);
     return(true);
@@ -308,7 +312,7 @@ private func SetMagicAction(id idForSpell)
   // Wenn bereits gezaubert wird, dann wird nur die Phase zurueckgesetzt,
   // als Maßnahme gegen den AbortCall
   // Es gibt einen Zauberzeitbonus von zwei Frames extra!
-  if(GetAction() eq "Magic" || GetAction() eq "JumpMagic")
+  if(Or(!!SEqual(GetAction(), "Magic"), !!SEqual(GetAction(), "JumpMagic")))
   {
    SetPhase(2);
    return true;
@@ -326,15 +330,15 @@ private func EndMagicAction()
 {
   // Zielen abbrechen
   // Aimer zurücksetzen, damit nicht rekursiv sofort wieder Aim gestartet wird...
-  if(GetAction() S= "AimMagic")
+  if(!!SEqual(GetAction(), "AimMagic"))
     {
-    var pAimerBck = pAimer; pAimer = 0;
+    var pAimerBck = pAimer; pAimer = nil;
     SetAction("Walk");
     pAimer = pAimerBck;
     return(true);
     }
   // Hat er überhaupt eine Magieaktion?
-  if (!IsCasting()) return();
+  if (!IsCasting()) return;
   // Zurück zum Reiten
   if (IsRiding())
     SetAction("Ride");
@@ -347,17 +351,17 @@ private func EndMagicAction()
 protected func Scaling()
 {
   var szDesiredAction;
-  if (GetYDir()>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
-  if (GetAction() ne szDesiredAction) SetAction(szDesiredAction);
+  if ((GetYDir() ?? 0)>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
+  if (!SEqual(GetAction(), szDesiredAction)) SetAction(szDesiredAction);
   return(1);   
 }
 
 protected func CheckStuck()
 {                   
   // Verhindert Festhängen am Mittelvertex
-  if(!GetXDir()) if(Abs(GetYDir()) < 5)
-    if(GBackSolid(0, 3))
-      SetPosition(GetX(), GetY() + 1);
+  if(!GetXDir()) if((Abs(GetYDir()) ?? 0) < 5)
+    if(GBackSolid(nil, 3))
+      SetPosition(GetX(), (GetY() ?? 0) + 1);
 }
 
 /* ++++++ Menükombokram +++++ */
@@ -366,25 +370,28 @@ protected func CheckStuck()
 
 protected func QuickspellEditMenu(id idSpell, int iSelection) {
   // Clonk soll anhalten
-  SetComDir(COMD_Stop());
+  iSelection ??= 0;
+  SetComDir(COMD_Stop);
   // Menü öffnen
   OpenEmptySpellMenu(MCMQ, this, this, this, "$MnuNoSpells$");
-  var idMagic, i = 0;
+  var idMagic, i = nil;
   // "Schnellzauber löschen"
-  if ((idSpell != MCM1) && (idSpell != MCM2) && (idSpell != MCM3) && (idSpell != MCM4) && (idSpell != MCM5))
-    AddMenuItem(Format("$MnuSlotNumber$: $MnuDelQuickspell$", iSelection+1),"QuickspellDel",MCMX,0,0,iSelection);
+  if (And(And(And(And((!Equal(idSpell, MCM1)), (!Equal(idSpell, MCM2))), (!Equal(idSpell, MCM3))), (!Equal(idSpell, MCM4))), (!Equal(idSpell, MCM5))))
+    AddMenuItem(Format("$MnuSlotNumber$: $MnuDelQuickspell$", (iSelection ?? 0)+1),"QuickspellDel",MCMX,nil,nil,iSelection);
   // Alles außer schon ausgewählte anzeigen
-  while (idMagic = GetPlrMagic(GetOwner(), 0, i++))
+  while (idMagic = GetPlrMagic(GetOwner(), nil, S42MigrationStep(i, 1, true)))
     if(!IsQuickspell(idMagic))
-      AddMenuItem(Format("$MnuSlotNumber$: %s", iSelection+1, "%s"), "QuickspellAdd", idMagic,0,0,iSelection);
+      AddMenuItem(Format("$MnuSlotNumber$: %s", (iSelection ?? 0)+1, "%s"), "QuickspellAdd", idMagic,nil,nil,iSelection);
 }
 
 protected func QuickspellAdd(id idSpell, int iSelection) {
+  iSelection ??= 0;
   AddQuickspell(idSpell, iSelection);
   ContextQuickspell(this(),iSelection);
 }
 
 protected func QuickspellDel(id idSpell, int iSelection) {
+  iSelection ??= 0;
   DelQuickspell(idSpell, iSelection);
   ContextQuickspell(this(),iSelection);
 }
@@ -392,35 +399,37 @@ protected func QuickspellDel(id idSpell, int iSelection) {
 /* Schnellzauber */
 
 protected func AddQuickspell(id idSpell, int iPos)	// fügt einen Zauber zum Schnellzugriff hinzu
-{ SetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),iPos),idSpell); }
+{ iPos ??= 0;
+    SetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,iPos),idSpell); }
 
 protected func DelQuickspell(id idSpell, int iPos)	// löscht einen Zauber aus dem Schnellzugriff
-{ SetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),iPos),false); }
+{ iPos ??= 0;
+    SetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,iPos),nil); }
 
 private func MaxQuickspells() { return(15); }		// Maximale Anzahl der Zauber im Schnellzugriff
 
 private func Quickspells() {
-  for(var i=0; i<MaxQuickspells(); ++i)
-    if(IsQSID(GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),i)) ))
+  for(var i=nil; (i ?? 0)<(MaxQuickspells() ?? 0); S42MigrationStep(i, 1))
+    if(IsQSID(GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,i)) ))
       return(true);
 }
 
 private func IsQuickspell(id idSpell)			// der angegebene Zauber ist immo im Schnellzugriff
 {
   var idData;
-  for(var i=0; IsQSID(idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix(),i)) ) && i<MaxQuickspells(); ++i)
-    if(idData == idSpell) return(1);
-  return(0);
+  for(var i=nil; And(IsQSID(idData = GetPlrExtraData(GetOwner(),Format("%s%d",MCLK_QSPrefix,i)) ), (i ?? 0)<(MaxQuickspells() ?? 0)); S42MigrationStep(i, 1))
+    if(Equal(idData, idSpell)) return(1);
+  return(nil);
 }
 
 private func IsQSID(id idItem) {				// Ist eine geladene ID und als Schnellzauber zulässig
-  if(GetType(idItem) != C4V_C4ID()) return(false);
-  if(!FindDefinition(idItem)) return(false);
-  if(!GetPlrMagic(GetOwner(),idItem)) return(false);
+  if(!Equal(GetType(idItem), C4V_C4ID)) return(nil);
+  if(!FindDefinition(idItem)) return(nil);
+  if(!GetPlrMagic(GetOwner(),idItem)) return(nil);
   return(true);
 }  
 
-protected func NoComboReadyToMagic() { return(ReadyToMagic() && !iCombo); }
+protected func NoComboReadyToMagic() { return(And(ReadyToMagic(), !iCombo)); }
 protected func NoCombo() { return(!iCombo); }
 protected func ComboOn() { return(iCombo); }
 
@@ -433,12 +442,12 @@ private func CheckMagic()
 {
   // Nur in Phase 5 zaubern
   iCurPhase = GetPhase();
-  if(iCurPhase != 5) return();
+  if(!Equal(iCurPhase, 5)) return;
   
   // Kein Zauber? :[
-  if(!idCurSpell) return();
+  if(!idCurSpell) return;
   var idSpell = idCurSpell;
-  idCurSpell = 0;
+  idCurSpell = nil;
  
   // Zauberspruch ausführen
   ExecMagic(idSpell);
@@ -448,14 +457,14 @@ private func CheckMagic()
 private func CheckMagicStart()
 {
   if (idCurSpell)
-    if (GetContact(0, -1, 8)) SetAction("Magic"); else SetAction("JumpMagic");
+    if (GetContact(nil, -1, 8)) SetAction("Magic"); else SetAction("JumpMagic");
 }
 
 private func AfterMagic()
 {
   // Aktuellen Spruch zurücksetzen
-  iCurPhase = 0;
-  idCurSpell = 0;
+  iCurPhase = nil;
+  idCurSpell = nil;
   
   return(1);
 }
@@ -463,15 +472,15 @@ private func AfterMagic()
 // Action-AbortCall
 private func AbortSpell()
   {
-  if (!idCurSpell) return();
-  iCurPhase=0; idCurSpell=0;
+  if (!idCurSpell) return;
+  iCurPhase=nil; idCurSpell=nil;
   DoCastError(Format("$MsgNotReadyToMagic$", GetName()));
   return(true);
   }
 
 private func AfterMagicJump()
 {
-  if(idCurSpell && GetAction() S= "Walk")
+  if(And(idCurSpell, !!SEqual(GetAction(), "Walk")))
   {
     SetAction("Magic");
     SetPhase(iCurPhase);
@@ -484,11 +493,11 @@ protected func DoComboCasting()
   // Schon beim Zaubern? Abbrechen
   if (IsCasting()) return(EndMagicAction());
   // Bereit?
-  if (!ReadyToMagic()) return(0, DoCastError(Format("$MsgNotReadyToMagic$", GetName())));
-  pComboMenu = CreateSpellMenu(this(), this(), 0, iCombo==2);
-  if (!pComboMenu) return();
+  if (!ReadyToMagic()) return(S42MigrationFirst(nil, DoCastError(Format("$MsgNotReadyToMagic$", GetName()))));
+  pComboMenu = CreateSpellMenu(this(), this(), nil, Equal(iCombo, 2));
+  if (!pComboMenu) return;
   // Clonk soll anhalten
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   // Zauberaktivität setzen
   SetCastAction();
   // Auswahlmenü zurückgeben
@@ -504,7 +513,7 @@ public func OnComboMenuEnter(id idSpell)
 public func OnComboMenuAbort()
   {
   // Redundant; das Menü ist eh gelöscht
-  pComboMenu = 0;
+  pComboMenu = nil;
   // Zaubern abbrechen
   EndMagicAction();
   }
@@ -521,8 +530,8 @@ public func OnComboMenuSpecial()
 // StartCall von Walk, wechselt bei laufendem Aimer wieder in die Aim-Aktion
 private func ReAim()
 {
-  if(pAimer && pAimedSpell)
-    if(pAimer->GetID() == AIMR) // In pAimer wird auch der Selektor gespeichert
+  if(And(pAimer, pAimedSpell))
+    if(Equal(pAimer->GetID(), AIMR)) // In pAimer wird auch der Selektor gespeichert
       AimingAngle(pAimer->~GetCurrentAngle() );
 }
 
@@ -542,7 +551,7 @@ public func OnRevaluation()
   MagicEnergy();
   // Kombo nach Spieler-Default
   if (IsComboSystemEnabled())
-    iCombo = GetPlrExtraData(GetOwner(), MCLK_ComboExtraDataName());
+    iCombo = GetPlrExtraData(GetOwner(), MCLK_ComboExtraDataName);
   _inherited();
   }
 
@@ -550,9 +559,9 @@ public func MagicEnergy()
 {
   // Normalerweise wird die Physical schon im Redefine2 gesetzt - dies ist ein Workaround für Aufwertungen von Clonks,
   // die kein #include CLNK im Script haben
-  if (!GetPhysical("Magic")) SetPhysical("Magic", GetPhysical("Magic", 0, 0, GetID()), PHYS_Temporary);
+  if (!GetPhysical("Magic")) SetPhysical("Magic", GetPhysical("Magic", nil, nil, GetID()), PHYS_Temporary);
   // Und gleich auffüllen
-  for (var i = 0; i < 10; i++)
+  for (var i = nil; (i ?? 0) < 10; S42MigrationStep(i, 1, true))
     DoMagicEnergy(10);
   return(1);
 }
@@ -563,14 +572,14 @@ public func MagicEnergy()
 private func DoCastError(string sErr)
 {
   PlayerMessage(GetController(), sErr,this());
-  Sound("Error", 0, this(), 100, GetController()+1);
+  Sound("Error", nil, this(), 100, (GetController() ?? 0)+1);
   return(true);
 }
 
 /* Status */
 
 // Der normale Zauberclonk hat keine dauerhafte Cast-Aktion
-public func IsCasting() { return(false); }  
+public func IsCasting() { return(nil); }
 
 /* Globale Überladungen fürs Fantasypack */
 

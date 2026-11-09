@@ -1,6 +1,6 @@
 /*-- Nebel erzeugen --*/
 
-#strict
+#strict 3
 
 static zaaahl;
 
@@ -17,12 +17,12 @@ zaaahl=Random(10);
 /* Eventuell Nebel erzeugen */
 private func DoNebel()
 {
-if(ObjectCount2(Find_ID(NBL2))>=1) RemoveAll(NBL2);
+if((ObjectCount2(Find_ID(NBL2)) ?? 0)>=1) RemoveAll(NBL2);
  
 
 
-if(ObjectCount2(Find_ID(NB9Z))>=zaaahl) {
-return();
+if((ObjectCount2(Find_ID(NB9Z)) ?? 0)>=(zaaahl ?? 0)) {
+return;
 }
 
 

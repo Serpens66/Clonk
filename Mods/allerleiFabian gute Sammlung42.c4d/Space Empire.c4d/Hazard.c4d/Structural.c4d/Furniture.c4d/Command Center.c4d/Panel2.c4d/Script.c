@@ -1,12 +1,12 @@
 /*-- Panel --*/
 
-#strict
+#strict 3
 
 local broken;
 
 protected func Damage()
 {
-  if(GetDamage() > 20 && !broken)
+  if(And((GetDamage() ?? 0) > 20, !broken))
   {
     SetAction("Broken");
     Sparkle(20);

@@ -1,6 +1,6 @@
 /* Warp */
 
-#strict
+#strict 3
 
 public func Activate(caster, real_caster) {
   // Zaubernden Clonk finden
@@ -15,7 +15,7 @@ private func Warp(clonk)
 {
   // Basis?
   var home;
-  if(!(home = FindBase(GetOwner(), 0) )) return(0, Message("$TxtNobase$",clonk) );
+  if(!(home = FindBase(GetOwner(), nil) )) return(S42MigrationFirst(nil, Message("$TxtNobase$",clonk) ));
   
   // Objekt wird vorsichtshalber nach draußen versetzt
 //  Exit(clonk);
@@ -25,10 +25,10 @@ private func Warp(clonk)
   
   // Richtungsfaktor ermitteln
   var dir = GetDir(clonk);
-  if(dir == DIR_Left() ) dir = -1;
+  if(Equal(dir, DIR_Left) ) dir = -1;
 
   // Löcher erzeugen
-  var startwarp = CreateObject(WARP, BoundBy(65 * dir, -GetX(), LandscapeWidth() - GetX()), 10, -1);
+  var startwarp = CreateObject(WARP, BoundBy(65 * (dir ?? 0), -(GetX() ?? 0), (LandscapeWidth() ?? 0) - (GetX() ?? 0)), 10, -1);
   var endwarp = CreateObject(WARP, AbsX(GetX(home)), AbsY(GetY(home)), -1);
   
   // Löcher verbinden

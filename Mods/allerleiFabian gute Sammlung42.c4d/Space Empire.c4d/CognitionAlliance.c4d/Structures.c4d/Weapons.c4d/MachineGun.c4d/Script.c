@@ -1,12 +1,12 @@
 /*-- Maschinengewehr --*/
 
-#strict
+#strict 3
 
 local target, aimphase, angle, phase, control, energyneed,schaaden;
 
 func RejectGraphChange() {return(1);}
 
-func Munitionsverbrauch(){if(!Random(5)) return(1); return(0);} // regelt den Munitionsverbrauch pro Salve
+func Munitionsverbrauch(){if(!Random(5)) return(1); return(nil);} // regelt den Munitionsverbrauch pro Salve
 
 
 func Schaaden() {return(1);}  // zusätzlicher Schaden der MG Kugel, damit minigun mehr schaden macht als maschinengewehr
@@ -23,19 +23,19 @@ protected func Initialize()
 public func Init(building, mode, vx, vy, direction)
 {
   // Waffenkontrolle aktivieren
-  control=CreateObject(_CMG,0,0,GetOwner());
+  control=CreateObject(_CMG,nil,nil,GetOwner());
   control->Init(this(), building);
   
   SetAction("Wait", building);
   if (mode) energyneed = 20;
-       else energyneed = 0;
-  SetVertex(0,0, GetVertex(0,0)+vx);
-  SetVertex(0,1, GetVertex(0,1)+vy);
+       else energyneed = nil;
+  SetVertex(nil,nil, (GetVertex(nil,nil) ?? 0)+(vx ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1) ?? 0)+(vy ?? 0));
   // Ausrichtung
-  if (direction == 0)
-    if (GetX() < LandscapeWidth()/2) direction = +1;
+  if (Equal(direction, nil))
+    if ((GetX() ?? 0) < (LandscapeWidth() ?? 0)/2) direction = +1;
                                 else direction = -1;
-  if (direction < 0) phase = 40;
+  if ((direction ?? 0) < 0) phase = 40;
                 else phase = 8;
   SetPhase(phase);
   aimphase=phase;
@@ -45,7 +45,7 @@ public func Init(building, mode, vx, vy, direction)
 protected func Destruction()
 {
   var obj;
-  while (obj = FindObject(SMGF, 0,0,0,0, 0,"Show",this()))
+  while (obj = FindObject(SMGF, nil,nil,nil,nil, nil,"Show",this()))
     RemoveObject(obj);
   if (control) RemoveObject(control);
   return(1);
@@ -65,8 +65,8 @@ protected func Waiting()
 private func CheckTurnLeft()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (--phase < 0) phase = 47;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, -1) < 0) phase = 47;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -76,8 +76,8 @@ private func CheckTurnLeft()
 private func CheckTurnRight()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (++phase > 47) phase = 0;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, 1) > 47) phase = nil;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -90,7 +90,7 @@ private func ResetAimPhase()
 {
   // Energieverbrauch
   var building = GetActionTarget();
-  if (GetEnergy(building) < energyneed) StopFiring();
+  if ((GetEnergy(building) ?? 0) < (energyneed ?? 0)) StopFiring();
   // Ziel suchen
   target = GetTargetCrew(500,AbsX(GetX()),AbsY(GetY()));                    // verfeindeter Clonk
   if (!target) target = GetTargetVehicle(500,AbsX(GetX()),AbsY(GetY()));    // gegnerisches Fahrzeug
@@ -99,30 +99,30 @@ private func ResetAimPhase()
   
   if (!target) StopFiring(); // Feuer einstellen oder Zielwinkel berechnen
   else {
-    angle = Angle(GetX(),GetY(), GetX(target)+GetXDir(target), GetY(target)+GetYDir(target));
-    aimphase = ((angle*2 + 7) / 15) % 48;
+    angle = Angle(GetX(),GetY(), (GetX(target) ?? 0)+(GetXDir(target) ?? 0), (GetY(target) ?? 0)+(GetYDir(target) ?? 0));
+    aimphase = (((angle ?? 0)*2 + 7) / 15) % 48;
   }
   // passt die Ausrichtung schon?
-  if (phase == aimphase)
+  if (Equal(phase, aimphase))
   {
     // Feuern!
-    if ((GetAction(control) ne "Fire") && target) ObjectSetAction(control,"Fire");
+    if (And((!SEqual(GetAction(control), "Fire")), target)) ObjectSetAction(control,"Fire");
     SetPhase(phase);
     return(1);
   }  
   // neu ausrichten
-  if ((phase < aimphase) ^ Inside(phase-aimphase, -24, +24))
+  if ((((phase ?? 0) < (aimphase ?? 0)) ?? 0) ^ (Inside((phase ?? 0)-(aimphase ?? 0), -24, +24) ?? 0))
   {
     SetAction("TurnLeft");
-    SetPhase((48-phase) % 48);
+    SetPhase((48-(phase ?? 0)) % 48);
     // Abschalten der Kanone, wenn Phasendifferenz zu groß
-    if (((phase-aimphase) > 8) || ((phase - aimphase) < -40)) StopFiring();
+    if (Or((((phase ?? 0)-(aimphase ?? 0)) > 8), (((phase ?? 0) - (aimphase ?? 0)) < -40))) StopFiring();
     return(1);
   }
   SetAction("TurnRight");
   SetPhase(phase);  
   // Abschalten der Kanone, wenn Phasendifferenz zu groß
-  if (((aimphase-phase) > 8) || ((aimphase-phase) < -40)) StopFiring();
+  if (Or((((aimphase ?? 0)-(phase ?? 0)) > 8), (((aimphase ?? 0)-(phase ?? 0)) < -40))) StopFiring();
   return(1);
 }
 
@@ -136,21 +136,22 @@ private func StopFiring()
 
 public func FireShot(xofs, yofs, xdir, ydir)
 {
-  angle = phase*15/2 + Random(13)-6;
-  xdir = +Sin(angle, 100);
-  ydir = -Cos(angle, 100);
+  angle = (phase ?? 0)*15/2 + (Random(13) ?? 0)-6;
+  xdir = +(Sin(angle, 100) ?? 0);
+  ydir = -(Cos(angle, 100) ?? 0);
   
   var bullet = CreateObject(SMG4,GetX(),GetY(),GetOwner());
-  bullet->Launch(GetX()+xofs, GetY()+yofs, xdir,ydir, angle, schaaden);
+  bullet->Launch((GetX() ?? 0)+(xofs ?? 0), (GetY() ?? 0)+(yofs ?? 0), xdir,ydir, angle, schaaden);
   
   // Energie abzapfen
   DoEnergy(-2,GetActionTarget());
   // Mündungsfeuer
-  CreateObject(SMGF)->Config(this(), xofs,yofs, phase*15/2);
+  CreateObject(SMGF)->Config(this(), xofs,yofs, (phase ?? 0)*15/2);
   return(1);
 }
 
 /* Energieverbrauch */
 
-public EnergyNeed: return(energyneed);
+public func EnergyNeed(...) { return(energyneed);
+}
 

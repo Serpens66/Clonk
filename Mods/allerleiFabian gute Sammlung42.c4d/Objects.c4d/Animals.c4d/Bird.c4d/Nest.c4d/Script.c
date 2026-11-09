@@ -1,6 +1,6 @@
 /*-- Nest --*/
 
-#strict
+#strict 3
 
 local pTree;
 
@@ -15,29 +15,29 @@ private func Check4Tree()
   // Baum noch da?	
   if(pTree)	
    if(!OnFire(pTree))  
-    if(!(GetCategory(pTree) & C4D_Vehicle))
+    if(!((GetCategory(pTree) ?? 0) & (C4D_Vehicle ?? 0)))
       return(1);      	    
   SetAction("Decay");
-  SetCategory(C4D_Vehicle());
+  SetCategory(C4D_Vehicle);
   // Ei benachrichtigen
   var pEgg;
-  if(pEgg = FindObject(BEGG, 0, 0, 0, 0, 0, 0, this())) pEgg->SetAction("Idle");
+  if(pEgg = FindObject(BEGG, nil, nil, nil, nil, nil, nil, this())) pEgg->SetAction("Idle");
   return(1);
 }
 
 protected func Incineration()
 {
   SetAction("Decay");
-  SetCategory(C4D_Vehicle());
+  SetCategory(C4D_Vehicle);
   // Ei benachrichtigen
   var pEgg;
-  if(pEgg = FindObject(BEGG, 0, 0, 0, 0, 0, 0, this())) pEgg->SetAction("Idle");
+  if(pEgg = FindObject(BEGG, nil, nil, nil, nil, nil, nil, this())) pEgg->SetAction("Idle");
   return(1);
 }
 
 public func RejectCollect(pObj, pID)
 {
-  if(pID == BIRD) return(0);
+  if(Equal(pID, BIRD)) return(nil);
   return(1);
 }
 
@@ -54,7 +54,7 @@ public func Ejection()
 
 private func Hit()
 {
-  if (GetAction()!="Decay")  SetAction("Decay");
+  if (!Equal(GetAction(), "Decay"))  SetAction("Decay");
   return(1);
 }
 

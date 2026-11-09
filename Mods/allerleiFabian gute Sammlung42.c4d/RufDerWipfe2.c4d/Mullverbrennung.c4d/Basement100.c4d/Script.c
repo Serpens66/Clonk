@@ -1,11 +1,13 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 
 #include BAS7
 
-private BasementID: return(B100);
-private BasementWidth: return(100);
+private func BasementID(...) { return(B100);
+}
+private func BasementWidth(...) { return(100);
+}
 func IsBasement(){return(1);}  
 
 //Fenster-Kruscht 

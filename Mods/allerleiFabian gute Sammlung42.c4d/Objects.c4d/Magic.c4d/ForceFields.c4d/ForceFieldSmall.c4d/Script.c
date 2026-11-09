@@ -1,6 +1,6 @@
 /* Kleines Kraftfeld (Objekt) */
 
-#strict 2
+#strict 3
 #include FRCA
 
 local is_dead;
@@ -19,10 +19,11 @@ public func GetLightningDamage() { return GetMaxDamage(); }
 protected func Damage(int iChange)
 {
   // Effekt
+  iChange ??= 0;
   Sound("Electric");
   
   // Lebenszeit verringern
-  EffectVar(0, this(), GetEffect("ForceFieldPSpell", this())) += GetForceFieldTime() / GetMaxDamage() * iChange;
+  S42MigrationAssign(EffectVar(nil, this(), GetEffect("ForceFieldPSpell", this())), "+=", (GetForceFieldTime() ?? 0) / (GetMaxDamage() ?? 0) * (iChange ?? 0));
 }
 
 public func LightningStrike(object lightning)
@@ -31,20 +32,20 @@ public func LightningStrike(object lightning)
   if (is_dead) return;
   is_dead = true;
   // Blitzeffekt
-  var lgt = CreateObject(FXL1, -GetX(), -GetY(), GetOwner(lightning));
+  var lgt = CreateObject(FXL1, -(GetX() ?? 0), -(GetY() ?? 0), GetOwner(lightning));
   if (lgt)
   {
-    var start_angle = 0;
+    var start_angle = nil;
     if (lightning)
     {
       lgt->SetController(GetController(lightning));
-      var vtx_num = Max(lightning->GetVertexNum()-3), vtx_x = lightning->GetVertex(vtx_num, VTX_X), vtx_y = lightning->GetVertex(vtx_num, VTX_Y);
+      var vtx_num = Max((lightning->GetVertexNum() ?? 0)-3), vtx_x = lightning->GetVertex(vtx_num, VTX_X), vtx_y = lightning->GetVertex(vtx_num, VTX_Y);
       start_angle = Angle(GetX(), GetY(), vtx_x, vtx_y);
     }
-    for (var angle = 0; angle <= 360; angle += 20)
+    for (var angle = nil; (angle ?? 0) <= 360; S42MigrationAssign(angle, "+=", 20))
     {
-      var a = angle + start_angle;
-      lgt->AddVertex(GetX()+Sin(a, FRCS_Radius)+Random(FRCS_RadiusMargin*2+1)-FRCS_RadiusMargin,GetY()-Cos(a, FRCS_Radius)+Random(FRCS_RadiusMargin*2+1)-FRCS_RadiusMargin);
+      var a = (angle ?? 0) + (start_angle ?? 0);
+      lgt->AddVertex((GetX() ?? 0)+(Sin(a, FRCS_Radius) ?? 0)+(Random((FRCS_RadiusMargin ?? 0)*2+1) ?? 0)-(FRCS_RadiusMargin ?? 0),(GetY() ?? 0)-(Cos(a, FRCS_Radius) ?? 0)+(Random((FRCS_RadiusMargin ?? 0)*2+1) ?? 0)-(FRCS_RadiusMargin ?? 0));
     }
     lgt->SetAction("Connect");
   }
@@ -55,55 +56,55 @@ public func LightningStrike(object lightning)
 protected func Timer()
 {
   var protege = GetActionTarget();
-  var inner_radius = FRCS_Radius-FRCS_RadiusMargin;
+  var inner_radius = (FRCS_Radius ?? 0)-(FRCS_RadiusMargin ?? 0);
   // Alles im Kraftfeld nach aussen wegschleudern
-  for (var obj in FindObjects(Find_Distance(FRCS_Radius+FRCS_RadiusMargin), Find_Category(28), Find_Exclude(this), Find_NoContainer(), Find_Layer(GetObjectLayer()), Find_Exclude(protege)))
+  for (var obj in FindObjects(Find_Distance((FRCS_Radius ?? 0)+(FRCS_RadiusMargin ?? 0)), Find_Category(28), Find_Exclude(this), Find_NoContainer(), Find_Layer(GetObjectLayer()), Find_Exclude(protege)))
     if (!Stuck(obj))
     {
-      if (obj == GetActionTarget(0, protege))
+      if (S42MigrationEqual(obj, GetActionTarget(nil, protege)))
       {
         // Reitziel (Drachen) ignorieren
-        if (GetProcedure(protege) == "ATTACH") continue;
+        if (S42MigrationEqual(GetProcedure(protege), "ATTACH")) continue;
       }
       // Keine attachten Objekte
-      if (GetProcedure(obj) == "ATTACH")
+      if (S42MigrationEqual(GetProcedure(obj), "ATTACH"))
       {
         // Kraftfelder zerstoeren sich gegenseitig
-        if (GetID(obj) == GetID())
+        if (S42MigrationEqual(GetID(obj), GetID()))
         {
-          DoDamage(+5, obj, FX_Call_DmgScript, GetController()+1);
+          DoDamage(+5, obj, FX_Call_DmgScript, (GetController() ?? 0)+1);
         }
         continue;
       }
       
       // Keine Clonks am Boden festklemmen - das Kraftfeld ist durch Laufen passierbar
-      if(GetOCF(obj) & OCF_Alive)
-      	if(GetContact(obj, -1) & CNAT_Bottom)
+      if((GetOCF(obj) ?? 0) & (OCF_Alive ?? 0))
+        if((GetContact(obj, -1) ?? 0) & (CNAT_Bottom ?? 0))
       		continue;
       
       // Keine nur-Fahrzeuge (Burgtore etwa)
-      if(GetCategory(obj) == C4D_Vehicle) // Absichtlich kein &
+      if(S42MigrationEqual(GetCategory(obj), C4D_Vehicle)) // Absichtlich kein &
       	continue;
       	
       // Nicht im oberen, durch SolidMask geschuetzten Kegel
-      var dx = GetX(obj)-GetX(), dy = GetY(obj)-GetY();
-      if (dy<0 && Abs(dx)<FRCS_TopSolidWidth*dy/FRCS_Radius) continue;
+      var dx = (GetX(obj) ?? 0)-(GetX() ?? 0), dy = (GetY(obj) ?? 0)-(GetY() ?? 0);
+      if ((dy ?? 0)<0 && (Abs(dx) ?? 0)<(FRCS_TopSolidWidth ?? 0)*(dy ?? 0)/(FRCS_Radius ?? 0)) continue;
       // Objekte tief innerhalb des Kraftfeldes nur, wenn sie sich schnell auf den Clonk zu bewegen (-> Haubitzenschuesse, etc.)
       var pvx = GetXDir(obj), pvy = GetYDir(obj);
-      if (dx*dx+dy*dy < inner_radius*inner_radius)
-        if (pvx*dx + pvy*dy >= 0 || Abs(pvx)+Abs(pvy) < 12) continue;
+      if ((dx ?? 0)*(dx ?? 0)+(dy ?? 0)*(dy ?? 0) < (inner_radius ?? 0)*(inner_radius ?? 0))
+        if ((pvx ?? 0)*(dx ?? 0) + (pvy ?? 0)*(dy ?? 0) >= 0 || (Abs(pvx) ?? 0)+(Abs(pvy) ?? 0) < 12) continue;
       // Ansonsten beschleunigen
-      var dvx = dx*FRCS_Strength/FRCS_Radius, dvy = dy*FRCS_Strength/FRCS_Radius;
+      var dvx = (dx ?? 0)*(FRCS_Strength ?? 0)/(FRCS_Radius ?? 0), dvy = (dy ?? 0)*(FRCS_Strength ?? 0)/(FRCS_Radius ?? 0);
       // Gegenrichtung neutralisieren
-      if (dvx * pvx < 0) dvx -= pvx;
-      if (dvy * pvy < 0) dvy -= pvy;
+      if ((dvx ?? 0) * (pvx ?? 0) < 0) S42MigrationAssign(dvx, "-=", (pvx ?? 0));
+      if ((dvy ?? 0) * (pvy ?? 0) < 0) S42MigrationAssign(dvy, "-=", (pvy ?? 0));
       // Nicht gegen die Wand
       var contact_mask = GetContact(obj, -1, 15);
-      if (dvx<0 && (contact_mask & CNAT_Left)) dvx=0;
-      if (dvx>0 && (contact_mask & CNAT_Right)) dvx=0;
-      if (dvy<0 && (contact_mask & CNAT_Top)) dvy=0;
-      if (dvy>0 && (contact_mask & CNAT_Bottom)) dvy=0;
-      if (!(dvx|dvy)) continue;
+      if ((dvx ?? 0)<0 && ((contact_mask ?? 0) & (CNAT_Left ?? 0))) dvx=nil;
+      if ((dvx ?? 0)>0 && ((contact_mask ?? 0) & (CNAT_Right ?? 0))) dvx=nil;
+      if ((dvy ?? 0)<0 && ((contact_mask ?? 0) & (CNAT_Top ?? 0))) dvy=nil;
+      if ((dvy ?? 0)>0 && ((contact_mask ?? 0) & (CNAT_Bottom ?? 0))) dvy=nil;
+      if (!((dvx ?? 0)|(dvy ?? 0))) continue;
       // Und Speed drauf
       if (GetAlive(obj))
         {
@@ -112,10 +113,10 @@ protected func Timer()
       else
         {
         SetController(GetController(), obj);
-        SetXDir(dvx + pvx, obj);
-        SetYDir(dvy + pvy, obj);
+        SetXDir((dvx ?? 0) + (pvx ?? 0), obj);
+        SetYDir((dvy ?? 0) + (pvy ?? 0), obj);
         }
-      Sound("MgWind*", false, obj, 50, 0, false, true, 300); // Fantasy only
+      Sound("MgWind*", nil, obj, 50, nil, nil, true, 300); // Fantasy only
       CreateParticle("NoGravSpark", dx, dy, dvx,dvy, 30, 0xa0c0ff);
     }
 }

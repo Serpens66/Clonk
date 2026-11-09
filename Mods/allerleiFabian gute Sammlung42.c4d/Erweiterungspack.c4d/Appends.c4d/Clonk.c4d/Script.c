@@ -1,6 +1,6 @@
 /*-- Clonk --*/
 
-#strict
+#strict 3
 #appendto CLNK
 #include CLNK
 
@@ -22,37 +22,37 @@ public func IsTransferabl() {
 func ContextKletternHangeln(caller,iSelection) // man kann wählen, ob man will dass der Clonk klettert/hangelt. Zb gut, wenn man schnell nach unten will, der clonk also schnell fallen soll und sich nicht ständig überall festhalten
 {
   [Können ändern|Image=S_10]
-  CreateMenu(S_10,0,0,0,"Können ändern",0,1,0);
+  CreateMenu(S_10,nil,nil,nil,"Können ändern",nil,1,nil);
     if(GetPhysical("CanScale")) 
-        AddMenuItem("Klettern deaktivieren","ChangeKoennen",S_10,0,0,0,"Der Clonk wird sich dann nicht mehr an allen Wänden usw. festhalten. Ganz praktisch, wenn man schnell irgendwo runter will.");
+        AddMenuItem("Klettern deaktivieren","ChangeKoennen",S_10,nil,nil,nil,"Der Clonk wird sich dann nicht mehr an allen Wänden usw. festhalten. Ganz praktisch, wenn man schnell irgendwo runter will.");
     else
-        AddMenuItem("Klettern aktivieren","ChangeKoennen",S_10,0,0,0,"Der Clonk wird wieder normal klettern.");
+        AddMenuItem("Klettern aktivieren","ChangeKoennen",S_10,nil,nil,nil,"Der Clonk wird wieder normal klettern.");
     if(GetPhysical("CanHangle")) 
-        AddMenuItem("Hangeln deaktivieren","ChangeKoennen",S_11,0,0,1,"Der Clonk wird sich dann nicht mehr an allen Decken usw. festhalten.");
+        AddMenuItem("Hangeln deaktivieren","ChangeKoennen",S_11,nil,nil,1,"Der Clonk wird sich dann nicht mehr an allen Decken usw. festhalten.");
     else
-        AddMenuItem("Hangeln aktivieren","ChangeKoennen",S_11,0,0,1,"Der Clonk wird wieder normal hangeln.");
+        AddMenuItem("Hangeln aktivieren","ChangeKoennen",S_11,nil,nil,1,"Der Clonk wird wieder normal hangeln.");
     if(GetPhysical("CanDig")) 
-        AddMenuItem("Graben deaktivieren","ChangeKoennen",S_20,0,0,2,"Der Clonk kann nicht mehr graben. Sinnvoll, wenn man z.b etwas aktivieren will und oft ausversehen gräbt.");
+        AddMenuItem("Graben deaktivieren","ChangeKoennen",S_20,nil,nil,2,"Der Clonk kann nicht mehr graben. Sinnvoll, wenn man z.b etwas aktivieren will und oft ausversehen gräbt.");
     else
-        AddMenuItem("Graben aktivieren","ChangeKoennen",S_20,0,0,2,"Der Clonk kann wieder graben.");
-    SelectMenuItem(iSelection, 0);
+        AddMenuItem("Graben aktivieren","ChangeKoennen",S_20,nil,nil,2,"Der Clonk kann wieder graben.");
+    SelectMenuItem(iSelection, nil);
 }
 
 func ChangeKoennen(ID,izahl)
 {
-    if(ID==S_10)
+    if(Equal(ID, S_10))
     {
-        if(GetPhysical("CanScale")) SetPhysical("CanScale", 0, PHYS_StackTemporary, this());
+        if(GetPhysical("CanScale")) SetPhysical("CanScale", nil, PHYS_StackTemporary, this());
         else SetPhysical("CanScale", 1, PHYS_StackTemporary, this());
     }
-    if(ID==S_11)
+    if(Equal(ID, S_11))
     {
-        if(GetPhysical("CanHangle")) SetPhysical("CanHangle", 0, PHYS_StackTemporary, this());
+        if(GetPhysical("CanHangle")) SetPhysical("CanHangle", nil, PHYS_StackTemporary, this());
         else SetPhysical("CanHangle", 1, PHYS_StackTemporary, this());
     }
-    if(ID==S_20)
+    if(Equal(ID, S_20))
     {
-        if(GetPhysical("CanDig")) SetPhysical("CanDig", 0, PHYS_StackTemporary, this());
+        if(GetPhysical("CanDig")) SetPhysical("CanDig", nil, PHYS_StackTemporary, this());
         else SetPhysical("CanDig", 1, PHYS_StackTemporary, this());
     }
     ContextKletternHangeln(this(),izahl);
@@ -63,45 +63,45 @@ func ChangeKoennen(ID,izahl)
 func ContextAntiFussel(caller,iSelection) // Aktiviert im TimerCall eine Freerect funktion im hauptclonkskript, welche festes material hinter dem clonk alle x frames entfernt. dadurch lassen sich fussel in der landschaft durch gegenspringen entfernen, ohne sonstige negative auswirkungen. dennoch besser nur aktivieren, wenn fussel entfernt werden sollen. 
 {
 [AntiFusselModus|Image=ERTH|Condition=ErsterSpieler]
-  CreateMenu(ERTH,0,0,0,"AntiFusselModus ändern",0,1,0);
+  CreateMenu(ERTH,nil,nil,nil,"AntiFusselModus ändern",nil,1,nil);
     if(AntiFussel) 
-        AddMenuItem("AntiFussel deaktivieren","SetAntiFussel",ERTH,0,0,0,"Normales Clonk");
+        AddMenuItem("AntiFussel deaktivieren","SetAntiFussel",ERTH,nil,nil,nil,"Normales Clonk");
     if(!AntiFussel)    
-        AddMenuItem("AntiFussel aktivieren","SetAntiFussel",ERTH,0,0,1,"Festes Material hinter dem Clonk wird entfernt. Auf diese Weise können nervige MaterialFussel in der Landschaft durch Gegenspringen entfernt werden.");
+        AddMenuItem("AntiFussel aktivieren","SetAntiFussel",ERTH,nil,nil,1,"Festes Material hinter dem Clonk wird entfernt. Auf diese Weise können nervige MaterialFussel in der Landschaft durch Gegenspringen entfernt werden.");
 }
 
 func SetAntiFussel(objID,izahl)
 {
     AntiFussel = izahl;
-    return(ContextAntiFussel(0,izahl));
+    return(ContextAntiFussel(nil,izahl));
 }
 
 func ContextGameSettingss()
 {
 [GameSettings|Image=BOOM|Condition=ErsterSpieler]
-  CreateMenu(GOOO,0,0,0,"Gamespeed ändern",0,1,0);
-    AddMenuItem("Gamespeed ändern","GameSpeedChange",GOLD,0,0,0,"Passe die maximale FPS Zahl an");
-    AddMenuItem("Explosionsverhalten ändern","OpenExplosivMenu",BOOM,0,0,1,"Soll die Erde bei Explosionen zerstört werden?");
-    AddMenuItem("Tageszeit ändern","ChangeDayTimeMenu",TIME,0,0,0);
-    AddMenuItem("Settings ändern","Choosersettings",GOLD,0,0,0);
+  CreateMenu(GOOO,nil,nil,nil,"Gamespeed ändern",nil,1,nil);
+    AddMenuItem("Gamespeed ändern","GameSpeedChange",GOLD,nil,nil,nil,"Passe die maximale FPS Zahl an");
+    AddMenuItem("Explosionsverhalten ändern","OpenExplosivMenu",BOOM,nil,nil,1,"Soll die Erde bei Explosionen zerstört werden?");
+    AddMenuItem("Tageszeit ändern","ChangeDayTimeMenu",TIME,nil,nil,nil);
+    AddMenuItem("Settings ändern","Choosersettings",GOLD,nil,nil,nil);
 }
 
 func ChangeDayTimeMenu(dummy,iSelection)
 {
-  CreateMenu(TIME,0,0,0,"Tageszeit ändern",0,1,0);
-    AddMenuItem(Format("Erhöhen %v/100",HashGet(hashSpielRegeln, "Tageszeit")),"ChangeDayTime",PFEI,0,0,1,"0 bis 100",2,0);
-    AddMenuItem(Format("Vermindern %v/100",HashGet(hashSpielRegeln, "Tageszeit")),"ChangeDayTime",PFEI,0,0,-1,"0 bis 100",2,1);
-    AddMenuItem("Eingestellte Tageszeit setzen","ChangeDayTime",TIME,0,0,2,"0-100 = Mittag bis Mittag");
-SelectMenuItem(iSelection, 0);
+  CreateMenu(TIME,nil,nil,nil,"Tageszeit ändern",nil,1,nil);
+    AddMenuItem(Format("Erhöhen %v/100",HashGet(hashSpielRegeln, "Tageszeit")),"ChangeDayTime",PFEI,nil,nil,1,"0 bis 100",2,nil);
+    AddMenuItem(Format("Vermindern %v/100",HashGet(hashSpielRegeln, "Tageszeit")),"ChangeDayTime",PFEI,nil,nil,-1,"0 bis 100",2,1);
+    AddMenuItem("Eingestellte Tageszeit setzen","ChangeDayTime",TIME,nil,nil,2,"0-100 = Mittag bis Mittag");
+SelectMenuItem(iSelection, nil);
 }
 
 func ChangeDayTime(dummy,iSelection)
 {
-if(iSelection==1 || iSelection==-1)
-HashPut(hashSpielRegeln, "Tageszeit", BoundBy(HashGet(hashSpielRegeln, "Tageszeit")+iSelection,0,100));
-if(iSelection==1) iSelection=0;
-if(iSelection==-1) iSelection=1;
-  if(iSelection==2)
+if(Or(Equal(iSelection, 1), Equal(iSelection, -1)))
+HashPut(hashSpielRegeln, "Tageszeit", BoundBy((HashGet(hashSpielRegeln, "Tageszeit") ?? 0)+(iSelection ?? 0),nil,100));
+if(Equal(iSelection, 1)) iSelection=nil;
+if(Equal(iSelection, -1)) iSelection=1;
+  if(Equal(iSelection, 2))
   {
   var timeobj;
   timeobj = FindObject(TIME);
@@ -121,32 +121,33 @@ obj->OpenMenu();
 
 func OpenExplosivMenu(id dummy, int iSelection)
 {
+iSelection ??= 0;
 if(!GetLength(aExplosiv)) aExplosiv = CreateArray();
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i) ; S42MigrationStep(i, 1, true))
   {
    if(DefinitionCall(idR, "IsErdschaden") )
-    aExplosiv[i]=true;
+    aExplosiv[(i ?? 0)]=true;
    else
-    aExplosiv[i]=false;
+    aExplosiv[(i ?? 0)]=nil;
   }
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
-  CreateMenu(BOOM, pClonk,0,0,"Markiert->Erdschaden");
+  CreateMenu(BOOM, pClonk,nil,nil,"Markiert->Erdschaden");
   // Explosiv einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i) ; S42MigrationStep(i, 1, true))
     if(DefinitionCall(idR, "IsExplosiv"))
       {
-      def = TransformObject(idR,aExplosiv[i]);
-      AddMenuItem("%s", "ChangeExplosivConf", idR, pClonk, 0, i, 0, 4, def);
-      if(i == iSelection)
+      def = TransformObject(idR,aExplosiv[(i ?? 0)]);
+      AddMenuItem("%s", "ChangeExplosivConf", idR, pClonk, nil, i, nil, 4, def);
+      if(Equal(i, iSelection))
         check = true;
       if(!check)
-        j++;
+        S42MigrationStep(j, 1, true);
       RemoveObject(def);
       }
   // Fertig
   AddMenuItem("Fertig", "ContextGameSettingss", CNCL, pClonk);
-  AddMenuItem("Auf Standard zurücksetzen", "ExploStandard", BOOM, pClonk,0,j);
+  AddMenuItem("Auf Standard zurücksetzen", "ExploStandard", BOOM, pClonk,nil,j);
   // Menneintrag auswShlen
   SelectMenuItem(j, pClonk);
 }
@@ -156,37 +157,38 @@ func ExploStandard(dummy, iSelection)
 var obj; // den regelchooser finden und darin die fkt aufrufen
 obj = FindObject(CHO6);
 obj->SetExplosivStandard();
-OpenExplosivMenu(0,iSelection);
+OpenExplosivMenu(nil,iSelection);
 }
 
 func ChangeExplosivConf(id idExplosiv, int i)
 {
   // Explosiv wurde ausgewShlt
-  if(!aExplosiv[i])
+  i ??= 0;
+  if(!aExplosiv[(i ?? 0)])
   {
-    aExplosiv[i] = true;
+    aExplosiv[(i ?? 0)] = true;
     idExplosiv->~ ChangeErdschaden(1);
   }
   // Explosiv wurde abgewShlt
   else
   {
-    aExplosiv[i] = false;
-    idExplosiv->~ChangeErdschaden(0);
+    aExplosiv[(i ?? 0)] = nil;
+    idExplosiv->~ChangeErdschaden(nil);
   }
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Regelmenn wieder aufmachen
-  OpenExplosivMenu(0, i);
+  OpenExplosivMenu(nil, i);
 }
 
 func TransformObject(idDef,yes)
 {
-  var def = CreateObject(TIM1, 0,0, -1);
+  var def = CreateObject(TIM1, nil,nil, -1);
   SetGraphics("",def,idDef,1,3);
   if(yes)
   {
     SetGraphics("", def, CNCL, 2, GFXOV_MODE_Picture);
-    SetObjDrawTransform(650,0,5000,0,650,5000, def, 2);
+    SetObjDrawTransform(650,nil,5000,nil,650,5000, def, 2);
   }
   else
   {
@@ -202,61 +204,61 @@ public func GameSpeedChange(pCaller,iSelection)
 {
 // nun davon ausgehen, dass der aktuelle Gamespeed 38, also Standard ist, sofern die Variable DerGameSpeed noch nicht gesetzt oder 0 ist
 if(!DerGameSpeed) DerGameSpeed=38;
-  CreateMenu(GOLD,0,0,0,"Gamespeed ändern",0,1,0);
-    AddMenuItem(Format("Um 1 FPS erhöhen (%d/50)",DerGameSpeed),"SendDenSpeed",PFEI,0,0,1,"1 bis 50",2,0);
-    AddMenuItem(Format("Um 1 FPS vermindern (%d/50)",DerGameSpeed),"SendDenSpeed",PFEI,0,0,-1,"1 bis 50",2,1);
-    AddMenuItem("Auf Standard zurückstellen","SendDenSpeed",GOLD,0,0,0);
+  CreateMenu(GOLD,nil,nil,nil,"Gamespeed ändern",nil,1,nil);
+    AddMenuItem(Format("Um 1 FPS erhöhen (%d/50)",DerGameSpeed),"SendDenSpeed",PFEI,nil,nil,1,"1 bis 50",2,nil);
+    AddMenuItem(Format("Um 1 FPS vermindern (%d/50)",DerGameSpeed),"SendDenSpeed",PFEI,nil,nil,-1,"1 bis 50",2,1);
+    AddMenuItem("Auf Standard zurückstellen","SendDenSpeed",GOLD,nil,nil,nil);
     SelectMenuItem(iSelection);
 }
 
 func SendDenSpeed(dummy, izahl)
 {
 var Selection;
-if(dummy==GOLD)
-{ChangeDenSpeed(0);Selection=2; DerGameSpeed=38; return(GameSpeedChange(0,Selection));}
-ChangeDenSpeed(BoundBy(DerGameSpeed+izahl,1,50));
-DerGameSpeed=BoundBy(DerGameSpeed+izahl,1,50);
-if(izahl==1) Selection=0;
-if(izahl==-1) Selection=1;
-GameSpeedChange(0,Selection);
+if(Equal(dummy, GOLD))
+{ChangeDenSpeed(nil);Selection=2; DerGameSpeed=38; return(GameSpeedChange(nil,Selection));}
+ChangeDenSpeed(BoundBy((DerGameSpeed ?? 0)+(izahl ?? 0),1,50));
+DerGameSpeed=BoundBy((DerGameSpeed ?? 0)+(izahl ?? 0),1,50);
+if(Equal(izahl, 1)) Selection=nil;
+if(Equal(izahl, -1)) Selection=1;
+GameSpeedChange(nil,Selection);
 }
 
 func ChangeDenSpeed(izahl)
 {
-SetGameSpeed(izahl); return(0);
+SetGameSpeed(izahl); return(nil);
 }
 
 func ErsterSpieler()
 {
   // Spieler 1? 
-  if(GetPlayerByIndex(0,C4PT_User)==GetOwner())
+  if(Equal(GetPlayerByIndex(nil,C4PT_User), GetOwner()))
   return(1);
-return(0);
+return(nil);
 }
 
 // präziser zielen mit der lokalen variablen AIM_precisely. Diese steht im canaim 
 //skript und somit auch in jedem hazardclonk. Nur wenn klassische Steuerung
 func WeaponDabei()
 {
-if (Contents(0))
-if (Contents(0)->~IsWeapon() && !GetPlrCoreJumpAndRunControl(GetOwner()) && GetID()==HZCK)
+if (Contents(nil))
+if (And(And(Contents(nil)->~IsWeapon(), !GetPlrCoreJumpAndRunControl(GetOwner())), Equal(GetID(), HZCK)))
 return(1);
-return(0);
+return(nil);
 }
 
 public func ContextZielmodus(pCaller) {
   [Zielmodus ändern|Image=HCRH|Condition=WeaponDabei]
-  CreateMenu(GetID(Contents(0)),0,0,0,"Zielmodus ändern",0,1,0);
+  CreateMenu(GetID(Contents(nil)),nil,nil,nil,"Zielmodus ändern",nil,1,nil);
     if(!AIM_precisely) 
-        AddMenuItem("Genaueres Zielen aktivieren","Zielmodus",PFEI,0,0,1,"Langsames, aber exakteres Zielen",2,0);
+        AddMenuItem("Genaueres Zielen aktivieren","Zielmodus",PFEI,nil,nil,1,"Langsames, aber exakteres Zielen",2,nil);
     if(AIM_precisely)    
-        AddMenuItem("Normales Zielen aktivieren","Zielmodus",PFEI,0,0,2,"Schnelles, aber ungenaues Zielen",2,1);
+        AddMenuItem("Normales Zielen aktivieren","Zielmodus",PFEI,nil,nil,2,"Schnelles, aber ungenaues Zielen",2,1);
 }
 
 func Zielmodus(iImage,ichange)
 {
-if (ichange==1) AIM_precisely = 1;
-if (ichange==2) AIM_precisely = 0;
+if (Equal(ichange, 1)) AIM_precisely = 1;
+if (Equal(ichange, 2)) AIM_precisely = nil;
 }
 
 
@@ -264,25 +266,25 @@ if (ichange==2) AIM_precisely = 0;
 
 func FindGrenadeLauncher()
 {
-if (Contents(0))
-if (Contents(0)->~IsGrenadeLauncher() )
+if (Contents(nil))
+if (Contents(nil)->~IsGrenadeLauncher() )
 return(1);
-return(0);
+return(nil);
 }
 
 public func ContextGranatzeit(pCaller) {
   [Zündzeit ändern|Image=GREN|Condition=FindGrenadeLauncher]
-  CreateMenu(GREN,0,0,0,"Zündzeit ändern",0,1,1);
-    AddMenuItem("Um 100 Milisekunden erhöhen","SendDelay",PFEI,0,0,1,"100 bis 10.000",2,0);
-    AddMenuItem("Um 100 Milisekunden vermindern","SendDelay",PFEI,0,0,2,"100 bis 10.000",2,1);
-    AddMenuItem("Auf Standard zurückstellen","SendDelay",GREN,0,0,0);
+  CreateMenu(GREN,nil,nil,nil,"Zündzeit ändern",nil,1,1);
+    AddMenuItem("Um 100 Milisekunden erhöhen","SendDelay",PFEI,nil,nil,1,"100 bis 10.000",2,nil);
+    AddMenuItem("Um 100 Milisekunden vermindern","SendDelay",PFEI,nil,nil,2,"100 bis 10.000",2,1);
+    AddMenuItem("Auf Standard zurückstellen","SendDelay",GREN,nil,nil,nil);
 }
 
 func SendDelay(iImage,ichange)
 {
-if (Contents(0))
-if (Contents(0)->~IsGrenadeLauncher() )
-Contents(0)->~EditExplodedelay(ichange);
+if (Contents(nil))
+if (Contents(nil)->~IsGrenadeLauncher() )
+Contents(nil)->~EditExplodedelay(ichange);
 }
 
 //Lichter über Contextmenü verstellen
@@ -294,13 +296,13 @@ Contents(0)->~EditExplodedelay(ichange);
 
 public func ContextLichtanpassen(pCaller) {
   [Licht ändern|Image=LIGH|Condition=FindLichtObject]
-  if(!FindLichtObject()) return 0;
-  CreateMenu(LIGH,0,0,0,"Licht ändern",0,1);
-    AddMenuItem("Durchsichtigkeit verändern","Lichtaendernmenu",LIGH,0,0,1);
-    AddMenuItem("Farbe verändern","Lichtaendernmenu",LIGH,0,0,2);
-    AddMenuItem("Standardlicht wiederherstellen","Lichtaendern",LIGH,0,0,11);
-    AddMenuItem("Alle eigenen Lichter ausschalten/einschalten (unsichtbar)","AlleLichter",LIGH,0,0,1); 
-    AddMenuItem("durch große lichter ersetzen (test)","AlleLichter",LIGH,0,0,2); 
+  if(!FindLichtObject()) return nil;
+  CreateMenu(LIGH,nil,nil,nil,"Licht ändern",nil,1);
+    AddMenuItem("Durchsichtigkeit verändern","Lichtaendernmenu",LIGH,nil,nil,1);
+    AddMenuItem("Farbe verändern","Lichtaendernmenu",LIGH,nil,nil,2);
+    AddMenuItem("Standardlicht wiederherstellen","Lichtaendern",LIGH,nil,nil,11);
+    AddMenuItem("Alle eigenen Lichter ausschalten/einschalten (unsichtbar)","AlleLichter",LIGH,nil,nil,1);
+    AddMenuItem("durch große lichter ersetzen (test)","AlleLichter",LIGH,nil,nil,2);
     //AddMenuItem("Alle eigenen Lichter entfernen (nur testzwecke, nicht rückgängig machbar)","AlleLichter",LIGH,0,0,3);   
 AddMenuItem("$Nothing$","No",MCMX);
 }
@@ -309,32 +311,32 @@ AddMenuItem("$Nothing$","No",MCMX);
 
 func AlleLichter(dummy, izahl)
 {
-if(Lichtersindaus==0)
-if(izahl==1)
+if(Equal(Lichtersindaus, nil))
+if(Equal(izahl, 1))
  {
 Lichtersindaus=1;
 for (var licht in FindObjects(Find_Func("IsLight"), Find_Owner(GetOwner()) ) )
 {licht->~TurnOff();}
-return();
+return;
  }
 
-if(Lichtersindaus==1)
-if(izahl==1)
+if(Equal(Lichtersindaus, 1))
+if(Equal(izahl, 1))
  {
-Lichtersindaus=0;
+Lichtersindaus=nil;
 for (var licht in FindObjects(Find_Func("IsLight"), Find_Owner(GetOwner())) )
 {licht->~TurnOn();}
-return();
+return;
  }
 
-if(izahl==3)
+if(Equal(izahl, 3))
 if(FindObject2(Find_Func("IsLight"), Find_Or(Find_Owner(GetOwner()), Find_Owner(NO_OWNER))) )
 {for (var licht in FindObjects(Find_Func("IsLight"), Find_Or(Find_Owner(GetOwner()), Find_Owner(NO_OWNER))) )
 {RemoveObject(licht);}
-return();}
+return;}
 
-if(Lichtersindaus==0)
-if(izahl==2)
+if(Equal(Lichtersindaus, nil))
+if(Equal(izahl, 2))
  {
 Lichtersindaus=1;
 for (var licht in FindObjects(Find_Func("IsLight"), Find_Owner(GetOwner()) ) )
@@ -358,14 +360,14 @@ MLicht3=AddLight(3500,RGBa(235,230,230,50),ziel3);
 MLicht4=AddLight(3500,RGBa(235,230,230,50),ziel4);
 MLicht5=AddLight(3500,RGBa(235,230,230,50),ziel5);
 MLicht6=AddLight(3500,RGBa(235,230,230,50),ziel6);
-return();
+return;
  }
 
 
-if(Lichtersindaus==1)
-if(izahl==2)
+if(Equal(Lichtersindaus, 1))
+if(Equal(izahl, 2))
  {
-Lichtersindaus=0;
+Lichtersindaus=nil;
 for (var licht in FindObjects(Find_Func("IsLight"), Find_Owner(GetOwner())) )
 {licht->~TurnOn();}
 if(MLicht1) RemoveObject(MLicht1);
@@ -374,30 +376,30 @@ if(MLicht3) RemoveObject(MLicht3);
 if(MLicht4) RemoveObject(MLicht4);
 if(MLicht5) RemoveObject(MLicht5);
 if(MLicht6) RemoveObject(MLicht6);
-return();
+return;
  }
 }
 
 
 func Lichtaendernmenu(objId,izahl)
 {
-  CreateMenu(LIGH,0,0,0,"Licht ändern",0,1,1);
-if(izahl==1)
+  CreateMenu(LIGH,nil,nil,nil,"Licht ändern",nil,1,1);
+if(Equal(izahl, 1))
     {
-AddMenuItem("Durchsichtigkeit um 1 vermindern","Lichtaendern",PFEI,0,0,1,"0 bis 255",2,1);
-AddMenuItem("Durchsichtigkeit um 1 erhöhen","Lichtaendern",PFEI,0,0,2,"0 bis 255",2,0);
+AddMenuItem("Durchsichtigkeit um 1 vermindern","Lichtaendern",PFEI,nil,nil,1,"0 bis 255",2,1);
+AddMenuItem("Durchsichtigkeit um 1 erhöhen","Lichtaendern",PFEI,nil,nil,2,"0 bis 255",2,nil);
     }            
 
-if(izahl==2)    
+if(Equal(izahl, 2))
             {
-AddMenuItem("Grünlich","Lichtaendern",LIGH,0,0,3);
-AddMenuItem("Rötlich","Lichtaendern",LIGH,0,0,4);
-AddMenuItem("Weißlich","Lichtaendern",LIGH,0,0,5);
-AddMenuItem("Orangelich","Lichtaendern",LIGH,0,0,6);
-AddMenuItem("Bläulich","Lichtaendern",LIGH,0,0,7);
-AddMenuItem("Gelblich","Lichtaendern",LIGH,0,0,8);
-AddMenuItem("Zufällig","Lichtaendern",LIGH,0,0,9);  // siehe knicklicht
-AddMenuItem("Individuell","Lichtaendern",LIGH,0,0,10);
+AddMenuItem("Grünlich","Lichtaendern",LIGH,nil,nil,3);
+AddMenuItem("Rötlich","Lichtaendern",LIGH,nil,nil,4);
+AddMenuItem("Weißlich","Lichtaendern",LIGH,nil,nil,5);
+AddMenuItem("Orangelich","Lichtaendern",LIGH,nil,nil,6);
+AddMenuItem("Bläulich","Lichtaendern",LIGH,nil,nil,7);
+AddMenuItem("Gelblich","Lichtaendern",LIGH,nil,nil,8);
+AddMenuItem("Zufällig","Lichtaendern",LIGH,nil,nil,9);  // siehe knicklicht
+AddMenuItem("Individuell","Lichtaendern",LIGH,nil,nil,10);
             }
 }
 
@@ -407,33 +409,33 @@ func Lichtaendern(objId,izahl)
 {
 for (var lichtobj in FindObjects(Find_Func("IsLightObject"), Find_Or(Find_Owner(GetOwner()), Find_Owner(NO_OWNER)) )  )
 {
-if(izahl==1) {intensi=-1;lichtobj->~LichtAnpassen(0,0,0,intensi);}
-if(izahl==2) {intensi=1;lichtobj->~LichtAnpassen(0,0,0,intensi);}
-if(izahl==3) {rot=41;gruen=181;blau=26;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} // gruenlich
-if(izahl==4) {rot=202;gruen=4;blau=4;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //rötlich
-if(izahl==5) {rot=255;gruen=255;blau=255;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //weißlich
-if(izahl==6) {rot=223;gruen=117;blau=1;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} // oranglich
-if(izahl==7) {rot=1;gruen=39;blau=222;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //Bläulich
-if(izahl==8) {rot=255;gruen=255;blau=1;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //Gelblich
+if(Equal(izahl, 1)) {intensi=-1;lichtobj->~LichtAnpassen(nil,nil,nil,intensi);}
+if(Equal(izahl, 2)) {intensi=1;lichtobj->~LichtAnpassen(nil,nil,nil,intensi);}
+if(Equal(izahl, 3)) {rot=41;gruen=181;blau=26;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} // gruenlich
+if(Equal(izahl, 4)) {rot=202;gruen=4;blau=4;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //rötlich
+if(Equal(izahl, 5)) {rot=255;gruen=255;blau=255;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //weißlich
+if(Equal(izahl, 6)) {rot=223;gruen=117;blau=1;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} // oranglich
+if(Equal(izahl, 7)) {rot=1;gruen=39;blau=222;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //Bläulich
+if(Equal(izahl, 8)) {rot=255;gruen=255;blau=1;return(lichtobj->~LichtAnpassen(rot,gruen,blau));} //Gelblich
 
-if(izahl==9) { 
+if(Equal(izahl, 9)) {
 //HSL Farbgebung!
  iH = Random(256);
   iS = 255;
   iL = 128;
-return(lichtobj->~LichtAnpassen(0,0,0,0,iH,iS,iL));
+return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,iH,iS,iL));
              }
-if(izahl==10) {CloseMenu();CreateMenu(LIGH,0,0,0,"Individuelle Farbe",0,1,1);
-AddMenuItem("Farbenwert erhöhen","LichtIndivaendern",PFEI,0,0,1,"0 ist Rot, 85 ist Grün, 170 Blau und 255 wieder Rot",2,0);
-AddMenuItem("Farbenwert vermindern","LichtIndivaendern",PFEI,0,0,2,"0 ist Rot, 85 ist Grün, 170 Blau und 255 wieder Rot",2,1);
-AddMenuItem("Sättigung erhöhen","LichtIndivaendern",PFEI,0,0,3,"Dies ist der Farbkontrast, 0 bis 255",2,0);
-AddMenuItem("Sättigung vermindern","LichtIndivaendern",PFEI,0,0,4,"Dies ist der Farbkontrast, 0 bis 255",2,1);
-AddMenuItem("Helligkeit erhöhen","LichtIndivaendern",PFEI,0,0,5,"Helligkeit gleich null entspräche RGB(0,0,0), 0 bis 255",2,0);
-AddMenuItem("Helligkeit vermindern","LichtIndivaendern",PFEI,0,0,6,"Helligkeit gleich null entspräche RGB(0,0,0), 0 bis 255",2,1);
-return();
+if(Equal(izahl, 10)) {CloseMenu();CreateMenu(LIGH,nil,nil,nil,"Individuelle Farbe",nil,1,1);
+AddMenuItem("Farbenwert erhöhen","LichtIndivaendern",PFEI,nil,nil,1,"0 ist Rot, 85 ist Grün, 170 Blau und 255 wieder Rot",2,nil);
+AddMenuItem("Farbenwert vermindern","LichtIndivaendern",PFEI,nil,nil,2,"0 ist Rot, 85 ist Grün, 170 Blau und 255 wieder Rot",2,1);
+AddMenuItem("Sättigung erhöhen","LichtIndivaendern",PFEI,nil,nil,3,"Dies ist der Farbkontrast, 0 bis 255",2,nil);
+AddMenuItem("Sättigung vermindern","LichtIndivaendern",PFEI,nil,nil,4,"Dies ist der Farbkontrast, 0 bis 255",2,1);
+AddMenuItem("Helligkeit erhöhen","LichtIndivaendern",PFEI,nil,nil,5,"Helligkeit gleich null entspräche RGB(0,0,0), 0 bis 255",2,nil);
+AddMenuItem("Helligkeit vermindern","LichtIndivaendern",PFEI,nil,nil,6,"Helligkeit gleich null entspräche RGB(0,0,0), 0 bis 255",2,1);
+return;
               }
 // standardlicht, wenn alle 3 RGB Werte 1000
-if(izahl==11) lichtobj->~return(lichtobj->~LichtAnpassen(1000,1000,1000,0,0,0,0,0,0,0));  }
+if(Equal(izahl, 11)) lichtobj->~return(lichtobj->~LichtAnpassen(1000,1000,1000,nil,nil,nil,nil,nil,nil,nil));  }
 //return(lichtobj->~LichtAnpassen(rot,gruen,blau,intensi,iH,iS,iL,plusiH,plusiS,plusiL)); 
 
 }
@@ -442,12 +444,12 @@ func LichtIndivaendern(objID,izahl)
 {
   var lichtobj;
 lichtobj = FindObject2(Find_AtRect(-5,-5,10,20), Find_Func("IsLightObject"), Find_Or(Find_Owner(GetOwner()), Find_Owner(NO_OWNER)) );
-if(izahl==1) {plusiH=1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,plusiH,0,0));}
-if(izahl==2) {plusiH=-1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,plusiH,0,0));}
-if(izahl==3) {plusiS=1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,0,plusiS,0));}
-if(izahl==4) {plusiS=-1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,0,plusiS,0));}
-if(izahl==5) {plusiL=1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,0,0,plusiL));}
-if(izahl==6) {plusiL=-1;return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,0,0,plusiL));}
+if(Equal(izahl, 1)) {plusiH=1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,plusiH,nil,nil));}
+if(Equal(izahl, 2)) {plusiH=-1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,plusiH,nil,nil));}
+if(Equal(izahl, 3)) {plusiS=1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,nil,plusiS,nil));}
+if(Equal(izahl, 4)) {plusiS=-1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,nil,plusiS,nil));}
+if(Equal(izahl, 5)) {plusiL=1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,nil,nil,plusiL));}
+if(Equal(izahl, 6)) {plusiL=-1;return(lichtobj->~LichtAnpassen(nil,nil,nil,nil,nil,nil,nil,nil,nil,plusiL));}
 //return(lichtobj->~LichtAnpassen(0,0,0,0,0,0,0,plusiH,plusiS,plusiL));
 }
 
@@ -468,8 +470,8 @@ lichtobj = FindObject2(Find_AtRect(-5,-5,10,20), Find_Func("IsLightObject"), Fin
 public func ContextTaucherhelmAblegen(pCaller)
 {
   [$DepositHelm$|Image=THLM|Condition=FindHelm]
-  var line= FindObject(PWRL,0,0,0,0,0,"Connect",FindHelm()),helmet;
-  if(!(helmet= FindHelm())) return(0);
+  var line= FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",FindHelm()),helmet;
+  if(!(helmet= FindHelm())) return(nil);
   if(line) RemoveObject(line);
   helmet->~ Extract(this());
 }
@@ -477,7 +479,7 @@ public func ContextTaucherhelmAblegen(pCaller)
 public func ContextTaucherhelmAnschliessen(pCaller)
 {
   [$ConnectHelm$|Image=LUPU|Condition=FindPump]
-  ObjectSetAction(CreateObject(PWRL,0,0,GetOwner()),"Connect",FindHelm(),FindPump());
+  ObjectSetAction(CreateObject(PWRL,nil,nil,GetOwner()),"Connect",FindHelm(),FindPump());
   Sound("Connect");
 }
 
@@ -519,10 +521,10 @@ private func Abriss(pObj)
 
 public func ContextReperatur(pCaller) {
   [$RepairObject$|Image=CXCN|Condition=FindDamagedObject]
-  if(!FindDamagedObject()) return 0;
-  CreateMenu(CXCN,0,0,0,"$WhatIsToRepair$",0,1);
+  if(!FindDamagedObject()) return nil;
+  CreateMenu(CXCN,nil,nil,nil,"$WhatIsToRepair$",nil,1);
   for(var obj in FindObjects(Find_AtRect(-5,-5,10,20), Find_NoContainer(), Find_Or(Find_Func("GetDefCoreVal", "BlastIncinerate", "DefCore"), Find_Func("GetMaxDamage")), Find_Or(Find_Func("GetDefCoreVal", "Construction", "DefCore"), Find_Func("IsRepa")),Find_Not(Find_Func("IsBasement")), Find_Func("GetDamage"))) {
-    AddMenuItem(Format("%s (%d C.)",GetName(obj),GetDamage(obj) /2),"Repair",GetID(obj),0,0,obj,0,0,4,obj);
+    AddMenuItem(Format("%s (%d C.)",GetName(obj),(GetDamage(obj) ?? 0) /2),"Repair",GetID(obj),nil,nil,obj,nil,nil,4,obj);
   }
   AddMenuItem("$Nothing$","No",MCMX);
 }
@@ -531,10 +533,10 @@ public func ContextReperatur(pCaller) {
 
 public func ContextSchuttDrehen(pCaller) {
   ["Schutt drehen"|Image=DE_5|Condition=FindSchuttObject]
-  if(!FindSchuttObject()) return 0;
-  CreateMenu(DE_5,0,0,0,"Schutt drehen",0,1);
+  if(!FindSchuttObject()) return nil;
+  CreateMenu(DE_5,nil,nil,nil,"Schutt drehen",nil,1);
   for(var obj in FindObjects(Find_AtRect(-5,-5,10,20), Find_ID(DE_5), Find_Or(Find_Owner(GetOwner()), Find_Owner(NO_OWNER)) )) {
-    AddMenuItem("Schutt drehen","EinmalDrehen",DE_5,0,0,obj);
+    AddMenuItem("Schutt drehen","EinmalDrehen",DE_5,nil,nil,obj);
   }
   AddMenuItem("$Nothing$","No",MCMX);
 }
@@ -549,8 +551,8 @@ obj = FindObject2(Find_AtRect(-5,-5,10,20), Find_ID(DE_5), Find_Or(Find_Owner(Ge
 func EinmalDrehen(objID, objekt)
 {
 //Log(Format("das Objekt ist %v und die Phase ist %v",objekt,GetPhase(objekt)));
-if(GetPhase(objekt)==0) {objekt->~SetDirr(1);return();}
-if(GetPhase(objekt)==1) {objekt->~SetDirr(0);return();}
+if(Equal(GetPhase(objekt), nil)) {objekt->~SetDirr(1);return;}
+if(Equal(GetPhase(objekt), 1)) {objekt->~SetDirr(nil);return;}
 }
 
 
@@ -560,77 +562,77 @@ func FindBuildinggabgeschlossen()
 var abgeschlobjekt;
 if (abgeschlobjekt = FindObject2(Find_Or(Find_OCF(OCF_Entrance),Find_ID(SLTW),Find_ID(CGDT),Find_ID(CDFT)),Find_AtRect(-5,-5,10,20),Find_NoContainer()))
 if((abgeschlobjekt->~Abgeschlossenn())) return(1);
-return(0);
+return(nil);
 }
 
 //abgeschlossene Gebäude knacken
 public func ContextKnackenn(pCaller)
 {
   [Schloss knacken|Image=SHM6|Condition=FindBuildinggabgeschlossen]
-ScheduleCall(0, "Schloossknacken", 5, 0, pCaller);counnnter=0;PlayerMessage(GetOwner(pCaller),"Schloss wird geknackt...",this());
+ScheduleCall(nil, "Schloossknacken", 5, nil, pCaller);counnnter=nil;PlayerMessage(GetOwner(pCaller),"Schloss wird geknackt...",this());
 }
 
 func Schloossknacken(pCaller)
 {
-if(GetComDir(this())!=0 ||
- ( GetAction(this()) ne "Walk" && GetAction(this()) ne "HoldWalk" && GetAction(this()) ne "WalkArmed") ) // nur weitermachen, wenn Clonk stillsteht
-{PlayerMessage(GetOwner(pCaller),"Schloss knacken abgebrochen",this());counnnter=0;return();}
+if(Or(!Equal(GetComDir(this()), nil),
+ ( And(And(!SEqual(GetAction(this()), "Walk"), !SEqual(GetAction(this()), "HoldWalk")), !SEqual(GetAction(this()), "WalkArmed")))) ) // nur weitermachen, wenn Clonk stillsteht
+{PlayerMessage(GetOwner(pCaller),"Schloss knacken abgebrochen",this());counnnter=nil;return;}
 
 var abgeschlobjekt = FindObject2(Find_Or(Find_OCF(OCF_Entrance),Find_ID(SLTW),Find_ID(CGDT),Find_ID(CDFT)),Find_AtRect(-5,-5,10,20),Find_NoContainer(),Find_Func("Abgeschlossenn") );
 
-++counnnter;
+S42MigrationStep(counnnter, 1);
 // wenn feindlich, dauerts länger
-if(GetOwner(abgeschlobjekt)!=GetOwner(pCaller)) if(Hostile(GetOwner(abgeschlobjekt),GetOwner(pCaller)))
+if(!Equal(GetOwner(abgeschlobjekt), GetOwner(pCaller))) if(Hostile(GetOwner(abgeschlobjekt),GetOwner(pCaller)))
   {
 // wenn stabilere Schlösser LOOC erforscht, dauerts sogar 4000 Frames
 if(GetPlrKnowledge(GetOwner(abgeschlobjekt),LOOC))
    {
-var counnnterhundert = counnnter/40;   
-if(counnnter<4000)                     // dauert 4000Frames, in der Zeit muss der Clonk still stehen.
- {ScheduleCall(0, "Schloossknacken", 1, 0, pCaller);
-PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return();
+var counnnterhundert = (counnnter ?? 0)/40;
+if((counnnter ?? 0)<4000)                     // dauert 4000Frames, in der Zeit muss der Clonk still stehen.
+ {ScheduleCall(nil, "Schloossknacken", 1, nil, pCaller);
+PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return;
  }
-if(counnnter==4000)
+if(Equal(counnnter, 4000))
         {
-if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return();}
+if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return;}
 
-if(LocalN("zuu",abgeschlobjekt)==1) LocalN("zuu",abgeschlobjekt)=0;
-counnnter=0;
-PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return();
+if(Equal(LocalN("zuu",abgeschlobjekt), 1)) LocalN("zuu",abgeschlobjekt)=nil;
+counnnter=nil;
+PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return;
          }
    }
 // wenn noch nicht erforscht, dann nur doppelt so lang, wie verbündete  
 else {
-var counnnterhundert = counnnter/20;   
-if(counnnter<2000)                     // dauert 2000Frames, in der Zeit muss der Clonk still stehen.
- {ScheduleCall(0, "Schloossknacken", 1, 0, pCaller);
-PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return();
+var counnnterhundert = (counnnter ?? 0)/20;
+if((counnnter ?? 0)<2000)                     // dauert 2000Frames, in der Zeit muss der Clonk still stehen.
+ {ScheduleCall(nil, "Schloossknacken", 1, nil, pCaller);
+PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return;
  }
-if(counnnter==2000)
+if(Equal(counnnter, 2000))
  {
-if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return();}
+if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return;}
 
-if(LocalN("zuu",abgeschlobjekt)==1) LocalN("zuu",abgeschlobjekt)=0;
-counnnter=0;
-PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return();
+if(Equal(LocalN("zuu",abgeschlobjekt), 1)) LocalN("zuu",abgeschlobjekt)=nil;
+counnnter=nil;
+PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return;
  }
   }
    }
 
 // wenn nicht feindlich
-var counnnterhundert = counnnter/10;   
-if(counnnter<1000)                     // dauert 1000Frames, in der Zeit muss der Clonk still stehen.
- {ScheduleCall(0, "Schloossknacken", 1, 0, pCaller);
-PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return();
+var counnnterhundert = (counnnter ?? 0)/10;
+if((counnnter ?? 0)<1000)                     // dauert 1000Frames, in der Zeit muss der Clonk still stehen.
+ {ScheduleCall(nil, "Schloossknacken", 1, nil, pCaller);
+PlayerMessage(GetOwner(pCaller),"%v%",this(),counnnterhundert); return;
  }
 
-if(counnnter==1000)
+if(Equal(counnnter, 1000))
  {
-if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return();}
+if(!abgeschlobjekt) {PlayerMessage(GetOwner(pCaller),"Aufzubrechendes Objekt weg?!",this());return;}
 
-if(LocalN("zuu",abgeschlobjekt)==1) LocalN("zuu",abgeschlobjekt)=0;
-counnnter=0;
-PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return();
+if(Equal(LocalN("zuu",abgeschlobjekt), 1)) LocalN("zuu",abgeschlobjekt)=nil;
+counnnter=nil;
+PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return;
  }
 }
 
@@ -639,8 +641,8 @@ PlayerMessage(GetOwner(pCaller),"Schloss geknackt!",this()); return();
 func FindBuildingg()
 // gebäude finden und schlüssel dabei haben
 {
-if (FindObject2(Find_Or(Find_OCF(OCF_Entrance),Find_ID(SLTW),Find_ID(CGDT),Find_ID(CDFT)),Find_AtRect(-5,-5,10,20),Find_NoContainer())  && FindContents(SHM6,this()) && Contained(this()) ) return(1);
-return(0);
+if (And(And(FindObject2(Find_Or(Find_OCF(OCF_Entrance),Find_ID(SLTW),Find_ID(CGDT),Find_ID(CDFT)),Find_AtRect(-5,-5,10,20),Find_NoContainer()), FindContents(SHM6,this())), Contained(this())) ) return(1);
+return(nil);
 }
 
 //damit man den Schlüssel auch innerhalb von Gebäuden verwenden und von innen auf-/abschließen kann
@@ -656,7 +658,7 @@ key->Activate(pCaller);};
 public func ContextBarrelSellControl(pCaller)
 {
   [$SaleMenu$|Image=SY02|Condition=InBase2]
-  ObjectCall(FindObject(ATFU,0,0,0,0,0,"Checking",Contained()),"BarrelSellControl",pCaller);
+  ObjectCall(FindObject(ATFU,nil,nil,nil,nil,nil,"Checking",Contained()),"BarrelSellControl",pCaller);
   return(1);
 }
 
@@ -664,10 +666,10 @@ public func ContextContainerControl(pCaller)
 {
   [$AutomaticBarrel$|Image=ATFU|Condition=InBase1]
   Sound("KnightConfirm*");
-  if(FindObject(ATFU,0,0,0,0,0,"Checking",Contained()))
+  if(FindObject(ATFU,nil,nil,nil,nil,nil,"Checking",Contained()))
     {
     PlayerMessage(GetOwner(),"$NoSupervising$",Contained());
-    RemoveObject(FindObject(ATFU,0,0,0,0,0,"Checking",Contained()));
+    RemoveObject(FindObject(ATFU,nil,nil,nil,nil,nil,"Checking",Contained()));
     }
   else
     {
@@ -681,16 +683,16 @@ public func ContextContainerControl(pCaller)
 
 public func InBase1()
 {
-  if(!Contained()) return(0);
-  if(GetBase(Contained())== -1) return(0);
+  if(!Contained()) return(nil);
+  if(Equal(GetBase(Contained()), -1)) return(nil);
   return(1);
 }
 
 public func InBase2()
 {
-  if(!Contained()) return(0);
-  if(GetBase(Contained())== -1) return(0);
-  if(!FindObject(ATFU,0,0,0,0,0,"Checking",Contained())) return(0);
+  if(!Contained()) return(nil);
+  if(Equal(GetBase(Contained()), -1)) return(nil);
+  if(!FindObject(ATFU,nil,nil,nil,nil,nil,"Checking",Contained())) return(nil);
   return(1);
 }
 
@@ -703,14 +705,14 @@ public func ContextSchlafen(pCaller) {
 func FindSchlafregel()
 {
     if(FindObject(SLEP))return(1);
-    return(0);        
+    return(nil);
 }
 
 private func Repair(idObj,pObj)
 {
-  if(GetWealth(GetOwner())< (GetDamage(pObj) /2))
-    return(Message("$NotEnoughMoney$",this()),Sound("Error"));
-  SetWealth(GetOwner(),GetWealth(GetOwner())- (GetDamage(pObj) /2));
+  if((GetWealth(GetOwner()) ?? 0)< ((GetDamage(pObj) ?? 0) /2))
+    return(S42MigrationFirst(Message("$NotEnoughMoney$",this()),Sound("Error")));
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)- ((GetDamage(pObj) ?? 0) /2));
   Sound("Cash");
   ScheduleCall(this(),"Repairing",1,GetDamage(pObj),pObj);
 }
@@ -718,30 +720,30 @@ private func Repair(idObj,pObj)
 private func Repairing(pObj)
 {
   DoDamage(-1,pObj);
-  if(!Random(15)) Sound("Build*",0,pObj);
+  if(!Random(15)) Sound("Build*",nil,pObj);
 }
 
-private func No() { return(); }
+private func No() { return; }
 
 public func FindHelm()
 {
-  if(InLiquid()) return(0);
-  return(FindObject(THLM,0,0,0,0,0,"Wear",this()));
+  if(InLiquid()) return(nil);
+  return(FindObject(THLM,nil,nil,nil,nil,nil,"Wear",this()));
 }
 
 public func FindPump()
 {
-  if(!FindHelm()) return(0);
-  if(FindObject(PWRL,0,0,0,0,0,"Connect",FindHelm())) return(0);
+  if(!FindHelm()) return(nil);
+  if(FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",FindHelm())) return(nil);
   return(FindObject(LUPU,-16,-20,32,40));
 }
 
 public func FindConstruction()
 {
   var obj;
-  while(obj= FindObject(0,-1,+9,0,0,0,0,0,NoContainer(),obj))
-   if(GetCategory(obj) & C4D_Structure())
-    if(GetOwner(obj)== GetOwner() || GetOwner(obj)== NO_OWNER())
+  while(obj= FindObject(nil,-1,+9,nil,nil,nil,nil,nil,NoContainer(),obj))
+   if((GetCategory(obj) ?? 0) & (C4D_Structure ?? 0))
+    if(Or(Equal(GetOwner(obj), GetOwner()), Equal(GetOwner(obj), NO_OWNER)))
      return(obj);
 }
 
@@ -757,17 +759,17 @@ protected func Death(a,b,c)
   var beutel;
   var sack;
   var kiste;
-  if(beutel= FindObject(BETL,0,0,0,0,0,"Belongs",this())) beutel->~ Loose(0,1);
-  if(sack= FindObject(SAK1,0,0,0,0,0,"Belongs",this())) sack->~ Loose(0,1);
-  if(kiste= FindObject(KI_T,0,0,0,0,0,"Belongs",this())) kiste->~ Loose(0,1);
+  if(beutel= FindObject(BETL,nil,nil,nil,nil,nil,"Belongs",this())) beutel->~ Loose(nil,1);
+  if(sack= FindObject(SAK1,nil,nil,nil,nil,nil,"Belongs",this())) sack->~ Loose(nil,1);
+  if(kiste= FindObject(KI_T,nil,nil,nil,nil,nil,"Belongs",this())) kiste->~ Loose(nil,1);
   if(!GetCrew(GetOwner())) Geldbeutel();
   return(_inherited(a,b,c));
 }
 
 protected func Destruction(a,b,c)
 {
-  if(GetCrew(GetOwner())== this())
-   if(GetCrewCount(GetOwner())== 1)
+  if(Equal(GetCrew(GetOwner()), this()))
+   if(Equal(GetCrewCount(GetOwner()), 1))
     if(GetPlayerName(GetOwner()))
      Geldbeutel();
   return(_inherited(a,b,c));
@@ -784,15 +786,15 @@ private func Geldbeutel()
 
 protected func Departure(pContainer,a,b,c)
 {
-  var helm= FindObject(THLM,0,0,0,0,0,"Wear",this());
-  if(helm) SetVisibility(VIS_All(),helm);
+  var helm= FindObject(THLM,nil,nil,nil,nil,nil,"Wear",this());
+  if(helm) SetVisibility(VIS_All,helm);
   return(_inherited(pContainer,a,b,c));
 }
 
 protected func Entrance(pContainer,a,b,c)
 {
-  var helm= FindObject(THLM,0,0,0,0,0,"Wear",this());
-  if(helm) SetVisibility(VIS_None(),helm);
+  var helm= FindObject(THLM,nil,nil,nil,nil,nil,"Wear",this());
+  if(helm) SetVisibility(VIS_None,helm);
   return(_inherited(pContainer,a,b,c));
 }
 
@@ -806,41 +808,41 @@ public func Collection2(pObj,a,b,c,d,e,f,g,h)
 
 public func BagCheck(pObj)
 {
-  if(!AutoCollect) return(0);
+  if(!AutoCollect) return(nil);
   var beutel;
-  if(!(beutel= FindObject(BETL,0,0,0,0,0,"Belongs",this()))) return(0);
-  if(LocalN("User",beutel)!= this()) return(0);
-  if(GetID(pObj)!= BETL)
+  if(!(beutel= FindObject(BETL,nil,nil,nil,nil,nil,"Belongs",this()))) return(nil);
+  if(!Equal(LocalN("User",beutel), this())) return(nil);
+  if(!Equal(GetID(pObj), BETL))
    if(!Contained())
     ObjectCall(beutel,"Put2",pObj);
    else
-    ScheduleCall(beutel,"Put2",3,0,pObj);    
+    ScheduleCall(beutel,"Put2",3,nil,pObj);
 }
 
 public func BagCheck2(pObj)
 {
-  if(!AutoCollect) return(0);
+  if(!AutoCollect) return(nil);
   var sack;
-  if(!(sack= FindObject(SAK1,0,0,0,0,0,"Belongs",this()))) return(0);
-  if(LocalN("User",sack)!= this()) return(0);
-  if(GetID(pObj)!= SAK1)
+  if(!(sack= FindObject(SAK1,nil,nil,nil,nil,nil,"Belongs",this()))) return(nil);
+  if(!Equal(LocalN("User",sack), this())) return(nil);
+  if(!Equal(GetID(pObj), SAK1))
    if(!Contained())
     ObjectCall(sack,"Put2",pObj);
    else
-    ScheduleCall(sack,"Put2",3,0,pObj);    
+    ScheduleCall(sack,"Put2",3,nil,pObj);
 }
 
 public func BagCheck3(pObj)
 {
-  if(!AutoCollect) return(0);
+  if(!AutoCollect) return(nil);
   var kiste;
-  if(!(kiste= FindObject(KI_T,0,0,0,0,0,"Belongs",this()))) return(0);
-  if(LocalN("User",kiste)!= this()) return(0);
-  if(GetID(pObj)!= KI_T)
+  if(!(kiste= FindObject(KI_T,nil,nil,nil,nil,nil,"Belongs",this()))) return(nil);
+  if(!Equal(LocalN("User",kiste), this())) return(nil);
+  if(!Equal(GetID(pObj), KI_T))
    if(!Contained())
     ObjectCall(kiste,"Put2",pObj);
    else
-    ScheduleCall(kiste,"Put2",3,0,pObj);    
+    ScheduleCall(kiste,"Put2",3,nil,pObj);
 }
 
 protected func Incineration(iByPlayer,a,b,c)
@@ -854,7 +856,7 @@ private func DeathCheck()
   if(!GetAlive())
     {
     SetAlive(1);
-    DoEnergy(+GetPhysical("Energy",1)/ 1000);
+    DoEnergy((+(GetPhysical("Energy",1) ?? 0) ?? 0)/ 1000);
     Incinerate();
     SetClrModulation(RGB(240,240,240));
     DeadBurning(240);
@@ -867,13 +869,13 @@ private func DeadBurning(iRGB)
   if(!OnFire())
     {
     SetAlive();
-    DoEnergy(-GetEnergy());
-    return();
+    DoEnergy(-(GetEnergy() ?? 0));
+    return;
     }
-  DoEnergy(+GetPhysical("Energy",1)/ 1000);
+  DoEnergy((+(GetPhysical("Energy",1) ?? 0) ?? 0)/ 1000);
   if(Random(2)) DoCon(-2);
-  if(iRGB>= 130) SetClrModulation(RGB(iRGB-10,iRGB-10,iRGB-10));
-  if(this()) return(ScheduleCall(this(),"DeadBurning",50,0,iRGB-10));
+  if((iRGB ?? 0)>= 130) SetClrModulation(RGB((iRGB ?? 0)-10,(iRGB ?? 0)-10,(iRGB ?? 0)-10));
+  if(this()) return(ScheduleCall(this(),"DeadBurning",50,nil,(iRGB ?? 0)-10));
 }
 
 public func IncludeClonk() { return(1); }
@@ -886,11 +888,11 @@ public func ContextDestruction()
   [Abreißen|Image=SYF1|Condition=BackAnything]
   var obj = BackAnything();
   if (!obj) return(1);
-  CreateMenu(SYF1,0,0,0,"Was soll abgerissen werden?",0,1);
+  CreateMenu(SYF1,nil,nil,nil,"Was soll abgerissen werden?",nil,1);
 for (var obj in FindObjects(Find_Not(Find_OCF(OCF_OnFire)),Find_Or(Find_Func("IsBasement"),Find_Func("GetDefCoreVal", "Construction", "DefCore"),Find_Func("IsShield")), Find_AtRect(-5,-5,10,20), Find_Owner(GetOwner())))
-if (!FindObject(DSTR,0,0,0,0,0,"Destruct",obj))
+if (!FindObject(DSTR,nil,nil,nil,nil,nil,"Destruct",obj))
 {{
-  AddMenuItem("%s abreißen","DoDestruction",GetID(obj),0,0,obj);}}
+  AddMenuItem("%s abreißen","DoDestruction",GetID(obj),nil,nil,obj);}}
   AddMenuItem("Zurück","NoDestruction",SYCC);
 }
 
@@ -903,7 +905,7 @@ for (var obj in FindObjects(Find_Not(Find_OCF(OCF_OnFire)),Find_AtRect(-5,-5,10,
 //      if (GetDefCoreVal("Construction", "DefCore",GetID(obj)) != 0)
 //      if (!FindObject(DSTR,0,0,0,0,0,"Destruct",obj))
           return(obj);
-  return(0);
+  return(nil);
 }
 
 
@@ -926,7 +928,7 @@ private func BackAnything()
 {
   var obj = BackBuilding();
   if (obj) return(obj);
-  return(0);
+  return(nil);
 }
 
 private func DoDestruction(par0, target)

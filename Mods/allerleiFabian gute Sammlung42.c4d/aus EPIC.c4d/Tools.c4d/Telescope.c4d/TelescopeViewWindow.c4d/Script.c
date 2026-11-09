@@ -1,6 +1,6 @@
 /*-- Fernrohr-Sichtfenster --*/
 
-#strict
+#strict 3
 
 local iDistance;
 local iYDir;
@@ -15,9 +15,9 @@ protected func Initialize()
 protected func Fly()
 {
   SetYDir(iYDir,this());
-  if(InLiquid()) iDistance-=4;
-   else --iDistance;
-  if(iDistance<1) RemoveObject();
+  if(InLiquid()) S42MigrationAssign(iDistance, "-=", 4);
+   else S42MigrationStep(iDistance, -1);
+  if((iDistance ?? 0)<1) RemoveObject();
   return(1);
 }
   

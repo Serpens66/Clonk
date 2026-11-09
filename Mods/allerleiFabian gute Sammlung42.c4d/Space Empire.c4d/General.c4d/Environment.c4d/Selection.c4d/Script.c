@@ -10,7 +10,7 @@
  *   - Erzeugung und Überwachung der Einstellungsmenüs
  */
 
-#strict
+#strict 3
 
 local count, caller;
 
@@ -27,7 +27,7 @@ private func PostInit()
   var obj;
   while (obj = FindObject(GetID()))
   {
-    ++count;
+    S42MigrationStep(count, 1);
     RemoveObject(obj);
   }
   return(Check());
@@ -39,11 +39,11 @@ private func PostInit()
 protected func Check()
 {
   var i, player;
-  for (i = 0; i < GetPlayerCount(); ++i)
+  for (i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1))
   {
     player = GetPlayerByIndex(i);
     if (!FindObjectOwner(SEL1, player))
-      CreateObject(SEL1,0,0,player);
+      CreateObject(SEL1,nil,nil,player);
   }
 }
 
@@ -53,21 +53,21 @@ protected func Check()
 protected func GameOptions()
 {
   // wenn Objekt 2x ausgewählt, gleich weiter
-  if (count <= 2)
+  if ((count ?? 0) <= 2)
     return(1);
   // alle außer Spieler 1 müssen warten
-  if (GetOwner() != GetPlayerByIndex(0))
+  if (!Equal(GetOwner(), GetPlayerByIndex(nil)))
   {
     SetAction("Wait");
     return(1);
   }
   // Objekt unsichtbar machen
-  SetVisibility(VIS_None());
+  SetVisibility(VIS_None);
   // erster Spieler macht die Einstellungen
   caller = GetHiRank(GetOwner());
-  CreateMenu(HZCK,caller,0,0,"Spieleinstellungen",0,0,1);
-  AddMenuItem("Details...",    "AcceptOptions", SYAC, caller, 0,0, "Spiel mit diesen Einstellungen starten.");
-  AddMenuItem("Spiel starten", "AcceptOptions", SYAC, caller, 0,0, "Spiel mit diesen Einstellungen starten.");
+  CreateMenu(HZCK,caller,nil,nil,"Spieleinstellungen",nil,nil,1);
+  AddMenuItem("Details...",    "AcceptOptions", SYAC, caller, nil,nil, "Spiel mit diesen Einstellungen starten.");
+  AddMenuItem("Spiel starten", "AcceptOptions", SYAC, caller, nil,nil, "Spiel mit diesen Einstellungen starten.");
   return(ShowSettings());
 }
 
@@ -90,27 +90,27 @@ private func CountGoals()
 {
   // Zahl der gewählten Spielziele
   var goal, count;
-  while (goal = FindObject(0, 0,0,0,0, 0,0,0,0, goal))
-    if (GetCategory(goal) & C4D_Goal())
-      ++count;
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil,nil,nil,nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
+      S42MigrationStep(count, 1);
   return(count);
 }
 
 private func GetGoal(goal)
 {
   // Zahl der gewählten Spielziele
-  while (goal = FindObject(0, 0,0,0,0, 0,0,0,0, goal))
-    if (GetCategory(goal) & C4D_Goal())
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil,nil,nil,nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
       return(goal);
-  return(0);
+  return(nil);
 }
 
 private func GetGoalDesc(goal)
 {
   var str = GetName(goal);
   var ID = GetID(goal);
-  if ((ID == GGMI) || (ID == GCMI) || (ID == GOMI) || (ID == GUMI) || (ID == GTMI))
-    str = Format("%s (%d%)", str, 100-(str->Percentage(100)));
+  if (Or(Or(Or(Or((Equal(ID, GGMI)), (Equal(ID, GCMI))), (Equal(ID, GOMI))), (Equal(ID, GUMI))), (Equal(ID, GTMI))))
+    str = Format("%s (%d%)", str, 100-((str->Percentage(100)) ?? 0));
   return(str);
 }
 
@@ -119,9 +119,9 @@ protected func ShowSettings()
   var str = "";
   // Spielziele
   var count = CountGoals();
-  if (count == 0)
+  if (Equal(count, nil))
     str = "spätere Spielzielauswahl|";
-  else if (count == 1)
+  else if (Equal(count, 1))
     str = Format("Spielziel:  %s|", GetGoalDesc(GetGoal()));
   else
   {

@@ -1,19 +1,19 @@
 /* Ewige Flammen */
 
-#strict
+#strict 3
 
 public func Activate(pCaster)
   {
   Sound("Magic1");
   // Effekt prüfen
   var iResult;
-  if (iResult = CheckEffect("EtrnlFlamesNSpell", 0, 75)) return(iResult!=-1 && RemoveObject());
+  if (iResult = CheckEffect("EtrnlFlamesNSpell", nil, 75)) return(And(!Equal(iResult, -1), RemoveObject()));
   // Zauber ausführen
   Sound("Inflame"); Sound("Fuse");
   var iPos = -60;
-  if (GetDir(pCaster) == DIR_Right()) iPos = 60;;
+  if (Equal(GetDir(pCaster), DIR_Right)) iPos = 60;;
   // Flammen erzeugen
-  CastObjects(MFLM, 6, 20, iPos, 0);
+  CastObjects(MFLM, 6, 20, iPos, nil);
   // Fertig; Zauber entfernen
   RemoveObject();
   return(1);

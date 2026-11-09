@@ -1,6 +1,6 @@
 /*-- Totes Pferd --*/
 
-#strict
+#strict 3
 
 local iGraphics;
 
@@ -24,12 +24,12 @@ public func ControlDigDouble(pClonk) {
 public func Embowel(object pByClonk) {
   // Tote Pferde haben Sonderbehandlung 
   var pSkin, pBone;
-  if (pSkin = CreateObject(SKIN, 0, 10)) pSkin->~SetSkinGraphics(Format("%d", LocalN("iGraphics")));
-  if (pSkin = CreateObject(SKIN, 0, 10)) pSkin->~SetSkinGraphics(Format("%d", LocalN("iGraphics")));
-  if (pBone = CreateObject(BBON, 0, 10)) SetName("$NameHorseBone$", pBone);
-  if (pBone = CreateObject(BBON, 0, 10)) SetName("$NameHorseBone$", pBone);
-  CreateObject(RMET, 0, 10);
-  CreateObject(RMET, 0, 10);
+  if (pSkin = CreateObject(SKIN, nil, 10)) pSkin->~SetSkinGraphics(Format("%d", LocalN("iGraphics")));
+  if (pSkin = CreateObject(SKIN, nil, 10)) pSkin->~SetSkinGraphics(Format("%d", LocalN("iGraphics")));
+  if (pBone = CreateObject(BBON, nil, 10)) SetName("$NameHorseBone$", pBone);
+  if (pBone = CreateObject(BBON, nil, 10)) SetName("$NameHorseBone$", pBone);
+  CreateObject(RMET, nil, 10);
+  CreateObject(RMET, nil, 10);
   RemoveObject();
   return(1);
 }

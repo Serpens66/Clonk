@@ -1,13 +1,13 @@
 /*--- Bausatz ---*/
 
-#strict
+#strict 3
 
 
 public func Activate(pClonk)
 { 
   [$TxtCreateconstructionsi$]
   // Clonk anhalten
-  SetComDir(COMD_Stop(), pClonk);
+  SetComDir(COMD_Stop, pClonk);
    // Fahrstuhl suchen
    // var f = FindObject2(Find_Func("IsElevator"),Find_InRect(-20,-100,40,200),Find_Not(Find_ID(ELC2))); // IsElevator beinhaltet auch groeßere fahrstuhle und seilban, daher einfach direkt die IDs nehmen
    var f = FindObject2(Find_InRect(-20,-100,40,200),Find_Or(Find_ID(ELEC),Find_ID(ELE_),Find_ID(CPEC)));
@@ -20,10 +20,10 @@ public func Activate(pClonk)
            {
                f->Halt(); // anhalten
                wall->addsperre();
-               if(GetID(f)==CPEC)
-                 CreateObject(SSPE,(GetX(f)-4)-GetX(),(GetY(wall)+44)-GetY(),GetOwner(pClonk));
+               if(Equal(GetID(f), CPEC))
+                 CreateObject(SSPE,((GetX(f) ?? 0)-4)-(GetX() ?? 0),((GetY(wall) ?? 0)+44)-(GetY() ?? 0),GetOwner(pClonk));
                else
-                 CreateObject(SSPE,(GetX(f)-4)-GetX(),(GetY(wall)+36)-GetY(),GetOwner(pClonk));
+                 CreateObject(SSPE,((GetX(f) ?? 0)-4)-(GetX() ?? 0),((GetY(wall) ?? 0)+36)-(GetY() ?? 0),GetOwner(pClonk));
                // CreateObject(SSPE,(GetX(f)-4)-GetX(),(GetY(f)+20)-GetY(),GetOwner(pClonk));
                RemoveObject();
            }

@@ -1,6 +1,6 @@
 /*-- Drain --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -12,19 +12,19 @@ private func Draining()
 {
   if(GetLength(hashSpielRegeln))
   {
-      if(RandomX(0,1000)<=HashGet(hashSpielRegeln, "Grundwasser")) // mit chance wasser saugen 
+      if((RandomX(nil,1000) ?? 0)<=(HashGet(hashSpielRegeln, "Grundwasser") ?? 0)) // mit chance wasser saugen
       if(GBackLiquid())
-        ExtractMaterialAmount(0, 0, GetMaterial(), 20);
+        ExtractMaterialAmount(nil, nil, GetMaterial(), 20);
   }
   else
   {
       if(!Random(100)) // mit chance wasser saugen 
       if(GBackLiquid())
-        ExtractMaterialAmount(0, 0, GetMaterial(), 20);
+        ExtractMaterialAmount(nil, nil, GetMaterial(), 20);
   }   
   // "Nachrutschen" 
-    if(GetY()>LandscapeHeight()/4)
-      if(!GBackSemiSolid(0,+3))
-        SetPosition(GetX(),GetY()+1);
+    if((GetY() ?? 0)>(LandscapeHeight() ?? 0)/4)
+      if(!GBackSemiSolid(nil,+3))
+        SetPosition(GetX(),(GetY() ?? 0)+1);
   return(1);
 }

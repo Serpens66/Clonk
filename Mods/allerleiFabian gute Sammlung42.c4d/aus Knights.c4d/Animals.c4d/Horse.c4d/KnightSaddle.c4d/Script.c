@@ -1,6 +1,6 @@
 /*-- Rittersattel --*/
 
-#strict
+#strict 3
 
 private func ID_Horse() { return(HORS); }
 private func ID_HorseSaddled() { return(HRSK); }
@@ -10,9 +10,9 @@ public func Activate(object pClonk)
   [$TxtPuton$]
   // Kein Pferd
   var pHorse;
-  if (!(pHorse = FindObject(ID_Horse(), 0, 1))) return(0);
+  if (!(pHorse = FindObject(ID_Horse(), nil, 1))) return(nil);
   // Pferd satteln
-  if (!pHorse->Saddle(ID_HorseSaddled(), GetID())) return(0);
+  if (!pHorse->Saddle(ID_HorseSaddled(), GetID())) return(nil);
   pHorse->SetOwner(GetOwner(pClonk));
   // Sattel entfernen
   RemoveObject();

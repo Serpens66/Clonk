@@ -1,6 +1,6 @@
 /*-- Fenster --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -9,13 +9,14 @@ func Initialize()
 
 public func Set(int iDir)
 {
+	iDir ??= 0;
 	SetDir(iDir);
-	SetSolidMask(70, 91 * iDir, 70, 91, 0,0);
+	SetSolidMask(70, 91 * (iDir ?? 0), 70, 91, nil,nil);
 }
 
 /* Serialisierung */
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("Set(%d)", GetDir());
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%d)", GetDir());
 }

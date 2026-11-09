@@ -1,6 +1,6 @@
 /*-- Hangar vom Bunker --*/
 
-#strict
+#strict 3
 
 #appendto SI0D //Schalter des Hangars vom Bunker
 
@@ -16,11 +16,11 @@ return(_inherited(a,b,c,d,e,f,g));
 
 public func GetTriggerName(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return("Hangartor öffnen");
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return("Hangartor schließen");
 	}
@@ -29,11 +29,11 @@ public func GetTriggerName(a)
 
 public func Trigger(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 			ControlLeft();
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 			ControlRight();
 	}

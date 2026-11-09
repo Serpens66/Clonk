@@ -1,28 +1,29 @@
 /*-- Torpedo --*/
 
-#strict
+#strict 3
 
 public func IsWaste(){ return(1);}
 
-Initialize:
-  DoScore(0, -5);
+func Initialize(...) {
+  DoScore(nil, -5);
   return(1);
+}
 
 /* Initialisierung */
 
 protected func Initialize() {
-  DoScore(0, 500);	
+  DoScore(nil, 500);
   SetAction("Walk");
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
 }
 
 public func Launch (object by) {
   SetAction ("Swim");
   SetDir(GetDir(by));
   SetXDir(GetXDir(by));
-  SetYDir(0);
-  if (GetDir()==DIR_Right()) SetComDir(COMD_Right());
-  if (GetDir()==DIR_Left()) SetComDir(COMD_Left());
+  SetYDir(nil);
+  if (Equal(GetDir(), DIR_Right)) SetComDir(COMD_Right);
+  if (Equal(GetDir(), DIR_Left)) SetComDir(COMD_Left);
   return(1);
 }
 
@@ -35,42 +36,46 @@ func Entrance (object container) {
 /* Effekte */
 
 private func Swimming() {
-  var iDir=(GetDir()*2-1);
-  Bubble(-16*iDir,0);
-  Bubble(-16*iDir,0);
-  if (GetActTime() > 25) SetYDir(0);
+  var iDir=((GetDir() ?? 0)*2-1);
+  Bubble(-16*(iDir ?? 0),nil);
+  Bubble(-16*(iDir ?? 0),nil);
+  if ((GetActTime() ?? 0) > 25) SetYDir(nil);
 }
 
 /* Aufschlag */
 
-public Hit:
+public func Hit(...) {
   Sound("HEADCRAS");	
   CreateObject(ABEX);
   // Druckwelle & Strahlung
 var obj;
   obj = CreateObject(SWAV);
-  ObjectCall(obj, "SetSize", 300,GetX(),GetY(), 200+Random(100), 300+Random(200));
+  ObjectCall(obj, "SetSize", 300,GetX(),GetY(), 200+(Random(100) ?? 0), 300+(Random(200) ?? 0));
 var verbrannt;
 verbrannt= CreateObject(VBWS);
 verbrannt->Verbrannt(GetID(),IsWaste());
 
 //Der Umwelt globalnature schaden. Wenn es soviele A-Bomben wie Spieler gezündet wurden, dann sinkt die globalnature auf 90% von dem Wert davor.
-DecNature((((startnature*90/100)-startnature)/GetPlayerCount()));
+DecNature(((((startnature ?? 0)*90/100)-(startnature ?? 0))/(GetPlayerCount() ?? 0)));
 
   RemoveObject();
   return(1);
+}
   
 
 
 /* Produkteigenschaften */
 
-public IsChemicalProduct: return(1);
+public func IsChemicalProduct(...) { return(1);
+}
 
 /* Status */
 
-public IsTorpedo: return(1);
+public func IsTorpedo(...) { return(1);
+}
 
 /* Forschung */
 
-public GetResearchBase: return(TRP2);
+public func GetResearchBase(...) { return(TRP2);
+}
 

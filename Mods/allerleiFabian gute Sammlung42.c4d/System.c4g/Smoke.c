@@ -1,12 +1,12 @@
 /*-- Rauch --*/
 
-#strict
+#strict 3
 
 global func Smoke(a,b,c,d,e,f,g,h,i,j)
 {
-if(FindObject(NOSM)) return(); // kein rauch
+if(FindObject(NOSM)) return; // kein rauch
 
-if(GetOwner()!=-1)
+if(!Equal(GetOwner(), -1))
 if(GetPlrKnowledge(GetOwner(),_BA2)) d=RGB(255, 255, 255); // jeder Rauch wird weiﬂ, wenn Besitzer des aufrufenden Objekts die Forschung hat 
 
 return(_inherited(a,b,c,d,e,f,g,h,i,j));

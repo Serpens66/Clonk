@@ -1,6 +1,6 @@
 /*-- Monsterei --*/
 
-#strict
+#strict 3
 
 /* TimerCall */
 
@@ -25,11 +25,11 @@ protected func Damage()
   
 private func DoBreak()
 {
-  if (!ActIdle()) return(0);
-  if (GBackSolid()) return(0);
+  if (!ActIdle()) return(nil);
+  if (GBackSolid()) return(nil);
   Sound("EggBreak");
   SetAction("Break");
-  var pChild = CreateConstruction(MONS, 0, 0, -1, 40);
+  var pChild = CreateConstruction(MONS, nil, nil, -1, 40);
   SetOwner(-1, pChild);
   pChild->~Birth();
 }

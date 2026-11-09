@@ -1,6 +1,6 @@
 /*-- Außenturm links --*/
 
-#strict
+#strict 3
 
 #include BG5C // Burgteil - Treppenhaus - Turm
 
@@ -26,6 +26,6 @@ public func GetResearchBase() { return(BT5C); }
 func Zumachen()
 {
 //fürs abschließen
-  if(zuu==1) SetEntrance(0);
-  if(zuu==0) SetEntrance(1);
+  if(Equal(zuu, 1)) SetEntrance(nil);
+  if(Equal(zuu, nil)) SetEntrance(1);
 }

@@ -1,6 +1,6 @@
 /*-- Kein Metall vor Gebäuden --*/
 
-#strict
+#strict 3
 
 protected func Activate(iByPlayer)
 {

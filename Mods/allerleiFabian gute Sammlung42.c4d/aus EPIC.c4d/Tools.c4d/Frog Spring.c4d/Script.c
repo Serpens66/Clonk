@@ -1,6 +1,6 @@
 /*--- Saw ---*/
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -11,12 +11,12 @@ protected func Hit()
 public func Activate(caller) 
 {
 
-  SetComDir(COMD_Stop(), caller);
+  SetComDir(COMD_Stop, caller);
 
   CreateMenu(DK8Z, caller, this);
-  AddMenuItem("Up", "Up", DK8Z, caller, 0, caller);
-  AddMenuItem("Diagonal", "Diagonal", DK8Z, caller, 0,caller);
-  AddMenuItem("Straight", "Straight", DK8Z, caller, 0,caller);
+  AddMenuItem("Up", "Up", DK8Z, caller, nil, caller);
+  AddMenuItem("Diagonal", "Diagonal", DK8Z, caller, nil,caller);
+  AddMenuItem("Straight", "Straight", DK8Z, caller, nil,caller);
   return(1);
 }
 
@@ -44,40 +44,40 @@ protected func Remover()
 }
 
 protected func DoJumpUp(target) {
-  SetPosition(GetX(target), GetY(target) - 1, target);
+  SetPosition(GetX(target), (GetY(target) ?? 0) - 1, target);
   ObjectSetAction(target, "Jump"); 
   var dir = -1;
-  if (GetDir(target) == 1) dir = +1;
+  if (Equal(GetDir(target), 1)) dir = +1;
 
-  SetSpeed(10 * dir, -120, target); 
+  SetSpeed(10 * (dir ?? 0), -120, target);
 
-  AddEffect("IntHasNoFallDamage",target,1,0,target);
+  AddEffect("IntHasNoFallDamage",target,1,nil,target);
 }
 
 protected func DoJumpDiagonal(target) {
-  SetPosition(GetX(target), GetY(target) - 1, target);
+  SetPosition(GetX(target), (GetY(target) ?? 0) - 1, target);
 
   ObjectSetAction(target, "Jump");
   
   var dir = -1;
-  if (GetDir(target) == 1) dir = +1;
+  if (Equal(GetDir(target), 1)) dir = +1;
 
-  SetSpeed(35 * dir, -70, target);
+  SetSpeed(35 * (dir ?? 0), -70, target);
 
-  AddEffect("IntHasNoFallDamage",target,1,0,target);
+  AddEffect("IntHasNoFallDamage",target,1,nil,target);
 }
 
 protected func DoJumpStraight(target) {
-  SetPosition(GetX(target), GetY(target) - 1, target);
+  SetPosition(GetX(target), (GetY(target) ?? 0) - 1, target);
 
   ObjectSetAction(target, "Jump");
   
   var dir = -1;
-  if (GetDir(target) == 1) dir = +1;
+  if (Equal(GetDir(target), 1)) dir = +1;
 
-  SetSpeed(70 * dir, -50, target);
+  SetSpeed(70 * (dir ?? 0), -50, target);
 
-  AddEffect("IntHasNoFallDamage",target,1,0,target);
+  AddEffect("IntHasNoFallDamage",target,1,nil,target);
 }
 
 

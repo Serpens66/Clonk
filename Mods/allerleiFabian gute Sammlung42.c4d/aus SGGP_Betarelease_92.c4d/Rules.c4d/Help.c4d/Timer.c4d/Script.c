@@ -1,28 +1,29 @@
-#strict
+#strict 3
 local iMinute,iSecound,TimeOver,Disabled,Count;
 func Initialize() 
 {
-	TimeOver = 0;
-	SetVisibility(VIS_All());
+	TimeOver = nil;
+	SetVisibility(VIS_All);
   	SetPosition(50, 100, this());
-  	return();
+        return;
 }
 
 func Timer() 
 {
-	if(Count == 0) Count = -1;
+	if(Equal(Count, nil)) Count = -1;
 	if(!Disabled) 
 	{
-		iSecound+= Count;
+		S42MigrationAssign(iSecound, "+=", (Count ?? 0));
 		Hexal();
-		if(Count < 0) Message("<c ff0000>%d:%3.2d</c>", this(),iMinute,iSecound);
-		if(iMinute < 60) if(Count > 0) Message("<c 00ff00>%d:%3.2d</c>", this(),iMinute,iSecound);
-		if(iMinute > 59) if(Count > 0) Message("<c cc00ff>Süchtig!</c>",this());
+		if((Count ?? 0) < 0) Message("<c ff0000>%d:%3.2d</c>", this(),iMinute,iSecound);
+		if((iMinute ?? 0) < 60) if((Count ?? 0) > 0) Message("<c 00ff00>%d:%3.2d</c>", this(),iMinute,iSecound);
+		if((iMinute ?? 0) > 59) if((Count ?? 0) > 0) Message("<c cc00ff>Süchtig!</c>",this());
 	}
 }
 
 global func ChangeTimerCount(int iC)
 {
+	iC ??= 0;
 	CheckHelp();
 	var pTimer;
 	pTimer = FindObject(TIMR);
@@ -32,27 +33,29 @@ global func ChangeTimerCount(int iC)
 
 func Hexal()
 {
-	if(iSecound < 0 || iSecound > 59)
+	if(Or((iSecound ?? 0) < 0, (iSecound ?? 0) > 59))
 	{
-		iMinute += Count;
-		if(Count > 0) iSecound = 0;
-		if(Count < 0) iSecound = 60;
+		S42MigrationAssign(iMinute, "+=", (Count ?? 0));
+		if((Count ?? 0) > 0) iSecound = nil;
+		if((Count ?? 0) < 0) iSecound = 60;
 	}
-	if(iMinute < 0)
+	if((iMinute ?? 0) < 0)
 	{
-		if(Count < 0) Down();
-		iMinute = 0;
+		if((Count ?? 0) < 0) Down();
+		iMinute = nil;
 	}
-	return();
+	return;
 }
 	
 func Enable()
 {
-	Disabled = 0;
+	Disabled = nil;
 }
 
 global func SetTime(int iMinutes,int iSecounds)
 {
+	iMinutes ??= 0;
+	iSecounds ??= 0;
 	CheckHelp();
 	var pTimer;
 	pTimer = FindObject(TIMR);

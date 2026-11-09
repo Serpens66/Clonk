@@ -1,6 +1,6 @@
 /*-- Ausrüstung --*/
 
-#strict
+#strict 3
 
 // actually, only the first four are used...
 static const GEAR_Armor  = 1;
@@ -20,11 +20,11 @@ public func Activate(object pClonk)
 {
   [$CtrlActivateDesc$]
   // Can the clonk use this?
-  if (!(pClonk->~CanUse(GetID()))) return(0);
+  if (!(pClonk->~CanUse(GetID()))) return(nil);
   // Clonk doesn't already use gear of that type 
   if (pClonk->~HasGear(this()->GetGearType())) {
     PlayerMessage(GetOwner(pClonk),"$AlreadyWears$",pClonk,GetName(pClonk));
-    return(0);
+    return(nil);
   }
   // Buckle
   if(pClonk->~EquipGear(this()))

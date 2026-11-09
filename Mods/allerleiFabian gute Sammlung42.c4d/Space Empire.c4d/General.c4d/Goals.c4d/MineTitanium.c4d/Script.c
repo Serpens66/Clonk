@@ -1,9 +1,12 @@
 /*-- Titanerzmine --*/
 
-#strict
+#strict 3
 #include GGMI
 
-private MatObjsCount:  return(ObjectCount(CTIO));
-private MatPixelCount: return(GetMaterialCount(Material("TitaniumOre")));
-private MatName:       return("Titanerz");
+private func MatObjsCount(...) {  return(ObjectCount(CTIO));
+}
+private func MatPixelCount(...) { return(GetMaterialCount(Material("TitaniumOre")));
+}
+private func MatName(...) {       return("Titanerz");
+}
 

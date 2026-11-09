@@ -1,6 +1,6 @@
 /* Generic Pseudo Set */
 
-#strict
+#strict 3
 
 // This object is a generic set. It contains a number of basically unordered
 // variables. The difference to a "real" set as known in other programming 
@@ -33,7 +33,7 @@ public func AddItem(item) {
 	// so dont iterate through this with while(GetItem(i)) ...
 
 	var length = GetLength(aItems);
-	aItems[length] = item;
+	aItems[(length ?? 0)] = item;
 	return(true);
 }
 
@@ -45,8 +45,8 @@ public func RemoveItem(item) {
 
 // Contains the item?
 public func ContainsItem(item) {
-	if(GetItemPosition(item) != -1) return(true);
-	return(false);
+	if(!Equal(GetItemPosition(item), -1)) return(true);
+	return(nil);
 }
 
 // Remove all
@@ -57,22 +57,24 @@ public func Clear() {
 
 // get item
 public func GetItem(int i) {
-	if(i < 0) return( false );
-	if(i >= GetLength(aItems)-1) return(false);
-	return(aItems[i]);
+	i ??= 0;
+	if((i ?? 0) < 0) return( nil );
+	if((i ?? 0) >= (GetLength(aItems) ?? 0)-1) return(nil);
+	return(aItems[(i ?? 0)]);
 }
 
 private func GetItemPosition(item, int iPos) {
-	if(iPos < 0) return(-1);
+	iPos ??= 0;
+	if((iPos ?? 0) < 0) return(-1);
 
 	// gets iPos position...
 	// .. there may be other positions too
 	var length = GetLength(aItems);
-	var num = 0;
-	for(var i=0; i<length; ++i) {
-		if(aItems[i] == item) {
-			if(iPos == num) return(i);
-			num++;
+	var num = nil;
+	for(var i=nil; (i ?? 0)<(length ?? 0); S42MigrationStep(i, 1)) {
+		if(Equal(aItems[(i ?? 0)], item)) {
+			if(Equal(iPos, num)) return(i);
+			S42MigrationStep(num, 1, true);
 		}
 	}
 	return(-1);
@@ -81,11 +83,11 @@ private func GetItemPosition(item, int iPos) {
 private func ReorderArray(deleteditem) {
 	// not in array.. fuck you
 	var num = GetItemPosition(deleteditem);
-	if(num == -1) return(false);
+	if(Equal(num, -1)) return(nil);
 
-	var last = GetLength(aItems)-1;
+	var last = (GetLength(aItems) ?? 0)-1;
 	// overwrite this entry with the last one
-	aItems[num] = aItems[last];
+	aItems[(num ?? 0)] = aItems[(last ?? 0)];
 	SetLength(aItems,last);
 	// ... will keep the array small and without nulls...
 	return(true);

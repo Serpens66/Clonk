@@ -1,6 +1,6 @@
 /*-- Rüstung --*/
 
-#strict
+#strict 3
 #include GEAR
 
 
@@ -21,17 +21,17 @@ public func GearEffect(object pClonk)
   var iPortraitCount = 3; 
   var strGraphics = "Armor";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, GetID(pClonk), 0, 0);
+  SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, GetID(pClonk), nil, nil);
   Sound("Connect");
-  SetPhysical("Fight", GetPhysical("Fight", PHYS_Current, pClonk) +5000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Jump", GetPhysical("Jump", PHYS_Current, pClonk) - 500, PHYS_StackTemporary, pClonk);
-  SetPhysical("Walk", GetPhysical("Walk", PHYS_Current, pClonk) - 500, PHYS_StackTemporary, pClonk);
-  SetPhysical("Scale", GetPhysical("Scale", PHYS_Current, pClonk) - 500, PHYS_StackTemporary, pClonk);
-  SetPhysical("Hangle", GetPhysical("Hangle", PHYS_Current, pClonk) - 500, PHYS_StackTemporary, pClonk);
-  SetPhysical("Swim", GetPhysical("Swim", PHYS_Current, pClonk) - 2000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Breath", GetPhysical("Breath", PHYS_Current, pClonk) - 500, PHYS_StackTemporary, pClonk);
-  SetPhysical("Dig", GetPhysical("Dig", PHYS_Current, pClonk) - 2000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Energy", GetPhysical("Energy", PHYS_Current, pClonk) +5000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Fight", (GetPhysical("Fight", PHYS_Current, pClonk) ?? 0) +5000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Jump", (GetPhysical("Jump", PHYS_Current, pClonk) ?? 0) - 500, PHYS_StackTemporary, pClonk);
+  SetPhysical("Walk", (GetPhysical("Walk", PHYS_Current, pClonk) ?? 0) - 500, PHYS_StackTemporary, pClonk);
+  SetPhysical("Scale", (GetPhysical("Scale", PHYS_Current, pClonk) ?? 0) - 500, PHYS_StackTemporary, pClonk);
+  SetPhysical("Hangle", (GetPhysical("Hangle", PHYS_Current, pClonk) ?? 0) - 500, PHYS_StackTemporary, pClonk);
+  SetPhysical("Swim", (GetPhysical("Swim", PHYS_Current, pClonk) ?? 0) - 2000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Breath", (GetPhysical("Breath", PHYS_Current, pClonk) ?? 0) - 500, PHYS_StackTemporary, pClonk);
+  SetPhysical("Dig", (GetPhysical("Dig", PHYS_Current, pClonk) ?? 0) - 2000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Energy", (GetPhysical("Energy", PHYS_Current, pClonk) ?? 0) +5000, PHYS_StackTemporary, pClonk);
 DoEnergy(5000,pClonk,true);
 
 }
@@ -40,7 +40,7 @@ public func GearEffectReset(object pClonk)
 {
   // reset graphics and portrait
   SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);
   if(pNightVision) RemoveObject(pNightVision);
   Sound("Connect");
   ResetPhysical(pClonk, "Fight");
@@ -59,27 +59,29 @@ DoEnergy(-5000,pClonk,true);
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   //Melee
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(30);     // 60% Melee
   //Projectile
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(30);     // 40% Projektile
   //Flame
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(5);
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(10);     // 20% Explosion
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(-20);    // -20% Energy (!)
   //Bio
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(5);     
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
+  if(Equal(iType, DMG_BetterProjectile))
     return(5);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 }
 
@@ -102,7 +104,7 @@ public func ConUse(object pHazard) {
   if(!pNightVision) {
     pNightVision = AddLight2(2200,RGBa(50,255,50,45),pHazard);
     if(!pNightVision)
-      return();
+      return;
     pNightVision->SetVisibility(VIS_Owner);
   }
 

@@ -1,6 +1,6 @@
 /*-- Verbrannte Pumpe --*/
 
-#strict
+#strict 3
 
 #include BAS1
 

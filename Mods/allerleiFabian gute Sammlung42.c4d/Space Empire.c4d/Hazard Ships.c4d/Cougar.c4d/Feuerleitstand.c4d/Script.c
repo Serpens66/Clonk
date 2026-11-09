@@ -1,6 +1,6 @@
 /*-- Geschützkanzel --*/
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -18,14 +18,14 @@ func Bezug(_vessel)
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   if(missle) Sprengung();
   RemoveObject();
@@ -36,7 +36,7 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -58,7 +58,7 @@ func ContainedDown()
 
 func ContainedDownDouble()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this());
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   if(missle) 
   {
   if(SEqual(GetAction(missle),"Eingefahren"))
@@ -68,7 +68,7 @@ func ContainedDownDouble()
   Sound("Airlock1");
   return(1);
   }
-  if(SEqual(GetAction(missle),"Start") || SEqual(GetAction(missle),"Travel"))
+  if(Or(SEqual(GetAction(missle),"Start"), SEqual(GetAction(missle),"Travel")))
   {
   ObjectCall(missle,"Explosion");
   return(1);
@@ -106,10 +106,10 @@ func ContainedThrow()
   Laden();
   return(1);
   }
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this());
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   if(SEqual(GetAction(missle),"Ready")) return(Start());
   if(missle) return(1);
-  if ((GetAmmo(MIAM,pilot)>=3) || (ObjectCount(NOAM)))
+  if (Or(((GetAmmo(MIAM,pilot) ?? 0)>=3), (ObjectCount(NOAM))))
   {
   Laden(); 
    if(!ObjectCount(NOAM)) DoAmmo(MIAM,-3,pilot);
@@ -132,7 +132,7 @@ func ContainedDig()
 
 func Laden()
 {
-  if(!missle) missle=CreateObject(CMM_,0,0,GetOwner(pilot));
+  if(!missle) missle=CreateObject(CMM_,nil,nil,GetOwner(pilot));
   ObjectSetAction(missle,"Attaching",this());
   SetActionData(256 + 3 , missle);
   Sound("SteelGate1");

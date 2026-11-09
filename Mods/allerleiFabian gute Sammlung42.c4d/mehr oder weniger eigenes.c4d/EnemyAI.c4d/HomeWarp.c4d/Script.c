@@ -1,6 +1,6 @@
 /* Homewarp für KI-Zauberer */
 
-#strict 2
+#strict 3
 
 public func Activate(caster, real_caster)
   {

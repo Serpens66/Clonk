@@ -1,6 +1,6 @@
 /*-- Geldpunkte --*/
 
-#strict
+#strict 3
 #include GOAL
 
 local money;
@@ -22,14 +22,14 @@ protected func Initialize()
 
 public func IncMoney(amount)
 {
-  money += amount;
+  S42MigrationAssign(money, "+=", (amount ?? 0));
 }
 
 public func IsFulfilled(player)
 {
   if (!money)
     money = 100;
-  return(GetWealth(player) >= money);
+  return((GetWealth(player) ?? 0) >= (money ?? 0));
 }
 
 protected func Activate(player)

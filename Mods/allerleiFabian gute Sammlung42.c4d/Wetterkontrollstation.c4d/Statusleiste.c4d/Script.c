@@ -1,10 +1,12 @@
 /*-- Statusleiste --*/
 
-#strict
+#strict 3
 
-public Start:
+public func Start(...) {
   SetAction("Start");
   return(1);
+}
 
-public Ende:
+public func Ende(...) {
   return(RemoveObject(this()));
+}

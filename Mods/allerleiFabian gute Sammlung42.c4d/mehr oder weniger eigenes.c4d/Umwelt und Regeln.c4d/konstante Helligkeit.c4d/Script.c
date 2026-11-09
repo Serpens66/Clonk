@@ -1,6 +1,6 @@
 /*-- konstante Helligkeit --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

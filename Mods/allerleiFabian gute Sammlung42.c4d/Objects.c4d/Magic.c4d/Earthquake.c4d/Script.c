@@ -1,20 +1,20 @@
 /* Erdbebenzauber */
 
-#strict
+#strict 3
 
 public func Activate(object pCaster, object pCaster2)
   {
-  var iX=(GetDir(pCaster)*2-1)*RandomX(100,120);
-  var iDY=0;
+  var iX=((GetDir(pCaster) ?? 0)*2-1)*(RandomX(100,120) ?? 0);
+  var iDY=nil;
   // Effekt prüfen
   var iResult;
-  if (iResult = CheckEffect("EarthquakeNSpell", 0, 150)) return(iResult!=-1 && RemoveObject());
+  if (iResult = CheckEffect("EarthquakeNSpell", nil, 150)) return(And(!Equal(iResult, -1), RemoveObject()));
   // in der Luft soll kein Erdbeben erzeugt werden
-  while(!GBackSolid(iX,iDY) && iDY+GetY()<=LandscapeHeight()) iDY+=5;
+  while(And(!GBackSolid(iX,iDY), (iDY ?? 0)+(GetY() ?? 0)<=(LandscapeHeight() ?? 0))) S42MigrationAssign(iDY, "+=", 5);
   // Effekt ausführen
-  LaunchEarthquake(GetX()+iX,GetY()+iDY);
+  LaunchEarthquake((GetX() ?? 0)+(iX ?? 0),(GetY() ?? 0)+(iDY ?? 0));
   // An Zielposition nochmal extra durchschütteln
-  for(var i;i<3;++i) ShakeFree(GetX()+iX+RandomX(-16,16),GetY()+iDY+RandomX(-16,16),RandomX(14,26));
+  for(var i;(i ?? 0)<3;S42MigrationStep(i, 1)) ShakeFree((GetX() ?? 0)+(iX ?? 0)+(RandomX(-16,16) ?? 0),(GetY() ?? 0)+(iDY ?? 0)+(RandomX(-16,16) ?? 0),RandomX(14,26));
   Sound("Magic1");
   RemoveObject();
   return(1);

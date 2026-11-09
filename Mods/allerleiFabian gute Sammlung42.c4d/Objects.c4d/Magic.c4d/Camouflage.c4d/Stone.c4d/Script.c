@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #include ROCK
 
 local iLastDamageFrame; // FrameCounter beim letzten Aufprall des Steines
@@ -21,7 +21,7 @@ protected func ContainedDigDouble()
 protected func ContainedLeft(pClonk)
 {
   [$DescMessage$]
-  if(GetContact(this(), -1, 10) & 10)
+  if((GetContact(this(), -1, 10) ?? 0) & 10)
     {
     SetXDir(-7);
     SetYDir(-11);
@@ -39,7 +39,7 @@ protected func ContainedDown()
 protected func ContainedRight(pClonk)
 {
   [$DescMessage$]
-  if(GetContact(this(), -1, 9) & 9)
+  if((GetContact(this(), -1, 9) ?? 0) & 9)
     {
     SetXDir(7);
     SetYDir(-11);
@@ -52,7 +52,7 @@ protected func ContainedRight(pClonk)
 protected func ContainedUp(pClonk)
 {
   [$DescMessage$]
-  if(GetContact(this(), -1, 8) & 8)
+  if((GetContact(this(), -1, 8) ?? 0) & 8)
     {
     SetYDir(-17);
     // Richtigen Controller setzen
@@ -74,12 +74,13 @@ protected func End()
 
 private func DoEnd(bool fForced)
   {
+  fForced ??= false;
   CastObjects(MSTB,6,35);
   CastObjects(SPRK, 15, 15);
   Sound("DeEnergize");
   var i = ContentsCount(), pCont;
-  while (i--) if (pCont = Contents(i))
-    if (Exit(pCont) && fForced)
+  while (S42MigrationStep(i, -1, true)) if (pCont = Contents(i))
+    if (And(Exit(pCont), fForced))
       pCont->SetAction("Tumble"); // Fehlschlag bei Schild, etc. - nicht schlimm
   RemoveObject(this(), 1);
   return(true);
@@ -88,7 +89,7 @@ private func DoEnd(bool fForced)
 protected func Damage()
 {
   // Bei zu viel Schaden Stein zerstören
-  if (GetDamage() >= 37)
+  if ((GetDamage() ?? 0) >= 37)
     DoEnd(true);
 }
 
@@ -98,23 +99,25 @@ protected func Hit2(int xDir, int yDir)
   // Schaden nach Geschwindigkeit berechnen:
   // 1 Px/Frame (Clonk-Laufgeschwindigkeit) entspricht 2% Schaden für voll trainierten Clonk
   // Maximal 50% Schaden auf voll trainierte Clonks (3.2 Px/Frame - extrem schnell!)
-  var iDamage = BoundBy(Distance(xDir, yDir)/50, 1, 50);
+  xDir ??= 0;
+  yDir ??= 0;
+  var iDamage = BoundBy((Distance(xDir, yDir) ?? 0)/50, 1, 50);
   // Schaden maximal alle 25 Frames, damit z.B. Windstoß nicht gleich tötet
   //  Wenn der letzte Schaden aber kleiner war als der jetzige, soll der
   //  Restschaden trotzdem aufaddiert werden
-  var iNow = FrameCounter() + 30;
-  if (iLastDamageFrame + 25 > iNow)
-    if (iDamage < iLastDamageAmount)
-      return();
+  var iNow = (FrameCounter() ?? 0) + 30;
+  if ((iLastDamageFrame ?? 0) + 25 > (iNow ?? 0))
+    if ((iDamage ?? 0) < (iLastDamageAmount ?? 0))
+      return;
     else
-      iDamage -= iLastDamageAmount;
+      S42MigrationAssign(iDamage, "-=", (iLastDamageAmount ?? 0));
   else
-    iLastDamageAmount = 0;
-  iLastDamageAmount += iDamage;
+    iLastDamageAmount = nil;
+  S42MigrationAssign(iLastDamageAmount, "+=", (iDamage ?? 0));
   iLastDamageFrame = iNow;
   // Schaden an alles, was im Stein lebt
   var i = ContentsCount(), pCont;
-  while (i--) if (pCont = Contents(i))
+  while (S42MigrationStep(i, -1, true)) if (pCont = Contents(i))
     if (GetAlive(pCont))
       // Caller von Punch ist this, damit der Controller des Steins für den Schaden verantwortlich ist!
       Punch(pCont, iDamage);

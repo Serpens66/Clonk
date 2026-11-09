@@ -1,6 +1,6 @@
 /*-- Tonne --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -11,21 +11,21 @@ protected func Initialize()
 protected func Collection2(pObj,fPut)
 {
   Sound("WoodHit*");
-  SetEntrance(0);
+  SetEntrance(nil);
 }
 
 protected func ActivateEntrance(pObj)
 {
   // Hinauslassen
-  if(Contained(pObj)== this()) return(SetEntrance(1));
+  if(Equal(Contained(pObj), this())) return(SetEntrance(1));
   // Maxi. 1 Clonk aufnehmen
-  if(GetOCF(pObj) & OCF_CrewMember())
-   if(!FindObject(0,0,0,0,0,OCF_CrewMember(),0,0,this()))
+  if((GetOCF(pObj) ?? 0) & (OCF_CrewMember ?? 0))
+   if(!FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,nil,nil,this()))
     return(SetEntrance(1));
    else
     return(Message("$OnlyOneClonk$",this()));
   // Nur Fahrzeuge aufnehmen!
-  if(GetCategory(pObj) & C4D_Vehicle())
+  if((GetCategory(pObj) ?? 0) & (C4D_Vehicle ?? 0))
    if(!RejectCollect(GetID(pObj),pObj))
     return(SetEntrance(1));
 }
@@ -33,45 +33,45 @@ protected func ActivateEntrance(pObj)
 protected func RejectCollect(idObj,pObj)
 {
   // Fahrzeuge nur aufnehmen wenn die Tonne leer ist!
-  if(GetCategory(pObj) & C4D_Vehicle())
+  if((GetCategory(pObj) ?? 0) & (C4D_Vehicle ?? 0))
    if(Contents())
-    if(!(GetOCF(Contents()) & OCF_CrewMember()))
-     return(1,Message("$MustBeEmpty$",this()));
+    if(!((GetOCF(Contents()) ?? 0) & (OCF_CrewMember ?? 0)))
+     return(S42MigrationFirst(1,Message("$MustBeEmpty$",this())));
   // Gegenstände nur aufnehmen wenn weniger als 60 Objekte und kein Fahrzeug im Inhalt
-  if(ContentsCount()< 60)
+  if((ContentsCount() ?? 0)< 60)
    if(!FindContainedVehicle())
-    return(0);
+    return(nil);
   // Keine Aufnahme!
-  if(Abs(GetXDir(pObj))>6) SetYDir(-5,pObj);
-  return(1,Message("$Full$",this()));
+  if((Abs(GetXDir(pObj)) ?? 0)>6) SetYDir(-5,pObj);
+  return(S42MigrationFirst(1,Message("$Full$",this())));
 }
 
-protected func Ejection(pObj) { SetEntrance(0); }
+protected func Ejection(pObj) { SetEntrance(nil); }
 
 protected func Entrance(pContainer)
 {
   // In der Heimatbasis entleeren
-  if(GetBase(pContainer)== -1) return(0);
+  if(Equal(GetBase(pContainer), -1)) return(nil);
   while(Contents()) Enter(pContainer,Contents());
 }
 
 public func FindContainedVehicle()
 {
   var i= ContentsCount();
-  while(i--)
-   if(GetCategory(Contents(i)) & C4D_Vehicle()) 
+  while(S42MigrationStep(i, -1, true))
+   if((GetCategory(Contents(i)) ?? 0) & (C4D_Vehicle ?? 0))
     return(Contents(i));
-  return(0);
+  return(nil);
 }
 
 protected func ControlUp(pClonk)
 {
   var obj;
-  if(!(obj= FindObject(FHKN,-20,-20,40,40,0,0,0,NoContainer()))) return(0);
-  if((obj-> FindAttachedContainer()) && ((obj->FindAttachedContainer()) != this())) return(0);
+  if(!(obj= FindObject(FHKN,-20,-20,40,40,nil,nil,nil,NoContainer()))) return(nil);
+  if(And((obj-> FindAttachedContainer()), (!Equal((obj->FindAttachedContainer()), this())))) return(nil);
   CreateMenu(GetID(),pClonk);
-  if(obj-> FindAttachedContainer()) return(AddMenuItem("$Unhook$","Haken",FHKN,pClonk,0,obj));
-  return(AddMenuItem("$Hook$","Haken",FHKN,pClonk,0,obj));
+  if(obj-> FindAttachedContainer()) return(AddMenuItem("$Unhook$","Haken",FHKN,pClonk,nil,obj));
+  return(AddMenuItem("$Hook$","Haken",FHKN,pClonk,nil,obj));
 }
 
 public func Haken(idItem,pHaken)

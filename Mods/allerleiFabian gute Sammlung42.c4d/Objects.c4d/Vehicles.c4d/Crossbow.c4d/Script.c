@@ -1,6 +1,6 @@
 /*-- Armbrust --*/
 
-#strict
+#strict 3
 
 public func ReloadDelay() { return(10); } // Zeit zum Nachladen
 
@@ -16,30 +16,35 @@ protected func Initialize()
 
 protected func FxIntControlStart(object target, int number, int temp, int dir, object controller)
 {
-  EffectVar(0, target, number) = dir;
+  number ??= 0;
+  temp ??= 0;
+  dir ??= 0;
+  EffectVar(nil, target, number) = dir;
   EffectVar(1, target, number) = controller;
 }
 
 protected func FxIntControlTimer(object target, int number)
 {
+  number ??= 0;
   if(!EffectVar(1, target, number)) return(-1);
-  if(EffectVar(1, target, number)->GetAction() ne "Push") return(-1);
-  if(EffectVar(1, target, number)->GetActionTarget() != this()) return(-1);
+  if(!SEqual(EffectVar(1, target, number)->GetAction(), "Push")) return(-1);
+  if(!Equal(EffectVar(1, target, number)->GetActionTarget(), this())) return(-1);
 
   var phases = GetActMapVal("Length", "Ready");
 
   var old_phase = GetPhase();
-  SetPhase(BoundBy(GetPhase() + EffectVar(0, target, number), 0, phases-1));
+  SetPhase(BoundBy((GetPhase() ?? 0) + (EffectVar(nil, target, number) ?? 0), nil, (phases ?? 0)-1));
 
-  if(old_phase != GetPhase())
+  if(!Equal(old_phase, GetPhase()))
     Sound("CatapultSet");
 }
 
 private func RemoveControlEffect(int dir)
 {
+  dir ??= 0;
   var count = GetEffectCount("IntControl", this());
-  for(var i = 0; i < count; ++ i)
-    if(EffectVar(0, this(), GetEffect("IntControl", this(), i)) == dir)
+  for(var i = nil; (i ?? 0) < (count ?? 0); S42MigrationStep( i, 1))
+    if(Equal(EffectVar(nil, this(), GetEffect("IntControl", this(), i)), dir))
       return(RemoveEffect("IntControl", this(), i));
 }
 
@@ -47,6 +52,7 @@ private func RemoveControlEffect(int dir)
 
 public func ControlConf(int conf)
 {
+  conf ??= 0;
   if(AimStdConf(conf))
     Sound("CatapultSet");
 }
@@ -70,6 +76,7 @@ public func ControlDown(object clonk)   // Zielen: runter (JumpAndRun)
 
 public func ControlUpdate(object clonk, int comdir)
 {
+  comdir ??= 0;
   AimUpdate(clonk, comdir, 5, "ControlConf");
 }
 
@@ -81,14 +88,16 @@ public func ControlDownSingle() // Sicht zurücksetzen
 public func ControlThrow(pClonk)  // Schießen
 {
   [$TxtFire$|Image=XBO1:1]
-  return(Fire(0,pClonk));
+  return(Fire(nil,pClonk));
 }
 
 public func ControlCommand(string szCommand,object pTarget,int iX,int iY)
 {
   // Feuern
-  if(szCommand eq "MoveTo")
-    if(Distance(GetX(),GetY(),iX,iY)>50)
+  iX ??= 0;
+  iY ??= 0;
+  if(!!SEqual(szCommand, "MoveTo"))
+    if((Distance(GetX(),GetY(),iX,iY) ?? 0)>50)
     {
       HaltPushers();
       return(FireAt(iX,iY));
@@ -101,13 +110,14 @@ private func HaltPushers()
 {
   var pClonk;
   // Alle Clonks die die Armbrust anfassen, sollen stoppen
-  while(pClonk=FindObject(0,0,0,0,0,0,"Push",this(),0,pClonk))
-    SetComDir(COMD_Stop(),pClonk);
+  while(pClonk=FindObject(nil,nil,nil,nil,nil,nil,"Push",this(),nil,pClonk))
+    SetComDir(COMD_Stop,pClonk);
 }
   
 public func Fire(bool fAuto,object pClonk)
 {
   // Noch am Nachladen? Nix da.
+  fAuto ??= false;
   if(GetEffect("IntReload", this()) ) return(true);
 
   // Pfeilpakete zerlegen, sofern nötig
@@ -115,16 +125,16 @@ public func Fire(bool fAuto,object pClonk)
 
   // Pfeil suchen
   var pArrow=Contents();
-  if (!pArrow) return(0,Sound("Click"));
+  if (!pArrow) return(S42MigrationFirst(nil,Sound("Click")));
 
   // Austritt berechnen
-  var iX = GetPhase()*(GetDir()*2-1);
-  var iY = GetPhase()-15;
-  var iR = iX*5;
-  var iAngle = BoundBy(GetPhase()*5,0,90);
-  var iXDir = Sin(iAngle,13*(GetDir()*2-1));
+  var iX = (GetPhase() ?? 0)*((GetDir() ?? 0)*2-1);
+  var iY = (GetPhase() ?? 0)-15;
+  var iR = (iX ?? 0)*5;
+  var iAngle = BoundBy((GetPhase() ?? 0)*5,nil,90);
+  var iXDir = Sin(iAngle,13*((GetDir() ?? 0)*2-1));
   var iYDir = Cos(iAngle,-13);
-  var iRDir = GetDir()*6-3;
+  var iRDir = (GetDir() ?? 0)*6-3;
 
   // Pfeil abfeuern
   Exit(pArrow,iX,iY,iR,iXDir,iYDir,iRDir);
@@ -135,7 +145,7 @@ public func Fire(bool fAuto,object pClonk)
   
   // Sicht verfolgen (wenn kein automatischer Schuss)
   if(!fAuto)
-    if(GetPlrViewMode(GetController())!=2)
+    if(!Equal(GetPlrViewMode(GetController()), 2))
       SetPlrView(GetController(),pArrow);
   // Sound
   Sound("Arrow");
@@ -149,14 +159,17 @@ public func Fire(bool fAuto,object pClonk)
 
 public func FireAt(int iX,int iY,int fAuto)
 {
+  iX ??= 0;
+  iY ??= 0;
+  fAuto ??= 0;
   var iAngle;
   // Zielwinkel
   iAngle = Angle(GetX(),GetY(),iX,iY);
   // Bei größerer Distanz höher zielen
-  if(Inside(iX-GetX(),+1,+300))
-     iAngle -= Abs(iX-GetX())/12;
-  if(Inside(iX-GetX(),-300,-1))
-     iAngle += Abs(iX-GetX())/12;
+  if(Inside((iX ?? 0)-(GetX() ?? 0),+1,+300))
+     S42MigrationAssign(iAngle, "-=", (Abs((iX ?? 0)-(GetX() ?? 0)) ?? 0)/12);
+  if(Inside((iX ?? 0)-(GetX() ?? 0),-300,-1))
+     S42MigrationAssign(iAngle, "+=", (Abs((iX ?? 0)-(GetX() ?? 0)) ?? 0)/12);
   // Zielen
   AimToAngle(iAngle);
   // Feuern
@@ -166,12 +179,13 @@ public func FireAt(int iX,int iY,int fAuto)
 public func AimToAngle(int iAngle)
 {
   // Winkel anpassen
-  while(iAngle > 180) iAngle-=360;
+  iAngle ??= 0;
+  while((iAngle ?? 0) > 180) S42MigrationAssign(iAngle, "-=", 360);
   // Richtung
-  if(iAngle > 0) SetDir(DIR_Right());
-  if(iAngle < 0) SetDir(DIR_Left());
+  if((iAngle ?? 0) > 0) SetDir(DIR_Right);
+  if((iAngle ?? 0) < 0) SetDir(DIR_Left);
   // Zielrichtung
-  SetPhase(BoundBy( 20*Abs(iAngle)/90, 0,19));
+  SetPhase(BoundBy( 20*(Abs(iAngle) ?? 0)/90, nil,19));
 }
 
 /* Laden */
@@ -191,7 +205,7 @@ protected func Collection(pObj)
 private func SplitPacks()
 {
   var i, obj;
-  while(obj = Contents(i++) )
+  while(obj = Contents(S42MigrationStep(i, 1, true)) )
     if(obj->~IsArrowPack() )
       if(!obj->~Unpack(this()) )
         Split2Components(obj);
@@ -202,7 +216,7 @@ private func SplitPacks()
 protected func RejectCollect(idDef, pObj)
 {
   // Maximal nur 10 Pfeile aufnehmen
-  return( ((!pObj->~IsArrow()) && (!pObj->~IsArrowPack())) || (GetArrowCount() >= 10) );
+  return( Or((And((!pObj->~IsArrow()), (!pObj->~IsArrowPack()))), ((GetArrowCount() ?? 0) >= 10)) );
 }
 
 /* Pfeile zaehlen */
@@ -210,10 +224,10 @@ protected func RejectCollect(idDef, pObj)
 private func GetArrowCount()
 {
   var i, obj, count;
-  while(obj = Contents(i ++) )
+  while(obj = Contents(S42MigrationStep(i , 1, true)) )
   {
-    if(obj->~IsArrow() ) count ++;
-    if(obj->~IsArrowPack() ) count += obj->PackCount();
+    if(obj->~IsArrow() ) S42MigrationStep(count , 1, true);
+    if(obj->~IsArrowPack() ) S42MigrationAssign(count, "+=", (obj->PackCount() ?? 0));
   }
   return(count);
 }

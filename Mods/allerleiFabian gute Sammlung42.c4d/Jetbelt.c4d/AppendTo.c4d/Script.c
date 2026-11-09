@@ -1,13 +1,13 @@
 /*-- Jetbelt --*/
 
-#strict
+#strict 3
 #appendto HZCK
 
 public func ControlUpDouble()
 {
   var inh = _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
-  if(!inh && jetpack)
+  var jetpack = this()->HasGear(nil,JB4K);
+  if(And(!inh, jetpack))
   {
       jetpack->UpDouble();
   }
@@ -16,8 +16,8 @@ public func ControlUpDouble()
 public func ControlDownDouble()
 {
   var inh = _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
-  if(!inh && jetpack)
+  var jetpack = this()->HasGear(nil,JB4K);
+  if(And(!inh, jetpack))
   {
     jetpack->DownDouble();
   }
@@ -26,8 +26,8 @@ public func ControlDownDouble()
 public func ControlLeftDouble()
 {
   var inh = _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
-  if(!inh && jetpack)
+  var jetpack = this()->HasGear(nil,JB4K);
+  if(And(!inh, jetpack))
   {
     jetpack->LeftDouble();
   }
@@ -36,8 +36,8 @@ public func ControlLeftDouble()
 public func ControlRightDouble()
 {
   var inh = _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
-  if(!inh && jetpack)
+  var jetpack = this()->HasGear(nil,JB4K);
+  if(And(!inh, jetpack))
   {
     jetpack->RightDouble();
   }
@@ -46,7 +46,7 @@ public func ControlRightDouble()
 public func ControlLeft()
 {
   _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
+  var jetpack = this()->HasGear(nil,JB4K);
   if(jetpack)
   {
     jetpack->Left();
@@ -56,7 +56,7 @@ public func ControlLeft()
 public func ControlRight()
 {
   _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
+  var jetpack = this()->HasGear(nil,JB4K);
   if(jetpack)
   {
     jetpack->Right();
@@ -66,7 +66,7 @@ public func ControlRight()
 public func ControlUp()
 {
   _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
+  var jetpack = this()->HasGear(nil,JB4K);
   if(jetpack)
   {
     jetpack->Up();
@@ -76,7 +76,7 @@ public func ControlUp()
 public func ControlDown()
 {
   _inherited(...);
-  var jetpack = this()->HasGear(0,JB4K);
+  var jetpack = this()->HasGear(nil,JB4K);
   if(jetpack)
   {
     jetpack->Down();
@@ -95,9 +95,10 @@ public func ControlDown()
 
 public func ControlUpdate(object controller, int comdir)
 {
+  comdir ??= 0;
   var inh = _inherited(controller,comdir,...);
-  var jetpack = this()->HasGear(0,JB4K);
-  if(!inh && jetpack)
+  var jetpack = this()->HasGear(nil,JB4K);
+  if(And(!inh, jetpack))
   {
     jetpack->Update(comdir);
   }
@@ -107,14 +108,14 @@ public func ControlUpdate(object controller, int comdir)
 
 private func ControlAgility(string strControl)
 {
-  if((strControl eq "ControlLeftDouble")||
-     (strControl eq "ControlRightDouble")||
-     (strControl eq "ControlUp"))
+  if(Or(Or((!!SEqual(strControl, "ControlLeftDouble")),
+     (!!SEqual(strControl, "ControlRightDouble"))),
+     (!!SEqual(strControl, "ControlUp"))))
   {
-    var jetpack = this()->HasGear(0,JB4K);
+    var jetpack = this()->HasGear(nil,JB4K);
     if(jetpack)
       if(jetpack->IsReady())
-        return(0);
+        return(nil);
   }
 
   return(_inherited(strControl,...));

@@ -1,6 +1,6 @@
 /*-- Windrad --*/
 
-#strict
+#strict 3
 
 #include BAS1
 
@@ -17,7 +17,7 @@ protected func Initialize()
 
 private func CreateWindwing()
 {
-wing = CreateObject(WWNG,0,0,GetOwner());
+wing = CreateObject(WWNG,nil,nil,GetOwner());
   ObjectSetAction(wing,"Turn",this());
 }
 
@@ -26,8 +26,8 @@ wing = CreateObject(WWNG,0,0,GetOwner());
 private func CheckWindwing()
 {
   // Komplett, aber kein Windrad da: reduzieren für Neuaufbau/Reparatur
-  if(GetCon() == 100)
-    if(!FindObject(WWNG,0,0,0,0,0,"Turn",this()) )
+  if(Equal(GetCon(), 100))
+    if(!FindObject(WWNG,nil,nil,nil,nil,nil,"Turn",this()) )
       DoCon(-1);
 }
 

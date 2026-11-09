@@ -1,6 +1,6 @@
 /*-- Lichschein #1 --*/
 
-#strict
+#strict 3
 
 local Owner,Alpha,Red,Green,Blue,Con,RDir,AttachedTo,NoFlare,SpecAttachedTo;
 //Grenzen
@@ -42,7 +42,7 @@ func TimerCall()
     return SetAttachedTo(SpecAttachedTo);
   if(/*Contained(GetCursor(Owner))||*/IsDay())
   { 
-    if(GetAction() ne "Eidel")
+    if(!SEqual(GetAction(), "Eidel"))
     {
       SetVisibility(VIS_None);
       SetAction("Eidel");
@@ -51,7 +51,7 @@ func TimerCall()
 	}
   else{
     AttachToObj(GetCursor(Owner));
-    if(GetAction() ne "IgnoreDay")
+    if(!SEqual(GetAction(), "IgnoreDay"))
     {
       SetVisibility(VIS_Owner);
       SetAction("IgnoreDay");
@@ -63,7 +63,7 @@ func TimerCall()
 
 func CrewSelection()
 {
- if(SpecAttachedTo) return 0;
+ if(SpecAttachedTo) return nil;
  if(IsNight())
  {
    AttachToObj(GetCursor(Owner));
@@ -80,7 +80,7 @@ func AttachToObj(pObj)
 
 func LightField()
 {
-  return(GetAction()S="IgnoreDay");
+  return(!!SEqual(GetAction(), "IgnoreDay"));
 }
 
 func SunRise()
@@ -103,19 +103,19 @@ func Light()
   {
     if(!Random(5))
     {
-      if(!RMin>=255)
-        Red   = BoundBy(Red   + RandomX(-8,8),RMin  ,RMax);
-      if(!GMin>=255)
-        Green = BoundBy(Green + RandomX(-8,8),GMin  ,GMax);
-      if(!BMin>=255)
-        Blue  = BoundBy(Blue  + RandomX(-8,8),BMin  ,BMax);
-      if(!AMin>=255)
-        Alpha = BoundBy(Alpha + RandomX(-8,8),AMin  ,AMax);
+      if((!RMin ?? 0)>=255)
+        Red   = BoundBy((Red ?? 0)   + (RandomX(-8,8) ?? 0),RMin  ,RMax);
+      if((!GMin ?? 0)>=255)
+        Green = BoundBy((Green ?? 0) + (RandomX(-8,8) ?? 0),GMin  ,GMax);
+      if((!BMin ?? 0)>=255)
+        Blue  = BoundBy((Blue ?? 0)  + (RandomX(-8,8) ?? 0),BMin  ,BMax);
+      if((!AMin ?? 0)>=255)
+        Alpha = BoundBy((Alpha ?? 0) + (RandomX(-8,8) ?? 0),AMin  ,AMax);
     }
 
-    Con = BoundBy(Con   + RandomX(-12,12),ConMin,ConMax);
+    Con = BoundBy((Con ?? 0)   + (RandomX(-12,12) ?? 0),ConMin,ConMax);
   }
-  SetClrModulation(RGBa(Red,Green,Blue,BoundBy(Alpha+dayhelligkeit*2,0,255)));
+  SetClrModulation(RGBa(Red,Green,Blue,BoundBy((Alpha ?? 0)+(dayhelligkeit ?? 0)*2,nil,255)));
   SetCon(Con);
   return true;
 }
@@ -126,7 +126,7 @@ func Set(dwRGBaMin,dwRGBaMax,iConMin,iConMax,iOwner,fNoFlare,pSpecAttachedTo)
   if(!dwRGBaMin)
     dwRGBaMin=RGBa(255,255,255,127);
   if(!dwRGBaMax)
-    dwRGBaMax=RGBa(255,255,255,0);
+    dwRGBaMax=RGBa(255,255,255,nil);
   if(!iConMin)
     iConMin=75;
   if(!iConMax)
@@ -141,7 +141,7 @@ func Set(dwRGBaMin,dwRGBaMax,iConMin,iConMax,iOwner,fNoFlare,pSpecAttachedTo)
   Owner=iOwner;
   CheckBorders();
   //SetRDir(RandomX(-30,30),this()); /* Funktioniert leider nicht... */
-  Rotate(RandomX(1,5)*GetRandomSign());
+  Rotate((RandomX(1,5) ?? 0)*(GetRandomSign() ?? 0));
   SpecAttachedTo=pSpecAttachedTo;
 }
 
@@ -173,7 +173,7 @@ func CheckBorders()
   Blue  = BoundBy(Blue, BMin  ,BMax);
   Alpha = BoundBy(Alpha,AMin  ,AMax);
   Con   = BoundBy(Con,  ConMin ,ConMax);
-  SetClrModulation(RGBa(Red,Green,Blue,BoundBy(Alpha+dayhelligkeit*2,0,255)));
+  SetClrModulation(RGBa(Red,Green,Blue,BoundBy((Alpha ?? 0)+(dayhelligkeit ?? 0)*2,nil,255)));
   SetCon(Con);
 }
 

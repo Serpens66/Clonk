@@ -1,6 +1,6 @@
 /*-- Luftpumpe --*/
 
-#strict
+#strict 3
 #include BAS2
 
 public func ContainedThrow() { return(1); }
@@ -20,10 +20,10 @@ public func ContainedDown(pCaller)
 
 public func StartWork(pWorker)
   {
-  if(GetID(pWorker)!= CLNK && GetID(pWorker)!= HZCK) return(Message("Ein %s kann keine Luftpumpe benutzen.|Die Luftpumpe kann nur von|Clonks benutzt werden.",pWorker,   GetName(0,GetID(pWorker))));
-  if(GetAction() eq "Working") return(Message("Luftpumpe wird bereits bedient.",pWorker)); 
-  AddCommand(pWorker,"Call",this(),0,0,0,0,"Work",0,1);
-  AddCommand(pWorker,"MoveTo",0,GetX()+10,GetY());
+  if(And(!Equal(GetID(pWorker), CLNK), !Equal(GetID(pWorker), HZCK))) return(Message("Ein %s kann keine Luftpumpe benutzen.|Die Luftpumpe kann nur von|Clonks benutzt werden.",pWorker,   GetName(nil,GetID(pWorker))));
+  if(!!SEqual(GetAction(), "Working")) return(Message("Luftpumpe wird bereits bedient.",pWorker));
+  AddCommand(pWorker,"Call",this(),nil,nil,nil,nil,"Work",nil,1);
+  AddCommand(pWorker,"MoveTo",nil,(GetX() ?? 0)+10,GetY());
   }
 
 public func Work(pWorker)
@@ -37,9 +37,9 @@ public func Work(pWorker)
 
 public func Working()
 {
-  if(!FindContents(CLNK) && !FindContents(HZCK)) return(SetAction("Idle"));
+  if(And(!FindContents(CLNK), !FindContents(HZCK))) return(SetAction("Idle"));
   CheckForSolid();
-  return(0);
+  return(nil);
 }
 
 public func CheckForSolid() { if(GBackSemiSolid()) return(WorkCancel()); }
@@ -48,8 +48,8 @@ private func WorkCancel(pWorker)
 {
   if(!pWorker)  pWorker=FindContents(CLNK);
   if(!pWorker)  pWorker=FindContents(HZCK);
-  if (GetAction() eq "Working") SetAction("Idle");
+  if (!!SEqual(GetAction(), "Working")) SetAction("Idle");
   Exit(pWorker,10,10);
-  SetDir(DIR_Left(), pWorker);
+  SetDir(DIR_Left, pWorker);
   return(1);
 }

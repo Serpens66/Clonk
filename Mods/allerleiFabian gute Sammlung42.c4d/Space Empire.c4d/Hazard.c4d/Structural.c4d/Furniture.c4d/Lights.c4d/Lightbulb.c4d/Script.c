@@ -1,6 +1,6 @@
 /*-- Glühbirne - Grundobjekt --*/
 
-#strict
+#strict 3
 
 local bulb;
 
@@ -11,6 +11,7 @@ public func Initialize() {
 }
 
 public func Set(int Length) {
+  Length ??= 0;
   bulb->Set(Length);
 }
 
@@ -24,5 +25,5 @@ public func Destruction() {
 public func Serialize(array& extra)
 {
 	_inherited(extra);
-	extra[GetLength(extra)] = Format("Set(%d)", bulb->LocalN("length"));
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%d)", bulb->LocalN("length"));
 }

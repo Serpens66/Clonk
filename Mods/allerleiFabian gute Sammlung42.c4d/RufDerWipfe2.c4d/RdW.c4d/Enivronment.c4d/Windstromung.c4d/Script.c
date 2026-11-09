@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 static globalwestwinde,globalostwinde;
 static horizont;
@@ -10,7 +10,7 @@ local ost,west,hang,factor; 	// für Rasterobjekte
 /* Start. Entweder ein Speicherobjekt oder das Berechnungsobjekt */
 protected func Initialize()
 {
-	if(ObjectCount(WIND)>=1) return(1); // gewöhnliches Rasterobjekt?
+	if((ObjectCount(WIND) ?? 0)>=1) return(1); // gewöhnliches Rasterobjekt?
 	MutterObjekt();
 	return(1);
 }
@@ -19,15 +19,15 @@ protected func Initialize()
    Nach vollenden des globalen Rechenvorganges wird dieses Objekt gelöscht. */
 public func RasterObjekt()
 {
-	ost=west=hang=0;
+	ost=west=hang=nil;
 	/* Wenn Himmel gefunden wird, soll das Objekt bestehen */
-	for(var i=-WINDAUFLOESUNG/2; i<WINDAUFLOESUNG/2; i++)
-	 for(var j=-WINDAUFLOESUNG/2; j<WINDAUFLOESUNG/2; j++)
-	  if(GetMaterial(i,j)==Material("Sky"))
+	for(var i=-(WINDAUFLOESUNG ?? 0)/2; (i ?? 0)<(WINDAUFLOESUNG ?? 0)/2; S42MigrationStep(i, 1, true))
+	 for(var j=-(WINDAUFLOESUNG ?? 0)/2; (j ?? 0)<(WINDAUFLOESUNG ?? 0)/2; S42MigrationStep(j, 1, true))
+	  if(Equal(GetMaterial(i,j), Material("Sky")))
 	   return(1);
 	/* Ansonsten wird es eben gelöscht */
 	RemoveObject();
-	return(0);
+	return(nil);
 }
 
 /* Bestimmt das Raster */
@@ -42,14 +42,14 @@ global func WindAufloesung()
    Hier fällt der Niederschlag und hier ist auch die höchste Windstärke */
 global func ErmittleHorizont()
 {
-	var temp=0;
+	var temp=nil;
 	/* Horizont ermitteln */
-	for(var x=0; x<LandscapeWidth(); x++)
+	for(var x=nil; (x ?? 0)<(LandscapeWidth() ?? 0); S42MigrationStep(x, 1, true))
 	{
-		temp+=GibHorizont(x);
-		horizont=temp/LandscapeWidth();
+		S42MigrationAssign(temp, "+=", (GibHorizont(x) ?? 0));
+		horizont=(temp ?? 0)/(LandscapeWidth() ?? 0);
 		/* Die maximale Tiefe soll 50% zählen */
-		horizont=(horizont+maxtiefe)/2;
+		horizont=((horizont ?? 0)+(maxtiefe ?? 0))/2;
 	}
 }
 
@@ -57,13 +57,13 @@ global func ErmittleHorizont()
    Dieser gibt dann die niedrigste Höhe an, die die Erdoberfläche hat */
 global func GibHorizont(x)
 {
-	for(var y=0; y<LandscapeHeight(); y++)
-	  if(GetMaterial(x,y)!=Material("Sky"))
+	for(var y=nil; (y ?? 0)<(LandscapeHeight() ?? 0); S42MigrationStep(y, 1, true))
+	  if(!Equal(GetMaterial(x,y), Material("Sky")))
 	  {
-		if(maxtiefe<y) maxtiefe=y;
+		if((maxtiefe ?? 0)<(y ?? 0)) maxtiefe=y;
 	    	return(y);
 	  }
-	if(maxtiefe<y) maxtiefe=y;
+	if((maxtiefe ?? 0)<(y ?? 0)) maxtiefe=y;
  	return(y);
 }
 
@@ -73,14 +73,14 @@ private func MutterObjekt()
 	/* Vorbereiten */
 	Log("Windströmungen werden berechnet. Der Vorgang kann einige Minuten dauern... ");
 	WINDAUFLOESUNG=WindAufloesung();
-	SetPosition(0,0);
+	SetPosition(nil,nil);
 	ErmittleHorizont();
 
 	/* Alle Rasterobjekte erstellen */
 	Log(" Windströmung: Speicherobjekte erstellen");
 	var obj;
-	for(var x=0; x<LandscapeWidth(); x+=WINDAUFLOESUNG)
-	 for(var y=0; y<maxtiefe+WINDAUFLOESUNG/2; y+=WINDAUFLOESUNG)	// Maxtiefe bei der Horizontberechnung ermittelt
+	for(var x=nil; (x ?? 0)<(LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", (WINDAUFLOESUNG ?? 0)))
+	 for(var y=nil; (y ?? 0)<(maxtiefe ?? 0)+(WINDAUFLOESUNG ?? 0)/2; S42MigrationAssign(y, "+=", (WINDAUFLOESUNG ?? 0)))	// Maxtiefe bei der Horizontberechnung ermittelt
 	  if(obj=CreateObject(WIND,x,y))
 	  {
 		  obj->WIND::RasterObjekt();
@@ -89,9 +89,9 @@ private func MutterObjekt()
 	  }
 
 	/* Stromberechnungen für jede Richtung einzeln */
-	for(y=0; y<maxtiefe+WINDAUFLOESUNG/2; y+=WINDAUFLOESUNG/3)
+	for(y=nil; (y ?? 0)<(maxtiefe ?? 0)+(WINDAUFLOESUNG ?? 0)/2; S42MigrationAssign(y, "+=", (WINDAUFLOESUNG ?? 0)/3))
 	{
-		if(!(y%100)) Log(" Windströme ab Zeile %d berechnen",y);
+		if(!((y ?? 0)%100)) Log(" Windströme ab Zeile %d berechnen",y);
 		StarteStroemungOst(y);
 		StarteStroemungWest(y);
 	}
@@ -114,12 +114,12 @@ private func MutterObjekt()
 private func StarteStroemungWest(y)
 {
 	var stromstaerke=40;
-	for(var x=0; x<LandscapeWidth(); x+=WINDAUFLOESUNG/3)
+	for(var x=nil; (x ?? 0)<(LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", (WINDAUFLOESUNG ?? 0)/3))
 	{
 		/* Frei? Wind verstärken */
 		if(!GBackSemiSolid(x,y))
 		{
-		 if((stromstaerke+=WINDAUFLOESUNG/3) > 1000)
+		 if(((S42MigrationAssign(stromstaerke, "+=", (WINDAUFLOESUNG ?? 0)/3)) ?? 0) > 1000)
 		  stromstaerke = 1000;
 		}
 		/* Nicht frei? */
@@ -127,39 +127,39 @@ private func StarteStroemungWest(y)
 		{
 		 	/* Hang? */
 			if(stromstaerke) FindObject(WIND,x,y,-1,-1)->WIND::Hang(1);
-			stromstaerke=0;
+			stromstaerke=nil;
 		}
 		/* Windpunkt ändern */
-		FindObject(WIND,x,y,-1,-1)->WIND::AenderStaerke(1, stromstaerke/10);
+		FindObject(WIND,x,y,-1,-1)->WIND::AenderStaerke(1, (stromstaerke ?? 0)/10);
 		//Log("%d/%d",x,LandscapeWidth());
 	};
-	return();
+	return;
 }
 
 private func StarteStroemungOst(y)
 {
   var stromstaerke=40;
-	for(var x=LandscapeWidth(); x>1; x-=WINDAUFLOESUNG/3)
+	for(var x=LandscapeWidth(); (x ?? 0)>1; S42MigrationAssign(x, "-=", (WINDAUFLOESUNG ?? 0)/3))
 	{
 		/* Frei? Wind verstärken */
 		if(!GBackSemiSolid(x,y))
 		{
-		 if((stromstaerke+=WINDAUFLOESUNG/3) > 1000)
+		 if(((S42MigrationAssign(stromstaerke, "+=", (WINDAUFLOESUNG ?? 0)/3)) ?? 0) > 1000)
 		  stromstaerke = 1000;
 		}
 		/* Nicht frei? */
 		else
 		{
 		 	/* Hang? */
-			if(stromstaerke) FindObject(WIND,x,y,-1,-1)->WIND::Hang(0);
-			stromstaerke=0;
+			if(stromstaerke) FindObject(WIND,x,y,-1,-1)->WIND::Hang(nil);
+			stromstaerke=nil;
 		}
 		/* Windpunkt ändern */
 		var obj;
-		if(obj=FindObject(WIND,x,y,-1,-1)) obj->WIND::AenderStaerke(0, stromstaerke/10);
+		if(obj=FindObject(WIND,x,y,-1,-1)) obj->WIND::AenderStaerke(nil, (stromstaerke ?? 0)/10);
 		//Log("%d/%d",x,LandscapeWidth());
 	};
-	return();
+	return;
 }
 
 /* lokale Windstärke abfragen */
@@ -175,22 +175,22 @@ public func AenderStaerke(bwest,staerke)
 	if(bwest)
  	{
 		if(GetBit(hang,2)) // Westhang?
-		 return(0);
-		west+=Prozent(staerke,RandomX(90,110));
-		west=west/2;
-		if(west<5) west=5; // Windstille solls nun doch nicht geben
+		 return(nil);
+		S42MigrationAssign(west, "+=", (Prozent(staerke,RandomX(90,110)) ?? 0));
+		west=(west ?? 0)/2;
+		if((west ?? 0)<5) west=5; // Windstille solls nun doch nicht geben
 		return(1);
 	}
 	if(!bwest)
 	{
 		if(GetBit(hang,1)) // Ostthang?
-		 return(0);
-		ost+=Prozent(staerke,RandomX(90,110));
-		ost=ost/2;
-		if(ost<5) ost=5; // Windstille solls nun doch nicht geben
+		 return(nil);
+		S42MigrationAssign(ost, "+=", (Prozent(staerke,RandomX(90,110)) ?? 0));
+		ost=(ost ?? 0)/2;
+		if((ost ?? 0)<5) ost=5; // Windstille solls nun doch nicht geben
 		return(1);
 	}
-	return();
+	return;
 }
 
 /* Dieses Rasterobjekt ist an einem Hang.*/
@@ -198,11 +198,11 @@ public func Hang(bwest)
 {
 	if(bwest) // westen? 
 	 if(!GetBit(hang,2))
-	  west+=50;
+	  S42MigrationAssign(west, "+=", 50);
 	if(!bwest) // Osten?
 	 if(!GetBit(hang,1))
-	  ost+=50;
-	hang=SetBit(hang,bwest+1,1);
+	  S42MigrationAssign(ost, "+=", 50);
+	hang=SetBit(hang,(bwest ?? 0)+1,1);
 	return(1);
 }
 
@@ -223,8 +223,8 @@ global func GetWind(x,y,fGlobal)
 	if(!globalwestwinde) return(normalwind);
 
 	/* Anhand der Normalwindstärke Ost- oder Westwind zurückgeben */
-	if(normalwind>=0) 	
-		return(globalwestwinde->GetStrength(GetX()+x,GetY()+y)*normalwind/100);
+	if((normalwind ?? 0)>=0)
+		return((globalwestwinde->GetStrength((GetX() ?? 0)+(x ?? 0),(GetY() ?? 0)+(y ?? 0)) ?? 0)*(normalwind ?? 0)/100);
 	else
-  	return(globalwestwinde->GetStrength(GetX()+x,GetY()+y)*normalwind/100);
+        return((globalwestwinde->GetStrength((GetX() ?? 0)+(x ?? 0),(GetY() ?? 0)+(y ?? 0)) ?? 0)*(normalwind ?? 0)/100);
 }

@@ -1,6 +1,6 @@
 /*-- Hai --*/
 
-#strict
+#strict 3
 #include ANIM
 
 public func IsPossessible() { return(1); }
@@ -15,17 +15,17 @@ protected func Initialize() { return(Birth()); }
 protected func Activity() 
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Nicht an der Wasseroberfläche bleiben
-  if (!GBackLiquid(0, -8) && GetAction() ne "Walk") 
-    return(SetComDir(BoundBy(GetComDir(), COMD_DownRight(), COMD_DownLeft())));
+  if (And(!GBackLiquid(nil, -8), !SEqual(GetAction(), "Walk")))
+    return(SetComDir(BoundBy(GetComDir(), COMD_DownRight, COMD_DownLeft)));
 
   // Nichts machen
   if (Random(2)) return(1);
 
   // Nur wenn der Hai schwimmt
-  if (GetAction() ne "Swim") return(1);
+  if (!SEqual(GetAction(), "Swim")) return(1);
 
   // Umdrehen
   if (Random(2)) TurnRight();
@@ -33,21 +33,21 @@ protected func Activity()
 
   // Anderen Haien aus dem Weg gehen
   var obj;
-  if (obj = FindObject(GetID(), -100, -25, 200, 50, 0, "Swim", 0, NoContainer())) 
+  if (obj = FindObject(GetID(), -100, -25, 200, 50, nil, "Swim", nil, NoContainer()))
   {
-    if (GetY(obj) < GetY()) SetComDir(BoundBy(GetComDir(), COMD_DownRight(), COMD_DownLeft()));
-    else if (GetComDir() == COMD_Right()) SetComDir(COMD_UpRight());
-    else SetComDir(COMD_UpLeft());
+    if ((GetY(obj) ?? 0) < (GetY() ?? 0)) SetComDir(BoundBy(GetComDir(), COMD_DownRight, COMD_DownLeft));
+    else if (Equal(GetComDir(), COMD_Right)) SetComDir(COMD_UpRight);
+    else SetComDir(COMD_UpLeft);
   }
 }
 
 private func SwimStart() 
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Beute am Maul beißen
-  if (Attack()) return();
+  if (Attack()) return;
   
   // Beute in Entfernung suchen
   var pPrey;
@@ -55,33 +55,33 @@ private func SwimStart()
   {
     // Immer von hinten mit einem Abstand angreifen
     var iFromSide = +1; if (GetDir(pPrey)) iFromSide = -1;
-    SetCommand(this(), "MoveTo", 0, GetX(pPrey) + 15 * iFromSide, GetY(pPrey));
+    SetCommand(this(), "MoveTo", nil, (GetX(pPrey) ?? 0) + 15 * (iFromSide ?? 0), GetY(pPrey));
   }
 }
 
 private func Swimming()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Vertikale Geschwindigkeit begrenzen
-  SetYDir(GetYDir(0, 100), 0, 120);
+  SetYDir(GetYDir(nil, 100), nil, 120);
   // Nicht gegen den Beckenrand schwimmen
-  if (GBackSolid(+75, 0))
+  if (GBackSolid(+75, nil))
   {
     TurnLeft();
-    if (!Random(5)) SetComDir(COMD_UpLeft());
-    else if (!Random(6)) SetComDir(COMD_DownLeft());
-    else SetComDir(COMD_Left());
-    return();
+    if (!Random(5)) SetComDir(COMD_UpLeft);
+    else if (!Random(6)) SetComDir(COMD_DownLeft);
+    else SetComDir(COMD_Left);
+    return;
   }
-  if (GBackSolid(-75, 0)) 
+  if (GBackSolid(-75, nil))
   {
     TurnRight();
-    if (!Random(5)) SetComDir(COMD_UpRight());
-    else if (!Random(6)) SetComDir(COMD_DownRight());
-    else SetComDir(COMD_Right());
-    return();
+    if (!Random(5)) SetComDir(COMD_UpRight);
+    else if (!Random(6)) SetComDir(COMD_DownRight);
+    else SetComDir(COMD_Right);
+    return;
   }
 }
 
@@ -89,11 +89,11 @@ private func FindPrey()
 {
   var prey;      
   // Zuerst schwimmende Beute suchen...
-  prey = FindObject(0, -250, -100, 500, 200, OCF_Prey(), "Swim", 0, NoContainer());
+  prey = FindObject(nil, -250, -100, 500, 200, OCF_Prey, "Swim", nil, NoContainer());
   // ...dann auch andere Beute im Wasser suchen (z.B. stehende Aquaclonks)
   if (!prey)
   {
-    while (prey = FindObject(0, -250, -100, 500, 200, OCF_Prey(), 0, 0, NoContainer(), prey))
+    while (prey = FindObject(nil, -250, -100, 500, 200, OCF_Prey, nil, nil, NoContainer(), prey))
       if (GetAlive(prey))
         if (InLiquid(prey))
           break;
@@ -107,7 +107,7 @@ private func FindPrey()
 protected func ContactLeft()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnRight());
 }
@@ -115,7 +115,7 @@ protected func ContactLeft()
 protected func ContactRight()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnLeft());
 }
@@ -123,19 +123,19 @@ protected func ContactRight()
 protected func ContactTop()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  return(SetComDir(COMD_Down()));
+  return(SetComDir(COMD_Down));
 }
 
 protected func ContactBottom()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  if (GetAction() ne "Walk") SetComDir(COMD_Up());
-  if (Random(10)) SetComDir(COMD_Right());
-  if (Random(10)) SetComDir(COMD_Left());
+  if (!SEqual(GetAction(), "Walk")) SetComDir(COMD_Up);
+  if (Random(10)) SetComDir(COMD_Right);
+  if (Random(10)) SetComDir(COMD_Left);
   return(1);
 }
 
@@ -143,30 +143,30 @@ protected func ContactBottom()
 
 private func TurnRight()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() < 0) SetXDir(0);
-  SetDir(DIR_Right());
-  SetComDir(COMD_Right());
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
+  SetDir(DIR_Right);
+  SetComDir(COMD_Right);
   return(1);
 }
 
 private func TurnLeft()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() > 0) SetXDir(0);
-  SetDir(DIR_Left());
-  SetComDir(COMD_Left());
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
+  SetDir(DIR_Left);
+  SetComDir(COMD_Left);
   return(1);
 }
 
 private func Attack()
 {
   // Während des Schwimmens kann alle 2 Sekunden einmal gebissen werden
-  if (GetEffect("IntAttackDelay", this()) || GetAction() ne "Swim") return();
+  if (Or(GetEffect("IntAttackDelay", this()), !SEqual(GetAction(), "Swim"))) return;
   
   // Beute suchen
-  var pPrey = FindObject2(Find_AtRect(40*GetDir()-25,0,10,10), Find_OCF(OCF_Prey), Find_OCF(OCF_Alive), Find_NoContainer(), Find_Layer(GetObjectLayer()), Find_Exclude(this));
-  if (!pPrey) return();
+  var pPrey = FindObject2(Find_AtRect(40*(GetDir() ?? 0)-25,nil,10,10), Find_OCF(OCF_Prey), Find_OCF(OCF_Alive), Find_NoContainer(), Find_Layer(GetObjectLayer()), Find_Exclude(this));
+  if (!pPrey) return;
   
   // Beißen :D
   Punch(pPrey, 8);
@@ -187,7 +187,7 @@ public func Eat(pByObject)
 
 protected func Death()
 {
-  SetDir(0);
+  SetDir(nil);
   ChangeDef(DSHK);
   SetAction("Dead");
   return(1);
@@ -199,14 +199,14 @@ private func MaxAnimalCount() { return(4); }
 
 private func SpecialReprodCond()
 {
-  return(GetAction() eq "Swim");
+  return(!!SEqual(GetAction(), "Swim"));
 }
 
 public func Birth()
 {
   SetAction("Swim");
-  SetComDir(COMD_Left());
-  if(Random(2)) SetComDir(COMD_Right());
+  SetComDir(COMD_Left);
+  if(Random(2)) SetComDir(COMD_Right);
 }
 
 /* Steuerung durch Besessenheit */
@@ -214,9 +214,9 @@ public func Birth()
 protected func ControlCommand(szCommand, pTarget, iTx, iTy)
 {
  // Bewegungskommando
- if (szCommand eq "MoveTo")
+ if (!!SEqual(szCommand, "MoveTo"))
   return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
- return(0);
+ return(nil);
 }
 
 protected func ContainedLeft(object caller)
@@ -242,7 +242,7 @@ protected func ContainedUp(object caller)
  [$TxtMovement$]
  SetCommand(this(),"None");
  if(!GetPlrJumpAndRunControl(caller->GetController()))
-  SetComDir(COMD_Up());
+  SetComDir(COMD_Up);
  return(1);
 }
 
@@ -252,7 +252,7 @@ protected func ContainedDown(object caller)
  SetCommand(this(),"None");
  if(Contained()) return SetCommand(this, "Exit");
  if(!GetPlrJumpAndRunControl(caller->GetController()))
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
  return(1);
 }
 
@@ -260,24 +260,26 @@ protected func ContainedDown(object caller)
 
 private func ClearDir(bool fX)
 {
-  if(fX && GetXDir())
+  fX ??= false;
+  if(And(fX, GetXDir()))
   {
-    if(GetXDir() > 0) SetXDir(Max(GetXDir() - 2, 0));
-    else SetXDir(Min(GetXDir() + 2, 0));
+    if((GetXDir() ?? 0) > 0) SetXDir(Max((GetXDir() ?? 0) - 2, nil));
+    else SetXDir(Min((GetXDir() ?? 0) + 2, nil));
   }
-  if(!fX && GetYDir())
+  if(And(!fX, GetYDir()))
   {
-    if(GetYDir() > 0) SetYDir(Max(GetYDir() - 2, 0));
-    else SetYDir(Min(GetYDir() + 2, 0));
+    if((GetYDir() ?? 0) > 0) SetYDir(Max((GetYDir() ?? 0) - 2, nil));
+    else SetYDir(Min((GetYDir() ?? 0) + 2, nil));
   }
 }
 
 public func ContainedUpdate(object self, int comdir)
 {
+  comdir ??= 0;
   SetComDir(comdir);
   ClearScheduleCall(this(), "ClearDir");
-  if(comdir == COMD_Down || comdir == COMD_Up) ScheduleCall(this(), "ClearDir", 1, (Abs(GetXDir())+1)/2, true);
-  if(comdir == COMD_Left || comdir == COMD_Right) ScheduleCall(this(), "ClearDir", 1, (Abs(GetYDir())+1)/2, false);
+  if(Or(Equal(comdir, COMD_Down), Equal(comdir, COMD_Up))) ScheduleCall(this(), "ClearDir", 1, ((Abs(GetXDir()) ?? 0)+1)/2, true);
+  if(Or(Equal(comdir, COMD_Left), Equal(comdir, COMD_Right))) ScheduleCall(this(), "ClearDir", 1, ((Abs(GetYDir()) ?? 0)+1)/2, nil);
 
   return(1);
 }

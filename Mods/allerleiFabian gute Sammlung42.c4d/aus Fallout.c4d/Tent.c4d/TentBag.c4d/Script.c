@@ -1,11 +1,11 @@
 /* Zelttasche */
 
-#strict
+#strict 3
 
 func Activate(clonk)
 {
-  var x = 0;
-  var y = Min(11, LandscapeHeight() - GetY() + 1);
+  var x = nil;
+  var y = Min(11, (LandscapeHeight() ?? 0) - (GetY() ?? 0) + 1);
 
   var tent = CreateObject(TN5B, x, y, GetOwner(clonk));
   

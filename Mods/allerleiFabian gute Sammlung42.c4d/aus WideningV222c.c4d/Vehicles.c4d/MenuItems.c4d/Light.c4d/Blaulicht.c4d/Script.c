@@ -1,43 +1,48 @@
-#strict
+#strict 3
 
-Completion:
+func Completion(...) {
   SetCategory(8388609);
   SetObjectBlitMode(1);
   SetVisibility(VIS_None);
   return(1);
+}
 
-SwitchOn:
+func SwitchOn(...) {
   SetVisibility(VIS_All);
-  return(SetAction("On",GetActionTarget(0)));
+  return(SetAction("On",GetActionTarget(nil)));
+}
 
-SwitchOff:
+func SwitchOff(...) {
   SetVisibility(VIS_None);
-  return(SetAction("Off",GetActionTarget(0)));
+  return(SetAction("Off",GetActionTarget(nil)));
+}
 
-Schalten:
-  if(GetAction()S="On") return(SwitchOff());
-  if(GetAction()S="Off") return(SwitchOn());
+func Schalten(...) {
+  if(!!SEqual(GetAction(), "On")) return(SwitchOff());
+  if(!!SEqual(GetAction(), "Off")) return(SwitchOn());
   return(1);
+}
 
-On:
+func On(...) {
   var rnd = Random(8);
-  if(rnd==0)
+  if(Equal(rnd, nil))
   {
-    CreateParticle("FastSpark",0,2,0,0,70,RGBa(0,0,230,0),this());
-    SetClrModulation(RGBa(0,0,230,60));
+    CreateParticle("FastSpark",nil,2,nil,nil,70,RGBa(nil,nil,230,nil),this());
+    SetClrModulation(RGBa(nil,nil,230,60));
   }
-  if(rnd==1)
+  if(Equal(rnd, 1))
   {
-    CreateParticle("FastSpark",0,2,0,0,70,RGBa(0,0,255,0),this());
-    SetClrModulation(RGBa(0,0,255,60));
+    CreateParticle("FastSpark",nil,2,nil,nil,70,RGBa(nil,nil,255,nil),this());
+    SetClrModulation(RGBa(nil,nil,255,60));
   }
-  if(rnd==2)
+  if(Equal(rnd, 2))
   {
-    CreateParticle("FastSpark",0,2,0,0,70,RGBa(255,255,255,0),this());
+    CreateParticle("FastSpark",nil,2,nil,nil,70,RGBa(255,255,255,nil),this());
     SetClrModulation(RGBa(255,255,255,40));
   }
-  if(rnd>2)
+  if((rnd ?? 0)>2)
   {
-    SetClrModulation(RGBa(0,0,255,0));
+    SetClrModulation(RGBa(nil,nil,255,nil));
   }
   return(1);
+}

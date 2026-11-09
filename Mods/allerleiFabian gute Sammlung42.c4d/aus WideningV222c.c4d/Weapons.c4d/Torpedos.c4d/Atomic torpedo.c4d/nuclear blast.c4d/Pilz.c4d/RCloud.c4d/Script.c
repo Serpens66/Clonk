@@ -1,36 +1,40 @@
-#strict
+#strict 3
 
 /*-- Wolken --*/
 
 
-protected Initialize:
+protected func Initialize(...) {
 
 	DoCon(-99);
 	local count;
 	local alpha;
 	local grow;
 	local started;
-	count=0;
+	count=nil;
 	return(1);
+}
 
-Hit:
-	if(started != 1) SetAction("GROW");
+func Hit(...) {
+	if(!Equal(started, 1)) SetAction("GROW");
 	started=1;
 	return(1);	
-protected grow1:
+}
+protected func grow1(...) {
 	DoCon(+1);
-	if(GetCon() == 99) SetAction("GO");
+	if(Equal(GetCon(), 99)) SetAction("GO");
 	
 
 
 
 
 	return(1);
-protected check:
-	SetVar(0,Random(100));
-	if(Var(0) == 1) DoDamage(1,FindObject(0,-80,-40,160,80,OCF_Living()));
-	++count;
-	alpha= count / 100;
-	if(alpha>255) RemoveObject();
+}
+protected func check(...) {
+	SetVar(nil,Random(100));
+	if(Equal(Var(nil), 1)) DoDamage(1,FindObject(nil,-80,-40,160,80,OCF_Living));
+	S42MigrationStep(count, 1);
+	alpha= (count ?? 0) / 100;
+	if((alpha ?? 0)>255) RemoveObject();
 	SetClrModulation(RGBa(255,255,255,alpha));
 	return(1);
+}

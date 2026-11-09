@@ -1,6 +1,6 @@
 /* Aufwertung */
 
-#strict
+#strict 3
 
 public func Activate(target1, target2)
   {
@@ -20,34 +20,34 @@ public func Revaluation(target, target1)
   if (contained)
     if (id2 = contained->~GetRevaluationCombo(target))
       { obj = contained; idRevaluationTarget = id2; }
-  while (obj = Contents(i++, target))
+  while (obj = Contents(S42MigrationStep(i, 1, true), target))
     if (id2 = obj->~GetRevaluationCombo(target))
       { idRevaluationTarget = id2; break; }
       
   // Keine Aufwertung zum gleichen Clonktyp
-  if (idRevaluationTarget == GetID(target) || (target->~IsSorcerer() && idRevaluationTarget==SCLK))
-    return(NoRevaluation(target, target1, Format("$MsgIsRev$", GetName(target), GetName(0, GetID(target)))));
+  if (Or(Equal(idRevaluationTarget, GetID(target)), (And(target->~IsSorcerer(), Equal(idRevaluationTarget, SCLK)))))
+    return(NoRevaluation(target, target1, Format("$MsgIsRev$", GetName(target), GetName(nil, GetID(target)))));
   // Aufwertung möglich? (z.B. nicht vom König zum Ritter)
   if (idRevaluationTarget->~IsRevaluationBlocked(target))
-    return(NoRevaluation(target, target1, Format("$MsgBlocked$", GetName(target), GetName(0, GetID(target)))));
+    return(NoRevaluation(target, target1, Format("$MsgBlocked$", GetName(target), GetName(nil, GetID(target)))));
     
   // Effekt
   Sound("Magic1");
   // Umwandlung
   if (!target->~Redefine2(idRevaluationTarget))
     if (!target->~Redefine(idRevaluationTarget))
-      if (GetOCF(target) & OCF_Alive())
+      if ((GetOCF(target) ?? 0) & (OCF_Alive ?? 0))
         {
         ChangeDef(idRevaluationTarget, target);
         ObjectSetAction(target, "Walk");
         }
-      else return(0, RemoveObject());
+      else return(S42MigrationFirst(nil, RemoveObject()));
   // Komboobjekt verbrauchen
   if (obj) RemoveObject(obj, true);
   // Clonkspezifische Aktionen nach Umwandlung (z.B. Zauberenergie für Magier)
   if (!target->~OnRevaluation())
     // Zur Abwärtskompatibilität mit alten Magiern
-    if (idRevaluationTarget == SCLK) target->~Magicenergy();
+    if (Equal(idRevaluationTarget, SCLK)) target->~Magicenergy();
   RemoveObject(); 
   return(1);
   }
@@ -57,13 +57,13 @@ public func NoRevaluation(target, target1, szErrorMessage)
   // Stein zu Gold verwandeln?
   var obj;
   if (obj = FindContents(GOLD, target)) {
-    var width = 2*GetDefCoreVal("Width", "DefCore", GetID(target1));
-    var height = 2*GetDefCoreVal("Height", "DefCore", GetID(target1));
+    var width = 2*(GetDefCoreVal("Width", "DefCore", GetID(target1)) ?? 0);
+    var height = 2*(GetDefCoreVal("Height", "DefCore", GetID(target1)) ?? 0);
     var convert_count = RandomX(5, 10);
-    while (convert_count--) {
+    while (S42MigrationStep(convert_count, -1, true)) {
       var rock;
       // Stein in der Nähe?
-      if (rock = FindObject(ROCK, -width, -height, width*2, height*2, OCF_InFree())) {
+      if (rock = FindObject(ROCK, -(width ?? 0), -(height ?? 0), (width ?? 0)*2, (height ?? 0)*2, OCF_InFree)) {
         // Zu Gold "aufwerten"
         ChangeDef(GOLD, rock);
         // Effekte!
@@ -85,9 +85,9 @@ public func NoRevaluation(target, target1, szErrorMessage)
 
   // Zauber fehlgeschlagen
   else {
-    Sound("Error", false, 0, 100, GetOwner()+1);
+    Sound("Error", nil, nil, 100, (GetOwner() ?? 0)+1);
     PlayerMessage(GetOwner(), szErrorMessage, target);
     RemoveObject(); 
-    return(0);
+    return(nil);
   }
 }

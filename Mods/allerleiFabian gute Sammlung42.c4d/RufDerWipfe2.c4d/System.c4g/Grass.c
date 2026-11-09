@@ -1,10 +1,10 @@
 /*-- Grass --*/
 
-#strict
+#strict 3
 #appendto GRAS
 
 public func Initialize()
 {
-  if(GetID()==GRAS) ChangeDef(GRA1);
+  if(Equal(GetID(), GRAS)) ChangeDef(GRA1);
   return _inherited();
 }

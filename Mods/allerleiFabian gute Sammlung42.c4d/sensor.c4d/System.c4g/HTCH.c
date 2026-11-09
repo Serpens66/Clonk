@@ -1,6 +1,6 @@
 /*-- Luke --*/
 
-#strict
+#strict 3
 #appendto HTCH
 //Target
 
@@ -14,11 +14,11 @@ return(_inherited(a,b,c,d,e,f,g));
 
 public func GetTriggerName(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return("÷ffnen");
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return("Schlieﬂen");
 	}
@@ -27,14 +27,14 @@ public func GetTriggerName(a)
 
 public func Trigger(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
-		if(state == 0)
+		if(Equal(state, nil))
 			ControlUp();
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
-		if(state == 1)
+		if(Equal(state, 1))
 			ControlDownSingle();
 	}
         return(1);	

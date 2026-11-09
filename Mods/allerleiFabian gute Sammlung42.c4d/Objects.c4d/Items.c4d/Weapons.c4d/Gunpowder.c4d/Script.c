@@ -1,6 +1,6 @@
 /*--- Schießpulver ---*/
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -15,7 +15,7 @@ protected func Damage()
     if (Contained()->~IsClonk())
     {
       Extinguish();
-      return(0);
+      return(nil);
     }
   // Explosion - verzögert, um Endlosrekursion zu verhindern
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))

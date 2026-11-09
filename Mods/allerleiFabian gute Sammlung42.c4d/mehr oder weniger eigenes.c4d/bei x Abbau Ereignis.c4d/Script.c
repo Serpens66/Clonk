@@ -1,6 +1,6 @@
 /*-- x Gold angriff --*/
 
-#strict
+#strict 3
 
 local aPixStart, aMatStart,aAllInPixStart,aErreicht,locplayer,aDone;
 
@@ -15,33 +15,33 @@ public func IsVariabelChooseable2() { return(1); }
 func Activate(player) // gibt aus, wieviel wovon abgebaut wurde
 {
   var string = "";
-  var izahl=0;
-    while(izahl<17) 
+  var izahl=nil;
+    while((izahl ?? 0)<17)
     {        
-        if(izahl==16) // letzter eintrag
+        if(Equal(izahl, 16)) // letzter eintrag
         {
             var hinweis = "";
-            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl])
-                hinweis = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl]); // zeigt dass diese Regel aktiv ist
+            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)])
+                hinweis = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)]); // zeigt dass diese Regel aktiv ist
             string = Format("%s{{%v}}%v% von %s %s|abgebaut.", //  mit {{IDID}} kann man noch Bilder der materialien einfuegen
             string,
-            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][izahl],ErreichteProzent(izahl),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][izahl],hinweis);
+            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(izahl ?? 0)],ErreichteProzent(izahl),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(izahl ?? 0)],hinweis);
         }
         else
         {
             var hinweis = "";
-            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl])
-                hinweis = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl]); // zeigt dass diese Regel aktiv ist
+            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)])
+                hinweis = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)]); // zeigt dass diese Regel aktiv ist
             var hinweis2 = "";
-            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl+1])
-                hinweis2 = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][izahl+1]); // zeigt dass diese Regel aktiv ist
+            if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)+1])
+                hinweis2 = Format("! %v%",HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(izahl ?? 0)+1]); // zeigt dass diese Regel aktiv ist
             string = Format("%s{{%v}}%v% von %s %s|{{%v}}%v% von %s %s|", //  mit {{IDID}} kann man noch Bilder der materialien einfuegen
             string,
-            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][izahl],ErreichteProzent(izahl),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][izahl],hinweis,
-            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][izahl+1],ErreichteProzent(izahl+1),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][izahl+1],hinweis2); // gleich 2 einträge in einem machen
+            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(izahl ?? 0)],ErreichteProzent(izahl),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(izahl ?? 0)],hinweis,
+            HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(izahl ?? 0)+1],ErreichteProzent((izahl ?? 0)+1),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(izahl ?? 0)+1],hinweis2); // gleich 2 einträge in einem machen
         }
             
-        izahl = izahl + 2;
+        izahl = (izahl ?? 0) + 2;
     }
     MessageWindow(string, player);
 }
@@ -50,27 +50,27 @@ func Activate(player) // gibt aus, wieviel wovon abgebaut wurde
 
 private func MatObjsCount(inumber)
 {
-    if(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))) == "Liquid") return(0); // bei fluessig gibt es keine klumpen
-    return(ObjectCount(HashGet(hashSpielRegeln, "AbbauEreignisse")[1][inumber]));
+    if(Equal(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))), "Liquid")) return(nil); // bei fluessig gibt es keine klumpen
+    return(ObjectCount(HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(inumber ?? 0)]));
 }
 private func MatName(inumber)
 {
-    return(HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber]);
+    return(HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(inumber ?? 0)]);
 }
 
 private func MatPixelCount(inumber)
 {
-    if(FrameCounter()<500) return(aPixStart[inumber]); // liefert erst ab 500 werte zurueck!
+    if((FrameCounter() ?? 0)<500) return(aPixStart[(inumber ?? 0)]); // liefert erst ab 500 werte zurueck!
     else 
     {
-        if(MatName(inumber) != "Lava" && MatName(inumber) != "Sand" && MatName(inumber) != "Ashes")
+        if(And(And(!Equal(MatName(inumber), "Lava"), !Equal(MatName(inumber), "Sand")), !Equal(MatName(inumber), "Ashes")))
             return(GetMaterialCount(Material(MatName(inumber))));
-        else if(MatName(inumber)=="Lava")
-            return(GetMaterialCount(Material(MatName(inumber))) + GetMaterialCount(Material("DuroLava"))); // sowohl duro, als auch normale lava beachten
-        else if(MatName(inumber)=="Sand")
-            return(GetMaterialCount(Material(MatName(inumber))) + GetMaterialCount(Material("FlySand")));
-        else if(MatName(inumber)=="Ashes")
-            return(GetMaterialCount(Material(MatName(inumber))) + GetMaterialCount(Material("FlyAshes")));
+        else if(Equal(MatName(inumber), "Lava"))
+            return((GetMaterialCount(Material(MatName(inumber))) ?? 0) + (GetMaterialCount(Material("DuroLava")) ?? 0)); // sowohl duro, als auch normale lava beachten
+        else if(Equal(MatName(inumber), "Sand"))
+            return((GetMaterialCount(Material(MatName(inumber))) ?? 0) + (GetMaterialCount(Material("FlySand")) ?? 0));
+        else if(Equal(MatName(inumber), "Ashes"))
+            return((GetMaterialCount(Material(MatName(inumber))) ?? 0) + (GetMaterialCount(Material("FlyAshes")) ?? 0));
     }
 }
 
@@ -81,29 +81,29 @@ protected func Initialize()
   aAllInPixStart= [];
   aDone = [];
   aErreicht = [];
-  for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln, "AbbauEreignisse")[0]);inumber++)
+  for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln, "AbbauEreignisse")[0]) ?? 0);S42MigrationStep(inumber, 1, true))
   {
     ArrayAdd(aPixStart,100); // fuer jedes material einen Eintrag machen
     ArrayAdd(aMatStart,100);
     ArrayAdd(aAllInPixStart,200);
-    ArrayAdd(aDone,0);
-    ArrayAdd(aErreicht,HashGet(hashSpielRegeln, "AbbauEreignisse")[2][inumber]); // bei alle 5% also zu anfang 5
-    ScheduleCall(0,"WievielamStart",1,510,inumber); // nach 501 frames mal nachzaehlen, wieviel des materials zu beginn da ist.
+    ArrayAdd(aDone,nil);
+    ArrayAdd(aErreicht,HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(inumber ?? 0)]); // bei alle 5% also zu anfang 5
+    ScheduleCall(nil,"WievielamStart",1,510,inumber); // nach 501 frames mal nachzaehlen, wieviel des materials zu beginn da ist.
   }
-  return();
+  return;
 }
 
 func CheckTime() // timercall alle 250 frames
 {
-   if(FrameCounter()<600) return;
-   for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln, "AbbauEreignisse")[0]);inumber++)
+   if((FrameCounter() ?? 0)<600) return;
+   for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln, "AbbauEreignisse")[0]) ?? 0);S42MigrationStep(inumber, 1, true))
   {
-    if(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][inumber] && aAllInPixStart[inumber])  // wenn aktiviert, und startwerte vorhanden sind 
+    if(And(HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(inumber ?? 0)], aAllInPixStart[(inumber ?? 0)]))  // wenn aktiviert, und startwerte vorhanden sind
     {
-        if(ErreichteProzent(inumber)>=aErreicht[inumber]) // wenn zb alle 5 % und 5% wurde erreicht, wird ereignis ausgelöst und der aErreicht eintrag + 5 erhöht und damit als nächstes bei 10 ausgelöst. 
+        if((ErreichteProzent(inumber) ?? 0)>=(aErreicht[(inumber ?? 0)] ?? 0)) // wenn zb alle 5 % und 5% wurde erreicht, wird ereignis ausgelöst und der aErreicht eintrag + 5 erhöht und damit als nächstes bei 10 ausgelöst.
         {
             // Log(Format("%v% wurde von Material %s erreicht. %v musste erreicht werden.",ErreichteProzent(inumber),HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber],aErreicht[inumber]));
-            aErreicht[inumber] = aErreicht[inumber] + HashGet(hashSpielRegeln, "AbbauEreignisse")[2][inumber];
+            aErreicht[(inumber ?? 0)] = (aErreicht[(inumber ?? 0)] ?? 0) + (HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(inumber ?? 0)] ?? 0);
             EreignisAusloesen();
         }
     }        
@@ -112,29 +112,29 @@ func CheckTime() // timercall alle 250 frames
 
 func WievielamStart(inumber)
 {
-    if(FrameCounter()<501 || aDone[inumber]) return;
+    if(Or((FrameCounter() ?? 0)<501, aDone[(inumber ?? 0)])) return;
 // beim Start einmal ausführen, damit die Startwerte gesetzt werden
-   aPixStart[inumber] = MatPixelCount(inumber);
-   aMatStart[inumber] = MatObjsCount(inumber);
+   aPixStart[(inumber ?? 0)] = MatPixelCount(inumber);
+   aMatStart[(inumber ?? 0)] = MatObjsCount(inumber);
    
-   if(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))) != "Liquid")
+   if(!Equal(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))), "Liquid"))
    {
        if(GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))))
        {
-           aAllInPixStart[inumber] = aPixStart[inumber] + aMatStart[inumber] * GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))); // wandelt die existierenden Materialien in Pixel um, anahnd der Blast2ObjectRatio.
+           aAllInPixStart[(inumber ?? 0)] = (aPixStart[(inumber ?? 0)] ?? 0) + (aMatStart[(inumber ?? 0)] ?? 0) * (GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))) ?? 0); // wandelt die existierenden Materialien in Pixel um, anahnd der Blast2ObjectRatio.
        }
        else if(GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))))
        {
-           aAllInPixStart[inumber] = aPixStart[inumber] + aMatStart[inumber] * GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))); // wandelt die existierenden Materialien in Pixel um, anahnd der Dig2ObjectRatio
+           aAllInPixStart[(inumber ?? 0)] = (aPixStart[(inumber ?? 0)] ?? 0) + (aMatStart[(inumber ?? 0)] ?? 0) * (GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))) ?? 0); // wandelt die existierenden Materialien in Pixel um, anahnd der Dig2ObjectRatio
        }
        else
-           aAllInPixStart[inumber] = aPixStart[inumber];
+           aAllInPixStart[(inumber ?? 0)] = aPixStart[(inumber ?? 0)];
    }
    else
    {
-       aAllInPixStart[inumber] = aPixStart[inumber];  // bei fluessigem material gibts nur pixel
+       aAllInPixStart[(inumber ?? 0)] = aPixStart[(inumber ?? 0)];  // bei fluessigem material gibts nur pixel
    }
-   aDone[inumber] = 1;
+   aDone[(inumber ?? 0)] = 1;
 }
 
 
@@ -144,15 +144,15 @@ func ErreichteProzent(inumber) // gibt zurück, wieviel Prozent bereits abgebaut 
      var material = MatObjsCount(inumber);
      var AllInPix;
      
-     if(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))) != "Liquid")
+     if(!Equal(GetMaterialVal("TextureOverlay","Material",Material(MatName(inumber))), "Liquid"))
    {
        if(GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))))
        {
-           AllInPix = pixel + material * GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))); // wandelt die existierenden Materialien in Pixel um, anahnd der Blast2ObjectRatio.
+           AllInPix = (pixel ?? 0) + (material ?? 0) * (GetMaterialVal("Blast2ObjectRatio","Material",Material(MatName(inumber))) ?? 0); // wandelt die existierenden Materialien in Pixel um, anahnd der Blast2ObjectRatio.
        }
        else if(GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))))
        {
-           AllInPix = pixel + material * GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))); // wandelt die existierenden Materialien in Pixel um, anahnd der Dig2ObjectRatio
+           AllInPix = (pixel ?? 0) + (material ?? 0) * (GetMaterialVal("Dig2ObjectRatio","Material",Material(MatName(inumber))) ?? 0); // wandelt die existierenden Materialien in Pixel um, anahnd der Dig2ObjectRatio
        }
        else
            AllInPix = pixel;
@@ -165,19 +165,19 @@ func ErreichteProzent(inumber) // gibt zurück, wieviel Prozent bereits abgebaut 
    // if(HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber]=="Gold")
     // Log(Format("Material: %s . AllinPix: %v . AllInPixStart: %v . Prozent: %v",HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber],AllInPix,aAllInPixStart[inumber],(((aAllInPixStart[inumber]-AllInPix)*100) / aAllInPixStart[inumber])));
 
-   if(aAllInPixStart[inumber]) return(((aAllInPixStart[inumber]-AllInPix)*100) / aAllInPixStart[inumber]);
-   else return(0); // wenn es keine pixel dieses materials gibt, immer 0 returnen
+   if(aAllInPixStart[(inumber ?? 0)]) return((((aAllInPixStart[(inumber ?? 0)] ?? 0)-(AllInPix ?? 0))*100) / (aAllInPixStart[(inumber ?? 0)] ?? 0));
+   else return(nil); // wenn es keine pixel dieses materials gibt, immer 0 returnen
 }
 
 func EreignisAusloesen()
 {
-    if(HashGet(hashSpielRegeln, "AbbauEreignisse")[3]==1) 
+    if(Equal(HashGet(hashSpielRegeln, "AbbauEreignisse")[3], 1))
         return(Katastrophenereignis());
-    if(HashGet(hashSpielRegeln, "AbbauEreignisse")[3]==2) 
+    if(Equal(HashGet(hashSpielRegeln, "AbbauEreignisse")[3], 2))
         return(Monsterereignis());
     
     // ansonsten beides moeglich
-    if(RandomX(0,1)) // 50 zu 50 chance entweder monster oder katastrophe
+    if(RandomX(nil,1)) // 50 zu 50 chance entweder monster oder katastrophe
         return(Monsterereignis());
     else
         return(Katastrophenereignis());
@@ -186,39 +186,39 @@ func EreignisAusloesen()
 func Monsterereignis()
 {
     Log("Ein Monsterangriff");
-    var Age = 0;
-    for(var i = 0; i < GetPlayerCount(); i++)
+    var Age = nil;
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
     {
         Age = Max(Age, gPlayerAge(GetPlayerByIndex(i))); // das hoechste Zeitalter aller spieler rausfinden
     }
-    if(Age<=4)  // ab zeitalter 5 hat man armbrust usw.
+    if((Age ?? 0)<=4)  // ab zeitalter 5 hat man armbrust usw.
     {
         var liste = ["Zufall1","Zufall2"];
-        var imonster = liste[RandomX(0,1)]; // zufall1 oder zufall2, relativ leichte monster
+        var imonster = liste[(RandomX(nil,1) ?? 0)]; // zufall1 oder zufall2, relativ leichte monster
         var ikeinflug = !Random(10);   // selten flugviecher, weil die ohne vernünftige waffen schwer zu treffen sind.
         var ierledigen=RandomX(1,5);  // wieviele Feinde erledigt werden muessen
         var iaufeinmal=RandomX(4,10); // wieviele monster aufeinmal da sind (wenn eins getötet, kommt ein neues) 
     }
-    if(Age>4 && Age<11)  // ab zeitalter 11 hat man zukunftswaffen, ab 5 hat man immerhin armbrust usw.
+    if(And((Age ?? 0)>4, (Age ?? 0)<11))  // ab zeitalter 11 hat man zukunftswaffen, ab 5 hat man immerhin armbrust usw.
     {
         var liste = ["Zufall1","Zufall2","Zufall3"];
-        var imonster = liste[RandomX(0,2)];  // zufall1 oder zufall2, relativ leichte monster. zusätzlich zufall3, Clonks, ritter und magier
+        var imonster = liste[(RandomX(nil,2) ?? 0)];  // zufall1 oder zufall2, relativ leichte monster. zusätzlich zufall3, Clonks, ritter und magier
         var ikeinflug = !Random(10);   // selten flugviecher, weil die ohne vernünftige waffen schwer zu treffen sind.
         var ierledigen=RandomX(1,6);  // wieviele Feinde erledigt werden muessen
         var iaufeinmal=RandomX(4,10); // wieviele monster aufeinmal da sind (wenn eins getötet, kommt ein neues) 
     }
-    if(Age>=11 && Age<13)  // ab zeitalter 11 hat man zukunftswaffen, aber 13 auch automatische abwehrtürme
+    if(And((Age ?? 0)>=11, (Age ?? 0)<13))  // ab zeitalter 11 hat man zukunftswaffen, aber 13 auch automatische abwehrtürme
     {
         var liste = ["Zufall1","Zufall2","Zufall3","Zufall4"];
-        var imonster = liste[RandomX(0,3)]; // zufall1 oder zufall2, relativ leichte monster. zusätzlich zufall3, Clonks, ritter und magier. Und zufall4 Aliens
-        var ikeinflug = 0;   
+        var imonster = liste[(RandomX(nil,3) ?? 0)]; // zufall1 oder zufall2, relativ leichte monster. zusätzlich zufall3, Clonks, ritter und magier. Und zufall4 Aliens
+        var ikeinflug = nil;
         var ierledigen=RandomX(2,8);  // wieviele Feinde erledigt werden muessen
         var iaufeinmal=RandomX(5,10); // wieviele monster aufeinmal da sind (wenn eins getötet, kommt ein neues) 
     }
-    if(Age>=13)  // ab zeitalter 11 hat man zukunftswaffen, aber 13 auch automatische abwehrtürme
+    if((Age ?? 0)>=13)  // ab zeitalter 11 hat man zukunftswaffen, aber 13 auch automatische abwehrtürme
     {
         var imonster = "Zufall";  // Alles, auch Hazardclonks, assasine und kleine raumschiffe möglich
-        var ikeinflug = 0;  
+        var ikeinflug = nil;
         var ierledigen=RandomX(2,10);  // wieviele Feinde erledigt werden muessen
         var iaufeinmal=RandomX(5,12); // wieviele monster aufeinmal da sind (wenn eins getötet, kommt ein neues) 
     }
@@ -228,14 +228,14 @@ func Monsterereignis()
 func Katastrophenereignis()
 {
     Log("Eine Katastrophe");
-    var Age = 0;
-    for(var i = 0; i < GetPlayerCount(); i++)
+    var Age = nil;
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
     {
         Age = Max(Age, gPlayerAge(GetPlayerByIndex(i))); // das hoechste Zeitalter aller spieler rausfinden
     }
-    if(Age<=5)  KKatastrophen("Zufall", RandomX(1,5),RandomX(400,1200),1); // globale funktion im Globale Ereignisse Skript
-    else if(Age>5 && Age<=12) KKatastrophen("Zufall", RandomX(2,8),RandomX(500,1500),1);
-    else if(Age>12) KKatastrophen("Zufall", RandomX(4,10),RandomX(800,2000),1);
+    if((Age ?? 0)<=5)  KKatastrophen("Zufall", RandomX(1,5),RandomX(400,1200),1); // globale funktion im Globale Ereignisse Skript
+    else if(And((Age ?? 0)>5, (Age ?? 0)<=12)) KKatastrophen("Zufall", RandomX(2,8),RandomX(500,1500),1);
+    else if((Age ?? 0)>12) KKatastrophen("Zufall", RandomX(4,10),RandomX(800,2000),1);
     return;
 }
 

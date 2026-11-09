@@ -1,6 +1,6 @@
 /* Marke */
 
-#strict
+#strict 3
 
 local time;
 
@@ -12,9 +12,9 @@ func Initialize()
 
 func Disappear()
 {
-  time ++;
+  S42MigrationStep(time , 1, true);
 
-  if (time >= 15)
+  if ((time ?? 0) >= 15)
   {
     RemoveObject();
     return;

@@ -1,11 +1,14 @@
 /*--Sound fade out --*/
 
-#strict
+#strict 3
 
-protected Initialize:
+protected func Initialize(...) {
 	SetAction("FADE_OUT");
 	return(1);
-protected fade_out:
-	SetPosition(GetX(),GetY()-Random(2));
+}
+protected func fade_out(...) {
+	SetPosition(GetX(),(GetY() ?? 0)-(Random(2) ?? 0));
 	return(1);
-nicht_markieren: return(1);
+}
+func nicht_markieren(...) { return(1);
+}

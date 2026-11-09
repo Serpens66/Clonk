@@ -1,6 +1,6 @@
 /*-- Slide Door --*/
 
-#strict
+#strict 3
 
 #include GBDR
 
@@ -10,7 +10,7 @@ public func CanBeLaserRecycled() { return(2); }
 
 public func Initialize() 
 {
-	pathfree = false;
+	pathfree = nil;
 	SetAction("Closed");
 	_inherited();
 	SetMaxDamage(300);
@@ -18,27 +18,29 @@ public func Initialize()
 
 public func OnDmg(int iDmg, int iType) {
 	// diese Tür ist besonders dick
-	if(iType == DMG_Projectile)	return(60);
-	if(iType == DMG_Melee)	return(80);
-	if(iType == DMG_Energy)	return(30);
-	if(iType == DMG_Explosion)	return(0);
+	iDmg ??= 0;
+	iType ??= 0;
+	if(Equal(iType, DMG_Projectile))	return(60);
+	if(Equal(iType, DMG_Melee))	return(80);
+	if(Equal(iType, DMG_Energy))	return(30);
+	if(Equal(iType, DMG_Explosion))	return(nil);
 
 	return(100);
 }
 
 public func OnOpen()
 {
-	if(GetAction() eq "Open" || GetAction() eq "Opened") return();
+	if(Or(!!SEqual(GetAction(), "Open"), !!SEqual(GetAction(), "Opened"))) return;
 	SetAction("Open");
 	Sound("SlideSteeldoorOpen");
 }
 
 public func OnClose()
 {
-	if(GetAction() eq "Closed" || GetAction() eq "Close") return();
+	if(Or(!!SEqual(GetAction(), "Closed"), !!SEqual(GetAction(), "Close"))) return;
 	SetAction("Close");
 	Sound("SlideSteeldoorClose");
-	SetSolidMask(140, 0, 4, 30, 7, 0);
+	SetSolidMask(140, nil, 4, 30, 7, nil);
 }
 
 public func SetPathFree()
@@ -50,7 +52,7 @@ public func SetPathFree()
 public func OnDestroyed(iType)
 {
     //Kleinen Explosionseffekt
-    CreateObject(TIM1, 0,0, -1)->Explode(20);
+    CreateObject(TIM1, nil,nil, -1)->Explode(20);
     SetAction("Destroyed");
 }
 
@@ -60,7 +62,7 @@ public func Serialize(array& extra)
 {
 	_inherited(extra);
 	if (destroyed)
-		extra[GetLength(extra)] = "SetAction(\"Destroyed\")";
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Destroyed\")";
 	if (pathfree)
-		extra[GetLength(extra)] = "SetPathFree()";
+		extra[(GetLength(extra) ?? 0)] = "SetPathFree()";
 }

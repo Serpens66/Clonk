@@ -1,6 +1,6 @@
 /*-- Sensor-Functions --*/
 
-#strict
+#strict 3
 
 //Variablen
 local targets;
@@ -24,7 +24,7 @@ var hp;
 var schaden;
 hp = GetDefCoreVal("BlastIncinerate","DefCore");
 schaden = GetDamage();
-if (schaden >= hp) {Incinerate();};
+if ((schaden ?? 0) >= (hp ?? 0)) {Incinerate();};
 _inherited(a,b,c,d,e,f,g);
 }
 
@@ -37,8 +37,8 @@ func Initialize()
   action_trigger_masks=CreateArray();
   last_targets=CreateArray();
   state_desc = CreateArray();
-  state_selection = 0;
-  state = 0;
+  state_selection = nil;
+  state = nil;
   SetAction("Idle");
   return(1);
 }
@@ -47,7 +47,7 @@ func Initialize()
 public func Activate(pCaller)
 {
     if(Hostile (GetOwner(pCaller),GetOwner()))
-      return(Sound ("CommandFailure1",false,pCaller,100,GetOwner(pCaller),0)); 
+      return(Sound ("CommandFailure1",nil,pCaller,100,GetOwner(pCaller),nil));
 
     pUser = pCaller;
     Setup();
@@ -60,21 +60,21 @@ public func ControlDigDouble(pCaller)
 
 func Setup()
 {
-    CreateMenu (GetID(),pUser,0,0,0,0,1,1);
-    AddMenuItem ("$ADD_TARGET$","addtarget",GetID(),pUser,0,0,"$ADD_TARGET_DESC$");
-    AddMenuItem ("$DEL_TARGET$","deltarget",GetID(),pUser,0,0,"$DEL_TARGET_DESC$");
+    CreateMenu (GetID(),pUser,nil,nil,nil,nil,1,1);
+    AddMenuItem ("$ADD_TARGET$","addtarget",GetID(),pUser,nil,nil,"$ADD_TARGET_DESC$");
+    AddMenuItem ("$DEL_TARGET$","deltarget",GetID(),pUser,nil,nil,"$DEL_TARGET_DESC$");
 
-    if((GetAction() eq "Wall") || (GetAction() eq "Attach"))
-      AddMenuItem ("$DETACH$","detach",GetID(),pUser,0,0,"$DETACH_DESC$");
+    if(Or((!!SEqual(GetAction(), "Wall")), (!!SEqual(GetAction(), "Attach"))))
+      AddMenuItem ("$DETACH$","detach",GetID(),pUser,nil,nil,"$DETACH_DESC$");
     else
     {
-      if((!GBackLiquid()) && (GetMaterial() != Material ("Sky")))
-        AddMenuItem ("$ATTACH_WALL$","attach2wall",GetID(),pUser,0,0,"$ATTACH_WALL_DESC$");
+      if(And((!GBackLiquid()), (!Equal(GetMaterial(), Material ("Sky")))))
+        AddMenuItem ("$ATTACH_WALL$","attach2wall",GetID(),pUser,nil,nil,"$ATTACH_WALL_DESC$");
 
 
 
-      if((!GBackLiquid()) && (GetMaterial() == Material ("Sky")))
-       AddMenuItem ("$ATTACH_SKY$","attach2sky",GetID(),pUser,0,0,"$ATTACH_SKY_DESC$");
+      if(And((!GBackLiquid()), (Equal(GetMaterial(), Material ("Sky")))))
+       AddMenuItem ("$ATTACH_SKY$","attach2sky",GetID(),pUser,nil,nil,"$ATTACH_SKY_DESC$");
 
 
 // deaktiviert, weil das oft für Probleme sorgt
@@ -82,17 +82,17 @@ func Setup()
 //      if (GetLength(objects))
 //      AddMenuItem ("$ATTACH_OBJECT$","Attach2Object",GetID(),pUser,0,0,"$ATTACH_OBJECT_DESC$");
     }
-    ExtraSetup(0,pUser);
+    ExtraSetup(nil,pUser);
 }
 
 func deltarget()
 {
-    CreateMenu (GetID(),pUser,0,0,0,0,1,0);
-    var i = 0;
+    CreateMenu (GetID(),pUser,nil,nil,nil,nil,1,nil);
+    var i = nil;
     for(var obj in targets)
     {
-      AddMenuItem (GetName(obj),"deltarget2",GetID(obj),pUser,0,i,"$DEL_TARGET_DESC$");
-      i++;
+      AddMenuItem (GetName(obj),"deltarget2",GetID(obj),pUser,nil,i,"$DEL_TARGET_DESC$");
+      S42MigrationStep(i, 1, true);
     }
 }
 
@@ -108,23 +108,23 @@ func addtarget()
 {
     last_targets = FindObjects (Find_Or (Find_Func ("GetTriggerName"),Find_Func ("ConsoleControl")),Find_Distance(40));
     if(!last_targets)
-        return 0;
-    CreateMenu (GetID(),pUser,0,0,0,0,1,0);
-    for(var i = 0;i < 
-GetLength(last_targets);
-i++)
+        return nil;
+    CreateMenu (GetID(),pUser,nil,nil,nil,nil,1,nil);
+    for(var i = nil;(i ?? 0) <
+(GetLength(last_targets) ?? 0);
+S42MigrationStep(i, 1, true))
     {
-      if (!Hostile(last_targets[i]->GetOwner(), GetOwner()))
-        AddMenuItem (GetName(last_targets[i]),Format("SetTriggerAction(%d)",i),GetID(last_targets[i]),pUser,0,0);
+      if (!Hostile(last_targets[(i ?? 0)]->GetOwner(), GetOwner()))
+        AddMenuItem (GetName(last_targets[(i ?? 0)]),Format("SetTriggerAction(%d)",i),GetID(last_targets[(i ?? 0)]),pUser,nil,nil);
     }
 }
 
 func FindAttachTarget()
 {
-  var obj=0;
-  CreateMenu(GetID(),Par(1),0,0,"$ATTACH$",0,1,0);
-  while(obj=FindObject(0,-15,-80,30,90,0,0,0,NoContainer(),obj))
-    AddMenuItem(Format("%s",GetName(obj)),"Toolit",GetID(obj),Par(1),0,obj,0,0,0,0);
+  var obj=nil;
+  CreateMenu(GetID(),Par(1),nil,nil,"$ATTACH$",nil,1,nil);
+  while(obj=FindObject(nil,-15,-80,30,90,nil,nil,nil,NoContainer(),obj))
+    AddMenuItem(Format("%s",GetName(obj)),"Toolit",GetID(obj),Par(1),nil,obj,nil,nil,nil,nil);
 }
 
 func Attach(pTarget)
@@ -135,12 +135,12 @@ func Attach(pTarget)
 
 func SetTriggerAction(a)
 {
-    CreateMenu (GetID(),pUser,0,0,0,0,1,0);
+    CreateMenu (GetID(),pUser,nil,nil,nil,nil,1,nil);
     var i = 1;
-    while(GetType (TargetTriggerName(last_targets[a],i)) == C4V_String)
+    while(Equal(GetType (TargetTriggerName(last_targets[(a ?? 0)],i)), C4V_String))
     {
-        AddMenuItem (TargetTriggerName(last_targets[a],i),Format("SetTriggerState(%d,%d,0)",a,i),RSR1,pUser,0,0);
-        i++;
+        AddMenuItem (TargetTriggerName(last_targets[(a ?? 0)],i),Format("SetTriggerState(%d,%d,0)",a,i),RSR1,pUser,nil,nil);
+        S42MigrationStep(i, 1, true);
     }
 }
 
@@ -159,64 +159,64 @@ func TargetTriggerName(pTarget,iTrigger)
 
 func SetTriggerState(a,b,c)
 {
-    var active = 0;
+    var active = nil;
     var selection = c;
-    var state_pos = 0;
-    CreateMenu (GetID(),pUser,0,0,0,0,1,0);
-    for(var i = 0;i<GetLength(state_desc);i++)
+    var state_pos = nil;
+    CreateMenu (GetID(),pUser,nil,nil,nil,nil,1,nil);
+    for(var i = nil;(i ?? 0)<(GetLength(state_desc) ?? 0);S42MigrationStep(i, 1, true))
     {
 	state_pos = i;
         active = GetState(state_selection,i);
-	AddMenuItem (state_desc[i],Format("SwitchState(%d,%d,%d)",a,b,i),SENS,pUser,0,0,"",2,active);
-	active = 0;
+	AddMenuItem (state_desc[(i ?? 0)],Format("SwitchState(%d,%d,%d)",a,b,i),SENS,pUser,nil,nil,"",2,active);
+	active = nil;
     }
-    AddMenuItem ("$FINISHED$",Format("AddTarget2(%d,%d,%d)",a,b,state_selection),GetID(),pUser,0,0);
+    AddMenuItem ("$FINISHED$",Format("AddTarget2(%d,%d,%d)",a,b,state_selection),GetID(),pUser,nil,nil);
     SelectMenuItem (selection,pUser);
 }
 
 func SwitchState(a,b,c)
 {
-	if(GetState(state_selection,c)==0)
+	if(Equal(GetState(state_selection,c), nil))
 		SetState(state_selection,c,1);
 	else
 	{
-		if(GetState(state_selection,c)==1)
+		if(Equal(GetState(state_selection,c), 1))
 			SetState(state_selection,c,2);
 		else
 		{
-			if(GetState(state_selection,c)==2)
-				SetState(state_selection,c,0);
+			if(Equal(GetState(state_selection,c), 2))
+				SetState(state_selection,c,nil);
 		}
 	}
 	SetTriggerState(a,b,c);
 }
 
-func ExtraSetup(){return(0);}
-func ExtraMenu(){return(0);}
-func GetAdditionalInfo(){return(0);}
+func ExtraSetup(){return(nil);}
+func ExtraMenu(){return(nil);}
+func GetAdditionalInfo(){return(nil);}
 
 //Bit-Funktionen
 func GetBit(&bitmap,bitpos)
 {
-    var bit = 1 << bitpos;
-    if(bitmap & bit)
+    var bit = 1 << (bitpos ?? 0);
+    if((bitmap ?? 0) & (bit ?? 0))
         return true;
-    return false;
+    return nil;
 }
 
 func SetBit(&bitmap,bitpos,value)
 {
-    var bit = 1 << bitpos;
-    if(value == 1)
-    	bitmap = bitmap | bit;
+    var bit = 1 << (bitpos ?? 0);
+    if(Equal(value, 1))
+        bitmap = (bitmap ?? 0) | (bit ?? 0);
     else
-    	bitmap = bitmap & ~ bit;
+        bitmap = (bitmap ?? 0) & ~ (bit ?? 0);
 }
 
 func SwitchBit(&bitmap,bitpos)
 {
-    var bit = 1 << bitpos;
-    bitmap = bitmap ^ bit; 
+    var bit = 1 << (bitpos ?? 0);
+    bitmap = (bitmap ?? 0) ^ (bit ?? 0);
 }
 
 //Trigger-Mask
@@ -227,33 +227,33 @@ func AddState(desc)
 
 func SetState(&bitmap,action_id,value)
 {
-	if(value == 0)
+	if(Equal(value, nil))
 	{
-		SetBit(bitmap,action_id*2,0);
-		SetBit(bitmap,action_id*2+1,0);
-		return(0);
+		SetBit(bitmap,(action_id ?? 0)*2,nil);
+		SetBit(bitmap,(action_id ?? 0)*2+1,nil);
+		return(nil);
 	}
-	if(value == 1)
+	if(Equal(value, 1))
 	{
-		SetBit(bitmap,action_id*2,1);
-		SetBit(bitmap,action_id*2+1,0);
+		SetBit(bitmap,(action_id ?? 0)*2,1);
+		SetBit(bitmap,(action_id ?? 0)*2+1,nil);
 		return(1);
 	}
 	else
 	{
-		SetBit(bitmap,action_id*2,0);
-		SetBit(bitmap,action_id*2+1,1);
+		SetBit(bitmap,(action_id ?? 0)*2,nil);
+		SetBit(bitmap,(action_id ?? 0)*2+1,1);
 		return(2);
 	}
 }
 
 func GetState(&bitmap,action_id)
 {
-	if(GetBit(bitmap,action_id*2)==1)
+	if(Equal(GetBit(bitmap,(action_id ?? 0)*2), 1))
 		return(1);
-	if(GetBit(bitmap,action_id*2+1)==1)
+	if(Equal(GetBit(bitmap,(action_id ?? 0)*2+1), 1))
 		return(2);
-	return(0);
+	return(nil);
 }
 
 //Target-Array
@@ -266,31 +266,31 @@ func AddTarget(target,trigger,mask)
 
 func AddTarget2(target,trigger,mask)
 {
-    AddTarget(last_targets[target],trigger,mask);
-    state_selection = 0;
+    AddTarget(last_targets[(target ?? 0)],trigger,mask);
+    state_selection = nil;
     ExtraMenu();
 }
 
 private func AddToArray(&a, add)
 {
-  a[GetLength(a)] = add;
+  a[(GetLength(a) ?? 0)] = add;
 }
 
 func ResetArray(&a)
 {
-    SetLength(a,0);
+    SetLength(a,nil);
     a = CreateArray();
 }
 
 //Triggering
 func TriggerActions()
 {
-    for(var i = 0;i < GetLength(targets);i++)
+    for(var i = nil;(i ?? 0) < (GetLength(targets) ?? 0);S42MigrationStep(i, 1, true))
     {
-	if(state & action_trigger_masks[i])
+	if((state ?? 0) & (action_trigger_masks[(i ?? 0)] ?? 0))
 	{
-		if(targets[i])
-            		TriggerTarget(targets[i],action_ids[i]);
+		if(targets[(i ?? 0)])
+                        TriggerTarget(targets[(i ?? 0)],action_ids[(i ?? 0)]);
 	}
     }
 }
@@ -307,13 +307,14 @@ func TriggerTarget(pTarget,iTrigger)
 //Löscht ein Item aus einem Array
 global func DeleteArrayItem(int iNumber,&aArray)
 {
+ iNumber ??= 0;
  var temp=[];
- for(var cnt;cnt<GetLength(aArray);cnt++)
+ for(var cnt;(cnt ?? 0)<(GetLength(aArray) ?? 0);S42MigrationStep(cnt, 1, true))
  {
-  if(cnt==iNumber)continue;
-  var dif=0;
-  if(cnt>iNumber)dif=-1;
-  temp[cnt+dif]=aArray[cnt];
+  if(Equal(cnt, iNumber))continue;
+  var dif=nil;
+  if((cnt ?? 0)>(iNumber ?? 0))dif=-1;
+  temp[(cnt ?? 0)+(dif ?? 0)]=aArray[(cnt ?? 0)];
  } 
  
  aArray=temp;
@@ -324,9 +325,9 @@ global func DeleteArrayItem(int iNumber,&aArray)
 global func GetArrayItemPosition(value,aArray)
 {
  var number=-1;
- for(var cnt=0;cnt<GetLength(aArray);cnt++)
+ for(var cnt=nil;(cnt ?? 0)<(GetLength(aArray) ?? 0);S42MigrationStep(cnt, 1, true))
  {
-  if(aArray[cnt] == value)
+  if(Equal(aArray[(cnt ?? 0)], value))
   {
    number=cnt;
    break;
@@ -342,10 +343,10 @@ global func GetArrayItemPosition(value,aArray)
 func attach2wall()
 {
   if(GBackLiquid())
-    return(0);
+    return(nil);
 
-  if(GetMaterial() == Material ("Sky"))
-    return(0);
+  if(Equal(GetMaterial(), Material ("Sky")))
+    return(nil);
 
   SetAction("Wall");
 
@@ -367,10 +368,10 @@ func attach2wall()
 func attach2sky()
 {
   if(GBackLiquid())
-    return(0);
+    return(nil);
 
-  if(GetMaterial() == Material ("Earth"))
-    return(0);
+  if(Equal(GetMaterial(), Material ("Earth")))
+    return(nil);
 
   SetAction("Wall");
 
@@ -392,9 +393,9 @@ func attach2sky()
 public func Attach2Object()
 {
   
-  var objects = FindObjects(Find_AtPoint(), Find_Category(C4D_Vehicle | C4D_Structure));
+  var objects = FindObjects(Find_AtPoint(), Find_Category((C4D_Vehicle ?? 0) | (C4D_Structure ?? 0)));
   if (!GetLength(objects))
-    return 0;
+    return nil;
   var pTarget = objects[0];
 
   if(Contained())
@@ -404,19 +405,19 @@ public func Attach2Object()
     SetPosition(GetX(obj),GetY(obj));
   } 
 
-  var vertex = AddVertex (GetX()-GetX(pTarget),GetY()-GetY(pTarget));
-  SetVertex (vertex,3,0,0,2);//Absichern
+  var vertex = AddVertex ((GetX() ?? 0)-(GetX(pTarget) ?? 0),(GetY() ?? 0)-(GetY(pTarget) ?? 0));
+  SetVertex (vertex,3,nil,nil,2);//Absichern
   SetAction ("Attach",pTarget);
-  SetActionData(256*vertex + 1);//kompliziertes Zeugs
+  SetActionData(256*(vertex ?? 0) + 1);//kompliziertes Zeugs
 
   Setup();
 }
 
 func RejectEntrance()
 {
-  if(GetAction() ne "Wall")
-    if(GetAction() ne "Attach")
-      return(0);
+  if(!SEqual(GetAction(), "Wall"))
+    if(!SEqual(GetAction(), "Attach"))
+      return(nil);
   return(1);
 }
 

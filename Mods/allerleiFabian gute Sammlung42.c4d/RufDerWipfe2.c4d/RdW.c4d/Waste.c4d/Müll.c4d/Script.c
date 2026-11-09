@@ -1,6 +1,6 @@
 /*-- Schlacke - Müllgrundobjekt --*/
 
-#strict
+#strict 3
 
 // Eher Unschädlich für die Natur
 public func IsWaste(){ return(6);}
@@ -8,7 +8,7 @@ public func PackTo() { return(_SKA);}
 
 public func Initialize()
 {
-    if(FindObject(NOWS)) {RemoveObject();return();} // kein Müll, dann sofort wieder entfernen
+    if(FindObject(NOWS)) {RemoveObject();return;} // kein Müll, dann sofort wieder entfernen
 }
 
 public func Hit()
@@ -21,10 +21,10 @@ public func Hit()
 public func Entrance(pClonk)
 {
   // Nicht im Müllpacket selber
-  if(GetID(pClonk) == PackTo()) return();
+  if(Equal(GetID(pClonk), PackTo())) return;
 
   // Nicht wenn unterdrückt
-  if(GetEffect("IntNoPacking", pClonk)) return();
+  if(GetEffect("IntNoPacking", pClonk)) return;
 
   // Zu einem Pack dazufügen
   return(Pack(pClonk));
@@ -53,14 +53,14 @@ public func Pack(pClonk)
 public func JoinPack(pClonk,fForce)
 {
   // Nicht wenn unterdrückt
-  if(GetEffect("IntNoPacking", pClonk)) return();
-  if(GetEffect("IntArrowVanish", this())) return();
+  if(GetEffect("IntNoPacking", pClonk)) return;
+  if(GetEffect("IntArrowVanish", this())) return;
 
   // Müllpakete im Clonk suchen
   for(var obj in FindObjects(Find_Container(pClonk), Find_ID(PackTo())))
   {
     // Noch Platz?
-    if( obj->MaxPackCount() > obj->PackCount() )
+    if( (obj->MaxPackCount() ?? 0) > (obj->PackCount() ?? 0) )
     {
       // Integrieren
       obj->DoPackCount(1);
@@ -68,7 +68,7 @@ public func JoinPack(pClonk,fForce)
     }
   }
   // Nur bei passendem Flag Aufnahme erzwingen
-  if(!fForce) return();
+  if(!fForce) return;
   // Neues Pack anfangen
   CreateContents(PackTo(), pClonk)->SetPackCount(1);
   return(RemoveObject());

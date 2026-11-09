@@ -1,6 +1,6 @@
 /*-- Elevator Lock --*/
 
-#strict
+#strict 3
 #appendto ELEC // Fahrstuhl, Bunkerfahrstuhl und Transportfahrtuhl
 // #appendto ELC2 // Seilbahnkorb, fkt so nicht, muss in skript selbst gemacht werden
 #appendto ELE_ // Metallfahrstuhl
@@ -12,7 +12,7 @@ public func DoElevatorLock(pObj) {
   Sound("Click");
   
   if(!bLock) {Message("$TxtElevatorLockOn$",this()); this()->Halt(); return(bLock=1);}
-  if( bLock) {Message("$TxtElevatorLockOff$",this()); return(bLock=0);}
+  if( bLock) {Message("$TxtElevatorLockOff$",this()); return(bLock=nil);}
 }
 
 public func ContextElevatorLockTurnOn(pObj) 
@@ -27,27 +27,27 @@ public func ContextElevatorLockTurnOff(pObj)
   DoElevatorLock(pObj);
 }
 
-public func IsNotInElevatorLock() {if(!FindObject(_ELL)) return(0); return(!bLock);}
-public func IsInElevatorLock() {if(!FindObject(_ELL)) return(0); return(bLock);}
+public func IsNotInElevatorLock() {if(!FindObject(_ELL)) return(nil); return(!bLock);}
+public func IsInElevatorLock() {if(!FindObject(_ELL)) return(nil); return(bLock);}
 
 private func MoveToWaitingClonk()
 {
   // Bremse an? 
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
 
   _inherited();            
 }
 
 public func ControlDig(pObj)
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlDigDouble(pObj)  
 {
   [$TxtDrillshaft$|Image=ECS1:2|Method=Classic|Condition=NoContext]
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   if(!GetPlrCoreJumpAndRunControl(GetController(pObj)))
     this()->DoControlDig(pObj);
 
@@ -56,42 +56,42 @@ public func ControlDigDouble(pObj)
 
 public func ControlDigReleased(pObj)
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlDownSingle(pObj) 
 { 
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlDown(pObj)
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlDownReleased(pObj)
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlUp(pObj)         
 { 
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 public func ControlUpReleased(pObj)
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }
 
 private func SelfMovement()
 {
-  if(bLock&&FindObject(_ELL)) return(0);
+  if(And(bLock, FindObject(_ELL))) return(nil);
   _inherited();
 }

@@ -1,6 +1,6 @@
 /*-- Verbrannter Geschützturm --*/
 
-#strict
+#strict 3
 
 local cannon;
 
@@ -8,9 +8,9 @@ local cannon;
 
 public func ReleaseCannon()
 {
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   cannon->ComStopDouble();
-  cannon = 0;
+  cannon = nil;
 }
 
 /* Destruction */

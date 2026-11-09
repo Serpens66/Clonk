@@ -1,6 +1,6 @@
 /*-- Zukunfts Wachturm --*/
 
-#strict
+#strict 3
 
 #include DOOR
 #include BOB1
@@ -16,20 +16,20 @@ protected func Initialize() {
   gate_right = CreateObject(GAFR, +15, +10, GetOwner());
   ObjectSetAction(gate_right, "GateRight", this());
   // Ausgang erzeugen
-  exit = CreateObject(CSTE, 0, -20, GetOwner());
+  exit = CreateObject(CSTE, nil, -20, GetOwner());
   exit->Activate(this(), true);
   // Transferzone setzen
   UpdateTransferZone();
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
-  manager->InitLight(0,-5,10);;
+  manager->InitLight(nil,-5,10);;
   return(1);
 }
 
 
 protected func Construction()
 {
-  basement = CreateObject(BS08,0,8,GetOwner());
+  basement = CreateObject(BS08,nil,8,GetOwner());
   return(1);
 }
 
@@ -64,33 +64,33 @@ Incineration(); _inherited();
 public func ContextGateLeft(caller) {
   [$TxtLeftgate$|Image=GAFL|Condition=IsFullCon]
   SetCommand(caller, "Grab", this());
-  AppendCommand(caller, "Call", this(), 0, 0, 0, 0, "ControlLeft");  
+  AppendCommand(caller, "Call", this(), nil, nil, nil, nil, "ControlLeft");
   return(1); 
 }
   
 public func ContextGateRight(caller) {
   [$TxtRightgate$|Image=GAFL|Condition=IsFullCon]
   SetCommand(caller, "Grab", this());
-  AppendCommand(caller, "Call", this(), 0, 0, 0, 0, "ControlRight");  
+  AppendCommand(caller, "Call", this(), nil, nil, nil, nil, "ControlRight");
   return(1);
 }
   
-private func IsFullCon() { return(GetCon() >= 100); }
+private func IsFullCon() { return((GetCon() ?? 0) >= 100); }
 
 /* Steuerung */
 
 protected func ControlLeft(caller) {
   [$TxtLeftgate$]
-  var gate = FindObject(0, 0, 0, 0, 0, 0, "GateLeft", this());
-  if (!gate) return(0);
+  var gate = FindObject(nil, nil, nil, nil, nil, nil, "GateLeft", this());
+  if (!gate) return(nil);
   gate->Activate();
   return(1);
 }
   
 protected func ControlRight(caller) {
   [$TxtRightgate$]
-  var gate = FindObject(0, 0, 0, 0, 0, 0, "GateRight", this());
-  if (!gate) return(0);
+  var gate = FindObject(nil, nil, nil, nil, nil, nil, "GateRight", this());
+  if (!gate) return(nil);
   gate->Activate();
   return(1);
 }
@@ -98,7 +98,7 @@ protected func ControlRight(caller) {
 /* Inhalt auf die Plattform versetzen */
 
 protected func DoorClosed() {
-  while (Contents()) Exit(Contents(), 0, -20, 0, 0);  
+  while (Contents()) Exit(Contents(), nil, -20, nil, nil);
 }
 
 /* Wenn der Turm mal runterfällt */
@@ -116,34 +116,38 @@ protected func UpdateTransferZone() {
 protected func ControlTransfer(object pObj, int tx, int ty)
 {
   // Aufstieg zur Plattform
-  if(Inside(tx - GetX(), -24, 24) && Inside(ty - GetY(), -50, -24) )
-    if(GetY(pObj) > GetY() - 24)
+  tx ??= 0;
+  ty ??= 0;
+  if(And(Inside((tx ?? 0) - (GetX() ?? 0), -24, 24), Inside((ty ?? 0) - (GetY() ?? 0), -50, -24)) )
+    if((GetY(pObj) ?? 0) > (GetY() ?? 0) - 24)
       return(HandleTransferPlatform(pObj, tx, ty) );
   
   // Abstieg von der Plattform    
-  if(Inside(GetX(pObj) - GetX(), -24, 24) && Inside(GetY(pObj) - GetY(), -50, -24) )
-    if(Inside(tx - GetX(), -24, 24) && Inside(ty - GetY(), -24, 32) )
+  if(And(Inside((GetX(pObj) ?? 0) - (GetX() ?? 0), -24, 24), Inside((GetY(pObj) ?? 0) - (GetY() ?? 0), -50, -24)) )
+    if(And(Inside((tx ?? 0) - (GetX() ?? 0), -24, 24), Inside((ty ?? 0) - (GetY() ?? 0), -24, 32)) )
       return(HandleTransferDescend(pObj, tx, ty) );
       
   // Ausgang rechts
-  if(Inside(tx - GetX(), 20, 28) && Inside(ty - GetY(), -24, 32) )
+  if(And(Inside((tx ?? 0) - (GetX() ?? 0), 20, 28), Inside((ty ?? 0) - (GetY() ?? 0), -24, 32)) )
     return(HandleTransferGateRight(pObj, tx, ty) );
   
   // Ausgang links
-  if(Inside(tx - GetX(), -28, 20) && Inside(ty - GetY(), -24, 32) )
+  if(And(Inside((tx ?? 0) - (GetX() ?? 0), -28, 20), Inside((ty ?? 0) - (GetY() ?? 0), -24, 32)) )
     return(HandleTransferGateLeft(pObj, tx, ty) );
 
-  return(0);
+  return(nil);
 }
 
 private func HandleTransferPlatform(object pObj, int tx, int ty)
 {
   // Clonk ist auf der Plattform: erledigt
-  if(Inside(GetX(pObj) - GetX(), -24, 24) && Inside(GetY(pObj) - GetY(), -40, -24) )
-    return(0);
+  tx ??= 0;
+  ty ??= 0;
+  if(And(Inside((GetX(pObj) ?? 0) - (GetX() ?? 0), -24, 24), Inside((GetY(pObj) ?? 0) - (GetY() ?? 0), -40, -24)) )
+    return(nil);
 
   // Clonk ist im Turm: warten
-  if(Contained(pObj) == this() )
+  if(Equal(Contained(pObj), this()) )
     return(1);
 
   // Clonk soll den Turm betreten
@@ -153,7 +157,9 @@ private func HandleTransferPlatform(object pObj, int tx, int ty)
 private func HandleTransferDescend(object pObj, int tx, int ty)
 {
   // Clonk ist im Turm: warten
-  if(Contained(pObj) == this() )
+  tx ??= 0;
+  ty ??= 0;
+  if(Equal(Contained(pObj), this()) )
     return(1);
   // Clonk in den Turm versetzen (geschummelt: Tastaturclonks können dies nicht :)
   Enter(this(),pObj);
@@ -164,22 +170,24 @@ private func HandleTransferDescend(object pObj, int tx, int ty)
 private func HandleTransferGateRight(object pObj, int tx, int ty)
 {
   // Tor suchen
-  if (!gate_right) return(0);
+  tx ??= 0;
+  ty ??= 0;
+  if (!gate_right) return(nil);
   
   // Tor ist offen: Turm loslassen
-  if(GetY(gate_right) - GetY() < 0)
-    if(GetAction(pObj) S= "Push" && GetActionTarget(0,pObj) == this() )
+  if((GetY(gate_right) ?? 0) - (GetY() ?? 0) < 0)
+    if(And(!!SEqual(GetAction(pObj), "Push"), Equal(GetActionTarget(nil,pObj), this())) )
       return(AddCommand(pObj, "UnGrab", this()) );
        
   // Tor ist offen: Erledigt
-  if(GetY(gate_right) - GetY() < 0) return(0);
+  if((GetY(gate_right) ?? 0) - (GetY() ?? 0) < 0) return(nil);
   
   // Clonk soll den Turm anfassen
-  if((GetAction(pObj) ne "Push") || (GetActionTarget(0, pObj) != this()) )
+  if(Or((!SEqual(GetAction(pObj), "Push")), (!Equal(GetActionTarget(nil, pObj), this()))) )
     return(AddCommand(pObj, "Grab", this()) );
     
   // Tor bewegt sich: warten
-  if (GetComDir(gate_right) == COMD_Up()) return(1);
+  if (Equal(GetComDir(gate_right), COMD_Up)) return(1);
 
   // Tor öffnen
   return(ControlRight(pObj));
@@ -188,22 +196,24 @@ private func HandleTransferGateRight(object pObj, int tx, int ty)
 private func HandleTransferGateLeft(object pObj, int tx, int ty)
 {
   // Tor suchen
-  if (!gate_left) return(0);
+  tx ??= 0;
+  ty ??= 0;
+  if (!gate_left) return(nil);
  
   // Tor ist offen: Turm loslassen
-  if(GetY(gate_left) - GetY() < 0)
-    if(GetAction(pObj) S= "Push" && GetActionTarget(0, pObj) == this() )
+  if((GetY(gate_left) ?? 0) - (GetY() ?? 0) < 0)
+    if(And(!!SEqual(GetAction(pObj), "Push"), Equal(GetActionTarget(nil, pObj), this())) )
       return(AddCommand(pObj, "UnGrab", this()) );
       
   // Tor ist offen: Erledigt
-  if(GetY(gate_left) - GetY() < 0) return(0);
+  if((GetY(gate_left) ?? 0) - (GetY() ?? 0) < 0) return(nil);
   
   // Clonk soll den Turm anfassen
-  if( (GetAction(pObj) ne "Push") || (GetActionTarget(0, pObj) != this()) )
+  if( Or((!SEqual(GetAction(pObj), "Push")), (!Equal(GetActionTarget(nil, pObj), this()))) )
     return(AddCommand(pObj, "Grab", this()) );
   
   // Tor bewegt sich: warten
-  if(GetComDir(gate_left) == COMD_Up() ) return(1);
+  if(Equal(GetComDir(gate_left), COMD_Up) ) return(1);
   
   // Tor öffnen
   return(ControlLeft(pObj) );
@@ -218,4 +228,4 @@ public func NoLorryEjection(object lorry) { return true; }
 public func GetMaxDamage() { return(500); }
 public func InfoBarPos() { return(12); }
 public func InfoBarSize() { return(4); }
-private func NeedEnergy() { return(0); }
+private func NeedEnergy() { return(nil); }

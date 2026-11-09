@@ -1,6 +1,6 @@
 /*-- Living-Sensor --*/
 
-#strict
+#strict 3
 #include SENS
 
 local animal, feindlicherclonk, feindlichesfahrzeug,projektil,freundlichesfahrzeug, freundlicherclonk,zap;
@@ -21,10 +21,10 @@ local Mark_LO,Mark_LU,Mark_RO,Mark_RU;
 private func Markierungen()
 {
   // Linksoben,Linksunten,Rechtsoben,Rechtsunten eine Markierung erstellen
-  Mark_LO= CreateObject(FM9I,-distance,-distance);
-  Mark_LU= CreateObject(FM9I,-distance,+distance);
-  Mark_RO= CreateObject(FM9I,+distance,-distance);
-  Mark_RU= CreateObject(FM9I,+distance,+distance);
+  Mark_LO= CreateObject(FM9I,-(distance ?? 0),-(distance ?? 0));
+  Mark_LU= CreateObject(FM9I,-(distance ?? 0),+(distance ?? 0));
+  Mark_RO= CreateObject(FM9I,+(distance ?? 0),-(distance ?? 0));
+  Mark_RU= CreateObject(FM9I,+(distance ?? 0),+(distance ?? 0));
   Mark_LO-> Init(this(),1);
   Mark_LU-> Init(this(),2);
   Mark_RO-> Init(this(),3);
@@ -38,26 +38,26 @@ private func ExtraSetup(idItem,pClonk,iRepeat)
   Markierungen();
   if(!iRepeat)
     {
-    SetOwner(GetOwner(pClonk),Mark_LO); SetVisibility(VIS_Owner(),Mark_LO);
-    SetOwner(GetOwner(pClonk),Mark_LU); SetVisibility(VIS_Owner(),Mark_LU);
-    SetOwner(GetOwner(pClonk),Mark_RO); SetVisibility(VIS_Owner(),Mark_RO);
-    SetOwner(GetOwner(pClonk),Mark_RU); SetVisibility(VIS_Owner(),Mark_RU);
+    SetOwner(GetOwner(pClonk),Mark_LO); SetVisibility(VIS_Owner,Mark_LO);
+    SetOwner(GetOwner(pClonk),Mark_LU); SetVisibility(VIS_Owner,Mark_LU);
+    SetOwner(GetOwner(pClonk),Mark_RO); SetVisibility(VIS_Owner,Mark_RO);
+    SetOwner(GetOwner(pClonk),Mark_RU); SetVisibility(VIS_Owner,Mark_RU);
     }
   //CreateMenu(LS4K,pClonk);
-  AddMenuItem("Suchradius um 5 Meter erweitern","SetRadius",LMM3,pClonk,0,pClonk); 
-  AddMenuItem("Suchradius um 5 Meter verringern","SetRadius",LMM7,pClonk,0,pClonk);  
+  AddMenuItem("Suchradius um 5 Meter erweitern","SetRadius",LMM3,pClonk,nil,pClonk);
+  AddMenuItem("Suchradius um 5 Meter verringern","SetRadius",LMM7,pClonk,nil,pClonk);
 }
 
 private func SetRadius(idItem,pClonk)
 {  
   var iChange,iSMI;
-  if(idItem== LMM3) {iChange= (+5); iSMI= 3; }
-  if(idItem== LMM7) { iChange= (-5); iSMI= 4; }
-  distance= distance+ iChange;
+  if(Equal(idItem, LMM3)) {iChange= (+5); iSMI= 3; }
+  if(Equal(idItem, LMM7)) { iChange= (-5); iSMI= 4; }
+  distance= (distance ?? 0)+ (iChange ?? 0);
   if(!Inside(distance,10,500))
     {
-    if(distance> 500) distance= 500;
-    if(distance< 10) distance= 10;
+    if((distance ?? 0)> 500) distance= 500;
+    if((distance ?? 0)< 10) distance= 10;
     }
   else
     {
@@ -72,7 +72,7 @@ private func SetRadius(idItem,pClonk)
 
 protected func MenuQueryCancel()
 {
-  return(0,RemoveMarks());
+  return(S42MigrationFirst(nil,RemoveMarks()));
 }
 
 protected func Destruction(a,b,c)
@@ -93,9 +93,9 @@ private func RemoveMarks()
 
 func Suchradius(ID,zahl)
 {
-if(zahl==1 && distance<=490) {distance+=10; PlayerMessage(GetOwner(),Format("Radius beträgt nun %v Meter",distance),0);return(1);}
-if(zahl==2 && distance>=30) {distance-=10; PlayerMessage(GetOwner(),Format("Radius beträgt nun %v Meter",distance),0);return(1);}
-Sound("Error");PlayerMessage(GetOwner(),"Radius am Maximum/Minimum",0);return(1);
+if(And(Equal(zahl, 1), (distance ?? 0)<=490)) {S42MigrationAssign(distance, "+=", 10); PlayerMessage(GetOwner(),Format("Radius beträgt nun %v Meter",distance),nil);return(1);}
+if(And(Equal(zahl, 2), (distance ?? 0)>=30)) {S42MigrationAssign(distance, "-=", 10); PlayerMessage(GetOwner(),Format("Radius beträgt nun %v Meter",distance),nil);return(1);}
+Sound("Error");PlayerMessage(GetOwner(),"Radius am Maximum/Minimum",nil);return(1);
 }
 
 
@@ -157,16 +157,16 @@ func Timer()
 func Timer()
 {
 	Reset();
-        feindlicherclonk = GetTargetCrew(distance,0,0,1,1);
-        freundlicherclonk = GetTargetCrewAllied(distance,0,0,1,1);
-	animal = GetTargetAnimal(distance,0,0,1);
-        feindlichesfahrzeug = GetTargetVehicle(distance,0,0,1,1);
-        freundlichesfahrzeug = GetTargetVehicleAllied(distance,0,0,1,1);
-        projektil = GetTargetProjectile(distance,0,0,1);
-        zap = GetTargetZapGlobal(distance,0,0,1);
+        feindlicherclonk = GetTargetCrew(distance,nil,nil,1,1);
+        freundlicherclonk = GetTargetCrewAllied(distance,nil,nil,1,1);
+	animal = GetTargetAnimal(distance,nil,nil,1);
+        feindlichesfahrzeug = GetTargetVehicle(distance,nil,nil,1,1);
+        freundlichesfahrzeug = GetTargetVehicleAllied(distance,nil,nil,1,1);
+        projektil = GetTargetProjectile(distance,nil,nil,1);
+        zap = GetTargetZapGlobal(distance,nil,nil,1);
 
         if(feindlicherclonk) 
-        SetState(state,0,1); //Der Feind naht!
+        SetState(state,nil,1); //Der Feind naht!
 
 	if(freundlicherclonk)
         SetState(state,1,1);//Ein Freund!
@@ -197,7 +197,7 @@ func Timer()
 
 func Reset()//Hilfsfunktion für den Timer. -> alles nochmal neu suchen
 {
-	SetState(state,0,2);//Kein Feind!
+	SetState(state,nil,2);//Kein Feind!
 	SetState(state,1,2);//Kein Freund!
 	SetState(state,2,2);//Kein Tier!
 	SetState(state,3,2);//Kein FeindFahrzeug
@@ -218,5 +218,5 @@ if(feindlichesfahrzeug) return(feindlichesfahrzeug);
 if(freundlichesfahrzeug) return(freundlichesfahrzeug);
 if(projektil) return(projektil);
 if(zap) return(zap);
-return(0);
+return(nil);
 }

@@ -1,6 +1,6 @@
 /*-- Kleiner Hochofen --*/
 
-#strict
+#strict 3
 #include BAS2
 
 local pLight;
@@ -24,12 +24,12 @@ public func ControlDigDouble(pCaller)
 
 public func IsProducerOf(clonk, def) 
 {
-  return (def == ANML && GetCon() >= 100);
+  return (And(Equal(def, ANML), (GetCon() ?? 0) >= 100));
 }
 
 public func HowToProduce (clonk, def)
 {
-  AddCommand(clonk, "Wait", 0, 0, 0, 0, 0, 190);
+  AddCommand(clonk, "Wait", nil, nil, nil, nil, nil, 190);
   ProductionOrder(def, clonk);
 }
 
@@ -47,13 +47,13 @@ public func ProductionOrder(idProduct, pWorker)
 private func ProductionAcquireMaterial(idMat, iAmount, pWorker)
 {
   // Benötigte Menge ermitteln
-  var iNeededAmount = Max(iAmount - ContentsCount(idMat));
+  var iNeededAmount = Max((iAmount ?? 0) - (ContentsCount(idMat) ?? 0));
   // Der Arbeiter soll das Material beschaffen
-  AddCommand(pWorker,"Call",this(),0,0,0, 0, Format("CmdAcquire%i", idMat), 0, 3);
-  while (iNeededAmount--)
+  AddCommand(pWorker,"Call",this(),nil,nil,nil, nil, Format("CmdAcquire%i", idMat), nil, 3);
+  while (S42MigrationStep(iNeededAmount, -1, true))
   {
-    AddCommand(pWorker,"Put",this(),0,0,0, 0, idMat);
-    AddCommand(pWorker,"Acquire",0,0,0,this(), 0, idMat);
+    AddCommand(pWorker,"Put",this(),nil,nil,nil, nil, idMat);
+    AddCommand(pWorker,"Acquire",nil,nil,nil,this(), nil, idMat);
   }
   return(1);
 }
@@ -108,22 +108,22 @@ func Ejection(obj) // wenn etwas die Fackel verlässt
 
 protected func Burning()
 {
-  if(!pLight) {pLight=CreateObject(LGFL,0,0,-1);pLight->~Init(this,0,-6,300,RGB(75,60,10),true);}  // Licht, wenn burning
+  if(!pLight) {pLight=CreateObject(LGFL,nil,nil,-1);pLight->~Init(this,nil,-6,300,RGB(75,60,10),true);}  // Licht, wenn burning
   // Effekte
-  Smoke(0, 10, 6);
+  Smoke(nil, 10, 6);
   // Noch nicht fertig
-  if (GetActTime() < 150) return(1);
+  if ((GetActTime() ?? 0) < 150) return(1);
   // Aktion beenden
   SetAction("Idle");
   // Effekt
-  CastParticles("PxSpark",6,10,0,10,15,30,RGB(255,223,127),RGB(255,223,127));
+  CastParticles("PxSpark",6,10,nil,10,15,30,RGB(255,223,127),RGB(255,223,127));
   // Erz in Metall umwandeln
   var pOre;
   if (pOre = FindContents(ORE1))
   {
     RemoveObject(pOre);
-    Exit(CreateContents(ANML), -19,10,0, -1);
-    if (!Random(8))  Exit(CreateContents(SHLK), -19,10,0, -1);
+    Exit(CreateContents(ANML), -19,10,nil, -1);
+    if (!Random(8))  Exit(CreateContents(SHLK), -19,10,nil, -1);
   }
   Sound("Pshshsh");
   // Fertig
@@ -146,11 +146,11 @@ protected func ContentsCheck()
   if(pLight) {RemoveObject(pLight);}  // Licht weg, wenn idle
   // Unpassende Gegenstände auswerfen
   var i, pContents, idContents;
-  while (pContents = Contents(i++))
+  while (pContents = Contents(S42MigrationStep(i, 1, true)))
   {
     idContents = GetID(pContents);
-    if (idContents != COAL && idContents != OBRL && idContents != WOOD && idContents != ORE1)
-      Exit(pContents, -20,13,0, -1);
+    if (And(And(And(!Equal(idContents, COAL), !Equal(idContents, OBRL)), !Equal(idContents, WOOD)), !Equal(idContents, ORE1)))
+      Exit(pContents, -20,13,nil, -1);
   }
   // Ofen läuft schon?
   if (!ActIdle()) return(1);
@@ -158,7 +158,7 @@ protected func ContentsCheck()
   if (!FindContents(ORE1)) return(1);
   // Brennmaterial suchen
   var pBurnMat;
-  if (ContentsCount(WOOD) >= 2)
+  if ((ContentsCount(WOOD) ?? 0) >= 2)
   {
     RemoveObject(FindContents(WOOD));
     RemoveObject(FindContents(WOOD));
@@ -176,9 +176,9 @@ protected func ContentsCheck()
 public func HasFuel()
 {
   if (FindContents(COAL)) return(1);
-  if (ContentsCount(WOOD) >= 2) return(1);
+  if ((ContentsCount(WOOD) ?? 0) >= 2) return(1);
   if (FindContents(OBRL)) return(1);
-  return();
+  return;
 }
 
 

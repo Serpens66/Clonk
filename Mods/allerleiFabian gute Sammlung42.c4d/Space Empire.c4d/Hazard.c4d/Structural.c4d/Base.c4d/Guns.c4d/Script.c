@@ -1,6 +1,6 @@
 /*-- Geschützsteuerung --*/
 
-#strict
+#strict 3
 
 
 func IsConsoleTarget(){return(true);}
@@ -15,17 +15,18 @@ public func Initialize()
 
 public func ConsoleControl(int i)
 {
-  if(i == 1)
+  i ??= 0;
+  if(Equal(i, 1))
   {
 return("$TurnOff$");
   }
 
-if (i == 2)
+if (Equal(i, 2))
 {
 return("$TurnOn$");
 };
 
-if (i == 3)
+if (Equal(i, 3))
 {
 //if(armed) return("$Unarm$");
 //else 
@@ -41,17 +42,18 @@ if (i == 3)
 
 public func ConsoleControlled(int i)
 {
-    if(i == 1)
+    i ??= 0;
+    if(Equal(i, 1))
  { for(var gun in FindObjects(Find_ID(SEGU),Find_Owner(GetOwner()) ))
     gun->ConsoleControlled(1);}
 
-    if(i == 2)
+    if(Equal(i, 2))
  { 
 for(var gun in FindObjects(Find_ID(SEGU),Find_Owner(GetOwner()) ))
     {gun->ConsoleControlled(2);}
   }
 
-    if(i == 3)
+    if(Equal(i, 3))
  { 
 ChooseWeapon();
   }
@@ -60,16 +62,16 @@ ChooseWeapon();
 
 func ChooseWeapon()
 {
-CreateMenu (GetID(), GetCursor(GetOwner()), 0, 0, "wähle Waffe", 0,1, 0, 0);
+CreateMenu (GetID(), GetCursor(GetOwner()), nil, nil, "wähle Waffe", nil,1, nil, nil);
  
 if(!armed)
-AddMenuItem ("MG ausrüsten (300 C.)", "Arm", MGSA, GetCursor(GetOwner()), 0, 0, "Rüstet alle Geschütze mit einer MG aus, kostet 300 Clunker pro vorhandenes Geschütz. Nachladen kostet ebenfalls 300 Clunker"); 
+AddMenuItem ("MG ausrüsten (300 C.)", "Arm", MGSA, GetCursor(GetOwner()), nil, nil, "Rüstet alle Geschütze mit einer MG aus, kostet 300 Clunker pro vorhandenes Geschütz. Nachladen kostet ebenfalls 300 Clunker");
 
 if(!armed)
-AddMenuItem ("Railgun ausrüsten (300 C.)", "Arm", RGSA, GetCursor(GetOwner()), 0, 0, "Rüstet alle Geschütze mit einer Railgun aus, kostet 300 Clunker pro vorhandenes Geschütz. Nachladen kostet ebenfalls 300 Clunker"); 
+AddMenuItem ("Railgun ausrüsten (300 C.)", "Arm", RGSA, GetCursor(GetOwner()), nil, nil, "Rüstet alle Geschütze mit einer Railgun aus, kostet 300 Clunker pro vorhandenes Geschütz. Nachladen kostet ebenfalls 300 Clunker");
 
 if(armed)
-AddMenuItem ("Aktuelle Waffen entfernen", "UnArm", MGSA, GetCursor(GetOwner()), 0, 0, "Entfernt die aktuell gewählte Waffe, es gibt kein Geld zurück"); 
+AddMenuItem ("Aktuelle Waffen entfernen", "UnArm", MGSA, GetCursor(GetOwner()), nil, nil, "Entfernt die aktuell gewählte Waffe, es gibt kein Geld zurück");
 }
 
 func Arm(IDWeapon)
@@ -81,7 +83,7 @@ for(var gun in FindObjects(Find_ID(SEGU),Find_Owner(GetOwner()) ))
 func UnArm()
 {
 for(var gun in FindObjects(Find_ID(SEGU),Find_Owner(GetOwner()) ))
-    {gun->UnArm();armed=0;}
+    {gun->UnArm();armed=nil;}
 }
 
 
@@ -89,5 +91,5 @@ func CheckforSegu()
 {
 segu = FindObject2(Find_ID(SEGU),Find_Owner(GetOwner()));
 if (!segu) RemoveObject();
-return();
+return;
 }

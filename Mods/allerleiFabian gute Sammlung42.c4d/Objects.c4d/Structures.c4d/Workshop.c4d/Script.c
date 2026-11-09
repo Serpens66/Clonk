@@ -1,6 +1,6 @@
 /*-- Werkstatt --*/
 
-#strict
+#strict 3
 
 /* Stellt die Grundfunktionalität für Werkstätten zur Verfügung. */
 
@@ -32,9 +32,9 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1); // wenn initlight nicht aufgerufen wird, gibts kein licht
-  producer = CreateObject(C_F9,0,0,GetOwner()); 
+  producer = CreateObject(C_F9,nil,nil,GetOwner());
   producer->Init(this()); 
   return(1);
 }

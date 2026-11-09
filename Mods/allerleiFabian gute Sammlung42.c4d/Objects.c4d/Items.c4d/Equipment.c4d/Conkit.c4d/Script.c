@@ -1,6 +1,6 @@
 /*--- Bausatz ---*/
 
-#strict
+#strict 3
 
 
 local helper,clonksize;
@@ -9,23 +9,23 @@ public func Activate(pClonk)
 { 
   [$TxtCreateconstructionsi$]
   // Clonk anhalten
-  SetComDir(COMD_Stop(), pClonk);
+  SetComDir(COMD_Stop, pClonk);
   // Kann der Clonk überhaupt bauen?
-  if (pClonk && !GetPhysical("CanConstruct", PHYS_Current, pClonk))
-    { PlayerMessage(GetController(pClonk), "$TxtCantConstruct$", this, GetName(pClonk)); return false; }
+  if (And(pClonk, !GetPhysical("CanConstruct", PHYS_Current, pClonk)))
+    { PlayerMessage(GetController(pClonk), "$TxtCantConstruct$", this, GetName(pClonk)); return nil; }
   // Menü erzeugen und mit Bauplänen des Spielers füllen
   CreateMenu(CXCN, pClonk, this(), 1, "$TxtNoconstructionplansa$");
-  var idType; var i = 0;
+  var idType; var i = nil;
 
-  helper=CreateObject(A_CN,0,0,GetOwner(pClonk));
-  SetVisibility(VIS_Owner(),helper);
-  clonksize=GetDefCoreVal("Offset",0,GetID(pClonk),1);
+  helper=CreateObject(A_CN,nil,nil,GetOwner(pClonk));
+  SetVisibility(VIS_Owner,helper);
+  clonksize=GetDefCoreVal("Offset",nil,GetID(pClonk),1);
   var smec=CreateObject(SM3C);
   smec->Init(pClonk,this(), "ShowBuidling", 1);
 
-  while (idType = GetPlrKnowledge(GetOwner(pClonk), 0, i++, C4D_Structure()))
+  while (idType = GetPlrKnowledge(GetOwner(pClonk), nil, S42MigrationStep(i, 1, true), C4D_Structure))
     // Keine Trapper/Indianer Sachen mit Bausatz bauen. (Außer für Wachtürme/Palisaden, die es ausdrücklich zulassen)
-    if(idType->~IsConkitBuilding() || (!idType->~IsIndianHandcraft() && !idType->~IsTrapperHandcraft()))
+    if(Or(idType->~IsConkitBuilding(), (And(!idType->~IsIndianHandcraft(), !idType->~IsTrapperHandcraft()))))
     if (GetDefConstruction(idType))    // nur Gebäude mit Construction=1
       //AddMenuItem("$TxtConstructions$", "CreateConstructionSite", idType, pClonk);
 
@@ -33,15 +33,15 @@ public func Activate(pClonk)
        
       if(GetLength(hashSpielRegeln))  // baustellen kosten clunker?
         {
-            var ProdCostAnzeige = 0;
-              ProdCostAnzeige = (GetMass(0,idType)/10) * (HashGet(hashSpielRegeln, "Baustellenkosten")/100);  // standardkosten sind also die Masse des Gebäudes/10
+            var ProdCostAnzeige = nil;
+              ProdCostAnzeige = ((GetMass(nil,idType) ?? 0)/10) * ((HashGet(hashSpielRegeln, "Baustellenkosten") ?? 0)/100);  // standardkosten sind also die Masse des Gebäudes/10
             if (HashGet(hashSpielRegeln, "Baustellenkosten"))
-                AddMenuItem(Format("%d C. %s",ProdCostAnzeige,GetName(0,idType)), "CreateConstructionSite2", idType, pClonk,0,pClonk);
+                AddMenuItem(Format("%d C. %s",ProdCostAnzeige,GetName(nil,idType)), "CreateConstructionSite2", idType, pClonk,nil,pClonk);
             else
-                AddMenuItem("$TxtConstructions$", "CreateConstructionSite2", idType, pClonk,0,pClonk);
+                AddMenuItem("$TxtConstructions$", "CreateConstructionSite2", idType, pClonk,nil,pClonk);
         }
       else
-        AddMenuItem("$TxtConstructions$", "CreateConstructionSite2", idType, pClonk,0,pClonk);
+        AddMenuItem("$TxtConstructions$", "CreateConstructionSite2", idType, pClonk,nil,pClonk);
               
     smec->AddInfo(idType);
     }
@@ -57,11 +57,11 @@ protected func CreateConstructionSite2(idType,caller)
 }
 
 func ShowBuidling_Changed(selection,idinfo){
-SetGraphics(0,helper,idinfo,1,GFXOV_MODE_Base);
-SetPosition(GetX(),GetY()+GetDefCoreVal("Offset",0,idinfo,1)-clonksize,helper);
-Var(0)=GetX(); Var(1)=GetY();
-FindConstructionSite(idinfo,0,1); 
-if(GetX()==Var(0) || GetY()==Var(1))SetClrModulation(RGBa(100,250,100,70),helper,1);
+SetGraphics(nil,helper,idinfo,1,GFXOV_MODE_Base);
+SetPosition(GetX(),(GetY() ?? 0)+(GetDefCoreVal("Offset",nil,idinfo,1) ?? 0)-(clonksize ?? 0),helper);
+Var(nil)=GetX(); Var(1)=GetY();
+FindConstructionSite(idinfo,nil,1);
+if(Or(Equal(GetX(), Var(nil)), Equal(GetY(), Var(1))))SetClrModulation(RGBa(100,250,100,70),helper,1);
  else SetClrModulation(RGBa(250,100,100,70),helper,1);
 }
 
@@ -76,15 +76,15 @@ if(helper)RemoveObject(helper);
 protected func CreateConstructionSite(idType,caller) // wird durch appendto im EPIC teil überschrieben !!!
 {
   // Nur wenn der Clonk steht und sich im Freien befindet
-  if (GetAction(Contained()) ne "Walk") return(0);
-  if (Contained(Contained())) return(0);
+  if (!SEqual(GetAction(Contained()), "Walk")) return(nil);
+  if (Contained(Contained())) return(nil);
   // Pruefen, ob das Gebaeude hier gebaut werden kann
-  if (idType->~RejectConstruction(0, 10, Contained()) ) return(0);
+  if (idType->~RejectConstruction(nil, 10, Contained()) ) return(nil);
   // Besitzer setzen für CreateConstruction
   SetOwner(GetOwner(Contained()));
   // Baustelle erschaffen
   var pSite;
-  if (!(pSite = CreateConstruction(idType, 0, 10, GetOwner(Contained()), 1, 1,1))) return(0);
+  if (!(pSite = CreateConstruction(idType, nil, 10, GetOwner(Contained()), 1, 1,1))) return(nil);
   // Meldung
   Message("$TxtConstructions$", Contained(), GetName(pSite));
   // Bausatz verbrauchen

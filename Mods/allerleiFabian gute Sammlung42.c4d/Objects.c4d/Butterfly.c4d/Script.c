@@ -1,6 +1,6 @@
 /*-- Schmetterling --*/
 
-#strict
+#strict 3
 
 #include ANIM
 
@@ -11,32 +11,34 @@ private func MaxAnimalCount()       { return(10); }    // Maximale Tieranzahl im
 
 func IsBulletTarget() {return(1);}
 
-protected Initialize:
+protected func Initialize(...) {
   SetAction("Fly");
   MoveToTarget();
   return(1);
+}
   
 /* TimerCall */  
  
-private Activity:
-  if (!GetAlive()) return();
+private func Activity(...) {
+  if (!GetAlive()) return;
   // fortpflanzen
   if(!Random(500)) Reproduction();
   // Unterwasser
-  if (InLiquid()) return(SetComDir(COMD_Up()));
+  if (InLiquid()) return(SetComDir(COMD_Up));
   // Sitzt: warten
   if (SEqual(GetAction(),"Sit")) return(1);
   // Neues Ziel
   if (Or( Not(GetCommand()), Not(Random(5)) )) MoveToTarget();
   return(1);  
+}
   
 
 // Tiere Zählen
 private func CountMe()
 {
   var ReprodSize = ReproductionAreaSize();
-  var ReprodSizeHalb = ReprodSize  / -2;
-  return(ObjectCount(GetID(this()), ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive()));
+  var ReprodSizeHalb = (ReprodSize ?? 0)  / -2;
+  return(ObjectCount(GetID(this()), ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive));
 }
 
 /* Vermehrung */
@@ -44,15 +46,16 @@ private func CountMe()
 public func Reproduction(bool fRepr)
 {
   // Nicht mehr am Leben
-  if (!GetAlive()) return(0);
+  fRepr ??= false;
+  if (!GetAlive()) return(nil);
   // Noch nicht ausgewachsen
-  if (GetCon() < 100) return(0);
+  if ((GetCon() ?? 0) < 100) return(nil);
   // Schon zu viele Tiere dieser Art
-  if(!FindObject(REPR)) { if (CountMe() >= MaxAnimalCount()) return(0); }
-  else if(ObjectCount(GetID())+1 >= GetComponent(GetID(), 0, FindObject(REPR))) return(0);
+  if(!FindObject(REPR)) { if ((CountMe() ?? 0) >= (MaxAnimalCount() ?? 0)) return(nil); }
+  else if((ObjectCount(GetID()) ?? 0)+1 >= (GetComponent(GetID(), nil, FindObject(REPR)) ?? 0)) return(nil);
   // Reproduktion
     // Normale Reproduktion
-    var pChild = CreateConstruction(GetID(this()), 0, 0, -1, 40);
+    var pChild = CreateConstruction(GetID(this()), nil, nil, -1, 40);
     pChild->~Birth();
   // Erfolg
   return(1);
@@ -60,49 +63,56 @@ public func Reproduction(bool fRepr)
 
 /* Bewegung */
 
-private Flying:
+private func Flying(...) {
   // Richtung anpassen
-  if (GreaterThan(GetXDir())) SetDir(DIR_Right());
-  if (LessThan(GetXDir())) SetDir(DIR_Left());  
+  if (GreaterThan(GetXDir())) SetDir(DIR_Right);
+  if (LessThan(GetXDir())) SetDir(DIR_Left);
   // Aktion ändern
   if (Not(Random(3))) SetAction("Flutter");
   return(1);
+}
   
-private Fluttering:
+private func Fluttering(...) {
   // Richtung anpassen
-  if (GreaterThan(GetXDir())) SetDir(DIR_Right());
-  if (LessThan(GetXDir())) SetDir(DIR_Left());  
+  if (GreaterThan(GetXDir())) SetDir(DIR_Right);
+  if (LessThan(GetXDir())) SetDir(DIR_Left);
   // Aktion ändern
   if (Not(Random(7))) SetAction("Fly");
   return(1);
+}
   
   
 /* Kontakt */  
   
-protected ContactBottom:
+protected func ContactBottom(...) {
   SetCommand(this(),"None");
-  SetComDir(COMD_Up());
+  SetComDir(COMD_Up);
   return(1);  
+}
   
-SitDown:
-  SetXDir(0);
-  SetYDir(0);
-  SetComDir(COMD_Stop());
+func SitDown(...) {
+  SetXDir(nil);
+  SetYDir(nil);
+  SetComDir(COMD_Stop);
   SetAction("Sit");
-  SetCommand(0,"None");
+  SetCommand(nil,"None");
   return(1);  
+}
   
-TakeOff:
-  SetComDir(COMD_Up());
+func TakeOff(...) {
+  SetComDir(COMD_Up);
   return(1);  
+}
   
-private MoveToTarget:
-  SetVar(0,Random(LandscapeWidth()));
-  SetVar(1,Sum(Random(Sum(GetHorizonHeight(Var(0)),-60)),+30));
-  SetCommand(this(),"MoveTo",0,Var(0),Var(1));
+private func MoveToTarget(...) {
+  SetVar(nil,Random(LandscapeWidth()));
+  SetVar(1,Sum(Random(Sum(GetHorizonHeight(Var(nil)),-60)),+30));
+  SetCommand(this(),"MoveTo",nil,Var(nil),Var(1));
   return(1);
+}
   
-private GetHorizonHeight: // int iX
-  while (And( LessThan(Var(0),LandscapeHeight()), Not(GBackSemiSolid(Par(0),Var(0))) ))
-    SetVar(0,Sum(Var(0),+10));
-  return(Var(0));  
+private func GetHorizonHeight(...) { // int iX
+  while (And( LessThan(Var(nil),LandscapeHeight()), Not(GBackSemiSolid(Par(nil),Var(nil))) ))
+    SetVar(nil,Sum(Var(nil),+10));
+  return(Var(nil));
+}

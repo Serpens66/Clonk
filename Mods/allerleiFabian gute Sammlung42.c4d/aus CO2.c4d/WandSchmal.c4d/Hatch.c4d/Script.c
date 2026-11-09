@@ -1,6 +1,6 @@
 /*-- Bodenklappe --*/
 
-#strict
+#strict 3
 
 /*
  * Prueft, ob die Bodenklappe an der angegeben Stelle baubar ist
@@ -11,11 +11,13 @@
 private func CheckPlacement(int x, int y)
 {
   // Nur vor Burgteile
-  var castle = FindCastlePart(x, y - 10);
+  x ??= 0;
+  y ??= 0;
+  var castle = FindCastlePart(x, (y ?? 0) - 10);
   if(!castle) return("$ErrNoCastle$");
   
   // Nur vor Waende
-  if(GetID(castle) != BP5C && GetID(castle) != BW5C && GetID(castle) != B15C)
+  if(And(And(!Equal(GetID(castle), BP5C), !Equal(GetID(castle), BW5C)), !Equal(GetID(castle), B15C)))
     return("$ErrOnlyWall$");
   
   // Nur in Fundamente
@@ -33,16 +35,18 @@ private func CheckPlacement(int x, int y)
 
 public func RejectConstruction(int x, int y, object clonk)
 {
-  var err = CheckPlacement(GetX(clonk) + x, GetY(clonk) + y);
-  if(GetType(err) == C4V_String() )
+  x ??= 0;
+  y ??= 0;
+  var err = CheckPlacement((GetX(clonk) ?? 0) + (x ?? 0), (GetY(clonk) ?? 0) + (y ?? 0));
+  if(Equal(GetType(err), C4V_String) )
   {
     Message(err, clonk);
-    Sound("Error", 0, clonk);
+    Sound("Error", nil, clonk);
     return(1);
   }
   else
   {
-    return(0);
+    return(nil);
   }
 }
 
@@ -52,20 +56,20 @@ protected func Construction()
 {
   // Position pruefen
   var err = CheckPlacement(AbsX(GetX()), AbsY(GetY()) );
-  if(GetType(err) == C4V_String() ) return(RemoveObject() );
+  if(Equal(GetType(err), C4V_String) ) return(RemoveObject() );
   
   // Sofort vollstaendig aufbauen
   SetCon(100);
   
   // In die Mitte des Fundamentes setzen
-  SetPosition(GetX(err), GetY(err) - 8);
+  SetPosition(GetX(err), (GetY(err) ?? 0) - 8);
   
   // Fundament zum loch-fundament machen
   err->ChangeToHatch(this() );
   
   // Freigraben, davor aber Solidmask entfernen
   Open();
-  DigFreeRect(GetX()-8, GetY(), 16, 12);
+  DigFreeRect((GetX() ?? 0)-8, GetY(), 16, 12);
   Close();
 }
 
@@ -79,28 +83,28 @@ protected func Initialize()
 protected func ControlUp(clonk)
 {
   [$TxtOpen$]
-  if (GetAction() S= "Closed") SetAction("Opening");
+  if (!!SEqual(GetAction(), "Closed")) SetAction("Opening");
   ClearScheduleCall(this(), "DelayedClose");
 }
 
 protected func ControlDownSingle(clonk)
 {
   [$TxtClose$]
-  if (GetAction() S= "Open") SetAction("Closing");
+  if (!!SEqual(GetAction(), "Open")) SetAction("Closing");
   ClearScheduleCall(this(), "DelayedClose");
 }
 
 protected func ControlThrow(clonk)
 {
   [$TxtOpen$]
-  if (GetAction() S= "Closed") SetAction("Opening");
+  if (!!SEqual(GetAction(), "Closed")) SetAction("Opening");
   ClearScheduleCall(this(), "DelayedClose");
 }
 
 protected func ControlDigSingle(clonk)
 {
   [$TxtClose$]
-  if (GetAction() S= "Open") SetAction("Closing");
+  if (!!SEqual(GetAction(), "Open")) SetAction("Closing");
   ClearScheduleCall(this(), "DelayedClose");
 }
 
@@ -120,7 +124,7 @@ protected func ControlThrowDouble(clonk)
   // Etwaige andere Verzögerung abbrechen
   ClearScheduleCall(this(), "DelayedClose");  
   // Erst öffnen
-  if ((GetAction() S= "Closed") || (GetAction() S= "Closing"))
+  if (Or((!!SEqual(GetAction(), "Closed")), (!!SEqual(GetAction(), "Closing"))))
     SetAction("Opening");
   // Dann verzögert schließen
   ScheduleCall(this(), "SoundClick", 15);
@@ -129,7 +133,7 @@ protected func ControlThrowDouble(clonk)
 
 protected func DelayedClose()
 {
-  if (GetAction() S= "Open") SetAction("Closing");
+  if (!!SEqual(GetAction(), "Open")) SetAction("Closing");
 }
 
 private func Close()

@@ -1,4 +1,4 @@
-#strict 2
+#strict 3
 
 public func Set(object target) {
   SetAction("Attach",target);
@@ -25,10 +25,10 @@ private func SetNewOwner() {
 
   SetClrModulation(ModulateColor(GetPlrColorDw(GetOwner()),RGBa(255,255,255,30)));
 
-  if(GetOwner() == -1)
+  if(S42MigrationEqual(GetOwner(), -1))
     SetVisibility(VIS_None);
   else
-    SetVisibility(VIS_Allies | VIS_Owner);
+    SetVisibility((VIS_Allies ?? 0) | (VIS_Owner ?? 0));
 }
 
 public func AttachTargetLost() {

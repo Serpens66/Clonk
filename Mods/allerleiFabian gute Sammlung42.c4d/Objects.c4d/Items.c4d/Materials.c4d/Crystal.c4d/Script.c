@@ -1,6 +1,6 @@
 /*--- Kristall ---*/
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -12,16 +12,16 @@ protected func Hit()
 
 public func Apply(object obj)
 {
-  var used = false;
+  var used = nil;
   var times;
-  var maxtimes = (GetCon() - 50) / 5;
+  var maxtimes = ((GetCon() ?? 0) - 50) / 5;
 
-  for(var i = 0; i < maxtimes; ++ i)
+  for(var i = nil; (i ?? 0) < (maxtimes ?? 0); S42MigrationStep( i, 1))
   {
     if(DoMagicEnergy(1, obj) )
     {
       used = true;
-      if(GetCon() > 55)
+      if((GetCon() ?? 0) > 55)
         DoCon(-5);
       else
         RemoveObject();
@@ -34,7 +34,7 @@ public func Apply(object obj)
 
 protected func CalcValue()
 {
-  return( (GetCon() - 50) / 10 + (5 - (GetCon() / 20)) );
+  return( ((GetCon() ?? 0) - 50) / 10 + (5 - ((GetCon() ?? 0) / 20)) );
 }
 
 func IsAlchemContainer() { return(true); }

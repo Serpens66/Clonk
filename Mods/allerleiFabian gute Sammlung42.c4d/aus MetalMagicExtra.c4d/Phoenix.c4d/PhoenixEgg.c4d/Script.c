@@ -1,6 +1,6 @@
 /*-- Phoenixei --*/
 
-#strict
+#strict 3
 
 local zehler;
 
@@ -8,9 +8,9 @@ local zehler;
 
 private func Breed()
 {
-  if (GetMaterial(0,3) == Material("Ashes") || GetMaterial(0,3) == Material("FlyAshes")  ||  GetMaterial(0,-3) == Material("Ashes") || GetMaterial(0,-3) == Material("FlyAshes") || GetMaterial(3,0) == Material("Ashes") || GetMaterial(3,0) == Material("FlyAshes")  ||  GetMaterial(-3,0) == Material("Ashes") || GetMaterial(-3,0) == Material("FlyAshes"))
-  zehler++;
-  if (zehler>=30) DoBreak(); //wenn es auf Asche liegt, schlüpft der Phoenix nach 30 sekunden von alleine
+  if (Or(Or(Or(Or(Or(Or(Or(Equal(GetMaterial(nil,3), Material("Ashes")), Equal(GetMaterial(nil,3), Material("FlyAshes"))),  Equal(GetMaterial(nil,-3), Material("Ashes"))), Equal(GetMaterial(nil,-3), Material("FlyAshes"))), Equal(GetMaterial(3,nil), Material("Ashes"))), Equal(GetMaterial(3,nil), Material("FlyAshes"))),  Equal(GetMaterial(-3,nil), Material("Ashes"))), Equal(GetMaterial(-3,nil), Material("FlyAshes"))))
+  S42MigrationStep(zehler, 1, true);
+  if ((zehler ?? 0)>=30) DoBreak(); //wenn es auf Asche liegt, schlüpft der Phoenix nach 30 sekunden von alleine
   return(1);
 }
   
@@ -30,11 +30,11 @@ protected func Damage()
   
 private func DoBreak()
 {
-  if (!ActIdle()) return(0);
-  if (GBackSolid()) return(0);
+  if (!ActIdle()) return(nil);
+  if (GBackSolid()) return(nil);
   Sound("EggBreak");
   SetAction("Break");
-  var pMonster = CreateConstruction(PHNX,0,0,-1,40);
+  var pMonster = CreateConstruction(PHNX,nil,nil,-1,40);
   pMonster->~Birth();
   return(1);
 }

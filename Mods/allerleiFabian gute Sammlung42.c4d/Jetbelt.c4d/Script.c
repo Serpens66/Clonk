@@ -1,6 +1,6 @@
 /*-- Jetbelt --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local user, hud, buffer, slow;
@@ -15,14 +15,14 @@ public func GetGearType()	{ return(GEAR_Backpack); }
 public func IsEquipment()	{ return(true); }
 
 public func Hit(){Sound("ClonkHit*");}
-public func Hit3(){if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(40); else FakeExplode(40,0,0,40);}//:°
+public func Hit3(){if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(40); else FakeExplode(40,nil,nil,40);}//:°
 
 public func GearEffect(object pClonk)
 {
   user = pClonk;
   SetClonkOverlay();
   SetAction("StandBy");
-  hud = CreateObject(VHUD,0,0,GetOwner());
+  hud = CreateObject(VHUD,nil,nil,GetOwner());
   hud->Set(this(),pClonk);
   UpdateHUD(hud);
 }
@@ -35,7 +35,7 @@ public func GearEffectReset(object pClonk)
 public func GearUnbckle()
 {
   ResetClonkOverlay();
-  user = 0;
+  user = nil;
   if(hud)
     RemoveObject(hud);
   Stop();//Ausschalten.
@@ -44,8 +44,8 @@ public func GearUnbckle()
 
 public func IsActive()
 {
-  if(!user) return();
-  if(GetAction() eq "Active") return(true);
+  if(!user) return;
+  if(!!SEqual(GetAction(), "Active")) return(true);
 }
 
 /* Steuerung */
@@ -61,13 +61,15 @@ public func Right(){if(IsActive())return(Start(COMD_Right));}
 
 public func Slow(){if(IsActive())return(Start(COMD_Stop));}
 
-public func Update(int comdir){if(IsActive())return(Start(comdir));}
+public func Update(int comdir){comdir ??= 0;
+    if(IsActive())return(Start(comdir));}
 
 private func Switch(int iDir)
 {
+  iDir ??= 0;
   if(IsActive())
   {
-    if(iDir == COMD_Up)
+    if(Equal(iDir, COMD_Up))
       Stop();
   }
   else
@@ -80,8 +82,8 @@ private func Stop()
 {
   if(IsActive())
   {
-    Sound("Jetbelt",0,user,0,0,-1);
-    Sound("JetbeltStop",0,user);
+    Sound("Jetbelt",nil,user,nil,nil,-1);
+    Sound("JetbeltStop",nil,user);
     if(hud)
       hud->Recharge();
   }
@@ -89,28 +91,29 @@ private func Stop()
   SetAction("StandBy");
   SetComDir(COMD_None);
   
-  return();
+  return;
 }
 
 private func Start(int iDir)
 {
-  if(!IsReady()) return();
+  iDir ??= 0;
+  if(!IsReady()) return;
 
   var jnr = GetPlrCoreJumpAndRunControl(user->GetController());
   
-  if(iDir == COMD_Stop)
+  if(Equal(iDir, COMD_Stop))
   {
     if(!jnr)
       slow = !slow;
     else
       slow = true;
       
-    return();
+    return;
   }
   else
   {
     if(jnr)
-      slow = false;
+      slow = nil;
   
     iDir = DoDirection(iDir);
   }
@@ -122,7 +125,7 @@ private func Start(int iDir)
     SetOwner(GetOwner(user));
     SetController(GetController(user));
     
-    Sound("Jetbelt",0,user,0,0,+1);
+    Sound("Jetbelt",nil,user,nil,nil,+1);
     SetUserAction();
     SetAction("Active");
   }
@@ -130,20 +133,20 @@ private func Start(int iDir)
 
 public func UpdateHUD(object pHUD,pClonk)
 {
-  pHUD->Charge(GetAmmo(GSAM,user)*100/GSAM->MaxAmmo(user));
+  pHUD->Charge((GetAmmo(GSAM,user) ?? 0)*100/(GSAM->MaxAmmo(user) ?? 0));
   pHUD->Fuel(GetAmmo(GSAM,user),GSAM->MaxAmmo(user),GetName());
   pHUD->MasterFuel(GSAM,GetAmmo(GSAM,user));//2. Parameter ist doof/überflüssig.
   
-  if((GetFuel() <= 5000) && IsActive())
+  if(And(((GetFuel() ?? 0) <= 5000), IsActive()))
     pHUD->SetFlash(true);
   else
-    pHUD->SetFlash(false);
+    pHUD->SetFlash(nil);
 }
 
 private func GetFuel()
 {
   if(NoAmmo()) return(10000);
-  return(GetAmmo(GSAM,user)*100+buffer);
+  return((GetAmmo(GSAM,user) ?? 0)*100+(buffer ?? 0));
 }
 
 private func GetBuffer()
@@ -154,8 +157,9 @@ private func GetBuffer()
 
 private func DoBuffer(int iAmount)
 {
-  if(NoAmmo()) return();
-  buffer = BoundBy(buffer+iAmount,0,100);
+  iAmount ??= 0;
+  if(NoAmmo()) return;
+  buffer = BoundBy((buffer ?? 0)+(iAmount ?? 0),nil,100);
 }
 
 private func RefillBuffer()
@@ -163,7 +167,7 @@ private func RefillBuffer()
   if(NoAmmo()) return(true);
 
   var fuel = DoAmmo(GSAM,-1,user);
-  if(!fuel) return(false);
+  if(!fuel) return(nil);
   
   buffer = 100;
   return(true);
@@ -171,6 +175,7 @@ private func RefillBuffer()
 
 private func DoDirection(int comdir)
 {
+  comdir ??= 0;
   return(comdir);
   var cur_comdir = GetComDir();
   //if(ComDir2Angle(cur_comdir)-ComDir2Angle(comdir)) cur_comdir = COMD_Stop;
@@ -181,18 +186,18 @@ private func DoDirection(int comdir)
 
 private func UpdateTimer()
 {
-  if(!user) return();
+  if(!user) return;
   
   //GetProcedure ist hier Performance schonender als GetAction. :D
-  if(user->GetProcedure() eq "NONE"
-  || user->GetProcedure() eq "KNEEL"
-  || user->GetProcedure() eq "SWIM"
-  || user->GetProcedure() eq "FIGHT"
-  || user->GetProcedure() eq "DIG"
-  || user->GetProcedure() eq "BRIDGE"
-  || user->GetAction() eq "BackFlip"
-  || user->GetAction() eq "Tumble"
-  || user->GetAction() eq "Dive")
+  if(Or(Or(Or(Or(Or(Or(Or(Or(!!SEqual(user->GetProcedure(), "NONE")
+  , !!SEqual(user->GetProcedure(), "KNEEL"))
+  , !!SEqual(user->GetProcedure(), "SWIM"))
+  , !!SEqual(user->GetProcedure(), "FIGHT"))
+  , !!SEqual(user->GetProcedure(), "DIG"))
+  , !!SEqual(user->GetProcedure(), "BRIDGE"))
+  , !!SEqual(user->GetAction(), "BackFlip"))
+  , !!SEqual(user->GetAction(), "Tumble"))
+  , !!SEqual(user->GetAction(), "Dive")))
     ResetClonkOverlay();
   else
     SetClonkOverlay();
@@ -201,7 +206,7 @@ private func UpdateTimer()
 private func ActiveTimer()
 {
   if(!IsReady()) return(Stop());
-  if(user->GetAction() eq "Tumble") return(Stop());
+  if(!!SEqual(user->GetAction(), "Tumble")) return(Stop());
   
   UpdateTimer();
   
@@ -212,12 +217,12 @@ private func ActiveTimer()
   
   if(slow)
   {
-    xmax /= 4;
-    ymax /= 4;
+    S42MigrationAssign(xmax, "/=", 4);
+    S42MigrationAssign(ymax, "/=", 4);
   }
   
-  var xdir = BoundBy(GetXDir(user)*100+Sin(r,MaxAccel()),-xmax*100,+xmax*100);
-  var ydir = BoundBy(GetYDir(user)*100-Cos(r,MaxAccel()),-ymax*100,+ymax*100);
+  var xdir = BoundBy((GetXDir(user) ?? 0)*100+(Sin(r,MaxAccel()) ?? 0),-(xmax ?? 0)*100,(+(xmax ?? 0) ?? 0)*100);
+  var ydir = BoundBy((GetYDir(user) ?? 0)*100-(Cos(r,MaxAccel()) ?? 0),-(ymax ?? 0)*100,(+(ymax ?? 0) ?? 0)*100);
   
   
   /*var xdir = GetXDir(user)*100;
@@ -258,41 +263,41 @@ private func ActiveTimer()
   
 
   SetXDir(xdir,user,1000);
-  SetYDir(ydir-GetGravityAccel4K(1000),user,1000);//4K-Lib sorgt für Pseudo-Schwerelosigkeit. ;D
+  SetYDir((ydir ?? 0)-(GetGravityAccel4K(1000) ?? 0),user,1000);//4K-Lib sorgt für Pseudo-Schwerelosigkeit. ;D
   
   if(!GetBuffer()) RefillBuffer();
-  DoBuffer(-Consumption());
+  DoBuffer(-(Consumption() ?? 0));
   
-  hud->Recharge(Min(Distance(xdir/100,ydir/100),MaxSpeed())*100/MaxSpeed());//^^
+  hud->Recharge((Min(Distance((xdir ?? 0)/100,(ydir ?? 0)/100),MaxSpeed()) ?? 0)*100/(MaxSpeed() ?? 0));//^^
     
-  r-=180;
+  S42MigrationAssign(r, "-=", 180);
   
-  var dist = Distance(0,0,GetXDir(user),GetYDir(user));
-  var maxx = +Sin(r,dist/10);
-  var maxy = -Cos(r,dist/10);
+  var dist = Distance(nil,nil,GetXDir(user),GetYDir(user));
+  var maxx = +(Sin(r,(dist ?? 0)/10) ?? 0);
+  var maxy = -(Cos(r,(dist ?? 0)/10) ?? 0);
   var ptrdist = 50;
 
-  for(var i=0; i<dist; i+=ptrdist)
+  for(var i=nil; (i ?? 0)<(dist ?? 0); S42MigrationAssign(i, "+=", (ptrdist ?? 0)))
   {
-    var x = -maxx*i/dist+GetX(user)-GetDir(user)*12+6;
-    var y = -maxy*i/dist+GetY(user)+3;
+    var x = -(maxx ?? 0)*(i ?? 0)/(dist ?? 0)+(GetX(user) ?? 0)-(GetDir(user) ?? 0)*12+6;
+    var y = -(maxy ?? 0)*(i ?? 0)/(dist ?? 0)+(GetY(user) ?? 0)+3;
 
     var rand = RandomX(-30,30);
-    var xdir = +Sin(r+rand,20);
-    var ydir = -Cos(r+rand,20);
+    var xdir = +(Sin((r ?? 0)+(rand ?? 0),20) ?? 0);
+    var ydir = -(Cos((r ?? 0)+(rand ?? 0),20) ?? 0);
 
-    CreateParticle("Thrust",x,y,GetXDir(user)/2,GetYDir(user)/2,RandomX(50,70),RGBa(255,200,200),user,true);
+    CreateParticle("Thrust",x,y,(GetXDir(user) ?? 0)/2,(GetYDir(user) ?? 0)/2,RandomX(50,70),RGBa(255,200,200),user,true);
     CreateParticle("Smoke2",x,y,xdir,ydir,RandomX(40,60),RGBa(220,200,180),user,true);
   }
 }
 
 public func IsReady()
 {
-  if(!GetFuel()) return();
+  if(!GetFuel()) return;
 
-  if(user->IsJumping()
-  || user->GetAction() eq "Tumble"
-  || user->GetAction() eq "BackFlip")
+  if(Or(Or(user->IsJumping()
+  , !!SEqual(user->GetAction(), "Tumble"))
+  , !!SEqual(user->GetAction(), "BackFlip")))
     return(1);
 }
 
@@ -300,11 +305,11 @@ private func SetUserAction()
 {
  if(user->~IsArmed())
  {
-   if(user->GetAction() ne "JumpArmed")
+   if(!SEqual(user->GetAction(), "JumpArmed"))
      user->SetAction("JumpArmed");
  }
  else
-   if(user->GetAction() ne "Jump")
+   if(!SEqual(user->GetAction(), "Jump"))
      user->SetAction("Jump");
 }
 
@@ -322,48 +327,50 @@ private func Destruction()
 
 private func ComDir2Angle(int iDir)
 {
-  if(iDir == COMD_Down) return(180);
-  if(iDir == COMD_Left) return(270);
-  if(iDir == COMD_Right) return(90);
-  if(iDir == COMD_DownLeft) return(225);
-  if(iDir == COMD_DownRight) return(135);
-  if(iDir == COMD_UpLeft) return(315);
-  if(iDir == COMD_UpRight) return(45);
+  iDir ??= 0;
+  if(Equal(iDir, COMD_Down)) return(180);
+  if(Equal(iDir, COMD_Left)) return(270);
+  if(Equal(iDir, COMD_Right)) return(90);
+  if(Equal(iDir, COMD_DownLeft)) return(225);
+  if(Equal(iDir, COMD_DownRight)) return(135);
+  if(Equal(iDir, COMD_UpLeft)) return(315);
+  if(Equal(iDir, COMD_UpRight)) return(45);
   //if(COMD_Up) return(0);
-  return(0);
+  return(nil);
 }
 
 private func ComDir2String(int iDir)//:D Debug!
 {
-  if(iDir == COMD_Stop) return("COMD_Stop");
-  if(iDir == COMD_Down) return("COMD_Down");
-  if(iDir == COMD_Left) return("COMD_Left");
-  if(iDir == COMD_Right) return("COMD_Right");
-  if(iDir == COMD_DownLeft) return("COMD_DownLeft");
-  if(iDir == COMD_DownRight) return("COMD_DownRight");
-  if(iDir == COMD_UpLeft) return("COMD_UpLeft");
-  if(iDir == COMD_UpRight) return("COMD_UpRight");
+  iDir ??= 0;
+  if(Equal(iDir, COMD_Stop)) return("COMD_Stop");
+  if(Equal(iDir, COMD_Down)) return("COMD_Down");
+  if(Equal(iDir, COMD_Left)) return("COMD_Left");
+  if(Equal(iDir, COMD_Right)) return("COMD_Right");
+  if(Equal(iDir, COMD_DownLeft)) return("COMD_DownLeft");
+  if(Equal(iDir, COMD_DownRight)) return("COMD_DownRight");
+  if(Equal(iDir, COMD_UpLeft)) return("COMD_UpLeft");
+  if(Equal(iDir, COMD_UpRight)) return("COMD_UpRight");
   return("COMD_Up");
 }
 
 //Grafik-Extras
 public func ResetClonkOverlay()
 {
-  if(!user) return();
-  SetGraphics(0,user,0,WeaponDrawLayer+1);
+  if(!user) return;
+  SetGraphics(nil,user,nil,(WeaponDrawLayer ?? 0)+1);
 }
 
 public func SetClonkOverlay()
 {
-  if(!user) return();
+  if(!user) return;
 
   //SetGraphics(0,user,GetID(),WeaponDrawLayer+1,GFXOV_MODE_Base);
-  SetGraphics(0,user,GetID(),WeaponDrawLayer+1,GFXOV_MODE_Action,"BagPack");
+  SetGraphics(nil,user,GetID(),(WeaponDrawLayer ?? 0)+1,GFXOV_MODE_Action,"BagPack");
 
   var x = -1;
-  if(GetDir(user) == DIR_Left)
+  if(Equal(GetDir(user), DIR_Left))
     x = 1;
     
   //SetObjDrawTransform(650*x,0,x*5500,0,900,-3*1000,user,WeaponDrawLayer+1);
-  SetObjDrawTransform(1000*x,0,x*5000,0,1000,-1000,user,WeaponDrawLayer+1);
+  SetObjDrawTransform(1000*(x ?? 0),nil,(x ?? 0)*5000,nil,1000,-1000,user,(WeaponDrawLayer ?? 0)+1);
 }

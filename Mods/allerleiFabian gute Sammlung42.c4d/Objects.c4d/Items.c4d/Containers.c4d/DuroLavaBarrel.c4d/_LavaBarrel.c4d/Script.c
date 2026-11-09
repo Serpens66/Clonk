@@ -1,6 +1,6 @@
 /*-- Lavafass --*/
 
-#strict
+#strict 3
 
 #include BARL
 
@@ -11,6 +11,6 @@ public func BarrelMaterialName() { return("Lava"); }
 // Fassermittlungskette
 global func GetBarrelType(iMaterial)
 {
-  if (iMaterial == Material("Lava")) return(LBRL);
+  if (Equal(iMaterial, Material("Lava"))) return(LBRL);
   return(inherited(iMaterial));
 }

@@ -1,6 +1,6 @@
 /*-- Geschütz --*/
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -33,43 +33,43 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Check()
 {
-  if(GetR()<rmin)
+  if((GetR() ?? 0)<(rmin ?? 0))
   {
-  SetRDir(0);
-  SetR(rmin+1);
+  SetRDir(nil);
+  SetR((rmin ?? 0)+1);
   }
-  if(GetR()>rmax)
+  if((GetR() ?? 0)>(rmax ?? 0))
   {
-  SetRDir(0);
-  SetR(rmax-1);
+  SetRDir(nil);
+  SetR((rmax ?? 0)-1);
   }
 }
 
 //Steuerung
 func Up()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func Down()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func Right()
 {
-  if(GetR()==rmax-1) return(1);
+  if(Equal(GetR(), (rmax ?? 0)-1)) return(1);
   return(SetRDir(5));
 }
 
 func Left()
 {
-  if(GetR()==rmin+1) return(1);
+  if(Equal(GetR(), (rmin ?? 0)+1)) return(1);
   return(SetRDir(-5));
 }
 
@@ -77,11 +77,11 @@ func Fire()
 {
   var x,y;
   x=Sin( GetR(),30);
-  y=-Cos( GetR(),30);
+  y=-(Cos( GetR(),30) ?? 0);
   var gren=CreateObject(ARM_,x,y,GetOwner());
   var rand = RandomX(-10,10);
-  SetXDir(x*8,gren);
-  SetYDir(y*8+rand,gren);
+  SetXDir((x ?? 0)*8,gren);
+  SetYDir((y ?? 0)*8+(rand ?? 0),gren);
   Sound("Rocket");
   Sound("RocketLoad");
   SetAction("Shoot");

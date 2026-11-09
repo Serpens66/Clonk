@@ -1,6 +1,6 @@
 /*-- Akku --*/
 
-#strict
+#strict 3
 
 private func CheckEnergy()
 {
@@ -8,17 +8,17 @@ private func CheckEnergy()
   var battery = GetActionTarget();
   if (HasEMP(battery))
     return(1);
-  var lowenergy = (GetAction() eq "LowNRG");
+  var lowenergy = (!!SEqual(GetAction(), "LowNRG"));
   var batteryfill = battery->GetFill();
   // auf hohes Energieniveau bringen...
-  if (lowenergy && (batteryfill >= 2800))
+  if (And(lowenergy, ((batteryfill ?? 0) >= 2800)))
   {
     SetAction("HighNRG");
     battery->DoFill(-800);
     return(1);
   }
   // ...oder auf niedriges Niveau
-  if (!lowenergy && (batteryfill <= 1600))
+  if (And(!lowenergy, ((batteryfill ?? 0) <= 1600)))
   {
     SetAction("LowNRG");
     battery->DoFill(+800);
@@ -29,7 +29,7 @@ private func CheckEnergy()
 public func Remove(clonk)
 {
   // Akku abnehmen
-  if (GetAction() eq "HighNRG") ChangeDef(SACU);   // voll
+  if (!!SEqual(GetAction(), "HighNRG")) ChangeDef(SACU);   // voll
                            else ChangeDef(SACE);   // leer
   // dem Clonk geben
   if (clonk) Enter(clonk);

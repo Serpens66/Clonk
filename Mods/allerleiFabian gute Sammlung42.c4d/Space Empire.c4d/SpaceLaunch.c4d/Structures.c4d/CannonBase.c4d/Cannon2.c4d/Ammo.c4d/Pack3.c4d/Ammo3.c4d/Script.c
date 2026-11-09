@@ -1,33 +1,37 @@
 /*-- Nuklear-Munition --*/
 
-#strict
+#strict 3
 #include SOAM
 
 
 /* Fliegt */
 
-protected Travel:
+protected func Travel(...) {
   // Treffer-Überprüfung
-  if (FindTarget() || FindVehicle())
+  if (Or(FindTarget(), FindVehicle()))
     return(Hit());
-  Smoke(0,0,5);
+  Smoke(nil,nil,5);
   SetDirection();
   return(1);
+}
 
 /* Aufprall */
 
-protected Hit:
+protected func Hit(...) {
   var obj = CreateObject(SWAV);
-  ObjectCall(obj, "SetSize", 0,GetX(),GetY(), 50+50*combi,10+10*combi); // kleinen EMP Effekt hinzugefügt
+  ObjectCall(obj, "SetSize", nil,GetX(),GetY(), 50+50*(combi ?? 0),10+10*(combi ?? 0)); // kleinen EMP Effekt hinzugefügt
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(30);
-  else FakeExplode(30,0,0,30);
+  else FakeExplode(30,nil,nil,30);
   return(1);
+}
 
 /* Zerstörung */
 
-public Destroy:
+public func Destroy(...) {
   CastPXS("FlyAshes",25,25);
   return(Hit());
+}
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

@@ -1,13 +1,13 @@
 /*-- Marker --*/
 
-#strict
+#strict 3
 
 local timer;
 
 protected func Initialize()
 {
   // unsichtbar für alle anderen Spieler
-  SetVisibility(VIS_Owner());
+  SetVisibility(VIS_Owner);
   SetAction("Blink");
 }
 
@@ -20,7 +20,7 @@ public func SetTimer(value)
 private func Step()
 {
   // Timer herunterzählen
-  --timer;
+  S42MigrationStep(timer, -1);
   if (!timer) return(RemoveObject());
 }
 

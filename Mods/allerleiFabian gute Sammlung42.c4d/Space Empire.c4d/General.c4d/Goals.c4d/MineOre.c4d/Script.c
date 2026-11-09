@@ -1,9 +1,12 @@
 /*-- Erzmine --*/
 
-#strict
+#strict 3
 #include GGMI
 
-private MatObjsCount:  return(ObjectCount(ORE1));
-private MatPixelCount: return(GetMaterialCount(Material("Ore")));
-private MatName:       return("Erz");
+private func MatObjsCount(...) {  return(ObjectCount(ORE1));
+}
+private func MatPixelCount(...) { return(GetMaterialCount(Material("Ore")));
+}
+private func MatName(...) {       return("Erz");
+}
 

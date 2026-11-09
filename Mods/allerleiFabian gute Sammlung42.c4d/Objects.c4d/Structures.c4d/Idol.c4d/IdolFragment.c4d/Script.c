@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local living_time;	// Lebenszeit
 
@@ -10,16 +10,16 @@ public func Set(phase) {
   SetPhase(phase);
   var width = GetDefCoreVal("Width", "DefCore", GetID());
   var height = GetDefCoreVal("Height", "DefCore", GetID());
-  SetPicture(width*phase, 0, width, height);
+  SetPicture((width ?? 0)*(phase ?? 0), nil, width, height);
 }
 
 protected func SellTo() {
-  return(GetComponent(0, 0));
+  return(GetComponent(nil, nil));
 }
 
 // Timercall
 protected func Timer() {
-  if (living_time++ > 60*5) {
+  if (S42MigrationStep(living_time, 1, true) > 60*5) {
     Split2Components();
   }
 }

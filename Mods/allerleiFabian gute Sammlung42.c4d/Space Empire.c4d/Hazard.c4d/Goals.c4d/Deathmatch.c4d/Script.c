@@ -1,6 +1,6 @@
 /*-- Deathmatch --*/
 
-#strict
+#strict 3
 #include TEAM
 
 // Kann mittels des neuen Spielzielauswählers ausgewählt werden
@@ -11,7 +11,7 @@ protected func Initialize() {
   var pGoal;
   if (pGoal = FindObject(GetID()))
   { 
-    LocalN("iWinScore", pGoal)++;
+    S42MigrationStep(LocalN("iWinScore", pGoal), 1, true);
     return(RemoveObject()); 
   }
   iWinScore = 1;
@@ -19,13 +19,15 @@ protected func Initialize() {
 }
 
 public func RelaunchPlayer(int iPlr, object pClonk, int iMurdererPlr) {
+  iPlr ??= 0;
+  iMurdererPlr ??= 0;
   inherited(iPlr, pClonk, iMurdererPlr);
-  if(iPlr == -1 || !GetPlayerName(iPlr)) return();
-  if(iMurdererPlr == -1)
-    return();
+  if(Or(Equal(iPlr, -1), !GetPlayerName(iPlr))) return;
+  if(Equal(iMurdererPlr, -1))
+    return;
   
   // kein Teamkill?
-  if(GetPlayerTeam(iPlr) != GetPlayerTeam(iMurdererPlr))
+  if(!Equal(GetPlayerTeam(iPlr), GetPlayerTeam(iMurdererPlr)))
     //Punktestand erhöhen
     DoTeamScore(GetPlayerTeam(iMurdererPlr),+1);
 }
@@ -34,16 +36,17 @@ public func RelaunchPlayer(int iPlr, object pClonk, int iMurdererPlr) {
 public func IsConfigurable() { return(1); }
 
 public func GetHUDInfo(int player) {
+	player ??= 0;
 	var t34m = GetPlayerTeam(player);
 	
 	// Rückstand
 	var y00Rl4me;
-	y00Rl4me = Max(0,TeamGetScore(t34m))-BestTeamGetScore(t34m);
+	y00Rl4me = (Max(nil,TeamGetScore(t34m)) ?? 0)-(BestTeamGetScore(t34m) ?? 0);
 	
 	var secondstring;
-	if(y00Rl4me == 0) secondstring= "";
-	if(y00Rl4me > 0) secondstring = Format("(+%d)",y00Rl4me);
-	if(y00Rl4me < 0) secondstring = Format("(%d)",y00Rl4me);
+	if(Equal(y00Rl4me, nil)) secondstring= "";
+	if((y00Rl4me ?? 0) > 0) secondstring = Format("(+%d)",y00Rl4me);
+	if((y00Rl4me ?? 0) < 0) secondstring = Format("(%d)",y00Rl4me);
 	
 	return(Format("%d kills %s",TeamGetKills(t34m), secondstring));
 }
@@ -53,7 +56,7 @@ public func AITactic(object pAIPlayer)
 {
   var owner = pAIPlayer->GetOwner();
 
-  for(var i=0, pCrew ; pCrew = GetCrew(owner, i) ; i++) {
+  for(var i=nil, pCrew ; pCrew = GetCrew(owner, i) ; S42MigrationStep(i, 1, true)) {
     if(pCrew->Contained()) continue;
     // Es ist der Anführer?
     if(!i)
@@ -61,8 +64,8 @@ public func AITactic(object pAIPlayer)
     // Nicht? Dann folge doch bitte dem Anführer
     else {
       pCrew->CheckInventory();
-      if(!(pCrew->GetCommand() || pCrew->GetMacroCommand()))
-        pCrew->SetMacroCommand(this(), "Follow", GetCrew(owner, 0),0,0,0,Aggro_Follow);
+      if(!(Or(pCrew->GetCommand(), pCrew->GetMacroCommand())))
+        pCrew->SetMacroCommand(this(), "Follow", GetCrew(owner, nil),nil,nil,nil,Aggro_Follow);
     }
   }
   return(true);

@@ -1,6 +1,6 @@
 /* Magier */
 
-#strict
+#strict 3
 
 #include MCLK
 
@@ -17,7 +17,7 @@ protected func AfterMagic()
 protected func AfterMagicJump()
 {
   // Geth nicht mit inherited weil sonst nicht obiges AfterMagic aufgerufen wird
-  if(idCurSpell && GetAction() S= "Walk")
+  if(And(idCurSpell, !!SEqual(GetAction(), "Walk")))
   {
     SetAction("Magic");
     SetPhase(iCurPhase);
@@ -38,15 +38,15 @@ public func IsMagicCrystal() {}
 
 private func ConvertCrystal(object pObj)
   {
-  if (!IsConvertReady()) return();
+  if (!IsConvertReady()) return;
   if (!pObj->~Apply(this()))
     {
     var iManaGain = pObj->~GetManaGain(this());
     if (!iManaGain) iManaGain = 10;
-    if (!DoMagicEnergy(iManaGain)) return();
+    if (!DoMagicEnergy(iManaGain)) return;
     RemoveObject(pObj);
     }
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetMagicAction();
   Sound("Electric");
   PlayerMessage(GetOwner(), "", this());
@@ -58,7 +58,7 @@ protected func CheckContents()
   ReAim();
   // Alle Kristalle konvertieren
   var i=ContentsCount(), o;
-  while (i--) if (o=Contents(i)) if (GetID(o)==CRYS || o->~IsMagicCrystal(this()))
+  while (S42MigrationStep(i, -1, true)) if (o=Contents(i)) if (Or(Equal(GetID(o), CRYS), o->~IsMagicCrystal(this())))
     ConvertCrystal(o);
   }
   
@@ -83,17 +83,17 @@ private func Riding()
 public func LightningStrike()
 {
   // Wenn der Clonk tot ist, zerstört ihn der erste Blitz
-  if (GetAction() eq "Dead")
+  if (!!SEqual(GetAction(), "Dead"))
     {
     CastObjects(SPRK,5,20);
-    CreateParticle("MSpark", 0,0, 1000, RGBa(50,50,255,150));
+    CreateParticle("MSpark", nil,nil, 1000, RGBa(50,50,255,150));
     if (!GetAlive()) RemoveObject();
     return(true);
   }
   // Clonk soll anhalten
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   // Energiegewinnung
-  for(var i = 0; i < 10; ++ i) DoMagicEnergy(1);
+  for(var i = nil; (i ?? 0) < 10; S42MigrationStep( i, 1)) DoMagicEnergy(1);
   // Sound
   Sound("Electric");
   // Effekt-Aktion (wenn's gerade passt)
@@ -106,7 +106,7 @@ public func LightningStrike()
 public func IsConvertReady()
 {
   // Im Laufen und Reiten können Kristalle umgewandelt werden
-  return(GetAction() S= "Walk" || GetAction() S= "Ride" || GetAction() S= "RideStill");
+  return(Or(Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "Ride")), !!SEqual(GetAction(), "RideStill")));
 }  
 
 
@@ -115,8 +115,8 @@ public func IsConvertReady()
 protected func Scaling()
   {
   var szDesiredAction;
-  if (GetYDir()>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
-  if (GetAction() ne szDesiredAction) SetAction(szDesiredAction);
+  if ((GetYDir() ?? 0)>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
+  if (!SEqual(GetAction(), szDesiredAction)) SetAction(szDesiredAction);
   return(1);   
   }
 
@@ -125,9 +125,9 @@ protected func Scaling()
 protected func CheckStuck()
 {                   
   // Verhindert Festhängen am Mittelvertex
-  if(!GetXDir()) if(Abs(GetYDir()) < 5)
-    if(GBackSolid(0, 3))
-      SetPosition(GetX(), GetY() + 1);
+  if(!GetXDir()) if((Abs(GetYDir()) ?? 0) < 5)
+    if(GBackSolid(nil, 3))
+      SetPosition(GetX(), (GetY() ?? 0) + 1);
 }
 
 

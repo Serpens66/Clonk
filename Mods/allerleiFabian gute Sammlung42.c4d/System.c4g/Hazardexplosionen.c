@@ -12,7 +12,7 @@
 // angepasst werden, z.b bei flints und Co die durch eine KI verwendet werden sollen..
 // denn ein KI Angriff soll nicht dafür sorgen, dass nichts mehr bebaubar ist
 
-#strict
+#strict 3
 
 #appendto SP02 // Splitterflint, wird eher als Waffe, als für Bergbau verwendet -> keinerdschaden
 #appendto SB52 // Verfolgerbombe

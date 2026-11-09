@@ -1,6 +1,6 @@
 /*-- Arsenal --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -15,7 +15,7 @@ func Bezug(_vessel)
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   RemoveObject();
   return(1);
@@ -25,7 +25,7 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -33,7 +33,7 @@ protected func RejectCollect()
 
 func ContainedDownDouble()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this());
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(vessel,pilot);
   Sound("Airlock1");
   return(1);
@@ -44,24 +44,24 @@ func ContainedDownDouble()
 func ContainedDig(pByObj) 
 {
   pilot=pByObj;
-  CreateMenu(TCN_,Par(0),0,0,0,0);
-  AddMenuItem("%s","Bullets",STAM,Par(0)); 
-  AddMenuItem("%s","Missles",MIAM,Par(0));   		
+  CreateMenu(TCN_,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s","Bullets",STAM,Par(nil));
+  AddMenuItem("%s","Missles",MIAM,Par(nil));
   return(1);
 }
 
 
 func Bullets()
 {
-  if(GetAmmo(STAM,pilot)>=200)
+  if((GetAmmo(STAM,pilot) ?? 0)>=200)
   {
   Message("Munitionsgürtel voll.",this());
-  return(0);
+  return(nil);
   }
-  if(GetWealth(GetController(pilot)) < 10)
+  if((GetWealth(GetController(pilot)) ?? 0) < 10)
   {
   Message("Nicht genug Geld",this());
-  return(0);
+  return(nil);
   }
   SetWealth( GetController(pilot), Sub(GetWealth(GetController(pilot)),10) );
   DoAmmo(STAM,100,pilot);
@@ -73,15 +73,15 @@ func Bullets()
 
 func Missles()
 {
-  if(GetAmmo(MIAM,pilot)>=12)
+  if((GetAmmo(MIAM,pilot) ?? 0)>=12)
   {
   Message("Munitionsgürtel voll.",this());
-  return(0);
+  return(nil);
   }
-  if(GetWealth(GetController(pilot)) < 10)
+  if((GetWealth(GetController(pilot)) ?? 0) < 10)
   {
   Message("Nicht genug Geld",this());
-  return(0);
+  return(nil);
   }
   SetWealth( GetController(pilot), Sub(GetWealth(GetController(pilot)),10) );
   DoAmmo(MIAM,3,pilot);

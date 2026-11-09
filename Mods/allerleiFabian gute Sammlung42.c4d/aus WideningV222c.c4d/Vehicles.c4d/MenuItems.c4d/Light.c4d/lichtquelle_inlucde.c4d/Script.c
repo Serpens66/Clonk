@@ -1,11 +1,11 @@
 /*-- Lichtquellen Include --*/
 
-#strict
+#strict 3
 
 func Initialize() 
 {
 	var h=-60;
-	var a=0;
+	var a=nil;
 
 	SetClrModulation(RGBa(h,h,h,a));
 	SetCategory(8388609);
@@ -14,5 +14,6 @@ func Initialize()
 	return(_inherited());
 }
 
-public ist_lichtquelle:	return(1);
+public func ist_lichtquelle(...) {	return(1);
+}
 

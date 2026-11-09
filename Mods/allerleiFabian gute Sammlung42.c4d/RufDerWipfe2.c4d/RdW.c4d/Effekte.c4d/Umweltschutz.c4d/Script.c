@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
   static globalpollution,globalpollutionanzeige;
   static globalnature;
@@ -29,7 +29,7 @@ global func DecNature(faktor)
 {
   var i=1;
   if(faktor) i=faktor;
-  globalnature+=i;
+  S42MigrationAssign(globalnature, "+=", (i ?? 0));
   return(globalnature);
 }
 
@@ -59,7 +59,7 @@ func Meeresspiegel()
     {yPos=GetY(object);}  // davon ausgehend, dass alle DRAI Objekte auf derselben Höhe liegen!
 
     aScenMeeresStufen = GameCall("ScenarioMeeresStufen"); // eine liste der Form [["Stufe1",5],["Stufe2",15]["Stufe3",25],["Stufe4",30],["Stufe5",40]] // je nach szenario Vorgaben den Meeresspiegel bei verschmutzung erhoehen
-    if (!aScenMeeresStufen) aScenMeeresStufen=0;
+    if (!aScenMeeresStufen) aScenMeeresStufen=nil;
 }
 
 func Klima()
@@ -85,15 +85,15 @@ if(!FindObject2(Find_ID(SES_)))  //Regel für Jahreszeiten deaktivieren
 //     graphics="Winter";    }
 
 //Frühling
-  if(jahreszeitjetzt>=12 && jahreszeitjetzt<37 && temperaturjetzt>0){
+  if(And(And((jahreszeitjetzt ?? 0)>=12, (jahreszeitjetzt ?? 0)<37), (temperaturjetzt ?? 0)>0)){
      graphics="Spring";  }
 
 //Sommer
-  if(jahreszeitjetzt>=37 && jahreszeitjetzt<62 && temperaturjetzt>0){
+  if(And(And((jahreszeitjetzt ?? 0)>=37, (jahreszeitjetzt ?? 0)<62), (temperaturjetzt ?? 0)>0)){
      graphics="";  }
 
 //Herbst
-  if(jahreszeitjetzt>=62 && jahreszeitjetzt<87 && temperaturjetzt>0){
+  if(And(And((jahreszeitjetzt ?? 0)>=62, (jahreszeitjetzt ?? 0)<87), (temperaturjetzt ?? 0)>0)){
      graphics="Herbst";  }
 
 //Winter, Jahreszeit egal, immer wenn unter Null Grad, dann Schnee und Wintergrafiken
@@ -103,19 +103,19 @@ if(!FindObject2(Find_ID(SES_)))  //Regel für Jahreszeiten deaktivieren
   /* Umweltverschmutzung */
 if(!FindObject2(Find_ID(UMG_))) // Regel für Umweltverschmutzung deaktivieren
 {
-if (globalpollution<globalnature*70/100) {bDoKill=0;feuer=0;bDoKill2=0;}
+if ((globalpollution ?? 0)<(globalnature ?? 0)*70/100) {bDoKill=nil;feuer=nil;bDoKill2=nil;}
 
-if (globalpollution>globalnature*50/100 && globalpollution<=globalnature*70/100 && temperaturjetzt>0)
+if (And(And((globalpollution ?? 0)>(globalnature ?? 0)*50/100, (globalpollution ?? 0)<=(globalnature ?? 0)*70/100), (temperaturjetzt ?? 0)>0))
     {graphics="Krank";}
 
-if (globalpollution>globalnature*70/100 && globalpollution<=globalnature*100/100)  {bDoKill=true;graphics="Krank";}
+if (And((globalpollution ?? 0)>(globalnature ?? 0)*70/100, (globalpollution ?? 0)<=(globalnature ?? 0)*100/100))  {bDoKill=true;graphics="Krank";}
 }
 
 // hier jetzt der Winter, da auch wenn krank, soll schnee bei unter 0 grad draufliegen
 if(!FindObject2(Find_ID(SES_)))  //Regel für Jahreszeiten deaktivieren
 {
 //Winter, Jahreszeit egal, immer wenn unter Null Grad, dann Schnee und Wintergrafiken
-  if(temperaturjetzt<=0) 
+  if((temperaturjetzt ?? 0)<=0)
 	 graphics="Winter";
 }
 
@@ -123,12 +123,12 @@ if(!FindObject2(Find_ID(SES_)))  //Regel für Jahreszeiten deaktivieren
 if(FindObject2(Find_ID(KLI_)))  // Regel für tödliche Temperaturen
 {
 // wenn zu heiß, sterben die Bäume und Baumbrandgefahr
-  if(temperaturjetzt>80) 
+  if((temperaturjetzt ?? 0)>80)
 {bDoKill2=true;feuer=true;}
 }
 
 
-if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumänderungen, wenn mind. eine der beiden Regeln nicht aktiv ist, Umweltverschmutzung oder Jahreszeiten
+if(And(!FindObject2(Find_ID(UMG_)), !FindObject2(Find_ID(SES_)))) // Gras und Baumänderungen, wenn mind. eine der beiden Regeln nicht aktiv ist, Umweltverschmutzung oder Jahreszeiten
 { 
 //Grasänderungen
   for(var gras in FindObjects(Find_Func("IsBulletGrasTarget")))
@@ -137,10 +137,10 @@ if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumä
       if(!gras->~ChangeGraphic(graphics))
         FadeGraphics(graphics,gras);
 // ImFrühling auf Phase 2, also Blumen setzen
-    if(!Random(33) && jahreszeitjetzt>=12 && jahreszeitjetzt<37 && temperaturjetzt>0) 
+    if(And(And(And(!Random(33), (jahreszeitjetzt ?? 0)>=12), (jahreszeitjetzt ?? 0)<37), (temperaturjetzt ?? 0)>0))
     SetPhase(2,gras);
 // wenn nicht Frühling, dann keine Blumen, sondern nur Phase 0bis1
- if(!Random(166) && (jahreszeitjetzt<12 || jahreszeitjetzt>37)) 
+ if(And(!Random(166), (Or((jahreszeitjetzt ?? 0)<12, (jahreszeitjetzt ?? 0)>37))))
       SetPhase(Random(2),gras);
 }
 
@@ -151,7 +151,7 @@ if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumä
       if(!baum->~ChangeGraphic(graphics))
         FadeGraphics(graphics,baum);
     // Bäume töten
-    if(bDoKill && GetID(baum)!=CACT && GetID(baum)!=CAC2)
+    if(And(And(bDoKill, !Equal(GetID(baum), CACT)), !Equal(GetID(baum), CAC2)))
       if(!Random(33))
       {
         deathDef=GetDefBurnTo(GetID(baum));
@@ -167,7 +167,7 @@ if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumä
       }
 
     // Bäume verdursten
-    if(bDoKill2 && GetID(baum)!=CACT && GetID(baum)!=CAC2)
+    if(And(And(bDoKill2, !Equal(GetID(baum), CACT)), !Equal(GetID(baum), CAC2)))
       if(!Random(266))
       {
         deathDef=GetDefBurnTo(GetID(baum));
@@ -184,7 +184,7 @@ if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumä
 
 
    //Baumbrand Gefahr
-  if(feuer && GetID(baum)!=CACT && GetID(baum)!=CAC2)
+  if(And(And(feuer, !Equal(GetID(baum), CACT)), !Equal(GetID(baum), CAC2)))
    if(!Random(3333))
    {Incinerate(baum);}
 	}
@@ -199,6 +199,7 @@ if(!FindObject2(Find_ID(UMG_)) && !FindObject2(Find_ID(SES_))) // Gras und Baumä
 
 // wenn ein Clonk stirbt, kann ein neuer dafür nachgekauft werden. Dadurch, und durch die im Szenario eingestelle kaufmenge, soll garantiert werden, dass jeder immer maximal eine Menge x an Clonks haben kann, die Kaufmenge beim Tod von Clonks aber niemals erschöpft ist.
 func OnClonkDeath(object pClonk, int iKiller) {
+  iKiller ??= 0;
   DoHomebaseMaterial(GetOwner(pClonk), GetID(pClonk), 1);
 //Log("neuer clonk sollte kaufbar sein");
 return _inherited(pClonk, iKiller);
@@ -213,23 +214,23 @@ public func CheckPollution()
 
    /* LaubPartikel bewegen */
   if(!Random(10))
-  PushParticles("Laub",GetWind()/20+RandomX(-5,6),0);
+  PushParticles("Laub",(GetWind() ?? 0)/20+(RandomX(-5,6) ?? 0),nil);
   if(!Random(30))  
-   PushParticles("Laub",0,RandomX(-10,0));
+   PushParticles("Laub",nil,RandomX(-10,nil));
 
 
 //die Blitzlichtpartikel entfernen, wenn welche von wolken erstellt, globale variable. Wenn keine da, dann stört das nicht, deswegen dalassen.
-if(bliitzliiicht==1)
+if(Equal(bliitzliiicht, 1))
 if(!Random(1))
-{ClearParticles("PSpark");bliitzliiicht=0;}
+{ClearParticles("PSpark");bliitzliiicht=nil;}
 
 // nur einmal zu anfang:
-if (erledigt==0)
+if (Equal(erledigt, nil))
 {
 startnature2 = HashGet(hashSpielRegeln, "Umweltbelastbarkeit"); //werte pro Spieler
 
 //globalnature der Spielerzahl anpassen
-globalnature=startnature2*GetPlayerCount(C4PT_User);
+globalnature=(startnature2 ?? 0)*(GetPlayerCount(C4PT_User) ?? 0);
 //Log("sollte angepasst sein");
 startnature=globalnature;
 Log("globalnature gesetzt auf: %v", globalnature);
@@ -246,19 +247,19 @@ erledigt=1;
 
 //Gewitter bei starker Temp Änderung, evtl 
 //weil Temp am Spielstart sich immer stark ändert, folgende Bedingung:
-if (FrameCounter()>=3000)
+if ((FrameCounter() ?? 0)>=3000)
 {
 //wenn die Temperaturänderung innerhalb von 500Frames größer als 10 ist, dann gibts Gewitter
-if (gewitterzahl<=166)
-{++gewitterzahl;
-if(gewitterzahl==1) {tempe1=GetTemperature ();tempe2=GetTemperature ();}
+if ((gewitterzahl ?? 0)<=166)
+{S42MigrationStep(gewitterzahl, 1);
+if(Equal(gewitterzahl, 1)) {tempe1=GetTemperature ();tempe2=GetTemperature ();}
 }
 
-if(gewitterzahl>166)
+if((gewitterzahl ?? 0)>166)
 {tempe2=GetTemperature ();
-gewitterzahl=0;}
+gewitterzahl=nil;}
 
-if(Abs(tempe1-tempe2) >= 10)
+if((Abs((tempe1 ?? 0)-(tempe2 ?? 0)) ?? 0) >= 10)
 {
 Log("ein Gewitter zieht auf");
 
@@ -272,10 +273,10 @@ else{ohnewolkegewitter=1;}
 }
 
 //ohnewolkegewitter ausführen
-if(ohnewolkegewitter==1)
+if(Equal(ohnewolkegewitter, 1))
 {
-++ohnewolkegewitterzahler;
-if(ohnewolkegewitterzahler>=1000) {ohnewolkegewitter=0;ohnewolkegewitterzahler=0;}
+S42MigrationStep(ohnewolkegewitterzahler, 1);
+if((ohnewolkegewitterzahler ?? 0)>=1000) {ohnewolkegewitter=nil;ohnewolkegewitterzahler=nil;}
 if(!Random(100)) Blitzexyz();
 }
 
@@ -290,14 +291,14 @@ jetzigetemperatur=GetTemperature();
 if(FindObject2(Find_ID(KLI_)))  // nur wenn Regel aktiv ist!
 {
 
-if(jetzigetemperatur<-50 && jetzigetemperatur>-60)
+if(And((jetzigetemperatur ?? 0)<-50, (jetzigetemperatur ?? 0)>-60))
  {
- DynMessage("Kältewarnung! 1",0,16,RGBa(31,209,213,0));
+ DynMessage("Kältewarnung! 1",nil,16,RGBa(31,209,213,nil));
  }
 
-if(jetzigetemperatur<=-60 && jetzigetemperatur>=-80) 
+if(And((jetzigetemperatur ?? 0)<=-60, (jetzigetemperatur ?? 0)>=-80))
  {
-     DynMessage("Kältewarnung! 2,5",0,16,RGBa(31,209,213,0));
+     DynMessage("Kältewarnung! 2,5",nil,16,RGBa(31,209,213,nil));
 // Erstellt/entfernt ab und zu die Eismeteoritenregel, die zahl ist die Stärke.
 if(!Random(333)) Entferneeismeteoritenxyz();
 if(!Random(1000)) 
@@ -311,17 +312,17 @@ for( var target in FindObjects(Find_OCF(OCF_CrewMember), Find_NoContainer(),Find
    {
 //wenn die Funktion Klimaschutz im clonk true zurückliefert, dann kein Ziel,1 steht für Kälte, 2 für Hitze
 if(target->~Klimaschutz(1)) continue;
-if(!FindObject(CL22,0,0,0,0,0,"WarnCold",target))
+if(!FindObject(CL22,nil,nil,nil,nil,nil,"WarnCold",target))
       {
-var zeichen = CreateObject(CL22,0,0,-1);
+var zeichen = CreateObject(CL22,nil,nil,-1);
 zeichen->~Warning(target,1); 
        } // kältefarbe, das ziel und der zu machende schaden wird übergeben
    }
  }
 
 // wenn Temperatur unter -40°C geht gibt es eisigen Wind der den Clonks mehr schadet und sie werden ab und zu eingefroren. 
-if(jetzigetemperatur<-80) {
-DynMessage("Kältewarnung! 4",0,16,RGBa(31,209,213,0));
+if((jetzigetemperatur ?? 0)<-80) {
+DynMessage("Kältewarnung! 4",nil,16,RGBa(31,209,213,nil));
 // Erstellt/entfernt ab und zu die Eismeteoritenregel, die zahl ist die Stärke.
 if(!Random(500)) Entferneeismeteoritenxyz();
 if(!Random(666)) {Entferneeismeteoritenxyz();Eismeteoritenxyz(RandomX(1,10));}
@@ -332,60 +333,60 @@ for( var target in FindObjects(Find_OCF(OCF_CrewMember), Find_NoContainer(),Find
 //wenn die Funktion Klimaschutz im clonk true zurückliefert, dann kein Ziel
 if(target->~Klimaschutz(1)) continue;
 //nur kälteschaden, wenn nicht bereits vorhanden, oder eingefroren
-if(!FindObject(CL22,0,0,0,0,0,"WarnCold",target) && !FindObject(IC22,0,0,0,0,0,"Freeze",target)){
-var  zeichen = CreateObject(CL22,0,0,-1);
+if(And(!FindObject(CL22,nil,nil,nil,nil,nil,"WarnCold",target), !FindObject(IC22,nil,nil,nil,nil,nil,"Freeze",target))){
+var  zeichen = CreateObject(CL22,nil,nil,-1);
 zeichen->~Warning(target,2);}  // kältefarbe, das ziel und der zu machende schaden wird übergeben
 
 //ab und zu einfrieren, wenn noch nicht eingefroren
-if(!FindObject(IC22,0,0,0,0,0,"Freeze",target))
+if(!FindObject(IC22,nil,nil,nil,nil,nil,"Freeze",target))
 if(!Random(533)){var eisblock;
 ObjectSetAction(eisblock=CreateObject(IC22,GetX(target),GetY(target),-1),"Freeze",target);
     Extinguish(target);
-    AddVertex(GetVertex(0,0,target),GetVertex(0,1,target),eisblock);}
+    AddVertex(GetVertex(nil,nil,target),GetVertex(nil,1,target),eisblock);}
 }}
 
 //HITZE
-if(jetzigetemperatur>60 && jetzigetemperatur<70)
+if(And((jetzigetemperatur ?? 0)>60, (jetzigetemperatur ?? 0)<70))
  {
- DynMessage("Hitzewarnung! 1",0,16,RGBa(208,105,36,0));
+ DynMessage("Hitzewarnung! 1",nil,16,RGBa(208,105,36,nil));
  }
 // wenn Temperatur zwischen 35°C und 40C° geht ist es so heiß, dass Clonks etwas schaden nehmen
-if(jetzigetemperatur>=70 && jetzigetemperatur<=80) {
-    DynMessage("Hitzewarnung! 2",0,16,RGBa(208,105,36,0));
+if(And((jetzigetemperatur ?? 0)>=70, (jetzigetemperatur ?? 0)<=80)) {
+    DynMessage("Hitzewarnung! 2",nil,16,RGBa(208,105,36,nil));
 // Hitzedingens, muss mindestens alle 100Frames neu aufgerufen werden.
 for( var target in FindObjects(Find_OCF(OCF_CrewMember), Find_NoContainer(),Find_Not(Find_Func("IsAI")) ))
 {
 //wenn die Funktion Klimaschutz im Clonk true zurückliefert, dann kein Ziel
 if(target->~Klimaschutz(2)) continue;
-if(!FindObject(CL22,0,0,0,0,0,"WarnColdX",target)) {
-var  zeichen = CreateObject(CL22,0,0,-1);
+if(!FindObject(CL22,nil,nil,nil,nil,nil,"WarnColdX",target)) {
+var  zeichen = CreateObject(CL22,nil,nil,-1);
 zeichen->~WarningX(target,1); } // hitzefarbe, das ziel und der zu machende schaden wird übergeben
 }}
 
 // wenn Temperatur über 40C° geht ist es so heiß, dass Clonks mehr schaden nehmen
-if(jetzigetemperatur>80 && jetzigetemperatur<90) {
-    DynMessage("Hitzewarnung! 3",0,16,RGBa(208,105,36,0));
+if(And((jetzigetemperatur ?? 0)>80, (jetzigetemperatur ?? 0)<90)) {
+    DynMessage("Hitzewarnung! 3",nil,16,RGBa(208,105,36,nil));
 // Hitzedingens, muss mindestens alle 100Frames neu aufgerufen werden.
 for( var target in FindObjects(Find_OCF(OCF_CrewMember), Find_NoContainer(),Find_Not(Find_Func("IsAI")) ))
 {
 //wenn die Funktion Klimaschutz im Clonk true zurückliefert, dann kein Ziel
 if(target->~Klimaschutz(2)) continue;
-if(!FindObject(CL22,0,0,0,0,0,"WarnColdX",target)) {
- var zeichen = CreateObject(CL22,0,0,-1);
+if(!FindObject(CL22,nil,nil,nil,nil,nil,"WarnColdX",target)) {
+ var zeichen = CreateObject(CL22,nil,nil,-1);
 zeichen->~WarningX(target,2); } // hitzefarbe, das ziel und der zu machende schaden wird übergeben
 }}
 
 
 // wenn Temperatur über 45C° geht ist es so heiß, dass Clonks viel schaden nehmen
-if(jetzigetemperatur>=90) {
-    DynMessage("Hitzewarnung! 4",0,16,RGBa(208,105,36,0));
+if((jetzigetemperatur ?? 0)>=90) {
+    DynMessage("Hitzewarnung! 4",nil,16,RGBa(208,105,36,nil));
 // Hitzedingens, muss mindestens alle 100Frames neu aufgerufen werden.
 for( var target in FindObjects(Find_OCF(OCF_CrewMember), Find_NoContainer(),Find_Not(Find_Func("IsAI")) ))
 {
 //wenn die Funktion Klimaschutz im Clonk true zurückliefert, dann kein Ziel
 if(target->~Klimaschutz(2)) continue;
-if(!FindObject(CL22,0,0,0,0,0,"WarnColdX",target)) {
- var zeichen = CreateObject(CL22,0,0,-1);
+if(!FindObject(CL22,nil,nil,nil,nil,nil,"WarnColdX",target)) {
+ var zeichen = CreateObject(CL22,nil,nil,-1);
 zeichen->~WarningX(target,3); } // hitzefarbe, das ziel und der zu machende schaden wird übergeben
 }}
 
@@ -404,8 +405,8 @@ FilterAir();
 
 //globalpollution berechnen (statischer wert)
 
-globalpollution=gesamtwaste-baeume;
-globalpollutionanzeige = gesamtwaste-baeume; // dieser wert dient der Anzeige und kann kleiner null oder größer globalnature sein, damit man sieht, wieviel einem noch genau fehlt.
+globalpollution=(gesamtwaste ?? 0)-(baeume ?? 0);
+globalpollutionanzeige = (gesamtwaste ?? 0)-(baeume ?? 0); // dieser wert dient der Anzeige und kann kleiner null oder größer globalnature sein, damit man sieht, wieviel einem noch genau fehlt.
   CheckLimits();
 }
 
@@ -440,26 +441,26 @@ if(!Random(5))
 {
 
 //Umwelt stärken
-if(GetPlrKnowledge(0,_BAL) && player1==0) {player1=1;Natureverbesserung();}
-if(GetPlrKnowledge(1,_BAL) && player2==0) {player2=1;Natureverbesserung();}
-if(GetPlrKnowledge(2,_BAL) && player3==0) {player3=1;Natureverbesserung();}
-if(GetPlrKnowledge(3,_BAL) && player4==0) {player4=1;Natureverbesserung();}
-if(GetPlrKnowledge(4,_BAL) && player5==0) {player5=1;Natureverbesserung();}
-if(GetPlrKnowledge(5,_BAL) && player6==0) {player6=1;Natureverbesserung();}
-if(GetPlrKnowledge(6,_BAL) && player7==0) {player7=1;Natureverbesserung();}
-if(GetPlrKnowledge(7,_BAL) && player8==0) {player8=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(nil,_BAL), Equal(player1, nil))) {player1=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(1,_BAL), Equal(player2, nil))) {player2=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(2,_BAL), Equal(player3, nil))) {player3=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(3,_BAL), Equal(player4, nil))) {player4=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(4,_BAL), Equal(player5, nil))) {player5=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(5,_BAL), Equal(player6, nil))) {player6=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(6,_BAL), Equal(player7, nil))) {player7=1;Natureverbesserung();}
+if(And(GetPlrKnowledge(7,_BAL), Equal(player8, nil))) {player8=1;Natureverbesserung();}
 
 //Freier Händler
-if (ObjectCount2(Find_ID(SAIT))<=4)
+if ((ObjectCount2(Find_ID(SAIT)) ?? 0)<=4)
 {
-if(GetPlrKnowledge(0,ERIT) && playerfh1==0) {playerfh1=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(1,ERIT) && playerfh2==0) {playerfh2=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(2,ERIT) && playerfh3==0) {playerfh3=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(3,ERIT) && playerfh4==0) {playerfh4=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(4,ERIT) && playerfh5==0) {playerfh5=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(5,ERIT) && playerfh6==0) {playerfh6=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(6,ERIT) && playerfh7==0) {playerfh7=1;CreateObject(SAIT,1,1,-1);}
-if(GetPlrKnowledge(7,ERIT) && playerfh8==0) {playerfh8=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(nil,ERIT), Equal(playerfh1, nil))) {playerfh1=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(1,ERIT), Equal(playerfh2, nil))) {playerfh2=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(2,ERIT), Equal(playerfh3, nil))) {playerfh3=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(3,ERIT), Equal(playerfh4, nil))) {playerfh4=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(4,ERIT), Equal(playerfh5, nil))) {playerfh5=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(5,ERIT), Equal(playerfh6, nil))) {playerfh6=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(6,ERIT), Equal(playerfh7, nil))) {playerfh7=1;CreateObject(SAIT,1,1,-1);}
+if(And(GetPlrKnowledge(7,ERIT), Equal(playerfh8, nil))) {playerfh8=1;CreateObject(SAIT,1,1,-1);}
 }
 
 }
@@ -468,12 +469,12 @@ if(GetPlrKnowledge(7,ERIT) && playerfh8==0) {playerfh8=1;CreateObject(SAIT,1,1,-
 ForestChange();
 
 //Stufen
-if (globalpollution<=globalnature*40/100) Stufe0();
-if (globalpollution>globalnature*40/100 && globalpollution<=globalnature*50/100) Stufe1(); 
-if (globalpollution>globalnature*50/100 && globalpollution<=globalnature*60/100) Stufe2(); 
-if (globalpollution>globalnature*60/100 && globalpollution<=globalnature*70/100) Stufe3(); 
-if (globalpollution>globalnature*70/100 && globalpollution<globalnature*100/100) Stufe4(); 
-if (globalpollution==globalnature*100/100) Stufe5(); 
+if ((globalpollution ?? 0)<=(globalnature ?? 0)*40/100) Stufe0();
+if (And((globalpollution ?? 0)>(globalnature ?? 0)*40/100, (globalpollution ?? 0)<=(globalnature ?? 0)*50/100)) Stufe1();
+if (And((globalpollution ?? 0)>(globalnature ?? 0)*50/100, (globalpollution ?? 0)<=(globalnature ?? 0)*60/100)) Stufe2();
+if (And((globalpollution ?? 0)>(globalnature ?? 0)*60/100, (globalpollution ?? 0)<=(globalnature ?? 0)*70/100)) Stufe3();
+if (And((globalpollution ?? 0)>(globalnature ?? 0)*70/100, (globalpollution ?? 0)<(globalnature ?? 0)*100/100)) Stufe4();
+if (Equal(globalpollution, (globalnature ?? 0)*100/100)) Stufe5();
 
 
   return(1);
@@ -496,10 +497,10 @@ if (globalpollution==globalnature*100/100) Stufe5();
 
 func Stufe0()
 {
-if (stufee0==0){
+if (Equal(stufee0, nil)){
 //Meeresspiegel normalisieren
 Water();SetClimate(startklima);
-Message("Keine Umweltbelastung, alles im grünen Bereich");stufee0=1;stufee1=0;stufee2=0;stufee3=0;stufee4=0;stufee5=0;ClearParticles("Nebel2"); RemoveAll(VM9Z);if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);};
+Message("Keine Umweltbelastung, alles im grünen Bereich");stufee0=1;stufee1=nil;stufee2=nil;stufee3=nil;stufee4=nil;stufee5=nil;ClearParticles("Nebel2"); RemoveAll(VM9Z);if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);};
 
 
 
@@ -509,7 +510,7 @@ Message("Keine Umweltbelastung, alles im grünen Bereich");stufee0=1;stufee1=0;st
 
 func Stufe1()
 {
-if (stufee1==0) {Log("Stufe1");Water();SetClimate(startklima+3);Message("Leichte Umweltbelastung Stufe1, Meeresspiegel klein wenig erhöht, startklima+3"); stufee0=0;stufee1=1;stufee2=0;stufee3=0;stufee4=0;stufee5=0;ClearParticles("Nebel2"); RemoveAll(VM9Z);if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);}
+if (Equal(stufee1, nil)) {Log("Stufe1");Water();SetClimate((startklima ?? 0)+3);Message("Leichte Umweltbelastung Stufe1, Meeresspiegel klein wenig erhöht, startklima+3"); stufee0=nil;stufee1=1;stufee2=nil;stufee3=nil;stufee4=nil;stufee5=nil;ClearParticles("Nebel2"); RemoveAll(VM9Z);if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);}
 
 
 
@@ -518,14 +519,14 @@ if (stufee1==0) {Log("Stufe1");Water();SetClimate(startklima+3);Message("Leichte
 
 func Stufe2()
 {
-if (stufee2==0) {Log("Stufe2");Water();SetClimate(startklima+6);Message("Umweltbelastung Stufe2; die Bäume werden krank, wenn es schlimmer wird, könnten sie absterben; Leichter Smog behindert die Sicht; Meeresspiegel leicht erhöht; startklima+6"); stufee0=0;stufee1=0;stufee2=1;stufee3=0;stufee4=0;stufee5=0;if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);}
+if (Equal(stufee2, nil)) {Log("Stufe2");Water();SetClimate((startklima ?? 0)+6);Message("Umweltbelastung Stufe2; die Bäume werden krank, wenn es schlimmer wird, könnten sie absterben; Leichter Smog behindert die Sicht; Meeresspiegel leicht erhöht; startklima+6"); stufee0=nil;stufee1=nil;stufee2=1;stufee3=nil;stufee4=nil;stufee5=nil;if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);if(cloudAsche) RemoveObject(cloudAsche);}
 
 //Verschmutzungsnebel, nur wenn nicht deaktiviert
 
 if(!FindObject2(Find_Or(Find_ID(UMG_),Find_ID(VSCH)))) 
 {
-  if(ObjectCount2(Find_ID(VM9Z))>1)  {ClearParticles("Nebel2"); RemoveAll(VM9Z);}
-if(ObjectCount2(Find_ID(VM9Z))<1) {CreateObject(VM9Z);}
+  if((ObjectCount2(Find_ID(VM9Z)) ?? 0)>1)  {ClearParticles("Nebel2"); RemoveAll(VM9Z);}
+if((ObjectCount2(Find_ID(VM9Z)) ?? 0)<1) {CreateObject(VM9Z);}
 }
 
 }
@@ -533,15 +534,15 @@ if(ObjectCount2(Find_ID(VM9Z))<1) {CreateObject(VM9Z);}
 
 func Stufe3()
 {
-if (stufee3==0) {Log("Stufe3");Water();SetClimate(startklima+12);Message("Umweltbelastung Stufe3;Mittelstarker Smog;Es regnet Asche; Um Stufe 4 (Baumsterben) zu verhindern sollten Bäume gepflanzt, Filteranlagen gebaut und Müll/Industriegebäude beseitigt werden; Meeresspiegel erhöht; startklima+12"); stufee0=0;stufee1=0;stufee2=0;stufee3=1;stufee4=0;stufee5=0;if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);}
+if (Equal(stufee3, nil)) {Log("Stufe3");Water();SetClimate((startklima ?? 0)+12);Message("Umweltbelastung Stufe3;Mittelstarker Smog;Es regnet Asche; Um Stufe 4 (Baumsterben) zu verhindern sollten Bäume gepflanzt, Filteranlagen gebaut und Müll/Industriegebäude beseitigt werden; Meeresspiegel erhöht; startklima+12"); stufee0=nil;stufee1=nil;stufee2=nil;stufee3=1;stufee4=nil;stufee5=nil;if(cloudAcid) RemoveObject(cloudAcid); if(cloudLava) RemoveObject(cloudLava);}
 
 Ascheregenxyz();Ascheregenxyz();Ascheregenxyz();
 
 //Verschmutzungsnebel
 if(!FindObject2(Find_Or(Find_ID(UMG_),Find_ID(VSCH)))) 
 {
-  if(ObjectCount2(Find_ID(VM9Z))>4) {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
-if(ObjectCount2(Find_ID(VM9Z))<4) {CreateObject(VM9Z);}
+  if((ObjectCount2(Find_ID(VM9Z)) ?? 0)>4) {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
+if((ObjectCount2(Find_ID(VM9Z)) ?? 0)<4) {CreateObject(VM9Z);}
 }
 
 
@@ -550,19 +551,19 @@ if(!FindObject(WOL_))
  {
 if(!cloudAsche) {
 //Ascheregenwolke.. erstmal nur eine, weil ich noch nicht weiß, wie ich mehrere am besten entferne
-var blitze=0;
-var ende = 0;
+var blitze=nil;
+var ende = nil;
  var strenght = RandomX(40,100);
   var iMat= Material("Ashes");
-  cloudAsche = CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloudAsche) return(0);
+  cloudAsche = CreateObject(FX22,Random(LandscapeWidth()),nil,NO_OWNER);
+  if(!cloudAsche) return(nil);
   cloudAsche-> Activate(iMat,LandscapeWidth(),strenght,blitze);}
  }
 }
 
 func Stufe4()
 {
-if (stufee4==0) {Log("Stufe4");Water();SetClimate(startklima+24);Message("Umweltbelastung Stufe4;Bäume sterben und filtern nur noch sehr schwach die Luft, wodurch die Verschmutzung ansteigt; Es regnet Säure und starker Smog bedeckt die Sicht;einige Katastrophen;Stufe5 sollte unbedingt verhindert werden! ; Meeresspiegel stark erhöht; startklima+24"); stufee0=0;stufee1=0;stufee2=0;stufee3=0;stufee4=1;stufee5=0;if(cloudLava) RemoveObject(cloudLava); if(cloudAsche) RemoveObject(cloudAsche);}
+if (Equal(stufee4, nil)) {Log("Stufe4");Water();SetClimate((startklima ?? 0)+24);Message("Umweltbelastung Stufe4;Bäume sterben und filtern nur noch sehr schwach die Luft, wodurch die Verschmutzung ansteigt; Es regnet Säure und starker Smog bedeckt die Sicht;einige Katastrophen;Stufe5 sollte unbedingt verhindert werden! ; Meeresspiegel stark erhöht; startklima+24"); stufee0=nil;stufee1=nil;stufee2=nil;stufee3=nil;stufee4=1;stufee5=nil;if(cloudLava) RemoveObject(cloudLava); if(cloudAsche) RemoveObject(cloudAsche);}
 Saureregenxyz();Saureregenxyz();Saureregenxyz();
 if(!Random(166)) Blitzexyz();
 if(!Random(666)) Erdbebenxyz();
@@ -572,8 +573,8 @@ if(!Random(333)) Vulcanxyz();
 //Verschmutzungsnebel
    if(!FindObject2(Find_Or(Find_ID(UMG_),Find_ID(VSCH)))) 
 {
-  if(ObjectCount2(Find_ID(VM9Z))>7)  {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
-if(ObjectCount2(Find_ID(VM9Z))<7) {CreateObject(VM9Z);}
+  if((ObjectCount2(Find_ID(VM9Z)) ?? 0)>7)  {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
+if((ObjectCount2(Find_ID(VM9Z)) ?? 0)<7) {CreateObject(VM9Z);}
 }
 
 // wenn "keine wolken" aktiv ist, dann keine wolken
@@ -581,12 +582,12 @@ if(!FindObject(WOL_))
  {
 if(!cloudAcid) {
 //Acidregenwolke.. erstmal nur eine, weil ich noch nicht weiß, wie ich mehrere am besten entferne
-var blitze=0;
-var ende = 0;
+var blitze=nil;
+var ende = nil;
  var strenght = RandomX(40,100);
   var iMat= Material("Acid");
-  cloudAcid = CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloudAcid) return(0);
+  cloudAcid = CreateObject(FX22,Random(LandscapeWidth()),nil,NO_OWNER);
+  if(!cloudAcid) return(nil);
   cloudAcid-> Activate(iMat,LandscapeWidth(),strenght,blitze);}
  }
 }
@@ -594,20 +595,20 @@ var ende = 0;
 
 func Stufe5()
 { 
-if (stufee5==0) {Log("Stufe5");Water();SetClimate(startklima+40);Message("Umweltbelastung Stufe5; Jetzt heißt es nur noch überleben.Sehr starker Smog bedeckt die Sicht, Es regnet Lava und Meteoriten, heftige Gewitter, Erdbeben und Vulkanausbrüche sind an der Tagesordnung; Das einzig positive ist, dass dadurch möglicherweise genug zerstört wird, um die Umweltbelastung zu senken und die Natur erholt sich wieder; Meeresspiegel sehr stark erhöht; startklima+40"); stufee0=0;stufee1=0;stufee2=0;stufee3=0;stufee4=0;stufee5=1;if(cloudAcid) RemoveObject(cloudAcid); if(cloudAsche) RemoveObject(cloudAsche);}
+if (Equal(stufee5, nil)) {Log("Stufe5");Water();SetClimate((startklima ?? 0)+40);Message("Umweltbelastung Stufe5; Jetzt heißt es nur noch überleben.Sehr starker Smog bedeckt die Sicht, Es regnet Lava und Meteoriten, heftige Gewitter, Erdbeben und Vulkanausbrüche sind an der Tagesordnung; Das einzig positive ist, dass dadurch möglicherweise genug zerstört wird, um die Umweltbelastung zu senken und die Natur erholt sich wieder; Meeresspiegel sehr stark erhöht; startklima+40"); stufee0=nil;stufee1=nil;stufee2=nil;stufee3=nil;stufee4=nil;stufee5=1;if(cloudAcid) RemoveObject(cloudAcid); if(cloudAsche) RemoveObject(cloudAsche);}
 Lavaregenxyz();Lavaregenxyz();Lavaregenxyz();
 if(!Random(66)) Blitzexyz();
 if(!Random(333)) Erdbebenxyz();
 if(!Random(33)) Meteoritenxyz();
 if(!Random(166)) Vulcanxyz();
-if(!Random(20)) CastObjects(LAVA,1,100,Random(LandscapeWidth()),0);  // Lavabrocken 
+if(!Random(20)) CastObjects(LAVA,1,100,Random(LandscapeWidth()),nil);  // Lavabrocken
 
 //Verschmutzungsnebel
 
 if(!FindObject2(Find_Or(Find_ID(UMG_),Find_ID(VSCH)))) 
 {
-  if(ObjectCount2(Find_ID(VM9Z))>10) {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
-if(ObjectCount2(Find_ID(VM9Z))<10) {CreateObject(VM9Z);}
+  if((ObjectCount2(Find_ID(VM9Z)) ?? 0)>10) {ClearParticles("Nebel2"); RemoveAll(VM9Z);  CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);CreateObject(VM9Z);}
+if((ObjectCount2(Find_ID(VM9Z)) ?? 0)<10) {CreateObject(VM9Z);}
 }
 
 // wenn "keine wolken" aktiv ist, dann keine wolken
@@ -615,12 +616,12 @@ if(!FindObject(WOL_))
  {
 if(!cloudLava) {
 //Lavaregenwolke.. erstmal nur eine, weil ich noch nicht weiß, wie ich mehrere am besten entferne
-var blitze=0;
-var ende = 0;
+var blitze=nil;
+var ende = nil;
  var strenght = RandomX(40,100);
   var iMat= Material("Lava");
-  cloudLava = CreateObject(FX22,Random(LandscapeWidth()),0,NO_OWNER());
-  if(!cloudLava) return(0);
+  cloudLava = CreateObject(FX22,Random(LandscapeWidth()),nil,NO_OWNER);
+  if(!cloudLava) return(nil);
   cloudLava-> Activate(iMat,LandscapeWidth(),strenght,blitze);}
  }
 }
@@ -629,13 +630,13 @@ var ende = 0;
 public func Natureverbesserung()
 {
 //sorgt dafür, dass globalnature mit 2,5 Multipliziert wird, sobald alles spieler es erforscht haben (bei einzelnen Spielern ist es halt ein Bruchteil davon)
-globalnature+=(((startnature*250/100)-startnature)/GetPlayerCount(C4PT_User));
+S42MigrationAssign(globalnature, "+=", ((((startnature ?? 0)*250/100)-(startnature ?? 0))/(GetPlayerCount(C4PT_User) ?? 0)));
 
 //sorgt dafür, dass alle vorhandenen Bäume sich 2 mal fortpflanzen. -> keine neuen Bäume, wenn keine alten da, oder wenn kein Platz mehr ist
 var obj;
 for(var obj in FindObjects(Find_OCF(OCF_Chop)))
 {obj->Reproduction();obj->Reproduction();};
-return();
+return;
 }
 
 
@@ -645,23 +646,23 @@ public func Water() // erhoehe den Meeresspiegel bei verschmutzung ( -> kleinere
     // die Szenariospezifischen Meeresstufen sind in aScenMeeresStufen der Form [["Stufe1",5],["Stufe2",15]["Stufe3",25],["Stufe4",30],["Stufe5",40]]. Bzw. wenn es keine Vorgaben gibt, ist es 0
     // yPos ist eine lokale variable, die den Start meeresspiegel beinhaltet, sofern drai objkete vorhanden
 
-if (globalpollution<=globalnature*40/100) // stufe 0
-{gChangeMeeresspiegel(yPos,1);meer1=0;meer2=0;meer3=0;meer4=0;meer5=0;globalmeeresspiegel=yPos;};    
+if ((globalpollution ?? 0)<=(globalnature ?? 0)*40/100) // stufe 0
+{gChangeMeeresspiegel(yPos,1);meer1=nil;meer2=nil;meer3=nil;meer4=nil;meer5=nil;globalmeeresspiegel=yPos;};
     
-if (globalpollution>globalnature*40/100 && globalpollution<=globalnature*50/100 && meer1==0) 
-{if(aScenMeeresStufen) {gChangeMeeresspiegel(yPos-aScenMeeresStufen[0][1],1);globalmeeresspiegel=yPos-aScenMeeresStufen[0][1];} else {gChangeMeeresspiegel(yPos-5,1);globalmeeresspiegel=yPos-5;}meer1=1;meer2=0;meer3=0;meer4=0;meer5=0;}  // gChangeMeeresspiegel(2,1) setzt die position aller DRAI objekte auf Y = 2. funktioniert daher nur, wenn die Environment meeresspiegel aktiv ist.
+if (And(And((globalpollution ?? 0)>(globalnature ?? 0)*40/100, (globalpollution ?? 0)<=(globalnature ?? 0)*50/100), Equal(meer1, nil)))
+{if(aScenMeeresStufen) {gChangeMeeresspiegel((yPos ?? 0)-(aScenMeeresStufen[0][1] ?? 0),1);globalmeeresspiegel=(yPos ?? 0)-(aScenMeeresStufen[0][1] ?? 0);} else {gChangeMeeresspiegel((yPos ?? 0)-5,1);globalmeeresspiegel=(yPos ?? 0)-5;}meer1=1;meer2=nil;meer3=nil;meer4=nil;meer5=nil;}  // gChangeMeeresspiegel(2,1) setzt die position aller DRAI objekte auf Y = 2. funktioniert daher nur, wenn die Environment meeresspiegel aktiv ist.
 
-if (globalpollution>globalnature*50/100 && globalpollution<=globalnature*60/100 && meer2==0) 
-{if(aScenMeeresStufen) {gChangeMeeresspiegel(yPos-aScenMeeresStufen[1][1],1);globalmeeresspiegel=yPos-aScenMeeresStufen[1][1];} else {gChangeMeeresspiegel(yPos-12,1);globalmeeresspiegel=yPos-12;}meer1=0;meer2=1;meer3=0;meer4=0;meer5=0;}
+if (And(And((globalpollution ?? 0)>(globalnature ?? 0)*50/100, (globalpollution ?? 0)<=(globalnature ?? 0)*60/100), Equal(meer2, nil)))
+{if(aScenMeeresStufen) {gChangeMeeresspiegel((yPos ?? 0)-(aScenMeeresStufen[1][1] ?? 0),1);globalmeeresspiegel=(yPos ?? 0)-(aScenMeeresStufen[1][1] ?? 0);} else {gChangeMeeresspiegel((yPos ?? 0)-12,1);globalmeeresspiegel=(yPos ?? 0)-12;}meer1=nil;meer2=1;meer3=nil;meer4=nil;meer5=nil;}
 
-if (globalpollution>globalnature*60/100 && globalpollution<=globalnature*70/100 && meer3==0) 
-{if(aScenMeeresStufen) {gChangeMeeresspiegel(yPos-aScenMeeresStufen[2][1],1);globalmeeresspiegel=yPos-aScenMeeresStufen[2][1];} else {gChangeMeeresspiegel(yPos-22,1);globalmeeresspiegel=yPos-22;}meer1=0;meer2=0;meer3=1;meer4=0;meer5=0;}
+if (And(And((globalpollution ?? 0)>(globalnature ?? 0)*60/100, (globalpollution ?? 0)<=(globalnature ?? 0)*70/100), Equal(meer3, nil)))
+{if(aScenMeeresStufen) {gChangeMeeresspiegel((yPos ?? 0)-(aScenMeeresStufen[2][1] ?? 0),1);globalmeeresspiegel=(yPos ?? 0)-(aScenMeeresStufen[2][1] ?? 0);} else {gChangeMeeresspiegel((yPos ?? 0)-22,1);globalmeeresspiegel=(yPos ?? 0)-22;}meer1=nil;meer2=nil;meer3=1;meer4=nil;meer5=nil;}
 
-if (globalpollution>globalnature*70/100 && globalpollution<globalnature*100/100 && meer4==0) 
-{if(aScenMeeresStufen) {gChangeMeeresspiegel(yPos-aScenMeeresStufen[3][1],1);globalmeeresspiegel=yPos-aScenMeeresStufen[3][1];} else {gChangeMeeresspiegel(yPos-37,1);globalmeeresspiegel=yPos-37;}meer1=0;meer2=0;meer3=0;meer4=1;meer5=0;}
+if (And(And((globalpollution ?? 0)>(globalnature ?? 0)*70/100, (globalpollution ?? 0)<(globalnature ?? 0)*100/100), Equal(meer4, nil)))
+{if(aScenMeeresStufen) {gChangeMeeresspiegel((yPos ?? 0)-(aScenMeeresStufen[3][1] ?? 0),1);globalmeeresspiegel=(yPos ?? 0)-(aScenMeeresStufen[3][1] ?? 0);} else {gChangeMeeresspiegel((yPos ?? 0)-37,1);globalmeeresspiegel=(yPos ?? 0)-37;}meer1=nil;meer2=nil;meer3=nil;meer4=1;meer5=nil;}
 
-if (globalpollution>=globalnature*100/100 && meer5==0) 
-{if(aScenMeeresStufen) {gChangeMeeresspiegel(yPos-aScenMeeresStufen[4][1],1);globalmeeresspiegel=yPos-aScenMeeresStufen[4][1];} else {gChangeMeeresspiegel(yPos-60,1);globalmeeresspiegel=yPos-60;}meer1=0;meer2=0;meer3=0;meer4=0;meer5=1;}
+if (And((globalpollution ?? 0)>=(globalnature ?? 0)*100/100, Equal(meer5, nil)))
+{if(aScenMeeresStufen) {gChangeMeeresspiegel((yPos ?? 0)-(aScenMeeresStufen[4][1] ?? 0),1);globalmeeresspiegel=(yPos ?? 0)-(aScenMeeresStufen[4][1] ?? 0);} else {gChangeMeeresspiegel((yPos ?? 0)-60,1);globalmeeresspiegel=(yPos ?? 0)-60;}meer1=nil;meer2=nil;meer3=nil;meer4=nil;meer5=1;}
 
   return(1);
 }
@@ -672,148 +673,148 @@ public func Waste()
 
 var waste,temp,waste1,temp1,waste2,temp2,waste3,temp3,waste4,temp4,waste5,temp5,waste6,temp6,waste7,temp7;
 
-  for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(0)))
+  for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(nil)))
 {
     temp=obj->IsWaste();
-    if(GetPlrKnowledge(0,_BAO) && !(GetPlrKnowledge(0,_BA2))) 
+    if(And(GetPlrKnowledge(nil,_BAO), !(GetPlrKnowledge(nil,_BA2))))
     {
-        if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal, und auch bei Filternanlage
-          waste+=(temp/2*(200/3))/100;     
-        else  waste+=(temp*(200/3))/100;
+        if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal, und auch bei Filternanlage
+          S42MigrationAssign(waste, "+=", ((temp ?? 0)/2*(200/3))/100);
+        else  S42MigrationAssign(waste, "+=", ((temp ?? 0)*(200/3))/100);
     }
-    else if(GetPlrKnowledge(0,_BAO) && GetPlrKnowledge(0,_BA2))
+    else if(And(GetPlrKnowledge(nil,_BAO), GetPlrKnowledge(nil,_BA2)))
     {
-        if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-          waste+=temp/4;     
-        else  waste+=temp/2;
+        if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+          S42MigrationAssign(waste, "+=", (temp ?? 0)/4);
+        else  S42MigrationAssign(waste, "+=", (temp ?? 0)/2);
     }
     else
     {   
-         if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-          waste+=temp/2;
-         else  waste+=temp;
+         if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+          S42MigrationAssign(waste, "+=", (temp ?? 0)/2);
+         else  S42MigrationAssign(waste, "+=", (temp ?? 0));
     }
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(1)))
   {
     temp1=obj->IsWaste();
-if(GetPlrKnowledge(1,_BAO) && !(GetPlrKnowledge(1,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste1+=(temp1/2*(200/3))/100;     
-else     waste1+=(temp1*(200/3))/100;}
-else if(GetPlrKnowledge(1,_BAO) && GetPlrKnowledge(1,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste1+=temp1/4;     
-else     waste1+=temp1/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste1+=temp1/2;
-     else     waste1+=temp1;};
+if(And(GetPlrKnowledge(1,_BAO), !(GetPlrKnowledge(1,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste1, "+=", ((temp1 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste1, "+=", ((temp1 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(1,_BAO), GetPlrKnowledge(1,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste1, "+=", (temp1 ?? 0)/4);
+else     S42MigrationAssign(waste1, "+=", (temp1 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste1, "+=", (temp1 ?? 0)/2);
+     else     S42MigrationAssign(waste1, "+=", (temp1 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(2)))
   {
     temp2=obj->IsWaste();
-if(GetPlrKnowledge(2,_BAO) && !(GetPlrKnowledge(2,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste2+=(temp2/2*(200/3))/100;     
-else     waste2+=(temp2*(200/3))/100;}
-else if(GetPlrKnowledge(2,_BAO) && GetPlrKnowledge(2,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste2+=temp2/4;     
-else     waste2+=temp2/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste2+=temp2/2;
-     else     waste2+=temp2;};
+if(And(GetPlrKnowledge(2,_BAO), !(GetPlrKnowledge(2,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste2, "+=", ((temp2 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste2, "+=", ((temp2 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(2,_BAO), GetPlrKnowledge(2,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste2, "+=", (temp2 ?? 0)/4);
+else     S42MigrationAssign(waste2, "+=", (temp2 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste2, "+=", (temp2 ?? 0)/2);
+     else     S42MigrationAssign(waste2, "+=", (temp2 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(3)))
   {
     temp3=obj->IsWaste();
-if(GetPlrKnowledge(3,_BAO) && !(GetPlrKnowledge(3,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste3+=(temp3/2*(200/3))/100;     
-else     waste3+=(temp3*(200/3))/100;}
-else if(GetPlrKnowledge(3,_BAO) && GetPlrKnowledge(3,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste3+=temp3/4;     
-else     waste3+=temp3/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste3+=temp3/2;
-     else     waste3+=temp3;};
+if(And(GetPlrKnowledge(3,_BAO), !(GetPlrKnowledge(3,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste3, "+=", ((temp3 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste3, "+=", ((temp3 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(3,_BAO), GetPlrKnowledge(3,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste3, "+=", (temp3 ?? 0)/4);
+else     S42MigrationAssign(waste3, "+=", (temp3 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste3, "+=", (temp3 ?? 0)/2);
+     else     S42MigrationAssign(waste3, "+=", (temp3 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(4)))
   {
     temp4=obj->IsWaste();
-if(GetPlrKnowledge(4,_BAO) && !(GetPlrKnowledge(4,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste4+=(temp4/2*(200/3))/100;     
-else     waste4+=(temp4*(200/3))/100;}
-else if(GetPlrKnowledge(4,_BAO) && GetPlrKnowledge(4,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste4+=temp4/4;     
-else     waste4+=temp4/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste4+=temp4/2;
-     else     waste4+=temp4;};
+if(And(GetPlrKnowledge(4,_BAO), !(GetPlrKnowledge(4,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste4, "+=", ((temp4 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste4, "+=", ((temp4 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(4,_BAO), GetPlrKnowledge(4,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste4, "+=", (temp4 ?? 0)/4);
+else     S42MigrationAssign(waste4, "+=", (temp4 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste4, "+=", (temp4 ?? 0)/2);
+     else     S42MigrationAssign(waste4, "+=", (temp4 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(5)))
   {
     temp5=obj->IsWaste();
-if(GetPlrKnowledge(5,_BAO) && !(GetPlrKnowledge(5,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste5+=(temp5/2*(200/3))/100;     
-else     waste5+=(temp5*(200/3))/100;}
-else if(GetPlrKnowledge(5,_BAO) && GetPlrKnowledge(5,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste5+=temp5/4;     
-else     waste5+=temp5/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste5+=temp5/2;
-     else     waste5+=temp5;};
+if(And(GetPlrKnowledge(5,_BAO), !(GetPlrKnowledge(5,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste5, "+=", ((temp5 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste5, "+=", ((temp5 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(5,_BAO), GetPlrKnowledge(5,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste5, "+=", (temp5 ?? 0)/4);
+else     S42MigrationAssign(waste5, "+=", (temp5 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste5, "+=", (temp5 ?? 0)/2);
+     else     S42MigrationAssign(waste5, "+=", (temp5 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(6)))
   {
     temp6=obj->IsWaste();
-if(GetPlrKnowledge(6,_BAO) && !(GetPlrKnowledge(6,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste6+=(temp6/2*(200/3))/100;     
-else     waste6+=(temp6*(200/3))/100;}
-else if(GetPlrKnowledge(6,_BAO) && GetPlrKnowledge(6,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste6+=temp6/4;     
-else     waste6+=temp6/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste6+=temp6/2;
-     else     waste6+=temp6;};
+if(And(GetPlrKnowledge(6,_BAO), !(GetPlrKnowledge(6,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste6, "+=", ((temp6 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste6, "+=", ((temp6 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(6,_BAO), GetPlrKnowledge(6,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste6, "+=", (temp6 ?? 0)/4);
+else     S42MigrationAssign(waste6, "+=", (temp6 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste6, "+=", (temp6 ?? 0)/2);
+     else     S42MigrationAssign(waste6, "+=", (temp6 ?? 0));};
 };
 
   for(var obj in FindObjects(Find_Func("IsWaste"),Find_Owner(7)))
   {
     temp7=obj->IsWaste();
-if(GetPlrKnowledge(7,_BAO) && !(GetPlrKnowledge(7,_BA2))) {if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste7+=(temp7/2*(200/3))/100;     
-else     waste7+=(temp7*(200/3))/100;}
-else if(GetPlrKnowledge(7,_BAO) && GetPlrKnowledge(7,_BA2))
-{if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal
-      waste7+=temp7/4;     
-else     waste7+=temp7/2;}
-else{   if(VerticesStuck(obj)>=GetVertexNum(obj) && GetID(obj)!=VBWS && GetID(obj)!=_X1A) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
-      waste7+=temp7/2;
-     else     waste7+=temp7;};
+if(And(GetPlrKnowledge(7,_BAO), !(GetPlrKnowledge(7,_BA2)))) {if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste7, "+=", ((temp7 ?? 0)/2*(200/3))/100);
+else     S42MigrationAssign(waste7, "+=", ((temp7 ?? 0)*(200/3))/100);}
+else if(And(GetPlrKnowledge(7,_BAO), GetPlrKnowledge(7,_BA2)))
+{if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal
+      S42MigrationAssign(waste7, "+=", (temp7 ?? 0)/4);
+else     S42MigrationAssign(waste7, "+=", (temp7 ?? 0)/2);}
+else{   if(And(And((VerticesStuck(obj) ?? 0)>=(GetVertexNum(obj) ?? 0), !Equal(GetID(obj), VBWS)), !Equal(GetID(obj), _X1A))) // beim verbrannter Müll objekt ist feststecken egal//Im Erdboden vergraben : Nicht so umweltschädigent
+      S42MigrationAssign(waste7, "+=", (temp7 ?? 0)/2);
+     else     S42MigrationAssign(waste7, "+=", (temp7 ?? 0));};
 };
 
-gesamtwaste=waste+waste1+waste2+waste3+waste4+waste5+waste6+waste7;
+gesamtwaste=(waste ?? 0)+(waste1 ?? 0)+(waste2 ?? 0)+(waste3 ?? 0)+(waste4 ?? 0)+(waste5 ?? 0)+(waste6 ?? 0)+(waste7 ?? 0);
  return(gesamtwaste);
 }
 
 
 public func CheckLimits()
     {
-    globalpollution=BoundBy(globalpollution,0,globalnature);   
+    globalpollution=BoundBy(globalpollution,nil,globalnature);
     }
 
 public func FilterAir()
 {
 // ausgewachsene Bäume zählen -6, wachsende Bäume zählen -3, tote Bäume-2 und wachsendes Gras -0,5 und fertiges gras -1
-baeume=(ObjectCount2(Find_Func("IsTree"),Find_OCF(OCF_Fullcon),Find_Not(Find_Func("IsDeadTree")))*6 + ObjectCount2(Find_Func("IsTree"),Find_Not(Find_OCF(OCF_Fullcon)),Find_Not(Find_Func("IsDeadTree")))*3 + ObjectCount2(Find_Not(Find_OCF(OCF_Fullcon)),Find_Func("IsBulletGrasTarget"))/2 + ObjectCount2(Find_OCF(OCF_Fullcon),Find_Func("IsBulletGrasTarget"))*1 + ObjectCount2(Find_Func("IsDeadTree"))*2) ;
+baeume=((ObjectCount2(Find_Func("IsTree"),Find_OCF(OCF_Fullcon),Find_Not(Find_Func("IsDeadTree"))) ?? 0)*6 + (ObjectCount2(Find_Func("IsTree"),Find_Not(Find_OCF(OCF_Fullcon)),Find_Not(Find_Func("IsDeadTree"))) ?? 0)*3 + (ObjectCount2(Find_Not(Find_OCF(OCF_Fullcon)),Find_Func("IsBulletGrasTarget")) ?? 0)/2 + (ObjectCount2(Find_OCF(OCF_Fullcon),Find_Func("IsBulletGrasTarget")) ?? 0)*1 + (ObjectCount2(Find_Func("IsDeadTree")) ?? 0)*2) ;
   return(1);
 }
 
@@ -823,7 +824,7 @@ baeume=(ObjectCount2(Find_Func("IsTree"),Find_OCF(OCF_Fullcon),Find_Not(Find_Fun
 global func RemovePlayer(iSpieler)
 {
 	var clonk;
-	while(clonk=FindObjectOwner(0,iSpieler,0,0,0,0,OCF_CrewMember,0,0,clonk))
+	while(clonk=FindObjectOwner(nil,iSpieler,nil,nil,nil,nil,OCF_CrewMember,nil,nil,clonk))
 	  clonk->ResetName();
 	return(1);
 }

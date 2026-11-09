@@ -1,6 +1,6 @@
 /*-- Heizkraftwerk --*/
 
-#strict
+#strict 3
 #include BOB1 // Gebäude-Hilfsobjekt
 #include XMTR // Transmitter
 
@@ -10,7 +10,7 @@ public func IsWaste(){ return(10);}
 
 protected func Construction()
 {
-  basement = CreateObject(BS21,0,8,GetOwner());  
+  basement = CreateObject(BS21,nil,8,GetOwner());
   return(1);
 }
 
@@ -30,11 +30,11 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager=CreateObject(BMAN,0,0,GetOwner());
+  manager=CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(-30,-25);
   
-  glow = CreateObject(CLE2,0,0,GetOwner());
+  glow = CreateObject(CLE2,nil,nil,GetOwner());
   glow->Init(this());
   return(1);
 }
@@ -43,7 +43,7 @@ protected func DoorClosed()  // Funktion für Loren u.ä
 {
   var count = -1;
   var obj;
-  while (obj = Contents(++count))
+  while (obj = Contents(S42MigrationStep(count, 1)))
     if (obj->~IsLorry()) { 
       GrabContents(obj);  
       SetCommand(obj,"Exit");  
@@ -54,8 +54,8 @@ protected func DoorClosed()  // Funktion für Loren u.ä
 public func DoSmoke()
 {
   if (HasEMP()) return(1);
-  if (!Random(2)) Smoke(-34,-28,Random(4)+7);  
-  if (!Random(2)) Smoke(-38,-28,Random(4)+7);
+  if (!Random(2)) Smoke(-34,-28,(Random(4) ?? 0)+7);
+  if (!Random(2)) Smoke(-38,-28,(Random(4) ?? 0)+7);
   DoEnergy(18);
   return(1);
 }
@@ -66,7 +66,7 @@ protected func ContainedUp()
 {
   [Statusanzeige]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),glow->GetRemaining(),3000,5,1);
   return(1);
 }
@@ -92,8 +92,8 @@ public func InfoBarSize() { return(4); }
 public func InfoBarPos() { return(4); }
 private func InfoBarText()
 {        
-  if (Par(0) == IBRE)       
+  if (Equal(Par(nil), IBRE))
     return(Format("@verbleibende Brennzeit:  %d", Par(1)));
-  return(0); 
+  return(nil);
 }    
 

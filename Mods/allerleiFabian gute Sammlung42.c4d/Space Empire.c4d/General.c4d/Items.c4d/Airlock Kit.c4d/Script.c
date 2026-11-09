@@ -1,6 +1,6 @@
 /*--- Bausatz ---*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -18,7 +18,7 @@ protected func Activate()
   // Besitzer setzen für CreateConstruction
   SetOwner(GetOwner(Contained()));
   // Baustelle erschaffen
-  CreateConstruction(AIAL, 0, 16, GetOwner(Contained()), 1, 0,0);
+  CreateConstruction(AIAL, nil, 16, GetOwner(Contained()), 1, nil,nil);
   // Bausatz verbrauchen
   RemoveObject();
   return(1);

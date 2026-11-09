@@ -1,6 +1,6 @@
 /*-- Flashlight --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local light;
@@ -23,7 +23,7 @@ public func GearEffect(object pClonk)
 
 public func GearEffectReset(object pClonk)
 {
-  user = 0;
+  user = nil;
 }
 
 
@@ -50,7 +50,7 @@ if(!light)
 {
   light = AddLightCone(1000,RGBa(255,255,220,50),user);
   light->ChangeSizeXY(3000,7000);
-  light->ChangeOffset(0,0, true);
+  light->ChangeOffset(nil,nil, true);
   SetAction("On");
   Sound("Click");
   }

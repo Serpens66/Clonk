@@ -1,8 +1,8 @@
-#strict
+#strict 3
 
 local alpha,tick;
 
-func Destruct(){ return(alpha+=10);}
+func Destruct(){ return(S42MigrationAssign(alpha, "+=", 10));}
 
 func NoAction() //Keine Äktschn!
 {
@@ -14,9 +14,9 @@ func NoAction() //Keine Äktschn!
 // wenn etwas in der Nähe brennt, oder Fackel oder lagerfeuer, schnelleres tauen.
 var feuer;
 if(feuer = FindObject2(Find_Distance(80),Find_Or(Find_OCF(OCF_OnFire),Find_And(Find_ID(LAGF),Find_Action("Burn")),Find_And(Find_ID(TORC),Find_Action("Burning")) ) ))
-{tick+=20;}
-else ++tick;
-if(tick>=500) Destruct();
+{S42MigrationAssign(tick, "+=", 20);}
+else S42MigrationStep(tick, 1);
+if((tick ?? 0)>=500) Destruct();
  return(1);
 }
 
@@ -26,9 +26,9 @@ func Destructing()
 // wenn etwas in der Nähe brennt, oder Fackel oder lagerfeuer, schnelleres tauen.
 var feuer;
 if(feuer = FindObject2(Find_Distance(80),Find_Or(Find_OCF(OCF_OnFire),Find_And(Find_ID(LAGF),Find_Action("Burn")),Find_And(Find_ID(TORC),Find_Action("Burning")) ) ))
-{alpha+=15;}
- else alpha+=1;
-  if(alpha>120) {ObjectSetAction(GetActionTarget(),"Walk"); RemoveObject();}
+{S42MigrationAssign(alpha, "+=", 15);}
+ else S42MigrationAssign(alpha, "+=", 1);
+  if((alpha ?? 0)>120) {ObjectSetAction(GetActionTarget(),"Walk"); RemoveObject();}
   return(1);
 }
 

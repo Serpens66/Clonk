@@ -1,6 +1,6 @@
 /*-- Sentry Gun --*/
 
-#strict
+#strict 3
 
 local cur_Attachment;
 local aim_angle;
@@ -14,7 +14,7 @@ local anzahl;
 
 func Construction()
 {
-SetPosition(GetX(),GetY()-5);
+SetPosition(GetX(),(GetY() ?? 0)-5);
 }
 
 /* Aufrufe */
@@ -26,27 +26,27 @@ public func TurnOn()
 
 public func TurnOff()
 {
-  Active = false;
+  Active = nil;
 }
 
 public func Arm(id idWeapon)
 {
   // Crash-Vermeidung
-  if(!idWeapon) return();
-  if(!GetName(0, idWeapon)) return();
+  if(!idWeapon) return;
+  if(!GetName(nil, idWeapon)) return;
 //Log(Format("%v",anzahl));
 //Geld abziehen
-if (GetWealth(GetOwner())< 300) {PlayerMessage(GetOwner(),"Nicht genug Geld",this());return();}
-  SetWealth(GetOwner(),GetWealth(GetOwner())- 300);
+if ((GetWealth(GetOwner()) ?? 0)< 300) {PlayerMessage(GetOwner(),"Nicht genug Geld",this());return;}
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)- 300);
   Sound("Cash");
 
   //Ausrüsten mit idWeapon
-  pWeapon = CreateObject(idWeapon, 0, 0, GetOwner());
+  pWeapon = CreateObject(idWeapon, nil, nil, GetOwner());
   Enter(this(),pWeapon);
   //Ordnern
   SetObjectOrder(this(), pWeapon, 1);
   aim_angle = 180;
-  iPat_Dir = -1+ Random(2)*2;
+  iPat_Dir = -1+ (Random(2) ?? 0)*2;
   cur_Attachment = pWeapon;
   LocalN("controller", pWeapon) = this();
   Reload();
@@ -77,50 +77,50 @@ if (!gnc) CreateObject(_GNC,1,1,GetOwner());
   FitToTop();
   AddEffect("ShowWeapon",this(),1,1,this(),GetID());
   //lieber Overlay 3 nehmen. Falls wir mal 2-overlayige waffen einbaun :]
-  SetGraphics(0,this(),GetID(),3,5,0,0,this());
+  SetGraphics(nil,this(),GetID(),3,5,nil,nil,this());
 }
 
 public func WeaponAt(&x, &y, &r) {
-  x = 0;
+  x = nil;
   y = 7000;
-  r = aim_angle+270;
+  r = (aim_angle ?? 0)+270;
   return(1);
 }
 
 public func WeaponBegin(&x, &y) {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
-  x = EffectVar(2, this(), number)/1000;
-  y = EffectVar(3, this(), number)/1000;
+    return(nil);
+  x = (EffectVar(2, this(), number) ?? 0)/1000;
+  y = (EffectVar(3, this(), number) ?? 0)/1000;
 }
 
 public func WeaponEnd(&x, &y) {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
-  x = EffectVar(4, this(), number)/1000;
-  y = EffectVar(5, this(), number)/1000;
+    return(nil);
+  x = (EffectVar(4, this(), number) ?? 0)/1000;
+  y = (EffectVar(5, this(), number) ?? 0)/1000;
 }
 
 public func GetWeaponR() {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
+    return(nil);
   return(EffectVar(1, this(), number));
 }
 
 public func FitToTop()
 {
   //Das Gestell passt sich selbst mal etwas besser zur Decke an.
-  var x = GetX(), y = GetY() - GetObjHeight() / 2;
+  var x = GetX(), y = (GetY() ?? 0) - (GetObjHeight() ?? 0) / 2;
   
-  while(! GBackSolid(0, -8) )
+  while(! GBackSolid(nil, -8) )
   {
-    y -= 1;
+    S42MigrationAssign(y, "-=", 1);
     
     //Endlosschleife vermeiden
-    if(y < 0) return(1);
+    if((y ?? 0) < 0) return(1);
     
     SetPosition(x, y);
   }
@@ -132,42 +132,42 @@ public func Activity()
 anzahl=ObjectCount2(Find_ID(SEGU),Find_Owner(GetOwner()));
   var iHeight, iWidth, iAngle;
   //Wuah, haben wir eine Waffe?
-  if(! GetAttWeapon()) return();
+  if(! GetAttWeapon()) return;
   //Sind wir im Eimer?
-  if( EMPShocked()) return();
+  if( EMPShocked()) return;
   //Sind wir aktiv?
-  if(! Active) return();
+  if(! Active) return;
   //Wenn nicht schon gesetzt: Turn-Action
-  if(GetAction() ne "Turn")
+  if(!SEqual(GetAction(), "Turn"))
     SetAction("Turn");
 
   /*Patroullie fahren*/
   
   // alle 5 Frames
-  if(!(GetActTime()%5)) {
+  if(!((GetActTime() ?? 0)%5)) {
 	  //Zu weit links?
-	  if( aim_angle <= MaxRotLeft() )
+	  if( (aim_angle ?? 0) <= (MaxRotLeft() ?? 0) )
 	  {
 	    //Wir fahren zurück
 	    iPat_Dir = 1;
 	    target_angle = MaxRotRight();
-	    GotTarget = 0;
+	    GotTarget = nil;
 	  }
 	  //Oder zu weit rechts?
-	  else if( aim_angle >= MaxRotRight() )
+	  else if( (aim_angle ?? 0) >= (MaxRotRight() ?? 0) )
 	  {
 	    //Hinfahren
 	    iPat_Dir = -1;
 	    target_angle = MaxRotLeft();
-	    GotTarget = 0;
+	    GotTarget = nil;
 	  }
 	if(!GotTarget)
-		aim_angle += iPat_Dir*3;
+		S42MigrationAssign(aim_angle, "+=", (iPat_Dir ?? 0)*3);
   }
   
   //Das Fahren selber ;)
   if(GotTarget)
-  	aim_angle += BoundBy(target_angle-aim_angle,-8,8);
+        S42MigrationAssign(aim_angle, "+=", (BoundBy((target_angle ?? 0)-(aim_angle ?? 0),-8,8) ?? 0));
   
        
   /* Feinde suchen */
@@ -176,7 +176,7 @@ anzahl=ObjectCount2(Find_ID(SEGU),Find_Owner(GetOwner()));
   {
   	if(Shooting)
   	{
-	    Shooting = false;
+	    Shooting = nil;
    		GetAttWeapon()->StopAutoFire();
   	}
   		
@@ -184,31 +184,31 @@ anzahl=ObjectCount2(Find_ID(SEGU),Find_Owner(GetOwner()));
 	}
 	else
 	{
-		target_angle = Angle(GetX(), GetY() + 7, GotTarget->GetX(), GotTarget->GetY());
-		if(Abs(aim_angle - target_angle) < 15)
+		target_angle = Angle(GetX(), (GetY() ?? 0) + 7, GotTarget->GetX(), GotTarget->GetY());
+		if((Abs((aim_angle ?? 0) - (target_angle ?? 0)) ?? 0) < 15)
 		{
 		    Shooting = true;
 		    if(!GetAttWeapon()->IsShooting())
 			    GetAttWeapon()->ControlThrow(this());
-	  	    if(GetAmmo(GetAttWeapon()->GetFMData(FM_AmmoID), GetAttWeapon()) < GetAttWeapon()->GetFMData(FM_AmmoUsage))
+                    if((GetAmmo(GetAttWeapon()->GetFMData(FM_AmmoID), GetAttWeapon()) ?? 0) < (GetAttWeapon()->GetFMData(FM_AmmoUsage) ?? 0))
 
 //Geld abziehen
-{if (GetWealth(GetOwner())< 300) {PlayerMessage(GetOwner(),"Nicht genug Geld zum Nachladen",this());return();}
-  SetWealth(GetOwner(),GetWealth(GetOwner())- 300);
+{if ((GetWealth(GetOwner()) ?? 0)< 300) {PlayerMessage(GetOwner(),"Nicht genug Geld zum Nachladen",this());return;}
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)- 300);
   Sound("Cash");Reload();}
 		}
 		else
 		{
-	    Shooting = false;
+	    Shooting = nil;
    		GetAttWeapon()->StopAutoFire();
 		}
 		
 		if(!CheckTarget(GotTarget,this()))
-			GotTarget = 0;
-		else if(!PathFree(GetX(),GetY()+7,GotTarget->GetX(), GotTarget->GetY()))
-			GotTarget = 0;
-		else if(ObjectDistance(GotTarget,this()) > SearchLength())
-			GotTarget = 0;
+			GotTarget = nil;
+		else if(!PathFree(GetX(),(GetY() ?? 0)+7,GotTarget->GetX(), GotTarget->GetY()))
+			GotTarget = nil;
+		else if((ObjectDistance(GotTarget,this()) ?? 0) > (SearchLength() ?? 0))
+			GotTarget = nil;
 	}
 	 
   /*
@@ -226,6 +226,9 @@ anzahl=ObjectCount2(Find_ID(SEGU),Find_Owner(GetOwner()));
 
 public func Search(int iX, int iWidth, int iHeight)
 {
+  iX ??= 0;
+  iWidth ??= 0;
+  iHeight ??= 0;
   var pAim;
   
   /*DrawParticleLine("PSpark", 0, 0, -70 + Sin(aim_angle, SearchLength()), SearchLength(), 10, 80, RGB(255, 0, 0));
@@ -236,8 +239,8 @@ public func Search(int iX, int iWidth, int iHeight)
 	var Targets = FindTargets(this(), SearchLength()); //FindObjects(Find_Distance(SearchLength()),Find_PathFree(),Find_NoContainer());
   for(pAim in Targets)
   {
-    if(GetOwner() != NO_OWNER)
-      if(pAim->GetOwner() == GetOwner() || !Hostile(pAim->GetOwner(), GetOwner()))
+    if(!Equal(GetOwner(), NO_OWNER))
+      if(Or(Equal(pAim->GetOwner(), GetOwner()), !Hostile(pAim->GetOwner(), GetOwner())))
         continue;
 
 		if(!CheckTarget(pAim,this()))
@@ -245,10 +248,10 @@ public func Search(int iX, int iWidth, int iHeight)
 
 
     //Winkel zum Ziel
-    target_angle = Angle(GetX(), GetY() + 7, pAim->GetX(), pAim->GetY());
+    target_angle = Angle(GetX(), (GetY() ?? 0) + 7, pAim->GetX(), pAim->GetY());
 
-		target_angle = Normalize(target_angle, 0);
-    if(target_angle < MaxRotLeft() || target_angle > MaxRotRight())
+		target_angle = Normalize(target_angle, nil);
+    if(Or((target_angle ?? 0) < (MaxRotLeft() ?? 0), (target_angle ?? 0) > (MaxRotRight() ?? 0)))
     	continue;
 
 		return pAim;
@@ -257,9 +260,9 @@ public func Search(int iX, int iWidth, int iHeight)
     break;
   }
   
-  if(Shooting && ! pAim)
+  if(And(Shooting, ! pAim))
   {
-    Shooting = false;
+    Shooting = nil;
     GetAttWeapon()->StopAutoFire();
   }
   
@@ -272,7 +275,7 @@ private func Reload()
   // Munitionsart
   var AmmoID = GetAttWeapon()->~GetFMData(FM_AmmoID);
   // Erzeugen
-  Local(0, CreateContents(AmmoID)) = GetAttWeapon()->~GetFMData(FM_AmmoLoad);
+  Local(nil, CreateContents(AmmoID)) = GetAttWeapon()->~GetFMData(FM_AmmoLoad);
   // Waffe soll nachladen
   GetAttWeapon()->~Reloaded(this());
   GetAttWeapon()->~Recharge();
@@ -285,7 +288,7 @@ public func MaxDamage() {
 
 public func Damage()
 {
-  if(GetDamage() > MaxDamage())
+  if((GetDamage() ?? 0) > (MaxDamage() ?? 0))
     Explode(20);
 }
 
@@ -302,23 +305,25 @@ public func EMPShock()
 
 public func ConsoleControl(int i)
 {
-    if(i == 1)
+    i ??= 0;
+    if(Equal(i, 1))
     {
       if(Active) return("$TurnOff$");
       else
           return("$TurnOn$");
     }
-    if(i == 2 && EMPShocked())
+    if(And(Equal(i, 2), EMPShocked()))
         return("$Repair$");
 }
 
 public func ConsoleControlled(int i)
 {
-    if(i == 1)
+    i ??= 0;
+    if(Equal(i, 1))
     {
-        Active = 0;
+        Active = nil;
     }
-    if(i == 2)
+    if(Equal(i, 2))
     {
         Active = 1;
     };
@@ -357,17 +362,17 @@ public func IsAiming()     { return(true); } // Die Sentry Gun "zielt" immer
 
 /* Serialisierung */
 
-public func RejectContainedSerialize(object foo) { return !false; } // weg mit den alten Waffen
+public func RejectContainedSerialize(object foo) { return !nil; } // weg mit den alten Waffen
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("SetTeam(%d)", GetTeam());
+	extra[(GetLength(extra) ?? 0)] = Format("SetTeam(%d)", GetTeam());
 	if (Active)
-		extra[GetLength(extra)] = "TurnOn()";
+		extra[(GetLength(extra) ?? 0)] = "TurnOn()";
 	if (cur_Attachment) {
-		extra[GetLength(extra)] = Format("Arm(%i)", GetID(cur_Attachment));
-		extra[GetLength(extra)] = Format("LocalN(\"aim_angle\")=%d", aim_angle);
-		extra[GetLength(extra)] = Format("LocalN(\"iPat_Dir\")=%d", iPat_Dir);
+		extra[(GetLength(extra) ?? 0)] = Format("Arm(%i)", GetID(cur_Attachment));
+		extra[(GetLength(extra) ?? 0)] = Format("LocalN(\"aim_angle\")=%d", aim_angle);
+		extra[(GetLength(extra) ?? 0)] = Format("LocalN(\"iPat_Dir\")=%d", iPat_Dir);
 	}
 }
 

@@ -1,6 +1,6 @@
 /*-- Haken --*/
 
-#strict
+#strict 3
 
 local slide, ydir, load;
 
@@ -18,69 +18,75 @@ public func Set(object pSlide) {
 }
 
 public func Down() {
-  if(ydir < 2)
-    ydir += 2;
+  if((ydir ?? 0) < 2)
+    S42MigrationAssign(ydir, "+=", 2);
 }
 
 public func Up() {
-  if(ydir > -2)
-    ydir -= 2;
+  if((ydir ?? 0) > -2)
+    S42MigrationAssign(ydir, "-=", 2);
 }
 
 /* Bewegung */
 
 public func FxMovementTimer() {
   // Geschwindigkeiten
-  var y = BoundBy(GetY() + ydir, GetY(slide) + 10, LandscapeHeight());
+  var y = BoundBy((GetY() ?? 0) + (ydir ?? 0), (GetY(slide) ?? 0) + 10, LandscapeHeight());
   if(CheckSolid(y))
   {
     y = GetY();
-    ydir = 0;
+    ydir = nil;
   }
 	SetPosition(GetX(slide), y);
 }
 
 public func CheckSolid(int iY) {
+  iY ??= 0;
   if(!load)
-    return(GBackSolid(0,iY-GetY()));
-  iY = iY - GetY();
-  var y = load->GetY() + load->GetObjHeight() + load->GetDefOffset(0,1) + iY;
-  if(iY < 0)
-    y = load->GetY() + load->GetDefOffset(0,1) + iY;
-  return(GBackSolid(0,y-GetY()));
+    return(GBackSolid(nil,(iY ?? 0)-(GetY() ?? 0)));
+  iY = (iY ?? 0) - (GetY() ?? 0);
+  var y = (load->GetY() ?? 0) + (load->GetObjHeight() ?? 0) + (load->GetDefOffset(nil,1) ?? 0) + (iY ?? 0);
+  if((iY ?? 0) < 0)
+    y = (load->GetY() ?? 0) + (load->GetDefOffset(nil,1) ?? 0) + (iY ?? 0);
+  return(GBackSolid(nil,(y ?? 0)-(GetY() ?? 0)));
 }
 
 /* Objekte schnappen */
 
 public func Grab() {
   // Hat schon eines?
-  if(GetAction() eq "Load") return(Ungrab());
+  if(!!SEqual(GetAction(), "Load")) return(Ungrab());
 
   var obj;
-  obj = FindObjects(Find_Or(Find_AtPoint(0,0), Find_AtPoint(0,20)), Find_NoContainer(), Find_Func("IsCraneGrabable"), Find_Exclude(this()));
+  obj = FindObjects(Find_Or(Find_AtPoint(nil,nil), Find_AtPoint(nil,20)), Find_NoContainer(), Find_Func("IsCraneGrabable"), Find_Exclude(this()));
   for(var pObj in obj)
-    if(GetProcedure(pObj) ne "FLOAT")
+    if(!SEqual(GetProcedure(pObj), "FLOAT"))
       if(!pObj->~NoCrane())
       {
         load = pObj;
         SetAction("Load");
         Sound("Grapple");
-        AddEffect("Loading", load, 99, 1, this(), 0, GetX(load)-GetX(), GetY(load)-GetY());
+        AddEffect("Loading", load, 99, 1, this(), nil, (GetX(load) ?? 0)-(GetX() ?? 0), (GetY(load) ?? 0)-(GetY() ?? 0));
         return(1);
       }
 }
 
 public func FxLoadingStart(object target, int no, int temp, int x, int y) {
-  if(temp) return();
-  EffectVar(0, target, no) = x;
+  no ??= 0;
+  temp ??= 0;
+  x ??= 0;
+  y ??= 0;
+  if(temp) return;
+  EffectVar(nil, target, no) = x;
   EffectVar(1, target, no) = y;
 }
 
 public func FxLoadingTimer(object target, int no) {
   // Zielposition setzen
-  SetPosition(GetX()+EffectVar(0, target, no), GetY()+EffectVar(1, target, no), target);
-  SetXDir(0, target);
-  SetYDir(0, target);
+  no ??= 0;
+  SetPosition((GetX() ?? 0)+(EffectVar(nil, target, no) ?? 0), (GetY() ?? 0)+(EffectVar(1, target, no) ?? 0), target);
+  SetXDir(nil, target);
+  SetYDir(nil, target);
 }
 
 public func Loading() {
@@ -90,14 +96,14 @@ public func Loading() {
 }
 
 public func Ungrab() {
-  if(!load) return();
+  if(!load) return;
   // Ziel loslassen
   SetAction("NoLoad");
   if(GetEffect("Loading", load)) RemoveEffect("Loading", load);
-  load = 0;
+  load = nil;
   Sound("Grapple");
 }
 
 /* Serialisierung */
 
-public func NoSerialize() { return !false; }
+public func NoSerialize() { return !nil; }

@@ -1,14 +1,15 @@
 /*-- Kaputte Handelsstation --*/
 
-#strict
+#strict 3
 
 local Called;
 
-Remove:
+func Remove(...) {
   if(Called)
-    return(0);
+    return(nil);
   Called=1;
   var obj;
-  if(obj=FindObject(BAS4,0,0,-1,-1,0,0,0,NoContainer(),0))
+  if(obj=FindObject(BAS4,nil,nil,-1,-1,nil,nil,nil,NoContainer(),nil))
     RemoveObject(obj);
   return(1);
+}

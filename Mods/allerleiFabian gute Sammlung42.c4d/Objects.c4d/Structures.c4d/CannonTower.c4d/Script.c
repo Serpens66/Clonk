@@ -1,6 +1,6 @@
 /*--- Geschützturm ---*/
 
-#strict
+#strict 3
 
 local cannon;
 
@@ -22,14 +22,14 @@ private func CloseEntrance()
 protected func ContainedLeft(object pObj)
 {
   [$TxtRotatecannontothelef$|Image=CT01:0]
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   Sound("Click");
   return(cannon->ComLeft(pObj) );
 }
 
 protected func ContainedLeftReleased(object pObj)
 {
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   Sound("CannonStop");
   return(cannon->ComStop(pObj));
 }
@@ -37,14 +37,14 @@ protected func ContainedLeftReleased(object pObj)
 protected func ContainedRight(object pObj)
 {
   [$TxtRotatecannontotherig$|Image=CT01:2]
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   Sound("Click");
   return(cannon->ComRight(pObj) );
 }
 
 protected func ContainedRightReleased(object pObj)
 {
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   Sound("CannonStop");
   return(cannon->ComStop(pObj));
 }
@@ -52,7 +52,7 @@ protected func ContainedRightReleased(object pObj)
 protected func ContainedUp(object pObj)
 {
   [$TxtStopcannonrotation$|Method=Classic]
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
 
   if(!GetPlrCoreJumpAndRunControl(pObj->GetController()))
   {
@@ -65,14 +65,14 @@ protected func ContainedUp(object pObj)
 protected func ContainedUpDouble(object pObj)
 {
   [$TxtDisconnectcannon$|Image=CT01:3]
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   return(ReleaseCannon());
 }
 
 protected func ContainedDig(object pObj)
 {
   [$TxtFire$|Image=CT01:1]
-  if (!cannon) return(0);
+  if (!cannon) return(nil);
   return (cannon->ComFire(pObj));
 }
 
@@ -81,7 +81,7 @@ protected func ContainedDown(object pObj)
   [Method=Classic]
   /* Kanone anhalten und den Clonk noch rauslassen */
   ContainedUp(pObj);
-  return(0);
+  return(nil);
 }
 
 /* Kontext */
@@ -90,12 +90,12 @@ public func ContextReleaseCannon(pCaller)
 {
   [$TxtDisconnectcannon$|Image=CT01:3|Condition=HasCannon]
   // Der Clonk soll erst in Geschützturm laufen
-  if (pCaller->Contained() != this())
+  if (!Equal(pCaller->Contained(), this()))
   {
     SetCommand(pCaller, "None");
-    AddCommand(pCaller, "Call", this(), 0,0,0,0, "ReleaseCannon");
+    AddCommand(pCaller, "Call", this(), nil,nil,nil,nil, "ReleaseCannon");
     AddCommand(pCaller, "Enter", this());
-    return(0);
+    return(nil);
   }
   // Der Clonk kann die Kanone direkt abschrauben
   return(ReleaseCannon());  
@@ -129,15 +129,15 @@ public func ConnectCannon(object pCannon)
   // eigene Dinge tun um sich anzubauen.
   pCannon->Connect(this() );
   SetR(45, pCannon);
-  if(GetX() > LandscapeWidth() / 2) SetR(-45, pCannon);
+  if((GetX() ?? 0) > (LandscapeWidth() ?? 0) / 2) SetR(-45, pCannon);
   
   // neue Kategorie für die Kanone um sie in den Hintergrund zu kriegen
   SetCategory(2,pCannon);
   SetObjectOrder(pCannon);
 
   // Die neue Kanone über enthaltene Objekte informieren
-  var i = ContentsCount() - 1, obj;
-  while(obj = Contents(--i) )
+  var i = (ContentsCount() ?? 0) - 1, obj;
+  while(obj = Contents(S42MigrationStep(i, -1)) )
     if(!obj->~IsCannon() )
       pCannon->~ComEnter(obj);
   
@@ -157,16 +157,16 @@ public func ConnectCannonDef(object pCannon, id defChg, string szAction)
 // Löst die Kanone vom Geschützturm
 public func ReleaseCannon()
 {
-  if(!cannon) return(0);
+  if(!cannon) return(nil);
   Sound("Connect");
   cannon->ComStopDouble();
   // Kategorie für die Kanone wiederherstellen
   SetCategory(GetDefCategory(GetID(cannon)),cannon);
-  cannon = 0;
+  cannon = nil;
   
   // Neue Kanonen suchen
   var i, obj;
-  while(obj = Contents(i++) )
+  while(obj = Contents(S42MigrationStep(i, 1, true)) )
   {
     if(obj->~IsCannon() )
     {
@@ -186,7 +186,7 @@ public func IsCannonTower()
 
 public func HasCannon()
 {
-  return (cannon != 0); 
+  return (!Equal(cannon, nil));
 }
 
 /* Zerstörung */

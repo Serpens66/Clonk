@@ -1,17 +1,17 @@
 /* Luftschutzkraftfeldzauber */
 
-#strict
+#strict 3
 
 public func Activate(pCaster)
   {
   // Effekt prüfen
   var iChkEff;
-  if (iChkEff = CheckEffect("FFAirShieldPSpell", 0, 150)) return (iChkEff!=-1 && RemoveObject());
+  if (iChkEff = CheckEffect("FFAirShieldPSpell", nil, 150)) return (And(!Equal(iChkEff, -1), RemoveObject()));
   // Kraftfeld erstellen
-  ObjectSetAction(CreateObject(FRCA,0,60,GetOwner()),"Field",pCaster);
+  ObjectSetAction(CreateObject(FRCA,nil,60,GetOwner()),"Field",pCaster);
   // Grafikeffekt
-  CastParticles("MSpark", 5, 50, 0,0, 100, 200, RGBa(100,100,255,128), RGBa(0,0,255,0));
-  CreateParticle("MSpark", 0,0, 1000, RGBa(50,50,255,150));
+  CastParticles("MSpark", 5, 50, nil,nil, 100, 200, RGBa(100,100,255,128), RGBa(nil,nil,255,nil));
+  CreateParticle("MSpark", nil,nil, 1000, RGBa(50,50,255,150));
   // Zauber entfernen
   RemoveObject();
   return(1);     

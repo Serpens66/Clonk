@@ -1,6 +1,6 @@
 /*-- Uplink (Heimatbasis) --*/
 
-#strict
+#strict 3
 #include UPL0   // einige allgemeine Uplinkfunktionen
 
 local freigegeben;
@@ -13,7 +13,7 @@ public func Init(target)
   inherited(target);
   // Nachricht
   PlayerMessage(GetOwner(), "Ausgerichtet auf|Heimatbasis", this());
-  Local(0) = 0;
+  Local(nil) = nil;
 }
 
 
@@ -22,9 +22,9 @@ public func Init(target)
 protected func CheckBuilding()
 {
   // Gebäude noch da?
-  if (!inherited()) return(0);
+  if (!inherited()) return(nil);
   // Gold automatisch verkaufen
-  var gold, sold = 0;
+  var gold, sold = nil;
   while (gold = FindContents(GOLD, building))
   {
     RemoveObject(gold);
@@ -32,7 +32,7 @@ protected func CheckBuilding()
     sold = 1;
   }
   var clonk;
-  while (clonk = FindObject(0,0,0,0,0, OCF_CrewMember(), 0,0, building, clonk))
+  while (clonk = FindObject(nil,nil,nil,nil,nil, OCF_CrewMember, nil,nil, building, clonk))
     while (gold = FindContents(GOLD, clonk))
     {
       RemoveObject(gold);
@@ -48,12 +48,12 @@ protected func CheckBuilding()
 public func DirectBuy(clonk, ID, count)
 {
   // kein caller, damit kein Menü geöffnet wird
-  caller = 0;
+  caller = nil;
   // für jedes count eins (versuchen zu) kaufen
   while (count)
   {
     BuyWare(ID);
-    --count;
+    S42MigrationStep(count, -1);
   }
 }
 
@@ -80,9 +80,9 @@ public func KeyDig(par_caller)
 private func KaufFlaggeMenu(selection)
 {
   // kein caller?
-  if (!caller) return(0);
+  if (!caller) return(nil);
   // Menü mit allen kaufbaren Objekten
-  CreateMenu(GetID(building), caller, 0,2, "Es gibt nichts zu kaufen", 0,0,1);
+  CreateMenu(GetID(building), caller, nil,2, "Es gibt nichts zu kaufen", nil,nil,1);
   // Flagge
     AddMenuItem("Kauf: %s", "BuyFlagge", FLAG, caller, GetHomebaseMaterial(GetOwner(),FLAG));
   // Menüeintrag setzen, falls einer angegeben ist
@@ -93,7 +93,7 @@ private func KaufFlaggeMenu(selection)
 private func BuyMenu(selection)
 {
   // kein caller?
-  if (!caller) return(0);
+  if (!caller) return(nil);
 
   SetCommand(caller,"Buy",building);  // funktioniert, weil zum uplink einfach unsichtbare Flagge aufs Gebäude gesetzt wird
 
@@ -120,7 +120,7 @@ private func BuyMenu(selection)
 private func BuyFlagge(ID, selection)
 {
   // genug finanzielle Rücklagen?
-  if (GetWealth(GetOwner()) < GetValue(0,ID))
+  if ((GetWealth(GetOwner()) ?? 0) < (GetValue(nil,ID) ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", building);
     Sound("Error");
@@ -136,10 +136,10 @@ private func BuyFlagge(ID, selection)
   var ware = CreateContents(ID, building);
   DoHomebaseMaterial(GetOwner(), ID, -1);
   // frische Clonks müssen noch zur Crew hinzugefügt werden
-  if (GetOCF(ware) & OCF_CrewMember())
+  if ((GetOCF(ware) ?? 0) & (OCF_CrewMember ?? 0))
     MakeCrewMember(ware, GetOwner());
   // erst noch bezahlen
-  DoWealth(GetOwner(), -GetValue(0,ID));
+  DoWealth(GetOwner(), -(GetValue(nil,ID) ?? 0));
   Sound("Cash");
   // und fertig
   return(KaufFlaggeMenu(selection));
@@ -148,7 +148,7 @@ private func BuyFlagge(ID, selection)
 private func BuyWare(ID, selection)
 {
   // genug finanzielle Rücklagen?
-  if (GetWealth(GetOwner()) < GetValue(0,ID))
+  if ((GetWealth(GetOwner()) ?? 0) < (GetValue(nil,ID) ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", building);
     Sound("Error");
@@ -164,10 +164,10 @@ private func BuyWare(ID, selection)
   var ware = CreateContents(ID, building);
   DoHomebaseMaterial(GetOwner(), ID, -1);
   // frische Clonks müssen noch zur Crew hinzugefügt werden
-  if (GetOCF(ware) & OCF_CrewMember())
+  if ((GetOCF(ware) ?? 0) & (OCF_CrewMember ?? 0))
     MakeCrewMember(ware, GetOwner());
   // erst noch bezahlen
-  DoWealth(GetOwner(), -GetValue(0,ID));
+  DoWealth(GetOwner(), -(GetValue(nil,ID) ?? 0));
   Sound("Cash");
   // und fertig
   return(BuyMenu(selection));
@@ -179,31 +179,31 @@ private func BuyWare(ID, selection)
 private func SellMenu(selection)
 {
   // kein caller?
-  if (!caller) return(0);
+  if (!caller) return(nil);
   // Menü mit verkaufbaren Waren öffnen
-  CreateMenu(GetID(building), caller, 0,2, Format("%s ist leer.",GetName(building)));
+  CreateMenu(GetID(building), caller, nil,2, Format("%s ist leer.",GetName(building)));
   var obj, ID;
   var i, count, value;
-  while (obj = FindObject(0,0,0,0,0,0,0,0, building, obj))
+  while (obj = FindObject(nil,nil,nil,nil,nil,nil,nil,nil, building, obj))
   {
     // Clonks ignorieren
-    if (GetOCF(obj) & OCF_CrewMember())
+    if ((GetOCF(obj) ?? 0) & (OCF_CrewMember ?? 0))
       continue;
 //NoGet Objecte ignorieren
 if(GetDefCoreVal("NoGet", "DefCore", GetID(obj)))
 continue;
     // gleiche ID wie zuvor?
-    if (GetID(obj) == ID)
+    if (Equal(GetID(obj), ID))
     {
       // Zähler erhöhen
-      ++count;
+      S42MigrationStep(count, 1);
       continue;
     }
     // Menüeintrag für ID erzeugen
     if (ID)
     {
-      AddMenuItem("Verkauf: %s", "SellWare", ID, caller, count, i, 0, 128,0,value);
-      ++i;
+      AddMenuItem("Verkauf: %s", "SellWare", ID, caller, count, i, nil, 128,nil,value);
+      S42MigrationStep(i, 1);
     }
     // neue ID, Zähler zurücksetzen
     ID = GetID(obj);
@@ -213,31 +213,31 @@ continue;
   // letzten Eintrag noch dazu
   if (ID)
   {
-    AddMenuItem("Verkauf: %s", "SellWare", ID, caller, count, i, 0, 128,0,value);
-    ++i;
+    AddMenuItem("Verkauf: %s", "SellWare", ID, caller, count, i, nil, 128,nil,value);
+    S42MigrationStep(i, 1);
   }
-  if (selection == i)
-    --selection;
+  if (Equal(selection, i))
+    S42MigrationStep(selection, -1);
   // mit ein paar leeren Einträge auffüllen
-  while ((i % 5) || (i == 0))   // zur Not gesamte erste Zeile füllen
+  while (Or(((i ?? 0) % 5), (Equal(i, nil))))   // zur Not gesamte erste Zeile füllen
   {
-    AddMenuItem("---", "SellNothing", SPCR, caller, 0,i);
-    ++i;
+    AddMenuItem("---", "SellNothing", SPCR, caller, nil,i);
+    S42MigrationStep(i, 1);
   }
   // zusätzliche Einträge
-  AddMenuItem("Ausrichtung wechseln auf Handelsystem",  "ChangeMode", SYUP,caller, 0,0, "Das Handelssystem wird gewählt. Hier kann sowohl mit Mitspielern Handel getrieben werden, als auch mit einem KI Händler, sofern dieser nicht deaktiviert wurde und erforscht ist", 2,2);
+  AddMenuItem("Ausrichtung wechseln auf Handelsystem",  "ChangeMode", SYUP,caller, nil,nil, "Das Handelssystem wird gewählt. Hier kann sowohl mit Mitspielern Handel getrieben werden, als auch mit einem KI Händler, sofern dieser nicht deaktiviert wurde und erforscht ist", 2,2);
 if(GetPlrKnowledge(GetOwner(),UUU1))
-  AddMenuItem("Transfer",            "TransferMenu", SYUP,caller, 0,0, "Transfer zu anderen Basen und Fahrzeugen mit Uplink. Reichweite: 500Meter.", 2,4);
-  AddMenuItem("Uplink abnehmen", "AttachTargetLost", SYUP,caller, 0,0, "Uplink deaktivieren und abnehmen.", 2,3);
+  AddMenuItem("Transfer",            "TransferMenu", SYUP,caller, nil,nil, "Transfer zu anderen Basen und Fahrzeugen mit Uplink. Reichweite: 500Meter.", 2,4);
+  AddMenuItem("Uplink abnehmen", "AttachTargetLost", SYUP,caller, nil,nil, "Uplink deaktivieren und abnehmen.", 2,3);
   if (building->~HasWeaponSelection())
   {
-    AddMenuItem("Waffenwechsel",    "SelectWeapons", SYUP,caller, 0,0, "Bewaffnung der Basis austauschen.", 2,5);
-    ++i;
+    AddMenuItem("Waffenwechsel",    "SelectWeapons", SYUP,caller, nil,nil, "Bewaffnung der Basis austauschen.", 2,5);
+    S42MigrationStep(i, 1);
   }
-if(freigegeben==0)
-  AddMenuItem("System freigeben", "Freigabe", SYUP,caller, 0,caller, "Uplinksystem wird für alle NichtFeinde freigegeben. Diese können sowohl im Gebäude auf alles zugreifen, als auch aus ihrem eigenen Uplinksystem Dinge aus deinem System per Beam holen oder dir senden. Außerdem werden sie auch geheilt und gelöscht, was sonst nicht der Fall ist", 2,2);
-if(freigegeben==1)
-  AddMenuItem("System sperren", "Freigabe", SYUP,caller, 0,caller, "Uplinksystem wird wieder gesperrt, sodass nur noch der Besitzer Zugriff hat.", 2,2);
+if(Equal(freigegeben, nil))
+  AddMenuItem("System freigeben", "Freigabe", SYUP,caller, nil,caller, "Uplinksystem wird für alle NichtFeinde freigegeben. Diese können sowohl im Gebäude auf alles zugreifen, als auch aus ihrem eigenen Uplinksystem Dinge aus deinem System per Beam holen oder dir senden. Außerdem werden sie auch geheilt und gelöscht, was sonst nicht der Fall ist", 2,2);
+if(Equal(freigegeben, 1))
+  AddMenuItem("System sperren", "Freigabe", SYUP,caller, nil,caller, "Uplinksystem wird wieder gesperrt, sodass nur noch der Besitzer Zugriff hat.", 2,2);
   // und noch mehr auffüllen
 //  i += 3;
 //  while (i % 5)

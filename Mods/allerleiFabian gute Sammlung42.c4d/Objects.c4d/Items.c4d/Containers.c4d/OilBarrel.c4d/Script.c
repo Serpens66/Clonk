@@ -1,6 +1,6 @@
 /*-- Ölfass --*/
 
-#strict
+#strict 3
 
 #include BARL
 
@@ -11,7 +11,7 @@ public func BarrelMaterialName() { return("Oil"); }
 // Fassermittlungskette
 global func GetBarrelType(iMaterial)
 {
-  if (iMaterial == Material("Oil")) return(OBRL);
+  if (Equal(iMaterial, Material("Oil"))) return(OBRL);
   return(_inherited(iMaterial));
 }
 
@@ -24,10 +24,10 @@ protected func Damage()
 
 private func Damaged()
 {
-  CastObjects(DFLM, GetComDir() / 12, 15);
+  CastObjects(DFLM, (GetComDir() ?? 0) / 12, 15);
   CreateContents(BARL);
-  Exit(Contents(), 0, 0, Random(360), Random(7) - 3, Random(3) - 8, +10);
-  Explode(Max(GetComDir() / 6, 15));
+  Exit(Contents(), nil, nil, Random(360), (Random(7) ?? 0) - 3, (Random(3) ?? 0) - 8, +10);
+  Explode(Max((GetComDir() ?? 0) / 6, 15));
 }
 
 /* Für's Ölförderungsziel */
@@ -35,13 +35,14 @@ private func Damaged()
 public func Sale(plr) 
 {
   var obj;
-  if (obj = FindObject (OILP, 50 - GetX (), 49 - GetY ()))
+  if (obj = FindObject (OILP, 50 - (GetX () ?? 0), 49 - (GetY () ?? 0)))
     obj -> OILP::PlayerHasSold (plr, this ());
 }
 
 public func Purchase(int plr, object buyobj) 
 {
+  plr ??= 0;
   var obj;
-  if (obj = FindObject (OILP, 50 - GetX (), 49 - GetY ()))
+  if (obj = FindObject (OILP, 50 - (GetX () ?? 0), 49 - (GetY () ?? 0)))
     obj -> OILP::PlayerHasBought (plr, this ());
 }

@@ -1,6 +1,6 @@
 /* Scavenger-Marschflugkörper */
 
-#strict
+#strict 3
 
 local mlight;
 
@@ -21,7 +21,7 @@ private func TurnLightOn()
 protected func Initialize()
 {
   local speed, heat, timer;
-  timer=0;
+  timer=nil;
   speed=10;
 TurnLightOn();
   return(1);
@@ -40,20 +40,20 @@ func Explosion()
   BlastObjects(GetX(), GetY(), 25);
   BlastObjects(GetX(), GetY(), 25);
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))Explode(50);
-  else FakeExplode(50,0,0,50);
+  else FakeExplode(50,nil,nil,50);
   return(1);
 }
 
 func Explosion2()
 { 
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))Explode(50);
-  else FakeExplode(50,0,0,50);
+  else FakeExplode(50,nil,nil,50);
   return(1);
 }
 
 func Damage()
 {
-  if(GetDamage()<10) return(0);
+  if((GetDamage() ?? 0)<10) return(nil);
   Explosion2();
   return(1);
 }
@@ -63,13 +63,13 @@ func Damage()
 func Traveling()
 {
   SetPlrView(GetOwner(), this());
-  if (timer>285) Explosion();
-  timer++;
-  if(speed<90) speed+=5;
+  if ((timer ?? 0)>285) Explosion();
+  S42MigrationStep(timer, 1, true);
+  if((speed ?? 0)<90) S42MigrationAssign(speed, "+=", 5);
   SetXDir(Cos(Sum(GetR(),270),speed));
   SetYDir(Sin(Sum(GetR(),270),speed));
-  CreateParticle("Thrust",Cos( GetR() + 270 , -10),Sin( GetR() + 270, -10),GetXDir()/2,GetYDir()/2,RandomX(60,80),RGBa(255,200,200,60),0,0);
-  CreateParticle("Smoke2",Cos( GetR() + 270 , -10),Sin( GetR() + 270, -10),GetXDir()/2,GetYDir()/2,RandomX(60,80),RGBa(220,200,180,0),0,0);
+  CreateParticle("Thrust",Cos( (GetR() ?? 0) + 270 , -10),Sin( (GetR() ?? 0) + 270, -10),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(60,80),RGBa(255,200,200,60),nil,nil);
+  CreateParticle("Smoke2",Cos( (GetR() ?? 0) + 270 , -10),Sin( (GetR() ?? 0) + 270, -10),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(60,80),RGBa(220,200,180,nil),nil,nil);
   return(1);
 }
 
@@ -77,13 +77,13 @@ func Traveling()
 //Steuerung & Schubregelung
 func ControlUp()
 {
-  SetRDir(0);
+  SetRDir(nil);
   return(1);
 }
 
 func ControlDown()
 {
-  SetRDir(0);
+  SetRDir(nil);
   return(1);
 }
 

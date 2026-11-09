@@ -1,5 +1,5 @@
 /* Feuerfaust */
-#strict
+#strict 3
 
 public func Activate(caster, real_caster)
 {
@@ -9,49 +9,49 @@ public func Activate(caster, real_caster)
   Sound("Magic1");
 
   var iChkEff;
-  if (iChkEff = CheckEffect("FirefistNSpell", 0, 130)) return(iChkEff!=-1 && RemoveObject());
+  if (iChkEff = CheckEffect("FirefistNSpell", nil, 130)) return(And(!Equal(iChkEff, -1), RemoveObject()));
 
   var obj, nocrcnt;
-  if (InLiquid(clonk) && (obj = FindContents(METL, clonk)))
+  if (And(InLiquid(clonk), (obj = FindContents(METL, clonk))))
     {
     var torpedo;
-    SetDir(DIR_Left(),  torpedo=CreateObject(TRP1,-15,+10,-1));
+    SetDir(DIR_Left,  torpedo=CreateObject(TRP1,-15,+10,-1));
     if (torpedo)
       {
       torpedo->Launch(torpedo); // Kleiner Trick damit das Torpedo in die richtige Richtung schwimmt
       torpedo->SetController(GetOwner(clonk)); // Damit eventuelle Tötungen auch gezählt werden
       }
-    else ++nocrcnt;
-    SetDir(DIR_Right(), torpedo=CreateObject(TRP1,+15,+10,-1));
+    else S42MigrationStep(nocrcnt, 1);
+    SetDir(DIR_Right, torpedo=CreateObject(TRP1,+15,+10,-1));
     if (torpedo)
       {
       torpedo->Launch(torpedo); 
       torpedo->SetController(GetOwner(clonk));
       }
-    else ++nocrcnt;
-    if (nocrcnt < 2) RemoveObject(obj);
+    else S42MigrationStep(nocrcnt, 1);
+    if ((nocrcnt ?? 0) < 2) RemoveObject(obj);
     }
   else
     {
-    var firefist=CreateObject(FSHW,-15,0,GetOwner(clonk));
+    var firefist=CreateObject(FSHW,-15,nil,GetOwner(clonk));
     if (firefist)
       {
       firefist->SetController(GetOwner(clonk));
       ObjectSetAction(firefist,"Left");
       }
-    else ++nocrcnt;
+    else S42MigrationStep(nocrcnt, 1);
     
-    firefist=CreateObject(FSHW,+15,0,GetOwner(clonk));
+    firefist=CreateObject(FSHW,+15,nil,GetOwner(clonk));
     if (firefist)
       {
       firefist->SetController(GetOwner(clonk));
       ObjectSetAction(firefist,"Right");
       }
-    else ++nocrcnt;
+    else S42MigrationStep(nocrcnt, 1);
   }
   
   RemoveObject();
-  return(nocrcnt < 2);
+  return((nocrcnt ?? 0) < 2);
 }
 
 public func GetSpellClass(object pMage) { return(FIRE); }

@@ -1,6 +1,6 @@
 /*-- Liftdock --*/
 
-#strict
+#strict 3
 #include BOB2
 
 local basement, manager;
@@ -11,19 +11,19 @@ local liftplate;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(1,1);
   // Liftplatte
   SetAction("OffStatus");
-  liftplate = CreateObject(SLP1,0,+10,GetOwner());
+  liftplate = CreateObject(SLP1,nil,+10,GetOwner());
   liftplate->SetOwnerObject(this());
   return(1);
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BSA2,0,+8,GetOwner());
+  basement = CreateObject(BSA2,nil,+8,GetOwner());
   return(1);
 }
 
@@ -59,8 +59,8 @@ public func ControlThrow(clonk)
   [Lift bauen]
   if (liftplate) return(Message("Lift bereits vorhanden!",this()));
   var obj;
-  if (!FindContents(METL) && (obj = FindContents(METL,clonk)))  PushObject(obj);
-  if (!FindContents(SURO) && (obj = FindContents(SURO,clonk)))  PushObject(obj);
+  if (And(!FindContents(METL), (obj = FindContents(METL,clonk))))  PushObject(obj);
+  if (And(!FindContents(SURO), (obj = FindContents(SURO,clonk))))  PushObject(obj);
   return(BuildLift());
 }
 
@@ -78,42 +78,43 @@ public func CheckEnergy()
 {
   // Energieverbrauch
   if (liftplate)
-    if (!Inside(GetY(liftplate)-GetY(), -3, 0))    // im Liftdock eingerastet?
+    if (!Inside((GetY(liftplate) ?? 0)-(GetY() ?? 0), -3, nil))    // im Liftdock eingerastet?
     {
       var dir = GetComDir(liftplate);
-      if (dir==COMD_Up())   DoEnergy(-5);
-      if (dir==COMD_Stop()) DoEnergy(-3);
-      if (dir==COMD_Down()) DoEnergy(-2);
+      if (Equal(dir, COMD_Up))   DoEnergy(-5);
+      if (Equal(dir, COMD_Stop)) DoEnergy(-3);
+      if (Equal(dir, COMD_Down)) DoEnergy(-2);
     }
   // Update für Energieanzeige
-  ShowInfoBar(IBRE, this(), GetEnergy(), 100, 0, 1);
+  ShowInfoBar(IBRE, this(), GetEnergy(), 100, nil, 1);
   // genügende Energieversorgung / welcher Status gesetzt?
   var Energynum = GetEnergyNum();
   var Statusnum = GetStatusNum();
   // keine Statusänderung?
-  if (Energynum == Statusnum) return(1);
+  if (Equal(Energynum, Statusnum)) return(1);
   // neuen Status setzen
-  if (Energynum == 0)  SetAction("OffStatus");
-  if (Energynum == 1)  SetAction("WarningStatus");
-  if (Energynum == 2)  SetAction("NormalStatus");
+  if (Equal(Energynum, nil))  SetAction("OffStatus");
+  if (Equal(Energynum, 1))  SetAction("WarningStatus");
+  if (Equal(Energynum, 2))  SetAction("NormalStatus");
   return(1);
 }
 
 private func GetStatusNum()
 {
-  if (GetAction() eq "NormalStatus")  return(2);
-  if (GetAction() eq "WarningStatus") return(1);
-  return(0);   // OffStatus
+  if (!!SEqual(GetAction(), "NormalStatus"))  return(2);
+  if (!!SEqual(GetAction(), "WarningStatus")) return(1);
+  return(nil);   // OffStatus
 }
 
 private func GetEnergyNum()
 {
-  if (GetEnergy() > 80) return(2);   // ab 80
-  if (!GetEnergy())     return(0);   // genau 0
+  if ((GetEnergy() ?? 0) > 80) return(2);   // ab 80
+  if (!GetEnergy())     return(nil);   // genau 0
   return(1);   // 1 bis 80
 }
 
-public EnoughEnergy: return(GetEnergy());
+public func EnoughEnergy(...) { return(GetEnergy());
+}
 
 
 /* neuen Lift bauen */
@@ -121,10 +122,10 @@ public EnoughEnergy: return(GetEnergy());
 public func BuildLift()
 {
   // genug Energie?
-  if (GetEnergy() < 50)
+  if ((GetEnergy() ?? 0) < 50)
     return(Message("Nicht genügend Energie!",this()));
   // Metall & Uranerz gebraucht
-  if (!FindContents(METL) && !FindContents(SURO))
+  if (And(!FindContents(METL), !FindContents(SURO)))
     return(Message("Benötigt|1x Metall|1x Uranerz",this()));
   if (!FindContents(METL))
     return(Message("Benötigt noch|1x Metall",this()));
@@ -134,7 +135,7 @@ public func BuildLift()
   RemoveObject(FindContents(METL));
   RemoveObject(FindContents(SURO));
   // Lift erstellen
-  liftplate = CreateObject(SLP1,0,+10,GetOwner());
+  liftplate = CreateObject(SLP1,nil,+10,GetOwner());
   liftplate->Init(this());
   return(1);
 }
@@ -142,8 +143,12 @@ public func BuildLift()
 
 /* Eigenschaften */
 
-public IsEnergyConsumer: return(1);
-public InfoBarPos:  return(5);
-public InfoBarSize: return(3);
-public GetMaxDamage: return(80);
+public func IsEnergyConsumer(...) { return(1);
+}
+public func InfoBarPos(...) {  return(5);
+}
+public func InfoBarSize(...) { return(3);
+}
+public func GetMaxDamage(...) { return(80);
+}
 

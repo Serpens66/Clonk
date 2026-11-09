@@ -1,6 +1,6 @@
 /*-- Schleimgranate --*/
 
-#strict
+#strict 3
 
 // Ist eine "Granate"
 #include GREN
@@ -10,19 +10,19 @@ func Initialize() {
   AddAlienFlareEffect(this(),300);
 }
 
-func IsExplosiv() {return(0);}
+func IsExplosiv() {return(nil);}
 
 func Hit() { inherited(); HitObject(); }
 
 func HitObject()
 {
-  for(var i = 7+Random(5), glob ; i ; i--)
+  for(var i = 7+(Random(5) ?? 0), glob ; i ; S42MigrationStep(i, -1, true))
     {
-    glob = CreateObject(SLST, 0, 0, GetOwner());
+    glob = CreateObject(SLST, nil, nil, GetOwner());
     glob ->~ Launch(RandomX(-40,40), RandomX(-40,40), iDamage);
     }
-  CastParticles("SlimeGrav", 10, 25, 0, 0, 20, 40, RGBa(0, 240, 0, 10), RGBa(20, 255, 20, 75));
-  CastParticles("FrSprk", 30, 5, 0, 0, 70, 130, RGBa(0, 240, 0, 10), RGBa(20, 255, 20, 75));  
+  CastParticles("SlimeGrav", 10, 25, nil, nil, 20, 40, RGBa(nil, 240, nil, 10), RGBa(20, 255, 20, 75));
+  CastParticles("FrSprk", 30, 5, nil, nil, 70, 130, RGBa(nil, 240, nil, 10), RGBa(20, 255, 20, 75));
   Sound("SlimeHit");
   Sound("Poff");
   RemoveObject();

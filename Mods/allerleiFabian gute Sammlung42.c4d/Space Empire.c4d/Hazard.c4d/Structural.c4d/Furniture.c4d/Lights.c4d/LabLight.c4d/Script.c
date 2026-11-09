@@ -1,6 +1,6 @@
 /*-- Laborlicht --*/
 
-#strict
+#strict 3
 #include BLGH
 
 func Initialize() {

@@ -1,6 +1,6 @@
 /* Lüftungsgitter */
 
-#strict 2
+#strict 3
 
 protected func Initialize()
 {
@@ -9,8 +9,8 @@ protected func Initialize()
 
 protected func Damage()
 {
-  if (GetAction() == "Put") return(0);
-  if (GetDamage() < 30) return(0);
+  if (S42MigrationEqual(GetAction(), "Put")) return(nil);
+  if ((GetDamage() ?? 0) < 30) return(nil);
   // Crack open
   while (Contents()) Exit(Contents());
   Sound("CrateCrack");
@@ -23,6 +23,6 @@ protected func Damage()
 
 public func Serialize(array& extra)
 {
-	if (GetAction() == "Put")
-		extra[GetLength(extra)] = "SetAction(\"Put\")";
+	if (S42MigrationEqual(GetAction(), "Put"))
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Put\")";
 }

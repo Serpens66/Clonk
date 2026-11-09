@@ -1,6 +1,6 @@
 /*-- Konzentrierter Schuss (Ammo 3) --*/
 
-#strict
+#strict 3
 
 local xdir;
 
@@ -9,8 +9,8 @@ local xdir;
 
 public func Launch(dx)
 {
-  if (dx == DIR_Left())  xdir = -100;
-  if (dx == DIR_Right()) xdir = +100;
+  if (Equal(dx, DIR_Left))  xdir = -100;
+  if (Equal(dx, DIR_Right)) xdir = +100;
   SetAction("Travel");
   return(1);
 }
@@ -22,19 +22,19 @@ private func Travel()
 {
   // Treffer-Überprüfung
   var obj;
-  if (obj = FindObject(0,1,0,0,0, OCF_Alive(),0,0,NoContainer()))      // Lebewesen
-    if (Hostile(GetOwner(obj), GetOwner()) || (GetOwner(obj)==-1))
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Alive,nil,nil,NoContainer()))      // Lebewesen
+    if (Or(Hostile(GetOwner(obj), GetOwner()), (Equal(GetOwner(obj), -1))))
       return(Hit());
-  if (obj = FindObject(0,1,0,0,0, OCF_Entrance(),0,0,NoContainer()))   // Fahrzeuge
-    if (GetCategory(obj) & C4D_Vehicle())
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Entrance,nil,nil,NoContainer()))   // Fahrzeuge
+    if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
       if (Hostile(GetOwner(obj), GetOwner()))
         return(Hit());
   // Bewegung
   SetXDir(xdir);
-  SetYDir(0);
+  SetYDir(nil);
   // zufällige Explosion
-  if (GetActTime() < 50) return(1);
-  if (!Random(80-GetActTime()))
+  if ((GetActTime() ?? 0) < 50) return(1);
+  if (!Random(80-(GetActTime() ?? 0)))
     return(Hit());
   return(1);
 }
@@ -45,9 +45,9 @@ private func Travel()
 protected func Hit()
 {
   var frag, i;
-  for (i = 1; i < 5; ++i)
+  for (i = 1; (i ?? 0) < 5; S42MigrationStep(i, 1))
   {
-    frag = CreateObject(SMG0, xdir/15*i, 0);
+    frag = CreateObject(SMG0, (xdir ?? 0)/15*(i ?? 0), nil);
     ObjectCall(frag,"SetCounter",i);
   }
   Explode(4);

@@ -1,6 +1,6 @@
 /*-- Waffenfabrik --*/
 
-#strict
+#strict 3
 #include BOB1
 
 local basement, manager;
@@ -10,25 +10,28 @@ public func IsWaste(){ return(10);}
 
 /* Initialisierung */
 
-protected Initialize:
-  manager = CreateObject(BMAN,0,0,GetOwner());
+protected func Initialize(...) {
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(29,-3);
   // Fabrikobjekt
-  factory = CreateObject(SOF2,0,0,GetOwner());
+  factory = CreateObject(SOF2,nil,nil,GetOwner());
   factory->Init(this());
   return(1);
+}
 
-protected Construction:
-  basement = CreateObject(BS17,0,+8,GetOwner());
+protected func Construction(...) {
+  basement = CreateObject(BS17,nil,+8,GetOwner());
   return(1);
+}
   
-protected Destruction:
+protected func Destruction(...) {
   PreDestruction();
   if (basement) RemoveObject(basement);
   return(1);
+}
 
-public PreDestruction:
+public func PreDestruction(...) {
   if (factory)
   {
     factory->StopProduction();
@@ -36,32 +39,36 @@ public PreDestruction:
   }
   if (manager) RemoveObject(manager);
   return(inherited());
+}
 
 /* Steuerung */
 
-protected ContainedUp:
+protected func ContainedUp(...) {
   [Produktion]
-  factory->KeyUp(Par(0));
+  factory->KeyUp(Par(nil));
   return(1);
+}
 
-protected ContainedDig:
+protected func ContainedDig(...) {
   [Auftragsmenü]
-  factory->KeyDig(Par(0));
+  factory->KeyDig(Par(nil));
   return(1);
+}
 
 
 /* Inhalt von Loren übernehmen */
 
-private DoorClosed:
+private func DoorClosed(...) {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
     {
       GrabContents(obj);
       SetCommand(obj,"Exit");
     }
   return(1);
+}
 
 
 /* Energie */
@@ -71,11 +78,14 @@ func EnoughEnergy()
 {
     return(factory->EnoughEnergy());
 }
-public IsEnergyConsumer: return(1);
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* Eigenschaften */
 
-public InfoBarSize: return(3);
-public GetMaxDamage: return(100);
+public func InfoBarSize(...) { return(3);
+}
+public func GetMaxDamage(...) { return(100);
+}
 

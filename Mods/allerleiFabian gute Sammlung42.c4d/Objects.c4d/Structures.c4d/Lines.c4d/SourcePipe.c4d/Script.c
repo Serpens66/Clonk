@@ -1,46 +1,47 @@
 /*--- Zuflussrohr ---*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
   SetAction("Connect");  
-  SetVertex(0, 0, GetX()); SetVertex(0, 1, GetY());
-  SetVertex(1, 0, GetX()); SetVertex(1, 1, GetY());
-  SetPosition(0, 0, this());
+  SetVertex(nil, nil, GetX()); SetVertex(nil, 1, GetY());
+  SetVertex(1, nil, GetX()); SetVertex(1, 1, GetY());
+  SetPosition(nil, nil, this());
 }
 
 protected func Transfer()
 {
   // Zielobjekt suchen
-  var pPumpTarget = GetActionTarget(0);
+  var pPumpTarget = GetActionTarget(nil);
   // Kein Zielobjekt  
-  if (!pPumpTarget) return(0);
+  if (!pPumpTarget) return(nil);
   // Zielobjekt akzeptiert keinen Transfer
-  if (!pPumpTarget->~AcceptTransfer()) return(0);
+  if (!pPumpTarget->~AcceptTransfer()) return(nil);
   // Zielobjekt hat nicht genug Energie (könnte man auch in AcceptTransfer verlegen...)
-  if (!EnergyCheck(1000,pPumpTarget)) return(0);
+  if (!EnergyCheck(1000,pPumpTarget)) return(nil);
   // Materialtransfer
-  for (var i = 0; i < 3; i++)
+  for (var i = nil; (i ?? 0) < 3; S42MigrationStep(i, 1, true))
   {
     var mat = ObjectExtractLiquid(GetActionTarget(1));
-    if (mat == -1) mat = ExtractLiquid(GetVertex(50, 0), GetVertex(50, 1));
+    if (Equal(mat, -1)) mat = ExtractLiquid(GetVertex(50, nil), GetVertex(50, 1));
     ObjectInsertMaterial(mat, pPumpTarget);
   }
   // Blubbern  
-  if (!Random(5)) Bubble(GetVertex(50,0), GetVertex(50,1));
+  if (!Random(5)) Bubble(GetVertex(50,nil), GetVertex(50,1));
 }
 
 public func LineBreak(bool fNoMsg)
 {
+  fNoMsg ??= false;
   Sound("LineBreak");
   if (!fNoMsg) BreakMessage();
 }
 
 private func BreakMessage()
 {
-  var pPumpTarget = GetActionTarget(0);
-  if (GetID(pPumpTarget) != LNKT)
+  var pPumpTarget = GetActionTarget(nil);
+  if (!Equal(GetID(pPumpTarget), LNKT))
     pPumpTarget = GetActionTarget(1);
   Message("$TxtLinebroke$", pPumpTarget);
 }

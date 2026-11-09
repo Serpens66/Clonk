@@ -1,11 +1,11 @@
 /*-- Fadenkreuz --*/
 
-#strict
+#strict 3
 
 public func SetAngle(angle, cannon)    // angle in 1/10 Grad
 {
-  SetPosition(GetX(cannon) + Sin10(angle, 75),
-              GetY(cannon) - Cos10(angle, 75));
+  SetPosition((GetX(cannon) ?? 0) + (Sin10(angle, 75) ?? 0),
+              (GetY(cannon) ?? 0) - (Cos10(angle, 75) ?? 0));
   return(1);
 }
 

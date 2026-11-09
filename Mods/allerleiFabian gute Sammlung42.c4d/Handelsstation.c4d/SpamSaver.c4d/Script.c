@@ -2,10 +2,12 @@
 
 local SpamObject;
 
-#strict
+#strict 3
 
-SetSaver:
-  SpamObject=Par(0);
+func SetSaver(...) {
+  SpamObject=Par(nil);
   return(1);
+}
 
-Object: return(SpamObject);
+func Object(...) { return(SpamObject);
+}

@@ -1,6 +1,6 @@
 /*-- Halle --*/
 
-#strict
+#strict 3
 
 #include HL0D // Burgteilfunktion
 

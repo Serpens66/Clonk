@@ -1,48 +1,50 @@
 /*-- 2x2 Holzoverlay --*/
 
-#strict
+#strict 3
 
 local iDmg;
 
 func Initialize() {
-  iDmg = 0;
+  iDmg = nil;
   return(1);
 }
 
 public func OnDmg(int iDamage, int iType)
 {
   // Explosionsschaden
-  if(iType == DMG_Explosion)
+  iDamage ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Explosion))
   {
-   return(0);
+   return(nil);
   }
   // Energieschaden
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
   {
    return(50);
   }
   // Projektilschaden
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
   {
    return(100);
   }
   // Feuerschaden
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
   {
    return(-100);
   }
   // Bioschaden
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
   {
    return(100);
   }
   // Nahkampfschaden
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
   {
    return(50);
   }
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
+  if(Equal(iType, DMG_BetterProjectile))
     return(90);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 
  return(50);
@@ -56,8 +58,8 @@ public func IsBulletExtraTarget(id idBullet, object pBullet, object pShooter)
 
 protected func Damage() 
 {
-  if(!Local(0)) RemoveObject();
-  DoDamage((GetDamage()-iDmg)/2,Local(0));
+  if(!Local(nil)) RemoveObject();
+  DoDamage(((GetDamage() ?? 0)-(iDmg ?? 0))/2,Local(nil));
   iDmg = GetDamage();
  return(1);
 }

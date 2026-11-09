@@ -1,6 +1,6 @@
 /*-- Elektrowaffe --*/
 
-#strict
+#strict 3
 
 local target, ammocount, restshots;
 
@@ -10,7 +10,7 @@ local target, ammocount, restshots;
 public func Fire()
 {
   // noch beim Nachladen
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // noch genug Energie?
   if (!ammocount)
     return(LoadAmmo());
@@ -20,38 +20,38 @@ public func Fire()
   if (!target)
   {
     Sound("ElNoTarget");
-    return(0);
+    return(nil);
   }
   // Sound & Aktion
   Sound("Electric");
   SetAction("Firing");
   // gleich mal 'ne Ladung loslassen
   restshots = 8;
-  --ammocount;
+  S42MigrationStep(ammocount, -1);
 }
 
 private func DrawLightning(x0, y0, x1, y1)
 {
-  var lgh = CreateObject(SLGH,0,0,-1);
-  SetCon(Distance(x0,y0,x1,y1)/2, lgh);
+  var lgh = CreateObject(SLGH,nil,nil,-1);
+  SetCon((Distance(x0,y0,x1,y1) ?? 0)/2, lgh);
   SetR(Angle(x0,y0,x1,y1), lgh);
-  SetPosition((x0+x1)/2, (y0+y1)/2, lgh);
+  SetPosition(((x0 ?? 0)+(x1 ?? 0))/2, ((y0 ?? 0)+(y1 ?? 0))/2, lgh);
 }
 
 private func Shoot()
 {
   // Ziel noch da und in Reichweite?
-  if (!target || Contained(target))  return(0);
-  if (ObjectDistance(target) > 100)  return(0);
+  if (Or(!target, Contained(target)))  return(nil);
+  if ((ObjectDistance(target) ?? 0) > 100)  return(nil);
   // Blitz erzeugen
-  if (GetDir(Contained()))  DrawLightning(GetX()+7, GetY(), GetX(target), GetY(target));
-                      else  DrawLightning(GetX()-6, GetY(), GetX(target), GetY(target));
+  if (GetDir(Contained()))  DrawLightning((GetX() ?? 0)+7, GetY(), GetX(target), GetY(target));
+                      else  DrawLightning((GetX() ?? 0)-6, GetY(), GetX(target), GetY(target));
   // Lebewesen oder nicht?
-  if (GetOCF(target) & OCF_Alive())
-    DoEnergy(-1-Random(4)/3, target);                            // Schaden: 1.25 HP
+  if ((GetOCF(target) ?? 0) & (OCF_Alive ?? 0))
+    DoEnergy(-1-(Random(4) ?? 0)/3, target);                            // Schaden: 1.25 HP
   else
-    CreateObject(SEMP,0,0,-1)->SetTarget(target, 4+Random(5));   // EMP der Stärke 6.0
-  DoDamage(1-Random(5)/4, target);                               // Schaden: 0.8 HP
+    CreateObject(SEMP,nil,nil,-1)->SetTarget(target, 4+(Random(5) ?? 0));   // EMP der Stärke 6.0
+  DoDamage(1-(Random(5) ?? 0)/4, target);                               // Schaden: 0.8 HP
 }
 
 
@@ -63,26 +63,26 @@ private func FindTarget()
   var obj;
   while (1)
   {
-    obj = FindObject(0, 0,0,-1,-1, 0,"ActiveDetonation",0,NoContainer(), obj);
+    obj = FindObject(nil, nil,nil,-1,-1, nil,"ActiveDetonation",nil,NoContainer(), obj);
     if (!obj) break;
-    if (GetDir(Contained()) == (GetX(obj) < GetX())) continue;
-    if (ObjectDistance(obj) > 100) break;
+    if (Equal(GetDir(Contained()), ((GetX(obj) ?? 0) < (GetX() ?? 0)))) continue;
+    if ((ObjectDistance(obj) ?? 0) > 100) break;
     if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
       return(obj);
   }
   // Lebewesen
-  obj = 0;
+  obj = nil;
   while (1)
   {
-    obj = FindObject(0, 0,0,-1,-1, OCF_Alive(),0,0,NoContainer(), obj);
+    obj = FindObject(nil, nil,nil,-1,-1, OCF_Alive,nil,nil,NoContainer(), obj);
     if (!obj) break;
-    if (GetDir(Contained()) == (GetX(obj) < GetX())) continue;
-    if (ObjectDistance(obj) > 100) break;
-    if ((GetID(obj) == SSPR) || (GetID(obj) == SNSS))
-      if (GetAction(obj) == "Count")
+    if (Equal(GetDir(Contained()), ((GetX(obj) ?? 0) < (GetX() ?? 0)))) continue;
+    if ((ObjectDistance(obj) ?? 0) > 100) break;
+    if (Or((Equal(GetID(obj), SSPR)), (Equal(GetID(obj), SNSS))))
+      if (Equal(GetAction(obj), "Count"))
         if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
           return(obj);       // Sprengsätze
-    if (GetOCF(obj) & OCF_CrewMember())
+    if ((GetOCF(obj) ?? 0) & (OCF_CrewMember ?? 0))
     {
       if (Hostile(GetOwner(Contained()),GetOwner(obj)))
         if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
@@ -92,33 +92,33 @@ private func FindTarget()
            return(obj);    // andere Lebewesen
   }
   // gegnerische Fahrzeuge
-  obj = 0;
+  obj = nil;
   while (1)
   {
-    obj = FindObject(0, 0,0,-1,-1, 0,0,0,NoContainer(), obj);
+    obj = FindObject(nil, nil,nil,-1,-1, nil,nil,nil,NoContainer(), obj);
     if (!obj) break;
-    if (GetDir(Contained()) == (GetX(obj) < GetX())) continue;
-    if (ObjectDistance(obj) > 100) break;
-    if (GetCategory(obj) & C4D_Vehicle())
-      if (GetOCF(obj) & OCF_Entrance())
+    if (Equal(GetDir(Contained()), ((GetX(obj) ?? 0) < (GetX() ?? 0)))) continue;
+    if ((ObjectDistance(obj) ?? 0) > 100) break;
+    if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
+      if ((GetOCF(obj) ?? 0) & (OCF_Entrance ?? 0))
         if (Hostile(GetOwner(Contained()),GetOwner(obj)))
           if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
             return(obj);
   }
   // gegnerische Gebäude
-  obj = 0;
+  obj = nil;
   while (1)
   {
-    obj = FindObject(0, 0,0,-1,-1, OCF_Exclusive(),0,0,NoContainer(), obj);
+    obj = FindObject(nil, nil,nil,-1,-1, OCF_Exclusive,nil,nil,NoContainer(), obj);
     if (!obj) break;
-    if (GetDir(Contained()) == (GetX(obj) < GetX())) continue;
-    if (ObjectDistance(obj) > 100) break;
-    if (GetCategory(obj) & C4D_Structure())
+    if (Equal(GetDir(Contained()), ((GetX(obj) ?? 0) < (GetX() ?? 0)))) continue;
+    if ((ObjectDistance(obj) ?? 0) > 100) break;
+    if ((GetCategory(obj) ?? 0) & (C4D_Structure ?? 0))
       if (Hostile(GetOwner(Contained()),GetOwner(obj)))
         if (PathFree(GetX(),GetY(), GetX(obj),GetY(obj)))
           return(obj);
   }
-  return(0);
+  return(nil);
 }
 
 
@@ -127,7 +127,7 @@ private func FindTarget()
 protected func Activate()
 {
   [Waffe überladen]
-  if (GetAction() ne "Countdown")
+  if (!SEqual(GetAction(), "Countdown"))
   {
     SetAction("Countdown");
     Sound("Overload");
@@ -159,7 +159,7 @@ public func LoadAmmo()
   // Sound
   Sound("Buckle3");
   // Waffe wieder auswählen
-  ShiftContents(Contained(),0,GetID());
+  ShiftContents(Contained(),nil,GetID());
 }
 
 
@@ -180,24 +180,24 @@ protected func Firing()
 
 protected func Countdown()
 {
-  var counter = 5 - GetActTime()/30;
+  var counter = 5 - (GetActTime() ?? 0)/30;
   // Zeitanzeige
   Message(Format("Waffe überladen|... %d ...", counter), this());
   // Zeit vorbei?
-  if (counter <= 0)
+  if ((counter ?? 0) <= 0)
   {
     // Fragmente
     var i, obj;
-    for (i = 1; i <= 3; i++)
+    for (i = 1; (i ?? 0) <= 3; S42MigrationStep(i, 1, true))
     {
-      obj = CreateObject(SFRX, Random(50)-25, Random(50)-25, GetOwner());
+      obj = CreateObject(SFRX, (Random(50) ?? 0)-25, (Random(50) ?? 0)-25, GetOwner());
       obj->Settings(i, 25);
     }
     // Druckwelle & EMP
     obj = CreateObject(SWV2);
-    obj->SetSize(200,GetX(),GetY(), 0, 500+ammocount*80+Random(200));
+    obj->SetSize(200,GetX(),GetY(), nil, 500+(ammocount ?? 0)*80+(Random(200) ?? 0));
     // Explosion
-    CreateParticle("Blast", 0,0,0,0, 800,RGB(128,0,255));
+    CreateParticle("Blast", nil,nil,nil,nil, 800,RGB(128,nil,255));
     Explode(20);
   }
 }
@@ -213,11 +213,14 @@ public func Selection()
 
 /* Infos */
 
-public GetAmmoPercent: return(ammocount*10 + restshots*10/8);
+public func GetAmmoPercent(...) { return((ammocount ?? 0)*10 + (restshots ?? 0)*10/8);
+}
 
 
 /* Eigenschaften */
 
-public IsWeapon: return(GetAction() ne "Countdown");   // Waffe bei Überladung werfen
-public IsWeaponProduct: return(1);
+public func IsWeapon(...) { return(!SEqual(GetAction(), "Countdown"));   // Waffe bei Überladung werfen
+}
+public func IsWeaponProduct(...) { return(1);
+}
 

@@ -1,6 +1,6 @@
 /*-- Pumpe --*/
 
-#strict
+#strict 3
 
 local Barrel;
 local TransferReady;
@@ -15,7 +15,7 @@ protected func Initialize()
 {
   SetAction("Pump");
   Barrel = CreateContents(BARL);
-  TransferReady = 0;
+  TransferReady = nil;
 }
 
 /* Status */
@@ -43,7 +43,7 @@ private func Pumping()
   if (!ReadyToPump())
   {
     SetAction("Wait");
-    TransferReady = 0;    
+    TransferReady = nil;
   }
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy()),this());
@@ -52,25 +52,25 @@ private func Pumping()
 private func ReadyToPump()
 {
   // Zuflussrohr suchen
-  var pSourcePipe = FindObject(SPIP,0,0,0,0,0,"Connect",this());
+  var pSourcePipe = FindObject(SPIP,nil,nil,nil,nil,nil,"Connect",this());
   // Kein Zuflussrohr da: nicht pumpen
-  if (!pSourcePipe) return(0);
+  if (!pSourcePipe) return(nil);
   // Zufluss-Leitungsbausatz suchen
   var pPumpSource = GetActionTarget(1, pSourcePipe);
   // Zuflussrohr ist gar nicht oder nicht an einen Leitungsbausatz angeschlossen: strange?!
-  if (!pPumpSource || (GetID(pPumpSource)!=LNKT)) return(1);
+  if (Or(!pPumpSource, (!Equal(GetID(pPumpSource), LNKT)))) return(1);
   // Abflussrohr suchen
-  var pDrainPipe = FindObject(DPIP,0,0,0,0,0,"Connect",this());
+  var pDrainPipe = FindObject(DPIP,nil,nil,nil,nil,nil,"Connect",this());
   // Kein Abflussrohr da: pumpen
   if (!pDrainPipe) return(1);
   // Abfluss-Zielobjekt suchen
   var pPumpTarget = GetActionTarget(1, pDrainPipe);
   // Abflussrohr ist gar nicht oder an einen Leitungsbausatz angeschlossen: pumpen
-  if (!pPumpTarget || (GetID(pPumpTarget)==LNKT)) return(1);
+  if (Or(!pPumpTarget, (Equal(GetID(pPumpTarget), LNKT)))) return(1);
   // Kapazität für gepumptes Material im Zielobjekt prüfen
-  if (!CheckCapacity(pPumpTarget, 12, pPumpSource->GetMaterial(0,1)))
+  if (!CheckCapacity(pPumpTarget, 12, pPumpSource->GetMaterial(nil,1)))
     // Keine ausreichende Kapazität: nicht pumpen
-    return(0);
+    return(nil);
   // Ansonsten: pumpen
   return(1);
 }
@@ -82,24 +82,24 @@ private func CheckCapacity(pTarget, iAmount, iMaterial)
   var BarrelID = GetBarrelType(iMaterial);
   var objBarrel;
   // Wenn es keinen Fasstyp für diese Flüssigkeit gibt, kann auch nicht gepumpt werden!
-  if (!BarrelID) return();
-  while (objBarrel = FindObject(BarrelID,0,0,0,0,0,0,0,pTarget,objBarrel))
+  if (!BarrelID) return;
+  while (objBarrel = FindObject(BarrelID,nil,nil,nil,nil,nil,nil,nil,pTarget,objBarrel))
     if (!objBarrel->BarrelIsFull())
-      if ((iAmount -= objBarrel->BarrelMaxFill() - objBarrel->GetAmount()) <= 0)
+      if (((S42MigrationAssign(iAmount, "-=", (objBarrel->BarrelMaxFill() ?? 0) - (objBarrel->GetAmount() ?? 0))) ?? 0) <= 0)
         // Noch Kapazität vorhanden
         return(1);
   // Leere Fässer suchen
   BarrelID = EmptyBarrelID();
-  objBarrel = 0;
+  objBarrel = nil;
   if (BarrelID)
   {
-    while (objBarrel = FindObject(BarrelID,0,0,0,0,0,0,0,pTarget,objBarrel))
-      if ((iAmount -= objBarrel->BarrelMaxFill()) <= 0)
+    while (objBarrel = FindObject(BarrelID,nil,nil,nil,nil,nil,nil,nil,pTarget,objBarrel))
+      if (((S42MigrationAssign(iAmount, "-=", (objBarrel->BarrelMaxFill() ?? 0))) ?? 0) <= 0)
         // Noch Kapazität vorhanden
         return(1);
   }
   // Keine Kapazität vorhanden
-  return(0);
+  return(nil);
 }
 
 /* Zerstörung */

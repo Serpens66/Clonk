@@ -1,6 +1,6 @@
 /*-- keine Lichter --*/
 
-#strict
+#strict 3
 
 // solange diese Regel vorhanden, sind alle neuen Lichter automatisch turned off
 

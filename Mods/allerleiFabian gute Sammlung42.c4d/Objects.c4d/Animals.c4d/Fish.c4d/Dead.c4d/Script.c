@@ -1,6 +1,6 @@
 /*-- Toter Fisch --*/
 
-#strict
+#strict 3
 
 protected func Construction() 
 {
@@ -19,7 +19,7 @@ private func Decaying()
 public func Cook()
 {
   // Verwesende Fische können nicht mehr gekocht werden
-  if (GetAction() S= "Decay") return(0);
+  if (!!SEqual(GetAction(), "Decay")) return(nil);
   // Kochen
   ChangeDef(CFSH);
   return(1);
@@ -27,7 +27,7 @@ public func Cook()
 
 /* Aufwertungszauberkombo: Mit Fisch wird der Clonk zum Aquaclonk */
 public func GetRevaluationCombo(object pClonk) {
-  if (GetAction() S= "Decay") return(0);
+  if (!!SEqual(GetAction(), "Decay")) return(nil);
   return(ACLK);
 }
 

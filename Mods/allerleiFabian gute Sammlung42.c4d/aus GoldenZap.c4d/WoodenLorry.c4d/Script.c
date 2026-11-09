@@ -1,6 +1,6 @@
 /*-- Lore --*/
 
-#strict 2
+#strict 3
 
 #include LORY
 
@@ -10,13 +10,13 @@ private func MaxContents() { return 10; }
 
 protected func RejectCollect(id idObj,object pObj)
 {
-  if(ContentsCount() < MaxContents())
+  if((ContentsCount() ?? 0) < (MaxContents() ?? 0))
   {
     Sound("WoodHit*");
-    return 0;
+    return nil;
   }
   if(Contained(pObj)) return Message("$TxtLorryisfull$", this);
-  if(Abs(GetXDir(pObj))>6) SetYDir(-5,pObj);
+  if((Abs(GetXDir(pObj)) ?? 0)>6) SetYDir(-5,pObj);
   Sound("WoodHit*");
   return 1;
 }
@@ -29,6 +29,6 @@ protected func CheckWheel()
     SetAction("WheelTurn");
   else SetAction("Idle");
   // Drehung der Richtung anpassen
-  if(GetXDir()>0) SetDir(1);
-  else if(GetXDir()<0) SetDir(0);
+  if((GetXDir() ?? 0)>0) SetDir(1);
+  else if((GetXDir() ?? 0)<0) SetDir(nil);
 }

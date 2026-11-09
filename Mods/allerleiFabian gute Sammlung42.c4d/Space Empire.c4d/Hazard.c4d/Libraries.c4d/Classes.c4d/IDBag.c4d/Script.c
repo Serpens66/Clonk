@@ -1,6 +1,6 @@
 /* Generic ID bag */
 
-#strict
+#strict 3
 #include L_AI
 
 // This object contains a number of IDs.
@@ -24,7 +24,8 @@ public func RemoveItem(id idItem) { return(RemoveItems(idItem,1)); }
 
 // Add items
 public func AddItems(id idItem, int iNum) {
-	if(iNum < 0) return( false );
+	iNum ??= 0;
+	if((iNum ?? 0) < 0) return( nil );
 
 	var obj;
 	// if no object yet...
@@ -32,28 +33,29 @@ public func AddItems(id idItem, int iNum) {
 		obj = CreateContents(idItem);
 	}
 	// still no object (id not existant)
-	if(!obj) return(false);
+	if(!obj) return(nil);
 
 	// increase..
-	var newinfo = GetInfo(obj,0)+iNum;
-	SetInfo(obj,0,newinfo);
+	var newinfo = (GetInfo(obj,nil) ?? 0)+(iNum ?? 0);
+	SetInfo(obj,nil,newinfo);
 	return (true);
 }
 
 // Delete items
 public func RemoveItems(id idItem, int iNum) {
-	if(iNum < 0) return(false);
+	iNum ??= 0;
+	if((iNum ?? 0) < 0) return(nil);
 
 	var obj;
 	if(!(obj=FindContents(idItem)))
-		return( false );
+		return( nil );
 
 	// decrease..
-	var newinfo = GetInfo(obj,0)-iNum;
-	SetInfo(obj,0,newinfo);
+	var newinfo = (GetInfo(obj,nil) ?? 0)-(iNum ?? 0);
+	SetInfo(obj,nil,newinfo);
 
 	// delete ID object if empty
-	if(GetInfo(obj,0) <= 0) {
+	if((GetInfo(obj,nil) ?? 0) <= 0) {
 		obj->RemoveObject();
 	}
 
@@ -62,25 +64,26 @@ public func RemoveItems(id idItem, int iNum) {
 
 // Get item (like Contents only that each ID only comes one time)
 public func GetItem(int i) {
+	i ??= 0;
 	var c = Contents(i);
-	if(!c) return(false);
+	if(!c) return(nil);
 	return(c->GetID());
 }
 
 // bag is empty
 public func IsEmpty() {
-	return(!Contents(0));
+	return(!Contents(nil));
 }
 
 // Remove all of idItem. If idItem = 0, remove all
 public func RemoveAllItems(id idItem) {
 	// none to remove: return false
-	if(IsEmpty()) return(false);
+	if(IsEmpty()) return(nil);
 
 	// no id: remove all
 	if(!idItem) {
 		var obj;
-		while(obj=Contents(0))
+		while(obj=Contents(nil))
 			obj->RemoveObject();
 	}
 	// id: remove id
@@ -89,7 +92,7 @@ public func RemoveAllItems(id idItem) {
 		if(obj=FindContents(idItem))
 			obj->RemoveObject();
 		else
-			return(false);
+			return(nil);
 	}
 	return (true);
 }
@@ -98,18 +101,18 @@ public func RemoveAllItems(id idItem) {
 public func GetItemCount(id idItem) {
 	// recursive add...
 	if(!idItem) {
-		var sum = 0;
-		for(var i=0; Contents(i); ++i) {
-			sum += GetItemCount(GetID(Contents(i)));
+		var sum = nil;
+		for(var i=nil; Contents(i); S42MigrationStep(i, 1)) {
+			S42MigrationAssign(sum, "+=", (GetItemCount(GetID(Contents(i))) ?? 0));
 		}
 		return (sum);
 	}
 	// number of the contents
 	else {
 		var obj = FindContents(idItem);
-		if(!obj) return(0);
+		if(!obj) return(nil);
 		
-		return(GetInfo(obj,0));
+		return(GetInfo(obj,nil));
 	}
 }
 
@@ -118,13 +121,15 @@ public func GetItemCount(id idItem) {
 // if bStrict, only transfer if iCount is not more than actually in bag
 public func TransferItems(object pBag, id idItem, int iCount, bool bStrict) {
 	// All parameters must be given 
-	if(!pBag) return(false);
-	if(!idItem) return(false);
-	if(iCount < 0) return(false);
+	iCount ??= 0;
+	bStrict ??= false;
+	if(!pBag) return(nil);
+	if(!idItem) return(nil);
+	if((iCount ?? 0) < 0) return(nil);
 
 	var top = GetItemCount(idItem);
 	// no sense in transfer if it is 0
-	if(top == 0) return( true );
+	if(Equal(top, nil)) return( true );
 
 	// transfer all
 	if(!iCount) {
@@ -136,9 +141,9 @@ public func TransferItems(object pBag, id idItem, int iCount, bool bStrict) {
 		iCount = top;
 	}
 	// iCount is too big?
-	if(iCount > top) {
+	if((iCount ?? 0) > (top ?? 0)) {
 		if(bStrict) {
-			return(false);
+			return(nil);
 		}
 		else {
 			iCount = top;
@@ -154,11 +159,11 @@ public func TransferItems(object pBag, id idItem, int iCount, bool bStrict) {
 
 // Transfer all items into another bag
 public func TransferAllItems(object pBag) {
-	if(!pBag) return(false);
+	if(!pBag) return(nil);
 
 	var obj;
-	while(obj = Contents(0))
-		TransferItems(obj, GetID(obj), 0);
+	while(obj = Contents(nil))
+		TransferItems(obj, GetID(obj), nil);
 
 	return(true);
 }

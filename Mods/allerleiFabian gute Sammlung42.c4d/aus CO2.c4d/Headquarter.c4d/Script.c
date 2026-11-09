@@ -1,6 +1,6 @@
 /*-- Headquarter--*/
 
-#strict
+#strict 3
 
 #include BP5C // Burgteilfunktion
 #include DOOR // Tuersteuerung

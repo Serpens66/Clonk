@@ -1,6 +1,6 @@
 /*-- fliegende Rakete --*/
 
-#strict
+#strict 3
 
 local dir;
 
@@ -24,10 +24,10 @@ private func Launch()
     return(1);
   }
   // Rakete starten
-  var speed = 40+Random(11);
-  SetXDir(dir*2*speed - speed);
-  SetYDir(-speed);
-  SetRDir(0);
+  var speed = 40+(Random(11) ?? 0);
+  SetXDir((dir ?? 0)*2*(speed ?? 0) - (speed ?? 0));
+  SetYDir(-(speed ?? 0));
+  SetRDir(nil);
   if (dir) SetR(+45);
       else SetR(-45);
 }
@@ -38,19 +38,19 @@ private func Launch()
 private func CheckTargets()
 {
   // Flugrichtung setzen
-  var angle = Angle(0,0,GetXDir(),GetYDir());
+  var angle = Angle(nil,nil,GetXDir(),GetYDir());
   SetR(angle);
-  Smoke(0,3,1);
+  Smoke(nil,3,1);
   // Beschleunigung
-  SetXDir(GetXDir() + Sin(angle,5)/2);
-  SetYDir(GetYDir() - Cos(angle,5)/2);
+  SetXDir((GetXDir() ?? 0) + (Sin(angle,5) ?? 0)/2);
+  SetYDir((GetYDir() ?? 0) - (Cos(angle,5) ?? 0)/2);
   // Treffer-Überprüfung
   var obj;
-  if (obj = FindObject(0,1,0,0,0, OCF_Exclusive()))                    // Gebäude
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Exclusive))                    // Gebäude
     if (Hostile(GetOwner(obj), GetOwner()))
       return(Hit());
-  if (obj = FindObject(0,1,0,0,0, OCF_Entrance(),0,0,NoContainer()))   // Fahrzeuge
-    if (GetCategory(obj) & C4D_Vehicle())
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Entrance,nil,nil,NoContainer()))   // Fahrzeuge
+    if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
       if (Hostile(GetOwner(obj), GetOwner()))
         return(Hit());
 }
@@ -60,16 +60,18 @@ private func CheckTargets()
 
 protected func Hit()
 {
-  var obj = CreateObject(SFRX,0,0,GetOwner());
+  var obj = CreateObject(SFRX,nil,nil,GetOwner());
   obj->Settings(1, 40);
-if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(30+Random(6));
-else FakeExplode(30+Random(6),0,0,30+Random(6));
+if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(30+(Random(6) ?? 0));
+else FakeExplode(30+(Random(6) ?? 0),nil,nil,30+(Random(6) ?? 0));
 }
 
-public Destroy: return(Hit());
+public func Destroy(...) { return(Hit());
+}
 
 
 /* Eigenschaften */
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

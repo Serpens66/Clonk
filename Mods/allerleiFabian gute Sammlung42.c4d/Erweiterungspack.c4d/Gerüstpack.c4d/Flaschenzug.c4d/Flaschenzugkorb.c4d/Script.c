@@ -1,6 +1,6 @@
 /*-- Flaschenzugkorb --*/
 
-#strict
+#strict 3
 
 // Local 8: Obergrenze
 // Local 9: Untergrenze
@@ -34,8 +34,8 @@ public func Init(pFlaschenzug)
 
 protected func Timer() 
 {
-  if(Abs(GetYDir()) && !KeyIsOccupied()) return(DoControlDig(this()));
-  timer= (++timer) % 30;
+  if(And(Abs(GetYDir()), !KeyIsOccupied())) return(DoControlDig(this()));
+  timer= (S42MigrationStep(timer, 1)) % 30;
   // Lore fassen
   GrabObjects();
   // Clonks umgreifen lassen
@@ -47,9 +47,9 @@ protected func Activity()
 {
   UpdateTransferZone();
   // Legacy
-  if (Local(8) && !RangeTop) ImportSettings();
+  if (And(Local(8), !RangeTop)) ImportSettings();
   // Zu wartenden Clonks fahren
-  if (AutoMode == 0 && !Passenger() && !GetCommand() && KeyIsOccupied())
+  if (And(And(And(Equal(AutoMode, nil), !Passenger()), !GetCommand()), KeyIsOccupied()))
     MoveToWaitingClonk();
   // Sicherheitscheck: Bewegung ohne Kommando nur bei Schachtbohrung
   if (GetComDir())
@@ -63,18 +63,18 @@ private func MoveToWaitingClonk()
 {
   // Wartender Clonk da? 
   var oClnk;
-  if(!(oClnk = FindWaitingClonk()) ) return(0);
+  if(!(oClnk = FindWaitingClonk()) ) return(nil);
 
   // Bewegung nötig?
-  if(Abs(GetY(oClnk) - GetY()) < 4 
-     && GetAction(oClnk) ne "Swim") return(0);
+  if(And((Abs((GetY(oClnk) ?? 0) - (GetY() ?? 0)) ?? 0) < 4
+     , !SEqual(GetAction(oClnk), "Swim"))) return(nil);
 
   // Zielposition bestimmen
   var iTargetY = GetY(oClnk);
-  if(GetAction(oClnk) S= "Swim")
-    iTargetY -= 2;
-  if(GetY() > iTargetY)
-    iTargetY -= 3;
+  if(!!SEqual(GetAction(oClnk), "Swim"))
+    S42MigrationAssign(iTargetY, "-=", 2);
+  if((GetY() ?? 0) > (iTargetY ?? 0))
+    S42MigrationAssign(iTargetY, "-=", 3);
   
   // Dorthin fahren
   SetMoveTo(iTargetY);
@@ -84,21 +84,21 @@ private func MoveToWaitingClonk()
 private func FindWaitingClonk()
 {
   var clnk, best;
-  while(clnk = FindObject(0, -40, RangeTop - GetY(), 80, 6000, OCF_CrewMember(), 0, 0, NoContainer(), clnk) )
-    if(GetComDir(clnk) == COMD_Stop() || (GetAction(clnk) S= "Swim" && Inside(GetXDir(clnk), -5, 5)) ) //(GetComDir(clnk) == COMD_Down() || GetComDir(clnk) == COMD_Up() )) )
-      if(GetAction(clnk) S= "Walk" || GetAction(clnk) S= "Push" || GetAction(clnk) S= "Scale" || GetAction(clnk) S= "Hangle" || GetAction(clnk) S= "Swim")
+  while(clnk = FindObject(nil, -40, (RangeTop ?? 0) - (GetY() ?? 0), 80, 6000, OCF_CrewMember, nil, nil, NoContainer(), clnk) )
+    if(Or(Equal(GetComDir(clnk), COMD_Stop), (And(!!SEqual(GetAction(clnk), "Swim"), Inside(GetXDir(clnk), -5, 5)))) ) //(GetComDir(clnk) == COMD_Down() || GetComDir(clnk) == COMD_Up() )) )
+      if(Or(Or(Or(Or(!!SEqual(GetAction(clnk), "Walk"), !!SEqual(GetAction(clnk), "Push")), !!SEqual(GetAction(clnk), "Scale")), !!SEqual(GetAction(clnk), "Hangle")), !!SEqual(GetAction(clnk), "Swim")))
         if(!Hostile(GetController(clnk), GetOwner()) )
         {
           // Nicht erreichbar?
-          if(GetY(clnk) < GetY() - 7) if(!PathFree(GetX(), GetY(), GetX(), GetY(clnk)) ) continue;
-          if(GetY(clnk) > GetY() + 7) if(!PathFree(GetX(), GetY() + 16, GetX(), GetY(clnk)) ) continue;
+          if((GetY(clnk) ?? 0) < (GetY() ?? 0) - 7) if(!PathFree(GetX(), GetY(), GetX(), GetY(clnk)) ) continue;
+          if((GetY(clnk) ?? 0) > (GetY() ?? 0) + 7) if(!PathFree(GetX(), (GetY() ?? 0) + 16, GetX(), GetY(clnk)) ) continue;
           // Priorität prüfen (Cursor hat Priorität, sonst nächster Clonk)
           if(!best)
             best = clnk;
-          else if(GetCursor(GetController(clnk)) == clnk)
+          else if(Equal(GetCursor(GetController(clnk)), clnk))
             best = clnk;
-          else if(GetCursor(GetController(best)) != best)
-            if(ObjectDistance(clnk) < ObjectDistance(best))
+          else if(!Equal(GetCursor(GetController(best)), best))
+            if((ObjectDistance(clnk) ?? 0) < (ObjectDistance(best) ?? 0))
               best = clnk;
         }
   return(best);
@@ -108,12 +108,12 @@ private func FitsInElevator(pObject)
 {
   // Alle (ungedrehten) Vertices des Objekts prüfen
   var vertexCount = GetDefCoreVal("Vertices", "DefCore", pObject->GetID());
-  for (var i = 0; i < vertexCount; i++) 
+  for (var i = nil; (i ?? 0) < (vertexCount ?? 0); S42MigrationStep(i, 1, true))
   {
     var vertexX = GetDefCoreVal("VertexX", "DefCore", pObject->GetID(), i);
     var vertexY = GetDefCoreVal("VertexY", "DefCore", pObject->GetID(), i);
     // Passt nicht
-    if (!Inside(vertexX, -12, 11) || !Inside(vertexY, -20, 15)) return(0);
+    if (Or(!Inside(vertexX, -12, 11), !Inside(vertexY, -20, 15))) return(nil);
   }
   // Passt
   return(1);  
@@ -124,15 +124,15 @@ private func GrabObjects()
   var pObject, did_grab;
   
   // Fahrzeuge
-  while (pObject = FindObject(0, -8, -10, 16, 30, OCF_Grab(), 0, 0, 0, pObject)) 
+  while (pObject = FindObject(nil, -8, -10, 16, 30, OCF_Grab, nil, nil, nil, pObject))
   {
     // Objekt passt in den Fahrstuhlkorb
     if (FitsInElevator(pObject)) 
     {
-      if (!(GetCategory(pObject) & C4D_Vehicle())) continue;
+      if (!((GetCategory(pObject) ?? 0) & (C4D_Vehicle ?? 0))) continue;
       if (!Inside(GetXDir(pObject, 100), -1, +1)) continue;
-      if (pObject->~IsTree() && GetCon(pObject) >= 50) continue;
-      if (GetX(pObject) == GetX() && GetY(pObject) == GetY() + 1) continue;
+      if (And(pObject->~IsTree(), (GetCon(pObject) ?? 0) >= 50)) continue;
+      if (And(Equal(GetX(pObject), GetX()), Equal(GetY(pObject), (GetY() ?? 0) + 1))) continue;
       if (pObject->~IsElevator() ) continue;
       did_grab = true;
       
@@ -142,11 +142,11 @@ private func GrabObjects()
   
   // Gegenstände
   var obj;
-  var item_ocf = OCF_Collectible() | OCF_NotContained();
-  while (obj = FindObject(0, -10, 7, 20, 4, item_ocf, 0, 0, 0, obj)) 
+  var item_ocf = (OCF_Collectible ?? 0) | (OCF_NotContained ?? 0);
+  while (obj = FindObject(nil, -10, 7, 20, 4, item_ocf, nil, nil, nil, obj))
   {
-    if (!(GetCategory(obj) & C4D_Object())) continue;
-    if (GetYDir(obj) < -2 || !Inside(GetXDir(obj), -2, +2)) continue;
+    if (!((GetCategory(obj) ?? 0) & (C4D_Object ?? 0))) continue;
+    if (Or((GetYDir(obj) ?? 0) < -2, !Inside(GetXDir(obj), -2, +2))) continue;
     GrabAdjustPosition(obj);
   }
   
@@ -155,41 +155,41 @@ private func GrabObjects()
 
 private func GrabAdjustPosition(obj) 
 {
-  var offset = (GetObjHeight(this()) - GetObjHeight(obj)) / 2 - 1;
+  var offset = ((GetObjHeight(this()) ?? 0) - (GetObjHeight(obj) ?? 0)) / 2 - 1;
   var x = GetX();
 
-  if (GetCategory(obj) & C4D_Object()) 
+  if ((GetCategory(obj) ?? 0) & (C4D_Object ?? 0))
   {
-    if(GetOCF(obj) & OCF_HitSpeed1() ) return(0);
-    offset = 8 + GetYDir() / 10;
+    if((GetOCF(obj) ?? 0) & (OCF_HitSpeed1 ?? 0) ) return(nil);
+    offset = 8 + (GetYDir() ?? 0) / 10;
     x = GetX(obj);
   }
-  else if (GetID(obj) == LORY)
-    offset = -1 + GetYDir() / 10;
+  else if (Equal(GetID(obj), LORY))
+    offset = -1 + (GetYDir() ?? 0) / 10;
   
-  SetSpeed(0, GetYDir() / 20, obj); SetRDir(0, obj);
-  SetR(0, obj);
-  SetPosition(x, GetY() + offset, obj);
+  SetSpeed(nil, (GetYDir() ?? 0) / 20, obj); SetRDir(nil, obj);
+  SetR(nil, obj);
+  SetPosition(x, (GetY() ?? 0) + (offset ?? 0), obj);
 }
 
 private func ChangeClonkGrabs()
 {
   var clonk;
-  var clonk_ocf = OCF_Living() | OCF_NotContained();
+  var clonk_ocf = (OCF_Living ?? 0) | (OCF_NotContained ?? 0);
   // Schiebende Clonks suchen
-  while (clonk = FindObject(0, -15, -10, 30, 20, clonk_ocf, "Push", 0, 0, clonk)) 
+  while (clonk = FindObject(nil, -15, -10, 30, 20, clonk_ocf, "Push", nil, nil, clonk))
   {
-    if (GetComDir(clonk) != COMD_Stop() && GetComDir(clonk) != COMD_Up()) continue;
+    if (And(!Equal(GetComDir(clonk), COMD_Stop), !Equal(GetComDir(clonk), COMD_Up))) continue;
     if (!Inside(GetXDir(clonk), -2, +2)) continue;
-    if (GetCommand(clonk) && GetCommand(clonk) ne "None") continue;
+    if (And(GetCommand(clonk), !SEqual(GetCommand(clonk), "None"))) continue;
     if (GetMenu(clonk)) continue;
       
     // Geschobenes Objekt prüfen
-    var target = GetActionTarget(0, clonk);
+    var target = GetActionTarget(nil, clonk);
     if (!target) continue;
     if (target->~IsElevator() ) continue;
-    if (!Inside(GetX(target), GetX() - 8, GetX() + 8)) continue;
-    if (ObjectDistance(this(), target) > 15) continue;
+    if (!Inside(GetX(target), (GetX() ?? 0) - 8, (GetX() ?? 0) + 8)) continue;
+    if ((ObjectDistance(this(), target) ?? 0) > 15) continue;
     if (!Inside(GetXDir(target), -2, +2)) continue;
     if (!PathFree(GetX(this()), GetY(this()), GetX(target), GetY(target))) continue;
     if (!FitsInElevator(target)) continue;
@@ -197,7 +197,7 @@ private func ChangeClonkGrabs()
     // Geschobenes Objekt zentrieren
     GrabAdjustPosition(target);
     // Der Clonk soll nun uns anfassen
-    if (!Inside(GetX(clonk) - GetX(), -5, +5)) 
+    if (!Inside((GetX(clonk) ?? 0) - (GetX() ?? 0), -5, +5))
     {
       //SetCommand(clonk, "UnGrab"); unnötig, wenn wir unten SetCommand benutzen...
       //AppendCommand(clonk, "MoveTo", 0, GetX()); wtf sollte denn dieses MoveTo-Kommando zur oberen Bildschirmkante...?
@@ -209,7 +209,7 @@ private func ChangeClonkGrabs()
     } 
     else 
     {
-      SetActionTargets(this(), 0, clonk);
+      SetActionTargets(this(), nil, clonk);
     }
   }
 }
@@ -217,30 +217,30 @@ private func ChangeClonkGrabs()
 private func SetMoveTo(iPos)
 {
   SetAction("Ride"); 
-  var iDir = 0;
-  if (iPos > GetY()) iDir = +3;
-  if (iPos < GetY()) iDir = -3;
-  SetCommand(this(),"MoveTo", 0, GetX(), Max(iPos, RangeTop) + iDir);
-  SetYDir(0);
+  var iDir = nil;
+  if ((iPos ?? 0) > (GetY() ?? 0)) iDir = +3;
+  if ((iPos ?? 0) < (GetY() ?? 0)) iDir = -3;
+  SetCommand(this(),"MoveTo", nil, GetX(), (Max(iPos, RangeTop) ?? 0) + (iDir ?? 0));
+  SetYDir(nil);
   return(1);
 }
 
 public func Halt()
 {
-  if (!Elevator()) { SetAction("Idle"); return(); }
+  if (!Elevator()) { SetAction("Idle"); return; }
   ObjectSetAction(Schalter(),"Normal");
   SetAction("Wait");
   SetCommand(this(),"None");
-  SetComDir(COMD_Stop());
-  SetYDir(0);
-  if (GetY() > RangeBottom) UpdateRangeBottom();
+  SetComDir(COMD_Stop);
+  SetYDir(nil);
+  if ((GetY() ?? 0) > (RangeBottom ?? 0)) UpdateRangeBottom();
   return(1);
 }
 
 private func Waiting()
 {
   // Dauerbetrieb: selbständig losfahren
-  if (AutoMode == 1)
+  if (Equal(AutoMode, 1))
     SelfMovement();
   return(1);
 }
@@ -249,7 +249,7 @@ private func SelfMovement()
 {
   // Selbständig rauf- bzw. runterfahren
   if (AutoMoveDir) SetMoveTo(RangeTop);
-  if (!AutoMoveDir) SetMoveTo(LandscapeHeight() - 12);
+  if (!AutoMoveDir) SetMoveTo((LandscapeHeight() ?? 0) - 12);
   AutoMoveDir = !AutoMoveDir;
   return(1);
 }
@@ -259,13 +259,13 @@ private func SelfMovement()
 
 protected func Command(strCommand, oTarget, iTx, iTy)
 {
-  if (!Elevator()) return(0);
+  if (!Elevator()) return(nil);
   // Bewegungskommando vertikal
-  if (strCommand eq "MoveTo")
-    if (Inside(iTx, GetX()-15, GetX()+15))
+  if (!!SEqual(strCommand, "MoveTo"))
+    if (Inside(iTx, (GetX() ?? 0)-15, (GetX() ?? 0)+15))
       return(SetMoveTo(iTy));
   // Andere Kommandos nicht auswerten
-  return(0);
+  return(nil);
 }
 
 protected func ControlCommandFinished()
@@ -276,52 +276,52 @@ protected func ControlCommandFinished()
 
 private func DoControlDown(pObj)
 {
-  if (pIgnoreClonkDown == pObj)
-    { pIgnoreClonkDown = 0; return(0); }
-  pIgnoreClonkDown = 0;
+  if (Equal(pIgnoreClonkDown, pObj))
+    { pIgnoreClonkDown = nil; return(nil); }
+  pIgnoreClonkDown = nil;
   
-  if (!Elevator()) return(0);
-  if (!KeyIsOccupied()) return(0);
+  if (!Elevator()) return(nil);
+  if (!KeyIsOccupied()) return(nil);
   Sound("Click");
-  if (Hostile(GetController(pObj), GetOwner())) return(0);
-  SetMoveTo(LandscapeHeight() - 12);
+  if (Hostile(GetController(pObj), GetOwner())) return(nil);
+  SetMoveTo((LandscapeHeight() ?? 0) - 12);
   ObjectSetAction(Schalter(),"Work");  
 }
 
 private func DoControlUp(pObj)
 {
-  if (!Elevator()) return(0);
-  if (!KeyIsOccupied()) return(0);
+  if (!Elevator()) return(nil);
+  if (!KeyIsOccupied()) return(nil);
   Sound("Click");
-  if (Hostile(GetController(pObj), GetOwner())) return(0);
+  if (Hostile(GetController(pObj), GetOwner())) return(nil);
   SetMoveTo(RangeTop);
   ObjectSetAction(Schalter(),"Work");  
 }
 
 private func DoControlDig(pObj)
 {
-  if (!Elevator()) return(0);
+  if (!Elevator()) return(nil);
   Sound("Click");
-  if (Hostile(GetController(pObj), GetOwner())) return(0); 
+  if (Hostile(GetController(pObj), GetOwner())) return(nil);
   Halt();
 }
 
 public func DoControlAuto(pObj)
 {
   // Kein Fahrstuhl
-  if (!Elevator()) return(0);
+  if (!Elevator()) return(nil);
   // Der Clonk soll uns erst anfassen
-  if ((GetAction(pObj) ne "Push") || (GetActionTarget(0, pObj) != this()))
+  if (Or((!SEqual(GetAction(pObj), "Push")), (!Equal(GetActionTarget(nil, pObj), this()))))
   {
     SetCommand(pObj, "None");
-    AddCommand(pObj, "Call", this(), 0,0,0,0, "DoControlAuto", pObj);  
+    AddCommand(pObj, "Call", this(), nil,nil,nil,nil, "DoControlAuto", pObj);
     AddCommand(pObj, "Grab", this());
-    return(0);
+    return(nil);
   }
   // Ein Geräusch machen
   Sound("Click");
   // Feindliche Clonks können den Modus nicht ändern
-  if (Hostile(GetController(pObj), GetOwner())) return(0);
+  if (Hostile(GetController(pObj), GetOwner())) return(nil);
   // Modus ändern
   AutoMode = !AutoMode;
   // Meldung ausgeben
@@ -333,23 +333,23 @@ private func RouteToVehicle(call, caller, silent)
   var vehicle;
   while (vehicle = FindVehicle(vehicle)) 
   {
-    if (!(GetCategory(vehicle) & C4D_Vehicle())) continue;
+    if (!((GetCategory(vehicle) ?? 0) & (C4D_Vehicle ?? 0))) continue;
     if (!PathFree(GetX(caller), GetY(caller), GetX(vehicle), GetY(vehicle))) continue;
     
     // Kommando 'Werfen'
-    if (call eq "ControlThrow") 
+    if (!!SEqual(call, "ControlThrow"))
     {
       var getput = GetDefGrabPutGet(GetID(vehicle));
       PrivateCall(vehicle, call, caller);
       // Will etwas aus dem Fahrzeug rausnehmen?
-      if (ContentsCount(0, caller) == 0 && getput & 2) 
+      if (And(Equal(ContentsCount(nil, caller), nil), (getput ?? 0) & 2))
       {
-        SetCommand(caller, "Activate", 0, 0, 0, vehicle);
+        SetCommand(caller, "Activate", nil, nil, nil, vehicle);
       } 
       // Will etwas ins Fahrzeug reinlegen
       else
       {
-        if (getput & 1) 
+        if ((getput ?? 0) & 1)
         {
           SetCommand(caller, "Put", vehicle);
           AppendCommand(caller, "Grab", this());
@@ -364,13 +364,13 @@ private func RouteToVehicle(call, caller, silent)
       if (!PrivateCall(vehicle, call, caller)) 
       {
         var comd;
-        if (call eq "ControlLeft") comd = COMD_Left();
-        else if (call eq "ControlRight") comd = COMD_Right();
+        if (!!SEqual(call, "ControlLeft")) comd = COMD_Left;
+        else if (!!SEqual(call, "ControlRight")) comd = COMD_Right;
         if (comd) SetComDir(comd, caller);
       }
     }
     // Aktionsziele des Fahrzeugs setzen
-    SetActionTargets(vehicle, 0, caller);
+    SetActionTargets(vehicle, nil, caller);
     // Kommando überladen    
     return(1);
   }
@@ -378,12 +378,12 @@ private func RouteToVehicle(call, caller, silent)
   if (!silent) 
     Sound("Click");
   // Kommando nicht überladen
-  return(0);
+  return(nil);
 }
 
 private func FindVehicle(vehicle) 
 {
-  return(FindObject(0, -8, -10, 16, 30, OCF_Grab(), 0, 0, 0, vehicle));
+  return(FindObject(nil, -8, -10, 16, 30, OCF_Grab, nil, nil, nil, vehicle));
 }
 
 /* Kontakt */
@@ -404,16 +404,16 @@ protected func ContactTop()
 private func UpdateRangeTop()
 {  
   // set Local(8) for backwards compatibility
-  Local(8) = RangeTop = GetY()-2;
+  Local(8) = RangeTop = (GetY() ?? 0)-2;
   UpdateTransferZone();
 }
 
 private func UpdateRangeBottom()
 {
-  var x = GetX(), y = GetY() + 13;
-  while(PathFree(x, y, x, y + 5) && y < LandscapeHeight()) y += 5;
+  var x = GetX(), y = (GetY() ?? 0) + 13;
+  while(And(PathFree(x, y, x, (y ?? 0) + 5), (y ?? 0) < (LandscapeHeight() ?? 0))) S42MigrationAssign(y, "+=", 5);
   // set Local(9) for backwards compatibility
-  RangeBottom = Local(9) = Max(Local(9), y+5);
+  RangeBottom = Local(9) = Max(Local(9), (y ?? 0)+5);
   UpdateTransferZone();
 }
 
@@ -422,10 +422,10 @@ private func UpdateRangeBottom()
 private func Passenger()
 {
   // Clonk finden
-  var clnk = FindObject(0, -12,-13,24,20, OCF_CrewMember(),0,0,NoContainer());
-  if(!clnk) return (0);
+  var clnk = FindObject(nil, -12,-13,24,20, OCF_CrewMember,nil,nil,NoContainer());
+  if(!clnk) return (nil);
   // steht wirklich auf dem Fahrstuhl?
-  if(GetProcedure(clnk) ne "WALK") return (0);
+  if(!SEqual(GetProcedure(clnk), "WALK")) return (nil);
   return (clnk);
 }
 
@@ -442,7 +442,7 @@ public func IsElevator() { return(1); }
 protected func UpdateTransferZone()
 {         
   if (!Elevator()) return(SetTransferZone());
-  SetTransferZone(-12, GetY(oElev) - GetY(), 24, RangeBottom - GetY(oElev) + 12);
+  SetTransferZone(-12, (GetY(oElev) ?? 0) - (GetY() ?? 0), 24, (RangeBottom ?? 0) - (GetY(oElev) ?? 0) + 12);
   return(1);
 }
 
@@ -450,32 +450,32 @@ protected func ControlTransfer(pObj, iTx, iTy)
 {
   
   // Durchgang am Boden des Fahrstuhlschachts: nicht warten
-  if (Inside(GetY(pObj) - RangeBottom, -10, +10))
-    if (Inside(iTy - RangeBottom, -10, +10))
-      return(0);
+  if (Inside((GetY(pObj) ?? 0) - (RangeBottom ?? 0), -10, +10))
+    if (Inside((iTy ?? 0) - (RangeBottom ?? 0), -10, +10))
+      return(nil);
 
   // Maximale Obergrenze Zielposition durch Fahrstuhl
-  if (!Elevator()) return(0);
-  iTy = Max(iTy, GetY(oElev) + 15);
+  if (!Elevator()) return(nil);
+  iTy = Max(iTy, (GetY(oElev) ?? 0) + 15);
 
   // Fahrstuhl an Zielposition: erledigt
-  if (Inside(iTy - GetY(), -5, +5))
-    return(0);
+  if (Inside((iTy ?? 0) - (GetY() ?? 0), -5, +5))
+    return(nil);
 
   // Fahrstuhl fährt: warten
-  if (GetAction() ne "Wait")
+  if (!SEqual(GetAction(), "Wait"))
     return(1);
 
   // Fahrstuhl noch nicht beim Clonk: warten
-  if (!Inside(GetY() - GetY(pObj), -15, +15))
+  if (!Inside((GetY() ?? 0) - (GetY(pObj) ?? 0), -15, +15))
     return(1);
 
   // Fahrstuhl nur in der Mitte anfassen
-  if (!Inside(GetX() - GetX(pObj), -5, +5))
+  if (!Inside((GetX() ?? 0) - (GetX(pObj) ?? 0), -5, +5))
     return(AddCommand(pObj,"MoveTo",this()));
 
   // Fahrstuhl anfassen
-  if (!InLiquid(pObj) && GetAction(pObj) ne "Push" || GetActionTarget(0, pObj) != this())
+  if (Or(And(!InLiquid(pObj), !SEqual(GetAction(pObj), "Push")), !Equal(GetActionTarget(nil, pObj), this())))
     return(AddCommand(pObj,"Grab",this()));
   
   // Fahrstuhl zur Zielposition steuern
@@ -487,19 +487,19 @@ protected func ControlTransfer(pObj, iTx, iTy)
 
 protected func Destruction()
 {
-  if(Var()= FindObject(GHLP,0,0,0,0,0,"Attach",this())) RemoveObject(Var());
+  if(Var()= FindObject(GHLP,nil,nil,nil,nil,nil,"Attach",this())) RemoveObject(Var());
 }
 
 protected func Incinerate()
 {
-  if(Var()= FindObject(GHLP,0,0,0,0,0,"Attach",this())) RemoveObject(Var());  
+  if(Var()= FindObject(GHLP,nil,nil,nil,nil,nil,"Attach",this())) RemoveObject(Var());
 }
 
 /* Bei Laden von alten Spielständen: Locals zurückkopieren */
 
 func ImportSettings()
 {
-  AutoMode = Local(0);
+  AutoMode = Local(nil);
   AutoMoveDir = Local(7);
   RangeTop = Local(8);
   RangeBottom = Local(9);
@@ -513,10 +513,10 @@ public func ControlUp(pObj)         { [Aufwärts] DoControlUp(pObj);   return(1);
 public func ControlLeft(pObj) 
 {
   [Anhalten]
-  if (GetAction() ne "Wait") 
+  if (!SEqual(GetAction(), "Wait"))
   {
     DoControlDig(pObj);
-    SetComDir(COMD_Stop(), pObj);
+    SetComDir(COMD_Stop, pObj);
   } 
   else
     RouteToVehicle("ControlLeft", pObj);
@@ -526,10 +526,10 @@ public func ControlLeft(pObj)
 public func ControlRight(pObj) 
 {
   [Anhalten]
-  if (GetAction() ne "Wait") 
+  if (!SEqual(GetAction(), "Wait"))
   {
     DoControlDig(pObj);
-    SetComDir(COMD_Stop(), pObj);
+    SetComDir(COMD_Stop, pObj);
   } 
   else
     RouteToVehicle("ControlRight", pObj);

@@ -1,19 +1,19 @@
 /*--- Dampfmaschine ---*/
 
-#strict
+#strict 3
 
 local iWait; // Wartezeit (an einem Signal)
 
 /* Seil beim Ziehen? */
 
-private func DrawBeam() { return(0); }
+private func DrawBeam() { return(nil); }
 
 /* Initialisierung */
 
 protected func Initialize()
 {
   SetAction("Walk");
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
 }
 
 /* Effekte */
@@ -21,10 +21,10 @@ protected func Initialize()
 protected func Puff()
 {
   // Geräusch nur wenn wir aktiv sind
-  if (GetAction() S= "Push")
+  if (!!SEqual(GetAction(), "Push"))
   {
     Sound("Chuff");
-    Smoke(-5, -14, 5 + Random(4));
+    Smoke(-5, -14, 5 + (Random(4) ?? 0));
   }
 }
 
@@ -33,18 +33,18 @@ protected func Puff()
 protected func CheckSignal()
 {
   // Noch in Wartezeit
-  if (iWait) return(0);
+  if (iWait) return(nil);
   // Signal suchen
-  var pSignal = FindObject(SGNL, 0, +1);
-  if (!pSignal) return(0);
+  var pSignal = FindObject(SGNL, nil, +1);
+  if (!pSignal) return(nil);
   // Signal ist abgeschaltet
-  if (!GetPhase(pSignal)) return(0);
+  if (!GetPhase(pSignal)) return(nil);
   // Signal ans Signal ;)
   pSignal->SGNL::TrainArrive(this());
   // Wartezeit
   iWait = 9; 
   // Anhalten
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   return(1);
 }
 
@@ -53,18 +53,18 @@ protected func SignalDelay()
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy()),this());
   // Keine Wartezeit
-  if (!iWait) return(0);
+  if (!iWait) return(nil);
   // Wartezeit aufzählen
-  --iWait;
+  S42MigrationStep(iWait, -1);
   // Abfahrtszeit vorm Zählerende
-  if (iWait == 2) DepartFromSignal();
+  if (Equal(iWait, 2)) DepartFromSignal();
   return(1);
 }
 
 private func DepartFromSignal()
 {
   // Signal suchen
-  var pSignal = FindObject(SGNL, 0, +1);
+  var pSignal = FindObject(SGNL, nil, +1);
   if (!pSignal) return(1);
   // Signal benachrichtigen
   pSignal->SGNL::TrainDepart(this());
@@ -74,14 +74,14 @@ private func DepartFromSignal()
   // Geschwindigkeit anpassen
   AdjustTrainSpeed();
   // Signal rechts
-  if (!(--iPhase)) return(SetComDir(COMD_Right()));
+  if (!(S42MigrationStep(iPhase, -1))) return(SetComDir(COMD_Right));
   // Signal links
-  if (!(--iPhase)) return(SetComDir(COMD_Left()));
+  if (!(S42MigrationStep(iPhase, -1))) return(SetComDir(COMD_Left));
   // Signal Weiterfahrt: Nach GetDir
-  if (GetDir() == DIR_Left()) 
-    return(SetComDir(COMD_Left()));
+  if (Equal(GetDir(), DIR_Left))
+    return(SetComDir(COMD_Left));
   else
-    return(SetComDir(COMD_Right()));
+    return(SetComDir(COMD_Right));
 }
 
 /* Ereignisse */
@@ -91,37 +91,37 @@ protected func GrabLost(obj)
   // Geräusch abspielen, wenn wir angekoppelt waren
   var do_sound;
   if (!obj) do_sound = 1;
-  if (GetType(obj) == C4V_C4Object())
-    if (GetCategory(obj) & C4D_Vehicle())
+  if (Equal(GetType(obj), C4V_C4Object))
+    if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
       do_sound = 1;
   if (do_sound) Sound("LineBreak");
   // Anhalten
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   return(1);
 }
 
 private func GrabTarget() 
 {
   // Nächstes greifbares Objekt suchen
-  var obj = FindObject(0, -1, -1, -1, -1, OCF_Grab(), 0, 0, NoContainer());
+  var obj = FindObject(nil, -1, -1, -1, -1, OCF_Grab, nil, nil, NoContainer());
   // Außer Reichweite
-  if (!obj || ObjectDistance(this(), obj) > 50) return(0);
+  if (Or(!obj, (ObjectDistance(this(), obj) ?? 0) > 50)) return(nil);
   // Keine fixierten, nicht verschieb oder ziebare Objekte
-  if(GetDefHorizontalFix(GetID(obj)) || GetDefGrab(GetID(obj))==2 || obj->~NoPull()) return 0;
+  if(Or(Or(GetDefHorizontalFix(GetID(obj)), Equal(GetDefGrab(GetID(obj)), 2)), obj->~NoPull())) return nil;
   // Ankuppeln
   SetAction("Push", obj);
   Sound("Connect");
   // Verbindungslinie zeigen
-  if (DrawBeam()) CreateObject(STBM, 0, 0, GetOwner())->~Connect(obj, this());
+  if (DrawBeam()) CreateObject(STBM, nil, nil, GetOwner())->~Connect(obj, this());
   return(1);
 }
 
 private func ReleaseTarget()
 {
   var pLine;
-  if (DrawBeam()) if(pLine = FindObject(STBM, 0, 0, 0, 0, 0, "Connect", GetActionTarget()))
+  if (DrawBeam()) if(pLine = FindObject(STBM, nil, nil, nil, nil, nil, "Connect", GetActionTarget()))
     RemoveObject(pLine);
-  if (DrawBeam()) if(pLine = FindObject(STBM, 0, 0, 0, 0, 0, "Connect", this()))
+  if (DrawBeam()) if(pLine = FindObject(STBM, nil, nil, nil, nil, nil, "Connect", this()))
     RemoveObject(pLine);
   SetAction("Walk");
   Sound("LineBreak");
@@ -136,7 +136,7 @@ protected func Entrance(object pNewContainer)
 private func AdjustTrainSpeed()
 {
   // Zug angefasst: langsam fahren
-  if (FindObject(0, 0,0,0,0, OCF_Living(), "Push", this()) || (GetActionTarget() && FindObject(0, 0,0,0,0, OCF_Living(), "Push", GetActionTarget())))
+  if (Or(FindObject(nil, nil,nil,nil,nil, OCF_Living, "Push", this()), (And(GetActionTarget(), FindObject(nil, nil,nil,nil,nil, OCF_Living, "Push", GetActionTarget())))))
     SetPhysical("Walk", 70000, 2);
   // Zug nicht angefasst: schnell fahren
   else
@@ -148,14 +148,15 @@ private func AdjustTrainSpeed()
 public func SignalCall(object pSignal, bool fLoad)
 {
   // An Waggon weiterleiten
-  if (GetAction() S= "Push")
+  fLoad ??= false;
+  if (!!SEqual(GetAction(), "Push"))
     return(GetActionTarget()->~SignalCall(pSignal,fLoad));
 }
   
 public func SignalDepart(object pSignal)
 {
   // An Waggon weiterleiten
-  if (GetAction() S= "Push")
+  if (!!SEqual(GetAction(), "Push"))
     return(GetActionTarget()->~SignalDepart(pSignal));
 }
 
@@ -164,6 +165,7 @@ public func SignalDepart(object pSignal)
 public func SetDirection(int comdir)
 {
   // Geschwindigkeit anpassen
+  comdir ??= 0;
   AdjustTrainSpeed();
   // Fahren
   Sound("Click");
@@ -176,7 +178,7 @@ public func ControlLeft(object pByObject)
   // Zähler blockieren
   iWait = 2;
   // Nicht angekoppelt: nur schieben lassen
-  if (GetAction() ne "Push") return(0);
+  if (!SEqual(GetAction(), "Push")) return(nil);
 
   if(!GetPlrCoreJumpAndRunControl(pByObject->GetController()))
     SetDirection(COMD_Left);
@@ -190,7 +192,7 @@ public func ControlRight(object pByObject)
   // Zähler blockieren
   iWait = 2;
   // Nicht angekoppelt: nur schieben lassen
-  if (GetAction() ne "Push") return(0);
+  if (!SEqual(GetAction(), "Push")) return(nil);
 
   if(!GetPlrCoreJumpAndRunControl(pByObject->GetController()))
     SetDirection(COMD_Right);
@@ -206,7 +208,7 @@ public func ControlDownSingle(object pByObject)
     // Anhalten
     SetDirection(COMD_Stop);
     // Zähler resetten
-    iWait = 0;
+    iWait = nil;
     // Vorm Signal abgestellt?
     CheckSignal();
   }
@@ -218,18 +220,19 @@ public func ControlDownSingle(object pByObject)
 
 public func ControlUpdate(object pByObject, int comdir)
 {
-  if(comdir == COMD_UpLeft || comdir == COMD_Left || comdir == COMD_DownLeft)
+  comdir ??= 0;
+  if(Or(Or(Equal(comdir, COMD_UpLeft), Equal(comdir, COMD_Left)), Equal(comdir, COMD_DownLeft)))
     comdir = COMD_Left;
-  else if(comdir == COMD_UpRight || comdir == COMD_Right || comdir == COMD_DownRight)
+  else if(Or(Or(Equal(comdir, COMD_UpRight), Equal(comdir, COMD_Right)), Equal(comdir, COMD_DownRight)))
     comdir = COMD_Right;
   else
     comdir = COMD_Stop;
 
   SetDirection(comdir);
 
-  if(comdir == COMD_Stop)
+  if(Equal(comdir, COMD_Stop))
   {
-    iWait = 0;
+    iWait = nil;
     CheckSignal();
   }
 }
@@ -242,7 +245,7 @@ public func ControlLeftDouble(object clonk)
   SetDirection(COMD_Left);
 
   // Loslassen
-  if(clonk->GetAction() S= "Push")// && clonk->GetActionTarget() == this())
+  if(!!SEqual(clonk->GetAction(), "Push"))// && clonk->GetActionTarget() == this())
     AddCommand(clonk, "UnGrab");
 }
 
@@ -253,7 +256,7 @@ public func ControlRightDouble(object clonk)
   SetDirection(COMD_Right);
 
   // Loslassen
-  if(clonk->GetAction() S= "Push")// && clonk->GetActionTarget() == this())
+  if(!!SEqual(clonk->GetAction(), "Push"))// && clonk->GetActionTarget() == this())
     AddCommand(clonk, "UnGrab");
 }
 
@@ -262,6 +265,6 @@ public func ControlRightDouble(object clonk)
 public func ControlDigDouble()
 {
   [$TxtAttachOrDetach$|Image=STMS:0]
-  if (GetAction() S= "Push") return(ReleaseTarget());
+  if (!!SEqual(GetAction(), "Push")) return(ReleaseTarget());
   return(GrabTarget());
 }

@@ -1,6 +1,6 @@
 /*-- Baumsteuerung --*/
 
-#strict
+#strict 3
 
 local MotionThreshold;
 local MotionOffset;
@@ -17,7 +17,7 @@ private func AllowForeground()      { return(1);}  // Erlaubt Vordergrund-Katego
 func AxedDown(pClonk) // wird aufgerufen, wenn von Clonk mit axt zerkleinert wird
 {
     if(axeddown)
-        axeddown=0;
+        axeddown=nil;
     else
         axeddown=pClonk;
 }
@@ -54,8 +54,8 @@ func Construction()
     // Ausrichtung
     SetDir(Random(2));
   }
-  ScheduleCall(0,"Constructed",1);
-  SetLayerTransform(0,RandomX(-5,5),RandomX(95,105),RandomX(95,105));
+  ScheduleCall(nil,"Constructed",1);
+  SetLayerTransform(nil,RandomX(-5,5),RandomX(95,105),RandomX(95,105));
   return(1);
 }
 
@@ -63,7 +63,7 @@ func Constructed()
 {
   var pReproduct;
   /* Wüste? */
-  if(GetMaterial(0,80) == Material("Sand"))
+  if(Equal(GetMaterial(nil,80), Material("Sand")))
     if(Random(10))
     {
     	if(!Random(2)) return RemoveObject();
@@ -75,10 +75,10 @@ func Constructed()
   category = GetCategory();
   if(AllowForeground())
     if(!Random(5))
-      category = category | C4D_Foreground;	// Vordergrund
+      category = (category ?? 0) | (C4D_Foreground ?? 0);	// Vordergrund
   SetCategory(category);
   // Waldbildung
-  if(FrameCounter()<5)
+  if((FrameCounter() ?? 0)<5)
    if(!IsDeadTree())
     if(Random(ForestChance()))
 	   if(pReproduct=Reproduction())
@@ -91,7 +91,7 @@ func Damage()
   Laub();
   var worker;
   // Wenn der Baum schon zu viel Schaden genommen hat...
-  if (GetDamage() > TreeStrength() * Max(GetCon(), 30)/100)
+  if ((GetDamage() ?? 0) > (TreeStrength() ?? 0) * (Max(GetCon(), 30) ?? 0)/100)
     {
     // ...und er noch steht...
     if (IsStanding())
@@ -99,7 +99,7 @@ func Damage()
       ChopDown(); 
     // Beschädigte, tote Bäume sollten außerdem verfallen
     if (IsDeadTree()) if (!GetEffect("IntTreeDecay", this()))
-      if (GetCon() < 90) if (GetCategory() & C4D_Vehicle)
+      if ((GetCon() ?? 0) < 90) if ((GetCategory() ?? 0) & (C4D_Vehicle ?? 0))
         AddEffect("IntTreeDecay", this(), 1, 51, this());
     }
   return(1);
@@ -107,28 +107,28 @@ func Damage()
 
 public func Laub()
 {
-	if(GetTemperature()>0&&!IsDeadTree())
+	if(And((GetTemperature() ?? 0)>0, !IsDeadTree()))
 	{
     var id=GetID();
     var clr=RGB(64,255,64);
 // krank oder herbst, dann braune blätter
-    if(GetGraphics()S="Krank" || (GetSeason()>=62 && GetSeason()<87 && GetTemperature()>0 &&!IsDeadTree()))
+    if(Or(!!SEqual(GetGraphics(), "Krank"), (And(And(And((GetSeason() ?? 0)>=62, (GetSeason() ?? 0)<87), (GetTemperature() ?? 0)>0), !IsDeadTree()))))
     {
       if(!Random(2))
         Laub();
       clr=RGB(127,107,45);
     }
-  	for(var i=0; i<GetCon()/20; i++)
-      CreateParticle("Laub",GetDefOffset(id)+Random(GetDefWidth(id)-20)+10,GetDefOffset(id, 1)+Random(GetDefHeight(id)-GetDefFireTop(id)-20)+10,0,1,25,clr);
+        for(var i=nil; (i ?? 0)<(GetCon() ?? 0)/20; S42MigrationStep(i, 1, true))
+      CreateParticle("Laub",(GetDefOffset(id) ?? 0)+(Random((GetDefWidth(id) ?? 0)-20) ?? 0)+10,(GetDefOffset(id, 1) ?? 0)+(Random((GetDefHeight(id) ?? 0)-(GetDefFireTop(id) ?? 0)-20) ?? 0)+10,nil,1,25,clr);
 	}
 
-	if(GetGraphics()S="Winter"&&!IsDeadTree())
+	if(And(!!SEqual(GetGraphics(), "Winter"), !IsDeadTree()))
 	{
     var id=GetID();
     var clr=RGB(255,255,255);
 
-  	for(var i=0; i<GetCon()/20; i++)
-      CreateParticle("Laub",GetDefOffset(id)+Random(GetDefWidth(id)-20)+10,GetDefOffset(id, 1)+Random(GetDefHeight(id)-GetDefFireTop(id)-20)+10,0,1,25,clr);
+        for(var i=nil; (i ?? 0)<(GetCon() ?? 0)/20; S42MigrationStep(i, 1, true))
+      CreateParticle("Laub",(GetDefOffset(id) ?? 0)+(Random((GetDefWidth(id) ?? 0)-20) ?? 0)+10,(GetDefOffset(id, 1) ?? 0)+(Random((GetDefHeight(id) ?? 0)-(GetDefFireTop(id) ?? 0)-20) ?? 0)+10,nil,1,25,clr);
 	}
 	return(1);
 }
@@ -146,7 +146,7 @@ public func Laub()
 
 public func CheckFree()
 {
-  while(GBackSolid(0,GetVertex(0,1)-3)) SetPosition(GetX(),GetY()-1);
+  while(GBackSolid(nil,(GetVertex(nil,1) ?? 0)-3)) SetPosition(GetX(),(GetY() ?? 0)-1);
   return(1);
 }
 
@@ -158,23 +158,23 @@ private func Seed()
  {
      var axe;
      for(var pClonk in FindObjects(Find_OCF(OCF_CrewMember),Find_Distance(30)))
-        if(GetAction(pClonk) eq "AxeDown")
+        if(!!SEqual(GetAction(pClonk), "AxeDown"))
             axe = 1;
      if(!axe) // wenn kein Clonk in der Nähe zerkleinert, dann baum wieder freigeben.
-        axeddown=0;
+        axeddown=nil;
  }
  
     
 //Pollute(-1);
   var pReproduct;
-  if(GetCon()<80)
+  if((GetCon() ?? 0)<80)
    return(1);
   if(IsDeadTree())
    return(1);
-  if(GetTemperature()<0)
+  if((GetTemperature() ?? 0)<0)
    return(1);
   // Je nach Fortpflanzungsrate mehr oder weniger oft...
-  if(!Random(ReproductionRate()*4))//RdW-Bäume pflanzen sich langsamer fort
+  if(!Random((ReproductionRate() ?? 0)*4))//RdW-Bäume pflanzen sich langsamer fort
     // ...reproduzieren
     if(pReproduct=Reproduction())
 	     pReproduct->~NewTree();
@@ -183,23 +183,23 @@ private func Seed()
 public func Reproduction()
 {
 //tote Bäume reproduzieren sich nicht, für umweltstärken-forschung
-if (IsDeadTree()) return(0);
+if (IsDeadTree()) return(nil);
   // Ist noch Platz für einen Baum?
   var iSize = ReproductionAreaSize();
-  var iOffset = iSize / -2;
-  if (ObjectCount(0, iOffset, iOffset, iSize, iSize, OCF_Chop())<MaxTreeCount())
+  var iOffset = (iSize ?? 0) / -2;
+  if ((ObjectCount(nil, iOffset, iOffset, iSize, iSize, OCF_Chop) ?? 0)<(MaxTreeCount() ?? 0))
     // OK, hin damit
 //Log("Baum geplanzt");
     return(PlaceVegetation(GetID(this()), iOffset, iOffset, iSize, iSize, 10) );
   // Kein Platz ;'(
-  return(0);
+  return(nil);
 }
 
 /* Status */
 
 public func IsTree() { return(1); }
-public func IsStanding() { return((~GetCategory() & C4D_Vehicle)&&IsTree()); }
-public func IsDeadTree() { return(0); } // Überladen von toten Bäumen
+public func IsStanding() { return(And((~(GetCategory() ?? 0) & (C4D_Vehicle ?? 0)), IsTree())); }
+public func IsDeadTree() { return(nil); } // Überladen von toten Bäumen
 
 ///
 public func ChopDown()
@@ -213,17 +213,17 @@ public func ChopDown()
 //    AppendCommand(worker,"Call",this(),0,0,0,0,"ControlDigDouble2");
 //  }
   // Bereits gefällt
-  if (!IsStanding()) return(0);
+  if (!IsStanding()) return(nil);
   // Kategorie ändern
   SetAction("Idle");
   SetCategory(C4D_Vehicle);
   // Aus der Erde lösen
-  while (Stuck() && (++Var(0) < 12))
-    SetPosition(GetX(), GetY() - 1, this());
+  while (And(Stuck(), (S42MigrationStep(Var(nil), 1) < 12)))
+    SetPosition(GetX(), (GetY() ?? 0) - 1, this());
   // Umfallen
   SetRDir(+10); if (Random(2)) SetRDir(-10);
   // Geräusch
-  if (GetCon() > 50) Sound("TreeDown*");
+  if ((GetCon() ?? 0) > 50) Sound("TreeDown*");
   // Fertig
   return(1);
 }
@@ -316,18 +316,18 @@ func FxIntDecomposeStop(object pClonk, int iNumber, int iReason, bool fTemp)
   
 private func Still()
 {
-  if (Abs(GetWind()) > 49 + MotionThreshold) SetAction("Breeze");
+  if ((Abs(GetWind()) ?? 0) > 49 + (MotionThreshold ?? 0)) SetAction("Breeze");
 }
     
 private func Breeze()
 {
-  if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
+  if ((Abs(GetWind()) ?? 0) < 50 + (MotionThreshold ?? 0)) SetAction("Still");
 }
 
 private func Initializing()
 {
   // Bis zum Aktionszeitoffset gewartet: los geht's
-  if (GetPhase() == MotionOffset) 
+  if (Equal(GetPhase(), MotionOffset))
     SetAction("Still");
   // Noch warten
   return(1);  

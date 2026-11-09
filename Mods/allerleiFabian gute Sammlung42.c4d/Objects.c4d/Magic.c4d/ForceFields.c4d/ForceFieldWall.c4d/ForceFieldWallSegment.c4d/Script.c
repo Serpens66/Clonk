@@ -1,6 +1,6 @@
 /* Kraftfeldwand - Segment */
 
-#strict 2
+#strict 3
 #include FRCA
 
 local pLast, pNext;
@@ -24,11 +24,11 @@ protected func Destroy()
 
 private func UpdatePhase()
 {
-  SetPhase(0);
+  SetPhase(nil);
   if (pLast) SetPhase(3);
   if (pNext) SetPhase(1);
   if (pLast && pNext) SetPhase(2);
-  SetSolidMask(GetPhase() * GetDefCoreVal("Width", "DefCore"), 0, GetDefCoreVal("Width", "DefCore"), GetDefCoreVal("Height", "DefCore"));
+  SetSolidMask((GetPhase() ?? 0) * (GetDefCoreVal("Width", "DefCore") ?? 0), nil, GetDefCoreVal("Width", "DefCore"), GetDefCoreVal("Height", "DefCore"));
 }
 
 private func CheckStuck()
@@ -39,12 +39,12 @@ private func CheckStuck()
   {
     iX=GetX(pClonk);
     iY=GetY(pClonk);
-    while(Stuck(pClonk) && Inside(GetX(pClonk)-GetX(),-20,20))
+    while(Stuck(pClonk) && Inside((GetX(pClonk) ?? 0)-(GetX() ?? 0),-20,20))
       {
-      if(!(iXChange=BoundBy(GetX(pClonk)-GetX(),-1,1))) iXChange=1;
+      if(!(iXChange=BoundBy((GetX(pClonk) ?? 0)-(GetX() ?? 0),-1,1))) iXChange=1;
       // zur Sicherheit...
-      if(!Inside(GetX(pClonk)+iXChange,0,LandscapeWidth())) break;
-      SetPosition(GetX(pClonk)+iXChange,GetY(pClonk),pClonk);
+      if(!Inside((GetX(pClonk) ?? 0)+(iXChange ?? 0),nil,LandscapeWidth())) break;
+      SetPosition((GetX(pClonk) ?? 0)+(iXChange ?? 0),GetY(pClonk),pClonk);
       }
     // verschieben fehlgeschlagen: rückgängig machen
     if(Stuck(pClonk)) SetPosition(iX,iY,pClonk);
@@ -54,10 +54,11 @@ private func CheckStuck()
 protected func Damage(int iChange)
 {
   // Effekt
+  iChange ??= 0;
   Sound("Electric");
-  CastParticles("MSpark", 5, 25, 0,0, 50, 100, RGBa(100,100,255,128), RGBa(0,0,255,0));
+  CastParticles("MSpark", 5, 25, nil,nil, 50, 100, RGBa(100,100,255,128), RGBa(nil,nil,255,nil));
   
   // Lebenszeit verringern
   if (GetEffect("ForceFieldPSpell", this))
-    EffectVar(0, this, GetEffect("ForceFieldPSpell", this)) += GetForceFieldTime() / GetMaxDamage() * iChange;
+    S42MigrationAssign(EffectVar(nil, this, GetEffect("ForceFieldPSpell", this)), "+=", (GetForceFieldTime() ?? 0) / (GetMaxDamage() ?? 0) * (iChange ?? 0));
 }

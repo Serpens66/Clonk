@@ -1,6 +1,6 @@
 /*-- Menü-Überwachung --*/
 
-#strict
+#strict 3
 
 local object;      // Objekt, das das Menü enthält
 local target;      // Objekt, an das die Aufrufe gehen
@@ -16,7 +16,7 @@ local infocount;   // Anzahl an gespeicherten Informationen
 protected func Initialize()
 {
   // irgendwohin verschieben, wo es nicht stört
-  SetPosition(0,0);
+  SetPosition(nil,nil);
 }
 
 public func Init(par_obj, par_target, par_func, removeothers)
@@ -30,15 +30,15 @@ public func Init(par_obj, par_target, par_func, removeothers)
   // andere Menü-Überwachungen für das gleiche Objekt löschen
   if (!removeothers) return(1);
   var obj;
-  while (obj = FindObject(SMEC, 0,0,0,0, 0,0,0,0, obj))
-    if (obj->GetTarget() == target)
+  while (obj = FindObject(SMEC, nil,nil,nil,nil, nil,nil,nil,nil, obj))
+    if (Equal(obj->GetTarget(), target))
       RemoveObject(obj);
 }
 
 public func AddInfo(info)
 {
   Local(infocount) = info;
-  ++infocount;
+  S42MigrationStep(infocount, 1);
 }
 
 public func GetTarget()
@@ -52,13 +52,13 @@ public func GetTarget()
 protected func Check()
 {
   // Menü abgebrochen?
-  if (GetMenu(object) != menuID)
+  if (!Equal(GetMenu(object), menuID))
   {
     ObjectCall(target, Format("%s_Closed",funcname));
     return(RemoveObject());
   }
   // Auswahl geändert?
-  if (GetMenuSelection(object) != selection)
+  if (!Equal(GetMenuSelection(object), selection))
   {
     selection = GetMenuSelection(object);
     ObjectCall(target, Format("%s_Changed",funcname), selection, Local(selection));

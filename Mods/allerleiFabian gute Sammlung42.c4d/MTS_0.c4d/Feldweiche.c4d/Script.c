@@ -1,6 +1,6 @@
 /*-- Weichenkonsole --*/
 
-#strict
+#strict 3
 #include BOB2
 local rad, gleis1, gleis2, gleis3, gleis4,cont, leitx, leity,step1, step2, step3, step4,basement, manager, obj,hlper;
 
@@ -8,7 +8,7 @@ local rad, gleis1, gleis2, gleis3, gleis4,cont, leitx, leity,step1, step2, step3
 func Construction()
 {
   //basement = CreateObject(BS04,0,+6,GetOwner());
-  SetClrModulation(RGBa(0,0,0,255));
+  SetClrModulation(RGBa(nil,nil,nil,255));
   SetCategory(1);
   return(1);
 }
@@ -16,7 +16,7 @@ func Construction()
 func Initialize() 
 {
   //Weiche erstellen
-  rad = CreateObject(ST_2,0,0,GetOwner());
+  rad = CreateObject(ST_2,nil,nil,GetOwner());
   ObjectSetAction(rad,"Attaching",this());
   return(1);
 }
@@ -31,14 +31,14 @@ func ControlUp(PController)
   //Verfeindet?
    if(Hostile(GetOwner(this()),GetOwner(PController))) return(Message("Feind an der Weiche!",this()));
   
-  if (gleis1 > 180) gleis1 = (gleis1 - 180) * -1;
-  if (gleis2 > 180) gleis2 = (gleis2 - 180) * -1;
-  if (gleis3 > 180) gleis3 = (gleis3 - 180) * -1;
-  if (gleis4 > 180) gleis4 = (gleis4 - 180) * -1;
-  if (gleis1 == 360) gleis1 = (0);
-  if (gleis2 == 360) gleis2 = (0);
-  if (gleis3 == 360) gleis3 = (0);
-  if (gleis4 == 360) gleis4 = (0);
+  if ((gleis1 ?? 0) > 180) gleis1 = ((gleis1 ?? 0) - 180) * -1;
+  if ((gleis2 ?? 0) > 180) gleis2 = ((gleis2 ?? 0) - 180) * -1;
+  if ((gleis3 ?? 0) > 180) gleis3 = ((gleis3 ?? 0) - 180) * -1;
+  if ((gleis4 ?? 0) > 180) gleis4 = ((gleis4 ?? 0) - 180) * -1;
+  if (Equal(gleis1, 360)) gleis1 = (nil);
+  if (Equal(gleis2, 360)) gleis2 = (nil);
+  if (Equal(gleis3, 360)) gleis3 = (nil);
+  if (Equal(gleis4, 360)) gleis4 = (nil);
 
   Message("<c fbfbfb>Strecke 1: %d°|Strecke 2: %d°|Strecke 3: %d°|Strecke 4: %d°",this(),gleis1,gleis2,gleis3,gleis4);
   return(1);
@@ -51,56 +51,56 @@ func ControlDigDouble(PController)
 {
   [Streckenrichtung einstellen|Image=SY_5|Condition=IsBuilt]
   //Fremder?
-  if(GetOwner(this()) != GetOwner(PController)) return(Message("Nur dem Besitzer zugänglich!",this()));
+  if(!Equal(GetOwner(this()), GetOwner(PController))) return(Message("Nur dem Besitzer zugänglich!",this()));
    var max = GetMaxDamage();
   //ShowInfoBar(SBQ0, this(), max-GetDamage(), max, 5, 1);
-  ShowInfoBar(IBRS, this(), max-GetDamage(),max, 2);
+  ShowInfoBar(IBRS, this(), (max ?? 0)-(GetDamage() ?? 0),max, 2);
   
   //Streckenmenü öffnen
   cont = PController;
-    var mc=CreateObject(SMEC,0,0,GetOwner(cont));
-  CreateMenu(ST_1, PController, this(), 0, "Strecken konfigurieren", 0, 0, 0);
+    var mc=CreateObject(SMEC,nil,nil,GetOwner(cont));
+  CreateMenu(ST_1, PController, this(), nil, "Strecken konfigurieren", nil, nil, nil);
   mc->Init(cont,this(),"ControlDigDouble");
-    AddMenuItem("Richtung von Strecke 1 einstellen", "Strecke", SY_1, PController, 0, 1, " ");
-    AddMenuItem("Richtung von Strecke 2 einstellen", "Strecke", SY_2, PController, 0, 2, " ");
-    AddMenuItem("Richtung von Strecke 3 einstellen", "Strecke", SY_3, PController, 0, 3, " ");
-    AddMenuItem("Richtung von Strecke 4 einstellen", "Strecke", SY12, PController, 0, 4, " "); 
+    AddMenuItem("Richtung von Strecke 1 einstellen", "Strecke", SY_1, PController, nil, 1, " ");
+    AddMenuItem("Richtung von Strecke 2 einstellen", "Strecke", SY_2, PController, nil, 2, " ");
+    AddMenuItem("Richtung von Strecke 3 einstellen", "Strecke", SY_3, PController, nil, 3, " ");
+    AddMenuItem("Richtung von Strecke 4 einstellen", "Strecke", SY12, PController, nil, 4, " ");
     
   return(1);
 }
 
 func ControlDigDouble_Closed()
 {
-cont=0;
+cont=nil;
 }
 
 
 //WINKELMENÜ (WEICHE WIRD AUF DIE ENTSPRECHENDE POSITION GEDREHT)
 func Strecke() 
 {
-    hlper=CreateObject(NFWH,0,0,GetOwner(cont));
+    hlper=CreateObject(NFWH,nil,nil,GetOwner(cont));
   //Strecke auswählen
-  if (Par(1) == 1) {SetR(gleis1,rad);LocalN("r",hlper)=gleis1;}
-  if (Par(1) == 2) {SetR(gleis2,rad);LocalN("r",hlper)=gleis2;}
-  if (Par(1) == 3) {SetR(gleis3,rad);LocalN("r",hlper)=gleis3;}
-  if (Par(1) == 4) {SetR(gleis4,rad);LocalN("r",hlper)=gleis4;}
+  if (Equal(Par(1), 1)) {SetR(gleis1,rad);LocalN("r",hlper)=gleis1;}
+  if (Equal(Par(1), 2)) {SetR(gleis2,rad);LocalN("r",hlper)=gleis2;}
+  if (Equal(Par(1), 3)) {SetR(gleis3,rad);LocalN("r",hlper)=gleis3;}
+  if (Equal(Par(1), 4)) {SetR(gleis4,rad);LocalN("r",hlper)=gleis4;}
   LocalN("mother",hlper)=this();
   LocalN("radius",hlper)=200;
   hlper->DoIt();
   Message("<c fbfbfb>Nach Strecke %d ausgerichtet",this(),Par(1),GetR(rad));
  
   //Winkel einstellen
-  CreateMenu(ST_1, cont, this(), 0, "Richtung", 0, 1, 1);
-    var mc=CreateObject(SMEC,0,0,GetOwner(cont));
+  CreateMenu(ST_1, cont, this(), nil, "Richtung", nil, 1, 1);
+    var mc=CreateObject(SMEC,nil,nil,GetOwner(cont));
     mc->Init(cont,this(),"Strecke");
-    AddMenuItem("  nach rechts", "NGradp", SY_6,  cont, 0, Par(1), " ");
-    AddMenuItem("  nach links", "NGradm", SY_7,  cont, 0, Par(1), " ");
+    AddMenuItem("  nach rechts", "NGradp", SY_6,  cont, nil, Par(1), " ");
+    AddMenuItem("  nach links", "NGradm", SY_7,  cont, nil, Par(1), " ");
   return(hlper);
 }
 
 func Strecke_Closed()
 {
-cont=0;
+cont=nil;
 RemoveObject(hlper);
 }
 
@@ -109,34 +109,34 @@ RemoveObject(hlper);
 func NGradp() 
 {
   //Variablen an Winkelzahlen angleichen
-  if (gleis1 == 360) gleis1 = 0;
-  if (gleis2 == 360) gleis2 = 0;
-  if (gleis3 == 360) gleis3 = 0;
-  if (gleis4 == 360) gleis4 = 0;
+  if (Equal(gleis1, 360)) gleis1 = nil;
+  if (Equal(gleis2, 360)) gleis2 = nil;
+  if (Equal(gleis3, 360)) gleis3 = nil;
+  if (Equal(gleis4, 360)) gleis4 = nil;
 
   //Winkel einstellen, welche Stufe?
-  if (Par(1) == 1)
+  if (Equal(Par(1), 1))
     {
-    step1 += 1;
-    if (step1 == 36) step1 = 0;
+    S42MigrationAssign(step1, "+=", 1);
+    if (Equal(step1, 36)) step1 = nil;
     gleis1 = SetDrehung(rad,step1);
     }
-  if (Par(1) == 2)
+  if (Equal(Par(1), 2))
     {
-    step2 += 1;
-    if (step2 == 36) step2 = 0;
+    S42MigrationAssign(step2, "+=", 1);
+    if (Equal(step2, 36)) step2 = nil;
     gleis2 = SetDrehung(rad,step2);
     }
-  if (Par(1) == 3)
+  if (Equal(Par(1), 3))
     {
-    step3 += 1;
-    if (step3 == 36) step3 = 0;
+    S42MigrationAssign(step3, "+=", 1);
+    if (Equal(step3, 36)) step3 = nil;
     gleis3 = SetDrehung(rad,step3);
     }
-  if (Par(1) == 4)
+  if (Equal(Par(1), 4))
     {
-    step4 += 1;
-    if (step4 == 36) step4 = 0;
+    S42MigrationAssign(step4, "+=", 1);
+    if (Equal(step4, 36)) step4 = nil;
     gleis4 = SetDrehung(rad,step4);
     }
 
@@ -150,34 +150,34 @@ func NGradp()
 func NGradm() 
 {
   //Variablen an Winkelzahlen angleichen
-  if (gleis1 == 360) gleis1 = 0;
-  if (gleis2 == 360) gleis2 = 0;
-  if (gleis3 == 360) gleis3 = 0;
-  if (gleis4 == 360) gleis4 = 0;
+  if (Equal(gleis1, 360)) gleis1 = nil;
+  if (Equal(gleis2, 360)) gleis2 = nil;
+  if (Equal(gleis3, 360)) gleis3 = nil;
+  if (Equal(gleis4, 360)) gleis4 = nil;
   
   //Winkel einstellen, welche Stufe?
-  if (Par(1) == 1)
+  if (Equal(Par(1), 1))
     {
-    step1 -= 1;
-    if (step1 == -1) step1 = 35;
+    S42MigrationAssign(step1, "-=", 1);
+    if (Equal(step1, -1)) step1 = 35;
     gleis1 = SetDrehung(rad,step1);
     }
-  if (Par(1) == 2)
+  if (Equal(Par(1), 2))
     {
-    step2 -= 1;
-    if (step2 == -1) step2 = 35;
+    S42MigrationAssign(step2, "-=", 1);
+    if (Equal(step2, -1)) step2 = 35;
     gleis2 = SetDrehung(rad,step2);
     }
-  if (Par(1) == 3)
+  if (Equal(Par(1), 3))
     {
-    step3 -= 1;
-    if (step3 == -1) step3 = 35;
+    S42MigrationAssign(step3, "-=", 1);
+    if (Equal(step3, -1)) step3 = 35;
     gleis3 = SetDrehung(rad,step3);
     }
-  if (Par(1) == 4)
+  if (Equal(Par(1), 4))
     {
-    step4 -= 1;
-    if (step4 == -1) step4 = 35;
+    S42MigrationAssign(step4, "-=", 1);
+    if (Equal(step4, -1)) step4 = 35;
     gleis4 = SetDrehung(rad,step4);
     }
     
@@ -190,23 +190,23 @@ func NGradm()
 //SPHÄRE ANDOCKEN
 func Andocken(pkugel,pnummer) 
   {
-  if(LocalN("treibstoff",pkugel) <= 0) return(Message("Sphäre ist nicht magnetisiert!",this()));
+  if((LocalN("treibstoff",pkugel) ?? 0) <= 0) return(Message("Sphäre ist nicht magnetisiert!",this()));
   Sound("mts_halt");
  
-  if (pnummer == 0)
+  if (Equal(pnummer, nil))
     return(Message("Magnetsphäre hat keine Strecke zugewiesen!",this()));   
-  if (pnummer == 1)
+  if (Equal(pnummer, 1))
     SetR(gleis1,rad);
-  if (pnummer == 2)
+  if (Equal(pnummer, 2))
     SetR(gleis2,rad);
-  if (pnummer == 3)
+  if (Equal(pnummer, 3))
     SetR(gleis3,rad);
-  if (pnummer == 4)
+  if (Equal(pnummer, 4))
     SetR(gleis4,rad);
     
-  leitx = Sin(GetR(rad)*1000,3,1000);
-  leity = -Cos(GetR(rad)*1000,3,1000);
-  var ffs=FindObjectCircleDiagonal(GetR(rad),100,5000,this(),1,GetOwner(),ST_1,ST_5,0);
+  leitx = Sin((GetR(rad) ?? 0)*1000,3,1000);
+  leity = -(Cos((GetR(rad) ?? 0)*1000,3,1000) ?? 0);
+  var ffs=FindObjectCircleDiagonal(GetR(rad),100,5000,this(),1,GetOwner(),ST_1,ST_5,nil);
   ObjectCall(pkugel,"NextDock",ffs);
   //CastParticles("PxSpark",200,200,GetX(ffs)-GetX(),GetY(ffs)-GetY(),50,50,RGBa(200,200,200,10),RGBa(200,200,200,10));
   ObjectCall(pkugel,"Kurs",leitx,leity);
@@ -243,10 +243,10 @@ func SetDrehung(prad,pstep)
 {
  var winkel;
  var a;
- a=pstep*10;
+ a=(pstep ?? 0)*10;
  winkel=a;
- if(winkel==10)winkel++;
- if(winkel==350)winkel--;
+ if(Equal(winkel, 10))S42MigrationStep(winkel, 1, true);
+ if(Equal(winkel, 350))S42MigrationStep(winkel, -1, true);
  //Stufen in Winkel umrechnen
 
  //Winkel einstellen 
@@ -256,10 +256,14 @@ func SetDrehung(prad,pstep)
  return(winkel);
  }
  
- public InfoBarPos:   return(1);
-public InfoBarSize:  return(1);
-public Repairable:   return(1);
-public GetMaxDamage: return(60);
+ public func InfoBarPos(...) {   return(1);
+}
+public func InfoBarSize(...) {  return(1);
+}
+public func Repairable(...) {   return(1);
+}
+public func GetMaxDamage(...) { return(60);
+}
  
  
 

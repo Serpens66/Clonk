@@ -1,6 +1,6 @@
 /*--Berserker --*/
 
-#strict
+#strict 3
 
 /* Initialisierung */
 
@@ -9,9 +9,9 @@ protected func Initialize()
   SetAction("Walk");
   SetDir(Random(2));
   // Gruppen-KI
-  AddEffect("GroupKI", this(), 1, 0, this());
+  AddEffect("GroupKI", this(), 1, nil, this());
   // Schadenseffekt
-  AddEffect("DmgCheck",this(),1,0);
+  AddEffect("DmgCheck",this(),1,nil);
 }
 
 /* Aktivität */
@@ -19,22 +19,22 @@ protected func Initialize()
 protected func Activity()
 {
   // Tot?
-  if(!GetAlive()) {return();}
+  if(!GetAlive()) {return;}
   // Gerade verhindert?
-  if(!Ready()) return();
+  if(!Ready()) return;
 
   // Rumangreifen
   if(ReadyToAttack()) {
     // Nur wenn möglich
     for(var prey in FindTargets(this, 200)) {
         Attack(prey);
-		return();
+		return;
   }
 }
 
     // Auftauchen, wenn der Atem ausgeht
-  if(InLiquid() && GetBreath() <= 25 && GetComDir() != COMD_Up())
-    SetComDir(COMD_Up());
+  if(And(And(InLiquid(), (GetBreath() ?? 0) <= 25), !Equal(GetComDir(), COMD_Up)))
+    SetComDir(COMD_Up);
 
 // wieder deaktivert, weil sonst alles angegriffen wird
 /*
@@ -46,17 +46,17 @@ protected func Activity()
 */
 
   // Kommando?
-  if(GetCommand()) return();
+  if(GetCommand()) return;
 
   // Brüllen!
   if(!Random(500)) return(Roar());
 
   // Rumlaufen
-  if(GetAction() eq "Walk")
+  if(!!SEqual(GetAction(), "Walk"))
     {
-    if(Random(5)) return();
-    if(Random(2)) SetComDir(COMD_Left());
-    else SetComDir(COMD_Right());
+    if(Random(5)) return;
+    if(Random(2)) SetComDir(COMD_Left);
+    else SetComDir(COMD_Right);
     }
 }
 
@@ -64,9 +64,9 @@ protected func Activity()
 
 public func Ready() // Wenn das Alien gerade nichts tun kann
 {
-  if(GetAction() eq "Jump") return();
-  if(GetAction() eq "KneelDown") return();
-  if(GetAction() eq "Death") return();
+  if(!!SEqual(GetAction(), "Jump")) return;
+  if(!!SEqual(GetAction(), "KneelDown")) return;
+  if(!!SEqual(GetAction(), "Death")) return;
 
   return(1);
 }
@@ -76,7 +76,7 @@ public func Ready() // Wenn das Alien gerade nichts tun kann
 // Unglaublich schrecklicher Schrei!
 public func Roar()
 {
-  if(GetAction() eq "Roar") return();
+  if(!!SEqual(GetAction(), "Roar")) return;
   SetAction("Roar");
   Sound("BerserkerRoar");
 }
@@ -85,12 +85,13 @@ public func Roar()
 public func Attack(object pPrey, bool noKI)
 {
   // Gruppe benachrichtigen
+  noKI ??= false;
   if(!noKI)
     GroupAttack(pPrey);
   // Geth nicht?!
-  if(!ReadyToAttack()) return();
+  if(!ReadyToAttack()) return;
   // Nah genug zum krassen Angriff?
-  if(ObjectDistance(pPrey) <= 64)
+  if((ObjectDistance(pPrey) ?? 0) <= 64)
     // RAAR!
     return(ClawAttack(pPrey));
   // Hinrennen
@@ -103,14 +104,14 @@ private func ClawAttack(object pPrey)
   // Puh, jetzt wirds kompliziert. Richtige Attackanimation auswählen :D
   
   // Ist oben Platz?
-  if(!GBackSolid(0,-60))
+  if(!GBackSolid(nil,-60))
     // Wir haben genug Platz für alle Angriffe. Random!
-    SetAction(Format("Attack%d",Random(3)+1)); // *hax*
+    SetAction(Format("Attack%d",(Random(3) ?? 0)+1)); // *hax*
     
   // Genug Platz für Angriff von der Seite? 
-  else if(!GBackSolid(0,-45))
+  else if(!GBackSolid(nil,-45))
     // Attack! :D
-    SetAction(Format("Attack%d",Random(2)+2));
+    SetAction(Format("Attack%d",(Random(2) ?? 0)+2));
     
   // Okay, bleibt nur noch Beißen. >:(
   else
@@ -135,9 +136,9 @@ private func EndAttack()
   // Kein Feind
   if(!pPrey
 // && !pPrey2
-) return();
+) return;
   // Hauen!!1
-if (pPrey)  DoDmg(25+Random(40)*GetCon()/100, DMG_Melee, pPrey);
+if (pPrey)  DoDmg(25+(Random(40) ?? 0)*(GetCon() ?? 0)/100, DMG_Melee, pPrey);
 //if (pPrey2) DoDmg(35+Random(50)*GetCon()/100, DMG_Melee, pPrey2);
   Sound("BerserkerStab");
   // Hacksperre, damit man nicht dauerhackt
@@ -166,12 +167,12 @@ protected func Death()
 
 func CheckLiquid()
 {
-  return(); // kein Tod in Wasser mehr.
-  if(!GBackLiquid(0,-3))
-    return();
-  if(GetMaterial(0,-3) == Material("Water"))
+  return; // kein Tod in Wasser mehr.
+  if(!GBackLiquid(nil,-3))
+    return;
+  if(Equal(GetMaterial(nil,-3), Material("Water")))
   {
-    ExtractMaterialAmount(0,0, Material("Water"), GetMass());
+    ExtractMaterialAmount(nil,nil, Material("Water"), GetMass());
     CastPXS("Acid",GetMass(),GetMass());
     Death();
     FadeOut();
@@ -192,24 +193,26 @@ protected func GroupAttack(object pPrey)
 
 public func OnDmg(int iDmg, int iType) {
   //Melee
-  if(iType == DMG_Melee)
+  iDmg ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Melee))
     return(90);
   //Projectile
-  if(iType == DMG_Projectile)
-    return(0);
+  if(Equal(iType, DMG_Projectile))
+    return(nil);
   //Flame
-  if(iType == DMG_Fire) {
-    AddFireEffect(this(),(5*iDmg*(105))/100);
+  if(Equal(iType, DMG_Fire)) {
+    AddFireEffect(this(),(5*(iDmg ?? 0)*(105))/100);
     return(-50);
   }
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(-10);
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(50);
   //Bio
-  if(iType == DMG_Bio) {
+  if(Equal(iType, DMG_Bio)) {
     return(90);
   }
 }
@@ -218,12 +221,12 @@ public func OnDmg(int iDmg, int iType) {
 
 public func ReadyToAttack()
 {
-  if(GetEffect("NoAttack", this())) return();
+  if(GetEffect("NoAttack", this())) return;
 
-  return(GetAction() eq "Walk");
+  return(!!SEqual(GetAction(), "Walk"));
 }
 
-public func IsAlien() { return(GetAction() ne "Death"); }
+public func IsAlien() { return(!SEqual(GetAction(), "Death")); }
 public func IsBulletTarget() { return(true); }
 
 /* Effekte */
@@ -231,7 +234,10 @@ public func IsBulletTarget() { return(true); }
 public func FxGroupKIDamage(object target, int no, int iDmg, int iCause)
 {
   // Angeschossen?
-  if(iCause == 32 || iCause == 33 || iCause == 35)
+  no ??= 0;
+  iDmg ??= 0;
+  iCause ??= 0;
+  if(Or(Or(Equal(iCause, 32), Equal(iCause, 33)), Equal(iCause, 35)))
     // Feinde in weiter Ferne suchen
     for(var prey in FindTargets(this,400))
           {

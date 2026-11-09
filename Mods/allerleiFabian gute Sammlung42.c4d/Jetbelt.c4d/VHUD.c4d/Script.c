@@ -1,6 +1,6 @@
 /*-- VehicleHUD --*/
 
-#strict
+#strict 3
 
 local clonk,target,
       //alpha,
@@ -25,7 +25,7 @@ protected func Initialize()
   // Infos
   SetGraphics("Row", this(), GetID(), 1, 1);
   //alpha = 150;
-  infoID = CreateObject(2HUD, 0,0, GetOwner());
+  infoID = CreateObject(2HUD, nil,nil, GetOwner());
   infoID->SetPosition(150, -400);
   // Update
   Timer();
@@ -42,19 +42,19 @@ protected func Destruction()
 protected func Timer()
 {
   // Spieler weg?
-  if(GetOwner() == NO_OWNER || !GetPlayerName(GetOwner())) return(SetVisibility(VIS_None));
+  if(Or(Equal(GetOwner(), NO_OWNER), !GetPlayerName(GetOwner()))) return(SetVisibility(VIS_None));
   
   // Clonk falsch?
   SetVisibility(VIS_Owner);
   SetVisibility(VIS_Owner,infoID);
-  if(GetCursor(GetOwner())!=clonk || NoAmmo())
+  if(Or(!Equal(GetCursor(GetOwner()), clonk), NoAmmo()))
   {
     SetVisibility(VIS_None);
     SetVisibility(VIS_None,infoID);
   } 
   
-  if(!target) return();
-  if(!clonk) return();
+  if(!target) return;
+  if(!clonk) return;
   
   target->~UpdateHUD(this());
   
@@ -69,25 +69,26 @@ protected func Timer()
   {
     var mod  = Sin(flash,100);
     SetClrModulation(RGBa(255,255,255,mod));
-    flash += 10;
+    S42MigrationAssign(flash, "+=", 10);
   }
   
   // Anzeige
-  SetObjDrawTransform(charge * 10, 0, -1000 * (100-charge)/2,0, 1000, 0, this(), 1);
+  SetObjDrawTransform((charge ?? 0) * 10, nil, -1000 * (100-(charge ?? 0))/2,nil, 1000, nil, this(), 1);
   if(recharge)
   {
     SetGraphics("Red", this(), GetID(), 2, 2, "Red");
-    SetObjDrawTransform(1000, 0, 50000 -1000 * (100-recharge),0, 1000, 0, this(), 2);
+    SetObjDrawTransform(1000, nil, 50000 -1000 * (100-(recharge ?? 0)),nil, 1000, nil, this(), 2);
   }
   else
-    SetGraphics(0,0,0, 2);
+    SetGraphics(nil,nil,nil, 2);
 }
 
 /* Aufrufe */
 
 public func Charge(int iCharge)
 {
-  if(iCharge == charge) return();
+  iCharge ??= 0;
+  if(Equal(iCharge, charge)) return;
   charge = iCharge;
   //alpha = 80;
   //if(!charge) alpha = 200;
@@ -96,14 +97,17 @@ public func Charge(int iCharge)
 
 public func Recharge(int iRecharge)
 {
-  if(iRecharge == recharge) return();
+  iRecharge ??= 0;
+  if(Equal(iRecharge, recharge)) return;
   recharge = iRecharge;
   return(1);
 }
 
 public func Fuel(int iFuelCount, int iFuelLoad, string sModusName)
 {
-  if(iFuelCount == fuelCount && iFuelLoad == fuelLoad && sModusName == modusName) return();
+  iFuelCount ??= 0;
+  iFuelLoad ??= 0;
+  if(And(And(Equal(iFuelCount, fuelCount), Equal(iFuelLoad, fuelLoad)), Equal(sModusName, modusName))) return;
   fuelCount = iFuelCount;
   fuelLoad = iFuelLoad;
   modusName = sModusName;
@@ -115,13 +119,14 @@ public func Fuel(int iFuelCount, int iFuelLoad, string sModusName)
 
 public func MasterFuel(id idFuelID, int iMasterFuelCount)
 {
-  if(!infoID) return(); // Panique!
-  if(idFuelID == fuelID && iMasterFuelCount == masterFuelCount) return();
+  iMasterFuelCount ??= 0;
+  if(!infoID) return; // Panique!
+  if(And(Equal(idFuelID, fuelID), Equal(iMasterFuelCount, masterFuelCount))) return;
   fuelID = idFuelID;
   masterFuelCount = iMasterFuelCount;
-  SetGraphics(0, infoID, fuelID, 1, 4);
+  SetGraphics(nil, infoID, fuelID, 1, 4);
   //if(ammoID) SetClrModulation(RGBa(255,255,255, 128), infoID, 1);
-  if(masterFuelCount > -1) {
+  if((masterFuelCount ?? 0) > -1) {
     var color = "ffff00";
     if(!masterFuelCount) color = "ff0000";
     Message("@<c %s>%d</c>", infoID, color, masterFuelCount);
@@ -136,11 +141,12 @@ public func Clear()
   Charge();
   Recharge();
   Fuel();
-  MasterFuel(0, -1);
+  MasterFuel(nil, -1);
 }
 
 public func SetFlash(bool fFlash)
 {
+  fFlash ??= false;
   if(fFlash)
   {
    if(!flash)
@@ -148,7 +154,7 @@ public func SetFlash(bool fFlash)
   }
   else
   {
-    flash = 0;
+    flash = nil;
     SetClrModulation(RGBa(255,255,255));
   }
 }

@@ -1,6 +1,6 @@
 /*-- Verbranntes Schloss --*/
 
-#strict
+#strict 3
 
 #include BAS9
 

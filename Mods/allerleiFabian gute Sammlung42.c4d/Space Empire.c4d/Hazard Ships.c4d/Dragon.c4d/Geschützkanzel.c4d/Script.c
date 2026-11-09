@@ -1,6 +1,6 @@
 /*-- Geschützkanzel --*/
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -32,20 +32,20 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Check()
 {
-  if(GetR()<rmin)
+  if((GetR() ?? 0)<(rmin ?? 0))
   {
-  SetRDir(0);
-  SetR(rmin+1);
+  SetRDir(nil);
+  SetR((rmin ?? 0)+1);
   }
-  if(GetR()>rmax)
+  if((GetR() ?? 0)>(rmax ?? 0))
   {
-  SetRDir(0);
-  SetR(rmax-1);
+  SetRDir(nil);
+  SetR((rmax ?? 0)-1);
   }
 }
 
@@ -53,22 +53,22 @@ func Check()
 
 func ContainedUp()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedDown()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedRight()
 {
-  if(GetR()==rmax-1) return(1);
+  if(Equal(GetR(), (rmax ?? 0)-1)) return(1);
   return(SetRDir(5));
 }
 
 func ContainedLeft()
 {
-  if(GetR()==rmin+1) return(1);
+  if(Equal(GetR(), (rmin ?? 0)+1)) return(1);
   return(SetRDir(-5));
 }

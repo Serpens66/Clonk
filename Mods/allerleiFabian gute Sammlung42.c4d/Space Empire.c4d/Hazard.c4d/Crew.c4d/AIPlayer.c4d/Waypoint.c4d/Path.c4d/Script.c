@@ -1,6 +1,6 @@
 /*-- Pfad - Visualisierung --*/
 
-#strict
+#strict 3
 
 local so,eo, sx,sy, ex,ey, flag, jtpk, path;
 
@@ -9,18 +9,21 @@ protected func Timer() // Schaut nach Änderungen
   if(!so) return(RemoveObject());
   if(!(so->GetPathTarget(path))) return(RemoveObject());
   // Irgendeine klitzekleine Änderung?
-  if(so->GetX() != sx ||
-     so->GetY() != sy ||
-     eo->GetX() != ex ||
-     eo->GetY() != ey ||
-     so->GetPathFlag(path) != flag ||
-     so->GetPathJetpack(path) != jtpk ||
-     so->GetPathTarget(path) != eo)
+  if(Or(Or(Or(Or(Or(Or(!Equal(so->GetX(), sx),
+     !Equal(so->GetY(), sy)),
+     !Equal(eo->GetX(), ex)),
+     !Equal(eo->GetY(), ey)),
+     !Equal(so->GetPathFlag(path), flag)),
+     !Equal(so->GetPathJetpack(path), jtpk)),
+     !Equal(so->GetPathTarget(path), eo)))
 
        Set(so, so->GetPathTarget(path), so->GetPathFlag(path), so->GetPathJetpack(path), path);
 }
 
 public func Set(object start, object end, int flags, int jetpack, int iPath) {
+  flags ??= 0;
+  jetpack ??= 0;
+  iPath ??= 0;
   so = start;
   eo = end;
   sx = start->GetX();
@@ -38,20 +41,20 @@ public func Set(object start, object end, int flags, int jetpack, int iPath) {
   var sy = GetY(start);
   var ex = GetX(end);
   var ey = GetY(end);
-  var cl = 1000*Distance(sx,sy,ex,ey)/GetActMapVal("Facet",GetAction(),0,3);
+  var cl = 1000*(Distance(sx,sy,ex,ey) ?? 0)/(GetActMapVal("Facet",GetAction(),nil,3) ?? 0);
   var w = 650;
-  var r = Angle(sx,sy,ex,ey)-180;
+  var r = (Angle(sx,sy,ex,ey) ?? 0)-180;
 
-  var fsin = -Sin(r, 1000), fcos = Cos(r, 1000);
+  var fsin = -(Sin(r, 1000) ?? 0), fcos = Cos(r, 1000);
 
   var xoff = -4;
-  var yoff = 0;
+  var yoff = nil;
 
-  var width = +fcos*w/1000, height = +fcos*cl/1000;
-  var xskew = +fsin*cl/1000, yskew = -fsin*w/1000;
+  var width = (+(fcos ?? 0) ?? 0)*(w ?? 0)/1000, height = (+(fcos ?? 0) ?? 0)*(cl ?? 0)/1000;
+  var xskew = (+(fsin ?? 0) ?? 0)*(cl ?? 0)/1000, yskew = -(fsin ?? 0)*(w ?? 0)/1000;
 
-  var xadjust = +fcos*xoff + fsin*yoff;
-  var yadjust = -fsin*xoff + fcos*yoff;
+  var xadjust = (+(fcos ?? 0) ?? 0)*(xoff ?? 0) + (fsin ?? 0)*(yoff ?? 0);
+  var yadjust = -(fsin ?? 0)*(xoff ?? 0) + (fcos ?? 0)*(yoff ?? 0);
 
   // set matrix values
   SetObjDrawTransform (
@@ -62,19 +65,21 @@ public func Set(object start, object end, int flags, int jetpack, int iPath) {
 }
 
 private func MyColor(int flags, int jetpack, object start) {
+  flags ??= 0;
+  jetpack ??= 0;
   SetAction("Vis",start);
   if(jetpack) {
     SetAction("Vis3",start);
-    return(RGB(255,0,0));
+    return(RGB(255,nil,nil));
   }
   else {
-    if(flags == Path_MoveTo) return(RGB(0,255,0));
-    if(flags == Path_Jump) return(RGB(255,255,0));
-    if(flags == Path_Backflip) {
+    if(Equal(flags, Path_MoveTo)) return(RGB(nil,255,nil));
+    if(Equal(flags, Path_Jump)) return(RGB(255,255,nil));
+    if(Equal(flags, Path_Backflip)) {
       SetAction("Vis3",start);
-      return(RGB(255,255,0));
+      return(RGB(255,255,nil));
     }
     SetAction("Vis2",start);
-    if(flags == Path_Lift) return(RGB(255,0,255));
+    if(Equal(flags, Path_Lift)) return(RGB(255,nil,255));
   }
 }

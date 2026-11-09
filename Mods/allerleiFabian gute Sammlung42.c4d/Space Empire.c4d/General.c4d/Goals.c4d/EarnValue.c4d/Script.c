@@ -1,6 +1,6 @@
 /*-- Siedlungspunkte --*/
 
-#strict
+#strict 3
 #include GOAL
 
 local score;
@@ -22,14 +22,14 @@ protected func Initialize()
 
 public func IncScore(amount)
 {
-  score += amount;
+  S42MigrationAssign(score, "+=", (amount ?? 0));
 }
 
 public func IsFulfilled(player)
 {
   if (!score)
     score = 100;
-  return(GetPlrValueGain(player) >= score);
+  return((GetPlrValueGain(player) ?? 0) >= (score ?? 0));
 }
 
 protected func Activate(player)

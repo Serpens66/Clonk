@@ -1,6 +1,6 @@
 /*-- Explosiver Cluster --*/
 
-#strict
+#strict 3
 
 local size;
 
@@ -16,13 +16,16 @@ public func SetSize(newsize)
 
 /* Aufprall / Zerstörung */
 
-protected Hit:
-  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(10); else FakeExplode(10,0,0,10);
+protected func Hit(...) {
+  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(10); else FakeExplode(10,nil,nil,10);
   return(1);
+}
 
-public Destroy:
+public func Destroy(...) {
   CastPXS("FlyAshes",25,25);
   return(Hit());
+}
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

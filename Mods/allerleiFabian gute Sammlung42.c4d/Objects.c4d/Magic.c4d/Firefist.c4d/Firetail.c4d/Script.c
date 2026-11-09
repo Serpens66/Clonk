@@ -1,11 +1,11 @@
-#strict
+#strict 3
 
 protected func Initialize()
   {
   // An die Erdoberfläche bewegen
   var i;
-  while(Stuck() && (i++) < 5)
-    SetPosition(GetX(), GetY() - 1);
+  while(And(Stuck(), (S42MigrationStep(i, 1, true)) < 5))
+    SetPosition(GetX(), (GetY() ?? 0) - 1);
 
   // Immernoch festhängend?
   if(Stuck() ) RemoveObject();
@@ -14,39 +14,41 @@ protected func Initialize()
   SetYDir(10);
   
   // Effekt anhängen, damit Entzauberung den Feuerschweif entfernt
-  AddEffect("MFiretailNSpell", this(), 130, 0, this());
+  AddEffect("MFiretailNSpell", this(), 130, nil, this());
 
   return(1);
   }
 
 protected func Hit()
   {
-  if(GetAction() S= "Left") Jumpada(-20);
-  if(GetAction() S= "Right") Jumpada(20);
+  if(!!SEqual(GetAction(), "Left")) Jumpada(-20);
+  if(!!SEqual(GetAction(), "Right")) Jumpada(20);
   return(1);
   }
 
 protected func Jumpada(xdir)
   {
-  if (!GBackSolid(xdir, 0) || !Random(5)) {
+  if (Or(!GBackSolid(xdir, nil), !Random(5))) {
     SetXDir(xdir);
     SetYDir(-10);
-    SetController(GetController(),CreateObject(FLAM,0,0,GetOwner()));
+    SetController(GetController(),CreateObject(FLAM,nil,nil,GetOwner()));
   }
   return(1);
   }
 
 protected func Timer()
   {
-  if(GetActTime()>200) return(Explode(20));
+  if((GetActTime() ?? 0)>200) return(Explode(20));
 
-  var c;  CreateParticle("MSpark",Random(11)-5,Random(11)-5,0,-Random(10),c=20+Random(41),RGBa(255,Random(100),0,c*4,128));
+  var c;  CreateParticle("MSpark",(Random(11) ?? 0)-5,(Random(11) ?? 0)-5,nil,-(Random(10) ?? 0),c=20+(Random(41) ?? 0),RGBa(255,Random(100),nil,(c ?? 0)*4,128));
   return(1);
   }
 
 protected func FxMFiretailNSpellStop(object pTarget, int iEffectNumber, int iReason)
   {
   // Effekt per Script entfernt: Feuerschweif in die Luft jagen
+  iEffectNumber ??= 0;
+  iReason ??= 0;
   if (iReason) return(1);
   Explode(20, pTarget);
   return(1);

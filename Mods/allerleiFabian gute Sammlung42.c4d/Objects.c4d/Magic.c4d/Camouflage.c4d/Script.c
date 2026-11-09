@@ -1,6 +1,6 @@
 /* Tarnzauber */
 
-#strict
+#strict 3
 
 public func Activate(caster, real_caster) {
   // Zaubernden Clonk ermitteln
@@ -10,7 +10,7 @@ public func Activate(caster, real_caster) {
   // Zaubernder Clonk nicht im Freien -> Abbruch
   if (Contained(clonk)) {
     NoCamouflage(caster, "$must_be_in_free$");
-    return(0);
+    return(nil);
   }
 
   // Sonst den zaubernden Clonk draußen tarnen
@@ -20,10 +20,10 @@ public func Activate(caster, real_caster) {
 protected func Camouflage(clonk) {
   Sound("Magic1");
   // Der Zauberer wird in den magischen Stein hineinversetzt
-  var container = CreateObject(MRCK, 0,0, GetOwner());
+  var container = CreateObject(MRCK, nil,nil, GetOwner());
   Enter(container, clonk);
   // Aktivitaet auf Walk zuruecksetzen, wenn attacht (wuerde sonst sofort wieder aus dem Stein rauskommen)
-  if(clonk->GetProcedure() S= "ATTACH") clonk->SetAction("Walk");
+  if(!!SEqual(clonk->GetProcedure(), "ATTACH")) clonk->SetAction("Walk");
   // Clonk trägt Pfeil -> Stein wird geschleudert
   var comb_obj;
   comb_obj = FindContents(ARRW, clonk);
@@ -31,8 +31,8 @@ protected func Camouflage(clonk) {
 	  comb_obj = FindContents(ARWP, clonk)->GetItem();
   if(comb_obj) {
     var dir_sign = -1;
-    if (GetDir(clonk) == DIR_Right()) dir_sign = +1;
-    SetXDir(dir_sign * 35, container);
+    if (Equal(GetDir(clonk), DIR_Right)) dir_sign = +1;
+    SetXDir((dir_sign ?? 0) * 35, container);
     SetYDir(-40, container);
     RemoveObject(comb_obj);
   }

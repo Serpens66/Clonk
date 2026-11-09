@@ -1,34 +1,42 @@
 /*-- Alienpartikeleffekte --*/
 
-#strict
+#strict 3
 
 global func AlienSplatter(int iSize, int iX, int iY, int iColor) {
 	// not on sky
-	if(GetMaterialVal("Density","Material",GetMaterial(iX,iY)) != 0
-       || GetMaterial(iX,iY) == -1) return();
+	iSize ??= 0;
+	iX ??= 0;
+	iY ??= 0;
+	iColor ??= 0;
+	if(Or(!Equal(GetMaterialVal("Density","Material",GetMaterial(iX,iY)), nil)
+       , Equal(GetMaterial(iX,iY), -1))) return;
 	
 	// behind everything (like the burn mark of the explosion)
 	var boom;
-	if(!ObjectCount(BOOM)) boom = CreateObject(BOOM,0,0,-1);
+	if(!ObjectCount(BOOM)) boom = CreateObject(BOOM,nil,nil,-1);
 	else boom = FindObject(BOOM);
 	
 	var r = Random(360);
 	var xdir = Sin(r,100);
-	var ydir = -Cos(r,100);
-	CreateParticle("AlienSplatter",iX,iY,xdir,ydir,iSize*5,iColor,boom,1);
+	var ydir = -(Cos(r,100) ?? 0);
+	CreateParticle("AlienSplatter",iX,iY,xdir,ydir,(iSize ?? 0)*5,iColor,boom,1);
 }
 
 global func AlienBlood(int iSize, int iX, int iY, int iColor, object attach) {
 	
+	iSize ??= 0;
+	iX ??= 0;
+	iY ??= 0;
+	iColor ??= 0;
 	var rand = Random(360);
-	for(var i=0; i<5; ++i) {
-		var size = iSize*RandomX(10,20)/15*GetCon()/100;
-		var angle = rand+i*RandomX(50,80);
+	for(var i=nil; (i ?? 0)<5; S42MigrationStep(i, 1)) {
+		var size = (iSize ?? 0)*(RandomX(10,20) ?? 0)/15*(GetCon() ?? 0)/100;
+		var angle = (rand ?? 0)+(i ?? 0)*(RandomX(50,80) ?? 0);
 		var xdir = Sin(angle,100);
-		var ydir = -Cos(angle,100);
-		var xoff = Sin(angle,iSize/2-5);
-		var yoff = -Cos(angle,iSize/2-5);
-		CreateParticle("AlienBlood",iX+xoff,iY+yoff,xdir,ydir,iSize*5,iColor, attach);
+		var ydir = -(Cos(angle,100) ?? 0);
+		var xoff = Sin(angle,(iSize ?? 0)/2-5);
+		var yoff = -(Cos(angle,(iSize ?? 0)/2-5) ?? 0);
+		CreateParticle("AlienBlood",(iX ?? 0)+(xoff ?? 0),(iY ?? 0)+(yoff ?? 0),xdir,ydir,(iSize ?? 0)*5,iColor, attach);
 	}
 	
 }
@@ -39,41 +47,51 @@ global func AlienHive(int iSize, int iX, int iY, int iColor, object attach, bool
 	//if(GetMaterialVal("Density","Material",GetMaterial(iX,iY)) != 0
     //   || GetMaterial(iX,iY) == -1) return();
 	
+	iSize ??= 0;
+	iX ??= 0;
+	iY ??= 0;
+	iColor ??= 0;
+	foreground ??= false;
 	var boom;	
 	// to which object (if any)
 	if(attach) boom = attach;
 	else if(!foreground) {
-		if(!ObjectCount(BOOM)) boom = CreateObject(BOOM,0,0,-1);
+		if(!ObjectCount(BOOM)) boom = CreateObject(BOOM,nil,nil,-1);
 		else boom = FindObject(BOOM);
 	}
 	
 	var r = Random(360);
 	var xdir = Sin(r,100);
-	var ydir = -Cos(r,100);
-	CreateParticle("AlienHive",iX,iY,xdir,ydir,iSize*5,iColor,boom,!foreground);
+	var ydir = -(Cos(r,100) ?? 0);
+	CreateParticle("AlienHive",iX,iY,xdir,ydir,(iSize ?? 0)*5,iColor,boom,!foreground);
 }
 
 /* Alienpartikel */
 
 global func AddAlienFlareEffect(object target, int size) {
+	size ??= 0;
 	if(!target) target = this;
 	if(!target) return;
 	
-	AddEffect("AlienFlareEffect", target, 1, 1, 0, 0,size); 
+	AddEffect("AlienFlareEffect", target, 1, 1, nil, nil,size);
 	
 }
 
 global func FxAlienFlareEffectStart(object target, int effect, int temp, size) {
-	EffectVar(0,target,effect) = size;
+	effect ??= 0;
+	temp ??= 0;
+	EffectVar(nil,target,effect) = size;
 }
 
 global func FxAlienFlareEffectTimer(object target, int effect, int time)
 {
+  effect ??= 0;
+  time ??= 0;
   var xdir = GetXDir(target);
   var ydir = GetYDir(target);
-  var size = EffectVar(0,target,effect)+RandomX(-100,100);
+  var size = (EffectVar(nil,target,effect) ?? 0)+(RandomX(-100,100) ?? 0);
  
   if(!Contained(target))
-  	CreateParticle("FrSprk", GetX(target), GetY(target), xdir/3+RandomX(-10, 10), ydir/3+RandomX(-10, 10),
-                 size, RGBa(160,255,0,0)); 
+        CreateParticle("FrSprk", GetX(target), GetY(target), (xdir ?? 0)/3+(RandomX(-10, 10) ?? 0), (ydir ?? 0)/3+(RandomX(-10, 10) ?? 0),
+                 size, RGBa(160,255,nil,nil));
 }

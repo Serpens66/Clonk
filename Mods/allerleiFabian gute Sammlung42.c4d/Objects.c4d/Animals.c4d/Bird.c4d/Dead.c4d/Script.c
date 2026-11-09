@@ -1,6 +1,6 @@
 /*-- Toter Vogel --*/
 
-#strict
+#strict 3
 
 public func Eat(pBy)
 {

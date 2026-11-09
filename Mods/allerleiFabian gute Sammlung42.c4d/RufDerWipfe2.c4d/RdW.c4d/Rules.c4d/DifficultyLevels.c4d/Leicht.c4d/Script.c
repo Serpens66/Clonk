@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 func Activate(iPlr)
 {

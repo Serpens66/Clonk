@@ -1,6 +1,6 @@
 /*-- Tor (Zapper kann nicht coden) --*/
 
-#strict
+#strict 3
 local iTeam; // Hier ist das Team drin gespeichert.
 
 protected func Initialize()
@@ -24,7 +24,7 @@ protected func CheckGoal()
 	if( pObj )
 	{
 		var iBombTeam = GetPlayerTeam(pObj->GetOwner()); // Team speichern
-		if(iBombTeam != GetGoalTeam()) // Eigentore gibt es nicht!
+		if(!Equal(iBombTeam, GetGoalTeam())) // Eigentore gibt es nicht!
 		{
 			// Punktevergabe
 			if(pObj->Contained()) 
@@ -42,7 +42,7 @@ protected func CheckGoal()
 			var dir = GetDir();
 			SetAction("FlashUp");
 			SetDir(dir);
-			pObj -> CastParticles("MSpark", 15, 25, 0, 0, 20, 30, RGB(200, 230, 255), RGB(255,255,255));
+			pObj -> CastParticles("MSpark", 15, 25, nil, nil, 20, 30, RGB(200, 230, 255), RGB(255,255,255));
 
 			// Bombe zurücksetzen
 			pObj -> ReturnToSpawn();
@@ -60,12 +60,17 @@ public func GetGoalTeam()
 
 public func SetGoalTeam(int t)
 {
+	t ??= 0;
 	iTeam = t;
 }
 
 //Erzeugt ein Bombentor
 global func CreateBombGate(int iT,int iX,int iY, int iDir)
 {
+ iT ??= 0;
+ iX ??= 0;
+ iY ??= 0;
+ iDir ??= 0;
  var gate=CreateObject(GBRG,AbsX(iX),AbsY(iY),-1);
  gate->SetGoalTeam(iT);
  gate->SetDir(iDir);

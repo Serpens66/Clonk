@@ -1,6 +1,6 @@
 /*-- Spielzielsteuerung --*/
 
-#strict
+#strict 3
 
 local unfinished;   // Anzahl der Spielziele, die NICHT erfüllt werden müssen
 
@@ -10,27 +10,27 @@ local unfinished;   // Anzahl der Spielziele, die NICHT erfüllt werden müssen
 protected func Initialize()
 {
   // ist das hier GOAL selber? (also nicht #included)
-  if (GetID() == GOAL)
+  if (Equal(GetID(), GOAL))
   {
     // dringend benötigte Objekte erstellen
-    CreateObject(SFXM,0,0,-1);   // Effektmanager
-    CreateObject(STWL,0,0,-1);   // Warenliste für Handelssystem
+    CreateObject(SFXM,nil,nil,-1);   // Effektmanager
+    CreateObject(STWL,nil,nil,-1);   // Warenliste für Handelssystem
     // Warteaktion
     return(SetAction("Init"));
   }
   // GOAL-Objekt mit Timer erstellen
   if (!FindObject(GOAL))
-    CreateObject(GOAL,0,0,-1);
+    CreateObject(GOAL,nil,nil,-1);
 }
 
 protected func PostInit()   // Nachinitialisierung für GOAL
 {
   // alle Spielziele müssen erfüllt werden
-  unfinished = 0;
+  unfinished = nil;
   // ein CheckFulfilled-Broadcast an alle
   var goal;
-  while (goal = FindObject(0, 0,0,0,0, 0, 0,0, 0, goal))
-    if (GetCategory(goal) & C4D_Goal())
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil, nil,nil, nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
       goal->~IsFulfilled();
 }
 
@@ -41,15 +41,15 @@ private func EnoughGoals(player)
 {
   // Alle Spielziele für einen Spieler überprüfen
   var goal, count, restgoals;
-  while (goal = FindObject(0, 0,0,0,0, 0,0,0,0, goal))
-    if (GetCategory(goal) & C4D_Goal())
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil,nil,nil,nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
       {
-        ++count;
+        S42MigrationStep(count, 1);
         if (!(goal->~IsFulfilled(player)))
-          ++restgoals;
+          S42MigrationStep(restgoals, 1);
       }
   // Mindestanzahl der Spielziele erfüllt?
-  return((restgoals <= unfinished) && count);
+  return(And(((restgoals ?? 0) <= (unfinished ?? 0)), count));
 }
 
 protected func CheckTime()
@@ -57,7 +57,7 @@ protected func CheckTime()
   // alle Spieler überprüfen
   var i, boool;
   var j = GetPlayerCount();
-  for (i; i < j; ++i) 
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
     if (EnoughGoals(GetPlayerByIndex(i)))
     {
       // da hat einer genug Spielziele erfüllt
@@ -69,7 +69,7 @@ protected func CheckTime()
   if (GameCall("OnGoalsFulfilled"))
     return(RemoveObject());
   // alle "Verlierer" rausschmeissen
-  for (i; i < j; ++i) 
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
     if (!EnoughGoals(GetPlayerByIndex(i)))
       EliminatePlayer(GetPlayerByIndex(i));   // tja, leider verloren
   // die restlichen haben gewonnen!

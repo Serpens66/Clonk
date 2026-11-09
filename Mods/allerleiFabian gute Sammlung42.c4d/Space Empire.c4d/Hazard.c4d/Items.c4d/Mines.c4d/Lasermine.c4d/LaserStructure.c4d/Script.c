@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local w, l, r, c, iTime, pDmgCallback, pAttach, pLight, iMaxDist, dx, dy;
 local reflections;
@@ -6,21 +6,25 @@ local reflections;
 protected func Initialize()
 {
   SetObjectBlitMode(1);
-  SetClrModulation(RGB(255,0,0));
+  SetClrModulation(RGB(255,nil,nil));
 }
 
 /* Interface (public functions) */
 
 public func SetAngle(int iAngle) {
-   r = iAngle-180;
+   iAngle ??= 0;
+   r = (iAngle ?? 0)-180;
 }
 public func SetWidth(int iWidth) {
-   w = 1000*iWidth/GetActMapVal("Facet","Laser",0,2);
+   iWidth ??= 0;
+   w = 1000*(iWidth ?? 0)/(GetActMapVal("Facet","Laser",nil,2) ?? 0);
 }
 public func SetMaxDistance(int iDist) {
+   iDist ??= 0;
    iMaxDist = iDist;
 }
 public func SetContinuous(int iDelay) {
+  iDelay ??= 0;
   if(!iDelay) iDelay = 1;
   AddEffect("Continuous", this(), 1,iDelay, this());
 }
@@ -28,6 +32,11 @@ public func SetContinuous(int iDelay) {
 public func Set(int iAngle, int iWidth, int iDist, int iT, object pDmg, object pAtt, int iReflect)
 {
   // optional parameters
+  iAngle ??= 0;
+  iWidth ??= 0;
+  iDist ??= 0;
+  iT ??= 0;
+  iReflect ??= 0;
   if(!iWidth) iWidth = 3;
   if(!iDist) iDist = 300;
   // iT = 0: no out-fading
@@ -35,17 +44,17 @@ public func Set(int iAngle, int iWidth, int iDist, int iT, object pDmg, object p
 	reflections = iReflect; // how often the Ray should be reflected
 
   // reset fade-timer
-  c=0;
+  c=nil;
   // new attach and damage callback objects (optional)
   pDmgCallback = pDmg;
   pAttach = pAtt;
   if(pAttach) {
-    dx = GetX()-GetX(pAttach);
-    dy = GetY()-GetY(pAttach);
+    dx = (GetX() ?? 0)-(GetX(pAttach) ?? 0);
+    dy = (GetY() ?? 0)-(GetY(pAttach) ?? 0);
   }
 
   // create light
-  pLight = CreateObject(LALI,0,0,-1);
+  pLight = CreateObject(LALI,nil,nil,-1);
 
   SetMaxDistance(iDist);
   SetAngle(iAngle);
@@ -58,20 +67,20 @@ public func Set(int iAngle, int iWidth, int iDist, int iT, object pDmg, object p
 		RemoveObject();
 }
 
-public func GetAngle()  { return(r+180); }
-public func GetWidth()  { return(w*GetActMapVal("Facet","Laser",0,2)/1000);  }
+public func GetAngle()  { return((r ?? 0)+180); }
+public func GetWidth()  { return((w ?? 0)*(GetActMapVal("Facet","Laser",nil,2) ?? 0)/1000);  }
 public func GetLength() { 
-  if(GetAction()eq"Idle")
-    return(l*GetActMapVal("Facet","Laser",0,3)/1000);
+  if(!!SEqual(GetAction(), "Idle"))
+    return((l ?? 0)*(GetActMapVal("Facet","Laser",nil,3) ?? 0)/1000);
   else
-    return(l*GetActMapVal("Facet",GetAction(),0,3)/1000);
+    return((l ?? 0)*(GetActMapVal("Facet",GetAction(),nil,3) ?? 0)/1000);
 }
 
 public func GetMaxDistance() { return(iMaxDist); }
 
 public func LaserEnd(&x, &y) {
-  x = +Sin(GetAngle(),GetLength());
-  y = -Cos(GetAngle(),GetLength());
+  x = +(Sin(GetAngle(),GetLength()) ?? 0);
+  y = -(Cos(GetAngle(),GetLength()) ?? 0);
 }
 
 /* intern */
@@ -79,22 +88,22 @@ public func LaserEnd(&x, &y) {
 private func HitCheck() {
 
   // calculate length
-  var mx=-Sin(r,iMaxDist),
-      my=+Cos(r,iMaxDist),
-      ml=0;
-  while(++ml) {
-    if(GBackSolid(mx*ml/iMaxDist,my*ml/iMaxDist)) break;
-    if(ml>=iMaxDist) break;
+  var mx=-(Sin(r,iMaxDist) ?? 0),
+      my=+(Cos(r,iMaxDist) ?? 0),
+      ml=nil;
+  while(S42MigrationStep(ml, 1)) {
+    if(GBackSolid((mx ?? 0)*(ml ?? 0)/(iMaxDist ?? 0),(my ?? 0)*(ml ?? 0)/(iMaxDist ?? 0))) break;
+    if((ml ?? 0)>=(iMaxDist ?? 0)) break;
   }
   // graphic
-  SetLaser(ml == iMaxDist);
+  SetLaser(Equal(ml, iMaxDist));
 
-  l = 1000*ml/GetActMapVal("Facet",GetAction(),0,3);
+  l = 1000*(ml ?? 0)/(GetActMapVal("Facet",GetAction(),nil,3) ?? 0);
   LaserEnd(mx,my); 
 
   // no hit check
   if(!pDmgCallback)
-	return();
+	return;
 
   // clonk = user of the weapon that fires (the shooter). Will be given with clonk
   var clonk;
@@ -105,7 +114,7 @@ private func HitCheck() {
 	
   // search points on the line for clonks etc.
   // step for step
-  for(pObj in FindObjects(Find_OnLine(0, 0, mx, my), Sort_Distance(0,0),
+  for(pObj in FindObjects(Find_OnLine(nil, nil, mx, my), Sort_Distance(nil,nil),
               Find_Exclude(this()),
               Find_Exclude(pAttach),
               Find_Exclude(pDmgCallback),
@@ -115,32 +124,34 @@ private func HitCheck() {
               Find_Func("CheckEnemy",this())))
   {
   	// we have to save this before, if the object is removed on hit
-  	temp_l = 1000*ObjectDistance(pObj)/GetActMapVal("Facet",GetAction(),0,3);;
+        temp_l = 1000*(ObjectDistance(pObj) ?? 0)/(GetActMapVal("Facet",GetAction(),nil,3) ?? 0);;
   	if(pDmgCallback ->~ LaserStrikeStructure(pObj,c))
   	{
-  		SetLaser(0);
+                SetLaser(nil);
   		l = temp_l;
   		hitobject = true;
   		break;
   	}
   }
-  if(ml != iMaxDist && reflections && !hitobject && !Stuck())
+  if(And(And(And(!Equal(ml, iMaxDist), reflections), !hitobject), !Stuck()))
 		CheckGround(ml);
 }
 
 private func NotZero(int a) {
+  a ??= 0;
   if(!a) return(1);
   else return(a);
 }
 
 private func SetLaser(bool end) {
+  end ??= false;
   if(end) {
-    if(GetAction() ne "LaserEnd") {
+    if(!SEqual(GetAction(), "LaserEnd")) {
       SetAction("LaserEnd");
     }
   }
   else {
-    if(GetAction() ne "Laser") {
+    if(!SEqual(GetAction(), "Laser")) {
       SetAction("Laser");
     }
   }
@@ -151,36 +162,36 @@ protected func Laser() {		// fade out
   if(pAttach) {
 		var wx,wy;
 		pAttach->~WeaponEnd(wx,wy);
-		if(wx || wy)
-			SetPosition(GetX(pAttach) + wx, GetY(pAttach) + wy);
+		if(Or(wx, wy))
+			SetPosition((GetX(pAttach) ?? 0) + (wx ?? 0), (GetY(pAttach) ?? 0) + (wy ?? 0));
 		else
-	    SetPosition(GetX(pAttach)+dx,GetY(pAttach)+dy);
+	    SetPosition((GetX(pAttach) ?? 0)+(dx ?? 0),(GetY(pAttach) ?? 0)+(dy ?? 0));
 	   
 		SetPosition(GetX(),GetY(),pLight);
   }
 
   // animation & effect
   SetPhase(Random(4));
-  if(GetAction() eq "Laser" && !reflections) {
+  if(And(!!SEqual(GetAction(), "Laser"), !reflections)) {
     var x,y;
     LaserEnd(x,y);
     var color = GetClrModulation();
-    LaserLight(20+GetWidth()*2,color,x,y);
+    LaserLight(20+(GetWidth() ?? 0)*2,color,x,y);
     var a,r,g,b;
     SplitRGBaValue(color,r,g,b,a);
-    a = BoundBy(a+64,180,255);
-    CreateParticle("PSpark",x,y,0,0,300+GetWidth()*30,RGBa(r,g,b,a));
+    a = BoundBy((a ?? 0)+64,180,255);
+    CreateParticle("PSpark",x,y,nil,nil,300+(GetWidth() ?? 0)*30,RGBa(r,g,b,a));
   }
 
-  if(!iTime) return();
+  if(!iTime) return;
 
   // fade out (only if time != 0)
-  var a = 200*c/iTime;
-  var rgba = SetRGBaValue(GetClrModulation(),a,0);
+  var a = 200*(c ?? 0)/(iTime ?? 0);
+  var rgba = SetRGBaValue(GetClrModulation(),a,nil);
   SetClrModulation(rgba);
-  ++c;
+  S42MigrationStep(c, 1);
 
-  if(c >= iTime)
+  if((c ?? 0) >= (iTime ?? 0))
     RemoveObject();
 }
 
@@ -192,18 +203,18 @@ protected func Destruction() {
 private func DrawTransform() {		// draw line
 
   var cl = l;
-  cl = l*GetActMapVal("Facet","Laser",0,3)/GetActMapVal("Facet",GetAction(),0,3);
+  cl = (l ?? 0)*(GetActMapVal("Facet","Laser",nil,3) ?? 0)/(GetActMapVal("Facet",GetAction(),nil,3) ?? 0);
 
-  var fsin = -Sin(r, 1000), fcos = Cos(r, 1000);
+  var fsin = -(Sin(r, 1000) ?? 0), fcos = Cos(r, 1000);
 
-  var xoff = -(GetActMapVal("Facet",GetAction(),0,2)*w/1000)/2;
-  var yoff = 0;
+  var xoff = -((GetActMapVal("Facet",GetAction(),nil,2) ?? 0)*(w ?? 0)/1000)/2;
+  var yoff = nil;
 
-  var width = +fcos*w/1000, height = +fcos*cl/1000;
-  var xskew = +fsin*cl/1000, yskew = -fsin*w/1000;
+  var width = (+(fcos ?? 0) ?? 0)*(w ?? 0)/1000, height = (+(fcos ?? 0) ?? 0)*(cl ?? 0)/1000;
+  var xskew = (+(fsin ?? 0) ?? 0)*(cl ?? 0)/1000, yskew = -(fsin ?? 0)*(w ?? 0)/1000;
 
-  var xadjust = +fcos*xoff + fsin*yoff;
-  var yadjust = -fsin*xoff + fcos*yoff;
+  var xadjust = (+(fcos ?? 0) ?? 0)*(xoff ?? 0) + (fsin ?? 0)*(yoff ?? 0);
+  var yadjust = -(fsin ?? 0)*(xoff ?? 0) + (fcos ?? 0)*(yoff ?? 0);
 
   // set matrix values
   SetObjDrawTransform (
@@ -216,19 +227,19 @@ private func DrawTransform() {		// draw line
     var alphamod, sizemod;
     CalcLight(alphamod, sizemod);
 
-    var light_width = w*(5+sizemod/100);
-    var light_height = cl/2;
-    xoff = -(GetActMapVal("Facet","Laser",LALI,2)*light_width/1000)/2;
-    xadjust = +fcos*xoff + fsin*yoff;
-    yadjust = -fsin*xoff + fcos*yoff;
-    width =  +fcos*light_width/1000;
-    height = +fcos*light_height/1000;
-    xskew =  +fsin*light_height/1000;
-    yskew =  -fsin*light_width/1000;
+    var light_width = (w ?? 0)*(5+(sizemod ?? 0)/100);
+    var light_height = (cl ?? 0)/2;
+    xoff = -((GetActMapVal("Facet","Laser",LALI,2) ?? 0)*(light_width ?? 0)/1000)/2;
+    xadjust = (+(fcos ?? 0) ?? 0)*(xoff ?? 0) + (fsin ?? 0)*(yoff ?? 0);
+    yadjust = -(fsin ?? 0)*(xoff ?? 0) + (fcos ?? 0)*(yoff ?? 0);
+    width =  (+(fcos ?? 0) ?? 0)*(light_width ?? 0)/1000;
+    height = (+(fcos ?? 0) ?? 0)*(light_height ?? 0)/1000;
+    xskew =  (+(fsin ?? 0) ?? 0)*(light_height ?? 0)/1000;
+    yskew =  -(fsin ?? 0)*(light_width ?? 0)/1000;
     
     var a,r_,g,b;
     SplitRGBaValue(GetClrModulation(),r_,g,b,a);
-    SetClrModulation(RGBa(r_,g,b,Min(a+160+alphamod,180)),pLight);
+    SetClrModulation(RGBa(r_,g,b,Min((a ?? 0)+160+(alphamod ?? 0),180)),pLight);
     SetPosition(GetX(),GetY(),pLight);
     
     SetObjDrawTransform (
@@ -241,12 +252,14 @@ private func DrawTransform() {		// draw line
 private func FxContinuousTimer(object target, int effect, int time) {
   // ein bischen Hax: wenn der Laser bleibt, wird auch der Winkel
   // angepasst, falls der Target AimAngle hat (Clonk hat das)
+  effect ??= 0;
+  time ??= 0;
   var angle;
   if(pAttach) {
     if(angle = (pAttach->~AimAngle(1)))
       SetAngle(angle);
-    if((GetDir(pAttach) == DIR_Right) && (dx < 0)) dx *= -1;
-    if((GetDir(pAttach) == DIR_Left) && (dx > 1))  dx *= -1;
+    if(And((Equal(GetDir(pAttach), DIR_Right)), ((dx ?? 0) < 0))) S42MigrationAssign(dx, "*=", -1);
+    if(And((Equal(GetDir(pAttach), DIR_Left)), ((dx ?? 0) > 1)))  S42MigrationAssign(dx, "*=", -1);
     }
   HitCheck();
   DrawTransform();
@@ -257,10 +270,11 @@ private func FxContinuousTimer(object target, int effect, int time) {
 func CheckGround(int length)
 {
 
+	length ??= 0;
 	var x,y;
 	LaserEnd(x,y);
 	
-	var r = Normalize(LocalN("r"),0);
+	var r = Normalize(LocalN("r"),nil);
 	var angle1, angle2; // Winkel des Materials
 	var angle1set, angle2set;
 	var rout; //ausgangswinkel
@@ -268,52 +282,52 @@ func CheckGround(int length)
 
 	var oldx = x, oldy = y;
 	// Adjust position a little bit
-	for(i = 0; oldx == x && oldy == y; i++)
+	for(i = nil; And(Equal(oldx, x), Equal(oldy, y)); S42MigrationStep(i, 1, true))
 	{
-		x = oldx+Sin(r, i);
-		y = oldy-Cos(r, i);
+		x = (oldx ?? 0)+(Sin(r, i) ?? 0);
+		y = (oldy ?? 0)-(Cos(r, i) ?? 0);
 	}
 
 	// Search for the angle of the solid material
-	for(i = 0; i < 180; i++)
+	for(i = nil; (i ?? 0) < 180; S42MigrationStep(i, 1, true))
 	{
-		if(GBackSolid(x+Sin(r+i,5), y-Cos(r+i,5)) && !angle1set)
+		if(And(GBackSolid((x ?? 0)+(Sin((r ?? 0)+(i ?? 0),5) ?? 0), (y ?? 0)-(Cos((r ?? 0)+(i ?? 0),5) ?? 0)), !angle1set))
 		{
 			angle1set = true;
 		}
-		if(GBackSolid(x+Sin(r-i,5), y-Cos(r-i,5)) && !angle2set)
+		if(And(GBackSolid((x ?? 0)+(Sin((r ?? 0)-(i ?? 0),5) ?? 0), (y ?? 0)-(Cos((r ?? 0)-(i ?? 0),5) ?? 0)), !angle2set))
 		{
 			angle2set = true;
 		}	
 		if(!angle2set)
 		{
-			angle1 = r-i;
+			angle1 = (r ?? 0)-(i ?? 0);
 		}
 		if(!angle1set)
 		{
-			angle2 = r+i;
+			angle2 = (r ?? 0)+(i ?? 0);
 		}
 	}
 
 	//nichts gefunden? wir müssen im Material feststecken.
-	if(!angle1set || !angle2set)
-		return();
+	if(Or(!angle1set, !angle2set))
+		return;
 	
-	var angle = Normalize(Angle(Sin(angle1,5),-Cos(angle1,5),Sin(angle2,5),-Cos(angle2,5)),0);
+	var angle = Normalize(Angle(Sin(angle1,5),-(Cos(angle1,5) ?? 0),Sin(angle2,5),-(Cos(angle2,5) ?? 0)),nil);
 	
 	// calculate the angle of the new laser
-	rout = Normalize(angle*2 - (r+180),0);
+	rout = Normalize((angle ?? 0)*2 - ((r ?? 0)+180),nil);
 
 	oldx = x; oldy = y;
 	// adjust position
-	for(i = 0; GBackSolid(x,y); i++)
+	for(i = nil; GBackSolid(x,y); S42MigrationStep(i, 1, true))
 	{
-		x = oldx+Sin(rout, i);
-		y = oldy-Cos(rout, i);
+		x = (oldx ?? 0)+(Sin(rout, i) ?? 0);
+		y = (oldy ?? 0)-(Cos(rout, i) ?? 0);
 	}
 
 	// create new laser
 	var newlaser = CreateObject(GetID(), x,y, GetOwner());
 	newlaser->SetClrModulation(GetClrModulation());
-	newlaser->Set(rout, GetWidth(), iMaxDist-length, iTime, pDmgCallback, pAttach, reflections-1);
+	newlaser->Set(rout, GetWidth(), (iMaxDist ?? 0)-(length ?? 0), iTime, pDmgCallback, pAttach, (reflections ?? 0)-1);
 }

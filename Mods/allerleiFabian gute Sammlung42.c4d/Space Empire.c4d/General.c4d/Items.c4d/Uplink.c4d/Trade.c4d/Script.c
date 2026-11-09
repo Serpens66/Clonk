@@ -1,6 +1,6 @@
 /*-- Uplink (Handelssystem) --*/
 
-#strict
+#strict 3
 #include UPL0
 
 local input, inputID;
@@ -13,7 +13,7 @@ public func Init(target)
   inherited(target);
   // Nachricht
   PlayerMessage(GetOwner(), "Ausgerichtet auf|Handelssystem", this());
-  Local(0) = 1;
+  Local(nil) = 1;
 }
 
 
@@ -22,7 +22,7 @@ public func Init(target)
 public func KeyUp(par_caller)
 {
   if (inherited(par_caller))
-    BuyObjects(1,0);
+    BuyObjects(1,nil);
 }
 
 public func KeyDig(par_caller)
@@ -37,17 +37,17 @@ public func KeyDig(par_caller)
 private func BuyObjects(category, selection)
 {
   // Menü mit allen Objekten dieser Kategorie
-  CreateMenu(GetID(GetActionTarget()), caller, 0,0,0,0,0,1);
+  CreateMenu(GetID(GetActionTarget()), caller, nil,nil,nil,nil,nil,1);
   var mec = CreateObject(SMEC);   // Menü-Überwachung
   mec->Init(caller,this(), "BuyObjects",1);
   // Übersicht über Kategorien
-  AddMenuItem("Kategorie: Materialien", "BuyChangeCat", SYT0,caller, 0,1, "Materialien und Rohstoffe kaufen.",  2, 0 + (category != 1) * 5);
-  AddMenuItem("Kategorie: Gegenstände", "BuyChangeCat", SYT0,caller, 0,2, "Grundlegende Gegenstände kaufen.",   2, 1 + (category != 2) * 5);
-  AddMenuItem("Kategorie: Ausrüstung",  "BuyChangeCat", SYT0,caller, 0,3, "Ausrüstung und Munition kaufen.",    2, 2 + (category != 3) * 5);
-  AddMenuItem("Kategorie: Waffen",      "BuyChangeCat", SYT0,caller, 0,4, "Tragbare Waffen kaufen.",            2, 3 + (category != 4) * 5);
-  AddMenuItem("Kategorie: Fahrzeuge",   "BuyChangeCat", SYT0,caller, 0,5, "Fahrzeuge und großes Gerät kaufen.", 2, 4 + (category != 5) * 5);
+  AddMenuItem("Kategorie: Materialien", "BuyChangeCat", SYT0,caller, nil,1, "Materialien und Rohstoffe kaufen.",  2, 0 + ((!Equal(category, 1)) ?? 0) * 5);
+  AddMenuItem("Kategorie: Gegenstände", "BuyChangeCat", SYT0,caller, nil,2, "Grundlegende Gegenstände kaufen.",   2, 1 + ((!Equal(category, 2)) ?? 0) * 5);
+  AddMenuItem("Kategorie: Ausrüstung",  "BuyChangeCat", SYT0,caller, nil,3, "Ausrüstung und Munition kaufen.",    2, 2 + ((!Equal(category, 3)) ?? 0) * 5);
+  AddMenuItem("Kategorie: Waffen",      "BuyChangeCat", SYT0,caller, nil,4, "Tragbare Waffen kaufen.",            2, 3 + ((!Equal(category, 4)) ?? 0) * 5);
+  AddMenuItem("Kategorie: Fahrzeuge",   "BuyChangeCat", SYT0,caller, nil,5, "Fahrzeuge und großes Gerät kaufen.", 2, 4 + ((!Equal(category, 5)) ?? 0) * 5);
   var i = 6;
-  while (--i)
+  while (S42MigrationStep(i, -1))
     mec->AddInfo(-1);
   // richtige Kategorie anwählen
   var warelist = FindObject(STWL);
@@ -55,12 +55,12 @@ private func BuyObjects(category, selection)
   var size = warelist->CategorySize(category);
   // alle IDs durchgehen
   var warenum, ID;
-  for (i = 0; i < size; ++i)
+  for (i = nil; (i ?? 0) < (size ?? 0); S42MigrationStep(i, 1))
   {
-    warenum = start+i;
+    warenum = (start ?? 0)+(i ?? 0);
     ID = GetWareID(warenum);               // Ware wird zugelassen:
-    if ((category <= 2) ||                 //  - automatisch in den ersten beiden Kategorien
-        GetPlrKnowledge(GetOwner(),ID))    //  - oder wenn der Bauplan erforschbar ist
+    if (Or(((category ?? 0) <= 2),                 //  - automatisch in den ersten beiden Kategorien
+        GetPlrKnowledge(GetOwner(),ID)))    //  - oder wenn der Bauplan erforschbar ist
     {
       AddMenuItem("Kauf: %s", "BuyWare", ID, caller, AllAvailableAmount(warenum,1), warenum);
       mec->AddInfo(warenum);
@@ -73,7 +73,7 @@ private func BuyObjects(category, selection)
 public func BuyObjects_Changed(selection, warenum)
 {
   // ungültige Warennummer?
-  if (warenum == -1)
+  if (Equal(warenum, -1))
     return(PlayerMessage(GetOwner(), "", this()));
   // billigsten Preis ermitteln
   var cheapest = GetCheapestPrice(warenum);
@@ -84,10 +84,10 @@ public func BuyObjects_Changed(selection, warenum)
     // Angebotsmenge und Preis
     amount = GetAvailableAmount(warenum, GetOwner());
     price = GetWarePrice(warenum, GetOwner());
-    if (amount && (price == cheapest))
+    if (And(amount, (Equal(price, cheapest))))
     {
       PlayerMessage(GetOwner(), "@%s|Wert: %d Gold|<c 80ff80>Eigenes Angebot: %d Stück für je %d Gold", this(),
-                    GetName(0,GetWareID(warenum)), GetValue(0,GetWareID(warenum)), amount, price);
+                    GetName(nil,GetWareID(warenum)), GetValue(nil,GetWareID(warenum)), amount, price);
       return(1);
     }
   }
@@ -96,31 +96,31 @@ public func BuyObjects_Changed(selection, warenum)
   var allamount;
   var i = -1;
   var j = GetPlayerCount();
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
-    if (i >= 0) player = GetPlayerByIndex(i);
+    if ((i ?? 0) >= 0) player = GetPlayerByIndex(i);
            else player = -1;
-    if (player == GetOwner())         continue;
+    if (Equal(player, GetOwner()))         continue;
     if (!OffersWare(warenum, player)) continue;
     // Angebotsmenge und Preis
     amount = GetAvailableAmount(warenum, player);
     price = GetWarePrice(warenum, player);
-    if (price == cheapest)
+    if (Equal(price, cheapest))
     {
-      ++splayer;
+      S42MigrationStep(splayer, 1);
       cplayer = player;
-      allamount += amount;
+      S42MigrationAssign(allamount, "+=", (amount ?? 0));
     }
   }
   // Infos ausgeben
   var infostring;
-  if (splayer == 0) infostring = "<c c0c0c0>- keine Angebote verfügbar -";
-  if (splayer == 1)
-    if (cplayer == -1) infostring = Format("KI-Händler: %d Stück für je %d Gold", allamount, cheapest);
+  if (Equal(splayer, nil)) infostring = "<c c0c0c0>- keine Angebote verfügbar -";
+  if (Equal(splayer, 1))
+    if (Equal(cplayer, -1)) infostring = Format("KI-Händler: %d Stück für je %d Gold", allamount, cheapest);
                   else infostring = Format("%s: %d Stück für je %d Gold", GetPlayerName(cplayer), allamount, cheapest);
-  if (splayer >= 2) infostring = Format("%d Spieler: %d Stück für je %d Gold", splayer, allamount, cheapest);
+  if ((splayer ?? 0) >= 2) infostring = Format("%d Spieler: %d Stück für je %d Gold", splayer, allamount, cheapest);
   // Info ausgeben
-  PlayerMessage(GetOwner(), "@%s|Wert: %d Gold|%s", this(), GetName(0,GetWareID(warenum)), GetValue(0,GetWareID(warenum)), infostring);
+  PlayerMessage(GetOwner(), "@%s|Wert: %d Gold|%s", this(), GetName(nil,GetWareID(warenum)), GetValue(nil,GetWareID(warenum)), infostring);
 }
 
 public func BuyObjects_Closed()
@@ -134,7 +134,7 @@ public func BuyObjects_Closed()
 private func BuyChangeCat(par0, category)
 {
   Sound("Click");
-  BuyObjects(category, category-1);
+  BuyObjects(category, (category ?? 0)-1);
 }
 
 /* Ware gekauft */
@@ -144,25 +144,25 @@ private func BuyWare(ID, warenum)
   // erstmal den billigsten Spieler finden
   var player = GetCheapestPlayer(warenum);
   // keiner bietet die Ware an?
-  if (player == -2)
-    return(BuyWareReturn(warenum, 0));
+  if (Equal(player, -2))
+    return(BuyWareReturn(warenum, nil));
   // eigenes Angebot das billigste?
   if (OffersWare(warenum, GetOwner()))
     if (GetAvailableAmount(warenum, GetOwner()))                                // nur wenn man selbst nicht ausverkauft ist
-      if (GetWarePrice(warenum, player) == GetWarePrice(warenum, GetOwner()))   // man selbst bietet auch am billigsten an?
-        return(BuyWareReturn(warenum, 0));
+      if (Equal(GetWarePrice(warenum, player), GetWarePrice(warenum, GetOwner())))   // man selbst bietet auch am billigsten an?
+        return(BuyWareReturn(warenum, nil));
   // reicht das Geld?
   var price = GetWarePrice(warenum, player);
-  if (GetWealth(GetOwner()) < price)
-    return(BuyWareReturn(warenum, 0));
+  if ((GetWealth(GetOwner()) ?? 0) < (price ?? 0))
+    return(BuyWareReturn(warenum, nil));
   // Kauf bei KI-Spieler
-  if (player == -1)
+  if (Equal(player, -1))
   {
     // Ware erzeugen
     var ware = CreateContents(ID, GetActionTarget());
-    --Local(warenum, FindObject(SAIT));
+    S42MigrationStep(Local(warenum, FindObject(SAIT)), -1);
     // Geld überweisen
-    DoWealth(GetOwner(), -price);
+    DoWealth(GetOwner(), -(price ?? 0));
     // zurück zum Menü
     return(BuyWareReturn(warenum, 1));
   }
@@ -171,7 +171,7 @@ private func BuyWare(ID, warenum)
   SetOwner(GetOwner(), ware);
   Enter(GetActionTarget(), ware);
   // Geld überweisen
-  DoWealth(GetOwner(), -price);
+  DoWealth(GetOwner(), -(price ?? 0));
   DoWealth(player, price);
   // zurück zum Menü
   return(BuyWareReturn(warenum, 1));
@@ -192,35 +192,35 @@ private func BuyWareReturn(warenum, success)
 private func ExtMenu()
 {
   // Menü öffnen
-  CreateMenu(GetID(GetActionTarget()),caller, 0,0, "Handelsmenü");
-  AddMenuItem("Verkaufsliste", "SellList",  SYT2,caller, 0,0, "Auflistung der eigenen Angebote.");
-  AddMenuItem("Neues Angebot", "SellOffer", SYT1,caller, 0,0, "Neues Verkaufsangebot erstellen.");
+  CreateMenu(GetID(GetActionTarget()),caller, nil,nil, "Handelsmenü");
+  AddMenuItem("Verkaufsliste", "SellList",  SYT2,caller, nil,nil, "Auflistung der eigenen Angebote.");
+  AddMenuItem("Neues Angebot", "SellOffer", SYT1,caller, nil,nil, "Neues Verkaufsangebot erstellen.");
   var i = 2;
-  if (GetPlayerCount() > 1)
+  if ((GetPlayerCount() ?? 0) > 1)
   {
-    AddMenuItem("Überweisung", "MoneyXfer", SYT3,caller, 0,0, "Geld an anderen Spieler überweisen.");
-    ++i;
+    AddMenuItem("Überweisung", "MoneyXfer", SYT3,caller, nil,nil, "Geld an anderen Spieler überweisen.");
+    S42MigrationStep(i, 1);
   }
   // mit ein paar leeren Einträge auffüllen
-  while (i % 5)
+  while ((i ?? 0) % 5)
   {
-    AddMenuItem("---", "SellNothing", SPCR, caller, 0,i);
-    ++i;
+    AddMenuItem("---", "SellNothing", SPCR, caller, nil,i);
+    S42MigrationStep(i, 1);
   }
   // zusätzliche Einträge
-  AddMenuItem("Ausrichtung wechseln: Basis",  "ChangeMode", SYUP,caller, 0,0, "Das Heimatbasissystem wird gewählt. Hat alle Funktionen einer normalen Basis.",   2,2);
+  AddMenuItem("Ausrichtung wechseln: Basis",  "ChangeMode", SYUP,caller, nil,nil, "Das Heimatbasissystem wird gewählt. Hat alle Funktionen einer normalen Basis.",   2,2);
 if(GetPlrKnowledge(GetOwner(),UUU1))
-  AddMenuItem("Transfer",            "TransferMenu", SYUP,caller, 0,0, "Transfer zu anderen Basen und Fahrzeugen mit Uplink. Reichweite: 500Meter.", 2,4);
-  AddMenuItem("Uplink abnehmen", "AttachTargetLost", SYUP,caller, 0,0, "Uplink deaktivieren und abnehmen.", 2,3);
+  AddMenuItem("Transfer",            "TransferMenu", SYUP,caller, nil,nil, "Transfer zu anderen Basen und Fahrzeugen mit Uplink. Reichweite: 500Meter.", 2,4);
+  AddMenuItem("Uplink abnehmen", "AttachTargetLost", SYUP,caller, nil,nil, "Uplink deaktivieren und abnehmen.", 2,3);
   if (building->~HasWeaponSelection())
   {
-    AddMenuItem("Waffenwechsel",    "SelectWeapons", SYUP,caller, 0,0, "Bewaffnung der Basis austauschen.", 2,5);
-    ++i;
+    AddMenuItem("Waffenwechsel",    "SelectWeapons", SYUP,caller, nil,nil, "Bewaffnung der Basis austauschen.", 2,5);
+    S42MigrationStep(i, 1);
   }
-if(freigegeben==0)
-  AddMenuItem("System freigeben", "Freigabe", SYUP,caller, 0,caller, "Uplinksystem wird für alle NichtFeinde freigegeben. Diese können sowohl im Gebäude auf alles zugreifen, als auch aus ihrem eigenen Uplinksystem Dinge aus deinem System per Beam holen oder dir senden. Außerdem werden sie auch geheilt und gelöscht, was sonst nicht der Fall ist", 2,2);
-if(freigegeben==1)
-  AddMenuItem("System sperren", "Freigabe", SYUP,caller, 0,caller, "Uplinksystem wird wieder gesperrt, sodass nur noch der Besitzer Zugriff hat.", 2,2);
+if(Equal(freigegeben, nil))
+  AddMenuItem("System freigeben", "Freigabe", SYUP,caller, nil,caller, "Uplinksystem wird für alle NichtFeinde freigegeben. Diese können sowohl im Gebäude auf alles zugreifen, als auch aus ihrem eigenen Uplinksystem Dinge aus deinem System per Beam holen oder dir senden. Außerdem werden sie auch geheilt und gelöscht, was sonst nicht der Fall ist", 2,2);
+if(Equal(freigegeben, 1))
+  AddMenuItem("System sperren", "Freigabe", SYUP,caller, nil,caller, "Uplinksystem wird wieder gesperrt, sodass nur noch der Besitzer Zugriff hat.", 2,2);
 //  i += 3;
   // und noch mehr auffüllen
 //  while (i % 5)
@@ -238,22 +238,22 @@ private func SellList(par0, selnum)
   // Zahl der Handelswaren gesamt
   var size = FindObject(STWL)->GetListSize();
   // Menü mit allen verkaufbaren Objekten
-  CreateMenu(SYT2, caller, 0,0, "Verkaufsliste", 0,1);
+  CreateMenu(SYT2, caller, nil,nil, "Verkaufsliste", nil,1);
   var mec = CreateObject(SMEC);         // Menü-Überwachung
   mec->Init(caller,this(), "SellList");
   // alle IDs durchgehen
   var selection;
   var i, j;
-  for (i = 0; i < size; ++i)
+  for (i = nil; (i ?? 0) < (size ?? 0); S42MigrationStep(i, 1))
     if (OffersWare(i, GetOwner()))
     {
-      if (i == selnum)  selection = j;
-      ++j;
+      if (Equal(i, selnum))  selection = j;
+      S42MigrationStep(j, 1);
       // Menüeintrag hinzufügen
-      AddMenuItem("%s", "EditOffer", GetWareID(i), caller, 0, i);
+      AddMenuItem("%s", "EditOffer", GetWareID(i), caller, nil, i);
       mec->AddInfo(i);
     }
-  AddMenuItem("Neu...", "SellOffer", SYT1,caller, 0,0, "Neues Verkaufsangebot erstellen.");
+  AddMenuItem("Neu...", "SellOffer", SYT1,caller, nil,nil, "Neues Verkaufsangebot erstellen.");
   mec->AddInfo(-1);
   AddMenuItem("Abbrechen", "ExtMenu", SYCC,caller);
   mec->AddInfo(-1);
@@ -265,7 +265,7 @@ private func SellList(par0, selnum)
 public func SellList_Changed(selection, warenum)
 {
   // ungültige Warennummer?
-  if (warenum == -1)
+  if (Equal(warenum, -1))
     return(PlayerMessage(GetOwner(), "", this()));
   // billigsten Preis ermitteln
   var cheapest = GetCheapestPrice(warenum, 1, GetOwner());   // Besitzer dabei ignorieren
@@ -275,35 +275,35 @@ public func SellList_Changed(selection, warenum)
   var player, cplayer, splayer;
   var i = -1;
   var j = GetPlayerCount();
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
-    if (i >= 0) player = GetPlayerByIndex(i);
+    if ((i ?? 0) >= 0) player = GetPlayerByIndex(i);
            else player = -1;
-    if (player == GetOwner()) continue;
+    if (Equal(player, GetOwner())) continue;
     if (!OffersWare(warenum, player)) continue;
     // Angebotsmenge und Preis
     amount = GetAvailableAmount(warenum, player);
     price = GetWarePrice(warenum, player);
-    if (price == cheapest)
+    if (Equal(price, cheapest))
     {
-      ++splayer;
+      S42MigrationStep(splayer, 1);
       cplayer = player;
-      allamount += amount;
+      S42MigrationAssign(allamount, "+=", (amount ?? 0));
     }
   }
   // Infos ausgeben
   var infostring;
-  if (splayer == 0) infostring = "<c c0c0c0>- kein anderes Angebot -";
-  if (splayer == 1)
-    if (cplayer == -1) infostring = Format("KI-Händler: %d Stück für je %d Gold", allamount, cheapest);
+  if (Equal(splayer, nil)) infostring = "<c c0c0c0>- kein anderes Angebot -";
+  if (Equal(splayer, 1))
+    if (Equal(cplayer, -1)) infostring = Format("KI-Händler: %d Stück für je %d Gold", allamount, cheapest);
                   else infostring = Format("%s: %d Stück für je %d Gold", GetPlayerName(cplayer), allamount, cheapest);
-  if (splayer >= 2) infostring = Format("%d Spieler: %d Stück für je %d Gold", splayer, allamount, cheapest);
+  if ((splayer ?? 0) >= 2) infostring = Format("%d Spieler: %d Stück für je %d Gold", splayer, allamount, cheapest);
   // Einfärbung je nachdem, ob Angebot gültig
   amount = GetAvailableAmount(warenum, GetOwner());
   if (!amount) infostring = Format("<c ff8080>Eigenes Angebot: 0 Stück für je %d Gold|<c ffffff>%s", GetWarePrice(warenum, GetOwner()), infostring);
           else infostring = Format("<c 80ff80>Eigenes Angebot: %d Stück für je %d Gold|<c ffffff>%s", amount, GetWarePrice(warenum, GetOwner()), infostring);
   // Info ausgeben
-  PlayerMessage(GetOwner(), "@%s|Wert: %d Gold|%s", this(), GetName(0,GetWareID(warenum)), GetValue(0,GetWareID(warenum)), infostring);
+  PlayerMessage(GetOwner(), "@%s|Wert: %d Gold|%s", this(), GetName(nil,GetWareID(warenum)), GetValue(nil,GetWareID(warenum)), infostring);
   return(1);
 }
 
@@ -326,7 +326,7 @@ private func SellOffer()
   // alle IDs durchgehen
   var amount;
   var i;
-  for (i = 0; i < size; ++i)
+  for (i = nil; (i ?? 0) < (size ?? 0); S42MigrationStep(i, 1))
     if (!OffersWare(i, GetOwner()))
     {
       amount = GetAvailableAmount(i, GetOwner());
@@ -349,27 +349,27 @@ private func EditOffer(ID, warenum)
   input = price;     // Startwert
   inputID = ID;      // ID der Ware
   // neues Menü
-  CreateMenu(ID, caller, 0,0, GetName(0,ID), 0,0,1);
+  CreateMenu(ID, caller, nil,nil, GetName(nil,ID), nil,nil,1);
   var mec = CreateObject(SMEC);                // Menü-Überwachung; hier nur benötigt, um Preisanzeige am Ende zu löschen
   mec->Init(caller,this(), "EditOffer", 1);    // removeothers = 1, damit PlayerMessage (siehe unten) nicht gelöscht wird
   // Ziffern
   var i;
-  for (i = 0; i <= 9; i++)
-    AddMenuItem(Format("Hinzufügen: %d",i), "Edit_AddNumber", SYNU, caller, 0,i,0, 2,i);
+  for (i = nil; (i ?? 0) <= 9; S42MigrationStep(i, 1, true))
+    AddMenuItem(Format("Hinzufügen: %d",i), "Edit_AddNumber", SYNU, caller, nil,i,nil, 2,i);
 
 //minuszeichen
     AddMenuItem("Negativ machen", "Edit_AddMinus", PCSO, caller);
 
   // Steuerbefehle
   if (price)
-    AddMenuItem("Altes Angebot löschen", "Edit_DeleteOffer", SYDL, caller, 0,warenum);
+    AddMenuItem("Altes Angebot löschen", "Edit_DeleteOffer", SYDL, caller, nil,warenum);
   AddMenuItem("Ziffer löschen", "Edit_DeleteNumber", SYBA, caller);
-  AddMenuItem("Fertig", "Edit_ChangeOffer", SYAC, caller, 0,warenum);
+  AddMenuItem("Fertig", "Edit_ChangeOffer", SYAC, caller, nil,warenum);
   // Menüauswahl setzen
   if (price) SelectMenuItem(12, caller);
         else SelectMenuItem(11, caller);
   // eingegebener Wert als Message
-  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(0,ID), input);
+  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(nil,ID), input);
 }
 
 public func EditOffer_Closed()
@@ -380,33 +380,33 @@ public func EditOffer_Closed()
 
 private func Edit_AddMinus()
 {
-input = -input;
+input = -(input ?? 0);
 }
 
 private func Edit_AddNumber(par0, number)
 {
   // Ziffer hinzufügen
 //  if (input >= 1000) return(1);   // höchstens vierstellig
-    if (input >= 10000) return(1);   // höchstens fünfstellig
-  input = input*10 + number;
+    if ((input ?? 0) >= 10000) return(1);   // höchstens fünfstellig
+  input = (input ?? 0)*10 + (number ?? 0);
   // Ausgabe
-  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(0,inputID), input);
+  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(nil,inputID), input);
   return(1);
 }
 
 private func Edit_DeleteNumber()
 {
   // Ziffer hinzufügen
-  input = input / 10;
+  input = (input ?? 0) / 10;
   // Ausgabe
-  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(0,inputID), input);
+  PlayerMessage(GetOwner(), "@<c c0c0c0>Wert der Ware:  %d Gold|<c ffffff>Eigener Preis:  %d Gold", this(), GetValue(nil,inputID), input);
   return(1);
 }
 
 private func Edit_DeleteOffer(par0, warenum)
 {
   // bisheriges Angebot löschen, indem Preis auf 0 gesetzt wird
-  Local(warenum, FindObjectOwner(STPO, GetOwner())) = 0;
+  Local(warenum, FindObjectOwner(STPO, GetOwner())) = nil;
   // zur Angebotsliste wechseln
   return(SellList());
 }
@@ -417,7 +417,7 @@ private func Edit_ChangeOffer(par0, warenum)
   var offer = FindObjectOwner(STPO, GetOwner());
   Local(warenum, offer) = input;
   // zur Angebotsliste wechseln
-  return(SellList(0,warenum));
+  return(SellList(nil,warenum));
 }
 
 
@@ -426,15 +426,15 @@ private func Edit_ChangeOffer(par0, warenum)
 private func MoneyXfer(ID)
 {
   // Betrag bestimmen
-  input = 0;
+  input = nil;
   // neues Menü
-  CreateMenu(ID, caller, 0,0, GetName(0,ID), 0,0,1);
+  CreateMenu(ID, caller, nil,nil, GetName(nil,ID), nil,nil,1);
   var mec = CreateObject(SMEC);                // Menü-Überwachung; hier nur benötigt, um Preisanzeige am Ende zu löschen
   mec->Init(caller,this(), "MoneyXfer", 1);    // removeothers = 1, damit PlayerMessage (siehe unten) nicht gelöscht wird
   // Ziffern
   var i;
-  for (i = 0; i <= 9; i++)
-    AddMenuItem(Format("Hinzufügen: %d",i), "Xfer_AddNumber", SYNU, caller, 0,i,0, 2,i);
+  for (i = nil; (i ?? 0) <= 9; S42MigrationStep(i, 1, true))
+    AddMenuItem(Format("Hinzufügen: %d",i), "Xfer_AddNumber", SYNU, caller, nil,i,nil, 2,i);
   // Steuerbefehle
   AddMenuItem("Ziffer löschen", "Xfer_DeleteNumber", SYBA, caller);
   AddMenuItem("Fertig", "Xfer_ChoosePlayer", SYAC, caller);
@@ -452,8 +452,8 @@ public func MoneyXfer_Closed()
 private func Xfer_AddNumber(par0, number)
 {
   // eine Ziffer hinzufügen
-  if (input >= 1000) return(1);   // höchstens vierstellig
-  input = input*10 + number;
+  if ((input ?? 0) >= 1000) return(1);   // höchstens vierstellig
+  input = (input ?? 0)*10 + (number ?? 0);
   // Ausgabe
   PlayerMessage(GetOwner(), "Geldbetrag:  %d Gold", this(), input);
 }
@@ -461,7 +461,7 @@ private func Xfer_AddNumber(par0, number)
 private func Xfer_DeleteNumber()
 {
   // eine Ziffer zurücknehmen
-  input = input / 10;
+  input = (input ?? 0) / 10;
   // Ausgabe
   PlayerMessage(GetOwner(), "Geldbetrag:  %d", this(), input);
 }
@@ -469,34 +469,34 @@ private func Xfer_DeleteNumber()
 private func Xfer_ChoosePlayer()
 {
   // neues Menü
-  CreateMenu(SGMI,caller, 0,0,"Überweisen an...",0,1);
+  CreateMenu(SGMI,caller, nil,nil,"Überweisen an...",nil,1);
   // alle Spieler durchgehen
   var i, player;
   var j = GetPlayerCount();
   // erstmal alle Spieler durchgehen
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
     player = GetPlayerByIndex(i);
-    if (player == GetOwner()) continue;
-    AddMenuItem(Format("%s",GetPlayerName(player)), "Xfer_DoTransfer", SYAC,caller,0,player);
+    if (Equal(player, GetOwner())) continue;
+    AddMenuItem(Format("%s",GetPlayerName(player)), "Xfer_DoTransfer", SYAC,caller,nil,player);
   }
 }
 
 private func Xfer_DoTransfer(par0, player)
 {
   // überhaupt so viel Geld da?
-  if (input > GetWealth(GetOwner()))
+  if ((input ?? 0) > (GetWealth(GetOwner()) ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", this());
     return(1);
   }
   // Geldüberweisung
-  SetWealth(GetOwner(), GetWealth(GetOwner())-input);
-  SetWealth(player, GetWealth(player)+input);
+  SetWealth(GetOwner(), (GetWealth(GetOwner()) ?? 0)-(input ?? 0));
+  SetWealth(player, (GetWealth(player) ?? 0)+(input ?? 0));
   // Sound & Meldungen
   Sound("Cash");
-  PlayerMessage(GetOwner(), "%d Gold an %s überwiesen", 0,input, GetPlayerName(player));
-  PlayerMessage(player, "%d Gold von %s erhalten", 0,input, GetPlayerName(GetOwner()));
+  PlayerMessage(GetOwner(), "%d Gold an %s überwiesen", nil,input, GetPlayerName(player));
+  PlayerMessage(player, "%d Gold von %s erhalten", nil,input, GetPlayerName(GetOwner()));
 }
 
 
@@ -512,14 +512,14 @@ private func GetWareID(warenum)
 private func GetWarePrice(warenum, player)
 {
   // findet den Warenpreis des entsprechenden Spielers bzw. 0, wenn kein Angebot
-  if (player == -1)
+  if (Equal(player, -1))
   {
     var ait = FindObject(SAIT);
-    if (!ait) return(0);
+    if (!ait) return(nil);
     return(ait->GetPrice(warenum));
   }
   var offerlist = FindObjectOwner(STPO, player);
-  if (!offerlist) return(0);
+  if (!offerlist) return(nil);
   // Angebot gefunden
   return(Local(warenum, offerlist));
 }
@@ -537,15 +537,15 @@ private func GetCheapestPrice(warenum, doignore, player2ignore)
   var price, player;
   var i = -1;
   var j = GetPlayerCount();
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
-    if (i >= 0) player = GetPlayerByIndex(i);
+    if ((i ?? 0) >= 0) player = GetPlayerByIndex(i);
            else player = -1;
-    if (doignore && (player == player2ignore)) continue;
+    if (And(doignore, (Equal(player, player2ignore)))) continue;
     if (!OffersWare(warenum, player))          continue;
     if (!GetAvailableAmount(warenum, player))  continue;
     price = GetWarePrice(warenum, player);
-    if (price < cheapest)
+    if ((price ?? 0) < (cheapest ?? 0))
       cheapest = price;
   }
   return(cheapest);
@@ -555,20 +555,20 @@ private func GetCheapestPlayer(warenum)
 {
   // Spieler mit billigstem Angebot ermitteln
   var cheapest = GetCheapestPrice(warenum);
-  if (cheapest == 10000)
+  if (Equal(cheapest, 10000))
     return(-2);   // keiner bietet das an
   var player, cplayer, splayer;        // splayer = Zahl der Spieler mit billigstem Preis
   var i = -1;
   var j = GetPlayerCount();
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
-    if (i >= 0) player = GetPlayerByIndex(i);
+    if ((i ?? 0) >= 0) player = GetPlayerByIndex(i);
            else player = -1;
     if (!OffersWare(warenum, player))             continue;
     if (!GetAvailableAmount(warenum, player))     continue;
-    if (GetWarePrice(warenum, player) > cheapest) continue;
+    if ((GetWarePrice(warenum, player) ?? 0) > (cheapest ?? 0)) continue;
     // mehrere gleiche
-    ++splayer;
+    S42MigrationStep(splayer, 1);
     if (!Random(splayer))              // bei mehreren Spielern mit gleichen Preisen entscheidet der Zufall
       cplayer = player;
   }
@@ -578,20 +578,20 @@ private func GetCheapestPlayer(warenum)
 private func GetAvailableAmount(warenum, player)
 {
   // KI-Händler
-  if (player == -1)
+  if (Equal(player, -1))
   {
     var ait = FindObject(SAIT);
-    if (!ait) return(0);
+    if (!ait) return(nil);
     return(Local(warenum, ait));
   }
   var ID = GetWareID(warenum);
   // alle Handelsbasen abklappern
   var count, uplink;
-  while (uplink = FindObjectOwner(UPLT, player, 0,0,0,0,0,"Turn",0, uplink))
-    count += ContentsCount(ID, GetActionTarget(0,uplink));
+  while (uplink = FindObjectOwner(UPLT, player, nil,nil,nil,nil,nil,"Turn",nil, uplink))
+    S42MigrationAssign(count, "+=", (ContentsCount(ID, GetActionTarget(nil,uplink)) ?? 0));
   // der Uplink darf sich selbst nicht vergessen
-  if (player == GetOwner())
-    count += ContentsCount(ID, GetActionTarget());
+  if (Equal(player, GetOwner()))
+    S42MigrationAssign(count, "+=", (ContentsCount(ID, GetActionTarget()) ?? 0));
   return(count);
 }
 
@@ -602,12 +602,12 @@ private func AllAvailableAmount(warenum, IgnoreOwner)
   var i = -1;
   var j = GetPlayerCount();
   // erstmal alle Spieler durchgehen
-  for (i; i < j; ++i)
+  for (i; (i ?? 0) < (j ?? 0); S42MigrationStep(i, 1))
   {
     player = GetPlayerByIndex(i);
-    if (IgnoreOwner && (player == GetOwner())) continue;
+    if (And(IgnoreOwner, (Equal(player, GetOwner())))) continue;
     if (!OffersWare(warenum, player))          continue;
-    count += GetAvailableAmount(warenum, player);
+    S42MigrationAssign(count, "+=", (GetAvailableAmount(warenum, player) ?? 0));
   }
   return(count);
 }
@@ -615,20 +615,20 @@ private func AllAvailableAmount(warenum, IgnoreOwner)
 private func FindWare(warenum, player)
 {
   // kein Angebot dieses Spielers da?
-  if (!GetWarePrice(warenum,player)) return(0);
+  if (!GetWarePrice(warenum,player)) return(nil);
   var ID = GetWareID(warenum);
   // alle Handelsbasen abklappern
   var uplink, ware;
-  while (uplink = FindObjectOwner(UPLT, player, 0,0,0,0,0,"Turn",0, uplink))
-    if (ware = FindContents(ID, GetActionTarget(0,uplink)))
+  while (uplink = FindObjectOwner(UPLT, player, nil,nil,nil,nil,nil,"Turn",nil, uplink))
+    if (ware = FindContents(ID, GetActionTarget(nil,uplink)))
       return(ware);
-  return(0);
+  return(nil);
 }
 
 private func SellNothing(par0, selection)
 {
   Sound("Error");
-  return(0);
+  return(nil);
 }
 
 

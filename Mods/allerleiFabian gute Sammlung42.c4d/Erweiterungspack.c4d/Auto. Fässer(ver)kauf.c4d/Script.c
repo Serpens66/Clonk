@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local Sell_A,Sell_L,Sell_O,Sell_W;
 
@@ -12,40 +12,40 @@ protected func Initialize()
 
 public func BarrelSellControl(pClonk)
 {
-  CreateMenu(SY02,pClonk,0,0,"$SaleOf$",0,1);
-  AddMenuItem(Format("$Water$: %s",Sell_W),"ChangeSellControl",WBRL,pClonk,0,pClonk);
-  AddMenuItem(Format("$Oil$: %s",Sell_O),"ChangeSellControl",OBRL,pClonk,0,pClonk);
-  AddMenuItem(Format("$Lava$: %s",Sell_L),"ChangeSellControl",LBRL,pClonk,0,pClonk);
-  AddMenuItem(Format("$Acid$: %s",Sell_A),"ChangeSellControl",ABRL,pClonk,0,pClonk);
+  CreateMenu(SY02,pClonk,nil,nil,"$SaleOf$",nil,1);
+  AddMenuItem(Format("$Water$: %s",Sell_W),"ChangeSellControl",WBRL,pClonk,nil,pClonk);
+  AddMenuItem(Format("$Oil$: %s",Sell_O),"ChangeSellControl",OBRL,pClonk,nil,pClonk);
+  AddMenuItem(Format("$Lava$: %s",Sell_L),"ChangeSellControl",LBRL,pClonk,nil,pClonk);
+  AddMenuItem(Format("$Acid$: %s",Sell_A),"ChangeSellControl",ABRL,pClonk,nil,pClonk);
   return(1);
 }
 
 private func ChangeSellControl(idItem,pClonk)
 {
   Sound("Click");
-  if(idItem== WBRL)
+  if(Equal(idItem, WBRL))
     {
-    if(Sell_W eq "$On$") Sell_W= "$Off$";
+    if(!!SEqual(Sell_W, "$On$")) Sell_W= "$Off$";
 		    else Sell_W= "$On$";
-    return(BarrelSellControl(pClonk),SelectMenuItem(0,pClonk));
+    return(S42MigrationFirst(BarrelSellControl(pClonk),SelectMenuItem(nil,pClonk)));
     }
-  if(idItem== OBRL)
+  if(Equal(idItem, OBRL))
     {
-    if(Sell_O eq "$On$") Sell_O= "$Off$";
+    if(!!SEqual(Sell_O, "$On$")) Sell_O= "$Off$";
 		    else Sell_O= "$On$";
-    return(BarrelSellControl(pClonk),SelectMenuItem(1,pClonk));
+    return(S42MigrationFirst(BarrelSellControl(pClonk),SelectMenuItem(1,pClonk)));
     }
-  if(idItem== LBRL)
+  if(Equal(idItem, LBRL))
     {
-    if(Sell_L eq "$On$") Sell_L= "$Off$";
+    if(!!SEqual(Sell_L, "$On$")) Sell_L= "$Off$";
 		    else Sell_L= "$On$";
-    return(BarrelSellControl(pClonk),SelectMenuItem(2,pClonk));
+    return(S42MigrationFirst(BarrelSellControl(pClonk),SelectMenuItem(2,pClonk)));
     }
-  if(idItem== ABRL)
+  if(Equal(idItem, ABRL))
     {
-    if(Sell_A eq "$On$") Sell_A= "$Off$";
+    if(!!SEqual(Sell_A, "$On$")) Sell_A= "$Off$";
 		    else Sell_A= "$On$";
-    return(BarrelSellControl(pClonk),SelectMenuItem(3,pClonk));
+    return(S42MigrationFirst(BarrelSellControl(pClonk),SelectMenuItem(3,pClonk)));
     }
 }
 
@@ -56,48 +56,48 @@ public func ContainerCheck()
   if(!target) return(RemoveObject());
   var iPlr= GetOwner(target);
   var obj;
-  while(obj= FindObject(0,0,0,0,0,0,0,0,target,obj))
+  while(obj= FindObject(nil,nil,nil,nil,nil,nil,nil,nil,target,obj))
    if(IsBarrel(GetID(obj)))
-    if(LocalN("iFillLevel",obj)>= (obj-> BarrelMaxFill()))
+    if((LocalN("iFillLevel",obj) ?? 0)>= ((obj-> BarrelMaxFill()) ?? 0))
       {
-      if(GetID(obj)== OBRL)
-       if(Sell_O eq "$On$")
+      if(Equal(GetID(obj), OBRL))
+       if(!!SEqual(Sell_O, "$On$"))
          {
          Sell(iPlr,obj);
          }
-      if(GetID(obj)== ABRL)
-       if(Sell_A eq "$On$")
+      if(Equal(GetID(obj), ABRL))
+       if(!!SEqual(Sell_A, "$On$"))
          {
          Sell(iPlr,obj);
          }
-      if(GetID(obj)== LBRL)
-       if(Sell_L eq "$On$")
+      if(Equal(GetID(obj), LBRL))
+       if(!!SEqual(Sell_L, "$On$"))
          {
          Sell(iPlr,obj);
          }
-      if(GetID(obj)== WBRL)
-       if(Sell_W eq "$On$")
+      if(Equal(GetID(obj), WBRL))
+       if(!!SEqual(Sell_W, "$On$"))
          {
          Sell(iPlr,obj);
          }
-      if(GetID(obj)== WDWB) // holzwasserfass
-       if(Sell_W eq "$On$")
+      if(Equal(GetID(obj), WDWB)) // holzwasserfass
+       if(!!SEqual(Sell_W, "$On$"))
          {
          Sell(iPlr,obj);
          }
       }
-  if(GetID(obj)!= WDWB)  if(!FindContents(EmptyBarrelID(),target)) Buy(EmptyBarrelID(),iPlr,iPlr,target,1);
+  if(!Equal(GetID(obj), WDWB))  if(!FindContents(EmptyBarrelID(),target)) Buy(EmptyBarrelID(),iPlr,iPlr,target,1);
   else if(!FindContents(WDBR,target)) Buy(WDBR,iPlr,iPlr,target,1);  // bei holzfass
 }
 
 public func IsBarrel(idObj)
 {
-  if(idObj== ABRL) return(1);
-  if(idObj== LBRL) return(1);
-  if(idObj== OBRL) return(1);
-  if(idObj== WBRL) return(1);
-  if(idObj== WDWB) return(1); // holzwasserfass
-  return(0);
+  if(Equal(idObj, ABRL)) return(1);
+  if(Equal(idObj, LBRL)) return(1);
+  if(Equal(idObj, OBRL)) return(1);
+  if(Equal(idObj, WBRL)) return(1);
+  if(Equal(idObj, WDWB)) return(1); // holzwasserfass
+  return(nil);
 }
 
 /*----------------------------------------- Damit auch Holzfässer mit Wasser gefüllt werden können ----------------------------------------*/

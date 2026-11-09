@@ -1,6 +1,6 @@
 /*-- Waffenpläne --*/
 
-#strict
+#strict 3
 
 local idPlan_1,idPlan_2,idPlan_3;
 
@@ -19,9 +19,9 @@ protected func Activate(pClonk)
   if(idPlan_3) SetPlrKnowledge(GetOwner(pClonk),idPlan_3);
 
   var text= "";
-  if(idPlan_1) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(0,idPlan_1)));
-  if(idPlan_2) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(0,idPlan_2)));
-  if(idPlan_3) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(0,idPlan_3)));
+  if(idPlan_1) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(nil,idPlan_1)));
+  if(idPlan_2) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(nil,idPlan_2)));
+  if(idPlan_3) text= Format("%s%s",text,Format("Bauplan von %s.|",GetName(nil,idPlan_3)));
   PlayerMessage(GetOwner(pClonk),text,pClonk);
   RemoveObject();
 }

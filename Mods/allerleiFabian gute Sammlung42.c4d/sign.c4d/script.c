@@ -1,4 +1,4 @@
-#strict
+#strict 3
 /*----------------------Schild------------------------*/
 
 
@@ -9,11 +9,11 @@ local idIcon;
 
 func Initialize()
 { 
-  SetPosition (GetX(),GetY()+2); 
-  bReject = false;
+  SetPosition (GetX(),(GetY() ?? 0)+2);
+  bReject = nil;
   szText = "";
-  pUser = 0;
-  idIcon = 0;
+  pUser = nil;
+  idIcon = nil;
   return(1);
 }
 
@@ -27,7 +27,7 @@ public func ControlDig(pCaller)
 {
   if(bReject)
   {
-    Sound ("Error",false,pCaller,100,GetOwner(pCaller)); 
+    Sound ("Error",nil,pCaller,100,GetOwner(pCaller));
     PlayerMessage (GetOwner(pCaller),"$PROTECTED$",this());
   }
   else
@@ -40,9 +40,9 @@ public func ControlDig(pCaller)
 public func Menu(pCaller)
 {
   pUser = pCaller;
-  CreateMenu(SIGN,pUser,0,0,0,0,0,1);
-  AddMenuItem ("$WRITE$","Write",SGN1,pUser,0,0,"$WRITE_DESC$",2,1);
-  AddMenuItem ("$PROTECT$","Protect",SGN1,pUser,0,0,"$PROTECT_DESC$");
+  CreateMenu(SIGN,pUser,nil,nil,nil,nil,nil,1);
+  AddMenuItem ("$WRITE$","Write",SGN1,pUser,nil,nil,"$WRITE_DESC$",2,1);
+  AddMenuItem ("$PROTECT$","Protect",SGN1,pUser,nil,nil,"$PROTECT_DESC$");
   return(1);
 }
 
@@ -50,7 +50,7 @@ public func Protect()
 {
   bReject = true;
   PlayerMessage (GetOwner(pUser),"$PROTECT_DESC$",this());
-  Sound ("Build1",false,pUser,60,0,0);
+  Sound ("Build1",nil,pUser,60,nil,nil);
   CloseMenu(pUser);
   return(1);
 }
@@ -67,7 +67,7 @@ szTitle         -Fenstertitel
 iPlayer         -Bei welchen Spieler wird es aufgerufen?
 */
 
-  CallMessageBoard(0, false, "Text:", GetOwner(pUser));
+  CallMessageBoard(nil, nil, "Text:", GetOwner(pUser));
   return(1);
 }
 
@@ -75,13 +75,13 @@ protected func InputCallback(string szInput)
 {
   szText = StrReplace (szInput,"<br>","|");//Zeilen machen...
 
-  idIcon = 0;
+  idIcon = nil;
   var pos = StrPos (szText,"{{!");
-  if(pos > -1)
+  if((pos ?? 0) > -1)
   {
-    var idIcon = C4Id (SubStr(szText,pos+3,4));
-    szText = StrIns(szText,pos+3+4+2,"|---------------|");
-    szText = StrDel(szText,pos+2,1);
+    var idIcon = C4Id (SubStr(szText,(pos ?? 0)+3,4));
+    szText = StrIns(szText,(pos ?? 0)+3+4+2,"|---------------|");
+    szText = StrDel(szText,(pos ?? 0)+2,1);
   }
   SetIcon(idIcon);
   return(1);
@@ -89,23 +89,23 @@ protected func InputCallback(string szInput)
 
 public func SetIcon(icon)
 {
-  if(!icon) return(SetGraphics(0,0,0,1));//Reset
+  if(!icon) return(SetGraphics(nil,nil,nil,1));//Reset
 
   //SetGraphics(0,this(),icon,1,GFXOV_MODE_IngamePicture);
   //SetObjDrawTransform(400,0,2000,0,400,-51000,0,1);
   
-  SetGraphics(0,this(),icon,1,GFXOV_MODE_Base);
+  SetGraphics(nil,this(),icon,1,GFXOV_MODE_Base);
   
   var w = 1000;
   var h = 1000;
   
-  if((GetDefWidth(icon) > 9)||(GetDefHeight(icon) > 9))
+  if(Or(((GetDefWidth(icon) ?? 0) > 9), ((GetDefHeight(icon) ?? 0) > 9)))
   {
-    w = 9*1000/GetDefWidth(icon);//Grafik auf 7px skalieren.
-    h = 9*1000/GetDefHeight(icon);
+    w = 9*1000/(GetDefWidth(icon) ?? 0);//Grafik auf 7px skalieren.
+    h = 9*1000/(GetDefHeight(icon) ?? 0);
   }
   
-  SetObjDrawTransform(w,0,2000,0,h,-1000*16,0,1);
+  SetObjDrawTransform(w,nil,2000,nil,h,-1000*16,nil,1);
 }
 
 /*
@@ -126,47 +126,49 @@ public func ActivateEntrance(pCaller)
 // takes an ASCII value and returns a single character
 global func Chr (int val)
 {
+  val ??= 0;
   return( Format("%c", val) );
 }
 
 // converts an integer into a string
 global func IntToStr (int val)
 {
+  val ??= 0;
   return( Format("%d", val) );
 }
 
 // converts a numerical string into an integer
 global func StrToInt (string str)
 {
-  var result = 0;
-  var num = 0;
-  var neg = false;
+  var result = nil;
+  var num = nil;
+  var neg = nil;
 
-  for( var i = 0; i < GetLength(str); i++ )
+  for( var i = nil; (i ?? 0) < (GetLength(str) ?? 0); S42MigrationStep(i, 1, true) )
   {
     // special cases if there's a "+" or "-"
 
-    if( (i == 0) && (GetChar(str, i) == 45) )
+    if( And((Equal(i, nil)), (Equal(GetChar(str, i), 45))) )
     {
       neg = true;
       continue;
     }
 
-    if( (i == 0) && (GetChar(str, i) == 43) )
+    if( And((Equal(i, nil)), (Equal(GetChar(str, i), 43))) )
     {
-      neg = false;
+      neg = nil;
       continue;
     }
 
     // only accept numbers
-    num = GetChar(str, i) - 48;
-    if( (num < 0) || (num > 9) ) return(-1);
+    num = (GetChar(str, i) ?? 0) - 48;
+    if( Or(((num ?? 0) < 0), ((num ?? 0) > 9)) ) return(-1);
 
-    result = result * 10 + num;
+    result = (result ?? 0) * 10 + (num ?? 0);
   }
 
   // if there was a "-", the result is negative
-  if( neg ) result = result * -1;
+  if( neg ) result = (result ?? 0) * -1;
 
   return(result);
 }
@@ -177,9 +179,9 @@ global func StrCat (array strs)
   var l = GetLength(strs);
   var result = "";
 
-  for( var i = 0; i < l; i++ )
-    if( GetType(strs[i]) == C4V_String )
-       result = Format("%s%s", result, strs[i]);
+  for( var i = nil; (i ?? 0) < (l ?? 0); S42MigrationStep(i, 1, true) )
+    if( Equal(GetType(strs[(i ?? 0)]), C4V_String) )
+       result = Format("%s%s", result, strs[(i ?? 0)]);
 
   return(result);
 }
@@ -188,11 +190,11 @@ global func StrCat (array strs)
 // (needle) inside (haystack), starting at 0
 global func StrPos (string haystack, string needle)
 {
-  for( var i = 0; i < GetLength(haystack); i++ )
-    if( GetChar(haystack, i) == GetChar(needle, 0) )
+  for( var i = nil; (i ?? 0) < (GetLength(haystack) ?? 0); S42MigrationStep(i, 1, true) )
+    if( Equal(GetChar(haystack, i), GetChar(needle, nil)) )
     {
       var s = SubStr( haystack, i, GetLength(needle) );
-      if(s eq needle) return(i);
+      if(!!SEqual(s, needle)) return(i);
     }
   return(-1);
 }
@@ -201,16 +203,19 @@ global func StrPos (string haystack, string needle)
 // deleting (length) characters
 global func StrDel(string str, int start, int length)
 {
-  if( GetLength(str) <= start )
+  start ??= 0;
+  length ??= 0;
+  if( (GetLength(str) ?? 0) <= (start ?? 0) )
     return(str);
 
-  return( StrCat( [SubStr(str,0,start), SubStr(str,start + length, -1)] ) );
+  return( StrCat( [SubStr(str,nil,start), SubStr(str,(start ?? 0) + (length ?? 0), -1)] ) );
 }
 
 // inserts (part) into (str) at (pos)
 global func StrIns (string str, int pos, string part)
 {
-  var result = StrCat( [SubStr(str, 0, pos), part, SubStr(str, pos, -1)] );
+  pos ??= 0;
+  var result = StrCat( [SubStr(str, nil, pos), part, SubStr(str, pos, -1)] );
   return(result);
 }
 
@@ -218,12 +223,14 @@ global func StrIns (string str, int pos, string part)
 // a length of (length)
 global func SubStr(string str, int start, int length)
 {
+  start ??= 0;
+  length ??= 0;
   var result = "";
 
-  if( length == -1 )
-    length = GetLength(str) - start;
+  if( Equal(length, -1) )
+    length = (GetLength(str) ?? 0) - (start ?? 0);
 
-  for( var i = start; i < start + length; i++ ) {
+  for( var i = start; (i ?? 0) < (start ?? 0) + (length ?? 0); S42MigrationStep(i, 1, true) ) {
     result = StrCat( [result, Chr(GetChar(str, i))] );
   }
   return(result);
@@ -232,19 +239,19 @@ global func SubStr(string str, int start, int length)
 // goes through (str), replacing (old) with (new)
 global func StrReplace (string str, string old, string new)
 {
-  if( StrPos(str, old) == -1 ) return(str);
+  if( Equal(StrPos(str, old), -1) ) return(str);
 
   var result = str;
-  var i = 0;
+  var i = nil;
 
-  while( i < GetLength(result) )
+  while( (i ?? 0) < (GetLength(result) ?? 0) )
    {
-    if( SubStr(result, i, GetLength(old)) eq old ) {
+    if( !!SEqual(SubStr(result, i, GetLength(old)), old) ) {
       result = StrDel(result, i, GetLength(old));
       result = StrIns(result, i, new);
-      i += GetLength(new);
+      S42MigrationAssign(i, "+=", (GetLength(new) ?? 0));
     }
-    i++;
+    S42MigrationStep(i, 1, true);
   }
   return(result);
 }

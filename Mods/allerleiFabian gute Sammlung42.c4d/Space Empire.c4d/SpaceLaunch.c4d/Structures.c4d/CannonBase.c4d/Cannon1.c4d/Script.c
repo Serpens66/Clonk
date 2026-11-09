@@ -1,6 +1,6 @@
 /*-- Artilleriegeschütz --*/
 
-#strict
+#strict 3
 
 local angle, marker, power;       // angle = Ausrichtung in 1/10 Grad
 local ammoID;
@@ -10,7 +10,7 @@ local ammoID;
 
 public func Init(building)
 {
-  angle = 0;
+  angle = nil;
   power = 3;
   SetAction("Wait", building);
   ResetPhase();
@@ -21,15 +21,15 @@ protected func Destruction()
 {
   // Gebäude noch da und wird nicht gerade zerstört?
   var building = GetActionTarget();
-  if (GetDamage(building) >= building->GetMaxDamage())
-    building = 0;
+  if ((GetDamage(building) ?? 0) >= (building->GetMaxDamage() ?? 0))
+    building = nil;
   // Inhalt ins Gebäude oder wegschleudern
   var obj;
   while (obj = Contents())
   {
     Exiting(obj);
     if (building) Enter(building, obj);
-             else Exit(obj,0,0,Random(360), Random(9)-4, -Random(5), Random(51)-25);
+             else Exit(obj,nil,nil,Random(360), (Random(9) ?? 0)-4, -(Random(5) ?? 0), (Random(51) ?? 0)-25);
   }
   return(1);
 }
@@ -37,37 +37,42 @@ protected func Destruction()
 
 /* Steuerung */
 
-protected ContainedLeft:
+protected func ContainedLeft(...) {
   Sound("Click");
   SetAction("TurnLeft");
   return(1);
+}
 
-protected ContainedLeftDouble:
+protected func ContainedLeftDouble(...) {
   Sound("Click");
   SetAction("FastTurnLeft");
   return(1);
+}
 
-protected ContainedRight:
+protected func ContainedRight(...) {
   Sound("Click");
   SetAction("TurnRight");
   return(1);
+}
 
-protected ContainedRightDouble:
+protected func ContainedRightDouble(...) {
   Sound("Click");
   SetAction("FastTurnRight");
   return(1);
+}
 
-protected ContainedUp:
+protected func ContainedUp(...) {
   return(StopTurning());
+}
 
 protected func ContainedUpDouble(caller)
 {
   [Schusskraft einstellen]
   CreateMenu(GetID(),caller);
   var i;
-  for (i = 1; i <= 5; i++)
-    AddMenuItem(Format("Schusskraft: %d", i), "ChangePower", SCBS, caller, 0,i, Format("Schusskraft auf Stufe %d einstellen", i), 2, i-1);
-  SelectMenuItem(power-1, caller);
+  for (i = 1; (i ?? 0) <= 5; S42MigrationStep(i, 1, true))
+    AddMenuItem(Format("Schusskraft: %d", i), "ChangePower", SCBS, caller, nil,i, Format("Schusskraft auf Stufe %d einstellen", i), 2, (i ?? 0)-1);
+  SelectMenuItem((power ?? 0)-1, caller);
   return(1);
 }
 
@@ -78,26 +83,26 @@ protected func ContainedDig(caller)
   var building = GetActionTarget();
   // alle Objekte im Gebäude durchsuchen
   var objID, count;
-  var obj = FindObject(0, 0,0,0,0, OCF_Collectible(),"",0, building);
+  var obj = FindObject(nil, nil,nil,nil,nil, OCF_Collectible,"",nil, building);
   while (1)
   {
     // alle Objekttypen
     objID = GetID(obj);
-    if (!obj || !objID) break;
+    if (Or(!obj, !objID)) break;
     count = 1;
     while (1)
     {
       // alle Objekte
-      obj = FindObject(0, 0,0,0,0, OCF_Collectible(),"",0, building, obj);
+      obj = FindObject(nil, nil,nil,nil,nil, OCF_Collectible,"",nil, building, obj);
       if (!obj) break;
-      if (GetID(obj) == objID) ++count;
+      if (Equal(GetID(obj), objID)) S42MigrationStep(count, 1);
                           else break;
     }
     AddMenuItem("Munition: %s", "SetAmmo", objID, caller, count);
   }
   // den Clonk auch hinzufügen
- if(GetID(caller)==HZCK) AddMenuItem(Format("%s verschiessen", GetName(caller)), "SetAmmo", HZCK, caller);
-  if(GetID(caller)==CLNK) AddMenuItem(Format("%s verschiessen", GetName(caller)), "SetAmmo", CLNK, caller);
+ if(Equal(GetID(caller), HZCK)) AddMenuItem(Format("%s verschiessen", GetName(caller)), "SetAmmo", HZCK, caller);
+  if(Equal(GetID(caller), CLNK)) AddMenuItem(Format("%s verschiessen", GetName(caller)), "SetAmmo", CLNK, caller);
   return(1);
 }
 
@@ -110,12 +115,12 @@ protected func ContainedThrow(caller)
       ammo = FindContents(ammoID, GetActionTarget());
 
 //schiepßulver suchen .. erstmal wieder deaktiviert, indem schießpulver erstellt wird..
-  var gunpowder = CreateContents(GUNP,0,1); //FindContents(GUNP);
+  var gunpowder = CreateContents(GUNP,nil,1); //FindContents(GUNP);
   if (!gunpowder)
       gunpowder = FindContents(GUNP, GetActionTarget());
 
   // Feuern!
-  if (ammo && gunpowder)
+  if (And(ammo, gunpowder))
     {Fire(ammo, caller);RemoveObject(gunpowder);}
   else
   {
@@ -148,8 +153,8 @@ if(hazardclonk)
   CreateContents(SPCR, caller);
   if (!marker)
   {
-    marker = CreateObject(SCBM,0,0,GetOwner(caller));
-    SetVisibility(VIS_Owner(), marker);
+    marker = CreateObject(SCBM,nil,nil,GetOwner(caller));
+    SetVisibility(VIS_Owner, marker);
   }
   ResetPhase();
   return(1);
@@ -168,7 +173,8 @@ public func Exiting(caller)
   return(1);
 }
 
-protected RejectCollect: return(1);    // Clonks dürfen nichts hineinlegen
+protected func RejectCollect(...) { return(1);    // Clonks dürfen nichts hineinlegen
+}
 
 
 /* Action-Calls */
@@ -185,9 +191,9 @@ private func TurningLeft()
   if (!ObjectCall(GetActionTarget(), "UseEnergy", 1))
     return(StopTurning());
   // weiterdrehen
-  angle -= 2;
+  S42MigrationAssign(angle, "-=", 2);
   // am Ende angekommen?
-  if (angle <= -900) StopTurning();
+  if ((angle ?? 0) <= -900) StopTurning();
                 else ResetPhase();
   return(1);
 }
@@ -197,9 +203,9 @@ private func FastTurningLeft()
   if (!ObjectCall(GetActionTarget(), "UseEnergy", 6))
     return(StopTurning());
   // weiterdrehen
-  angle -= 10;
+  S42MigrationAssign(angle, "-=", 10);
   // am Ende angekommen?
-  if (angle <= -900) StopTurning();
+  if ((angle ?? 0) <= -900) StopTurning();
                 else ResetPhase();
   return(1);
 }
@@ -209,9 +215,9 @@ private func TurningRight()
   if (!ObjectCall(GetActionTarget(), "UseEnergy", 1))
     return(StopTurning());
   // weiterdrehen
-  angle += 2;
+  S42MigrationAssign(angle, "+=", 2);
   // am Ende angekommen?
-  if (angle >= +900) StopTurning();
+  if ((angle ?? 0) >= (+900 ?? 0)) StopTurning();
                 else ResetPhase();
   return(1);
 }
@@ -221,9 +227,9 @@ private func FastTurningRight()
   if (!ObjectCall(GetActionTarget(), "UseEnergy", 6))
     return(StopTurning());
   // weiterdrehen
-  angle += 10;
+  S42MigrationAssign(angle, "+=", 10);
   // am Ende angekommen?
-  if (angle >= +900) StopTurning();
+  if ((angle ?? 0) >= (+900 ?? 0)) StopTurning();
                 else ResetPhase();
   return(1);
 }
@@ -236,17 +242,17 @@ private func ResetPhase(nomarker)
   angle = BoundBy(angle, -900, 900);
   // Phase neu bestimmen
   var phase;
-  if (angle >= 0)  phase = 45 + (+angle+10) / 20;
-             else  phase = 45 - (-angle+10) / 20;
+  if ((angle ?? 0) >= 0)  phase = 45 + ((+(angle ?? 0) ?? 0)+10) / 20;
+             else  phase = 45 - (-(angle ?? 0)+10) / 20;
   // und setzen
   SetPhase(phase);
   // Fadenkreuz auch neu setzen
-  if (marker && !nomarker)
+  if (And(marker, !nomarker))
   {
     marker->SetAngle(angle, this());
     SetPlrView(GetController(), marker);
-    if (angle >= 0) Message("+%d,%d°", marker,    angle/10,    angle % 10);
-               else Message("-%d,%d°", marker, (-angle)/10, (-angle) % 10);
+    if ((angle ?? 0) >= 0) Message("+%d,%d°", marker,    (angle ?? 0)/10,    (angle ?? 0) % 10);
+               else Message("-%d,%d°", marker, (-(angle ?? 0))/10, (-(angle ?? 0)) % 10);
   }
   return(1);
 }
@@ -254,7 +260,7 @@ private func ResetPhase(nomarker)
 protected func StopTurning()
 {
   // Drehung anhalten
-  if (GetAction() ne "Wait")
+  if (!SEqual(GetAction(), "Wait"))
   {
     Sound("CannonStop");
     SetAction("Wait");
@@ -269,33 +275,33 @@ protected func StopTurning()
 private func Fire(ammo, caller)
 {
   // Objekt bzw. Clonk abfeuern
-  var speed = 60 + power*30 + Random(20);
-  var energy = speed * GetMass(ammo) / 20;
+  var speed = 60 + (power ?? 0)*30 + (Random(20) ?? 0);
+  var energy = (speed ?? 0) * (GetMass(ammo) ?? 0) / 20;
   if (!ObjectCall(GetActionTarget(), "UseEnergy", energy))
   {
     Message("nicht genug|Energie!", this());
     Sound("Error");
-    return(0);
+    return(nil);
   }
   // Clonk oder Munition?
-  if (GetID(ammo) == HZCK || GetID(ammo) == CLNK)
+  if (Or(Equal(GetID(ammo), HZCK), Equal(GetID(ammo), CLNK)))
   {
     ObjectSetAction(ammo, "Tumble");
-    if (Contained(ammo) == this())
+    if (Equal(Contained(ammo), this()))
       Exiting(ammo);
-    ammoID = 0;      // Clonks nicht dauerhaft als Munnition verwenden
+    ammoID = nil;      // Clonks nicht dauerhaft als Munnition verwenden
   }
   else
     SetOwner(GetOwner(caller), ammo);
-  var realangle = (angle+5) / 10;
-  Exit(ammo, Sin(realangle,30), -Cos(realangle,30), realangle, 0,0, realangle/5 + Random(15)-7);
+  var realangle = ((angle ?? 0)+5) / 10;
+  Exit(ammo, Sin(realangle,30), -(Cos(realangle,30) ?? 0), realangle, nil,nil, (realangle ?? 0)/5 + (Random(15) ?? 0)-7);
   // bei Geschwindigkeit höhere Genauigkeit verwenden
-  SetXDir(+Sin10(angle,speed), ammo, 10);
-  SetYDir(-Cos10(angle,speed), ammo, 10);
+  SetXDir(+(Sin10(angle,speed) ?? 0), ammo, 10);
+  SetYDir(-(Cos10(angle,speed) ?? 0), ammo, 10);
   // Effekte
-  var i = 0;
-  for (i; i <= power; ++i)
-    Smoke(Sin(realangle,30+i*10), -Cos(realangle,30+i*10), 5+Random(10));
+  var i = nil;
+  for (i; (i ?? 0) <= (power ?? 0); S42MigrationStep(i, 1))
+    Smoke(Sin(realangle,30+(i ?? 0)*10), -(Cos(realangle,30+(i ?? 0)*10) ?? 0), 5+(Random(10) ?? 0));
   // Spielersicht soll hinterher
   SetPlrView(GetOwner(caller), ammo);
   Sound("Blast3");
@@ -305,17 +311,19 @@ private func Fire(ammo, caller)
 
 /* Aufrufe */
 
-private ChangePower:
+private func ChangePower(...) {
   power = Par(1);
   return(ShowCannonInfo());
+}
 
-private SetAmmo:
-  ammoID = Par(0);
+private func SetAmmo(...) {
+  ammoID = Par(nil);
   return(ShowCannonInfo());
+}
 
 private func ShowCannonInfo()
 {
-  Message("Munition:  %s|Schusskraft:  %d", this(), GetName(0,ammoID), power);
+  Message("Munition:  %s|Schusskraft:  %d", this(), GetName(nil,ammoID), power);
   return(1);
 }
 

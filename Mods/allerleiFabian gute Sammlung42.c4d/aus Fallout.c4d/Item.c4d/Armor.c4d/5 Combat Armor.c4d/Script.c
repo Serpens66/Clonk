@@ -1,6 +1,6 @@
 /*-- Combat Armor --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local pNightVision, superfertigkeit;	// saves the nightvision-light
@@ -21,19 +21,19 @@ public func GearEffect(object pClonk)
   MakeGraphic(pClonk);
   Sound("Connect");
 fertig=1;
-eeeeee=0;
+eeeeee=nil;
 angelegt=1;
-superfertigkeit=0;
-  SetPhysical("Fight", GetPhysical("Fight", PHYS_Current, pClonk) +10000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Throw", GetPhysical("Throw", PHYS_Current, pClonk) +0, PHYS_StackTemporary, pClonk);
-  SetPhysical("Jump", GetPhysical("Jump", PHYS_Current, pClonk) - 2000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Walk", GetPhysical("Walk", PHYS_Current, pClonk) - 7000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Scale", GetPhysical("Scale", PHYS_Current, pClonk) - 4000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Hangle", GetPhysical("Hangle", PHYS_Current, pClonk) - 4000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Swim", GetPhysical("Swim", PHYS_Current, pClonk) - 5000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Breath", GetPhysical("Breath", PHYS_Current, pClonk) - 5000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Dig", GetPhysical("Dig", PHYS_Current, pClonk) - 5000, PHYS_StackTemporary, pClonk);
-  SetPhysical("Energy", GetPhysical("Energy", PHYS_Current, pClonk) +10000, PHYS_StackTemporary, pClonk);
+superfertigkeit=nil;
+  SetPhysical("Fight", (GetPhysical("Fight", PHYS_Current, pClonk) ?? 0) +10000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Throw", (GetPhysical("Throw", PHYS_Current, pClonk) ?? 0) +0, PHYS_StackTemporary, pClonk);
+  SetPhysical("Jump", (GetPhysical("Jump", PHYS_Current, pClonk) ?? 0) - 2000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Walk", (GetPhysical("Walk", PHYS_Current, pClonk) ?? 0) - 7000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Scale", (GetPhysical("Scale", PHYS_Current, pClonk) ?? 0) - 4000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Hangle", (GetPhysical("Hangle", PHYS_Current, pClonk) ?? 0) - 4000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Swim", (GetPhysical("Swim", PHYS_Current, pClonk) ?? 0) - 5000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Breath", (GetPhysical("Breath", PHYS_Current, pClonk) ?? 0) - 5000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Dig", (GetPhysical("Dig", PHYS_Current, pClonk) ?? 0) - 5000, PHYS_StackTemporary, pClonk);
+  SetPhysical("Energy", (GetPhysical("Energy", PHYS_Current, pClonk) ?? 0) +10000, PHYS_StackTemporary, pClonk);
 DoEnergy(10000,pClonk,true);
 }
 
@@ -43,47 +43,47 @@ func MakeGraphic(pClonk)
   var strGraphics = "Spezial";
   var a ="a";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait("Kampf", pClonk, S_CA, 0, 0);
+  SetPortrait("Kampf", pClonk, S_CA, nil, nil);
 }
 
 public func GearEffectReset(object pClonk)
 {
-if(superfertigkeit==1) {eeeeee=1;eeeeee2=0;};
-angelegt=0;
+if(Equal(superfertigkeit, 1)) {eeeeee=1;eeeeee2=nil;};
+angelegt=nil;
 
 // Grafik je nach Stufe zurücksetzen
  var stuufe=pClonk->~AktuelleStufe();
 if(stuufe)
 {
 
-if(stuufe>=1 && stuufe<=9)
+if(And((stuufe ?? 0)>=1, (stuufe ?? 0)<=9))
 {SetGraphics("Normal",pClonk);  //Hazardclonk mit Clonkgrafik
   var iPortraitCount = 5; 
   var strGraphics = "";
-SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, CLNK, 0, 0);}
+SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, CLNK, nil, nil);}
 
-if(stuufe>=10 && stuufe<=14 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=14), !(pClonk->~IstBauarbeiter())))
 {SetPortrait("random", pClonk, S_XX); SetGraphics("SG1",pClonk);}  //Hazardclonk mit SG1 Grafik
 
 // Bisher nur eine Grafik für alle Stufen ab 10
-if(stuufe>=10 && stuufe<=20 && pClonk->~IstBauarbeiter())
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=20), pClonk->~IstBauarbeiter()))
 { SetPortrait("random", pClonk, X_12); 
 SetGraphics("Bauer",pClonk);}  //Hazardclonk mit Arbeiter Grafik
 
-if(stuufe>=15 && stuufe<=19 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=15, (stuufe ?? 0)<=19), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}  //Hazardclonk Grafik
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}  //Hazardclonk Grafik
 
-if(stuufe==20 && !(pClonk->~IstBauarbeiter()))
+if(And(Equal(stuufe, 20), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("Future",pClonk);
 SetPortrait("FutureP", pClonk, HZCK);} //Hazardclonk Future Grafik, Future Portrait
 }
 
   // reset graphics and portrait
 else {  SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}
 // falls fähigkeit an, deaktivieren
-if(superfertigkeit!=0) ConUse2(pClonk);
+if(!Equal(superfertigkeit, nil)) ConUse2(pClonk);
   Sound("Connect");
   ResetPhysical(pClonk, "Fight");
   ResetPhysical(pClonk, "Throw");
@@ -103,27 +103,29 @@ DoEnergy(-10000,pClonk,true);
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   //Melee
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(40);     // 40% Melee
   //Projectile
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(60);     // 60% Laser 
   //Flame
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(30);   // 30% Fire 
   //Plazma
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(50);     // 50% Plasma 
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(40);     // 40% Explosion
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(50);    // 50% Electric 
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
+  if(Equal(iType, DMG_BetterProjectile))
     return(20);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 }
 
@@ -150,32 +152,32 @@ public func ConUse2(object pHazard) {
 derclonk=pHazard;
   // turn on
 
-  if(superfertigkeit==0) {
-if(bereit==1) {
+  if(Equal(superfertigkeit, nil)) {
+if(Equal(bereit, 1)) {
 eeeeee2=1;
 superfertigkeit=1;
-  SetPhysical("Fight", GetPhysical("Fight", PHYS_Current, pHazard) +0, PHYS_StackTemporary, pHazard);
-  SetPhysical("Throw", GetPhysical("Throw", PHYS_Current, pHazard) +5000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Jump", GetPhysical("Jump", PHYS_Current, pHazard) +12000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Walk", GetPhysical("Walk", PHYS_Current, pHazard) +17000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Scale", GetPhysical("Scale", PHYS_Current, pHazard) +12000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Hangle", GetPhysical("Hangle", PHYS_Current, pHazard) +12000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Swim", GetPhysical("Swim", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Breath", GetPhysical("Breath", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Dig", GetPhysical("Dig", PHYS_Current, pHazard) +17000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Energy", GetPhysical("Energy", PHYS_Current, pHazard) +0, PHYS_StackTemporary, pHazard);
-aufladen=0;
-Sound("Energize",0,derclonk);
+  SetPhysical("Fight", (GetPhysical("Fight", PHYS_Current, pHazard) ?? 0) +0, PHYS_StackTemporary, pHazard);
+  SetPhysical("Throw", (GetPhysical("Throw", PHYS_Current, pHazard) ?? 0) +5000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Jump", (GetPhysical("Jump", PHYS_Current, pHazard) ?? 0) +12000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Walk", (GetPhysical("Walk", PHYS_Current, pHazard) ?? 0) +17000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Scale", (GetPhysical("Scale", PHYS_Current, pHazard) ?? 0) +12000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Hangle", (GetPhysical("Hangle", PHYS_Current, pHazard) ?? 0) +12000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Swim", (GetPhysical("Swim", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Breath", (GetPhysical("Breath", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Dig", (GetPhysical("Dig", PHYS_Current, pHazard) ?? 0) +17000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Energy", (GetPhysical("Energy", PHYS_Current, pHazard) ?? 0) +0, PHYS_StackTemporary, pHazard);
+aufladen=nil;
+Sound("Energize",nil,derclonk);
   };
-if (bereit==0) {PlayerMessage(GetOwner(pHazard),Format("Aufladestatus  %v/1500",aufladen),pHazard);};
+if (Equal(bereit, nil)) {PlayerMessage(GetOwner(pHazard),Format("Aufladestatus  %v/1500",aufladen),pHazard);};
  }
   // turn off
   else {
 
-superfertigkeit=0;
-eeeeee2=0;
-bereit=0;
-fertig=0;
+superfertigkeit=nil;
+eeeeee2=nil;
+bereit=nil;
+fertig=nil;
   ResetPhysical(pHazard, "Fight");
   ResetPhysical(pHazard, "Throw");
   ResetPhysical(pHazard, "Walk");
@@ -186,7 +188,7 @@ fertig=0;
   ResetPhysical(pHazard, "Breath");
   ResetPhysical(pHazard, "Dig");
   ResetPhysical(pHazard, "Energy");
-Sound("DeEnergize",0,derclonk);
+Sound("DeEnergize",nil,derclonk);
   };
   // Attentioooon: Here comes the effect!
   // ..
@@ -204,7 +206,7 @@ public func ConUse(object pHazard) {
   if(!pNightVision) {
     pNightVision = AddLight2(2200,RGBa(50,255,50,50),pHazard);
     if(!pNightVision)
-      return();
+      return;
     pNightVision->SetVisibility(VIS_Owner);
   }
 
@@ -221,10 +223,10 @@ public func ConUse(object pHazard) {
 
 func autodeactivate()
 {
-if(eeeeee==1)
+if(Equal(eeeeee, 1))
 {
 
-eeeeee=0;
+eeeeee=nil;
   ResetPhysical(derclonk, "Fight");
   ResetPhysical(derclonk, "Throw");
   ResetPhysical(derclonk, "Walk");
@@ -235,7 +237,7 @@ eeeeee=0;
   ResetPhysical(derclonk, "Breath");
   ResetPhysical(derclonk, "Dig");
   ResetPhysical(derclonk, "Energy");
-Sound("DeEnergize",0,derclonk);
+Sound("DeEnergize",nil,derclonk);
 };
 }
 
@@ -244,18 +246,18 @@ Sound("DeEnergize",0,derclonk);
 public func Fertigkeit()
 {
 
-if(superfertigkeit==1) 
-{++fertig;
+if(Equal(superfertigkeit, 1))
+{S42MigrationStep(fertig, 1);
 
 
-if (fertig>=1000) 
-{eeeeee=1;fertig=0;bereit=0;superfertigkeit=0;eeeeee2=0;autodeactivate();};  }
+if ((fertig ?? 0)>=1000)
+{eeeeee=1;fertig=nil;bereit=nil;superfertigkeit=nil;eeeeee2=nil;autodeactivate();};  }
 
-if(superfertigkeit==0 && angelegt==1)   
-{++aufladen; 
+if(And(Equal(superfertigkeit, nil), Equal(angelegt, 1)))
+{S42MigrationStep(aufladen, 1);
 
-if (aufladen>=1500) 
-{bereit=1; eeeeee=0; }; };
+if ((aufladen ?? 0)>=1500)
+{bereit=1; eeeeee=nil; }; };
 return(1);
 }
 

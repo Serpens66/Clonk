@@ -1,35 +1,35 @@
 /*-- Spielziele auswählen --*/
 
-#strict
+#strict 3
 
 // Kann mittels des neuen Spielzielauswählers ausgewählt werden
 public func IsChooseable2() { return(1); }
 
 protected func Activate(iPlayer)
 {
-  AuswahlMenu(0,GetCursor(iPlayer));
+  AuswahlMenu(nil,GetCursor(iPlayer));
 }
 
 private func AuswahlMenu(idItem,pClonk)
 {
-  CreateMenu(GetID(),pClonk,0,0,"$NoGoals$");
+  CreateMenu(GetID(),pClonk,nil,nil,"$NoGoals$");
   var Typ,i,iSMI= (-1);
-  while(Typ= GetDefinition(i++,C4D_Goal()))
-   if(Typ!= GetID())
+  while(Typ= GetDefinition(S42MigrationStep(i, 1, true),C4D_Goal))
+   if(!Equal(Typ, GetID()))
     {
-    iSMI++;
-    if(GetDefCoreVal("MaxUserSelect","DefCore",Typ)== 1)
+    S42MigrationStep(iSMI, 1, true);
+    if(Equal(GetDefCoreVal("MaxUserSelect","DefCore",Typ), 1))
       {
       if(ObjectCount(Typ)) AddMenuItem("$DisposeOf$","Change1",Typ,pClonk,ObjectCount(Typ),pClonk);
 		      else AddMenuItem("$Add$","Change1",Typ,pClonk,ObjectCount(Typ),pClonk);
       }
     else
       {
-      iSMI++;
+      S42MigrationStep(iSMI, 1, true);
       AddMenuItem("$DisposeOf$","Change2",Typ,pClonk,ObjectCount(Typ),pClonk);
       AddMenuItem("$Add$","Change3",Typ,pClonk,ObjectCount(Typ),pClonk);
       }
-    if(idItem== Typ) SelectMenuItem(iSMI,pClonk);
+    if(Equal(idItem, Typ)) SelectMenuItem(iSMI,pClonk);
     }
 }
 
@@ -48,6 +48,6 @@ private func Change2(idGoal,pClonk)
 
 private func Change3(idGoal,pClonk)
 {
-  if(ObjectCount(idGoal)< GetDefCoreVal("MaxUserSelect","DefCore",idGoal)) CreateObject(idGoal);
+  if((ObjectCount(idGoal) ?? 0)< (GetDefCoreVal("MaxUserSelect","DefCore",idGoal) ?? 0)) CreateObject(idGoal);
   AuswahlMenu(idGoal,pClonk);
 }

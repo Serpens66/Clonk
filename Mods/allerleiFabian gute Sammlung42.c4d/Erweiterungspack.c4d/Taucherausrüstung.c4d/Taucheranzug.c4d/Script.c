@@ -1,6 +1,6 @@
 /*-- Taucheranzug --*/
 
-#strict
+#strict 3
 
 public func Activate(pClonk)
 { 
@@ -8,8 +8,8 @@ public func Activate(pClonk)
 // if(GetID(pClonk)== HZCK)
 // return(PlayerMessage(GetOwner(pClonk),"Nur von unspezialisierten Clonks verwendbar",pClonk));
   
-  SetComDir(COMD_Stop(),pClonk);
-  if(pClonk->~IsPinguin()==2)   
+  SetComDir(COMD_Stop,pClonk);
+  if(Equal(pClonk->~IsPinguin(), 2))
    return(PlayerMessage(GetOwner(pClonk),"$AlreadyHasSuit$",pClonk,GetName(pClonk)));
   if(pClonk->~HasGear(GEAR_Armor))
    return(PlayerMessage(GetOwner(pClonk),"Trägt bereits eine Rüstung",pClonk));

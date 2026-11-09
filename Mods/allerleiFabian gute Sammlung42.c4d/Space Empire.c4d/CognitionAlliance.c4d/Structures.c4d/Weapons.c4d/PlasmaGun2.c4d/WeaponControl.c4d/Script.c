@@ -1,13 +1,13 @@
 /*-- Waffenkontrolle --*/
 
 
-#strict
+#strict 3
 
 local controller, building;
 
 public func Init()
 {
- controller=Par(0);
+ controller=Par(nil);
  building=Par(1);
  InitLocals();
  return(1);
@@ -18,12 +18,12 @@ public func Init()
 protected func Firing()
 {
   // hat das Gebäude Energie?
-  if (GetEnergy(building) < LocalN("energyneed",controller)) return(1);
+  if ((GetEnergy(building) ?? 0) < (LocalN("energyneed",controller) ?? 0)) return(1);
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(PTAP,0,0,0,0,0,0,0,building);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(PTAP,nil,nil,nil,nil,nil,nil,nil,building);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
 munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch()); 
 
@@ -31,9 +31,9 @@ munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch());
   var angle, xdir, ydir;
   var xofs, yofs;
   var phase=GetPhase(controller);
-  if (GetAction(controller) eq "TurnLeft") phase=47-phase;
+  if (!!SEqual(GetAction(controller), "TurnLeft")) phase=47-(phase ?? 0);
   // Feuern (linke und rechte Kanone)
-  for (var i=0; i < 2; i++) {
+  for (var i=nil; (i ?? 0) < 2; S42MigrationStep(i, 1, true)) {
     xofs = GetXoffset(phase,i);
     yofs = GetYoffset(phase);
     controller->FireShot(xofs, yofs, xdir, ydir);
@@ -47,7 +47,7 @@ munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch());
 private func InitLocals()
 {
   // X-Werte          // mehr X-Werte     // Y-Werte
-  Local(0)  = -9;    Local(24) = -8;     Local(48) = -13;
+  Local(nil)  = -9;    Local(24) = -8;     Local(48) = -13;
   Local(1)  = -7;    Local(25) = -10;    Local(49) = -13;
   Local(2)  = -6;    Local(26) = -11;    Local(50) = -13;
   Local(3)  = -5;    Local(27) = -13;    Local(51) = -13;
@@ -66,7 +66,7 @@ private func InitLocals()
   Local(16) = +8;    Local(40) = -18;    Local(64) = +8;
   Local(17) = +5;    Local(41) = -16;    Local(65) = +9;
   Local(18) = +3;    Local(42) = -15;    Local(66) = +10;
-  Local(19) = 0;     Local(43) = -14;    Local(67) = +10;
+  Local(19) = nil;     Local(43) = -14;    Local(67) = +10;
   Local(20) = -2;    Local(44) = -13;    Local(68) = +11;
   Local(21) = -3;    Local(45) = -12;    Local(69) = +11;
   Local(22) = -5;    Local(46) = -10;    Local(70) = +11;
@@ -80,8 +80,8 @@ private func GetXoffset(phase, cannon)
   // rechte Kanone
   if (cannon)
   { 
-    phase = (48-phase) % 48;
-    return(-Local(phase)-1);
+    phase = (48-(phase ?? 0)) % 48;
+    return(-(Local(phase) ?? 0)-1);
   }
   // linke Kanone
   return(Local(phase));
@@ -90,9 +90,9 @@ private func GetXoffset(phase, cannon)
 private func GetYoffset(phase)
 {
   // auf Phase zwischen 0 und 24 zurückrechnen
-  if (phase > 24)
-    phase = (48-phase) % 48;
-  return(Local(phase+48));
+  if ((phase ?? 0) > 24)
+    phase = (48-(phase ?? 0)) % 48;
+  return(Local((phase ?? 0)+48));
 }
 
 

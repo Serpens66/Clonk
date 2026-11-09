@@ -1,6 +1,6 @@
 /*-- Destroy the banner --*/
 
-#strict
+#strict 3
 
 private func Execute()
 {

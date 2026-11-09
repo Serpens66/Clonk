@@ -3,7 +3,7 @@
 //bekommen hohen Schaden durch HazardFeuer
 // weniger schaden durch etwas geht nicht, weil zb. 90% von 1 durch abrunden 0 ist und dann garkein schaden mehr gemacht würde
 
-#strict
+#strict 3
 
 #appendto BRDG
 #appendto DRCK
@@ -36,38 +36,40 @@
 public func OnDmg(int iDamage, int iType)
 {
   // Explosionsschaden
-  if(iType == DMG_Explosion)
+  iDamage ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Explosion))
   {
    return(-20);
   }
   // Energieschaden
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
   {
-   return(0);
+   return(nil);
   }
   // Projektilschaden
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
   {
-   return(0);
+   return(nil);
   }
   // Feuerschaden
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
   {
    return(-100);
   }
   // Bioschaden
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
   {
-   return(0);
+   return(nil);
   }
   // Nahkampfschaden
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
   {
-   return(0);
+   return(nil);
   }
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
-    return(0);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
+  if(Equal(iType, DMG_BetterProjectile))
+    return(nil);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 
- return(0);
+ return(nil);
 }

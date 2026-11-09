@@ -1,6 +1,6 @@
 /*-- Deckenlicht --*/
 
-#strict
+#strict 3
 #include BLGH
 
 func CreateLight() {

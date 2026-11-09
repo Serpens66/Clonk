@@ -1,28 +1,28 @@
 /* Flamme */
 
-#strict
+#strict 3
 
 protected func BurnProcess()
   {
   if (!OnFire()) return(RemoveObject());
   var i;
-  for (var i = -5; i <= 10; ++i) if (FlameConsumeMaterial (0, i)) break;
+  for (var i = -5; (i ?? 0) <= 10; S42MigrationStep(i, 1)) if (FlameConsumeMaterial (nil, i)) break;
   // Damit die Flamme nicht unten festhängt
-  if (i == -5)
+  if (Equal(i, -5))
     {
-    SetPosition (GetX(), GetY() - 1);
+    SetPosition (GetX(), (GetY() ?? 0) - 1);
     }
   // Kein Öl mehr
-  if (i > 10)
+  if ((i ?? 0) > 10)
     {
-    SetPosition (GetX(), GetY() - 1);
+    SetPosition (GetX(), (GetY() ?? 0) - 1);
     return (DoCon (-30));
     }
-  FlameConsumeMaterial (0,8);
+  FlameConsumeMaterial (nil,8);
   // zu viele FLAMs
-  if (FindObject (FLAM, 0, -5))
+  if (FindObject (FLAM, nil, -5))
     {
-    SetPosition (GetX(), GetY() - 1);
+    SetPosition (GetX(), (GetY() ?? 0) - 1);
     return (DoCon (-30));
     }
   // Noch mehr FLAMs erzeugen
@@ -32,7 +32,7 @@ protected func BurnProcess()
     // SetYDir (GetYDir (0, 1000), i, 1000);
     // }
   DoCon (-30);
-  SetXDir(Random(31)-15);
+  SetXDir((Random(31) ?? 0)-15);
   return(1);
   }
 

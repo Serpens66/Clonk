@@ -1,6 +1,6 @@
 /*-- OP-Tisch --*/
 
-#strict
+#strict 3
 
 #include BLGH
 

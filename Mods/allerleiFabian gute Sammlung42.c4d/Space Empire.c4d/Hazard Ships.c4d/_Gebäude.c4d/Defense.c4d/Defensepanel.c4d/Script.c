@@ -1,13 +1,13 @@
 /*-- Verteidigungssteuerung --*/
 
-#strict
+#strict 3
 
 local bunker,on;
 
 
 func Initialize() {
-  bunker = CreateObject(DFB_,0,20);
-  on=0;
+  bunker = CreateObject(DFB_,nil,20);
+  on=nil;
 }
 
 public func ControlDigDouble(user)
@@ -41,6 +41,6 @@ public func ControlUpDouble()
   Message("Kein Schaden.",this());
   return(1);
   }
-  Message("Schaden: %d%.",this(),GetDamage(bunker)/3);
+  Message("Schaden: %d%.",this(),(GetDamage(bunker) ?? 0)/3);
   return(1);
 }

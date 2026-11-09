@@ -1,6 +1,6 @@
 /*-- HUD --*/
 
-#strict 2
+#strict 3
 
 local ammoobjs,				// alle 2HUD-Objekte zur Anzeige der Ammo im Munitionsbeutel
       allAmmo,				// alle Definitionen die Ammo sind
@@ -16,11 +16,11 @@ global func GetHUD(object obj, id theID) {
 	theID = 1HUD;
   }
   var owner = GetOwner(obj);
-  if(owner <= -1) return;
+  if((owner ?? 0) <= -1) return;
   var bar = FindObjectOwner(theID,owner);
   if(!bar)
   {
-    bar = CreateObject(theID, 0,0, owner);
+    bar = CreateObject(theID, nil,nil, owner);
   }
   return bar;
 }
@@ -32,7 +32,7 @@ protected func Initialize()
   SetGraphics("Row", this(), GetID(), 1, 1);
   SetVisibility(VIS_None);
   // Infos
-  info = CreateObject(2HUD, 0,0, GetOwner());
+  info = CreateObject(2HUD, nil,nil, GetOwner());
   info->SetPosition(168, -23);
   
   // Ammobag
@@ -42,32 +42,32 @@ protected func Initialize()
 protected func Destruction()
 {
 	if(info) info->RemoveObject();
-	for(var i=0; i < GetLength(ammoobjs); ++i) {
-		if(ammoobjs[i]) ammoobjs[i]->RemoveObject();
+	for(var i=nil; (i ?? 0) < (GetLength(ammoobjs) ?? 0); S42MigrationStep(i, 1)) {
+		if(ammoobjs[(i ?? 0)]) ammoobjs[(i ?? 0)]->RemoveObject();
 	}
 }
 
 private func InitAmmoBagHUD() {
 	// remove ammobag display
-	var def = 0;
+	var def = nil;
 	allAmmo = CreateArray();
-	var arrI = 0;
+	var arrI = nil;
 	// get all ammo
-	for(var i=0; def = GetDefinition(i,C4D_StaticBack); ++i) {
+	for(var i=nil; def = GetDefinition(i,C4D_StaticBack); S42MigrationStep(i, 1)) {
 		if(DefinitionCall(def,"IsAmmo"))
-			allAmmo[arrI++] = def;
+			allAmmo[S42MigrationStep(arrI, 1, true)] = def;
 	}
 	ammoobjs = CreateArray();
 	
 	// place all ammo objects
-	for(var i=0; i < GetLength(allAmmo); ++i) {
+	for(var i=nil; (i ?? 0) < (GetLength(allAmmo) ?? 0); S42MigrationStep(i, 1)) {
 	
 		// ...now
-		ammoobjs[i] = CreateObject(2HUD,0,0,GetOwner());
-		ammoobjs[i]->SetPosition(70,-85-i*28);
-		ammoobjs[i]->SetGraphics(0, 0, allAmmo[i],1,4);
-		ammoobjs[i]->SetObjDrawTransform(750,0,-50000,0,750,-62000,0,1);
-		ammoobjs[i]->SetVisibility(VIS_None);
+		ammoobjs[(i ?? 0)] = CreateObject(2HUD,nil,nil,GetOwner());
+		ammoobjs[(i ?? 0)]->SetPosition(70,-85-(i ?? 0)*28);
+		ammoobjs[(i ?? 0)]->SetGraphics(nil, nil, allAmmo[(i ?? 0)],1,4);
+		ammoobjs[(i ?? 0)]->SetObjDrawTransform(750,nil,-50000,nil,750,-62000,nil,1);
+		ammoobjs[(i ?? 0)]->SetVisibility(VIS_None);
 	}
 
 }
@@ -77,16 +77,16 @@ private func InitAmmoBagHUD() {
 protected func Timer()
 {
   // Spieler weg?
-  if(GetOwner() == NO_OWNER || !GetPlayerName(GetOwner())) return(RemoveObject());
+  if(S42MigrationEqual(GetOwner(), NO_OWNER) || !GetPlayerName(GetOwner())) return(RemoveObject());
   // Kein Cursor?
   var pCursor = GetCursor(GetOwner());
   if(!pCursor) return;
   
-  for(var i=0; i < GetLength(ammoobjs); ++i) {
-		var aobj = ammoobjs[i];
+  for(var i=nil; (i ?? 0) < (GetLength(ammoobjs) ?? 0); S42MigrationStep(i, 1)) {
+		var aobj = ammoobjs[(i ?? 0)];
 	
 		// Munitionsanzeige unsichtbar bei nicht hazard
-		if(GetID(pCursor)!=HZCK) {
+		if(!S42MigrationEqual(GetID(pCursor), HZCK)) {
 			aobj->SetVisibility(VIS_None);
 			aobj->Message("",aobj);
             SetVisibility(VIS_None);
@@ -96,16 +96,16 @@ protected func Timer()
   }
   
   // Anzeige
-  SetObjDrawTransform(charge, 0, -1000 * (1000-charge)/20,0, 1000, 0, this(), 1);
+  SetObjDrawTransform(charge, nil, -1000 * (1000-(charge ?? 0))/20,nil, 1000, nil, this(), 1);
   
   // Recharge: roter Balken wandert von links nach rechts
   if(recharge)
   {
     SetGraphics("Red", this, GetID(), 2, 2, "Red");
-    SetObjDrawTransform(1000, 0, 50000 -1000 * (100-recharge),0, 1000, 0, this(), 2);
+    SetObjDrawTransform(1000, nil, 50000 -1000 * (100-(recharge ?? 0)),nil, 1000, nil, this(), 2);
   }
   else {
-    SetGraphics(0,0,0, 2);
+    SetGraphics(nil,nil,nil, 2);
   }
 }
 
@@ -115,7 +115,7 @@ public func Update(object weapon, object ammobag, object who)
 {
 	// Nur den Cursor updaten
 	if(who)
-		if(GetCursor(GetOwner(who)) == who) {
+		if(S42MigrationEqual(GetCursor(GetOwner(who)), who)) {
 			UpdateWeapon(weapon);
 			UpdateAmmoBag(ammobag, weapon,who);
 	}
@@ -131,7 +131,7 @@ private func UpdateWeapon(object weapon) {
 			if(weapon->IsRecharging())
 				recharge = weapon->GetRecharge();
 			else
-				recharge = 0;
+				recharge = nil;
 				
 			// charge updaten
 			charge = weapon->GetCharge();
@@ -156,19 +156,19 @@ private func UpdateWeapon(object weapon) {
 	SetVisibility(VIS_None);
 	Message("",info);
 	Message("",this);
-	charge = 0;
-	recharge = 0;
+	charge = nil;
+	recharge = nil;
 }
 
 private func UpdateAmmoBag(object ammobag, object weapon,who) {
 
-	var ammoid = 0;
+	var ammoid = nil;
 	if(weapon)
 		if(weapon->~IsWeapon())
 			ammoid = weapon->GetFMData(FM_AmmoID);
 
-	for(var i=0; i < GetLength(ammoobjs); ++i) {
-		var aobj = ammoobjs[i];
+	for(var i=nil; (i ?? 0) < (GetLength(ammoobjs) ?? 0); S42MigrationStep(i, 1)) {
+		var aobj = ammoobjs[(i ?? 0)];
 	
 		// unsichtbar bei NoAmmo, oder wenn clonk ein arbeiter ist!
 		if(NoAmmo() || !ammobag || who->~IstBauarbeiter()) {
@@ -179,13 +179,13 @@ private func UpdateAmmoBag(object ammobag, object weapon,who) {
 		// ansonsten Munitionsstand anzeigen
 		aobj->SetVisibility(VIS_Owner);
 			
-		var ammo = 0;
+		var ammo = nil;
 		if(ammobag)
-			ammo = ammobag->GetAmmo(allAmmo[i]);
+			ammo = ammobag->GetAmmo(allAmmo[(i ?? 0)]);
 		
 		var color = "eeeeee";
 		if(!ammo) color = "777777";
-		if(allAmmo[i] == ammoid) {
+		if(S42MigrationEqual(allAmmo[(i ?? 0)], ammoid)) {
 			color = "ffff00";
 			if(!ammo) color = "ff0000";
 		}

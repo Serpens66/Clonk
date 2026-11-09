@@ -1,6 +1,6 @@
 /*-- Autobau --*/
 
-#strict
+#strict 3
 
 
 func Initialize() {
@@ -11,6 +11,7 @@ func Initialize() {
 
 func Activate(int iPlayer)
 {
+	iPlayer ??= 0;
 	MessageWindow("Clonks bauen Gebäude sofort fertig!",iPlayer);
 }
 

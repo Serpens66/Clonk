@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #appendto TELE
 
 func IsTeleporterTarget(){return(true);}
@@ -11,15 +11,15 @@ func CheckBeam()
   {
     Sound("Error");
     Message("$NoTarget$", this());
-    return();
+    return;
   }
   //Ziel nicht aktiv?
-  if(GetID(pCur_Target) == TELE)
-    if(pCur_Target->GetAction() ne "Activated")
+  if(Equal(GetID(pCur_Target), TELE))
+    if(!SEqual(pCur_Target->GetAction(), "Activated"))
   {
     Message("$TargetInactive$", this());
     Sound("Error");
-    return();
+    return;
   }
   //Beamen
   BeamObjects();
@@ -43,7 +43,7 @@ func SetTarget(A,B)
   else
   {
     RemoveEffect("TeleTarget",pCur_Target);
-    AddEffect("TeleTarget", pCur_Target, 101, 0, 0, TELE, this());
+    AddEffect("TeleTarget", pCur_Target, 101, nil, nil, TELE, this());
   }
   
   pCur_Target = pTargetTeleporter; 
@@ -54,28 +54,28 @@ func SetTarget(A,B)
 
 global func CheckTeleTarget(object A)
 {
-  if(GetTeam() == GetTeam(A))
+  if(Equal(GetTeam(), GetTeam(A)))
     return(true);
     
-  if((GetController() != NO_OWNER) && (GetController(A) != NO_OWNER))
+  if(And((!Equal(GetController(), NO_OWNER)), (!Equal(GetController(A), NO_OWNER))))
     if(!Hostile(GetController(),GetController(A)))
       return(true);
 }
 
 func SearchTargets(object pClonk)
 {
-  if(!pClonk) return(0);
+  if(!pClonk) return(nil);
   CreateMenu(HSGN, pClonk, this());
 
   var pTele, i = -1;
   for(pTele in FindObjects(Find_Func("IsTeleporterTarget"),Find_Exclude(this()),Find_Func("CheckTeleTarget",this())))
   {
     //Teleporter lokal speichern zum anzeigen
-    ar_Tele[++i] = pTele;
-    AddMenuItem("$ChooseTarget$", "SetTarget", GetID(pTele), pClonk, 0, pTele);
+    ar_Tele[S42MigrationStep(i, 1)] = pTele;
+    AddMenuItem("$ChooseTarget$", "SetTarget", GetID(pTele), pClonk, nil, pTele);
   }
   // Effekt für tolles Feature
-  AddEffect("TeleMenu", pClonk, 101, 5, this(), 0, ar_Tele);
+  AddEffect("TeleMenu", pClonk, 101, 5, this(), nil, ar_Tele);
 }
 
 
@@ -83,14 +83,18 @@ func SearchTargets(object pClonk)
 
 func FxTeleTargetStart(object target, int no, int temp, pFrom)
 {
-  if(temp) return();
-  EffectVar(0, target, no) = pFrom;
+  no ??= 0;
+  temp ??= 0;
+  if(temp) return;
+  EffectVar(nil, target, no) = pFrom;
 }
 
 func FxTeleTargetStop(object target, int no, int reason)
 {
-  if(EffectVar(0, target, no) && (reason > 2))
-    EffectVar(0, target, no)->SetTarget();
+  no ??= 0;
+  reason ??= 0;
+  if(And(EffectVar(nil, target, no), ((reason ?? 0) > 2)))
+    EffectVar(nil, target, no)->SetTarget();
 }
 
 
@@ -99,32 +103,32 @@ func FxTeleTargetStop(object target, int no, int reason)
 
 public func FxBeamTimer(pTarget, iEffectNumber, iTime)
 {
-  for(var i = 0; i < 2; ++i)
+  for(var i = nil; (i ?? 0) < 2; S42MigrationStep(i, 1))
   {
-    var cur_X = pTarget->GetX() - GetX();
-    var cur_Y = pTarget->GetY() - GetY();
-    var x = RandomX( cur_X - pTarget->GetObjWidth() / 2, cur_X + pTarget->GetObjWidth() / 2);
-    var y = RandomX( cur_Y - pTarget->GetObjHeight() / 2, cur_Y + pTarget->GetObjHeight() / 2);
+    var cur_X = (pTarget->GetX() ?? 0) - (GetX() ?? 0);
+    var cur_Y = (pTarget->GetY() ?? 0) - (GetY() ?? 0);
+    var x = RandomX( (cur_X ?? 0) - (pTarget->GetObjWidth() ?? 0) / 2, (cur_X ?? 0) + (pTarget->GetObjWidth() ?? 0) / 2);
+    var y = RandomX( (cur_Y ?? 0) - (pTarget->GetObjHeight() ?? 0) / 2, (cur_Y ?? 0) + (pTarget->GetObjHeight() ?? 0) / 2);
     
-    CreateParticle("LsrSprk",x,y,0,-2,170,RGBa(188, 127, 220, 50));
+    CreateParticle("LsrSprk",x,y,nil,-2,170,RGBa(188, 127, 220, 50));
   }
-  var new_Visibility = 0;
+  var new_Visibility = nil;
 
     var TargetRGB = pTarget->GetClrModulation();
-    new_Visibility = GetRGBaValue(TargetRGB, 0) + 5;
+    new_Visibility = (GetRGBaValue(TargetRGB, nil) ?? 0) + 5;
     pTarget -> SetClrModulation(RGBa(255, 255, 255, new_Visibility));
 
-  if(new_Visibility > 230)
+  if((new_Visibility ?? 0) > 230)
   {
     var obj = EffectVar(2, pTarget, iEffectNumber);
     if(!obj->~OnTeleportIn(pTarget))
     {
-      if( obj->GetCategory() & C4D_Structure)
+      if( (obj->GetCategory() ?? 0) & (C4D_Structure ?? 0))
       {
         Enter(obj, pTarget);
-        var r = obj->GetObjHeight()/2-pTarget->GetObjHeight()/2;
+        var r = (obj->GetObjHeight() ?? 0)/2-(pTarget->GetObjHeight() ?? 0)/2;
         var a = obj->GetR();
-        EffectVar(2, pTarget, iEffectNumber)->Exit(pTarget, 0, pTarget->GetObjHeight()/2, a);
+        EffectVar(2, pTarget, iEffectNumber)->Exit(pTarget, nil, (pTarget->GetObjHeight() ?? 0)/2, a);
       }
       else
       {

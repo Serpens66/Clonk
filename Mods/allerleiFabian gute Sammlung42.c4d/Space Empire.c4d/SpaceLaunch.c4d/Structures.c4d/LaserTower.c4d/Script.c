@@ -1,27 +1,27 @@
 /*-- Laserturm --*/
 
-#strict
+#strict 3
 #include BOB2
 
 local basement, manager;
 local target, mode, cannon,buildingg, aus,fertig1,fertig2;
 
 // außer Energiezelle nichts aufnehmen
-protected func RejectCollect(def,pObj) { if(def!=ENAP && def!=CLNK && def!=CLNK) return(1); }
+protected func RejectCollect(def,pObj) { if(And(And(!Equal(def, ENAP), !Equal(def, CLNK)), !Equal(def, CLNK))) return(1); }
 
 func Zumachen() 
 {
-  if(zuu==1) SetEntrance(0);
-  if(zuu==0) SetEntrance(1);
-return(0);
+  if(Equal(zuu, 1)) SetEntrance(nil);
+  if(Equal(zuu, nil)) SetEntrance(1);
+return(nil);
 }
 
 
 func Munitionsverbrauch(zahl)
 {
-if(zahl==1 && !(Random(2)) )return(1);
-if(zahl==2)return(2);
-return(0);
+if(And(Equal(zahl, 1), !(Random(2))) )return(1);
+if(Equal(zahl, 2))return(2);
+return(nil);
 } // regelt den Munitionsverbrauch pro Salve
 
 
@@ -30,18 +30,18 @@ return(0);
 protected func Initialize()
 {
   buildingg = this();
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(1,1);
   SetAction("Wait0");
   // Animation
-  CreateObject(SLTS,0,+9,GetOwner())->Init(this());
+  CreateObject(SLTS,nil,+9,GetOwner())->Init(this());
 SetEntrance(1);
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS15,0,+8,GetOwner());
+  basement = CreateObject(BS15,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -52,9 +52,9 @@ protected func Destruction()
 
 public func PreDestruction()
 {
-  var scanner = FindObject(SLTS,0,0,0,0,0,"Active",this());
+  var scanner = FindObject(SLTS,nil,nil,nil,nil,nil,"Active",this());
   if (!scanner)
-      scanner = FindObject(SLTS,0,0,0,0,0,"Wait",this());
+      scanner = FindObject(SLTS,nil,nil,nil,nil,nil,"Wait",this());
   if (scanner) RemoveObject(scanner);
   if (manager) RemoveObject(manager);
   inherited();
@@ -116,9 +116,9 @@ protected func ContainedUp(clonk)
 {
   [Reichweite]
   var i, marker;
-  for (i = 0; i < 36; i++)
+  for (i = nil; (i ?? 0) < 36; S42MigrationStep(i, 1, true))
   {
-    marker = CreateObject(SMK1, Cos(i*10,280), -28+Sin(i*10,280), GetOwner(clonk));
+    marker = CreateObject(SMK1, Cos((i ?? 0)*10,280), -28+(Sin((i ?? 0)*10,280) ?? 0), GetOwner(clonk));
     marker->SetTimer(5);
   }
   PlayerMessage(GetOwner(),"Reichweite wird angezeigt",this());
@@ -127,34 +127,34 @@ protected func ContainedUp(clonk)
 
 func ContainedDig(clonk)
 {
-  CreateMenu(SLTW, clonk, this(),0,0,0,1);
-AddMenuItem("Feuermodus wechseln", "ControlDigDouble", SLTW, clonk, 0, 0,"Nicht möglich, während der Turm gerade schießt. Zwei einzelne Laser, oder ein gebündelter Laser, der Ziele in Brand stecken kann.");
-AddMenuItem("Ein-/Ausschalten", "ControlUpDouble", SLTW, clonk, 0, 0,"Ein-/Ausschalten um eventuell Munition zu sparen");
+  CreateMenu(SLTW, clonk, this(),nil,nil,nil,1);
+AddMenuItem("Feuermodus wechseln", "ControlDigDouble", SLTW, clonk, nil, nil,"Nicht möglich, während der Turm gerade schießt. Zwei einzelne Laser, oder ein gebündelter Laser, der Ziele in Brand stecken kann.");
+AddMenuItem("Ein-/Ausschalten", "ControlUpDouble", SLTW, clonk, nil, nil,"Ein-/Ausschalten um eventuell Munition zu sparen");
 
 }
 
 protected func ControlDigDouble(idImage)
 {
   [Modus wechseln]
-  if (GetAction() eq "Wait1")  return(DoChange(1));
-  if (GetAction() eq "Wait2")  return(DoChange(2));
+  if (!!SEqual(GetAction(), "Wait1"))  return(DoChange(1));
+  if (!!SEqual(GetAction(), "Wait2"))  return(DoChange(2));
   return(1);
 }
 
 protected func ControlUpDouble(idImage,zahl) //zahl nur für sensoren wichtig
 {
-if(zahl==1 && fertig1==1) return(0); // um weitere Prüfung zu ersparen.
-if(zahl==2 && fertig2==1) return(0); 
+if(And(Equal(zahl, 1), Equal(fertig1, 1))) return(nil); // um weitere Prüfung zu ersparen.
+if(And(Equal(zahl, 2), Equal(fertig2, 1))) return(nil);
 
 // an-/ausschalten
 if(!zahl){
-if(aus==0) {aus=1;PlayerMessage(GetOwner(),"Laserturm ausgeschaltet",this());return(1);}
-if(aus==1) {aus=0;PlayerMessage(GetOwner(),"Laserturm eingeschaltet",this());return(1);}
+if(Equal(aus, nil)) {aus=1;PlayerMessage(GetOwner(),"Laserturm ausgeschaltet",this());return(1);}
+if(Equal(aus, 1)) {aus=nil;PlayerMessage(GetOwner(),"Laserturm eingeschaltet",this());return(1);}
   return(1);}
 
 //sensoren:
-if(zahl==1 && fertig1==0) {aus=0;fertig1=1;fertig2=0;PlayerMessage(GetOwner(),"Laserturm eingeschaltet",this());return(1);}
-if(zahl==2 && fertig2==0) {aus=1;fertig2=1;fertig1=0;PlayerMessage(GetOwner(),"Laserturm ausgeschaltet",this());return(1);}
+if(And(Equal(zahl, 1), Equal(fertig1, nil))) {aus=nil;fertig1=1;fertig2=nil;PlayerMessage(GetOwner(),"Laserturm eingeschaltet",this());return(1);}
+if(And(Equal(zahl, 2), Equal(fertig2, nil))) {aus=1;fertig2=1;fertig1=nil;PlayerMessage(GetOwner(),"Laserturm ausgeschaltet",this());return(1);}
 return(1);
 }
 
@@ -163,11 +163,11 @@ return(1);
 
 private func DoChange(num)
 {
-  if (GetEnergy() < 25)
+  if ((GetEnergy() ?? 0) < 25)
     return(Sound("Error"));
   DoEnergy(-25);
   SetAction(Format("Change%d", num));
-  mode = 2-num;
+  mode = 2-(num ?? 0);
 }
 
 
@@ -175,7 +175,7 @@ private func DoChange(num)
 
 protected func CheckOpen()
 {
-if(aus==1) return(0);  // eingeschaltet?
+if(Equal(aus, 1)) return(nil);  // eingeschaltet?
   // Arme aus Startposition ausfahren, wenn genügend Energie
   if (EnoughEnergy())
     SetAction("Open");
@@ -186,9 +186,9 @@ if(aus==1) return(0);  // eingeschaltet?
 
 protected func FindTarget()
 {
-if(aus==1) {SetAction("Wait0");return(0);}  // eingeschaltet?
+if(Equal(aus, 1)) {SetAction("Wait0");return(nil);}  // eingeschaltet?
   // Position der aktiven Kanone
-  var wx = 0;
+  var wx = nil;
   var wy = -23;
   if (!mode)
   {
@@ -200,7 +200,7 @@ if(aus==1) {SetAction("Wait0");return(0);}  // eingeschaltet?
   var obj;
   if (!obj)  obj = GetTargetProjectile(300, wx, wy);
   if (!obj)  obj = GetTargetCrew(300, wx, wy);
-  if (!obj)  obj = GetTargetHostileDetonation(300, 0, wx, wy);
+  if (!obj)  obj = GetTargetHostileDetonation(300, nil, wx, wy);
   //if (!obj)  obj = GetTargetAnimal(300, wx, wy);
   if (!obj)  obj = GetTargetZap(300, wx, wy);
   if (!obj)  obj = GetOtherThreats(300, wx, wy);
@@ -209,7 +209,7 @@ if(aus==1) {SetAction("Wait0");return(0);}  // eingeschaltet?
     return(GetReadyToFire(obj));
   // oder auch nicht
   cannon = !cannon;
-  return(0);
+  return(nil);
 }
 
 private func GetTargetZap(Range, posX, posY)     // Zaps auch angreifen
@@ -217,13 +217,13 @@ private func GetTargetZap(Range, posX, posY)     // Zaps auch angreifen
   var obj;
   while (1)
   {
-    obj = FindObject(ZAP1, posX, posY,-1,-1, 0,0,0,NoContainer(),obj);
+    obj = FindObject(ZAP1, posX, posY,-1,-1, nil,nil,nil,NoContainer(),obj);
     if (!obj) break;
-    if (Distance(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)) > Range) return(0);
-    if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+    if ((Distance((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)) ?? 0) > (Range ?? 0)) return(nil);
+    if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
       return(obj);
   }
-  return(0);
+  return(nil);
 }
 
 
@@ -233,14 +233,14 @@ public func GetReadyToFire(par_target)
 {
   // Energie da?
   if (!EnoughEnergy())
-    return(0);
+    return(nil);
   target = par_target;
-  if (GetAction() eq "Wait1")
+  if (!!SEqual(GetAction(), "Wait1"))
   {
     CreateObject(SLTG)->Init(this(),cannon);
     return(SetAction("GetReady1"));
   }
-  if (GetAction() eq "Wait2")
+  if (!!SEqual(GetAction(), "Wait2"))
   {
     CreateObject(SLTG)->Init(this(),2);
     return(SetAction("GetReady2"));
@@ -251,28 +251,28 @@ public func GetReadyToFire(par_target)
 public func Fire1()
 {
   // Ziel noch da und in Reichweite?
-  if (!target || Contained(target))
-    return(0);
+  if (Or(!target, Contained(target)))
+    return(nil);
 
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(ENAP,0,0,0,0,0,0,0,buildingg);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(ENAP,nil,nil,nil,nil,nil,nil,nil,buildingg);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
  if(munitionspack) munitionspack->~RestAmmoreduzieren(Munitionsverbrauch(1)); // restmunition im Paket wird um 1 pro Salve reduziert
 
   // Laserstrahl erzeugen
   DoEnergy(-10);
-  var color = RGB(255,192+Random(64),0);
+  var color = RGB(255,192+(Random(64) ?? 0),nil);
   if (cannon)
   {
-    DrawLaser(GetX()+31, GetY()-28, GetX(target), GetY(target), color);
-    DrawLaser(GetX()+32, GetY()-15, GetX()+31, GetY()-28, color);
+    DrawLaser((GetX() ?? 0)+31, (GetY() ?? 0)-28, GetX(target), GetY(target), color);
+    DrawLaser((GetX() ?? 0)+32, (GetY() ?? 0)-15, (GetX() ?? 0)+31, (GetY() ?? 0)-28, color);
   }
   else
   {
-    DrawLaser(GetX()-32, GetY()-28, GetX(target), GetY(target), color);
-    DrawLaser(GetX()-33, GetY()-15, GetX()-32, GetY()-28, color);
+    DrawLaser((GetX() ?? 0)-32, (GetY() ?? 0)-28, GetX(target), GetY(target), color);
+    DrawLaser((GetX() ?? 0)-33, (GetY() ?? 0)-15, (GetX() ?? 0)-32, (GetY() ?? 0)-28, color);
   }
   cannon = !cannon;
   Sound("LaserShot3");
@@ -280,7 +280,7 @@ if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine 
   if (target->~IsProjectile())
     return(target->~Destroy());
   // Zaps sofort killen
-  if (GetID(target) == ZAP1)
+  if (Equal(GetID(target), ZAP1))
     return(RemoveObject(target));
   // alles andere beschädigen
   //DoDamage( 5+Random(3), target);
@@ -292,20 +292,20 @@ if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine 
 public func Fire2()
 {
   // Ziel noch da und in Reichweite?
-  if (!target || Contained(target))
-    return(0);
+  if (Or(!target, Contained(target)))
+    return(nil);
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(ENAP,0,0,0,0,0,0,0,buildingg);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(ENAP,nil,nil,nil,nil,nil,nil,nil,buildingg);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
  if(munitionspack) munitionspack->~RestAmmoreduzieren(Munitionsverbrauch(2)); // restmunition im Paket wird um 1 pro Salve reduziert
 
   // Laserstrahl erzeugen
   DoEnergy(-25);
-  DrawLaser(GetX(), GetY()-23, GetX(target), GetY(target), RGB(255,0,0));
-  DrawLaser(GetX()+14, GetY()-18, GetX(),   GetY()-23, RGB(255,0,0));
-  DrawLaser(GetX()-15, GetY()-18, GetX()-1, GetY()-23, RGB(255,0,0));
+  DrawLaser(GetX(), (GetY() ?? 0)-23, GetX(target), GetY(target), RGB(255,nil,nil));
+  DrawLaser((GetX() ?? 0)+14, (GetY() ?? 0)-18, GetX(),   (GetY() ?? 0)-23, RGB(255,nil,nil));
+  DrawLaser((GetX() ?? 0)-15, (GetY() ?? 0)-18, (GetX() ?? 0)-1, (GetY() ?? 0)-23, RGB(255,nil,nil));
   Sound("LaserShot3");
   // Geschosse werden gleich zerstört
   if (target->~IsProjectile())
@@ -316,14 +316,14 @@ if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine 
     return(1);
   }
   // Zaps sofort killen
-  if (GetID(target) == ZAP1)
+  if (Equal(GetID(target), ZAP1))
     return(RemoveObject(target));
   // alles andere beschädigen
   //DoDamage( 15+Random(4), target);
   //DoEnergy(-7-Random(4), target);     // Schaden: 16.5 HP
     DoDmg(5,DMG_Energy,target);
   if (!Random(6))
-    if (GetOCF(target) & OCF_Inflammable())
+    if ((GetOCF(target) ?? 0) & (OCF_Inflammable ?? 0))
       Incinerate(target);             // gebündelter Strahl kann Ziel anzünden
   return(1);  
 }
@@ -342,36 +342,40 @@ public func DrawLaser(x0, y0, x1, y1, color)
     angle = Angle(x0,y0,x1,y1);
     dist = Min(50, Distance(x0,y0,x1,y1));
     // geht noch ein ganzes Stück rein?
-    if (dist < 50) break;
+    if ((dist ?? 0) < 50) break;
     // nächstes Stück zeichnen
     laserline = CreateObject(SLSR);
     SetPosition(x0, y0, laserline);
     SetColorDw(color, laserline);
     SetR(angle, laserline);
     // zum nächsten Punkt
-    x0 += Sin(angle, dist);
-    y0 -= Cos(angle, dist);
+    S42MigrationAssign(x0, "+=", (Sin(angle, dist) ?? 0));
+    S42MigrationAssign(y0, "-=", (Cos(angle, dist) ?? 0));
   }
-  if (!dist) return(0);
+  if (!dist) return(nil);
   // Endstück
   laserline = CreateObject(SLSR);
-  var mx = (x0 + x1 + (50 * (x0-x1) + dist/2) / dist + 1) / 2;
-  var my = (y0 + y1 + (50 * (y0-y1) + dist/2) / dist + 1) / 2;
+  var mx = ((x0 ?? 0) + (x1 ?? 0) + (50 * ((x0 ?? 0)-(x1 ?? 0)) + (dist ?? 0)/2) / (dist ?? 0) + 1) / 2;
+  var my = ((y0 ?? 0) + (y1 ?? 0) + (50 * ((y0 ?? 0)-(y1 ?? 0)) + (dist ?? 0)/2) / (dist ?? 0) + 1) / 2;
   SetPosition(mx, my, laserline);
   SetColorDw(color, laserline);
   SetR(angle, laserline);
-  SetCon(50+dist, laserline);
+  SetCon(50+(dist ?? 0), laserline);
 }
 
 
 /* Energie */
 
-public EnoughEnergy: return(GetEnergy() >= 25);
-public IsEnergyConsumer: return(1);
+public func EnoughEnergy(...) { return((GetEnergy() ?? 0) >= 25);
+}
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* Eigenschaften */
 
-public InfoBarSize: return(3);
-public GetMaxDamage: return(150);
+public func InfoBarSize(...) { return(3);
+}
+public func GetMaxDamage(...) { return(150);
+}
 

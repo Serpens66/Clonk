@@ -1,6 +1,6 @@
 /*-- Leitungsbausatz --*/
 
-#strict
+#strict 3
 
 local pBuilding,Local2,Local3;
 
@@ -14,7 +14,7 @@ func Initialize()
 
   pBuilding = FindObject2(Find_AtPoint(),Find_Category(C4D_Structure));
   
-  if(FindObject(PWRL,0,0,0,0,0,"Connect",pBuilding)) Schedule("CheckLine()",1);
+  if(FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",pBuilding)) Schedule("CheckLine()",1);
 
 }
 
@@ -23,7 +23,7 @@ func CheckLine() // um zu bemerken, wann eine Leitung von etwas entfernt wurde.
     pBuilding = FindObject2(Find_AtPoint(),Find_Category(C4D_Structure));
     //Message("%s",0,GetName(pBuilding));
     // Leitungsbausatz hat beim erzeugen eine Energieleitung? --> Muss gerade abgenommen worden sein! (Danke Clonkonaut)
-    var pLine = FindObject(PWRL,0,0,0,0,0,"Connect",this());
+    var pLine = FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",this());
     if(pLine) 
     {
         pLine->LostConnection(pBuilding); // fuer umspannwerk
@@ -48,11 +48,11 @@ protected func Activate(clonk,iErlaubt)
 {
   [$TxtConnectline$]
   // Objekt zum Line-Verlegen finden.
-  var obj = FindObject(0, 1,0,0,0, OCF_LineConstruct(), 0,0,0, obj);
+  var obj = FindObject(nil, 1,nil,nil,nil, OCF_LineConstruct, nil,nil,nil, obj);
   // Keins da? Auch gut.
   if(!obj) return(Message("$TxtNoNewLine$", this()) );
   
-  if(FindObject(NLEI) && iErlaubt!=99) // wenn Regel, dass Feinde keine Leitungen anbringen duerfen, und es nicht gerade durch das sofortige wieder dranpacken ausgelöst wurde
+  if(And(FindObject(NLEI), !Equal(iErlaubt, 99))) // wenn Regel, dass Feinde keine Leitungen anbringen duerfen, und es nicht gerade durch das sofortige wieder dranpacken ausgelöst wurde
       if(Hostile(GetOwner(obj),GetOwner(clonk))) 
       {
           Sound("Error");
@@ -61,14 +61,14 @@ protected func Activate(clonk,iErlaubt)
     
   
   // Leitung
-  var pLine = FindObject(0, 0,0,0,0, 0, "Connect", this() );
-  SetComDir(COMD_Stop(), clonk);
+  var pLine = FindObject(nil, nil,nil,nil,nil, nil, "Connect", this() );
+  SetComDir(COMD_Stop, clonk);
 
   // Aktuelle Leitung anschließen
   if(pLine)
   {
     // Zielobjekt == Quellobject?
-    if(obj == GetActionTarget(0, pLine) || obj == GetActionTarget(1, pLine) )
+    if(Or(Equal(obj, GetActionTarget(nil, pLine)), Equal(obj, GetActionTarget(1, pLine))) )
     {
       // Leitung wieder entfernen
       Message("$TxtLineRemoval$", this(), GetName(pLine) );
@@ -79,10 +79,10 @@ protected func Activate(clonk,iErlaubt)
     else
     {
       // Line an obj anschließen
-      if(Format("%i",GetID(obj)) eq "_USW") obj->ConnectionTarget(GetActionTarget(1, pLine),1);
-      if(Format("%i",GetID(obj)) eq "_USW") obj->ConnectionTarget(GetActionTarget(0, pLine),0);
-      if(Format("%i",GetID(GetActionTarget(0, pLine))) eq "_USW") GetActionTarget(0, pLine)->ConnectionTarget(obj,1);
-      if(Format("%i",GetID(GetActionTarget(1, pLine))) eq "_USW") GetActionTarget(1, pLine)->ConnectionTarget(obj,0);
+      if(!!SEqual(Format("%i",GetID(obj)), "_USW")) obj->ConnectionTarget(GetActionTarget(1, pLine),1);
+      if(!!SEqual(Format("%i",GetID(obj)), "_USW")) obj->ConnectionTarget(GetActionTarget(nil, pLine),nil);
+      if(!!SEqual(Format("%i",GetID(GetActionTarget(nil, pLine))), "_USW")) GetActionTarget(nil, pLine)->ConnectionTarget(obj,1);
+      if(!!SEqual(Format("%i",GetID(GetActionTarget(1, pLine))), "_USW")) GetActionTarget(1, pLine)->ConnectionTarget(obj,nil);
       if(!ConnectLine(pLine, obj) ) return(1);
     }
   }
@@ -115,42 +115,42 @@ private func DefaultLineType(obj)
   var line_accept = GetDefCoreVal("LineConnect", "DefCore", GetID(obj) );
 
   // Pumpe
-  if (line_accept & C4D_LiquidPump && line_accept & C4D_LiquidInput)
+  if (And((line_accept ?? 0) & (C4D_LiquidPump ?? 0), (line_accept ?? 0) & (C4D_LiquidInput ?? 0)))
   {
     var nothing = true;
     for (var pipe in FindObjects(Find_ID(SPIP), Find_ActionTarget(obj), Find_Action("Connect")))
     {
       // Nur das erste Actiontarget zaehlt.
-      if (pipe->GetActionTarget(0) == obj)
-        nothing = false;
+      if (Equal(pipe->GetActionTarget(nil), obj))
+        nothing = nil;
     }
     if (nothing) return(SPIP);
   }
-  if (line_accept & C4D_LiquidPump && line_accept & C4D_LiquidOutput)
+  if (And((line_accept ?? 0) & (C4D_LiquidPump ?? 0), (line_accept ?? 0) & (C4D_LiquidOutput ?? 0)))
   {
     nothing = true;
     for (pipe in FindObjects(Find_ID(DPIP), Find_ActionTarget(obj), Find_Action("Connect")))
     {
-      if (pipe->GetActionTarget(0) == obj)
-        nothing = false;
+      if (Equal(pipe->GetActionTarget(nil), obj))
+        nothing = nil;
     }
     if (nothing) return(DPIP);
   }
 
   // Strom
-  if(line_accept & C4D_PowerOutput)
+  if((line_accept ?? 0) & (C4D_PowerOutput ?? 0))
     return(PWRL);
 
   // Gar nix, dann werden manche Leitungen eventuell doppelt.
-  if(line_accept & C4D_LiquidPump)
+  if((line_accept ?? 0) & (C4D_LiquidPump ?? 0))
     return(SPIP);
-  return(0);
+  return(nil);
 }
 
 private func CreateLine(linetype, owner, from, to)
 {
-  var line = CreateObject(linetype, 0, 0, owner);
-  if(Format("%i",GetID(from)) eq "_USW")
+  var line = CreateObject(linetype, nil, nil, owner);
+  if(!!SEqual(Format("%i",GetID(from)), "_USW"))
     SetLocal(2,1,line);
   ObjectSetAction(line, "Connect", from, to);
   Message("$TxtNewLine$", this(), GetName(line) );
@@ -167,44 +167,44 @@ private func ConnectLine(line, to)
   
   // Targets ausmachen. Es ist nicht definiert, welches Target das aktuell
   // verbundene Objekt und welches das Linekit ist.
-  var t1 = GetActionTarget(0, line);
+  var t1 = GetActionTarget(nil, line);
   var t2 = to;
-  if(t1 == this() ) { t2 = GetActionTarget(1, line); t1 = to; }
+  if(Equal(t1, this()) ) { t2 = GetActionTarget(1, line); t1 = to; }
   
-  var ok = false;
+  var ok = nil;
   // Energieleitung?
-  if (line_type == C4D_LinePower || line_type == C4D_LineVertex)
+  if (Or(Equal(line_type, C4D_LinePower), Equal(line_type, C4D_LineVertex)))
   {
     // Geht ok, wenn das Ziel Strom benötigt oder welchen hergibt
-    if (t1 == to && line_accept & C4D_PowerOutput)
+    if (And(Equal(t1, to), (line_accept ?? 0) & (C4D_PowerOutput ?? 0)))
       ok = true;
-    if (t2 == to && line_accept & C4D_PowerInput)
+    if (And(Equal(t2, to), (line_accept ?? 0) & (C4D_PowerInput ?? 0)))
       ok = true;
   }
   // Zufluss?
-  else if(line_type == C4D_LineSource)
+  else if(Equal(line_type, C4D_LineSource))
   {
     // Geht ok, wenn das Ziel Flüssigkeiten benötigt oder hergibt
-    if (t1 == to && line_accept & C4D_LiquidPump && line_accept & C4D_LiquidInput)
+    if (And(And(Equal(t1, to), (line_accept ?? 0) & (C4D_LiquidPump ?? 0)), (line_accept ?? 0) & (C4D_LiquidInput ?? 0)))
     {
       ok = true;
       // Jede Pumpe kann nur eine Zuflussleitung auf einmal haben.
       for (var pipe in FindObjects(Find_ID(SPIP), Find_ActionTarget(to), Find_Action("Connect")))
       {
-        if (pipe->GetActionTarget(0) == to)
-          ok = false;
+        if (Equal(pipe->GetActionTarget(nil), to))
+          ok = nil;
       }
     }
-    if (t2 == to && line_accept & C4D_LiquidOutput)
+    if (And(Equal(t2, to), (line_accept ?? 0) & (C4D_LiquidOutput ?? 0)))
       ok = true;
   }
   // Abfluss?
-  else if(line_type == C4D_LineDrain)
+  else if(Equal(line_type, C4D_LineDrain))
   {
     // Geht ok, wenn das Ziel Flüssigkeit hergibt oder benötigt
-    if (t1 == to && line_accept & C4D_LiquidPump && line_accept & C4D_LiquidOutput)
+    if (And(And(Equal(t1, to), (line_accept ?? 0) & (C4D_LiquidPump ?? 0)), (line_accept ?? 0) & (C4D_LiquidOutput ?? 0)))
       ok = true;
-    if (t2 == to && line_accept & C4D_LiquidInput)
+    if (And(Equal(t2, to), (line_accept ?? 0) & (C4D_LiquidInput ?? 0)))
       ok = true;
   }
 
@@ -214,12 +214,12 @@ private func ConnectLine(line, to)
     // Nö, also tschüss
     Sound("Error");
     Message("$TxtNoConnectType$", this(), GetName(line), GetName(to) );
-    return(0);
+    return(nil);
   }
   
   // Verbinden
   ObjectSetAction(line, "Connect", t1, t2);
-  if(Format("%i",GetID(t2)) eq "_USW")
+  if(!!SEqual(Format("%i",GetID(t2)), "_USW"))
     SetLocal(3,1,line);
 
   Message("$TxtConnect$", Contained(), GetName(line), GetName(to) );

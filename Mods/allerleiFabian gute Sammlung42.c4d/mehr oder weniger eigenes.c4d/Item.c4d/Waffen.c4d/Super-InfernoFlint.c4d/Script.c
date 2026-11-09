@@ -1,6 +1,6 @@
 /*-- Super-InfernoFlint --*/
 
-#strict
+#strict 3
 
 local pProduced;
 
@@ -8,7 +8,7 @@ local pProduced;
 protected func Initialize()
 {
   // Wurden wir produziert? Dann gibts das leere Ölfass zurück
-  if(pProduced && Contained() == pProduced)
+  if(And(pProduced, Equal(Contained(), pProduced)))
     {CreateContents(BARL, pProduced);
     CreateContents(BARL, pProduced);
     CreateContents(BARL, pProduced);
@@ -25,7 +25,7 @@ protected func Hit()
   Sound("Inflame");
   Sound("Fuse");
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(30);
-  else FakeExplode(30,0,0,30);
+  else FakeExplode(30,nil,nil,30);
   RemoveObject();
   return(1);
 }

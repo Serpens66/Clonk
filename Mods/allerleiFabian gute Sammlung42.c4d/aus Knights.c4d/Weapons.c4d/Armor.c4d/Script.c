@@ -1,6 +1,6 @@
 /*-- Rüstung --*/
 
-#strict
+#strict 3
 
 /* Status */
 public func IsArmor()
@@ -25,9 +25,9 @@ public func Activate(pClonk)
 {                  
   [$CtrlActivateDesc$]
   // Der Clonk kann dieses Objekt nicht verwenden
-  if (!pClonk->~CanUse(GetID())) {return(0);}
+  if (!pClonk->~CanUse(GetID())) {return(nil);}
   // Ritter trägt bereits eine Rüstung?
-  if (pClonk->KNIG::HasArmor()) {return(0);}
+  if (pClonk->KNIG::HasArmor()) {return(nil);}
   // Anlegen  
   return(pClonk->WearArmor(this()));
 }

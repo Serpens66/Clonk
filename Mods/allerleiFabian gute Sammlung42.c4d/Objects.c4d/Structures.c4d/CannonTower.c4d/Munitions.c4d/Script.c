@@ -1,6 +1,6 @@
 /*-- Munitionspack --*/
 
-#strict
+#strict 3
 
 /* Auftreffen */
 
@@ -10,7 +10,7 @@ protected func Hit()
 }
   
 public func Unpack(object target) {
-  for (var i = 0; i < 10; ++i)
+  for (var i = nil; (i ?? 0) < 10; S42MigrationStep(i, 1))
     CreateContents(ADB1, target);
   RemoveObject();
   return(1);

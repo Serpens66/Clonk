@@ -1,13 +1,13 @@
-#strict
+#strict 3
 
 func Activate()
 {
   Sound("Magic1");
-  while(Var()=FindObject(0,0,0,0,0,OCF_CrewMember(),0,0,0,Var())) {
-    if(GetOwner(Par())!=GetOwner(Var())) ObjectSetAction(Var(1)=CreateObject(ICBL,GetX(Var()),GetY(Var()),-1),"Freeze",Var());
+  while(Var()=FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,nil,nil,nil,Var())) {
+    if(!Equal(GetOwner(Par()), GetOwner(Var()))) ObjectSetAction(Var(1)=CreateObject(ICBL,GetX(Var()),GetY(Var()),-1),"Freeze",Var());
     Extinguish(Var());
-    AddVertex(GetVertex(0,0,Var()),
-              GetVertex(0,1,Var()),Var(1));
+    AddVertex(GetVertex(nil,nil,Var()),
+              GetVertex(nil,1,Var()),Var(1));
   }
 
   SetAction("Ticking");
@@ -16,7 +16,7 @@ func Activate()
 
 func Remove()
 {
-  while(Var()=FindObject(ICBL,0,0,0,0,0,0,0,0,Var())) Var()->ICBL::Destruct();
+  while(Var()=FindObject(ICBL,nil,nil,nil,nil,nil,nil,nil,nil,Var())) Var()->ICBL::Destruct();
 return(RemoveObject());
 }
 

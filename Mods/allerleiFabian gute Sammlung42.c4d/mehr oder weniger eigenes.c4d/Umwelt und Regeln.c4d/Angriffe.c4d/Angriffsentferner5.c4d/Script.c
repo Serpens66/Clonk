@@ -1,6 +1,6 @@
 /*-- Angriffsentferner --*/
 
-#strict
+#strict 3
 local anzahl,wert; // anzahl wird als lokale Variable definiert
 local kill,fertig,message;
 
@@ -13,7 +13,7 @@ func Activate()
 func Initialize()
 {
 SetPosition(1,1);
-anzahl=0;
+anzahl=nil;
 wert=5; // wenn nichts eingestellt, dann müssen 5 monster erledigt werden.
 kill=1; // nicht anders eingestellt, werden nach erreichen der Anzahl, alle übrigen Monster automatisch getötet
 }
@@ -29,8 +29,8 @@ message = imessage;
 
 func Zaehler5()  // Monsterangriff entfernen
 {
-  anzahl++; // anzahl wird um 1 erhöht
-  if (anzahl >= wert && !fertig)  // Bei if die Bedingung immer in runde Klammern verpacken
+  S42MigrationStep(anzahl, 1, true); // anzahl wird um 1 erhöht
+  if (And((anzahl ?? 0) >= (wert ?? 0), !fertig))  // Bei if die Bedingung immer in runde Klammern verpacken
   { // Durch diesen Block geschweifter Klammern nach einer If-Abfrage kannst du mehrere Befehle unter dem if zusammenfassen, die nur im Falle von anzahl > wert ausgeführt werden
     Beenden();
   }
@@ -40,7 +40,7 @@ func Beenden()
 {
     if ( FindObject(PRA_) )  // Zur Sicherheit überprüfst du vor dem Entfernen, ob das Zielobjekt vorhanden ist*
       RemoveAll(PRA_);
-    anzahl = 0; // anzahl zurücksetzen
+    anzahl = nil; // anzahl zurücksetzen
     fertig=1;  // damit dies beim töten der monster nicht nochmal aufgerufen wird
     //Log("PredatorRegel entfernt");
     if(kill)

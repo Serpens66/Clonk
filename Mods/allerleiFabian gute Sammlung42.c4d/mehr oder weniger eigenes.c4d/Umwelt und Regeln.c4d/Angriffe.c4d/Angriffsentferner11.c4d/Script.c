@@ -1,6 +1,6 @@
 /*-- Angriffsentferner --*/
 
-#strict
+#strict 3
 local anzahl,wert; // anzahl wird als lokale Variable definiert
 local kill,fertig,message;
 
@@ -13,7 +13,7 @@ func Activate()
 func Initialize()
 {
 SetPosition(1,1);
-anzahl=0;
+anzahl=nil;
 wert=5; // wenn nichts eingestellt, dann müssen 5 monster erledigt werden.
 kill=1; // nicht anders eingestellt, werden nach erreichen der Anzahl, alle übrigen Monster automatisch getötet
 }
@@ -28,8 +28,8 @@ message = imessage;
 
 func Zaehler11()  // Monsterangriff entfernen
 {
-  anzahl++; // anzahl wird um 1 erhöht
-  if (anzahl >= wert && !fertig)  // Bei if die Bedingung immer in runde Klammern verpacken
+  S42MigrationStep(anzahl, 1, true); // anzahl wird um 1 erhöht
+  if (And((anzahl ?? 0) >= (wert ?? 0), !fertig))  // Bei if die Bedingung immer in runde Klammern verpacken
   { 
     Beenden();
   }
@@ -45,7 +45,7 @@ func Beenden()
     var monster;
     if (FindObject(KRAE)) 
      for (monster in FindObjects(Find_ID(KRAE)))
-      {if(kill==1) Kill(monster); if(kill==2) RemoveObject(monster);}
+      {if(Equal(kill, 1)) Kill(monster); if(Equal(kill, 2)) RemoveObject(monster);}
     if(message) Message("Diese nervigen Krähen sind endlich ausgerottet!");
     }
     if (!kill) if(message) Message("Es kommen keine Krähen mehr nach");

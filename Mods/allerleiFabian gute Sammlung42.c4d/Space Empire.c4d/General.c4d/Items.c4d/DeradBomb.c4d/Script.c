@@ -1,30 +1,34 @@
 /*-- Deradbombe --*/
 
-#strict
+#strict 3
 
 local timer;
 
 /* Aufschlag */
 
-protected Hit:
-  if (GetAction() ne "Idle") return(1);
+protected func Hit(...) {
+  if (!SEqual(GetAction(), "Idle")) return(1);
   SetAction("Active");
   timer = 200;
   return(1);
+}
 
-protected Exhaust:
+protected func Exhaust(...) {
   // Gas ausströmen lassen
-  if (Random(2)) CreateObject(SDER,0,3);
+  if (Random(2)) CreateObject(SDER,nil,3);
   // bis Timer ganz heruntergezählt hat
-  --timer;
+  S42MigrationStep(timer, -1);
   if (timer) return(1);
   // Zerbrechen lassen
   SetAction("Break");
   Sound("Rip");
   return(1);
+}
 
-protected Destroy: return(RemoveObject());
+protected func Destroy(...) { return(RemoveObject());
+}
 
 /* Eigenschaften */
 
-public IsChemicalProduct: return(1);
+public func IsChemicalProduct(...) { return(1);
+}

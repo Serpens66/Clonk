@@ -1,6 +1,6 @@
 /*-- Angriffsentferner --*/
 
-#strict
+#strict 3
 local anzahl, wert; // anzahl wird als lokale Variable definiert
 local kill,fertig,message; // wenn message wahr ist, dann wird bei erledigung eine nachricht ausgegeben
 
@@ -13,7 +13,7 @@ func Activate()
 func Initialize()
 {
 SetPosition(1,1);
-anzahl=0;
+anzahl=nil;
 }
 
 func Einstellen(ierledigen,ikill,imessage)
@@ -26,8 +26,8 @@ message = imessage;
 func Zaehler1()  // Monsterangriff entfernen
 {
   //Log("monsterzaehler aufgerufen");
-    anzahl++; 
-  if (anzahl >= wert && !fertig) 
+    S42MigrationStep(anzahl, 1, true);
+  if (And((anzahl ?? 0) >= (wert ?? 0), !fertig))
   { 
     Beenden();
   }
@@ -43,7 +43,7 @@ func Beenden()
         var monster;
         if (FindObject(MONS)) 
          for (monster in FindObjects(Find_ID(MONS)))
-         {if(kill==1) Kill(monster); if(kill==2) RemoveObject(monster);}
+         {if(Equal(kill, 1)) Kill(monster); if(Equal(kill, 2)) RemoveObject(monster);}
         if(message) Message("Das waren alle Monster!");
     }
     if (!kill) if(message) Message("Es kommen keine neuen Monster mehr nach");

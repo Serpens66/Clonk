@@ -1,6 +1,6 @@
 /*-- Keine Leitungen von Feinden --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

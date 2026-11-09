@@ -1,14 +1,14 @@
 /*-- Glühbirne --*/
 
-#strict
+#strict 3
 #include BLGH
 
 local base, length, cable;
 local phase, speed, dir, minspeed; //phase as in Winkel.
 
 func Initialize() {
-  dir=Random(2)*-2+1;
-  minspeed = 0;
+  dir=(Random(2) ?? 0)*-2+1;
+  minspeed = nil;
 	_inherited();
 }
 
@@ -18,27 +18,29 @@ func CreateLight()
 }
 
 func Init(object pObj, int iLength) {
+  iLength ??= 0;
   base = pObj;
   cable = CreateObject(BLBC);
   cable->Set(base, this());
   length = iLength;
-  SetPosition(base->GetX(),base->GetY()+iLength);
-  speed = iLength/3*-dir;
-  phase = 0;
+  SetPosition(base->GetX(),(base->GetY() ?? 0)+(iLength ?? 0));
+  speed = (iLength ?? 0)/3*-(dir ?? 0);
+  phase = nil;
 }
 
 public func Set(int Length) {
-  if(Length <= 0)
-    return();
+  Length ??= 0;
+  if((Length ?? 0) <= 0)
+    return;
   length = Length;
   UpdatePos();
 }
 
 private func UpdatePos() {
   var x,y;
-  x = Sin(phase/10,length);
-  y = Cos(phase/10,length);
-  SetPosition(base->GetX()+x,base->GetY()+y);
+  x = Sin((phase ?? 0)/10,length);
+  y = Cos((phase ?? 0)/10,length);
+  SetPosition((base->GetX() ?? 0)+(x ?? 0),(base->GetY() ?? 0)+(y ?? 0));
 }
 
 private func Adjust() {
@@ -48,36 +50,36 @@ private func Adjust() {
     RemoveObject();
   }
   if(!dir)
-    return();
+    return;
   //Position anpassen
   UpdatePos();
   
-  phase += speed;
-  speed += dir;
+  S42MigrationAssign(phase, "+=", (speed ?? 0));
+  S42MigrationAssign(speed, "+=", (dir ?? 0));
   
-  if((speed > 0 && dir < 0) || (speed < 0 && dir > 0))
-    if(speed%5)
-      speed += dir;
+  if(Or((And((speed ?? 0) > 0, (dir ?? 0) < 0)), (And((speed ?? 0) < 0, (dir ?? 0) > 0))))
+    if((speed ?? 0)%5)
+      S42MigrationAssign(speed, "+=", (dir ?? 0));
     
     
-  if(Abs(phase) >= 900) {
-    speed = 0;
-    phase = phase/Abs(phase)*899;
+  if((Abs(phase) ?? 0) >= 900) {
+    speed = nil;
+    phase = (phase ?? 0)/(Abs(phase) ?? 0)*899;
   }
   //Gegenrechnen, weil sonst überschwanken
   //while(Abs(speed) > maxspeed) {
     //speed -= dir;
   //}
   
-  if((phase >= 0 && speed >= 0 && dir > 0) || (phase <= 0 && speed <= 0 && dir < 0)) {
-    dir *= -1;
-    if(Abs(speed) < 15) {
-      speed+=dir;
-      phase+=dir;
-      if(Abs(speed) < 7 && Abs(phase) < 5) {
-        dir = 0;
-        speed = 0;
-        speed = 0;
+  if(Or((And(And((phase ?? 0) >= 0, (speed ?? 0) >= 0), (dir ?? 0) > 0)), (And(And((phase ?? 0) <= 0, (speed ?? 0) <= 0), (dir ?? 0) < 0)))) {
+    S42MigrationAssign(dir, "*=", -1);
+    if((Abs(speed) ?? 0) < 15) {
+      S42MigrationAssign(speed, "+=", (dir ?? 0));
+      S42MigrationAssign(phase, "+=", (dir ?? 0));
+      if(And((Abs(speed) ?? 0) < 7, (Abs(phase) ?? 0) < 5)) {
+        dir = nil;
+        speed = nil;
+        speed = nil;
       }
     }
   }
@@ -88,14 +90,14 @@ private func Adjust() {
 }
 
 func IsBulletTarget(id ID) {
-  if(ID != SHT1)
-    return(0);
-  var shot = FindObject(ID,0,0,-1,-1);
+  if(!Equal(ID, SHT1))
+    return(nil);
+  var shot = FindObject(ID,nil,nil,-1,-1);
   if(!shot)
-    return(0);
+    return(nil);
   
-  speed += shot->GetXDir();
+  S42MigrationAssign(speed, "+=", (shot->GetXDir() ?? 0));
   speed = BoundBy(speed,-55,55);
-  dir = BoundBy(-speed,-1,1);
+  dir = BoundBy(-(speed ?? 0),-1,1);
   return(1);
 }

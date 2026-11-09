@@ -1,6 +1,6 @@
 /*-- Aufgeben erlaubt --*/
 
-#strict
+#strict 3
 
 protected func Activate(iPlr)
 {

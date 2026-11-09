@@ -1,11 +1,11 @@
 /*-- Relaunch --*/
 
-#strict
+#strict 3
 #appendto CLNK
 
 protected func Activate(Par1,a,b,c)
 {
-  if(GetID()== RLNC)
+  if(Equal(GetID(), RLNC))
     {
     if(GameCall("MaxRelaunchs"))
       {
@@ -32,20 +32,20 @@ protected func Death(a,b,c)
       LocalN("Player",hlp)= GetOwner();    
       }
     var Relaunchs= LocalN("Relaunchs",FindRelaunchHelper(GetOwner()));
-    if(!Max_R || Relaunchs <= Max_R)
-     if(GetOwner()!= NO_OWNER())
+    if(Or(!Max_R, (Relaunchs ?? 0) <= (Max_R ?? 0)))
+     if(!Equal(GetOwner(), NO_OWNER))
       {
       ok= true;
-      var wipf= PlaceAnimal(WIPF),clonk= CreateObject(GetID(),0,0,GetOwner()),energy;
+      var wipf= PlaceAnimal(WIPF),clonk= CreateObject(GetID(),nil,nil,GetOwner()),energy;
       SetPosition(GetX(wipf),GetY(wipf),clonk); 
       if(wipf) RemoveObject(wipf);
       MakeCrewMember(clonk,GetOwner());
-      DoEnergy(+(GetPhysical("Energy",1) /1000 -GetEnergy()),clonk);
+      DoEnergy(+((GetPhysical("Energy",1) ?? 0) /1000 -(GetEnergy() ?? 0)),clonk);
       Log("$Relaunched$",GetDefCoreVal("Name","DefCore",GetID()),GetName(),GetPlayerName(GetOwner()));
       if(Max_R)
         {
-        LocalN("Relaunchs",FindRelaunchHelper(GetOwner()))++;
-        Log("$Remaining$",GetPlayerName(GetOwner()),Max_R -Relaunchs);
+        S42MigrationStep(LocalN("Relaunchs",FindRelaunchHelper(GetOwner())), 1, true);
+        Log("$Remaining$",GetPlayerName(GetOwner()),(Max_R ?? 0) -(Relaunchs ?? 0));
         }
       GameCall("Relaunching",clonk,this());
       }
@@ -59,10 +59,10 @@ protected func Death(a,b,c)
 private func FindRelaunchHelper(iPlr,pInto)
 {
   if(!pInto) pInto= FindObject(RLNC);
-  var i= ContentsCount(0,pInto);
-  while(i--)
-   if(GetID(Contents(i,pInto))== RHLP)
-    if(LocalN("Player",Contents(i,pInto))== iPlr)
+  var i= ContentsCount(nil,pInto);
+  while(S42MigrationStep(i, -1, true))
+   if(Equal(GetID(Contents(i,pInto)), RHLP))
+    if(Equal(LocalN("Player",Contents(i,pInto)), iPlr))
      return(Contents(i,pInto));
-  return(0);
+  return(nil);
 }

@@ -1,6 +1,6 @@
 /*-- Hangar Links --*/
 
-#strict
+#strict 3
 
 #include BP5C // Burgteilfunktion
 
@@ -10,7 +10,7 @@ local pGate,zerstoert;
 func Initialize()
 {
   ScheduleCall(this(),"SetModules",1);
-  SetCategory(C4D_StaticBack());
+  SetCategory(C4D_StaticBack);
   CastlePartAdjust();
   CastlePartInitialize();
   return(1);
@@ -35,7 +35,7 @@ if(pGate)RemoveObject(pGate);
   	RemoveObject(basement);
   // Globaler Temporäreffekt, wenn nicht schon vorhanden
   if (!GetEffect("IntCPW2CastleChange"))
-  	AddEffect("IntCPW2CastleChange", 0, 1, 2, 0, CPW2);
+        AddEffect("IntCPW2CastleChange", nil, 1, 2, nil, CPW2);
   return(1);
 }
 
@@ -47,13 +47,13 @@ var schaden;
 hp = GetDefCoreVal("BlastIncinerate","DefCore");
 schaden = GetDamage();
 
-  if (schaden*100 > hp*70 && zerstoert==0)  // bei 70% Schaden
+  if (And((schaden ?? 0)*100 > (hp ?? 0)*70, Equal(zerstoert, nil)))  // bei 70% Schaden
   {
-    if(pGate != 0)
+    if(!Equal(pGate, nil))
       {PlayerMessage(GetOwner(),"Das Hangartor | wurde zerstört!",this()); Sound("Ding");RemoveObject(pGate);zerstoert=1;}
   }
-  if (schaden*100 < hp*70)
-{zerstoert=0;}
+  if ((schaden ?? 0)*100 < (hp ?? 0)*70)
+{zerstoert=nil;}
   return(_inherited(a,b,c,d,e,f,g,h,i,j));
 } 
 

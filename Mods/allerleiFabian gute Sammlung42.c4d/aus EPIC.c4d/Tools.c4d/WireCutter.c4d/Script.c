@@ -1,12 +1,12 @@
 /*--- Scythe ---*/
 
-#strict
+#strict 3
 
 public func Activate(pClonk) {
 	var trad = FindObject2(Find_Distance(30), Find_Func("IsCuttable"));        
 	if (!trad) {
 		Message("Du musst dich vor etwas Durchtrennbarem befinden",this());
-		return(0);
+		return(nil);
 	}	
 	else {
 		SetAction("Cut");

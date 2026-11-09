@@ -1,9 +1,10 @@
 /*-- Suizid --*/
 
-#strict
+#strict 3
 
 protected func Activate(int iPlr)
 {
+  iPlr ??= 0;
   Log("$MsgSuicide$", GetPlayerName(iPlr));
   Kill(GetCursor(iPlr));
   return(1);

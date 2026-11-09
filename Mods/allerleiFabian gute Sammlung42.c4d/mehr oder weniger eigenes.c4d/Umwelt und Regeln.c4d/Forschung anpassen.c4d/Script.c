@@ -1,6 +1,6 @@
 /*-- Forschung anpassen --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

@@ -1,44 +1,44 @@
 /*-- Radarschirm --*/
 
-#strict
+#strict 3
 
 local bc, cc;
 
 func Completion() {
-  var x = GetX(), y = GetY() -20;
+  var x = GetX(), y = (GetY() ?? 0) -20;
     SetPosition(x, y);
-SetCategory(C4D_StaticBack());
+SetCategory(C4D_StaticBack);
   Start();
   AddFrame();
 }
 
 func Start() {
   SetAction("LoadPlanet");
-  bc = 0;
-  cc = 0;
+  bc = nil;
+  cc = nil;
 }
 
 func BlinkPlanet() {
-  if(++bc > 2) {
-    bc = 0;
+  if(S42MigrationStep(bc, 1) > 2) {
+    bc = nil;
     SetAction("LoadEurope");
   }
 }
 
 func BlinkEurope() {
-  if(++bc > 2) {
-    bc = 0;
+  if(S42MigrationStep(bc, 1) > 2) {
+    bc = nil;
     SetAction("LoadMidEurope");
   }
 }
 
 func Credits() {
-  if(cc == 0) SetAction("Matthi");
-  if(cc == 1) SetAction("Newton");
-  if(cc == 2) SetAction("Boni");
-  if(cc == 3) SetAction("Clonko");
-  if(cc == 4) SetAction("Raven");
+  if(Equal(cc, nil)) SetAction("Matthi");
+  if(Equal(cc, 1)) SetAction("Newton");
+  if(Equal(cc, 2)) SetAction("Boni");
+  if(Equal(cc, 3)) SetAction("Clonko");
+  if(Equal(cc, 4)) SetAction("Raven");
   
-  if(cc == 5) Start();
-  else        ++cc;
+  if(Equal(cc, 5)) Start();
+  else        S42MigrationStep(cc, 1);
 }

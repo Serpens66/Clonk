@@ -1,6 +1,6 @@
 /*-- Totes Feuermonster --*/
 
-#strict
+#strict 3
 
 /* Verwesung */
 

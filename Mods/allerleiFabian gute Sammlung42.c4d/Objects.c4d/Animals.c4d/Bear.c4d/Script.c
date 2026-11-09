@@ -1,6 +1,6 @@
 /*-- B‰r --*/
 
-#strict
+#strict 3
 #include ANIM
 
 local iRun;
@@ -19,10 +19,10 @@ private func Activity()
 {
   var pEnemy;
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Nichts machen
-  if (Random(2) || (GetAction() ne "Walk" && GetAction() ne "Run" && GetAction() ne "Swim")) return(1);
+  if (Or(Random(2), (And(And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Run")), !SEqual(GetAction(), "Swim"))))) return(1);
 
   // Ein Ei legen
 //  if (!Random(ReproductionRate())) 
@@ -36,10 +36,10 @@ private func Activity()
   }
   
   // Springen
-  if (GetAction() eq "Walk" || GetAction() eq "Run")
+  if (Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "Run")))
    if (!Random(3)) return(DoJump());
 
-  if (!Random(3)) if(GetAction()S="Walk") return(SetAction("Run")); else return(iRun=0, SetAction("Walk"));
+  if (!Random(3)) if(!!SEqual(GetAction(), "Walk")) return(SetAction("Run")); else return(S42MigrationFirst(iRun=nil, SetAction("Walk")));
 
   if (!Random(3)) return(SetAction("Attack"));
 
@@ -53,14 +53,14 @@ private func Activity()
 }
 
 private func EnemyNearby() {
-  var pEnemy=FindObject(0,0,0,-1,-1, OCF_CrewMember());
+  var pEnemy=FindObject(nil,nil,nil,-1,-1, OCF_CrewMember);
   var iDist=ObjectDistance(pEnemy);
   var pContainer=Contained(pEnemy);
-  if(pContainer) if(GetID(pContainer)==GetID()) return();
+  if(pContainer) if(Equal(GetID(pContainer), GetID())) return;
   if(pEnemy)
-    if(iDist<350)
-      if(!Contained(pEnemy) || iDist<150)
-        if(PathFree(GetX(),GetY(),GetX(pEnemy),GetY(pEnemy)) || iDist<100 )
+    if((iDist ?? 0)<350)
+      if(Or(!Contained(pEnemy), (iDist ?? 0)<150))
+        if(Or(PathFree(GetX(),GetY(),GetX(pEnemy),GetY(pEnemy)), (iDist ?? 0)<100) )
           return(pEnemy);
 }
 
@@ -68,29 +68,29 @@ private func EnemyNearby() {
   
 private func RunAway(pEnemy) { // C4Object *pEnemy
   // Nahrungssuche einstellen
-  if (GetCommand()eq"Follow") SetCommand(this(),"None");
+  if (!!SEqual(GetCommand(), "Follow")) SetCommand(this(),"None");
   // In die entgegengesetzte Richtung
-  if(GetX(pEnemy)>GetX()) TurnLeft();  
-  if(GetX(pEnemy)<GetX()) TurnRight();
+  if((GetX(pEnemy) ?? 0)>(GetX() ?? 0)) TurnLeft();
+  if((GetX(pEnemy) ?? 0)<(GetX() ?? 0)) TurnRight();
   // Bewegungskommando
   SetCommand(this(),"None");
-  AddCommand(this(),"MoveTo",0,GetX()+100*(GetDir()*2-1),GetY(),0,20);
+  AddCommand(this(),"MoveTo",nil,(GetX() ?? 0)+100*((GetDir() ?? 0)*2-1),GetY(),nil,20);
   // Rennen
 //  SetAction("Run");
 }
 
 private func RunAttack(pPrey) { // C4Object *pEnemy
-  if(Contained(pPrey)) return();	
+  if(Contained(pPrey)) return;
   // Nahrungssuche einstellen
-  if (GetCommand()eq"Follow") SetCommand(this(),"None");
+  if (!!SEqual(GetCommand(), "Follow")) SetCommand(this(),"None");
   // In die passende Richtung
-  if(GetX(pPrey)<GetX()) TurnLeft();  
-  if(GetX(pPrey)>GetX()) TurnRight();
+  if((GetX(pPrey) ?? 0)<(GetX() ?? 0)) TurnLeft();
+  if((GetX(pPrey) ?? 0)>(GetX() ?? 0)) TurnRight();
   // Bewegungskommando
   SetCommand(this(),"None");
   // Immer von hinten mit einem Abstand angreifen
-  var iFromSide = +1; if (GetX(pPrey)>GetX()) iFromSide = -1;
-  SetCommand(this(), "MoveTo", 0, GetX(pPrey) + 21 * iFromSide, GetY(pPrey));
+  var iFromSide = +1; if ((GetX(pPrey) ?? 0)>(GetX() ?? 0)) iFromSide = -1;
+  SetCommand(this(), "MoveTo", nil, (GetX(pPrey) ?? 0) + 21 * (iFromSide ?? 0), GetY(pPrey));
   // Rennen
   if(!GetEffect("Attack", this())) AddEffect("Attack", this(), 1, 10, this());
   iRun=1;  
@@ -98,28 +98,28 @@ private func RunAttack(pPrey) { // C4Object *pEnemy
 
 func FxAttackTimer()
 {
-  if(!Random(10)) return(-1, SetCommand(this(), "None"));	
+  if(!Random(10)) return(S42MigrationFirst(-1, SetCommand(this(), "None")));
   var pEnemy = EnemyNearby();
-  if(Attack()) return();
+  if(Attack()) return;
   // Feind in Sicht: abhauen
   if(!Contained(pEnemy)) return(RunAttack(pEnemy));
-  else return(-1, SetCommand(this(), "None"));
+  else return(S42MigrationFirst(-1, SetCommand(this(), "None")));
 }
 
 private func Attack()
 {
   // W‰hrend des Schwimmens kann alle 2 Sekunden einmal gebissen werden
-  if (GetEffect("IntAttackDelay", this()) || (GetAction() ne "Walk" && GetAction() ne "Run")) return();
+  if (Or(GetEffect("IntAttackDelay", this()), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Run"))))) return;
   
   // Beute suchen
-  var pPrey = FindObject(0, -20 + 40 * GetDir(), 0, -1, -1, OCF_Prey(), 0, 0, NoContainer());
-  if(Abs(GetX()-20 + 40 * GetDir()-GetX(pPrey))>10) return();
-  if(Abs(GetY()-GetY(pPrey))>10) return();
-  if (!pPrey || !GetAlive(pPrey)) return();
+  var pPrey = FindObject(nil, -20 + 40 * (GetDir() ?? 0), nil, -1, -1, OCF_Prey, nil, nil, NoContainer());
+  if((Abs((GetX() ?? 0)-20 + 40 * (GetDir() ?? 0)-(GetX(pPrey) ?? 0)) ?? 0)>10) return;
+  if((Abs((GetY() ?? 0)-(GetY(pPrey) ?? 0)) ?? 0)>10) return;
+  if (Or(!pPrey, !GetAlive(pPrey))) return;
   
   // Beiﬂen :D
   Punch(pPrey, 8);
-  Fling(pPrey, -1 + 2*GetDir(), -2);
+  Fling(pPrey, -1 + 2*(GetDir() ?? 0), -2);
   SetAction("Attack");
   if (!Random(5)) Sound("BearAttack");
   Sound("Munch1");
@@ -131,11 +131,11 @@ private func Walking()
 {
   // Vorherige Gangart wieder aufnehmen (nach Sprung oder Wendung)
   if (iRun) 
-    { SetAction("Run"); return(); }
+    { SetAction("Run"); return; }
   // Geschwindigkeit und Ger‰usch
   SetPhysical("Walk",55000,2);
   // Beute am Maul beiﬂen
-  if (Attack()) return();
+  if (Attack()) return;
   return(1);
 }
   
@@ -145,7 +145,7 @@ private func Running()
   // Geschwindigkeit und Ger‰usch
   SetPhysical("Walk", 90000, 2);
   // Beute am Maul beiﬂen
-  if (Attack()) return();
+  if (Attack()) return;
   return(1);     
 }
 
@@ -154,7 +154,7 @@ private func Running()
 protected func ContactLeft()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
   
   return(TurnRight());
 }
@@ -162,7 +162,7 @@ protected func ContactLeft()
 protected func ContactRight()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
   
   return(TurnLeft());
 }
@@ -171,25 +171,25 @@ protected func ContactRight()
 
 public func TurnRight()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Run" && GetAction() ne "Swim")) return();
-  if (GetXDir() < 0) SetXDir(0);
-  SetDir(DIR_Right());
-  SetComDir(COMD_Right()); 
+  if (Or(Stuck(), (And(And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Run")), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
+  SetDir(DIR_Right);
+  SetComDir(COMD_Right);
   return(1);
 }
 
 public func TurnLeft()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Run" && GetAction() ne "Swim")) return();
-  if (GetXDir() > 0) SetXDir(0);
-  SetDir(DIR_Left());
-  SetComDir(COMD_Left()); 
+  if (Or(Stuck(), (And(And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Run")), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
+  SetDir(DIR_Left);
+  SetComDir(COMD_Left);
   return(1);
 }
 
 public func DoJump()
 {
-  if (GetAction() ne "Walk" && GetAction() ne "Run") return();
+  if (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Run"))) return;
   if (Random(2)) Sound("Growl*");
   Jump();
 }
@@ -224,9 +224,9 @@ private func CountMe()
 protected func ControlCommand(szCommand, pTarget, iTx, iTy)
 {
  // Bewegungskommando
- if (szCommand eq "MoveTo")
+ if (!!SEqual(szCommand, "MoveTo"))
   return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
- return(0);
+ return(nil);
 }
 
 protected func ContainedLeft()
@@ -250,8 +250,8 @@ protected func ContainedUp()
  [$TxtMovement$]
  SetCommand(this(), "None");
 
- if (GetAction() eq "Swim")
-  return(SetComDir(COMD_Up()));
+ if (!!SEqual(GetAction(), "Swim"))
+  return(SetComDir(COMD_Up));
 
  DoJump();
  return(1);
@@ -262,10 +262,10 @@ protected func ContainedDown()
  [$TxtMovement$]
  SetCommand(this(), "None");
 
- if (GetAction() eq "Swim")
-  return(SetComDir(COMD_Down()));
+ if (!!SEqual(GetAction(), "Swim"))
+  return(SetComDir(COMD_Down));
 
- if (GetAction() eq "Walk")
+ if (!!SEqual(GetAction(), "Walk"))
   SetAction("HeadDown");
   
  return(1);

@@ -1,6 +1,6 @@
 /*--- Flint ---*/
 
-#strict
+#strict 3
 
 public func ExplodeSize() 
 { 
@@ -11,7 +11,7 @@ protected func Hit()
 { 
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()) ))
   Explode(ExplodeSize());
-else FakeExplode(ExplodeSize(),0,0,ExplodeSize());
+else FakeExplode(ExplodeSize(),nil,nil,ExplodeSize());
 }
 
 /* Kann in der Chemiefabrik hergestellt werden */

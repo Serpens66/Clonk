@@ -4,7 +4,7 @@
 // The edges may have properties and only one edge may go from
 // one vertex to another
 
-#strict
+#strict 3
 // uses attach info...
 #include L_AI
 
@@ -24,7 +24,8 @@ public func IsVertex() { return(true); }
 // add an edge. If fReconnect = true, there'll be an edge back
 public func AddEdge(object pTarget, bool fReconnect) {
 	// ein Pfad ohne Target ist nix
-	if(!pTarget) return(false);
+	fReconnect ??= false;
+	if(!pTarget) return(nil);
 
 	// new edge
 	// addItem returns false in an object set if item already
@@ -33,7 +34,7 @@ public func AddEdge(object pTarget, bool fReconnect) {
 
 	if(fReconnect) {
 		// same goes for the other side
-		ret = (ret && pTarget->AddEdge(this()));
+		ret = (And(ret, pTarget->AddEdge(this())));
 	}
 	
 	// will return false if the connection is already there
@@ -42,12 +43,13 @@ public func AddEdge(object pTarget, bool fReconnect) {
 
 // remove an edge
 public func RemoveEdge(object pTarget, bool fBoth) {
-	if(!pTarget) return(false);
+	fBoth ??= false;
+	if(!pTarget) return(nil);
 	var ret = pVertices->RemoveItem(pTarget);
 	ClearEdgeData(pTarget);
 	
 	if(fBoth) {
-		ret = (ret || pTarget->RemoveEdge(this()));
+		ret = (Or(ret, pTarget->RemoveEdge(this())));
 	}
 	// will return true if at least one edge has been removed
 	return(ret);
@@ -57,6 +59,7 @@ public func RemoveEdge(object pTarget, bool fBoth) {
 // attention: no guarantee that the order will stay...
 // so dont safe the edge by number but rather by object 
 public func GetVertex(int iNum) {
+	iNum ??= 0;
 	return(pVertices->GetItem(iNum));
 }
 
@@ -68,21 +71,23 @@ public func GetEdgeCount() {
 
 // sets the iPos data for the edge to pTarget
 public func SetEdgeData(object pTarget, int iPos, data) {
-	if(!pTarget) return(false);
-	if(iPos < 0) return(false);
+	iPos ??= 0;
+	if(!pTarget) return(nil);
+	if((iPos ?? 0) < 0) return(nil);
 	
 	return(SetInfo(pTarget,iPos, data));
 }
 
 // gets the iPos data for the edge to pTarget
 public func GetEdgeData(object pTarget, int iPos) {
-	if(!pTarget) return(false);
-	if(iPos < 0) return(false);
+	iPos ??= 0;
+	if(!pTarget) return(nil);
+	if((iPos ?? 0) < 0) return(nil);
 	
 	return(GetInfo(pTarget,iPos));
 }
 
 public func ClearEdgeData(object pTarget) {
-	if(!pTarget) return(false);
+	if(!pTarget) return(nil);
 	return(ClearInfo(pTarget));
 }

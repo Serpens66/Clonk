@@ -1,10 +1,10 @@
 /*-- volle Gasflasche --*/
 
-#strict
+#strict 3
 
 protected func GasExhaust()
 {
-  CreateObject(CEH2,1-Random(3),-3); 
+  CreateObject(CEH2,1-(Random(3) ?? 0),-3);
   return(1);
 }
 

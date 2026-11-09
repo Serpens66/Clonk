@@ -1,7 +1,7 @@
 /*-- Schwebelift --*/
 // (Dieses Script wird von den Liften von SLC und CoAl gemeinsam genutzt)
 
-#strict
+#strict 3
 
 local AutoMode, AutoMoveDir;    // Dauerbetrieb: an/aus-Schalter, Richtung
 local RangeTop, RangeBottom;    // Ober- und Untergrenze
@@ -35,9 +35,9 @@ private func UpdateRangeBottom()
 {
   var x = GetX();
   var y = GetY();
-  while (PathFree(x, y, x, y+5) && (y < LandscapeHeight()))
-    y += 5;
-  RangeBottom = y+5;
+  while (And(PathFree(x, y, x, (y ?? 0)+5), ((y ?? 0) < (LandscapeHeight() ?? 0))))
+    S42MigrationAssign(y, "+=", 5);
+  RangeBottom = (y ?? 0)+5;
   UpdateTransferZone();
   return(1);
 }
@@ -48,9 +48,9 @@ protected func Timer()
   // kein Liftdock da?
   if (!Liftdock)
     return(Message("kein Lift!"));
-  timer = (++timer) % 30;
+  timer = (S42MigrationStep(timer, 1)) % 30;
   // keine Energie und nicht im Liftdock?
-  if (HasEMP(Liftdock) || NoEnergy() && ((GetY()-RangeTop) > 5))
+  if (Or(HasEMP(Liftdock), And(NoEnergy(), (((GetY() ?? 0)-(RangeTop ?? 0)) > 5))))
     return(SetAction("Idle"));
 
   // Lore fassen
@@ -58,8 +58,8 @@ protected func Timer()
 
  // Objekte nach oben 
   var obj; 
-  while (obj = FindObject(0, -23,0,45,10, OCF_Collectible(),0,0,NoContainer(),obj))
-    SetPosition(GetX(obj),GetY()+6,obj);
+  while (obj = FindObject(nil, -23,nil,45,10, OCF_Collectible,nil,nil,NoContainer(),obj))
+    SetPosition(GetX(obj),(GetY() ?? 0)+6,obj);
 
   if (!timer) Activity();
 }
@@ -71,11 +71,11 @@ protected func Timer()
 protected func Activity()
 { 
   // zu wartenden Clonks fahren
-  if (!AutoMode && !Passenger() && !GetCommand())
+  if (And(And(!AutoMode, !Passenger()), !GetCommand()))
     MoveToWaitingClonk();
   // Sicherheitscheck: Bewegung ohne Kommando nur bei Schachtbohrung
   if (GetComDir())
-    if (!GetCommand() && (GetAction() ne "Drill"))
+    if (And(!GetCommand(), (!SEqual(GetAction(), "Drill"))))
       {Halt(); Message("angehalten",this()); }
   // fertig
   return(1);
@@ -85,20 +85,20 @@ private func MoveToWaitingClonk()
 {
   if (HasEMP(Liftdock)) return(1);
   // wartenden Clonk finden
-  var clonk = FindObject(0, -60, RangeTop-GetY(), 120, RangeBottom-RangeTop, OCF_CrewMember(),0,0,NoContainer());
-  if (!clonk) return(0);
+  var clonk = FindObject(nil, -60, (RangeTop ?? 0)-(GetY() ?? 0), 120, (RangeBottom ?? 0)-(RangeTop ?? 0), OCF_CrewMember,nil,nil,NoContainer());
+  if (!clonk) return(nil);
   // wartet der Clonk auch?
-  if (GetComDir(clonk) != COMD_Stop()) return(0);
-  if (GetAction(clonk) ne "Walk"
+  if (!Equal(GetComDir(clonk), COMD_Stop)) return(nil);
+  if (And(And(And(And(!SEqual(GetAction(clonk), "Walk")
  // && GetAction(clonk) ne "ArmedWalk" // deaktiviert weil sonst nicht zu hazard mit waffe
- &&
-      GetAction(clonk) ne "Push"  && GetAction(clonk) ne "Swim" &&
-      GetAction(clonk) ne "Scale" && GetAction(clonk) ne "Hangle") return(0);
+ ,
+      !SEqual(GetAction(clonk), "Push")), !SEqual(GetAction(clonk), "Swim")),
+      !SEqual(GetAction(clonk), "Scale")), !SEqual(GetAction(clonk), "Hangle"))) return(nil);
   // nicht bei verfeindeten Clonks
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   // Weg muss frei ist
-  if (GetY(clonk) < GetY())  if (!PathFree(GetX(), GetY(),    GetX(), GetY(clonk)))    return(0);
-  if (GetY(clonk) > GetY())  if (!PathFree(GetX(), GetY()+PlateHeight()/2, GetX(), GetY(clonk))) return(0);
+  if ((GetY(clonk) ?? 0) < (GetY() ?? 0))  if (!PathFree(GetX(), GetY(),    GetX(), GetY(clonk)))    return(nil);
+  if ((GetY(clonk) ?? 0) > (GetY() ?? 0))  if (!PathFree(GetX(), (GetY() ?? 0)+(PlateHeight() ?? 0)/2, GetX(), GetY(clonk))) return(nil);
   // Zielposition setzen und starten
   SetMoveTo(GetY(clonk));
   return(1);              
@@ -107,30 +107,30 @@ private func MoveToWaitingClonk()
 private func GrabLorry()
 {
   // Lore anfassen
-  if (GetAction() ne "Wait") return(0);
+  if (!SEqual(GetAction(), "Wait")) return(nil);
   var lorry = FindObject(LORY, -20,-20, 40,40);
-  if (!lorry) return(0);
+  if (!lorry) return(nil);
   
   // Wenn ein Clonk dabei ist, nichts tun
-  if (FindObject(0,-PlateWidth()/2,-PlateHeight(),PlateWidth(),PlateHeight(),OCF_CrewMember(),"Push",FindObject(LORY))) return(0);
+  if (FindObject(nil,-(PlateWidth() ?? 0)/2,-(PlateHeight() ?? 0),PlateWidth(),PlateHeight(),OCF_CrewMember,"Push",FindObject(LORY))) return(nil);
   // Lore positionieren
-  SetPosition(GetX(), GetY()-1, lorry);
-  SetR(0, lorry);    SetRDir(0, lorry);
-  SetXDir(0, lorry); SetYDir(0, lorry);
+  SetPosition(GetX(), (GetY() ?? 0)-1, lorry);
+  SetR(nil, lorry);    SetRDir(nil, lorry);
+  SetXDir(nil, lorry); SetYDir(nil, lorry);
   return(1);
 }
 
 private func SetMoveTo(position)
 {
   // keine Energie
-  if (NoEnergy() || HasEMP(Liftdock)) return(1);
+  if (Or(NoEnergy(), HasEMP(Liftdock))) return(1);
   // los geht's
   SetAction("Travel"); 
-  var Dir = 0;
-  if (position > GetY())  Dir = +4;
-  if (position < GetY())  Dir = -5;
-  SetCommand(this(),"MoveTo", 0, GetX(), Max(position, RangeTop)+Dir);
-  SetYDir(0);
+  var Dir = nil;
+  if ((position ?? 0) > (GetY() ?? 0))  Dir = +4;
+  if ((position ?? 0) < (GetY() ?? 0))  Dir = -5;
+  SetCommand(this(),"MoveTo", nil, GetX(), (Max(position, RangeTop) ?? 0)+(Dir ?? 0));
+  SetYDir(nil);
   return(1);
 }
 
@@ -140,14 +140,14 @@ public func Halt()
   if (!Liftdock)
     return(SetAction("Idle"));
   // keine Energie und nicht im Liftdock?
-  if (HasEMP(Liftdock) || NoEnergy() && !Inside(GetY()-GetY(Liftdock), -4, -1))
+  if (Or(HasEMP(Liftdock), And(NoEnergy(), !Inside((GetY() ?? 0)-(GetY(Liftdock) ?? 0), -4, -1))))
     return(SetAction("Idle"));
   // anhalten
   SetAction("Wait");
   SetCommand(this(),"None");
-  SetComDir(COMD_Stop());
-  SetYDir(0);
-  if (GetY() > RangeBottom) UpdateRangeBottom();
+  SetComDir(COMD_Stop);
+  SetYDir(nil);
+  if ((GetY() ?? 0) > (RangeBottom ?? 0)) UpdateRangeBottom();
   return(1);
 }
 
@@ -157,12 +157,12 @@ public func Halt()
 private func Drilling()
 {
   if (HasEMP(Liftdock)) Halt();
-if((!GBackLiquid(GetX(),GetY()+5)) && FindContents(ENAP,Liftdock))
+if(And((!GBackLiquid(GetX(),(GetY() ?? 0)+5)), FindContents(ENAP,Liftdock)))
 //Überall durchbohren, wenn keine flüssigkeit unter fahrstuhl (flüssigkeit klappt noch nicht)
-    {FreeRect(GetX() - (PlateWidth()/2), GetY() + (PlateHeight()/2), PlateWidth(), PlateHeight());RemoveObject(FindContents(ENAP,Liftdock));}
+    {FreeRect((GetX() ?? 0) - ((PlateWidth() ?? 0)/2), (GetY() ?? 0) + ((PlateHeight() ?? 0)/2), PlateWidth(), PlateHeight());RemoveObject(FindContents(ENAP,Liftdock));}
   // Steuermann verloren?
-  if (!FindObject(0,0,0,0,0,OCF_CrewMember(),"Push",this()) &&
-      !FindObject(0,0,0,0,0,OCF_CrewMember(),"Push",FindObject(LORY)))
+  if (And(!FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,"Push",this()),
+      !FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,"Push",FindObject(LORY))))
     Halt();
   return(1);
 }
@@ -170,7 +170,7 @@ if((!GBackLiquid(GetX(),GetY()+5)) && FindContents(ENAP,Liftdock))
 private func Waiting()
 {
   // Dauerbetrieb: selbständig losfahren
-  if (AutoMode == 1)
+  if (Equal(AutoMode, 1))
     SelfMovement();
   return(1);
 }
@@ -180,7 +180,7 @@ private func SelfMovement()
   if (HasEMP(Liftdock)) return(1);
   // Selbständig rauf- bzw. runterfahren
   if (AutoMoveDir)  SetMoveTo(RangeTop);
-  if (!AutoMoveDir) SetMoveTo(LandscapeHeight()-12);
+  if (!AutoMoveDir) SetMoveTo((LandscapeHeight() ?? 0)-12);
   AutoMoveDir = !AutoMoveDir;
   return(1);
 }
@@ -189,19 +189,20 @@ private func SelfMovement()
 
 protected func ControlCommand(Cmd, Target, Tx, Ty)
 {
-  if (HasEMP(Liftdock)) return(0);
-  if (!Liftdock) return(0);
+  if (HasEMP(Liftdock)) return(nil);
+  if (!Liftdock) return(nil);
   // nur Bewegungskommando auswerten
-  if (Cmd ne "MoveTo")
-    return(0);
+  if (!SEqual(Cmd, "MoveTo"))
+    return(nil);
   // Ziel einstellen
-  if (Inside(Tx, GetX()-15, GetX()+15))
+  if (Inside(Tx, (GetX() ?? 0)-15, (GetX() ?? 0)+15))
     return(SetMoveTo(Ty));
-  return(0);
+  return(nil);
 }
 
-protected ControlCommandFinished:
+protected func ControlCommandFinished(...) {
   return(Halt());
+}
 
 
 /* Steuerung */
@@ -210,13 +211,13 @@ public func ControlDownSingle(clonk)
 {
   [Abwärts]
   // kein Liftdock oder keine Energie?
-  if (!Liftdock)  return(0);
-  if (NoEnergy() || HasEMP(Liftdock)) return(0);
+  if (!Liftdock)  return(nil);
+  if (Or(NoEnergy(), HasEMP(Liftdock))) return(nil);
   Sound("Click");
   // verfeindet?
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   // nach unten fahren
-  SetMoveTo(LandscapeHeight()-12);
+  SetMoveTo((LandscapeHeight() ?? 0)-12);
   return(1);
 }
 
@@ -224,11 +225,11 @@ public func ControlUp(clonk)
 {
   [Auswärts]
   // kein Liftdock oder keine Energie?
-  if (!Liftdock)  return(0);
-  if (NoEnergy() || HasEMP(Liftdock)) return(0);
+  if (!Liftdock)  return(nil);
+  if (Or(NoEnergy(), HasEMP(Liftdock))) return(nil);
   Sound("Click");
   // verfeindet?
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   // nach oben fahren
   SetMoveTo(RangeTop);
   return(1);
@@ -249,10 +250,10 @@ public func ControlRight(clonk)
 private func DoControlStop(clonk)
 {
   // nicht reagieren, wenn kein Liftdock da
-  if (!Liftdock) return(0);
+  if (!Liftdock) return(nil);
   Sound("Click");
   // verfeindet?
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   // anhalten
   return(Halt());
 }
@@ -261,17 +262,17 @@ public func ControlDigDouble(clonk)
 {
   [Schachtbohrung]
   // kein Liftdock oder keine Energie?
-  if (!Liftdock)  return(0);
-  if (NoEnergy() || HasEMP(Liftdock)) return(0);
+  if (!Liftdock)  return(nil);
+  if (Or(NoEnergy(), HasEMP(Liftdock))) return(nil);
   Sound("Click");
   // verfeindet?
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   // kurz anhalten
-  SetYDir(0);
+  SetYDir(nil);
   SetCommand(this(),"None");
   // jetzt wird gegraben
   SetAction("Drill");
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
   return(1);
 }
 
@@ -279,11 +280,11 @@ public func ControlThrow(clonk)
 {
   [Dauerbetrieb]
   // ohne Liftdock geht da nix
-  if (!Liftdock) return(0);
+  if (!Liftdock) return(nil);
   if (HasEMP(Liftdock)) return(Sound("Error"));
   Sound("Click");
   // verfeindet?
-  if (Hostile(GetController(clonk), GetOwner())) return(0);
+  if (Hostile(GetController(clonk), GetOwner())) return(nil);
   AutoMode = !AutoMode;
   if (AutoMode) Message("Dauerbetrieb an", this());
            else Message("Dauerbetrieb aus", this());
@@ -300,14 +301,17 @@ protected func ContactBottom()
   return(1);
 }
 
-protected ContactTop:
+protected func ContactTop(...) {
   return(Halt());
+}
 
-private Passenger:
-  return(FindObject(0, -PlateWidth()/2+2,-PlateHeight()/2, PlateWidth()-4,PlateHeight(), OCF_CrewMember(),0,0,NoContainer()));
+private func Passenger(...) {
+  return(FindObject(nil, -(PlateWidth() ?? 0)/2+2,-(PlateHeight() ?? 0)/2, (PlateWidth() ?? 0)-4,PlateHeight(), OCF_CrewMember,nil,nil,NoContainer()));
+}
 
-private NoEnergy:
+private func NoEnergy(...) {
   return(!GetEnergy(Liftdock));
+}
 
 
 /* Transfer */
@@ -317,33 +321,33 @@ protected func UpdateTransferZone()
   if (!Liftdock)
     return(SetTransferZone());
   var dockY = GetY(Liftdock);
-  SetTransferZone(-(PlateHeight()-2), dockY-GetY(), PlateWidth(), RangeBottom-dockY+12);
+  SetTransferZone(-((PlateHeight() ?? 0)-2), (dockY ?? 0)-(GetY() ?? 0), PlateWidth(), (RangeBottom ?? 0)-(dockY ?? 0)+12);
   return(1);
 }
 
 protected func ControlTransfer(clonk, Tx, Ty)  
 {
   // Durchgang am Boden des Fahrstuhlschachts: nicht warten
-  if (Inside(GetY(clonk)-RangeBottom, -10, +10))
-    if (Inside(Ty-RangeBottom, -10, +10))
-      return(0);
+  if (Inside((GetY(clonk) ?? 0)-(RangeBottom ?? 0), -10, +10))
+    if (Inside((Ty ?? 0)-(RangeBottom ?? 0), -10, +10))
+      return(nil);
   // Maximale Obergrenze Zielposition durch Fahrstuhl
-  if (!Liftdock) return(0);
-  Ty = Max(Ty, GetY(Liftdock)+15);
+  if (!Liftdock) return(nil);
+  Ty = Max(Ty, (GetY(Liftdock) ?? 0)+15);
   // Fahrstuhl an Zielposition: erledigt
-  if (Inside(Ty-GetY(), -5, +5))
-    return(0);
+  if (Inside((Ty ?? 0)-(GetY() ?? 0), -5, +5))
+    return(nil);
   // Fahrstuhl fährt: warten
-  if (GetAction() ne "Wait")
+  if (!SEqual(GetAction(), "Wait"))
     return(1);
   // Fahrstuhl noch nicht beim Clonk: warten
-  if (!Inside(GetY()-GetY(clonk), -5, +5))
+  if (!Inside((GetY() ?? 0)-(GetY(clonk) ?? 0), -5, +5))
     return(1);
   // Fahrstuhl nur in der Mitte anfassen
-  if (!Inside(GetX()-GetX(clonk), -5, +5))
+  if (!Inside((GetX() ?? 0)-(GetX(clonk) ?? 0), -5, +5))
     return(AddCommand(clonk,"MoveTo",this()));
   // Fahrstuhl anfassen
-  if (GetAction(clonk) ne "Push" || GetActionTarget(0,clonk) != this())
+  if (Or(!SEqual(GetAction(clonk), "Push"), !Equal(GetActionTarget(nil,clonk), this())))
     return(AddCommand(clonk,"Grab",this()));
   // Fahrstuhl zur Zielposition steuern
   return(SetMoveTo(Ty));
@@ -354,7 +358,7 @@ protected func ControlTransfer(clonk, Tx, Ty)
 
 protected func Damage()
 {
-  if (GetDamage() < GetMaxDamage()) return(1);
+  if ((GetDamage() ?? 0) < (GetMaxDamage() ?? 0)) return(1);
   return(Destroy());
 }
 
@@ -362,7 +366,7 @@ protected func Hit2()
 {
   // Aufprall auf den Boden
   if (NoEnergy()) return(Destroy());
-  return(0);
+  return(nil);
 }
 
 public func Destroy()

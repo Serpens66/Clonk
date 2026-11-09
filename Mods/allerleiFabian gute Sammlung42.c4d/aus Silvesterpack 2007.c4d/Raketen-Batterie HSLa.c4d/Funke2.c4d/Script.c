@@ -1,6 +1,6 @@
 /*-- Funke --*/
 
-#strict
+#strict 3
 
 local R,G,B,a,i;
 
@@ -19,11 +19,11 @@ private func Effect() {
 var zufall1,zufall2;
 zufall1=RandomX(40,60);
 zufall2=Random(50);
-  CreateParticle("EMSpark",0,0,0,0,zufall1,HSLa(R,G,B,zufall2));
-  CreateParticle("PSpark",0,0,0,0,RandomX(1000,1500),HSLa(R,G,B,180));
-  ++i;
+  CreateParticle("EMSpark",nil,nil,nil,nil,zufall1,HSLa(R,G,B,zufall2));
+  CreateParticle("PSpark",nil,nil,nil,nil,RandomX(1000,1500),HSLa(R,G,B,180));
+  S42MigrationStep(i, 1);
   Sound("Fuse");
-  if(i>=45){
+  if((i ?? 0)>=45){
     return(Finshes());
     }
   return(1);

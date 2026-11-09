@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 
 func Initialize() 
@@ -7,7 +7,7 @@ func Initialize()
 	var id;
 	Local()=1;
 	if (id=FindObject(GetID()))
-	  { Local()+=Local(0,id);  }
+	  { S42MigrationAssign(Local(), "+=", (Local(nil,id) ?? 0));  }
 	SetAction("Wait");
 }
 
@@ -19,22 +19,22 @@ func Initialized() {
 if(!FindObject(NB3L)) // wenn kein "Nebelerzeuger alle x Frames", dann bewegt sich der Nebel nicht, weshalb er überall verteilt wird.
   {
 var i;
-while(i<(Local()*15*Sqrt(LandscapeWidth()*LandscapeHeight())/800)) 
-	{i++; CreateParticle("Nebel2",Random(LandscapeWidth()+150)-GetX(),Random(LandscapeHeight()+150)-GetY(),0,0,RandomX(1000,1500), RGBa(0,0,0,Random(30)));}
+while((i ?? 0)<((Local() ?? 0)*15*(Sqrt((LandscapeWidth() ?? 0)*(LandscapeHeight() ?? 0)) ?? 0)/800))
+	{S42MigrationStep(i, 1, true); CreateParticle("Nebel2",(Random((LandscapeWidth() ?? 0)+150) ?? 0)-(GetX() ?? 0),(Random((LandscapeHeight() ?? 0)+150) ?? 0)-(GetY() ?? 0),nil,nil,RandomX(1000,1500), RGBa(nil,nil,nil,Random(30)));}
 return(1);
   }
 
   //Nebel auf Landschaft plazieren
-  for(var i = LandscapeWidth()/10; i > 0; i--)
-   DoFogg(i*10);
+  for(var i = (LandscapeWidth() ?? 0)/10; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+   DoFogg((i ?? 0)*10);
 }
 
 protected func Timerr()
 {
   if(!FindObject(NB3L)) return(1); // wenn kein "Nebelerzeuger alle x Frames", dann bewegt sich der Nebel nicht, muss also auch nicht neu erstellt werden
-  if(GetWind(0,0,1)<0)  // wenn windrichtung nach links, dann am rechten Rand erzeugen.
+  if((GetWind(nil,nil,1) ?? 0)<0)  // wenn windrichtung nach links, dann am rechten Rand erzeugen.
   DoFogg(LandscapeWidth());
-  if(GetWind(0,0,1)>0)
+  if((GetWind(nil,nil,1) ?? 0)>0)
   DoFogg();
 }
 
@@ -43,12 +43,12 @@ protected func DoFogg(x)
   //Atmosphärischen Nebel an den Kartenrändern erstellen
   var black = Random(20);
  
-if(GetWind(0,0,1)<10 && GetWind(0,0,1)>-10)  // wenn wind sehr langsam, dann deutlich seltener neue Partikel erstellen.
+if(And((GetWind(nil,nil,1) ?? 0)<10, (GetWind(nil,nil,1) ?? 0)>-10))  // wenn wind sehr langsam, dann deutlich seltener neue Partikel erstellen.
 {if(!Random(200*10))
-CreateParticle ("Nebel2", x, Random(LandscapeHeight()),GetWind(0,0,1)/10, 0, RandomX(1000,1500), RGBa(black,black,black,Random(10))); return();}
-var erstellen = 140-Abs(GetWind(0,0,1)); // je schneller der Wind (bis maximal 100), desto mehr partikel werden erzeugt.
-  if(!Random((erstellen/4)*6))
-  CreateParticle ("Nebel2", x, Random(LandscapeHeight()),GetWind(0,0,1)/10, 0, RandomX(1000,1500), RGBa(black,black,black,Random(10))); 
+CreateParticle ("Nebel2", x, Random(LandscapeHeight()),(GetWind(nil,nil,1) ?? 0)/10, nil, RandomX(1000,1500), RGBa(black,black,black,Random(10))); return;}
+var erstellen = 140-(Abs(GetWind(nil,nil,1)) ?? 0); // je schneller der Wind (bis maximal 100), desto mehr partikel werden erzeugt.
+  if(!Random(((erstellen ?? 0)/4)*6))
+  CreateParticle ("Nebel2", x, Random(LandscapeHeight()),(GetWind(nil,nil,1) ?? 0)/10, nil, RandomX(1000,1500), RGBa(black,black,black,Random(10)));
 }
 
 

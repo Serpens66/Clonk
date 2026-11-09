@@ -1,6 +1,6 @@
 /*-- Maschinenfabrik --*/
 
-#strict
+#strict 3
 #include BOB1
 
 local basement, manager;
@@ -12,17 +12,17 @@ public func IsWaste(){ return(10);}
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(-35,-17);
   // Fabrikobjekt
-  factory = CreateObject(SOF3,0,0,GetOwner());
+  factory = CreateObject(SOF3,nil,nil,GetOwner());
   factory->Init(this());
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS24,0,+8,GetOwner());
+  basement = CreateObject(BS24,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -64,7 +64,7 @@ private func DoorClosed()
 {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
     {
       GrabContents(obj);
@@ -80,10 +80,13 @@ func EnoughEnergy()
 {
     return(factory->EnoughEnergy());
 }
-public IsEnergyConsumer: return(1); 
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* Eigenschaften */
 
-public InfoBarSize: return(5);
-public GetMaxDamage: return(120);
+public func InfoBarSize(...) { return(5);
+}
+public func GetMaxDamage(...) { return(120);
+}

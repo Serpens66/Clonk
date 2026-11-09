@@ -1,6 +1,6 @@
 /*-- Glüh-Effekt --*/
 
-#strict
+#strict 3
 
 local base;
 
@@ -21,8 +21,8 @@ public func Init(par_base)
 private func UpdateGlow()
 {
   // Glühen neu einstellen
-  var alpha = 255 - base->GetFill();
-  SetColorDw((GetColorDw(base) & 16777215) + (alpha << 24));
+  var alpha = 255 - (base->GetFill() ?? 0);
+  SetColorDw(((GetColorDw(base) ?? 0) & 16777215) + ((alpha ?? 0) << 24));
   return(1);
 }
 

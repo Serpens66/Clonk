@@ -3,7 +3,7 @@
 // ein appendto an alle Basengebäude, damit man per contextmenü die Flagge abmontieren kann. Ist besser, als wenn man dafür die Regel Flagge abnehmbar einschalten muss und die Flagge einfach nur nervt, weil sie ständig ausversehen mitgenommen wird.
 
 
-#strict
+#strict 3
 
 
 #appendto CST1
@@ -48,11 +48,11 @@ func HatLebeSensorenplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(LS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmeLebeSensorenAb(pCaller)
 {
@@ -68,11 +68,11 @@ func HatWasserSensorenplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(WS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmeWasserSensorenAb(pCaller)
 {
@@ -88,11 +88,11 @@ func HatSchalterplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(SS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmeSchalterAb(pCaller)
 {
@@ -108,11 +108,11 @@ func HatKnopfplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(BS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmeKnopfAb(pCaller)
 {
@@ -127,11 +127,11 @@ func HatPINplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(PS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmePINAb(pCaller)
 {
@@ -147,11 +147,11 @@ func HatKartenleserplatziert()
 var upl1 = FindObject2(Find_ID(UPLT),Find_Action("Turn"),Find_Distance(50));
 var upl2 = FindObject2(Find_ID(UPLB),Find_Action("Turn"),Find_Distance(50));
 var flag = FindObject2(Find_ID(FLAG),Find_Action("FlyBase"),Find_Distance(50));
-var obj = GetActionTarget(0,upl1);
-if(!obj) obj = GetActionTarget(0,upl2);
-if(!obj) obj = GetActionTarget(0,flag);
+var obj = GetActionTarget(nil,upl1);
+if(!obj) obj = GetActionTarget(nil,upl2);
+if(!obj) obj = GetActionTarget(nil,flag);
 for (var sensor in FindObjects(Find_ID(CS4K), Find_Owner(GetOwner()),Find_Or(Find_Action("Attach"),Find_Action("Wall"))))
-if(sensor && obj) return(1);
+if(And(sensor, obj)) return(1);
 }
 func ContextNehmeKartenleserAb(pCaller)
 {
@@ -170,7 +170,7 @@ protected func ContainedUp(a,b,c)
   var uplink = GetUplink();
   if (!uplink)  return(_inherited(a,b,c));
   if (HasEMP()) return(Sound("Error"));
-  uplink->KeyUp(Par(0));
+  uplink->KeyUp(Par(nil));
   return(1);
   
 }
@@ -181,15 +181,15 @@ protected func ContainedDig(a,b,c)
   var uplink = GetUplink();
   if (!uplink)  return(_inherited(a,b,c));
   if (HasEMP()) return(Sound("Error"));
-  uplink->KeyDig(Par(0));
+  uplink->KeyDig(Par(nil));
   return(1);
 }
 
 private func GetUplink() 
 { 
-  var uplink = FindObject(UPLB,0,0,0,0,0,"Turn",this());
+  var uplink = FindObject(UPLB,nil,nil,nil,nil,nil,"Turn",this());
   if (!uplink)
-      uplink = FindObject(UPLT,0,0,0,0,0,"Turn",this());
+      uplink = FindObject(UPLT,nil,nil,nil,nil,nil,"Turn",this());
   return(uplink);
 }
 

@@ -1,6 +1,6 @@
 /*-- Blitz-Zauber --*/
 
-#strict
+#strict 3
 
 func Activate(pCaster,pRealcaster) {
   var pClonk;
@@ -8,14 +8,14 @@ func Activate(pCaster,pRealcaster) {
   else pClonk=pCaster;
 
   var iResult;
-  if (iResult = CheckEffect("LightningNSpell", 0, 125)) return(iResult!=-1 && RemoveObject());
+  if (iResult = CheckEffect("LightningNSpell", nil, 125)) return(And(!Equal(iResult, -1), RemoveObject()));
   
   // Zielen wenn möglich
   if (pClonk->~DoSpellAim(this())) return(1);
 
   // Blitz erzeugen
-  var obj = CreateObject(LGTS, -GetX(), -GetY(), GetOwner(pClonk));
-  obj->Launch(GetX(pCaster)+GetVertex(0, VTX_X, pCaster), GetY(pCaster)+GetVertex(0, VTX_Y, pCaster), (!GetDir(pCaster))*1800);
+  var obj = CreateObject(LGTS, -(GetX() ?? 0), -(GetY() ?? 0), GetOwner(pClonk));
+  obj->Launch((GetX(pCaster) ?? 0)+(GetVertex(nil, VTX_X, pCaster) ?? 0), (GetY(pCaster) ?? 0)+(GetVertex(nil, VTX_Y, pCaster) ?? 0), ((!GetDir(pCaster)) ?? 0)*1800);
   Sound("Thunder*");
   RemoveObject();
   return(1);
@@ -25,8 +25,9 @@ func Activate(pCaster,pRealcaster) {
 public func ActivateAngle(object pCaller, int iAngle)
   {
   // Blitz erzeugen
-  var obj = CreateObject(LGTS, -GetX(), -GetY(), GetOwner(pCaller));
-  obj->Launch(GetX(pCaller), GetY(pCaller), (900-iAngle*10));
+  iAngle ??= 0;
+  var obj = CreateObject(LGTS, -(GetX() ?? 0), -(GetY() ?? 0), GetOwner(pCaller));
+  obj->Launch(GetX(pCaller), GetY(pCaller), (900-(iAngle ?? 0)*10));
   Sound("Thunder*");
 
   // Objekt löschen

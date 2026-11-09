@@ -1,6 +1,6 @@
 /*-- Flower --*/
 
-#strict 2
+#strict 3
 #include GRA1
 
 private func ReproductionAreaSize() { return(500); } // Größe des Bereichs, in dem neue Bäume dieser Art entstehen können
@@ -17,17 +17,17 @@ protected func Initialize(obj) {
 
 public func Seed()
 {
- if(GetMaterial(0,5) != Material("Earth"))  //nur auf Erde wachsen, zb wenn erde mittlerweile weggegraben, soll gras nicht in der luft hängen
+ if(!S42MigrationEqual(GetMaterial(nil,5), Material("Earth")))  //nur auf Erde wachsen, zb wenn erde mittlerweile weggegraben, soll gras nicht in der luft hängen
     {
       RemoveObject();
     	return(1);
     }
  var pReproduct;
-  if(GetCon()<80)
+  if((GetCon() ?? 0)<80)
    return(1);
- if(GetTemperature()<0)
+ if((GetTemperature() ?? 0)<0)
    return(1);
- if(!(GetSeason()>=12 && GetSeason()<62)) // wenn weder Frühling noch Sommer, nicht pflanzen.
+ if(!((GetSeason() ?? 0)>=12 && (GetSeason() ?? 0)<62)) // wenn weder Frühling noch Sommer, nicht pflanzen.
   return(1);
   // Je nach Fortpflanzungsrate mehr oder weniger oft...
 //  if(!Random(ReproductionRate()))

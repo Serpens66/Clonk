@@ -1,6 +1,6 @@
 /*-- Gemeinschaftskonto --*/
 
-#strict
+#strict 3
 
 
 // Kann mittels des neuen Spielzielauswählers
@@ -11,9 +11,9 @@ public func IsChooseable2() { return(1); }
 protected func Initialize()
 {
   // Spieler ohne Konto?
-  for(var i = 0; i < GetPlayerCount(); ++ i)
+  for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep( i, 1))
   {
-    CreateObject(ACNT,0, 0, GetPlayerByIndex(i) );
+    CreateObject(ACNT,nil, nil, GetPlayerByIndex(i) );
   }
 }
 
@@ -21,7 +21,7 @@ public func InitializePlayer(iPlr)
 {
   // Neuer Spieler, neues Konto
   var old; if (old=FindObjectOwner(ACNT, iPlr)) RemoveObject(old);
-  CreateObject(ACNT, 0,0, iPlr);
+  CreateObject(ACNT, nil,nil, iPlr);
 }
 
 protected func Activate(iPlr)
@@ -36,6 +36,6 @@ protected func Destruction()
 {
   // Keine Teamaccounts, keine Konten
   // fixme: Sollte Gemeinschaftskonten vorher auflösen...
-  if (ObjectCount(GetID())<=1) RemoveAll(ACNT);
+  if ((ObjectCount(GetID()) ?? 0)<=1) RemoveAll(ACNT);
   return(1);
 }

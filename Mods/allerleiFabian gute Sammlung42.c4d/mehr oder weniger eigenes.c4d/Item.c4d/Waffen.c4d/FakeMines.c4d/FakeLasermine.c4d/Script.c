@@ -1,13 +1,13 @@
-#strict
+#strict 3
 #include MIN_
 
 local pLaser, iLastExplode;
 
 protected func OnActivate() {
-    pLaser = CreateObject(LASR,0,0,-1);
-    SetClrModulation(RGBa(255,0,0,255),pLaser);
-    pLaser->SetPosition(GetX()+Sin(GetR(),3),GetY()-Cos(GetR(),3));
-    pLaser->Set(GetR(),2,200,0,this(),this());
+    pLaser = CreateObject(LASR,nil,nil,-1);
+    SetClrModulation(RGBa(255,nil,nil,255),pLaser);
+    pLaser->SetPosition((GetX() ?? 0)+(Sin(GetR(),3) ?? 0),(GetY() ?? 0)-(Cos(GetR(),3) ?? 0));
+    pLaser->Set(GetR(),2,200,nil,this(),this());
     pLaser->SetContinuous(3);
     pLaser->SetController(-1);
     // Laserminen haften und sollen bei Explosionen nicht wegfliegen
@@ -16,7 +16,7 @@ protected func OnActivate() {
 
 protected func OnActive() {             // Mine ist nun aktiv
     SetClrModulation(RGBa(255,255,255,100));
-    SetClrModulation(RGBa(255,0,0,200),pLaser);
+    SetClrModulation(RGBa(255,nil,nil,200),pLaser);
 }
 
 public func WeaponEnd(int &x, int &y)
@@ -27,21 +27,21 @@ public func WeaponEnd(int &x, int &y)
 
 public func LaserStrike(object pHit) {
     // harmlos sein bis sie aktiviert ist
-    if(GetAction() ne "Active") return(0);
+    if(!SEqual(GetAction(), "Active")) return(nil);
 
-    if(GetActTime()-iLastExplode < 10) return(0);
+    if((GetActTime() ?? 0)-(iLastExplode ?? 0) < 10) return(nil);
     
     // wenn sich das Ziel nicht bewegt, ignorieren
-    if(pHit->GetXDir() == 0 && pHit->GetYDir() == 0) return(0);
+    if(And(Equal(pHit->GetXDir(), nil), Equal(pHit->GetYDir(), nil))) return(nil);
 
     // ausrechnen in welche Richtung geschleudert wird
     var rand = 5;
-    var angle = Angle(0,0,GetXDir(pHit),GetYDir(pHit))+GetR();
-    while(angle >= 360) angle -= 360;
-    while(angle < 0)    angle += 360;
-    if(angle >= 180) rand *= -1;
+    var angle = (Angle(nil,nil,GetXDir(pHit),GetYDir(pHit)) ?? 0)+(GetR() ?? 0);
+    while((angle ?? 0) >= 360) S42MigrationAssign(angle, "-=", 360);
+    while((angle ?? 0) < 0)    S42MigrationAssign(angle, "+=", 360);
+    if((angle ?? 0) >= 180) S42MigrationAssign(rand, "*=", -1);
 
-    FakeExplode(15,CreateObject(WIPF,AbsX(GetX(pHit))+Cos(GetR(),rand),AbsY(GetY(pHit))-Sin(GetR(),rand),-1));
+    FakeExplode(15,CreateObject(WIPF,(AbsX(GetX(pHit)) ?? 0)+(Cos(GetR(),rand) ?? 0),(AbsY(GetY(pHit)) ?? 0)-(Sin(GetR(),rand) ?? 0),-1));
     DoDamage(5);
 
     iLastExplode = GetActTime();
@@ -49,12 +49,13 @@ public func LaserStrike(object pHit) {
 }
 
 protected func Damage(int iChange) {            // kriegt Schaden
-    if(GetAction() ne "Idle") {
-      SetClrModulation(RGBa(255,255,255,200-200*GetDamage()/MaxDamage()));
-      SetClrModulation(RGBa(255,0,0,220-220*GetDamage()/MaxDamage()),pLaser);
+    iChange ??= 0;
+    if(!SEqual(GetAction(), "Idle")) {
+      SetClrModulation(RGBa(255,255,255,200-200*(GetDamage() ?? 0)/(MaxDamage() ?? 0)));
+      SetClrModulation(RGBa(255,nil,nil,220-220*(GetDamage() ?? 0)/(MaxDamage() ?? 0)),pLaser);
     }
     
-    if(GetDamage() >= MaxDamage())
+    if((GetDamage() ?? 0) >= (MaxDamage() ?? 0))
       FakeExplode(15);
 }
 

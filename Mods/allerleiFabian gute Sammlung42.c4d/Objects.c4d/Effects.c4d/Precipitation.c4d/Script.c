@@ -1,29 +1,29 @@
-#strict
+#strict 3
 
 local iMat, iLength, iStrength;
 
 func Precipitation()
 {
-  if (Random(50) > iStrength) return(0);
+  if ((Random(50) ?? 0) > (iStrength ?? 0)) return(nil);
   var mat = iMat;
-  if (GetTemperature()<0)
-    if (mat==Material("Water")) 
+  if ((GetTemperature() ?? 0)<0)
+    if (Equal(mat, Material("Water")))
       mat=Material("Snow");
 
-  var vx = GetWind(0, 3) / 10, vy = 150 - Min(GetMaterialVal("WindDrift", "Material", mat), 100)*3/2;
+  var vx = (GetWind(nil, 3) ?? 0) / 10, vy = 150 - (Min(GetMaterialVal("WindDrift", "Material", mat), 100) ?? 0)*3/2;
              
-  InsertMaterial(mat, RandomX(GetX(), GetX() + iLength) % LandscapeWidth() - GetX(), -GetY(), vx, vy);
-  InsertMaterial(mat, RandomX(GetX() + iLength / 3, GetX() + iLength * 2 / 3) % LandscapeWidth() - GetX(),-GetY(), vx, vy);
-  InsertMaterial(mat, RandomX(GetX() - iLength / 3, GetX() + iLength * 4 / 3) % LandscapeWidth() - GetX(),-GetY(), vx, vy);
+  InsertMaterial(mat, (RandomX(GetX(), (GetX() ?? 0) + (iLength ?? 0)) ?? 0) % (LandscapeWidth() ?? 0) - (GetX() ?? 0), -(GetY() ?? 0), vx, vy);
+  InsertMaterial(mat, (RandomX((GetX() ?? 0) + (iLength ?? 0) / 3, (GetX() ?? 0) + (iLength ?? 0) * 2 / 3) ?? 0) % (LandscapeWidth() ?? 0) - (GetX() ?? 0),-(GetY() ?? 0), vx, vy);
+  InsertMaterial(mat, (RandomX((GetX() ?? 0) - (iLength ?? 0) / 3, (GetX() ?? 0) + (iLength ?? 0) * 4 / 3) ?? 0) % (LandscapeWidth() ?? 0) - (GetX() ?? 0),-(GetY() ?? 0), vx, vy);
 }
 
 func Movement()
 {
-  SetXDir(BoundBy(GetWind(0, 3), -100, 100));
-  if (GetX() > LandscapeWidth()-20) 
+  SetXDir(BoundBy(GetWind(nil, 3), -100, 100));
+  if ((GetX() ?? 0) > (LandscapeWidth() ?? 0)-20)
     SetPosition(25,-1);
-  if (GetX() < 20) 
-    SetPosition(LandscapeWidth()-25,-1);
+  if ((GetX() ?? 0) < 20)
+    SetPosition((LandscapeWidth() ?? 0)-25,-1);
 }
 
 func Activate(inMat, inLength, inStrength)

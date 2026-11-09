@@ -1,6 +1,6 @@
 /*-- Clonk im Turm --*/
 
-#strict
+#strict 3
 
 local clonk;     // der Clonk im Turm, der diesen Schatten erzeugt
 local pos;       // Position des Schattens
@@ -16,14 +16,15 @@ public func Init(tower, par_clonk)
   SetPhase(Random(8));
   SetDir(Random(2));
   // zufällige Startposition
-  pos = Random(23)-11;
-  SetVertex(0,0, -pos);
-  SetVertex(0,1, 8);
-  SetPosition(GetX(tower)+GetVertex(0,0,tower)+pos,
-              GetY(tower)+GetVertex(0,1,tower)-8);
+  pos = (Random(23) ?? 0)-11;
+  SetVertex(nil,nil, -(pos ?? 0));
+  SetVertex(nil,1, 8);
+  SetPosition((GetX(tower) ?? 0)+(GetVertex(nil,nil,tower) ?? 0)+(pos ?? 0),
+              (GetY(tower) ?? 0)+(GetVertex(nil,1,tower) ?? 0)-8);
 }
 
-public GetClonk: return(clonk);
+public func GetClonk(...) { return(clonk);
+}
 
 
 /* Action-Calls */
@@ -31,25 +32,25 @@ public GetClonk: return(clonk);
 private func Standing()
 {
   // nicht bewegen
-  var phase = GetPhase()-1;
+  var phase = (GetPhase() ?? 0)-1;
   SetPhase(phase);
   // vielleicht weiterlaufen
   if (Random(4)) return(1);
   SetAction("Walk");
   SetPhase(phase);
   // umdrehen, wenn schon am Rand, oder zufällig
-  if (!Random(2) ||
-      (!GetDir() && (pos <= -11)) ||
-      (GetDir() && (pos >= 11)))
+  if (Or(Or(!Random(2),
+      (And(!GetDir(), ((pos ?? 0) <= -11)))),
+      (And(GetDir(), ((pos ?? 0) >= 11)))))
     SetDir(!GetDir());
 }
 
 private func Walking()
 {
   // am Rand oder auch zufällig stehen bleiben
-  if (!Random(20) ||
-      (!GetDir() && (pos <= -11)) ||
-      (GetDir() && (pos >= 11)))
+  if (Or(Or(!Random(20),
+      (And(!GetDir(), ((pos ?? 0) <= -11)))),
+      (And(GetDir(), ((pos ?? 0) >= 11)))))
   {
     var phase = GetPhase();
     SetAction("Stand");
@@ -57,8 +58,8 @@ private func Walking()
     return(1);
   }
   // je nach Laufrichtung bewegen
-  if (GetDir()==DIR_Left()) --pos;
-                       else ++pos;
-  SetVertex(0,0, -pos);
+  if (Equal(GetDir(), DIR_Left)) S42MigrationStep(pos, -1);
+                       else S42MigrationStep(pos, 1);
+  SetVertex(nil,nil, -(pos ?? 0));
 }
 

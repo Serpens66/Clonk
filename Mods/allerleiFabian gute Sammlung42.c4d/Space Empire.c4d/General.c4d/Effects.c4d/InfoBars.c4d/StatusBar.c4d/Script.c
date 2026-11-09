@@ -1,6 +1,6 @@
 /*-- Status-Balken --*/
 
-#strict
+#strict 3
 
 local size, timer, alpha;
 
@@ -10,17 +10,17 @@ local size, timer, alpha;
 global func ShowInfoBar(ID, target, fill, maxfill, timer)
 {
   // Anzeige aus?
-  if (GetPlrExtraData(GetOwner(target), "SE_infobars") == 2)
+  if (Equal(GetPlrExtraData(GetOwner(target), "SE_infobars"), 2))
     return(1);
   // noch ein Balken da?
   if (!target)
     target = this();
-  var bar = FindObject(ID, 0,0,0,0, 0,0,target);
+  var bar = FindObject(ID, nil,nil,nil,nil, nil,nil,target);
   // neuen Balken erstellen
   if (!bar)
   {
     if (!timer) return(1);   // nicht, wenn timer=0
-    bar = CreateObject(ID, 0,0, GetOwner(target));
+    bar = CreateObject(ID, nil,nil, GetOwner(target));
     bar->Init(target);
   }
   // Balken-Einstellungen
@@ -32,9 +32,9 @@ global func DisappearInfoBar(ID, target)
   // Info-Balken finden
   if (!target)
     target = this();
-  var bar = FindObject(ID, 0,0,0,0, 0,0,target);
+  var bar = FindObject(ID, nil,nil,nil,nil, nil,nil,target);
   // Balken ausblenden
-  if (!bar) return(0);
+  if (!bar) return(nil);
   bar->Disappear();
   return(1);
 }
@@ -53,17 +53,17 @@ protected func Initialize()
 protected func Destruction()
 {
   var obj;
-  if (obj = FindObject(IBRS, -1,-33,3,27, 0,0,GetActionTarget()))  SetDown(obj);
-  if (obj = FindObject(IBRE, -1,-33,3,27, 0,0,GetActionTarget()))  SetDown(obj);
-  if (obj = FindObject(IBRP, -1,-33,3,27, 0,0,GetActionTarget()))  SetDown(obj);
+  if (obj = FindObject(IBRS, -1,-33,3,27, nil,nil,GetActionTarget()))  SetDown(obj);
+  if (obj = FindObject(IBRE, -1,-33,3,27, nil,nil,GetActionTarget()))  SetDown(obj);
+  if (obj = FindObject(IBRP, -1,-33,3,27, nil,nil,GetActionTarget()))  SetDown(obj);
 }
 
 private func SetDown(obj)
 {
   var dy = 8;
   if (UseTextInfo()) dy = 16;
-  SetVertexXY(0, GetVertex(0,0,obj), GetVertex(0,1,obj)-dy, obj);
-  SetPosition(GetX(obj), GetY(obj)+dy, obj);
+  SetVertexXY(nil, GetVertex(nil,nil,obj), (GetVertex(nil,1,obj) ?? 0)-(dy ?? 0), obj);
+  SetPosition(GetX(obj), (GetY(obj) ?? 0)+(dy ?? 0), obj);
 }
 
 
@@ -80,26 +80,26 @@ protected func AttachTargetLost()
 public func Init(target)
 {
   // unsichtbar für gegnerische Spieler
-  SetVisibility(VIS_Owner() | VIS_Allies());
+  SetVisibility((VIS_Owner ?? 0) | (VIS_Allies ?? 0));
   size = target->~InfoBarSize();
   if (!Inside(size, 1, 5))
     size = 3;
   // Vertex setzen
-  var vx = GetVertex(0,0,target);
-  var vy = GetVertex(0,1,target) + GetObjHeight(target)/2 + target->~InfoBarPos();
+  var vx = GetVertex(nil,nil,target);
+  var vy = (GetVertex(nil,1,target) ?? 0) + (GetObjHeight(target) ?? 0)/2 + (target->~InfoBarPos() ?? 0);
   if (UseTextInfo())
   {
-    SetVertexXY(0, vx, vy-6);
-    SetPosition(GetX(target) + GetVertex(0,0,target) - vx,
-                GetY(target) + GetVertex(0,1,target) - vy + 6);
+    SetVertexXY(nil, vx, (vy ?? 0)-6);
+    SetPosition((GetX(target) ?? 0) + (GetVertex(nil,nil,target) ?? 0) - (vx ?? 0),
+                (GetY(target) ?? 0) + (GetVertex(nil,1,target) ?? 0) - (vy ?? 0) + 6);
     // Action & Zielobjekt
     SetAction("ShowText", target);
     CheckPosition(target, 16);
     return(1);
   }
-  SetVertexXY(0, vx, vy+8);
-  SetPosition(GetX(target) + GetVertex(0,0,target) - vx,
-              GetY(target) + GetVertex(0,1,target) - vy - 8);
+  SetVertexXY(nil, vx, (vy ?? 0)+8);
+  SetPosition((GetX(target) ?? 0) + (GetVertex(nil,nil,target) ?? 0) - (vx ?? 0),
+              (GetY(target) ?? 0) + (GetVertex(nil,1,target) ?? 0) - (vy ?? 0) - 8);
   // Action & Zielobjekt
   SetAction("Appear", target);
   CheckPosition(target, 8);
@@ -108,17 +108,17 @@ public func Init(target)
 public func Settings(fill, maxfill, timervalue)
 {
   // Wert korrigieren
-  if (fill < 0)       fill = 0;
-  if (fill > maxfill) fill = maxfill;
+  if ((fill ?? 0) < 0)       fill = nil;
+  if ((fill ?? 0) > (maxfill ?? 0)) fill = maxfill;
   // Anzeigewert
   var start, steps;
-  if (size==5)  { start = 00; steps = 24; }
-  if (size==4)  { start = 25; steps = 20; }
-  if (size==3)  { start = 46; steps = 16; }
-  if (size==2)  { start = 63; steps = 12; }
-  if (size==1)  { start = 76; steps = 08; }
+  if (Equal(size, 5))  { start = 00; steps = 24; }
+  if (Equal(size, 4))  { start = 25; steps = 20; }
+  if (Equal(size, 3))  { start = 46; steps = 16; }
+  if (Equal(size, 2))  { start = 63; steps = 12; }
+  if (Equal(size, 1))  { start = 76; steps = 08; }
   if (!maxfill) SetDir(start);
-           else SetDir(start + steps - fill*steps/maxfill);
+           else SetDir((start ?? 0) + (steps ?? 0) - (fill ?? 0)*(steps ?? 0)/(maxfill ?? 0));
   // Textmeldung neu
   if (UseTextInfo())
   {
@@ -129,20 +129,20 @@ public func Settings(fill, maxfill, timervalue)
   }
   // Anzeigedauer
   if (!timervalue) return(1);
-  if (timervalue == -1) timer = 1000000000;   // lange warten...
+  if (Equal(timervalue, -1)) timer = 1000000000;   // lange warten...
                    else timer = timervalue;
   // Textanzeige zusätzlich länger
-  if (text != -1)
-    return(timer += 2);
+  if (!Equal(text, -1))
+    return(S42MigrationAssign(timer, "+=", 2));
   // wieder einblenden, wenn nötig
-  if (GetAction() ne "Disappear") return(1);
+  if (!SEqual(GetAction(), "Disappear")) return(1);
   SetAction("Appear");
 }
 
 public func Disappear()
 {
-  if (GetAction() eq "Disappear")
-    return(0);
+  if (!!SEqual(GetAction(), "Disappear"))
+    return(nil);
   SetAction("Disappear");
   return(DisappearStep());
 }
@@ -158,7 +158,7 @@ private func UseTextInfo()
 private func AppearStep()
 {
   // auftauchen lassen
-  alpha = Max(alpha-51, 0);
+  alpha = Max((alpha ?? 0)-51, nil);
   SetClrModulation(RGBa(255,255,255,alpha));
   if (!alpha) SetAction("ShowBar");
 }
@@ -166,8 +166,8 @@ private func AppearStep()
 private func DisappearStep()
 {
   // verschwinden lassen
-  alpha = Min(alpha+51, 255);
-  if (alpha == 255) return(RemoveObject());
+  alpha = Min((alpha ?? 0)+51, 255);
+  if (Equal(alpha, 255)) return(RemoveObject());
   SetClrModulation(RGBa(255,255,255,alpha));
 }
 
@@ -179,7 +179,7 @@ private func CheckTimer()   // für grafische Anzeige
   // keine Zeitsteuerung?
   if (!timer) return(1);
   // herunterzählen
-  if (--timer) return(1);
+  if (S42MigrationStep(timer, -1)) return(1);
   // Zeit abgelaufen
   SetAction("Disappear");
   return(DisappearStep());
@@ -190,7 +190,7 @@ private func CheckTimer2()   // für Textanzeige
   // keine Zeitsteuerung?
   if (!timer) return(1);
   // herunterzählen
-  if (--timer) return(1);
+  if (S42MigrationStep(timer, -1)) return(1);
   return(RemoveObject());
 }
 
@@ -199,7 +199,7 @@ private func CheckTimer2()   // für Textanzeige
 
 protected func CheckAction()
 {
-  if (ActIdle() || !GetActionTarget())
+  if (Or(ActIdle(), !GetActionTarget()))
     return(RemoveObject());
 }
 
@@ -211,8 +211,8 @@ public func CheckPosition(target, dy)
   if (FindLowerBar(target))
   {
     // sich selbst eine Position hoch
-    SetVertexXY(0, GetVertex(0,0), GetVertex(0,1)+dy);
-    SetPosition(GetX(), GetY()-dy);
+    SetVertexXY(nil, GetVertex(nil,nil), (GetVertex(nil,1) ?? 0)+(dy ?? 0));
+    SetPosition(GetX(), (GetY() ?? 0)-(dy ?? 0));
     // neue Position überprüfen
     return(CheckPosition(target, dy));
   }
@@ -222,14 +222,16 @@ public func CheckPosition(target, dy)
     obj->CheckPosition(target, dy);
 }
 
-private FindLowerBar:
-  var obj = FindObject(IBRE, -1,-1,3,3, 0,0,Par(0));
+private func FindLowerBar(...) {
+  var obj = FindObject(IBRE, -1,-1,3,3, nil,nil,Par(nil));
   if (!obj)
-      obj = FindObject(IBRP, -1,-1,3,3, 0,0,Par(0));
+      obj = FindObject(IBRP, -1,-1,3,3, nil,nil,Par(nil));
   return(obj);
+}
 
-private FindHigherBar:
-  return(0);
+private func FindHigherBar(...) {
+  return(nil);
+}
 
 
 /* Textausgabe */

@@ -1,6 +1,6 @@
 /*-- Toter Wipf --*/
 
-#strict
+#strict 3
 
 
 /* Verwesung */

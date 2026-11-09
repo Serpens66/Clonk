@@ -1,6 +1,6 @@
 /*-- Granate --*/
 
-#strict
+#strict 3
 
 
 protected func Initialize()

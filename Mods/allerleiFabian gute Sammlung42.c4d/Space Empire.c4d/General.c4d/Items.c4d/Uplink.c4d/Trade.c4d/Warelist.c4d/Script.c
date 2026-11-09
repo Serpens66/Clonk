@@ -1,6 +1,6 @@
 /*-- Warenliste --*/
 
-#strict
+#strict 3
 
 local s1, s2, s3, s4, s5;   // Nummer in der Liste der jeweils letzten Ware einer Kategorie
 local listsize;             // Größe der gesamten Handelswarenliste
@@ -16,68 +16,68 @@ protected func Initialize()
   var i = -1;
 
 // Materialien
-  Local(++i) = ERTH;
-  Local(++i) = ROCK;
-  Local(++i) = LOAM;
-  Local(++i) = WOOD;
-  Local(++i) = GOLD;
-  Local(++i) = CTIT;
-  Local(++i) = CALU;
-  Local(++i) = METL;
-  Local(++i) = SURO;
-  Local(++i) = CRYS;
-  Local(++i) = CTIO;
-  Local(++i) = CALO;
-  Local(++i) = ORE1;
-  Local(++i) = COAL;
-  Local(++i) = SPHR;
-  Local(++i) = ANML;  //Schmiedeeisen
-  Local(++i) = PSTC;   //Plastik
-  Local(++i) = ASHS; //Asche
-  Local(++i) = ICE1;
-  Local(++i) = SAND; //Sand
+  Local(S42MigrationStep(i, 1)) = ERTH;
+  Local(S42MigrationStep(i, 1)) = ROCK;
+  Local(S42MigrationStep(i, 1)) = LOAM;
+  Local(S42MigrationStep(i, 1)) = WOOD;
+  Local(S42MigrationStep(i, 1)) = GOLD;
+  Local(S42MigrationStep(i, 1)) = CTIT;
+  Local(S42MigrationStep(i, 1)) = CALU;
+  Local(S42MigrationStep(i, 1)) = METL;
+  Local(S42MigrationStep(i, 1)) = SURO;
+  Local(S42MigrationStep(i, 1)) = CRYS;
+  Local(S42MigrationStep(i, 1)) = CTIO;
+  Local(S42MigrationStep(i, 1)) = CALO;
+  Local(S42MigrationStep(i, 1)) = ORE1;
+  Local(S42MigrationStep(i, 1)) = COAL;
+  Local(S42MigrationStep(i, 1)) = SPHR;
+  Local(S42MigrationStep(i, 1)) = ANML;  //Schmiedeeisen
+  Local(S42MigrationStep(i, 1)) = PSTC;   //Plastik
+  Local(S42MigrationStep(i, 1)) = ASHS; //Asche
+  Local(S42MigrationStep(i, 1)) = ICE1;
+  Local(S42MigrationStep(i, 1)) = SAND; //Sand
   s1 = i;
 
   // Grundausrüstung
-  Local(++i) = CNKT; //Bausatz
-  Local(++i) = FK9Z;  //Fackel
-  Local(++i) = LNKT;
-  Local(++i) = CNCR;      //Beton
-  Local(++i) = LIQG;      //Flüssiggranit
-  Local(++i) = TENP; //Ritterzelt gepackt
-  Local(++i) = WDBR; //Holzfass
-  Local(++i) = BARL; //Metallfass
-  Local(++i) = AM5P; //Fernrohr
-  Local(++i) = BETL; //Beutel
-  Local(++i) = SPKT; //Sperrenbausatz kleine Fahrstühle
-  Local(++i) = GV5Y;  //Gangverschluss
-  Local(++i) = FLAG; 
-  Local(++i) = SAK1; //Sack
-  Local(++i) = PNCR; //Profibeton
-  Local(++i) = TB5B;  //SFT Zeltpaket
-  Local(++i) = NLGT; //Knicklicht
-  Local(++i) = FLSH; //Taschenlampe
-  Local(++i) = AILK; //Airlock Bausatz
-  Local(++i) = UNCR; //Ultimativer beton
-  Local(++i) = TOKT; //Werkzeugkasten
-  Local(++i) = UPLI;  //Uplink
-  Local(++i) = CS4K;  //Sensorenzubehöhr 8 stück
-  Local(++i) = PS4K;
-  Local(++i) = BS4K;
-  Local(++i) = LS4K;
-  Local(++i) = SS4K;
-  Local(++i) = WS4K;
-  Local(++i) = GTE1;
-  Local(++i) = KC4K;
-  Local(++i) = CGBE; //Hydrogen Bottle
-  Local(++i) = KI_T;//Kiste
-  Local(++i) = SBST; //Isotope 
-  Local(++i) = IMTK;//verb. Werkzeugkasten
-  Local(++i) = ABRL; //verschieden gefüllte Fässer
-  Local(++i) = LBRL;
-  Local(++i) = OBRL;
-  Local(++i) = WBRL;
-  Local(++i) = WDWB; //HolzWasserfass
+  Local(S42MigrationStep(i, 1)) = CNKT; //Bausatz
+  Local(S42MigrationStep(i, 1)) = FK9Z;  //Fackel
+  Local(S42MigrationStep(i, 1)) = LNKT;
+  Local(S42MigrationStep(i, 1)) = CNCR;      //Beton
+  Local(S42MigrationStep(i, 1)) = LIQG;      //Flüssiggranit
+  Local(S42MigrationStep(i, 1)) = TENP; //Ritterzelt gepackt
+  Local(S42MigrationStep(i, 1)) = WDBR; //Holzfass
+  Local(S42MigrationStep(i, 1)) = BARL; //Metallfass
+  Local(S42MigrationStep(i, 1)) = AM5P; //Fernrohr
+  Local(S42MigrationStep(i, 1)) = BETL; //Beutel
+  Local(S42MigrationStep(i, 1)) = SPKT; //Sperrenbausatz kleine Fahrstühle
+  Local(S42MigrationStep(i, 1)) = GV5Y;  //Gangverschluss
+  Local(S42MigrationStep(i, 1)) = FLAG;
+  Local(S42MigrationStep(i, 1)) = SAK1; //Sack
+  Local(S42MigrationStep(i, 1)) = PNCR; //Profibeton
+  Local(S42MigrationStep(i, 1)) = TB5B;  //SFT Zeltpaket
+  Local(S42MigrationStep(i, 1)) = NLGT; //Knicklicht
+  Local(S42MigrationStep(i, 1)) = FLSH; //Taschenlampe
+  Local(S42MigrationStep(i, 1)) = AILK; //Airlock Bausatz
+  Local(S42MigrationStep(i, 1)) = UNCR; //Ultimativer beton
+  Local(S42MigrationStep(i, 1)) = TOKT; //Werkzeugkasten
+  Local(S42MigrationStep(i, 1)) = UPLI;  //Uplink
+  Local(S42MigrationStep(i, 1)) = CS4K;  //Sensorenzubehöhr 8 stück
+  Local(S42MigrationStep(i, 1)) = PS4K;
+  Local(S42MigrationStep(i, 1)) = BS4K;
+  Local(S42MigrationStep(i, 1)) = LS4K;
+  Local(S42MigrationStep(i, 1)) = SS4K;
+  Local(S42MigrationStep(i, 1)) = WS4K;
+  Local(S42MigrationStep(i, 1)) = GTE1;
+  Local(S42MigrationStep(i, 1)) = KC4K;
+  Local(S42MigrationStep(i, 1)) = CGBE; //Hydrogen Bottle
+  Local(S42MigrationStep(i, 1)) = KI_T;//Kiste
+  Local(S42MigrationStep(i, 1)) = SBST; //Isotope
+  Local(S42MigrationStep(i, 1)) = IMTK;//verb. Werkzeugkasten
+  Local(S42MigrationStep(i, 1)) = ABRL; //verschieden gefüllte Fässer
+  Local(S42MigrationStep(i, 1)) = LBRL;
+  Local(S42MigrationStep(i, 1)) = OBRL;
+  Local(S42MigrationStep(i, 1)) = WBRL;
+  Local(S42MigrationStep(i, 1)) = WDWB; //HolzWasserfass
 /* 
   Local(++i) = PLUT; //Plutonium
   Local(++i) = PLU1;
@@ -89,211 +89,211 @@ protected func Initialize()
   Local(++i) = HMWS;
   Local(++i) = _MSK;
 */
-  Local(++i) = AMWS;  //Atommüll,Metallschrott,Leiche und Yellow Cake haben keine gepackte Version, also ist okay hinzufügen 
-  Local(++i) = YECK; 
-  Local(++i) = CORP; 
-  Local(++i) = MTWS;  
+  Local(S42MigrationStep(i, 1)) = AMWS;  //Atommüll,Metallschrott,Leiche und Yellow Cake haben keine gepackte Version, also ist okay hinzufügen
+  Local(S42MigrationStep(i, 1)) = YECK;
+  Local(S42MigrationStep(i, 1)) = CORP;
+  Local(S42MigrationStep(i, 1)) = MTWS;
 
   s2 = i;
 
 
 
   // spezielle Ausrüstung Munition
-  Local(++i) = _Y3B; //früher Feuerschlöscher
-  Local(++i) = JPTH; //Springstein
-  Local(++i) = ARWP; //Pfeile
-  Local(++i) = FARP; //Feuerpfeile
-  Local(++i) = TAAZ;  // Tauscheranzug
-  Local(++i) = THLM; //Taucherhelm
-  Local(++i) = XARP;  //Sprengpfeile
-  Local(++i) = DK8Z;  //Frogspring
-  Local(++i) = E18Z;  //Air-Elevator
-  Local(++i) = E78Z; //frogspring2
-  Local(++i) = GUNP; //schießpulver
-  Local(++i) = ADM1; // Munitionspack Geschützturm
-  Local(++i) = ADM3; // Batterie
-  Local(++i) = WC_0; // 4 Waffenbauteile
-  Local(++i) = WC_1;
-  Local(++i) = WC_2;
-  Local(++i) = WC_3;
-  Local(++i) = GRAP; //Granatenmunitionskiste
-  Local(++i) = STAP;//Munitionskiste
-  Local(++i) = AIRT;//Atemflasche
-  Local(++i) = MEDI; //Medipack
-  Local(++i) = ENAP; //Engergiezelle munition
-  Local(++i) = SDBM; //Deradbombe
-  Local(++i) = PTAP; //Partikelbehälter (munition)
-  Local(++i) = S_RB; //5 Einfache Rüstungen
-  Local(++i) = S_LJ;
-  Local(++i) = S_MA;
-  Local(++i) = S_L2;
-  Local(++i) = S_CA;
-  Local(++i) = STLM;  //better Bullets munition
-  Local(++i) = SHMU; //SchrotMunition
-  Local(++i) = SNI_; //Snipermunition
-  Local(++i) = GSAP; // Benzinkanister (Munition)
-  Local(++i) = JTPK; //Jetpack
-  Local(++i) = MIAP; //Raketen Munition
-  Local(++i) = HARM; //Rüstung
-  Local(++i) = HSHD; //Schildgenerator
-  Local(++i) = SPC1; //Explosiv Siege Ammo
-  Local(++i) = _SKT; //Schildupgrade
-  Local(++i) = S_TA; //Tesla Rüstung
-  Local(++i) = PNGU; //Pinguinanzug
-  Local(++i) = SPC2; //Cluster siege Ammo
-  Local(++i) = _Y4C;//Schutzanzug
-  Local(++i) = S_C2; //verstärkte Rüstungen 4 stück
-  Local(++i) = S_LA;
-  Local(++i) = S_M2;
-  Local(++i) = S_CJ;
-  Local(++i) = GU01; //die kleinen Munitionsgürtel (10 stück)
-  Local(++i) = GU03;
-  Local(++i) = GU05;
-  Local(++i) = GU07;
-  Local(++i) = GU09;
-  Local(++i) = GU11;
-  Local(++i) = GU13;
-  Local(++i) = GU15;
-  Local(++i) = GU17;
-  Local(++i) = GU19;
-  Local(++i) = SPC4; //Toxic Siege Ammo
-  Local(++i) = SPC3;//Nuclear Siege Ammo
-  Local(++i) = JB4K; //Jetbelt
-  Local(++i) = S_BA; //SpezialRüstung
-  Local(++i) = SREP; //Repair Naniten
-  Local(++i) = KLAS; //LaserUpgrade
-  Local(++i) = KSLM; //Bio Upgrade
-  Local(++i) = KRFL; //WAffenteil Upgrade
-  Local(++i) = STRH; //Partikelkonverter (Upgrade)
-  Local(++i) = S_PA; //Power Rüstung
-  Local(++i) = GU02; // die großen Munitionsgürtel (10stück)
-  Local(++i) = GU04;
-  Local(++i) = GU06;
-  Local(++i) = GU08;
-  Local(++i) = GU10;
-  Local(++i) = GU12;
-  Local(++i) = GU14;
-  Local(++i) = GU16;
-  Local(++i) = GU18;
-  Local(++i) = GU20;
-  Local(++i) = 2SKT; //großes Schildupgrade
-  Local(++i) = S_P2; //verstärkte Power Rüstung
-  Local(++i) = SFEX;  //neuer Feuerlöscher
-  Local(++i) = CNBF; //Plasma Accumulator
+  Local(S42MigrationStep(i, 1)) = _Y3B; //früher Feuerschlöscher
+  Local(S42MigrationStep(i, 1)) = JPTH; //Springstein
+  Local(S42MigrationStep(i, 1)) = ARWP; //Pfeile
+  Local(S42MigrationStep(i, 1)) = FARP; //Feuerpfeile
+  Local(S42MigrationStep(i, 1)) = TAAZ;  // Tauscheranzug
+  Local(S42MigrationStep(i, 1)) = THLM; //Taucherhelm
+  Local(S42MigrationStep(i, 1)) = XARP;  //Sprengpfeile
+  Local(S42MigrationStep(i, 1)) = DK8Z;  //Frogspring
+  Local(S42MigrationStep(i, 1)) = E18Z;  //Air-Elevator
+  Local(S42MigrationStep(i, 1)) = E78Z; //frogspring2
+  Local(S42MigrationStep(i, 1)) = GUNP; //schießpulver
+  Local(S42MigrationStep(i, 1)) = ADM1; // Munitionspack Geschützturm
+  Local(S42MigrationStep(i, 1)) = ADM3; // Batterie
+  Local(S42MigrationStep(i, 1)) = WC_0; // 4 Waffenbauteile
+  Local(S42MigrationStep(i, 1)) = WC_1;
+  Local(S42MigrationStep(i, 1)) = WC_2;
+  Local(S42MigrationStep(i, 1)) = WC_3;
+  Local(S42MigrationStep(i, 1)) = GRAP; //Granatenmunitionskiste
+  Local(S42MigrationStep(i, 1)) = STAP;//Munitionskiste
+  Local(S42MigrationStep(i, 1)) = AIRT;//Atemflasche
+  Local(S42MigrationStep(i, 1)) = MEDI; //Medipack
+  Local(S42MigrationStep(i, 1)) = ENAP; //Engergiezelle munition
+  Local(S42MigrationStep(i, 1)) = SDBM; //Deradbombe
+  Local(S42MigrationStep(i, 1)) = PTAP; //Partikelbehälter (munition)
+  Local(S42MigrationStep(i, 1)) = S_RB; //5 Einfache Rüstungen
+  Local(S42MigrationStep(i, 1)) = S_LJ;
+  Local(S42MigrationStep(i, 1)) = S_MA;
+  Local(S42MigrationStep(i, 1)) = S_L2;
+  Local(S42MigrationStep(i, 1)) = S_CA;
+  Local(S42MigrationStep(i, 1)) = STLM;  //better Bullets munition
+  Local(S42MigrationStep(i, 1)) = SHMU; //SchrotMunition
+  Local(S42MigrationStep(i, 1)) = SNI_; //Snipermunition
+  Local(S42MigrationStep(i, 1)) = GSAP; // Benzinkanister (Munition)
+  Local(S42MigrationStep(i, 1)) = JTPK; //Jetpack
+  Local(S42MigrationStep(i, 1)) = MIAP; //Raketen Munition
+  Local(S42MigrationStep(i, 1)) = HARM; //Rüstung
+  Local(S42MigrationStep(i, 1)) = HSHD; //Schildgenerator
+  Local(S42MigrationStep(i, 1)) = SPC1; //Explosiv Siege Ammo
+  Local(S42MigrationStep(i, 1)) = _SKT; //Schildupgrade
+  Local(S42MigrationStep(i, 1)) = S_TA; //Tesla Rüstung
+  Local(S42MigrationStep(i, 1)) = PNGU; //Pinguinanzug
+  Local(S42MigrationStep(i, 1)) = SPC2; //Cluster siege Ammo
+  Local(S42MigrationStep(i, 1)) = _Y4C;//Schutzanzug
+  Local(S42MigrationStep(i, 1)) = S_C2; //verstärkte Rüstungen 4 stück
+  Local(S42MigrationStep(i, 1)) = S_LA;
+  Local(S42MigrationStep(i, 1)) = S_M2;
+  Local(S42MigrationStep(i, 1)) = S_CJ;
+  Local(S42MigrationStep(i, 1)) = GU01; //die kleinen Munitionsgürtel (10 stück)
+  Local(S42MigrationStep(i, 1)) = GU03;
+  Local(S42MigrationStep(i, 1)) = GU05;
+  Local(S42MigrationStep(i, 1)) = GU07;
+  Local(S42MigrationStep(i, 1)) = GU09;
+  Local(S42MigrationStep(i, 1)) = GU11;
+  Local(S42MigrationStep(i, 1)) = GU13;
+  Local(S42MigrationStep(i, 1)) = GU15;
+  Local(S42MigrationStep(i, 1)) = GU17;
+  Local(S42MigrationStep(i, 1)) = GU19;
+  Local(S42MigrationStep(i, 1)) = SPC4; //Toxic Siege Ammo
+  Local(S42MigrationStep(i, 1)) = SPC3;//Nuclear Siege Ammo
+  Local(S42MigrationStep(i, 1)) = JB4K; //Jetbelt
+  Local(S42MigrationStep(i, 1)) = S_BA; //SpezialRüstung
+  Local(S42MigrationStep(i, 1)) = SREP; //Repair Naniten
+  Local(S42MigrationStep(i, 1)) = KLAS; //LaserUpgrade
+  Local(S42MigrationStep(i, 1)) = KSLM; //Bio Upgrade
+  Local(S42MigrationStep(i, 1)) = KRFL; //WAffenteil Upgrade
+  Local(S42MigrationStep(i, 1)) = STRH; //Partikelkonverter (Upgrade)
+  Local(S42MigrationStep(i, 1)) = S_PA; //Power Rüstung
+  Local(S42MigrationStep(i, 1)) = GU02; // die großen Munitionsgürtel (10stück)
+  Local(S42MigrationStep(i, 1)) = GU04;
+  Local(S42MigrationStep(i, 1)) = GU06;
+  Local(S42MigrationStep(i, 1)) = GU08;
+  Local(S42MigrationStep(i, 1)) = GU10;
+  Local(S42MigrationStep(i, 1)) = GU12;
+  Local(S42MigrationStep(i, 1)) = GU14;
+  Local(S42MigrationStep(i, 1)) = GU16;
+  Local(S42MigrationStep(i, 1)) = GU18;
+  Local(S42MigrationStep(i, 1)) = GU20;
+  Local(S42MigrationStep(i, 1)) = 2SKT; //großes Schildupgrade
+  Local(S42MigrationStep(i, 1)) = S_P2; //verstärkte Power Rüstung
+  Local(S42MigrationStep(i, 1)) = SFEX;  //neuer Feuerlöscher
+  Local(S42MigrationStep(i, 1)) = CNBF; //Plasma Accumulator
   s3 = i;
 
 
   // Waffen und Sprengzubehör
-  Local(++i) = _BMR;  //Bumerang
-  Local(++i) = FLNT;
-  Local(++i) = TFLN;
-  Local(++i) = D18Z;  //Smoke Bombe
-  Local(++i) = CU8Z; //WireCutter
-  Local(++i) = AXE1; //Wurfaxt
-  Local(++i) = SFLN; //Superflint
-  Local(++i) = FBMP; //Brandbombe
-  Local(++i) = EFLN; //TeraFlint
-  Local(++i) = SFLF; //SuperBrandFlint
-  Local(++i) = EFL0; //Nitroflint
-  Local(++i) = TRP1; //Torpedo
-  Local(++i) = EFL2; //MAcroFlint
-  Local(++i) = IBMP;  //Infernobombe
-  Local(++i) = EFL6;  //Random Flint
-  Local(++i) = SFLI;  //SuperInfernoFlint
-  Local(++i) = EFL3; //Tetra Flint
-  Local(++i) = SW01; //Messer
-  Local(++i) = BLFL; //Blitzflint
-  Local(++i) = PIWP;//Sturmpistole
-  Local(++i) = ACWP;//AntiContent Waffe
-  Local(++i) = SNWP;//Schallpistole
-  Local(++i) = GRN2;  // einzelne Handgranate
-  Local(++i) = SW02;  //Kampfmesser 
-  Local(++i) = GLWP; //Granatwerfer
-  Local(++i) = BZWP; //Bazooka
-  Local(++i) = MPWP;// Maschinengewehr
-  Local(++i) = PPWP;//Partik. Pistole
-  Local(++i) = SHGN; //Shotgun
-  Local(++i) = ASHG; // abgesägte Schrotflinte
-  Local(++i) = SOC2;//Dual Soccom
-  Local(++i) = SW03; //Klinge
-  Local(++i) = TRP3; //Torpedo Gold
-  Local(++i) = MIN_; //Fakemine
-  Local(++i) = SMI_; //FakeSchwarmmine
-  Local(++i) = LMI_; //FakeLaserMine
-  Local(++i) = MINE; //Mine
-  Local(++i) = STRK;//HandRakete
-  Local(++i) = ENWP;//Energiegewehr
-  Local(++i) = FTWP;//Flammenwerfer
-  Local(++i) = PTWP;//Partikellader
-  Local(++i) = SCOT;//Scount (sniper)
-  Local(++i) = SW04;  //Hammer (nahkampf)
-  Local(++i) = MIWP; //Minigun
-  Local(++i) = CWBO; //Bomb (alt)
-  Local(++i) = SSPR; //Explosiv Kit
-  Local(++i) = PGWP;//PumpGun
-  Local(++i) = GGWP; //PartikelKanone  (Energiekanone)
-  Local(++i) = TRP2; //Tetra-Torpedo
-  Local(++i) = BLWP; //Partikelblaster
-  Local(++i) = ELWP; //Partikelgewehr
-  Local(++i) = M249; //M249 Waffe
-  Local(++i) = P90_; //P90 Waffe
-  Local(++i) = C40_; //PlastikSprengstoff + 2 Zünder
-  Local(++i) = MFUS;
-  Local(++i) = SFUS;
-  Local(++i) = SMIN; //Schwarmmine
-  Local(++i) = LMIN; //LaserMine
-  Local(++i) = AMIN; //Alienmine
-  Local(++i) = TRP4; //Todestorpedo
-  Local(++i) = SNSS; //Nuclear bomb
-  Local(++i) = SC_2; // Gaus Sniper
-  Local(++i) = ATO2; //Atomtorpedo
+  Local(S42MigrationStep(i, 1)) = _BMR;  //Bumerang
+  Local(S42MigrationStep(i, 1)) = FLNT;
+  Local(S42MigrationStep(i, 1)) = TFLN;
+  Local(S42MigrationStep(i, 1)) = D18Z;  //Smoke Bombe
+  Local(S42MigrationStep(i, 1)) = CU8Z; //WireCutter
+  Local(S42MigrationStep(i, 1)) = AXE1; //Wurfaxt
+  Local(S42MigrationStep(i, 1)) = SFLN; //Superflint
+  Local(S42MigrationStep(i, 1)) = FBMP; //Brandbombe
+  Local(S42MigrationStep(i, 1)) = EFLN; //TeraFlint
+  Local(S42MigrationStep(i, 1)) = SFLF; //SuperBrandFlint
+  Local(S42MigrationStep(i, 1)) = EFL0; //Nitroflint
+  Local(S42MigrationStep(i, 1)) = TRP1; //Torpedo
+  Local(S42MigrationStep(i, 1)) = EFL2; //MAcroFlint
+  Local(S42MigrationStep(i, 1)) = IBMP;  //Infernobombe
+  Local(S42MigrationStep(i, 1)) = EFL6;  //Random Flint
+  Local(S42MigrationStep(i, 1)) = SFLI;  //SuperInfernoFlint
+  Local(S42MigrationStep(i, 1)) = EFL3; //Tetra Flint
+  Local(S42MigrationStep(i, 1)) = SW01; //Messer
+  Local(S42MigrationStep(i, 1)) = BLFL; //Blitzflint
+  Local(S42MigrationStep(i, 1)) = PIWP;//Sturmpistole
+  Local(S42MigrationStep(i, 1)) = ACWP;//AntiContent Waffe
+  Local(S42MigrationStep(i, 1)) = SNWP;//Schallpistole
+  Local(S42MigrationStep(i, 1)) = GRN2;  // einzelne Handgranate
+  Local(S42MigrationStep(i, 1)) = SW02;  //Kampfmesser
+  Local(S42MigrationStep(i, 1)) = GLWP; //Granatwerfer
+  Local(S42MigrationStep(i, 1)) = BZWP; //Bazooka
+  Local(S42MigrationStep(i, 1)) = MPWP;// Maschinengewehr
+  Local(S42MigrationStep(i, 1)) = PPWP;//Partik. Pistole
+  Local(S42MigrationStep(i, 1)) = SHGN; //Shotgun
+  Local(S42MigrationStep(i, 1)) = ASHG; // abgesägte Schrotflinte
+  Local(S42MigrationStep(i, 1)) = SOC2;//Dual Soccom
+  Local(S42MigrationStep(i, 1)) = SW03; //Klinge
+  Local(S42MigrationStep(i, 1)) = TRP3; //Torpedo Gold
+  Local(S42MigrationStep(i, 1)) = MIN_; //Fakemine
+  Local(S42MigrationStep(i, 1)) = SMI_; //FakeSchwarmmine
+  Local(S42MigrationStep(i, 1)) = LMI_; //FakeLaserMine
+  Local(S42MigrationStep(i, 1)) = MINE; //Mine
+  Local(S42MigrationStep(i, 1)) = STRK;//HandRakete
+  Local(S42MigrationStep(i, 1)) = ENWP;//Energiegewehr
+  Local(S42MigrationStep(i, 1)) = FTWP;//Flammenwerfer
+  Local(S42MigrationStep(i, 1)) = PTWP;//Partikellader
+  Local(S42MigrationStep(i, 1)) = SCOT;//Scount (sniper)
+  Local(S42MigrationStep(i, 1)) = SW04;  //Hammer (nahkampf)
+  Local(S42MigrationStep(i, 1)) = MIWP; //Minigun
+  Local(S42MigrationStep(i, 1)) = CWBO; //Bomb (alt)
+  Local(S42MigrationStep(i, 1)) = SSPR; //Explosiv Kit
+  Local(S42MigrationStep(i, 1)) = PGWP;//PumpGun
+  Local(S42MigrationStep(i, 1)) = GGWP; //PartikelKanone  (Energiekanone)
+  Local(S42MigrationStep(i, 1)) = TRP2; //Tetra-Torpedo
+  Local(S42MigrationStep(i, 1)) = BLWP; //Partikelblaster
+  Local(S42MigrationStep(i, 1)) = ELWP; //Partikelgewehr
+  Local(S42MigrationStep(i, 1)) = M249; //M249 Waffe
+  Local(S42MigrationStep(i, 1)) = P90_; //P90 Waffe
+  Local(S42MigrationStep(i, 1)) = C40_; //PlastikSprengstoff + 2 Zünder
+  Local(S42MigrationStep(i, 1)) = MFUS;
+  Local(S42MigrationStep(i, 1)) = SFUS;
+  Local(S42MigrationStep(i, 1)) = SMIN; //Schwarmmine
+  Local(S42MigrationStep(i, 1)) = LMIN; //LaserMine
+  Local(S42MigrationStep(i, 1)) = AMIN; //Alienmine
+  Local(S42MigrationStep(i, 1)) = TRP4; //Todestorpedo
+  Local(S42MigrationStep(i, 1)) = SNSS; //Nuclear bomb
+  Local(S42MigrationStep(i, 1)) = SC_2; // Gaus Sniper
+  Local(S42MigrationStep(i, 1)) = ATO2; //Atomtorpedo
   s4 = i;
 
 
 
   // Fahrzeuge
-  Local(++i) = IDOL; //Statuen
-  Local(++i) = GIDL;
-  Local(++i) = WLRZ; //Holzlore
-  Local(++i) = SLBT; //Boot
-  Local(++i) = BALN; //Ballon
-  Local(++i) = CATA; //Katapult
-  Local(++i) = BRDG; //Holzbrückenstück
-  Local(++i) = WAGN; //Waggon
-  Local(++i) = STMG; //Dampfmaschine
-  Local(++i) = XBOW; //Armbrust
-  Local(++i) = BLMP; //Luftschiff
-  Local(++i) = TNNE; //Tonne
-  Local(++i) = LORY; //Lore
-  Local(++i) = CANN;  //Haubitze
-  Local(++i) = CTW3; //6 Geschütze für den Geschützturm
-  Local(++i) = CTW5;
-  Local(++i) = CTW7; 
-  Local(++i) = ACT1;
-  Local(++i) = ACT3;
-  Local(++i) = LICN;
-  Local(++i) = SUB1; //Uboot
-  Local(++i) = LORG; //GoldLore
-  Local(++i) = LAMP;  //portable Lampe
-  Local(++i) = CENM;//Emergency power module
-  Local(++i) = CVLA;//Leichter Jäger
-  Local(++i) = TANK;// Panzer
-  Local(++i) = SHTL;// Shuttle
-  Local(++i) = SCR_; //Scorpion
-  Local(++i) = PRE_; //Predetor
-  Local(++i) = TSP_; //Technosspähre
-  Local(++i) = CGC_; //Bomber Cougar fregatte
-  Local(++i) = MAM_; //Mammoth
-  Local(++i) = TCN_; // Tucan
-  Local(++i) = CCD_; //Concordia
-  Local(++i) = CAN_; //Cancer
-  Local(++i) = ST_3;  //Die Magnetsphäre
+  Local(S42MigrationStep(i, 1)) = IDOL; //Statuen
+  Local(S42MigrationStep(i, 1)) = GIDL;
+  Local(S42MigrationStep(i, 1)) = WLRZ; //Holzlore
+  Local(S42MigrationStep(i, 1)) = SLBT; //Boot
+  Local(S42MigrationStep(i, 1)) = BALN; //Ballon
+  Local(S42MigrationStep(i, 1)) = CATA; //Katapult
+  Local(S42MigrationStep(i, 1)) = BRDG; //Holzbrückenstück
+  Local(S42MigrationStep(i, 1)) = WAGN; //Waggon
+  Local(S42MigrationStep(i, 1)) = STMG; //Dampfmaschine
+  Local(S42MigrationStep(i, 1)) = XBOW; //Armbrust
+  Local(S42MigrationStep(i, 1)) = BLMP; //Luftschiff
+  Local(S42MigrationStep(i, 1)) = TNNE; //Tonne
+  Local(S42MigrationStep(i, 1)) = LORY; //Lore
+  Local(S42MigrationStep(i, 1)) = CANN;  //Haubitze
+  Local(S42MigrationStep(i, 1)) = CTW3; //6 Geschütze für den Geschützturm
+  Local(S42MigrationStep(i, 1)) = CTW5;
+  Local(S42MigrationStep(i, 1)) = CTW7;
+  Local(S42MigrationStep(i, 1)) = ACT1;
+  Local(S42MigrationStep(i, 1)) = ACT3;
+  Local(S42MigrationStep(i, 1)) = LICN;
+  Local(S42MigrationStep(i, 1)) = SUB1; //Uboot
+  Local(S42MigrationStep(i, 1)) = LORG; //GoldLore
+  Local(S42MigrationStep(i, 1)) = LAMP;  //portable Lampe
+  Local(S42MigrationStep(i, 1)) = CENM;//Emergency power module
+  Local(S42MigrationStep(i, 1)) = CVLA;//Leichter Jäger
+  Local(S42MigrationStep(i, 1)) = TANK;// Panzer
+  Local(S42MigrationStep(i, 1)) = SHTL;// Shuttle
+  Local(S42MigrationStep(i, 1)) = SCR_; //Scorpion
+  Local(S42MigrationStep(i, 1)) = PRE_; //Predetor
+  Local(S42MigrationStep(i, 1)) = TSP_; //Technosspähre
+  Local(S42MigrationStep(i, 1)) = CGC_; //Bomber Cougar fregatte
+  Local(S42MigrationStep(i, 1)) = MAM_; //Mammoth
+  Local(S42MigrationStep(i, 1)) = TCN_; // Tucan
+  Local(S42MigrationStep(i, 1)) = CCD_; //Concordia
+  Local(S42MigrationStep(i, 1)) = CAN_; //Cancer
+  Local(S42MigrationStep(i, 1)) = ST_3;  //Die Magnetsphäre
   s5 = i;
 
 
 
   // Gesamtgröße der Liste festhalten
-  listsize = s5+1;
+  listsize = (s5 ?? 0)+1;
   return(1);
 }
 
@@ -302,33 +302,34 @@ protected func Initialize()
 
 public func CategoryStart(num)
 {
-  if (num==1) return(0);
-  if (num==2) return(s1+1);
-  if (num==3) return(s2+1);
-  if (num==4) return(s3+1);
-  if (num==5) return(s4+1);
-  return(0);
+  if (Equal(num, 1)) return(nil);
+  if (Equal(num, 2)) return((s1 ?? 0)+1);
+  if (Equal(num, 3)) return((s2 ?? 0)+1);
+  if (Equal(num, 4)) return((s3 ?? 0)+1);
+  if (Equal(num, 5)) return((s4 ?? 0)+1);
+  return(nil);
 }
 
 public func CategorySize(num)
 {
-  if (num==1) return(s1+1);
-  if (num==2) return(s2-s1);
-  if (num==3) return(s3-s2);
-  if (num==4) return(s4-s3);
-  if (num==5) return(s5-s4);
-  return(0);
+  if (Equal(num, 1)) return((s1 ?? 0)+1);
+  if (Equal(num, 2)) return((s2 ?? 0)-(s1 ?? 0));
+  if (Equal(num, 3)) return((s3 ?? 0)-(s2 ?? 0));
+  if (Equal(num, 4)) return((s4 ?? 0)-(s3 ?? 0));
+  if (Equal(num, 5)) return((s5 ?? 0)-(s4 ?? 0));
+  return(nil);
 }
 
-public GetListSize: return(listsize);
+public func GetListSize(...) { return(listsize);
+}
 
 public func FindCategory(num)
 {
-  if (num <= s1) return(1);
-  if (num <= s2) return(2);
-  if (num <= s3) return(3);
-  if (num <= s4) return(4);
-  if (num <= s5) return(5);
-  return(0);
+  if ((num ?? 0) <= (s1 ?? 0)) return(1);
+  if ((num ?? 0) <= (s2 ?? 0)) return(2);
+  if ((num ?? 0) <= (s3 ?? 0)) return(3);
+  if ((num ?? 0) <= (s4 ?? 0)) return(4);
+  if ((num ?? 0) <= (s5 ?? 0)) return(5);
+  return(nil);
 }
 

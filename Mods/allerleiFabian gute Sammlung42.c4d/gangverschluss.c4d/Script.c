@@ -1,19 +1,22 @@
 /*-- Gangverschluss --*/
 
-#strict
+#strict 3
 
-Activate:
+func Activate(...) {
   // Aufbauen
-  if(Equal(GetDir(Par(0)),DIR_Right())) CreateObject(G15Y, 0, 10, GetOwner());
-  if(Equal(GetDir(Par(0)),DIR_Left())) CreateObject(G25Y, 0, 10, GetOwner());
+  if(Equal(GetDir(Par(nil)),DIR_Right)) CreateObject(G15Y, nil, 10, GetOwner());
+  if(Equal(GetDir(Par(nil)),DIR_Left)) CreateObject(G25Y, nil, 10, GetOwner());
   Sound("Connect");
   RemoveObject();
 return(1);
+}
 
-Hit:
+func Hit(...) {
   Sound("RockHit*");
   return(1);
+}
 
 /* Produkteigenschaften */
 
-public IsAnvilProduct: return(1);
+public func IsAnvilProduct(...) { return(1);
+}

@@ -1,6 +1,6 @@
 /*-- Warp --*/
 
-#strict
+#strict 3
 
 local iX, iY;
 
@@ -10,6 +10,8 @@ func Initialize() {
 }
 
 public func Set(int iXDest, int iYDest) {
+  iXDest ??= 0;
+  iYDest ??= 0;
   iX = iXDest;
   iY = iYDest;
 }
@@ -28,12 +30,12 @@ private func Warp(object pObj)
   pObj->SetPosition(iX, iY);
   pObj->SetXDir(xv);
   pObj->SetYDir(yv);
-  pObj->AddSpawnEffect(0, RGBa(0,200,255));
+  pObj->AddSpawnEffect(nil, RGBa(nil,200,255));
 }
 
 /* Serialisierung */
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("Set(%d,%d)", iX, iY);
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%d,%d)", iX, iY);
 }

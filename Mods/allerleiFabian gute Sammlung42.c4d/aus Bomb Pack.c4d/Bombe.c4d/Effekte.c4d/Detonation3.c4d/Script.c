@@ -1,17 +1,20 @@
-#strict
+#strict 3
 
-Launch:
+func Launch(...) {
   SetClrModulation(RGBa(255,255,255,80));
-  DoCon(Sub(Div(Mul(Par(0),100),32),100));
-  SetLocal(0,Par(0));
-  SetVar(0,Mul(Div(Sub(32,Div(Mul(32,GetCon()),100)),2),-1));
-  SetPosition(GetX(),Sum(GetY(),Var(0)));
+  DoCon(Sub(Div(Mul(Par(nil),100),32),100));
+  SetLocal(nil,Par(nil));
+  SetVar(nil,Mul(Div(Sub(32,Div(Mul(32,GetCon()),100)),2),-1));
+  SetPosition(GetX(),Sum(GetY(),Var(nil)));
   Sound("explo*");
   return(1);
-Initialize:
+}
+func Initialize(...) {
   SetAction("Blast");
-  SetLocal(0,32);
+  SetLocal(nil,32);
   return(1);  
-Remove:
+}
+func Remove(...) {
   RemoveObject();
   return(1);
+}

@@ -1,6 +1,6 @@
 /*-- Windkraftanlage --*/
 
-#strict
+#strict 3
 #include BOB2
 #include XMTR
 
@@ -10,28 +10,32 @@ local windwing;
 
 /* Initialisierung */
 
-protected Initialize:
-  manager = CreateObject(BMAN,0,0,GetOwner());
+protected func Initialize(...) {
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(1,1);
-  windwing = CreateObject(SWEW,0,0,GetOwner());
+  windwing = CreateObject(SWEW,nil,nil,GetOwner());
   windwing->Init(this());
   SetAction("Stand");
   return(1);
+}
 
-protected Construction:
-  basement = CreateObject(BS05,0,+8,GetOwner());
+protected func Construction(...) {
+  basement = CreateObject(BS05,nil,+8,GetOwner());
   return(1);
+}
   
-protected Destruction:
+protected func Destruction(...) {
   PreDestruction();
   if (basement) RemoveObject(basement);
   return(1);
+}
 
-public PreDestruction:
+public func PreDestruction(...) {
   if (manager)  RemoveObject(manager);
   if (windwing) RemoveObject(windwing);
   return(inherited());
+}
 
 
 /* Steuerung */
@@ -40,7 +44,7 @@ protected func ControlUp(clonk)
 {
   [Statusanzeige]
   if (!inherited(clonk)) return(1);   // wenn verfeindeter Spieler
-  var wind = Abs(GetWind(GetX(windwing)-GetX(), GetY(windwing)-GetY()));
+  var wind = Abs(GetWind((GetX(windwing) ?? 0)-(GetX() ?? 0), (GetY(windwing) ?? 0)-(GetY() ?? 0)));
   ShowInfoBar(IBRE, this(), wind,100, 5,1,1);
   return(1);
 }
@@ -48,25 +52,29 @@ protected func ControlUp(clonk)
 
 /* TimerCall */
 
-private CheckWindwing:
+private func CheckWindwing(...) {
   // Komplett, aber kein Windrad da: reduzieren für Neuaufbau/Reparatur
-  if (GetCon()==100 && !windwing) DoCon(-1);
+  if (And(Equal(GetCon(), 100), !windwing)) DoCon(-1);
   return(1);
+}
 
 
 /* Anzeigentext */
 
 private func InfoBarText(barID, fill, maxf)
 {
-  if (barID == IBRE)
+  if (Equal(barID, IBRE))
     return(Format("@Wind:  %d", fill));
-  return(0);
+  return(nil);
 }
 
 
 /* Eigenschaften */
 
-public InfoBarPos:  return(-10);
-public InfoBarSize: return(1);
-public GetMaxDamage: return(80);
+public func InfoBarPos(...) {  return(-10);
+}
+public func InfoBarSize(...) { return(1);
+}
+public func GetMaxDamage(...) { return(80);
+}
 

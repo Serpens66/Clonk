@@ -1,6 +1,6 @@
 /*-- Wachturm --*/
 
-#strict
+#strict 3
 #include BOB1
 
 local basement, manager;
@@ -11,14 +11,14 @@ local weapon;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(-3,-19);
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS13,0,+8,GetOwner());
+  basement = CreateObject(BS13,nil,+8,GetOwner());
 }
 
 protected func Destruction()
@@ -40,49 +40,49 @@ public func PreDestruction()
 protected func ContainedDig(caller)
 {
   [Waffenwechsel]
-  CreateMenu(GetID(), caller, 0,2, "Waffenwechsel",0,1);
-  AddMenuItem("keine Waffe", "ChangeWeapon", SYNW,caller, 0,0,"keine Bewaffnung", 128,0, GetCost());
+  CreateMenu(GetID(), caller, nil,2, "Waffenwechsel",nil,1);
+  AddMenuItem("keine Waffe", "ChangeWeapon", SYNW,caller, nil,nil,"keine Bewaffnung", 128,nil, GetCost());
   if (GetPlrKnowledge(GetOwner(),STW1))
-    AddMenuItem("Maschinengewehr","ChangeWeapon", STW1,caller, 0,0,0, 128,0, GetCost(STW1));
+    AddMenuItem("Maschinengewehr","ChangeWeapon", STW1,caller, nil,nil,nil, 128,nil, GetCost(STW1));
   if (GetPlrKnowledge(GetOwner(),STW4))
-    AddMenuItem("Vulcan-Waffe",   "ChangeWeapon", STW4,caller, 0,0,0, 128,0, GetCost(STW4));
+    AddMenuItem("Vulcan-Waffe",   "ChangeWeapon", STW4,caller, nil,nil,nil, 128,nil, GetCost(STW4));
   if (GetPlrKnowledge(GetOwner(),STW2))
-    AddMenuItem("Raketenwerfer",  "ChangeWeapon", STW2,caller, 0,0,0, 128,0, GetCost(STW2));
+    AddMenuItem("Raketenwerfer",  "ChangeWeapon", STW2,caller, nil,nil,nil, 128,nil, GetCost(STW2));
   if (GetPlrKnowledge(GetOwner(),STW3))
-    AddMenuItem("Elektrowaffe",   "ChangeWeapon", STW3,caller, 0,0,0, 128,0, GetCost(STW3));
+    AddMenuItem("Elektrowaffe",   "ChangeWeapon", STW3,caller, nil,nil,nil, 128,nil, GetCost(STW3));
   if (GetPlrKnowledge(GetOwner(),SLSW))
-    AddMenuItem("Laser",          "ChangeWeapon", SLSW,caller, 0,0,0, 128,0, GetCost(SLSW));
+    AddMenuItem("Laser",          "ChangeWeapon", SLSW,caller, nil,nil,nil, 128,nil, GetCost(SLSW));
   return(1);
 }
 
 // Für die Sensoren die Waffenwechselfunktionen:
 public func SensorenenWaffenwechsel(zahl)
 {
-if(zahl==1) ChangeWeapon(SYNW); //keine Waffe
-if(zahl==2) ChangeWeapon(SLSW); //Laser
-if(zahl==3) ChangeWeapon(STW1); //Maschinenegewehr
-if(zahl==4) ChangeWeapon(STW4); //Vulcan
-if(zahl==5) ChangeWeapon(STW3); //Elektrowaffe
-if(zahl==6) ChangeWeapon(STW2); //Raketenwerfer
+if(Equal(zahl, 1)) ChangeWeapon(SYNW); //keine Waffe
+if(Equal(zahl, 2)) ChangeWeapon(SLSW); //Laser
+if(Equal(zahl, 3)) ChangeWeapon(STW1); //Maschinenegewehr
+if(Equal(zahl, 4)) ChangeWeapon(STW4); //Vulcan
+if(Equal(zahl, 5)) ChangeWeapon(STW3); //Elektrowaffe
+if(Equal(zahl, 6)) ChangeWeapon(STW2); //Raketenwerfer
 }
 
 protected func ChangeWeapon(ID)
 {
   // nochmal das gleiche gewählt?
-  if (ID == SYNW) ID = 0;
-  if (ID == GetID(weapon)) return(0);
-  if (!ID && !weapon)      return(0);
+  if (Equal(ID, SYNW)) ID = nil;
+  if (Equal(ID, GetID(weapon))) return(nil);
+  if (And(!ID, !weapon))      return(nil);
   // genug Geld da?
   var cost = GetCost(ID);
-  if (GetWealth(GetOwner()) < cost)
+  if ((GetWealth(GetOwner()) ?? 0) < (cost ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", this());
     Sound("Error");
-    return(0);
+    return(nil);
   }
   // bezahlen
-  DoWealth(GetOwner(), -cost);
-  if (cost > 0) Sound("UnCash");
+  DoWealth(GetOwner(), -(cost ?? 0));
+  if ((cost ?? 0) > 0) Sound("UnCash");
            else Sound("Cash");
   // alte Waffe weg
   if (weapon)
@@ -90,7 +90,7 @@ protected func ChangeWeapon(ID)
   // keine draufsetzen?
   if (!ID) return(1);
   // neue Waffe erzeugen
-  weapon = CreateObject(ID, 0,-100,GetOwner());
+  weapon = CreateObject(ID, nil,-100,GetOwner());
   weapon->Init(this(),1);
   return(1);
 }
@@ -98,12 +98,12 @@ protected func ChangeWeapon(ID)
 private func GetCost(ID)
 {
   // Waffe bereits verwendet?
-  if (!ID && !weapon)      return(0);
-  if (ID == GetID(weapon)) return(0);
+  if (And(!ID, !weapon))      return(nil);
+  if (Equal(ID, GetID(weapon))) return(nil);
   // Kostenberechnung
-  var cost = 0;
-  if (ID)     cost += GetValue(0,ID);         // neue Waffe kostet was
-  if (weapon) cost -= GetValue(weapon)*4/5;   // alte wird für 80% des Wertes verkauft
+  var cost = nil;
+  if (ID)     S42MigrationAssign(cost, "+=", (GetValue(nil,ID) ?? 0));         // neue Waffe kostet was
+  if (weapon) S42MigrationAssign(cost, "-=", (GetValue(weapon) ?? 0)*4/5);   // alte wird für 80% des Wertes verkauft
   return(cost);
 }
 
@@ -113,9 +113,9 @@ private func GetCost(ID)
 protected func Collection2(clonk)
 {
   // neuen Clonkschatten erzeugen
-  if (GetID(clonk) != HZCK)
-    return(0);
-  CreateObject(STOF,0,0,GetOwner())->Init(this(), clonk);
+  if (!Equal(GetID(clonk), HZCK))
+    return(nil);
+  CreateObject(STOF,nil,nil,GetOwner())->Init(this(), clonk);
   return(1);
 }
 
@@ -123,8 +123,8 @@ protected func Ejection(clonk)
 {
   // Clonkschatten löschen
   var figure;
-  while (figure = FindObject(STOF, 0,0,0,0, 0,0,this(), 0,figure))
-    if (figure->GetClonk() == clonk)
+  while (figure = FindObject(STOF, nil,nil,nil,nil, nil,nil,this(), nil,figure))
+    if (Equal(figure->GetClonk(), clonk))
       return(RemoveObject(figure));
   return(1);
 }
@@ -135,14 +135,17 @@ protected func Ejection(clonk)
 public func EnoughEnergy()
 {
   if (weapon)
-    return(GetEnergy() > weapon->~EnergyNeed());
+    return((GetEnergy() ?? 0) > (weapon->~EnergyNeed() ?? 0));
   return(GetEnergy());
 }
 
 
 /* Eigenschaften */
 
-public IsEnergyConsumer: return(weapon != 0);
-public InfoBarSize: return(2);
-public GetMaxDamage: return(150);
+public func IsEnergyConsumer(...) { return(!Equal(weapon, nil));
+}
+public func InfoBarSize(...) { return(2);
+}
+public func GetMaxDamage(...) { return(150);
+}
 

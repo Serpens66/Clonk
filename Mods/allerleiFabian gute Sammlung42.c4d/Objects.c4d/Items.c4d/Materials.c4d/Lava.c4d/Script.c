@@ -1,6 +1,6 @@
 /*--- Lava ---*/
 
-#strict
+#strict 3
 
 local mat;
 
@@ -12,16 +12,16 @@ protected func Initialize() {
 protected func Hit()
 {
 	if(!mat) mat="Lava";
-  CastPXS(mat, GetCon()/2, 35);
+  CastPXS(mat, (GetCon() ?? 0)/2, 35);
   RemoveObject();
   return(1);
 }
 
 private func SmokeTrail()
 {
-  Smoke(0, 0, 5);
-  Smoke(0, -5, Random(7));
-  if (GetActTime() > 75) Hit();
+  Smoke(nil, nil, 5);
+  Smoke(nil, -5, Random(7));
+  if ((GetActTime() ?? 0) > 75) Hit();
   return(1);
 }
   

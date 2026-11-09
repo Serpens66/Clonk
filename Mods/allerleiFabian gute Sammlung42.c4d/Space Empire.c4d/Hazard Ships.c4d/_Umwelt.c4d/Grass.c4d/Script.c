@@ -1,6 +1,6 @@
 /*-- Grass --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -8,10 +8,10 @@ protected func Initialize()
   SetPosition();
   // Grass platzieren
   var x_dens = 12;
-  for (var x = 0; x < LandscapeWidth(); x += x_dens)
+  for (var x = nil; (x ?? 0) < (LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", (x_dens ?? 0)))
   {
     var y = GetHorizonHeight(x);
-    if (GetMaterial(x, y + 1) == Material("Earth"))
+    if (Equal(GetMaterial(x, (y ?? 0) + 1), Material("Earth")))
       CreateGrass(x, y);
   }
   // Steuerungsobjekt wird nicht mehr benötigt
@@ -22,10 +22,10 @@ protected func Initialize()
 private func GetHorizonHeight(x)
 {
   var y;
-  while (y < LandscapeHeight() && !GBackSemiSolid(x, y))
-    y += 10;
-  while (y > LandscapeHeight() && GBackSemiSolid(x, y))
-    --y;
+  while (And((y ?? 0) < (LandscapeHeight() ?? 0), !GBackSemiSolid(x, y)))
+    S42MigrationAssign(y, "+=", 10);
+  while (And((y ?? 0) > (LandscapeHeight() ?? 0), GBackSemiSolid(x, y)))
+    S42MigrationStep(y, -1);
   return(y);
 }
     

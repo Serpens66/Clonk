@@ -1,25 +1,27 @@
 /*-- Commode --*/
 
-#strict
+#strict 3
 
 local iAction;
 
 func Initialize() 
 {
-  SetAction( Format("Exist%d", iAction = Random(2) + 1)); 
+  SetAction( Format("Exist%d", iAction = (Random(2) ?? 0) + 1));
   SetDir(Random(2));
 }
 
 public func OnDmg(int iDmg, int iType)
 {
-  if(GetDamage() > MaxDamage())
+  iDmg ??= 0;
+  iType ??= 0;
+  if((GetDamage() ?? 0) > (MaxDamage() ?? 0))
   {
     SetAction( Format("Broken%d", iAction));
     return(true);
   }
   
-  if( iType == DMG_Explosion)
-    return(0);
+  if( Equal(iType, DMG_Explosion))
+    return(nil);
   else
     return(100);
 }

@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local Number,Forsthaus;
 
@@ -12,8 +12,8 @@ protected func Init(pHut,iNum)
 
 public func Move(iChange)
 {
-  if(Number== 1) SetPosition(GetX()-iChange,GetY()-iChange);
-  if(Number== 2) SetPosition(GetX()-iChange,GetY()+iChange);
-  if(Number== 3) SetPosition(GetX()+iChange,GetY()-iChange);
-  if(Number== 4) SetPosition(GetX()+iChange,GetY()+iChange);
+  if(Equal(Number, 1)) SetPosition((GetX() ?? 0)-(iChange ?? 0),(GetY() ?? 0)-(iChange ?? 0));
+  if(Equal(Number, 2)) SetPosition((GetX() ?? 0)-(iChange ?? 0),(GetY() ?? 0)+(iChange ?? 0));
+  if(Equal(Number, 3)) SetPosition((GetX() ?? 0)+(iChange ?? 0),(GetY() ?? 0)-(iChange ?? 0));
+  if(Equal(Number, 4)) SetPosition((GetX() ?? 0)+(iChange ?? 0),(GetY() ?? 0)+(iChange ?? 0));
 }

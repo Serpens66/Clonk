@@ -1,6 +1,6 @@
 /*-- Barierre --*/
 
-#strict
+#strict 3
 
 local ticker, barierre;
 
@@ -9,9 +9,9 @@ func Initialize()
 {
 SetPosition(1,1);
 if(!HashGet(hashSpielRegeln, "Barriere")) return(RemoveObject()); // nur aktiv werden, wenn variabel eingestellt
-barierre = CreateObject(_PER, LandscapeWidth()/2, 0,-1);
+barierre = CreateObject(_PER, (LandscapeWidth() ?? 0)/2, nil,-1);
 ticker = CreateObject(CLK_, 1, 1,-1);
-ticker ->~ DieSettings(100,RGBa(240,1,1,250),0,this()); // Zeit wird jetzt über hastable variable bestimmt
+ticker ->~ DieSettings(100,RGBa(240,1,1,250),nil,this()); // Zeit wird jetzt über hastable variable bestimmt
 }
 
 
@@ -24,11 +24,12 @@ barierre ->~Disable();
 RemoveObject(ticker);
 RemoveObject(barierre);
 RemoveObject(this());
-return();
+return;
 }
 
 func Activate(int iPlayer)
 {
+  iPlayer ??= 0;
   MessageWindow("Erzeugt eine Sperre in der Mitte der landschaft, um zu verhindern, das sich die Gegner vor Ablauf der Zeit einen Besuch abstatten",iPlayer);
   return(1);
 }

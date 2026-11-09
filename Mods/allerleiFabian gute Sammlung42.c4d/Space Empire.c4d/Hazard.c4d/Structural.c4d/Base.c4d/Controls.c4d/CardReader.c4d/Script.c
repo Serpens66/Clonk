@@ -1,6 +1,6 @@
 /*-- Keycard-Terminal --*/
 
-#strict
+#strict 3
 
 local cardid, target;
 
@@ -10,7 +10,7 @@ protected func ControlThrow(object pClonk)
 {
   [$Control$]
 
-  var kc = Contents(0,pClonk);
+  var kc = Contents(nil,pClonk);
   // Sonst Nullpointer -_-
   if(!kc) {
     Sound("CommandFailure1");
@@ -25,21 +25,21 @@ protected func ControlThrow(object pClonk)
     // erstmal annehmen
     kc->Exit();
     kc->Enter(this());
-    ScheduleCall(0,"CheckCard",40);
+    ScheduleCall(nil,"CheckCard",40);
   }
   return(1);
 }
 
 public func CheckCard() {
-  if(!Contents()) return();
+  if(!Contents()) return;
 
-  if(Contents()->GetKeyNumber() & cardid) {
+  if((Contents()->GetKeyNumber() ?? 0) & (cardid ?? 0)) {
     // es ist die richtige!
     if(target) target->~Access();
 
     // Effekt
     Sound("Beep");
-    CreateParticle("NoGravSpark", 5, -7, 0, 0, 50, RGBa(0, 255, 0, 50));
+    CreateParticle("NoGravSpark", 5, -7, nil, nil, 50, RGBa(nil, 255, nil, 50));
 
     // der Einfachheit halber werden Karten nach Gebrauch zerstört
     // if(Contents()) RemoveObject(Contents());
@@ -48,7 +48,7 @@ public func CheckCard() {
   else {
     // die falsche... :(
     Sound("Error");
-    CreateParticle("NoGravSpark", 5, -7, 0, 0, 50, RGBa(255, 0, 0, 50));
+    CreateParticle("NoGravSpark", 5, -7, nil, nil, 50, RGBa(255, nil, nil, 50));
 
     // ausspucken
     if(Contents()) Contents()->Exit();
@@ -56,13 +56,14 @@ public func CheckCard() {
 }
 
 public func CreateKeyCard() {
-  var kc = CreateObject(KCRD,0,0,GetOwner());
+  var kc = CreateObject(KCRD,nil,nil,GetOwner());
   kc -> SetKeyNumber(cardid);
   return(kc);
 }
 
 public func Set(object pTarget, int iNumber)
 {
+  iNumber ??= 0;
   cardid = iNumber;
   target = pTarget;
 }
@@ -72,5 +73,5 @@ public func Set(object pTarget, int iNumber)
 public func Serialize(array& extra)
 {
 	if (target)
-		extra[GetLength(extra)] = [Format("Set(Object(%%d),%i)", cardid), target];
+		extra[(GetLength(extra) ?? 0)] = [Format("Set(Object(%%d),%i)", cardid), target];
 }

@@ -1,18 +1,20 @@
 /*-- Niedergang --*/
 
-#strict
+#strict 3
 
-protected ActivateEntrance: // C4Object *pClonk
+protected func ActivateEntrance(...) { // C4Object *pClonk
   // Kein Beobachtungsturm?!
-  if (Not(SetVar(0,FindObject(BT7U,0,+3)))) return(1);
+  if (Not(SetVar(nil,FindObject(BT7U,nil,+3)))) return(1);
   // Verfeindet
-  if (Hostile(GetOwner(Par(0)),GetOwner(Var(0)))) return(Message("%s verfeindet.|Eingang versperrt!", Var(0), GetPlayerName(GetOwner())));
+  if (Hostile(GetOwner(Par(nil)),GetOwner(Var(nil)))) return(Message("%s verfeindet.|Eingang versperrt!", Var(nil), GetPlayerName(GetOwner())));
   // Beobachtungsturm betreten
-  Enter(Var(0),Par(0));
-  SetCommand(Par(0),"None");
-  return(0);
+  Enter(Var(nil),Par(nil));
+  SetCommand(Par(nil),"None");
+  return(nil);
+}
 
-protected Remove:
- if (SetVar(0,FindObject(BT7U,0,+3))) return(1);
+protected func Remove(...) {
+ if (SetVar(nil,FindObject(BT7U,nil,+3))) return(1);
  RemoveObject();
- return(0);
+ return(nil);
+}

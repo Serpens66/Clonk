@@ -1,6 +1,6 @@
 /*-- Nordlichter --*/
 
-#strict
+#strict 3
 
 protected func Initialize() {
   SetAction("NorthernLights");
@@ -16,12 +16,12 @@ private func NorthernLights() {
  
 private func PlaceNorthernLight() {
   var iRand;
-  CreateObject(NTLT,iRand=Random(LandscapeWidth()),Random(GetHorizonHeight(iRand)-40),-1);
+  CreateObject(NTLT,iRand=Random(LandscapeWidth()),Random((GetHorizonHeight(iRand) ?? 0)-40),-1);
 }
   
 private func GetHorizonHeight(iX) {
-  var i=0;
-  while(i<LandscapeHeight() && !GBackSemiSolid(iX,i)) i+=10;
+  var i=nil;
+  while(And((i ?? 0)<(LandscapeHeight() ?? 0), !GBackSemiSolid(iX,i))) S42MigrationAssign(i, "+=", 10);
   return(i);
 }
 

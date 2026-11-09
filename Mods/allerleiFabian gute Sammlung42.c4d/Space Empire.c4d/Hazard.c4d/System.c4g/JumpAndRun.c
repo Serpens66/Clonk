@@ -1,40 +1,46 @@
 /*-- Hilfsfunktionen für JumpAndRun-Steuerung --*/
 
-#strict
+#strict 3
 
 /* ComDir */
 
 global func ComDirTransform(int comdir, int tocomdir)
 {
-  if (comdir == tocomdir) return (comdir);
-  if (comdir == COMD_Stop) return (tocomdir);
-  if (comdir == (tocomdir + 3) % 8 + 1) return (COMD_Stop);
-  if (Inside(comdir, tocomdir + 1, tocomdir + 3)) return (comdir - 1);
-  if (Inside(comdir, tocomdir - 1, tocomdir - 3)) return (comdir + 1);
-  if (Inside(comdir, tocomdir - 7, tocomdir - 5)) return ((comdir + 6) % 8 + 1);
-  return (comdir % 8 + 1);
+  comdir ??= 0;
+  tocomdir ??= 0;
+  if (Equal(comdir, tocomdir)) return (comdir);
+  if (Equal(comdir, COMD_Stop)) return (tocomdir);
+  if (Equal(comdir, ((tocomdir ?? 0) + 3) % 8 + 1)) return (COMD_Stop);
+  if (Inside(comdir, (tocomdir ?? 0) + 1, (tocomdir ?? 0) + 3)) return ((comdir ?? 0) - 1);
+  if (Inside(comdir, (tocomdir ?? 0) - 1, (tocomdir ?? 0) - 3)) return ((comdir ?? 0) + 1);
+  if (Inside(comdir, (tocomdir ?? 0) - 7, (tocomdir ?? 0) - 5)) return (((comdir ?? 0) + 6) % 8 + 1);
+  return ((comdir ?? 0) % 8 + 1);
 }
 
 global func ComDirLike(int comdir1, int comdir2)
 {
-  if (comdir1 == comdir2) return (true);
-  if (comdir1 == COMD_Stop || comdir2 == COMD_Stop) return(false);
-  if (comdir1 % 8 + 1 == comdir2) return (true);
-  if (comdir1 == comdir2 % 8 + 1) return (true);
-  return (false);
+  comdir1 ??= 0;
+  comdir2 ??= 0;
+  if (Equal(comdir1, comdir2)) return (true);
+  if (Or(Equal(comdir1, COMD_Stop), Equal(comdir2, COMD_Stop))) return(nil);
+  if (Equal((comdir1 ?? 0) % 8 + 1, comdir2)) return (true);
+  if (Equal(comdir1, (comdir2 ?? 0) % 8 + 1)) return (true);
+  return (nil);
 }
 
 /* Zielen von Armbrust/Katapult/Bogen/Winchester/etc. */
 
 global func AimStdConf(int conf)
 {
+  conf ??= 0;
   var old_phase = GetPhase();
-  SetPhase(BoundBy(GetPhase()+conf, 0, GetActMapVal("Length", GetAction(), GetID())-1));
-  return(GetPhase() != old_phase);
+  SetPhase(BoundBy((GetPhase() ?? 0)+(conf ?? 0), nil, (GetActMapVal("Length", GetAction(), GetID()) ?? 0)-1));
+  return(!Equal(GetPhase(), old_phase));
 }
 
 global func AimConf(string conffunc, int conf, object controller, id def)
 {
+  conf ??= 0;
   if(conffunc)
   {
     if(this())
@@ -53,25 +59,29 @@ global func AimConf(string conffunc, int conf, object controller, id def)
 global func AimUpdate(object controller, int comdir, int interval, string conffunc, id def)
 {
   // Globaler Effekt, wenn this() 0 ist (DefinitionCall).
+  comdir ??= 0;
+  interval ??= 0;
   if(GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
     AimCancel(controller);
 
     if(ComDirLike(comdir, COMD_Up))
-      AddEffect("IntJnRAim", this(), 1, interval, 0, 0, conffunc, -1, controller, def);
+      AddEffect("IntJnRAim", this(), 1, interval, nil, nil, conffunc, -1, controller, def);
     if(ComDirLike(comdir, COMD_Down))
-      AddEffect("IntJnRAim", this(), 1, interval, 0, 0, conffunc, 1, controller, def);
+      AddEffect("IntJnRAim", this(), 1, interval, nil, nil, conffunc, 1, controller, def);
   }
 }
 
 global func AimUp(object controller, int interval, string conffunc, id def)
 {
+  interval ??= 0;
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
     return(AimConf(conffunc, -1, controller, def));
 }
 
 global func AimDown(object controller, int interval, string conffunc, id def)
 {
+  interval ??= 0;
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
     return(AimConf(conffunc, 1, controller, def));
 }
@@ -79,18 +89,21 @@ global func AimDown(object controller, int interval, string conffunc, id def)
 global func AimCancel(object controller)
 {
   var count = GetEffectCount("IntJnRAim", this());
-  while(count --)
+  while(S42MigrationStep(count , -1, true))
   {
     var number = GetEffect("IntJnRAim", this());
-    if(EffectVar(2, this(), number) != controller) continue;
-    RemoveEffect(0, this(), number); 
+    if(!Equal(EffectVar(2, this(), number), controller)) continue;
+    RemoveEffect(nil, this(), number);
   }
 }
 
 global func FxIntJnRAimStart(object target, int number, int temp, string conffunc, int conf, object controller, id def)
 {
-  if(temp) return();
-  EffectVar(0, target, number) = conffunc;
+  number ??= 0;
+  temp ??= 0;
+  conf ??= 0;
+  if(temp) return;
+  EffectVar(nil, target, number) = conffunc;
   EffectVar(1, target, number) = conf;
   EffectVar(2, target, number) = controller;
   EffectVar(3, target, number) = def;
@@ -100,20 +113,22 @@ global func FxIntJnRAimStart(object target, int number, int temp, string conffun
 global func FxIntJnRAimTimer(object target, int number, int time)
 {
   // Controller weg?
+  number ??= 0;
+  time ??= 0;
   var controller = EffectVar(2, target, number);
   if(!controller) return(-1);
 
   // Controller muss Fahrzeug anfassen
   if(target)
   	// Wenn target und controller das selbe Fahrzeug ist, nichts tun.
-    if(target->GetCategory() & C4D_Vehicle && target != controller)
-      if(controller->GetProcedure() ne "PUSH" || controller->GetActionTarget() != target)
+    if(And((target->GetCategory() ?? 0) & (C4D_Vehicle ?? 0), !Equal(target, controller)))
+      if(Or(!SEqual(controller->GetProcedure(), "PUSH"), !Equal(controller->GetActionTarget(), target)))
         return(-1);
 
   if(target)
-    target->AimConf(EffectVar(0, target, number), EffectVar(1, target, number), EffectVar(2, target, number));
+    target->AimConf(EffectVar(nil, target, number), EffectVar(1, target, number), EffectVar(2, target, number));
   else if(EffectVar(3, target, number))
-    AimConf(EffectVar(0, target, number), EffectVar(1, target, number), EffectVar(2, target, number), EffectVar(3, target, number));
+    AimConf(EffectVar(nil, target, number), EffectVar(1, target, number), EffectVar(2, target, number), EffectVar(3, target, number));
   else
     // Global call via eval()?
     ;

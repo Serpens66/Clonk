@@ -1,40 +1,46 @@
 /*-- Gangverschluss (aufgebaut) --*/
 
-#strict
+#strict 3
 
 local hilfe;
 
-Initialize:  
-hilfe = CreateObject(G35Y,AbsX(GetX()),AbsY(GetY())+7,GetOwner());
+func Initialize(...) {
+hilfe = CreateObject(G35Y,AbsX(GetX()),(AbsY(GetY()) ?? 0)+7,GetOwner());
 hilfe->~Set(this());
   SetAction("NoBridge");
 return(1);
+}
 
-ControlLeft:
+func ControlLeft(...) {
   SetAction("NoBridge");
-  SetSolidMask(30, 0, 1, 1);
+  SetSolidMask(30, nil, 1, 1);
   Sound("Connect");
 return(1);
+}
 
-ControlRight:
+func ControlRight(...) {
   SetAction("Bridge");
-  SetSolidMask(0, 31, 73, 17);
+  SetSolidMask(nil, 31, 73, 17);
   Sound("Connect");
 return(1);
+}
 
-ControlDigDouble:
+func ControlDigDouble(...) {
 RemoveObject(hilfe);
   ChangeDef(GV5Y);
   Sound("Connect");
 return(1);
+}
   
-Bridge:
-  SetSolidMask(0, 31, 73, 17);
+func Bridge(...) {
+  SetSolidMask(nil, 31, 73, 17);
 return(1);
+}
 
-NoBridge:
-  SetSolidMask(30, 0, 1, 1);
+func NoBridge(...) {
+  SetSolidMask(30, nil, 1, 1);
 return(1);
+}
 
 func Destruction(a,b,c,d,e,f)
 {

@@ -1,6 +1,6 @@
 /*-- Flamme --*/
 
-#strict
+#strict 3
 
 
 local step;
@@ -9,12 +9,12 @@ local step;
 
 public func SetOwnerObject()
 {
-  SetAction("FadeIn",Par(0));
+  SetAction("FadeIn",Par(nil));
   // ganz ausgeblendet
   SetClrModulation(RGBa(255,255,255,255));
   step = 250;
   // immer hinter dem Jäger
-  SetObjectOrder(this(),Par(0));
+  SetObjectOrder(this(),Par(nil));
   return(1);
 }
 
@@ -29,8 +29,8 @@ public func SwitchOff()
 
 private func StepIn()
 {
-  step -= 25;
-  if (step < 0) step = 0;
+  S42MigrationAssign(step, "-=", 25);
+  if ((step ?? 0) < 0) step = nil;
   if (!step)
     SetAction("Burn");
   SetClrModulation(RGBa(255,255,255,step));
@@ -39,8 +39,8 @@ private func StepIn()
 
 private func StepOff()
 {
-  step += 15;
-  if (step >= 255)
+  S42MigrationAssign(step, "+=", 15);
+  if ((step ?? 0) >= 255)
     return(RemoveObject());
   SetClrModulation(RGBa(255,255,255,step));
   return(1);
@@ -52,11 +52,11 @@ private func Burning()
 {
   // Objekte anbrennen
   var obj;
-  while (obj = FindObject(0, -27,-8,54,16, OCF_Inflammable(),0,0,NoContainer(),obj))
+  while (obj = FindObject(nil, -27,-8,54,16, OCF_Inflammable,nil,nil,NoContainer(),obj))
     if (!Random(6))
       Incinerate(obj);
   // Funken der Flamme
-  if (GetAction() eq "SwitchOff")
+  if (!!SEqual(GetAction(), "SwitchOff"))
     return(1);
   return(1);
 }

@@ -1,6 +1,6 @@
 /*-- Fahrstuhl --*/
 
-#strict
+#strict 3
 
 #include CXEC
 #include ELEF

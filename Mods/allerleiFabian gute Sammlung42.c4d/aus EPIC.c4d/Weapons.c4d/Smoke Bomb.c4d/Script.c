@@ -1,6 +1,6 @@
 /*-- T-Flint --*/
 
-#strict
+#strict 3
 
 protected func Hit() {
   Sound("RockHit*");
@@ -8,7 +8,7 @@ protected func Hit() {
   Sound("Fuse");
   SetAction("Activated");
   // Picture anpassen
-  SetPicture(0, 12 + 64, 64, 64);
+  SetPicture(nil, 12 + 64, 64, 64);
   return(1);
 }
 
@@ -18,25 +18,25 @@ public func Activate()
  Sound("Fuse");
  SetAction("Activated");
  // Picture anpassen
- SetPicture(0, 12 + 64, 64, 64);
+ SetPicture(nil, 12 + 64, 64, 64);
  return(1);
 }
 
 private func RemoveBomb() {
-  SetPicture(0, 12, 64, 64);
+  SetPicture(nil, 12, 64, 64);
   ChangeDef(COAL);
   return(1);
 }                  
 
 protected func SmokeAss() {
-  Smoke(0,0,RandomX(40,200));
-  Smoke(0,0,RandomX(80,300));
-  if(GetActTime() > 1000) RemoveBomb();
+  Smoke(nil,nil,RandomX(40,200));
+  Smoke(nil,nil,RandomX(80,300));
+  if((GetActTime() ?? 0) > 1000) RemoveBomb();
 }
                     
 public func MagicExtinguish() {
   // kann durch Zauber "Löschen" gelöscht werden
-  if(GetAction() ne "Activated") return(0);
+  if(!SEqual(GetAction(), "Activated")) return(nil);
   DoExtinguish();
   return(1);
 }

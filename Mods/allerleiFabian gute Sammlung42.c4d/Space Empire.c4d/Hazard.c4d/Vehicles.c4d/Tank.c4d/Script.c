@@ -1,6 +1,6 @@
 /*-- Tank --*/
 
-#strict
+#strict 3
 
 public func IsHazardShip()  { return(true); }
 #include L_TK	// tank physics
@@ -21,8 +21,8 @@ public func Initialize() {			// Initialization
 	// Create chassis
 	NewChassis(ChassisID());
 	
-	shieldupgrade = false;
-	aiming = false;
+	shieldupgrade = nil;
+	aiming = nil;
 	
 	// Damage effect
 	AddDamageEffect(this);
@@ -43,7 +43,7 @@ public func NewTurret(id idTurret) {		// Set new turret
 	if(turret) RemoveObject(turret);
 
 	// create the new one
-	turret = CreateObject(idTurret,0,5,GetOwner());
+	turret = CreateObject(idTurret,nil,5,GetOwner());
 	turret -> AttachTo(this());
 	SetObjectOrder(this(), turret);
 }
@@ -53,7 +53,7 @@ public func NewChassis(id idChassis) {		// set new chassis
 	if(chassis) RemoveObject(chassis);
 
 	// create the new one
-	chassis = CreateObject(idChassis,0,18,GetOwner());
+	chassis = CreateObject(idChassis,nil,18,GetOwner());
 	chassis -> AttachTo(this());
 	SetObjectOrder(this(), chassis);
 }
@@ -90,9 +90,9 @@ public func MaxAimDown() {
 public func StartAiming() {     // Anfangen zu zielen
 	Stop();
 	
-	crosshair = CreateObject(HCRH,0,0,-1);
+	crosshair = CreateObject(HCRH,nil,nil,-1);
 	crosshair->Init(this());
-	crosshair->SetAngle(80*(GetDir()*2-1));
+	crosshair->SetAngle(80*((GetDir() ?? 0)*2-1));
 	
 	if(IsTurning()) crosshair->SetVisibility(VIS_None);
 	//ScheduleCall(this(),"UpdateAiming",1);
@@ -107,7 +107,7 @@ public func StopAiming() {      // Zielen beenden
 	if(crosshair) RemoveObject(crosshair);
  
 	// Callback
-	aiming = false;
+	aiming = nil;
 	turret->~AimStop();
 }
 
@@ -116,27 +116,31 @@ public func StopAiming() {      // Zielen beenden
 public func ContainedConf(int conf)
 {
   // Feineres Zielen mit JnR-Steuerung möglich
+  conf ??= 0;
   if(GetPlrCoreJumpAndRunControl(GetController()))
-    DoAiming(conf * AIM_Step / 5);
+    DoAiming((conf ?? 0) * (AIM_Step ?? 0) / 5);
   else
-    DoAiming(conf * AIM_Step);
+    DoAiming((conf ?? 0) * (AIM_Step ?? 0));
 }
 
 protected func ContainedUpdate(object clonk, int comdir, bool dig, bool throw)
 {
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   if(IsAiming())
   {
     AimUpdate(this(), comdir, 1, "ContainedConf");
     return(1);
 	}
 	if(IsTurning())
-		if(comdir != COMD_Stop)
+		if(!Equal(comdir, COMD_Stop))
 		{
 			Go();
 			return(1);
 		}
 	if(IsDriving())
-		if(comdir == COMD_Stop)
+		if(Equal(comdir, COMD_Stop))
 		{
 			Stop();
 			return(1);
@@ -147,21 +151,22 @@ protected func ContainedUpdate(object clonk, int comdir, bool dig, bool throw)
 
 public func DoAiming(int iChange) {
   //zielen wir überhaupt?
+  iChange ??= 0;
   if(!IsAiming())
-    return();
+    return;
 
-  var angle = Abs(crosshair->GetAngle()) + iChange;
+  var angle = (Abs(crosshair->GetAngle()) ?? 0) + (iChange ?? 0);
 
   // Winkel anpassen, wenn keine freie Auswahl (klassische Steuerung)
   if(!GetPlrCoreJumpAndRunControl(GetController()))
-    angle = angle-angle%AIM_Step;
+    angle = (angle ?? 0)-(angle ?? 0)%(AIM_Step ?? 0);
 
   // Winkel wird zu groß?
-  if(angle > MaxAimDown() || angle < MaxAimUp())
-    return();
+  if(Or((angle ?? 0) > (MaxAimDown() ?? 0), (angle ?? 0) < (MaxAimUp() ?? 0)))
+    return;
 
-  if(GetDir() == DIR_Left)
-    angle = 360-angle;
+  if(Equal(GetDir(), DIR_Left))
+    angle = 360-(angle ?? 0);
   crosshair->SetAngle(angle);
 
   UpdateAiming();
@@ -169,7 +174,7 @@ public func DoAiming(int iChange) {
 
 public func UpdateAiming() {
   if(!IsAiming())
-    return();
+    return;
 
   var a = crosshair->GetAngle();
 
@@ -180,7 +185,7 @@ public func UpdateAiming() {
 /* ------------------------------------------------------------------------- */
 
 public func Damage() {							// Damage
-	if(GetDamage() < MaxDamage()) return();
+	if((GetDamage() ?? 0) < (MaxDamage() ?? 0)) return;
 
 	Destroyed();
 }
@@ -191,21 +196,21 @@ protected func Destruction() {					// Destruction
 }
 
 protected func ActivateEntrance(object by) {	// Entrance
-	if ((by->GetOCF() & OCF_CrewMember) && !Contents()) {
-		if(by == Contents()) { Exit(by); }
+	if (And(((by->GetOCF() ?? 0) & (OCF_CrewMember ?? 0)), !Contents())) {
+		if(Equal(by, Contents())) { Exit(by); }
 		else if(!ContentsCount()) {
 			Enter(this, by);
 		}
 		FinishCommand(by, true);
 	}
-	else { FinishCommand(by, false); }
+	else { FinishCommand(by, nil); }
 }
 
 protected func Ejection(object by) {
 	if(!EMPShocked()) {
-		Sound("tank_stop",0,0,SLvl(0));
-		Sound("tank",0,0,SLvl(0),0,-1);
-		Sound("tank2",0,0,SLvl(1),0,-1);
+		Sound("tank_stop",nil,nil,SLvl(nil));
+		Sound("tank",nil,nil,SLvl(nil),nil,-1);
+		Sound("tank2",nil,nil,SLvl(1),nil,-1);
 	}
 	//DoScore(GetOwner(by),-GetValue());
 	SetController(-1);
@@ -213,33 +218,34 @@ protected func Ejection(object by) {
 
 protected func Collection2(object by) {			// Collection
 	// only one object, that is a clonk may be in the vehicle
-	SetEntrance(0);
+	SetEntrance(nil);
 	// change owner of the vehicle 
 	DriverIsOwner(by);
 	// resume turning if possible
 	if(!EMPShocked()) {
-		Sound("tank_start",0,0,SLvl(0));
-		Sound("tank",0,0,SLvl(0),0,1);
+		Sound("tank_start",nil,nil,SLvl(nil));
+		Sound("tank",nil,nil,SLvl(nil),nil,1);
 		ResumeTurn();
 	}
 }
 
 // nur CrewMember dürfen hier rein
 protected func RejectCollect(id idObj, object pObj) {
-	if(GetOCF(pObj) & OCF_CrewMember) return(0);
+	if((GetOCF(pObj) ?? 0) & (OCF_CrewMember ?? 0)) return(nil);
 	return(1);
 } 
 
 private func DriverIsOwner(object driver) {
-	DoScore(GetOwner(),+GetValue());
+	DoScore(GetOwner(),+(GetValue() ?? 0));
 	SetOwner(GetOwner(driver));
-	DoScore(GetOwner(driver),-GetValue());
+	DoScore(GetOwner(driver),-(GetValue() ?? 0));
 }
 
 /* Sound  */
 /* ------------------------------------------------------------------------- */
 
 private func SLvl(bool drive) {
+	drive ??= false;
 	if(!drive) return(50);
 	if(drive) return(100);
 } 
@@ -254,7 +260,7 @@ public func OnStop() {
 
 public func OnJumpStart() {
 	EngineSoundStop();
-	Sound("Flamer",0,0,80);
+	Sound("Flamer",nil,nil,80);
 }
 
 public func OnJumpEnd() {
@@ -269,8 +275,8 @@ public func OnTurnEnd() {
 	if(stop) EngineSoundStop();
 }
 
-private func EngineSoundStart()	{ Sound("tank2",0,0,SLvl(1),0,+1); }
-private func EngineSoundStop()	{ Sound("tank2",0,0,SLvl(1),0,-1); }
+private func EngineSoundStart()	{ Sound("tank2",nil,nil,SLvl(1),nil,+1); }
+private func EngineSoundStop()	{ Sound("tank2",nil,nil,SLvl(1),nil,-1); }
 
 /* Status  */
 /* ------------------------------------------------------------------------- */
@@ -287,7 +293,7 @@ public func IsThreat()		{ return(!!ContentsCount()); }
 public func ContainedLeft(object driver) {	// Left
     [$TxtLeft$|Image=TAN1:3]
 	if(EMPShocked()) return(true);
-	if(GetDir() != DIR_Left) {
+	if(!Equal(GetDir(), DIR_Left)) {
 		if(!IsTurning()) {
 			if(BottomContact())
 				Turn();
@@ -304,7 +310,7 @@ public func ContainedLeft(object driver) {	// Left
 public func ContainedRight(object driver) {	// Right
     [$TxtRight$|Image=TAN1:4]
 	if(EMPShocked()) return(true);
-	if(GetDir() != DIR_Right) {
+	if(!Equal(GetDir(), DIR_Right)) {
 		if(!IsTurning())
 			if(BottomContact())
 				Turn();
@@ -344,7 +350,7 @@ public func ContainedUpDouble(object driver) {	// UpDouble
 	}
 	if(!IsDriving()) {
 		PauseTurn();
-		Exit(driver,0,20);
+		Exit(driver,nil,20);
 	}
 }
 
@@ -371,7 +377,7 @@ public func ContainedUp(object driver) {	// Up
 		return(1);
 	}
 	if(Jump()) {
-		for(var i=0; i<20; ++i)
+		for(var i=nil; (i ?? 0)<20; S42MigrationStep(i, 1))
 			CreateDustParticle(RandomX(-10,10),RandomX(20,300));
 
 		//var dir = GetDir()*2-1;
@@ -396,15 +402,18 @@ public func ContainedDigDouble(object driver) {	// Dig Double (fire mode)
 }
 
 public func ControlCommand(string strCommand, object pTarget, int iTx, int iTy, object pTarget2, int iData, object pCmdObj) {
-	if(strCommand eq "MoveTo") {
+	iTx ??= 0;
+	iTy ??= 0;
+	iData ??= 0;
+	if(!!SEqual(strCommand, "MoveTo")) {
 	
 		if(IsAiming()) {
 			//Winkel wird zu groß?
-			var iAngle = Normalize(Angle(GetX(),GetY(),iTx,iTy)-GetR(),-180);
+			var iAngle = Normalize((Angle(GetX(),GetY(),iTx,iTy) ?? 0)-(GetR() ?? 0),-180);
 			
 			// falsche Richtung? (nur drehen)
-			if(iAngle < 0 && GetDir() == DIR_Right ||
-			   iAngle > 0 && GetDir() == DIR_Left) {
+			if(Or(And((iAngle ?? 0) < 0, Equal(GetDir(), DIR_Right)),
+			   And((iAngle ?? 0) > 0, Equal(GetDir(), DIR_Left)))) {
 			   
 			   Turn();
 			   // danach!
@@ -415,13 +424,13 @@ public func ControlCommand(string strCommand, object pTarget, int iTx, int iTy, 
 			iAngle = Abs(iAngle);
 			iAngle = BoundBy(iAngle,MaxAimUp(),MaxAimDown());
 
-			if(GetDir() == DIR_Left)
-				iAngle = 360-iAngle;
+			if(Equal(GetDir(), DIR_Left))
+				iAngle = 360-(iAngle ?? 0);
 			
 			crosshair->SetAngle(iAngle);
 			UpdateAiming();
 			
-			ScheduleCall(turret,"ControlThrow",5,0,pCmdObj);
+			ScheduleCall(turret,"ControlThrow",5,nil,pCmdObj);
 		}
 		else
 		  turret->ControlThrow(pCmdObj);
@@ -446,8 +455,8 @@ public func Turn() {
 protected func ChangeDir() {
 
 	// turn dir 
-	if(GetPhase() == 15) {
-		if(GetDir() == DIR_Left)
+	if(Equal(GetPhase(), 15)) {
+		if(Equal(GetDir(), DIR_Left))
 			SetDir(DIR_Right);
 		else
 			SetDir(DIR_Left);
@@ -455,7 +464,7 @@ protected func ChangeDir() {
 		if(crosshair) crosshair->ChangeDir();
 	}
 	
-	if(GetPhase() == 29) {
+	if(Equal(GetPhase(), 29)) {
 	
 		if(crosshair) {
 			crosshair->SetVisibility(VIS_Owner);
@@ -467,7 +476,7 @@ protected func ChangeDir() {
 
 public func ResumeTurn() {
 	// resume turning only if paused
-	if(GetAction() ne "TurnStalled") return();
+	if(!SEqual(GetAction(), "TurnStalled")) return;
 	var p = GetPhase();
 	SetAction("Turn");
 	SetPhase(p);
@@ -475,7 +484,7 @@ public func ResumeTurn() {
 
 public func PauseTurn() {
 	// pause turning only if turning
-	if(GetAction() ne "Turn") return();
+	if(!SEqual(GetAction(), "Turn")) return;
 	var p = GetPhase();
 	SetAction("TurnStalled");
 	SetPhase(p);
@@ -488,7 +497,7 @@ public func ReadyToFire() { return(!IsTurning()); }
 
 public func UpdateCharge(object driver) {
 
-	if(!turret) return();
+	if(!turret) return;
 
 	var hud = driver->GetHUD();
 	if(hud) {
@@ -511,36 +520,38 @@ protected func Timer() {
 public func GetDmgEffectPos(&x, &y) {
 
 	var turn = 100;
-	if(GetAction() ne "Drive")
-		turn = 100*Abs(15 - GetPhase())/15;
-	x = Cos(GetR(),-(GetDir()*2-1)*13*turn/100)+Sin(GetR(),-4);
-	y = Sin(GetR(),-(GetDir()*2-1)*13*turn/100)+Cos(GetR(),-4);
+	if(!SEqual(GetAction(), "Drive"))
+		turn = 100*(Abs(15 - (GetPhase() ?? 0)) ?? 0)/15;
+	x = (Cos(GetR(),-((GetDir() ?? 0)*2-1)*13*(turn ?? 0)/100) ?? 0)+(Sin(GetR(),-4) ?? 0);
+	y = (Sin(GetR(),-((GetDir() ?? 0)*2-1)*13*(turn ?? 0)/100) ?? 0)+(Cos(GetR(),-4) ?? 0);
 }
 
 private func DustEffect() {
 
-	if(IsDriving() || IsTurning()) {
-		CreateDustParticle((GetDir()*2-1)*10,RandomX(20,300));
+	if(Or(IsDriving(), IsTurning())) {
+		CreateDustParticle(((GetDir() ?? 0)*2-1)*10,RandomX(20,300));
 	}
 }
 
 private func CreateDustParticle(int dir, int size) {
 		// Dust effect
-		var groundx = Sin(GetR(),-YOffsToWheels()-3);
-		var groundy = Cos(GetR(),+YOffsToWheels()+3);
+		dir ??= 0;
+		size ??= 0;
+		var groundx = Sin(GetR(),-(YOffsToWheels() ?? 0)-3);
+		var groundy = Cos(GetR(),(+(YOffsToWheels() ?? 0) ?? 0)+3);
 		var mat = GetMaterial(groundx, groundy);
 
 		if(CheckDust(mat)) {
 		
 			var rand = Random(3);
-			var r = GetMaterialColor(mat,rand,0);
+			var r = GetMaterialColor(mat,rand,nil);
 			var g = GetMaterialColor(mat,rand,1);
 			var b = GetMaterialColor(mat,rand,2);
 			var alpha = 160;
-			var xdir = -Max(26-Abs(dir*2),0)*dir/Abs(dir);
-			var x = -Sin(GetR(),YOffsToWheels()) + Cos(GetR(),-dir);
-			var y = Cos(GetR(),YOffsToWheels()) + Sin(GetR(),-dir);
-			CreateParticle("Dust",x,y,Cos(GetR(),xdir+RandomX(-2,2)),RandomX(-5,5),size,RGBa(r,g,b,alpha));
+			var xdir = -(Max(26-(Abs((dir ?? 0)*2) ?? 0),nil) ?? 0)*(dir ?? 0)/(Abs(dir) ?? 0);
+			var x = -(Sin(GetR(),YOffsToWheels()) ?? 0) + (Cos(GetR(),-(dir ?? 0)) ?? 0);
+			var y = (Cos(GetR(),YOffsToWheels()) ?? 0) + (Sin(GetR(),-(dir ?? 0)) ?? 0);
+			CreateParticle("Dust",x,y,Cos(GetR(),(xdir ?? 0)+(RandomX(-2,2) ?? 0)),RandomX(-5,5),size,RGBa(r,g,b,alpha));
 		}
 }
 
@@ -550,47 +561,48 @@ private func DrivingAnimation() {
 		if(!IsTurning()) {
 		
 			// Fling :D
-			var dir = GetDir()*2-1;
+			var dir = (GetDir() ?? 0)*2-1;
 			var r = GetR();
-			var x = Cos(r,dir*20) -Sin(r,8);
-			var y = Sin(r,dir*20) +Cos(r,8);
+			var x = (Cos(r,(dir ?? 0)*20) ?? 0) -(Sin(r,8) ?? 0);
+			var y = (Sin(r,(dir ?? 0)*20) ?? 0) +(Cos(r,8) ?? 0);
 
 			for(var obj in FindObjects(Find_Category(C4D_Living),Find_AtPoint(x,y))) {
 				if(GetAlive(obj))
-					Fling(obj,-dir,-2);
+					Fling(obj,-(dir ?? 0),-2);
 			}
 		
 			var maxphase = GetActMapVal("Length",GetAction());
-			if(maxphase > GetPhase()+2)
-				SetPhase(GetPhase()+2);
+			if((maxphase ?? 0) > (GetPhase() ?? 0)+2)
+				SetPhase((GetPhase() ?? 0)+2);
 			else {
-				if(maxphase == GetPhase()+1) SetPhase(1);
-				else SetPhase(0);
+				if(Equal(maxphase, (GetPhase() ?? 0)+1)) SetPhase(1);
+				else SetPhase(nil);
 			}
 		}
 	}
 }
 
 public func ThrustEffect(int iEffectTime) {
+	iEffectTime ??= 0;
 	if(!BottomContact()) {
-		if(iEffectTime < 10) {
+		if((iEffectTime ?? 0) < 10) {
 			  var angle = GetR();
-			  var xoff = -(GetDir()*2-1)*8;
-			  var yoff = +YOffsToWheels();
-			  var x = -Sin(angle,yoff)+Cos(angle,xoff);
-			  var y = +Cos(angle,yoff)+Sin(angle,xoff);
+			  var xoff = -((GetDir() ?? 0)*2-1)*8;
+			  var yoff = +(YOffsToWheels() ?? 0);
+			  var x = -(Sin(angle,yoff) ?? 0)+(Cos(angle,xoff) ?? 0);
+			  var y = (+(Cos(angle,yoff) ?? 0) ?? 0)+(Sin(angle,xoff) ?? 0);
 
-			  CreateParticle("Thrust",x,y,-GetXDir()/2,-GetYDir()/2,RandomX(140,200),RGBa(255,200,200,80),0,0);
-			  CreateParticle("Smoke2",x,y,-GetXDir()/2,-GetYDir()/2,RandomX(180,220),RGBa(220,200,180,0),0,0);
+			  CreateParticle("Thrust",x,y,-(GetXDir() ?? 0)/2,-(GetYDir() ?? 0)/2,RandomX(140,200),RGBa(255,200,200,80),nil,nil);
+			  CreateParticle("Smoke2",x,y,-(GetXDir() ?? 0)/2,-(GetYDir() ?? 0)/2,RandomX(180,220),RGBa(220,200,180,nil),nil,nil);
 			  
 			  // Stichflamme...
-			  if(iEffectTime % 3) {
-				  var dir = GetDir()*2-1;
-				  xoff = -dir*23;
+			  if((iEffectTime ?? 0) % 3) {
+				  var dir = (GetDir() ?? 0)*2-1;
+				  xoff = -(dir ?? 0)*23;
 				  yoff = -3;
-				  x = -Sin(angle,yoff)+Cos(angle,xoff);
-				  y = +Cos(angle,yoff)+Sin(angle,xoff);
-				  MuzzleFlash(20, this, x,y,angle-dir*90, RGB(255,150,0));
+				  x = -(Sin(angle,yoff) ?? 0)+(Cos(angle,xoff) ?? 0);
+				  y = (+(Cos(angle,yoff) ?? 0) ?? 0)+(Sin(angle,xoff) ?? 0);
+				  MuzzleFlash(20, this, x,y,(angle ?? 0)-(dir ?? 0)*90, RGB(255,150,nil));
 			  }
 		}
 	}
@@ -603,16 +615,18 @@ public func OnDmg(int iDmg, int iType) {
 	// full resistance to bio and fire damage
 	// vulnerable to explosions and energy
 	// and a bit resistant vs everything else
+	iDmg ??= 0;
+	iType ??= 0;
 	if(shieldupgrade) {
-		if(iType == DMG_Energy)		return(60);
-		if(iType == DMG_Explosion)	return(60);
+		if(Equal(iType, DMG_Energy))		return(60);
+		if(Equal(iType, DMG_Explosion))	return(60);
 	}
 	
-	if(iType == DMG_Energy)		return(-20);
-	if(iType == DMG_Bio)		return(100);
-	if(iType == DMG_Melee)		return(80);
-	if(iType == DMG_Fire)		return(100);
-	if(iType == DMG_Explosion)	return(0);
+	if(Equal(iType, DMG_Energy))		return(-20);
+	if(Equal(iType, DMG_Bio))		return(100);
+	if(Equal(iType, DMG_Melee))		return(80);
+	if(Equal(iType, DMG_Fire))		return(100);
+	if(Equal(iType, DMG_Explosion))	return(nil);
 	
 	return(50);
 }
@@ -620,7 +634,9 @@ public func OnDmg(int iDmg, int iType) {
 public func OnHit(int iDmg, int iType) {
 
 	// nur Energie
-	if(iType != DMG_Energy) return(0);
+	iDmg ??= 0;
+	iType ??= 0;
+	if(!Equal(iType, DMG_Energy)) return(nil);
 	// Schild flackert auf
 	EffectCall(this(), GetEffect("HazardShield", this()), "BulletHit");
 }
@@ -629,7 +645,7 @@ public func Destroyed() {
 	// remove turret and chassis
 	if(turret) {
 		turret->Explosive();
-		turret = 0;
+		turret = nil;
 	}
 	if(chassis) {
 		chassis->RemoveObject();
@@ -640,7 +656,7 @@ public func Destroyed() {
 	while(bla = Contents()) bla->Exit();
 	
 	// bumm
-	var tank = CreateObject(DTNK,0,19,-1);
+	var tank = CreateObject(DTNK,nil,19,-1);
 	tank->SetAction("Be");
 	tank->SetR(GetR());
 	tank->SetDir(GetDir());
@@ -657,9 +673,9 @@ public func EMPShock() {
 	Stop();
 	PauseTurn();
 	EMPShockEffect(30*35);
-	Sound("tank_stop",0,0,SLvl(0));
-	Sound("tank",0,0,SLvl(0),0,-1);
-	Sound("tank2",0,0,SLvl(1),0,-1);
+	Sound("tank_stop",nil,nil,SLvl(nil));
+	Sound("tank",nil,nil,SLvl(nil),nil,-1);
+	Sound("tank2",nil,nil,SLvl(1),nil,-1);
 	return(1);
 }
 
@@ -667,8 +683,8 @@ public func EMPShockEnd() {
 	// at the end of the shock-effect: the tank may continue to turn
 	if(Contents()) {
 		ResumeTurn();
-		Sound("tank_start",0,0,20);
-		Sound("tank",0,0,20,0,1);
+		Sound("tank_start",nil,nil,20);
+		Sound("tank",nil,nil,20,nil,1);
 	}
 }
 
@@ -678,15 +694,15 @@ public func EMPShockEnd() {
 local shieldupgrade;
 
 public func IsUpgradeable(id idObj) {
-	if(idObj == HSHD && !shieldupgrade)
+	if(And(Equal(idObj, HSHD), !shieldupgrade))
 		return("$UpgradeShield$");
-	return(false);
+	return(nil);
 	}
 
 public func Upgrade(id idObj) {
-	if(idObj == HSHD) {
+	if(Equal(idObj, HSHD)) {
 		shieldupgrade = true;
-		AddEffect("HazardShield", this(), 99, 3, 0, HSHD, 400);
+		AddEffect("HazardShield", this(), 99, 3, nil, HSHD, 400);
 		return(1);
 	}
 }

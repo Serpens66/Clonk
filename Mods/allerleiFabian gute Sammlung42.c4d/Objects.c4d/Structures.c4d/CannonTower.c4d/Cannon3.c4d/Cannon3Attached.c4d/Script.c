@@ -1,6 +1,6 @@
 /*--- Luftabwehrgesch¸tz (angeschraubt) ---*/
 
-#strict
+#strict 3
 
 #include CTW2
 
@@ -12,14 +12,14 @@ protected func CannonMobileID() { return(CTW7); }
 public func ComEnter(object pAmmo)
 {
   // Gepackte Muni
-  if(pAmmo->~IsArrowPack() || GetID(pAmmo) == ADM1)
+  if(Or(pAmmo->~IsArrowPack(), Equal(GetID(pAmmo), ADM1)))
   {
     // Aufnehmen
     Sound("Connect");
-    if (GetID(pAmmo) == ADM1) pAmmo->~Unpack(this()); else Enter(this(), pAmmo);
+    if (Equal(GetID(pAmmo), ADM1)) pAmmo->~Unpack(this()); else Enter(this(), pAmmo);
   }
   // Einzelne Munitionskomponenten
-  else if(pAmmo->~IsArrow() || GetID(pAmmo) == ADB1)
+  else if(Or(pAmmo->~IsArrow(), Equal(GetID(pAmmo), ADB1)))
   {
     Sound("Click");
     Enter(this(), pAmmo);
@@ -30,14 +30,14 @@ public func ComFire(object pClonk)
 {
   Sound("Click");
   SetAction("Attaching", GetActionTarget() );
-  SetRDir(0);
+  SetRDir(nil);
     
   // Bis zu 2 Projektile verschieﬂen
-  for(var i = 0; i < 2; ++ i)
+  for(var i = nil; (i ?? 0) < 2; S42MigrationStep( i, 1))
   {
     // Projektil suchen
-    var c = ContentsCount() - 1, obj, ammo;
-    while(obj = Contents(c--) )
+    var c = (ContentsCount() ?? 0) - 1, obj, ammo;
+    while(obj = Contents(S42MigrationStep(c, -1, true)) )
     {
       if (obj->~IsArrowPack())
       {
@@ -50,7 +50,7 @@ public func ComFire(object pClonk)
           break;
           }
       }
-      else if(obj->~IsArrow() || GetID(obj) == ADB1)
+      else if(Or(obj->~IsArrow(), Equal(GetID(obj), ADB1)))
       {
         ammo = obj;
         break;
@@ -62,7 +62,7 @@ public func ComFire(object pClonk)
     {
       if(!i) Sound("Error");
       else Sound("Click");
-      return(0);
+      return(nil);
     }
 
     // Sound    
@@ -70,18 +70,18 @@ public func ComFire(object pClonk)
     
     
     var speed = 15;
-    if(GetID(ammo) == ADB1) speed = 22;
+    if(Equal(GetID(ammo), ADB1)) speed = 22;
     
     // Rotationsgeschwindigkeit
     var rdir = 4;
-    if(GetR() < 0) rdir = -4;
-    if(Inside(GetR(), -10, 10) ) rdir = 0;
+    if((GetR() ?? 0) < 0) rdir = -4;
+    if(Inside(GetR(), -10, 10) ) rdir = nil;
     
     // Controller setzen
     ammo->SetController(pClonk->GetController());
     
     // Ausstoﬂ
-    Exit(ammo, Sin(GetR() - 45 + 90 * i, 9), -Cos(GetR() - 45 + 90 * i, 9), GetR(), Sin(GetR(), speed), -Cos(GetR(), speed), rdir);
+    Exit(ammo, Sin((GetR() ?? 0) - 45 + 90 * (i ?? 0), 9), -(Cos((GetR() ?? 0) - 45 + 90 * (i ?? 0), 9) ?? 0), GetR(), Sin(GetR(), speed), -(Cos(GetR(), speed) ?? 0), rdir);
     SetPlrView(GetOwner(pClonk), ammo);
     ammo->~Launch();
   }

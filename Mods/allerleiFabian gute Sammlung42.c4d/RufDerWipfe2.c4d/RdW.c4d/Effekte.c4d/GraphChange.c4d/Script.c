@@ -1,7 +1,7 @@
 /*-- Graphics --*/
 // Musste leider sein (erhöht die Performance [um 14% !])
 
-#strict
+#strict 3
 
 static const GRAPH_Save=55;
 

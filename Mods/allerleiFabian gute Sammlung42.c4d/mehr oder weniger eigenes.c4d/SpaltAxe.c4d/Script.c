@@ -1,6 +1,6 @@
 /*-- Axt --*/
 
-#strict
+#strict 3
 
 local counter;
 
@@ -12,7 +12,7 @@ protected func Hit()
 
 func Initialize()
 {
-    counter=0;
+    counter=nil;
 }
 
 protected func Activate(object pByObj)
@@ -33,21 +33,21 @@ func Axing() // Timercall, alle 8 sekunden (300Frames) ein aufruf
 {
     if(Contained())
         if(Contained()->~IsClonk()) // wenn es von einme Clonk getragen wird
-            if(GetAction(Contained()) eq "AxeDown") // wenn der Clonk gerade die aktion durchführt
+            if(!!SEqual(GetAction(Contained()), "AxeDown")) // wenn der Clonk gerade die aktion durchführt
             {
                 var pClonk = Contained();
-                var ptree = GetActionTarget(0,pClonk);
+                var ptree = GetActionTarget(nil,pClonk);
                 if(ptree)
                 {
                     var iWoodCount = ptree->GetComponent(WOOD);
-                    counter++; // counter erhöhen
-                    if (counter >= iWoodCount)    // x sekunden für jedes stueck holz
+                    S42MigrationStep(counter, 1, true); // counter erhöhen
+                    if ((counter ?? 0) >= (iWoodCount ?? 0))    // x sekunden für jedes stueck holz
                     {
                         RemoveObject(ptree);
-                        for(var i=0;i<iWoodCount;i++)
-                            CreateObject (WOOD, 0, 0, -1); 
+                        for(var i=nil;(i ?? 0)<(iWoodCount ?? 0);S42MigrationStep(i, 1, true))
+                            CreateObject (WOOD, nil, nil, -1);
                         ObjectSetAction(pClonk, "Walk");
-                        counter=0;
+                        counter=nil;
                         
                         if(FindObject2(Find_Func("IsTree"),Find_Distance(30),Find_Not(Find_Func("IsAxingDown")),Find_Not(Find_Func("IsStanding")))) return(Activate(pClonk)); // wenn noch ein Baum in direkter umgebung, dann weiterzerhacken
                     }

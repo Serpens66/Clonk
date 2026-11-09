@@ -1,6 +1,6 @@
 /*--- Waggon ---*/
 
-#strict
+#strict 3
 #include DOOR
 
 local fSignalState;	// 1=Load, 0=Unload
@@ -23,13 +23,16 @@ protected func ContainedRight(object clonk) { [$TxtRight$|Image=STMS:2] return(C
 protected func ContainedLeftDouble(object clonk) { [$TxtLeftDouble$|Image=STMS:3] return(ControlLeftDouble(clonk)); }
 protected func ContainedRightDouble(object clonk) { [$TxtRightDouble$|Image=STMS:4] return(ControlRightDouble(clonk)); }
 protected func ContainedDown(object clonk)  { [$TxtStop$|Method=None]  return(ControlDownSingle(clonk)); }
-protected func ContainedUpdate(object clonk, int comdir, bool dig, bool throw) { return(ControlUpdate(clonk, comdir, dig, throw)); }
+protected func ContainedUpdate(object clonk, int comdir, bool dig, bool throw) { comdir ??= 0;
+    dig ??= false;
+    throw ??= false;
+    return(ControlUpdate(clonk, comdir, dig, throw)); }
 
 protected func ControlLeft(object clonk)
 {
   [$TxtLeft$|Image=STMS:1]
-  var pEngine = FindObject(0,0,0,0,0,OCF_Grab(),"Push",this());
-  if(!pEngine) return(0);
+  var pEngine = FindObject(nil,nil,nil,nil,nil,OCF_Grab,"Push",this());
+  if(!pEngine) return(nil);
   pEngine->~ControlLeft(clonk);
   return(1);
 }
@@ -37,8 +40,8 @@ protected func ControlLeft(object clonk)
 protected func ControlRight(object clonk)
 {
   [$TxtRight$|Image=STMS:2]
-  var pEngine = FindObject(0,0,0,0,0,OCF_Grab(),"Push",this());
-  if(!pEngine) return(0);
+  var pEngine = FindObject(nil,nil,nil,nil,nil,OCF_Grab,"Push",this());
+  if(!pEngine) return(nil);
   pEngine->~ControlRight(clonk);
   return(1);
 }
@@ -46,8 +49,8 @@ protected func ControlRight(object clonk)
 protected func ControlLeftDouble(object clonk)
 {
   [$TxtLeftDouble$|Image=STMS:3]
-  var pEngine = FindObject(0, 0,0,0,0, OCF_Grab, "Push",this());
-  if(!pEngine) return(0);
+  var pEngine = FindObject(nil, nil,nil,nil,nil, OCF_Grab, "Push",this());
+  if(!pEngine) return(nil);
   pEngine->~ControlLeftDouble(clonk);
   return(1);
 }
@@ -55,27 +58,30 @@ protected func ControlLeftDouble(object clonk)
 protected func ControlRightDouble(object clonk)
 {
   [$TxtRightDouble$|Image=STMS:4]
-  var pEngine = FindObject(0, 0,0,0,0, OCF_Grab, "Push",this());
-  if(!pEngine) return(0);
+  var pEngine = FindObject(nil, nil,nil,nil,nil, OCF_Grab, "Push",this());
+  if(!pEngine) return(nil);
   pEngine->~ControlRightDouble(clonk);
   return(1);
 }
 
 protected func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 {
-  var pEngine = FindObject(0, 0,0,0,0, OCF_Grab, "Push",this());
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
+  var pEngine = FindObject(nil, nil,nil,nil,nil, OCF_Grab, "Push",this());
   if(pEngine) pEngine->~ControlUpdate(clonk, comdir, dig, throw);
 }
 
 protected func ControlDownSingle(object pCaller)
 {
   [$TxtStop$|Method=None]
-  var pEngine = FindObject(0,0,0,0,0,OCF_Grab(),"Push",this());
+  var pEngine = FindObject(nil,nil,nil,nil,nil,OCF_Grab,"Push",this());
   // No steam engine or engine has already stopped
-  if (!pEngine || GetComDir(pEngine) == COMD_Stop()) 
+  if (Or(!pEngine, Equal(GetComDir(pEngine), COMD_Stop)))
   {
     // Caller is inside us: exit
-    if (Contained(pCaller) == this())
+    if (Equal(Contained(pCaller), this()))
     {
       ActivateEntrance();
       AddCommand(pCaller, "Exit");
@@ -94,6 +100,7 @@ protected func ControlDownSingle(object pCaller)
 public func SignalCall(object pSignal,bool fLoad)
 {
   // Bei fLoad = 1 einladen, Status sichern
+  fLoad ??= false;
   if(fSignalState = fLoad) return(SignalLoad());
   // sonst ausladen
   else return(SignalUnload());
@@ -104,9 +111,9 @@ private func SignalLoad()
 {
   var pObj;
   // Gegenstände, Fahrzeuge suchen...
-  while(pObj = FindObject(0,-11,-6,20,20,OCF_Collectible()|OCF_Grab(),0,0,NoContainer(),pObj))
+  while(pObj = FindObject(nil,-11,-6,20,20,(OCF_Collectible ?? 0)|(OCF_Grab ?? 0),nil,nil,NoContainer(),pObj))
     // ...Zugmaschine und Waggon nicht...
-    if(GetID(pObj)!=STMG && GetID(pObj)!=WAGN)
+    if(And(!Equal(GetID(pObj), STMG), !Equal(GetID(pObj), WAGN)))
       // ...einladen
       SetCommand(pObj,"Enter",this());
   return(1);
@@ -116,9 +123,9 @@ private func SignalLoad()
 private func SignalUnload()
 {
   // Nur bei Inhalt
-  if(!ContentsCount()) return();
+  if(!ContentsCount()) return;
   // Alles raus
-  for(var pContents,i=0; pContents = Contents(i); ++i)
+  for(var pContents,i=nil; pContents = Contents(i); S42MigrationStep(i, 1))
     SetCommand(pContents,"Exit");
   return(1);
 }
@@ -129,10 +136,10 @@ public func SignalDepart(object pSignal)
   if(!fSignalState) return(1);
   // Einladen stoppen
   var pObj;
-  while(pObj = FindObject(0,-20,-20,40,40,OCF_Collectible()|OCF_Grab()|OCF_CrewMember(),0,0,NoContainer(),pObj))
-    if(GetCommand(pObj)S="Enter")
+  while(pObj = FindObject(nil,-20,-20,40,40,(OCF_Collectible ?? 0)|(OCF_Grab ?? 0)|(OCF_CrewMember ?? 0),nil,nil,NoContainer(),pObj))
+    if(!!SEqual(GetCommand(pObj), "Enter"))
       SetCommand(pObj, "None");
-  fSignalState = 0;
+  fSignalState = nil;
   return(1);
 }
 

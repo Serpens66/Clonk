@@ -1,6 +1,6 @@
 /*-- Labdoor --*/
 
-#strict
+#strict 3
 
 #include GBDR
 
@@ -21,22 +21,24 @@ public func Initialize()
 
 public func OnDmg(int iDmg, int iType) 
 {
-  if(iType == DMG_Projectile)   return(40);
-  if(iType == DMG_Melee)    return(20);
-  if(iType == DMG_Energy)   return(70);
-  if(iType == DMG_Explosion)    return(-10);
+  iDmg ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Projectile))   return(40);
+  if(Equal(iType, DMG_Melee))    return(20);
+  if(Equal(iType, DMG_Energy))   return(70);
+  if(Equal(iType, DMG_Explosion))    return(-10);
 
   return(100);
 }
 
 public func OnOpen()
 {
-  if( bBackground) return(false);
+  if( bBackground) return(nil);
     
-  if( GetAction() eq "Open" || Status) return(0);
+  if( Or(!!SEqual(GetAction(), "Open"), Status)) return(nil);
   
   SetAction("Open");
-  SetSolidMask(0);
+  SetSolidMask(nil);
   Status = true;
   //Sound
   Sound("LabDoorOpen");
@@ -44,11 +46,11 @@ public func OnOpen()
 
 public func OnClose()
 {
-  if( bBackground) return(false);
+  if( bBackground) return(nil);
   
-  if( GetAction() eq "Close"|| !Status) return(0);  
+  if( Or(!!SEqual(GetAction(), "Close"), !Status)) return(nil);
   SetAction("Close");
-  Status = false;
+  Status = nil;
   UpdateSolidMask();
   Sound("LabDoorClose");
 }
@@ -69,14 +71,14 @@ public func ShowFront()
 
 public func UpdateSolidMask()
 {
-  if(GetDir() == DIR_Left)
-    return(SetSolidMask(14,0,1,30,14,0) );
+  if(Equal(GetDir(), DIR_Left))
+    return(SetSolidMask(14,nil,1,30,14,nil) );
   else
-    return(SetSolidMask(14,0,1,30,1,0) );
+    return(SetSolidMask(14,nil,1,30,1,nil) );
 }
 
 public func IsBulletTarget() { 
-  if(bBackground) return(false);
+  if(bBackground) return(nil);
   return(_inherited());
 
 }
@@ -88,11 +90,11 @@ public func Serialize(array& extra)
 {
 	_inherited(extra);
 	if (destroyed)
-		extra[GetLength(extra)] = "SetAction(\"Destroyed\")";
-	if (GetDir() == DIR_Left) {
-		extra[GetLength(extra)] = "SetDir(DIR_Left)";
-		extra[GetLength(extra)] = "UpdateSolidMask()";
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Destroyed\")";
+	if (Equal(GetDir(), DIR_Left)) {
+		extra[(GetLength(extra) ?? 0)] = "SetDir(DIR_Left)";
+		extra[(GetLength(extra) ?? 0)] = "UpdateSolidMask()";
 	}
 	if (bBackground)
-		extra[GetLength(extra)] = "ShowFront()";
+		extra[(GetLength(extra) ?? 0)] = "ShowFront()";
 }

@@ -1,6 +1,6 @@
 /*-- Verbranntes Burgteil --*/
 
-#strict
+#strict 3
 
 /* Entzündung */
 
@@ -14,7 +14,7 @@ public func FCastleChange()
 {
   // Alle Teile benachrichtigen
   var pPart;
-  while(pPart = FindObject(0, 0, 0, 0, 0, OCF_Fullcon(), 0,0, NoContainer(), pPart))
+  while(pPart = FindObject(nil, nil, nil, nil, nil, OCF_Fullcon, nil,nil, NoContainer(), pPart))
     pPart->~CastleChange();
   return(1);
 }

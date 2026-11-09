@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 protected func Initialize() {
 
@@ -8,8 +8,8 @@ TunnelRules_iBTDist=TunnelRules_getBreakThroughDist();
 
 if(TunnelRules_AllowCountAndCalculate())
 	{
-	TunnelRules_iBTDist = TunnelRules_iBTDist - ObjectCount (GetID()) + 1;
-	if(TunnelRules_iBTDist<1)
+	TunnelRules_iBTDist = (TunnelRules_iBTDist ?? 0) - (ObjectCount (GetID()) ?? 0) + 1;
+	if((TunnelRules_iBTDist ?? 0)<1)
 		TunnelRules_iBTDist=1;
 	}
 
@@ -39,7 +39,7 @@ global func TunnelRules_getBreakThroughDist() { return(16); }
 
 //wie viele Pixel muss ein Freiraum haben, um als leer zu gelten?
 //sollte in Abhängigkeit von TunnelRules_iBTDist gewählt werden!
-global func TunnelRules_getMinimumHoleSize() { return(TunnelRules_iBTDist/2); }
+global func TunnelRules_getMinimumHoleSize() { return((TunnelRules_iBTDist ?? 0)/2); }
 
 //Radius des ShakeFree, falls ein Freiraum gefunden wurde. Sollte ebenfalls Abhängig von der Suchdistanz gewählt werden! 
-global func TunnelRules_getBreakThroughShakeFree() { return(TunnelRules_iBTDist-1); }
+global func TunnelRules_getBreakThroughShakeFree() { return((TunnelRules_iBTDist ?? 0)-1); }

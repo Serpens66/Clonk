@@ -1,6 +1,6 @@
 /*-- Chassis --*/
 
-#strict
+#strict 3
 
 public func AttachTo(attachto) {	// attach to tank
 	SetDir(DIR_Left);
@@ -8,7 +8,7 @@ public func AttachTo(attachto) {	// attach to tank
 }
 
 public func Remove() {			// remove
-	if(GetAction() eq "Idle")
+	if(!!SEqual(GetAction(), "Idle"))
 		RemoveObject();
 }
 
@@ -18,10 +18,10 @@ public func Turn() {
 
 protected func ChangeDir() {
 	var a = GetAction(GetActionTarget());
-	if(a eq "Turn" || a eq "TurnStalled") return(SetAction("Turn"));
+	if(Or(!!SEqual(a, "Turn"), !!SEqual(a, "TurnStalled"))) return(SetAction("Turn"));
 
 	SetAction("Attach",GetActionTarget());
-	if(GetDir() == DIR_Left) SetDir(DIR_Right);
+	if(Equal(GetDir(), DIR_Left)) SetDir(DIR_Right);
 	else  SetDir(DIR_Left);
 }
 
@@ -31,6 +31,6 @@ protected func Engine() {
 	SetR(GetR(GetActionTarget()));
 
 	// set matrix values
-	if(GetActionTarget()->Contents()	&& !(GetActionTarget()->EMPShocked()))
-		SetObjDrawTransform (1000, 0, 0, 0, 1000, Sin(GetActTime()*50,300));
+	if(And(GetActionTarget()->Contents(), !(GetActionTarget()->EMPShocked())))
+		SetObjDrawTransform (1000, nil, nil, nil, 1000, Sin((GetActTime() ?? 0)*50,300));
 }

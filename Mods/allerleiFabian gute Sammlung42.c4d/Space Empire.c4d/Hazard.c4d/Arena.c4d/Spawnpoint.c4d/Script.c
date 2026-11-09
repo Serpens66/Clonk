@@ -1,11 +1,14 @@
 /*-- Spawnpoint --*/
 
-#strict
+#strict 3
 
 local initialized, angle, player, nocollect, spawntimer;
 
 global func PlaceSpawnpoint(id idObj, int iX, int iY, int timer)
 {
+  iX ??= 0;
+  iY ??= 0;
+  timer ??= 0;
   var spwn = CreateObject(SPNP, iX, iY, -1);
   spwn->CreateContents(idObj);
   if(timer)
@@ -17,7 +20,7 @@ protected func Initialize()
 {
   // Standardtimer = 1000 Frames
   spawntimer = 1000;
-  SetClrModulation(RGBa(0,0,0,255));
+  SetClrModulation(RGBa(nil,nil,nil,255));
   // Arrays anlegen
   nocollect = CreateArray();
   player = CreateArray();
@@ -35,14 +38,14 @@ protected func Timer()
   if(!Contents())
     {
     // Nicht mehr initialisiert
-    initialized = false;
-    return();
+    initialized = nil;
+    return;
     }
   // Tolle Effekt starten
-  angle += 10;
-  if(angle >= 360) angle = 0;
-  SetObjDrawTransform(1000, 0,0,0, 1000, Sin(angle, 8)*1000 - 2000,0, 1);
-  if(Random(2)) CreateParticle("NoGravSpark", RandomX(-5,5), RandomX(5,10), 0, -5, 25, RGBa(210, 210, 255, 100));
+  S42MigrationAssign(angle, "+=", 10);
+  if((angle ?? 0) >= 360) angle = nil;
+  SetObjDrawTransform(1000, nil,nil,nil, 1000, (Sin(angle, 8) ?? 0)*1000 - 2000,nil, 1);
+  if(Random(2)) CreateParticle("NoGravSpark", RandomX(-5,5), RandomX(5,10), nil, -5, 25, RGBa(210, 210, 255, 100));
   // Alle Timer runterzählen
   DecreaseTimer();
 }
@@ -52,19 +55,19 @@ private func Initialized()
   // Unsichtbar werden
   SetAction("Invis");
   // Objekt als Layer auflegen
-  SetGraphics(0, 0, GetID(Contents()), 1, 1);
+  SetGraphics(nil, nil, GetID(Contents()), 1, 1);
   // Transformation
-  SetObjDrawTransform(1000, 0,0,0, 1000, -5000,0, 1);
+  SetObjDrawTransform(1000, nil,nil,nil, 1000, -5000,nil, 1);
   // Sammeleffekt starten
 //  AddEffect("Collect", this(), 1, 3, this());
   // Waffen-Bleiben-Regel
   if(FindObject(WPST))
     {
-    for(var i=0 ; i < GetPlayerCount() ; i++)
+    for(var i=nil ; (i ?? 0) < (GetPlayerCount() ?? 0) ; S42MigrationStep(i, 1, true))
       if(GetPlayerType(GetPlayerByIndex(i)))
-        if(!(Local() & 1<<GetPlayerByIndex(i)))
-          Local() += 1<<GetPlayerByIndex(i);
-    SetVisibility(VIS_Local() | VIS_God());
+        if(!((Local() ?? 0) & 1<<(GetPlayerByIndex(i) ?? 0)))
+          S42MigrationAssign(Local(), "+=", 1<<(GetPlayerByIndex(i) ?? 0));
+    SetVisibility((VIS_Local ?? 0) | (VIS_God ?? 0));
     }
   // Initialisiert
   initialized = true;
@@ -77,33 +80,33 @@ private func DecreaseTimer()
   // Waffen-Bleiben-Regel
   if(FindObject(WPST))
     {
-    for(var i=0, iPlr ; i < GetPlayerCount() ; i++)
+    for(var i=nil, iPlr ; (i ?? 0) < (GetPlayerCount() ?? 0) ; S42MigrationStep(i, 1, true))
       // Spielertimer runterzählen
       {
       iPlr = GetPlayerByIndex(i);
-      if(GetPlayerType(iPlr) == C4PT_Script) continue;
+      if(Equal(GetPlayerType(iPlr), C4PT_Script)) continue;
 
-      if(player[iPlr])
-        player[iPlr] -= 5;
-      if(player[iPlr] <= 0 && nocollect[iPlr])
+      if(player[(iPlr ?? 0)])
+        S42MigrationAssign(player[(iPlr ?? 0)], "-=", 5);
+      if(And((player[(iPlr ?? 0)] ?? 0) <= 0, nocollect[(iPlr ?? 0)]))
         {
         // Spieler kann das Objekt wieder einsammeln
-        player[iPlr] = 0;
-        nocollect[iPlr] = false;
-        Local() += 1<<GetPlayerByIndex(i);
+        player[(iPlr ?? 0)] = nil;
+        nocollect[(iPlr ?? 0)] = nil;
+        S42MigrationAssign(Local(), "+=", 1<<(GetPlayerByIndex(i) ?? 0));
         }
       }
     }
   else
     {
     // Timer runterzählen
-    player[0] -= 5;
-    if(player[0] <= 0)
+    S42MigrationAssign(player[0], "-=", 5);
+    if((player[0] ?? 0) <= 0)
       {
       // Objekt ist wieder da
-      player[0] = 0;
-      nocollect[0] = false;
-      SetVisibility(VIS_All());
+      player[0] = nil;
+      nocollect[0] = nil;
+      SetVisibility(VIS_All);
       }
     }
 }
@@ -135,9 +138,9 @@ public func FxCollectTimer()
 public func RejectEntrance(object pClonk)
 {
   // Objekt ist ein Clonk?
-  if(!(GetOCF(pClonk) & OCF_CrewMember) && !(pClonk->~CanCollectFromSpawnpoints())) return(1);
+  if(And(!((GetOCF(pClonk) ?? 0) & (OCF_CrewMember ?? 0)), !(pClonk->~CanCollectFromSpawnpoints()))) return(1);
   // Ich hab Contents?
-  if(!Contents() || !initialized) return(1);
+  if(Or(!Contents(), !initialized)) return(1);
   // Darf einsammeln
   if(CheckCollect(GetOwner(pClonk), pClonk))
   {
@@ -150,10 +153,10 @@ public func RejectEntrance(object pClonk)
     }
 
     Collect(pObj, pClonk);
-    if(Contained(pObj) == this()) RemoveObject(pObj);
+    if(Equal(Contained(pObj), this())) RemoveObject(pObj);
     else
     {
-      Sound("Grab", 0, pClonk, 0, GetOwner(pClonk)+1);
+      Sound("Grab", nil, pClonk, nil, (GetOwner(pClonk) ?? 0)+1);
       Collected(GetOwner(pClonk), pClonk);
       // Munition
       if(pObj->~IsAmmoPacket()) {
@@ -169,20 +172,21 @@ public func RejectEntrance(object pClonk)
 
 private func CheckCollect(int iPlr, object pClonk) // Überprüft, ob ein Spieler das Objekt einsammeln darf
 {
-  if(!initialized) return();
+  iPlr ??= 0;
+  if(!initialized) return;
   // Waffen-Bleiben-Regel
   if(FindObject(WPST))
   {
-    if(GetPlayerType(iPlr) == C4PT_User)
-      return(!nocollect[iPlr]);
-    if(!nocollect[iPlr])
+    if(Equal(GetPlayerType(iPlr), C4PT_User))
+      return(!nocollect[(iPlr ?? 0)]);
+    if(!nocollect[(iPlr ?? 0)])
     {
-      nocollect[iPlr] = CreateArray();
+      nocollect[(iPlr ?? 0)] = CreateArray();
       return(true);
     }
-    for(var pClnk in nocollect[iPlr])
-      if(pClnk == pClonk)
-        return(false);
+    for(var pClnk in nocollect[(iPlr ?? 0)])
+      if(Equal(pClnk, pClonk))
+        return(nil);
     return(true);
   }
   else
@@ -192,26 +196,27 @@ private func CheckCollect(int iPlr, object pClonk) // Überprüft, ob ein Spieler 
 private func Collected(int iPlr, object pClonk) // Regelt, dass ein Spieler das Objekt einsammelt
 {
   // Waffen-Bleiben-Regel
+  iPlr ??= 0;
   if(FindObject(WPST))
     {
-    if(GetPlayerType(iPlr) == C4PT_Script)
+    if(Equal(GetPlayerType(iPlr), C4PT_Script))
     {
-      if(!nocollect[iPlr])
-        nocollect[iPlr] = CreateArray();
-      for(var i=0 ; i < GetLength(nocollect[iPlr]) ; i++)
-        if(!nocollect[iPlr][i])
+      if(!nocollect[(iPlr ?? 0)])
+        nocollect[(iPlr ?? 0)] = CreateArray();
+      for(var i=nil ; (i ?? 0) < (GetLength(nocollect[(iPlr ?? 0)]) ?? 0) ; S42MigrationStep(i, 1, true))
+        if(!nocollect[(iPlr ?? 0)][(i ?? 0)])
           break;
-      nocollect[iPlr][i] = pClonk;
-      ScheduleCall(this(), "AICollectTimer", spawntimer, 0, iPlr, pClonk);
-      return();
+      nocollect[(iPlr ?? 0)][(i ?? 0)] = pClonk;
+      ScheduleCall(this(), "AICollectTimer", spawntimer, nil, iPlr, pClonk);
+      return;
     }
     // Spielertimer hochsetzen
-    player[iPlr] = spawntimer;
-    nocollect[iPlr] = true;
+    player[(iPlr ?? 0)] = spawntimer;
+    nocollect[(iPlr ?? 0)] = true;
     // Nicht mehr sichtbar für den Spieler
-    if(iPlr >= 0)
-      if(Local() & 1<<iPlr)
-        Local() -= 1<<iPlr;
+    if((iPlr ?? 0) >= 0)
+      if((Local() ?? 0) & 1<<(iPlr ?? 0))
+        S42MigrationAssign(Local(), "-=", 1<<(iPlr ?? 0));
     }
   else
     {
@@ -220,21 +225,22 @@ private func Collected(int iPlr, object pClonk) // Regelt, dass ein Spieler das 
     // Nicht mehr einsammelbar
     nocollect[0] = true;
     // Nicht mehr sichtbar
-    SetVisibility(VIS_God());
+    SetVisibility(VIS_God);
     }
 }
 
 protected func AICollectTimer(int iPlr, object pClonk)
 {
-  for(var i=0 ; i < GetLength(nocollect[iPlr]) ; i++)
-    if(nocollect[iPlr][i] == pClonk)
-      nocollect[iPlr][i] = 0;
+  iPlr ??= 0;
+  for(var i=nil ; (i ?? 0) < (GetLength(nocollect[(iPlr ?? 0)]) ?? 0) ; S42MigrationStep(i, 1, true))
+    if(Equal(nocollect[(iPlr ?? 0)][(i ?? 0)], pClonk))
+      nocollect[(iPlr ?? 0)][(i ?? 0)] = nil;
 }
 
 /* Serialisierung */
 
 public func Serialize(array& extra)
 {
-	extra = Format("PlaceSpawnpoint(%i,%%d+%d,%%d+%d)", Contents(0)->GetID(), GetX(), GetY());
-	return !false;
+	extra = Format("PlaceSpawnpoint(%i,%%d+%d,%%d+%d)", Contents(nil)->GetID(), GetX(), GetY());
+	return !nil;
 }

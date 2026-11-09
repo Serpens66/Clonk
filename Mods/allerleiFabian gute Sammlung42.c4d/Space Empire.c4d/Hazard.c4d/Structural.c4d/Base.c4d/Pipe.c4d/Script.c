@@ -1,6 +1,6 @@
 /*-- Pipe --*/
 
-#strict
+#strict 3
 
 local left, right, up, down, valve, // Anschlüsse, Ventil
       efflux, temp, // Abflüsse, Zwischenspeichern
@@ -26,6 +26,10 @@ public func Initialize() {
 // Beim Verbinden nur gültige Rohrobjekten (mit den entsprechenden Callbacks) benutzen
 
 public func Left(int iRepeat, bool solid, bool valve, id pipeId, int iPower, object connect) {
+  iRepeat ??= 0;
+  solid ??= false;
+  valve ??= false;
+  iPower ??= 0;
   if(!iRepeat) iRepeat = 1;
   if(!pipeId) pipeId = PIPL;
   if(!connect) connect = CreatePipe(PIPE_Left, pipeId);
@@ -36,12 +40,16 @@ public func Left(int iRepeat, bool solid, bool valve, id pipeId, int iPower, obj
   if(solid) connect->~Solid();
   if(valve) connect->~Valve();
 
-  if(iRepeat - 1) return(connect->~Left(iRepeat-1, solid, valve, pipeId, iPower));
+  if((iRepeat ?? 0) - 1) return(connect->~Left((iRepeat ?? 0)-1, solid, valve, pipeId, iPower));
 
   return(connect);
 }
 
 public func Right(int iRepeat, bool solid, bool valve, id pipeId, int iPower, object connect) {
+  iRepeat ??= 0;
+  solid ??= false;
+  valve ??= false;
+  iPower ??= 0;
   if(!iRepeat) iRepeat = 1;
   if(!pipeId) pipeId = PIPL;
   if(!connect) connect = CreatePipe(PIPE_Right, pipeId);
@@ -52,12 +60,16 @@ public func Right(int iRepeat, bool solid, bool valve, id pipeId, int iPower, ob
   if(solid) connect->~Solid();
   if(valve) connect->~Valve();
 
-  if(iRepeat - 1) return(connect->~Right(iRepeat-1, solid, valve, pipeId, iPower));
+  if((iRepeat ?? 0) - 1) return(connect->~Right((iRepeat ?? 0)-1, solid, valve, pipeId, iPower));
 
   return(connect);
 }
 
 public func Up(int iRepeat, bool solid, bool valve, id pipeId, int iPower, object connect) {
+  iRepeat ??= 0;
+  solid ??= false;
+  valve ??= false;
+  iPower ??= 0;
   if(!iRepeat) iRepeat = 1;
   if(!pipeId) pipeId = PIPL;
   if(!connect) connect = CreatePipe(PIPE_Up, pipeId);
@@ -68,12 +80,16 @@ public func Up(int iRepeat, bool solid, bool valve, id pipeId, int iPower, objec
   if(solid) connect->~Solid();
   if(valve) connect->~Valve();
 
-  if(iRepeat - 1) return(connect->~Up(iRepeat-1, solid, valve, pipeId, iPower));
+  if((iRepeat ?? 0) - 1) return(connect->~Up((iRepeat ?? 0)-1, solid, valve, pipeId, iPower));
 
   return(connect);
 }
 
 public func Down(int iRepeat, bool solid, bool valve, id pipeId, int iPower, object connect) {
+  iRepeat ??= 0;
+  solid ??= false;
+  valve ??= false;
+  iPower ??= 0;
   if(!iRepeat) iRepeat = 1;
   if(!pipeId) pipeId = PIPL;
   if(!connect) connect = CreatePipe(PIPE_Down, pipeId);
@@ -84,18 +100,20 @@ public func Down(int iRepeat, bool solid, bool valve, id pipeId, int iPower, obj
   if(solid) connect->~Solid();
   if(valve) connect->~Valve();
 
-  if(iRepeat - 1) return(connect->~Down(iRepeat-1, solid, valve, pipeId, iPower));
+  if((iRepeat ?? 0) - 1) return(connect->~Down((iRepeat ?? 0)-1, solid, valve, pipeId, iPower));
 
   return(connect);
 }
 
 public func Valve(bool open) {
-  valve = CreateObject(VALV, 0,11, GetOwner());
+  open ??= false;
+  valve = CreateObject(VALV, nil,11, GetOwner());
   LocalN("open", valve) = open;
   return(this());
 }
 
 public func Solid(bool Desolidate) {
+  Desolidate ??= false;
   if(Desolidate) {
     SetClrModulation(RGB(180,180,180));
     return(SetSolidMask());
@@ -109,57 +127,60 @@ public func Solid(bool Desolidate) {
 }
 
 protected func Consolidate() {
-  var index =  !!left*PIPE_Left
-             | !!right*PIPE_Right
-             | !!up*PIPE_Up
-             | !!down*PIPE_Down;
+  var index =  (!!left ?? 0)*(PIPE_Left ?? 0)
+             | (!!right ?? 0)*(PIPE_Right ?? 0)
+             | (!!up ?? 0)*(PIPE_Up ?? 0)
+             | (!!down ?? 0)*(PIPE_Down ?? 0);
 
-  SetSolidMask(index%4 * 50, index/4 * 50, 50,50);
+  SetSolidMask((index ?? 0)%4 * 50, (index ?? 0)/4 * 50, 50,50);
 }
 
 public func ConnectTo(object connect, int dir) {
 
   // allocate local
-  if(dir == PIPE_Left)       left = connect;
-  else if(dir == PIPE_Right) right = connect;
-  else if(dir == PIPE_Up)    up = connect;
-  else if(dir == PIPE_Down)  down = connect;
+  dir ??= 0;
+  if(Equal(dir, PIPE_Left))       left = connect;
+  else if(Equal(dir, PIPE_Right)) right = connect;
+  else if(Equal(dir, PIPE_Up))    up = connect;
+  else if(Equal(dir, PIPE_Down))  down = connect;
 
   UpdateGraphics();
 }
 
 private func UpdateGraphics() {
   // update graphic
-  var index =  !!left*PIPE_Left
-             | !!right*PIPE_Right
-             | !!up*PIPE_Up
-             | !!down*PIPE_Down;
+  var index =  (!!left ?? 0)*(PIPE_Left ?? 0)
+             | (!!right ?? 0)*(PIPE_Right ?? 0)
+             | (!!up ?? 0)*(PIPE_Up ?? 0)
+             | (!!down ?? 0)*(PIPE_Down ?? 0);
 
-  SetPhase(index%4);
-  SetDir(index/4);
+  SetPhase((index ?? 0)%4);
+  SetDir((index ?? 0)/4);
 }
 
 public func CreatePipe(int dir, id pipeId) {
-  var x=0, y=0;
+  dir ??= 0;
+  var x=nil, y=nil;
 
-  if(dir == PIPE_Left)  { x -= GetDefWidth(); }
-  if(dir == PIPE_Right) { x += GetDefWidth(); }
-  if(dir == PIPE_Up)    { y -= GetDefHeight(); }
-  if(dir == PIPE_Down)  { y += GetDefHeight(); }
+  if(Equal(dir, PIPE_Left))  { S42MigrationAssign(x, "-=", (GetDefWidth() ?? 0)); }
+  if(Equal(dir, PIPE_Right)) { S42MigrationAssign(x, "+=", (GetDefWidth() ?? 0)); }
+  if(Equal(dir, PIPE_Up))    { S42MigrationAssign(y, "-=", (GetDefHeight() ?? 0)); }
+  if(Equal(dir, PIPE_Down))  { S42MigrationAssign(y, "+=", (GetDefHeight() ?? 0)); }
 
-  x = x*GetCon()/100;
-  y = y*GetCon()/100;
+  x = (x ?? 0)*(GetCon() ?? 0)/100;
+  y = (y ?? 0)*(GetCon() ?? 0)/100;
 
   var pipe = CreateObject(pipeId,50,50,GetOwner());
-  pipe->DoCon(GetCon()-100);
+  pipe->DoCon((GetCon() ?? 0)-100);
   pipe->SetCategory(GetCategory());
 
-  pipe->SetPosition(GetX()+x,GetY()+y);
+  pipe->SetPosition((GetX() ?? 0)+(x ?? 0),(GetY() ?? 0)+(y ?? 0));
 
   return(pipe);
 }
 
 public func ChangePower(int iNewPower) {
+  iNewPower ??= 0;
   power = iNewPower;
   return(this());
 }
@@ -170,53 +191,55 @@ protected func LiquidCheck() {
   if(!GBackLiquid())
     {
     if(!noliquid) noliquid=true;
-    return();
+    return;
     }
-  if(efflux[0] == 0) return(NewLiquidCheck());
+  if(Equal(efflux[0], nil)) return(NewLiquidCheck());
 
-  if(!power) return();
+  if(!power) return;
 
   var mat;
-  for(var i=0 ; i < power ; i++)
+  for(var i=nil ; (i ?? 0) < (power ?? 0) ; S42MigrationStep(i, 1, true))
     {
-    mat = ExtractLiquid(0,0);
-    efflux[temp]->CastLiquid(mat, 15);
+    mat = ExtractLiquid(nil,nil);
+    efflux[(temp ?? 0)]->CastLiquid(mat, 15);
     }
 
   if(!Random(4)) Bubble();
 
-  temp++;
-  if(efflux[temp] == 0) temp = 0;
+  S42MigrationStep(temp, 1, true);
+  if(Equal(efflux[(temp ?? 0)], nil)) temp = nil;
 }
 
 public func CastLiquid(int iMat, int iStr) {
+  iMat ??= 0;
+  iStr ??= 0;
   var x,y;
-  if(left || right)
+  if(Or(left, right))
   {
-    x=0;
+    x=nil;
     y=RandomX(-5, 5);
   }
-  if(up || down)
+  if(Or(up, down))
   {
     x=RandomX(-5, 5);
-    y=0;
+    y=nil;
   }
 
   CastPXSX(MaterialName(iMat), 1, iStr, x,y, GetLiquidAngle(), 15);
 }
 
 private func NewLiquidCheck() {
-  if(!noliquid) return();
+  if(!noliquid) return;
 
   if(GBackLiquid())
     {
-    noliquid = false;
+    noliquid = nil;
     UpdateEfflux();
     }
 }
 
 private func GetLiquidAngle() {
-  if(left)  return(0);
+  if(left)  return(nil);
   if(right) return(180);
   if(down)  return(270);
   if(up)    return(90);
@@ -225,7 +248,7 @@ private func GetLiquidAngle() {
 /* Öffentliches */
 
 public func UpdateEfflux() {
-  if(!GBackLiquid()) return();
+  if(!GBackLiquid()) return;
 
   efflux = CreateArray();
 
@@ -237,46 +260,48 @@ public func UpdateEfflux() {
 
 public func UpdateSystem(object start, int From, int pump) {
   //! Wenn in diesem Frame schon einmal überprüft, geht es nicht nochmal !
-  if(checked) return();
+  From ??= 0;
+  pump ??= 0;
+  if(checked) return;
 
   if(valve)
     if(!(valve->~Status()))
-      return();
+      return;
 
-  if(pump == 1 && IsEnd())
+  if(And(Equal(pump, 1), IsEnd()))
     {
     start->~NewConflux(this());
-    return();
+    return;
     }
-  if(pump == 2 && IsEnd())
+  if(And(Equal(pump, 2), IsEnd()))
     {
     start->~NewEfflux(this());
-    return();
+    return;
     }
 
-  if(IsEnd() && !GBackLiquid())
+  if(And(IsEnd(), !GBackLiquid()))
     {
     start->NewEfflux(this());
-    return();
+    return;
     }
-  if(left  && From != PIPE_Left)  left  ->UpdateSystem(start, PIPE_Right, pump);
-  if(right && From != PIPE_Right) right ->UpdateSystem(start, PIPE_Left,  pump);
-  if(down  && From != PIPE_Down)  down  ->UpdateSystem(start, PIPE_Up,    pump);
-  if(pump || start->GetY() <= GetY()) {
-  if(up    && From != PIPE_Up)    up    ->UpdateSystem(start, PIPE_Down,  pump); }
+  if(And(left, !Equal(From, PIPE_Left)))  left  ->UpdateSystem(start, PIPE_Right, pump);
+  if(And(right, !Equal(From, PIPE_Right))) right ->UpdateSystem(start, PIPE_Left,  pump);
+  if(And(down, !Equal(From, PIPE_Down)))  down  ->UpdateSystem(start, PIPE_Up,    pump);
+  if(Or(pump, (start->GetY() ?? 0) <= (GetY() ?? 0))) {
+  if(And(up, !Equal(From, PIPE_Up)))    up    ->UpdateSystem(start, PIPE_Down,  pump); }
 
   checked = true;
   Schedule("LocalN(\"checked\") = false;", 1);
 }
 
 public func NewEfflux(object new) {
-  efflux[GetLength(efflux)] = new;
+  efflux[(GetLength(efflux) ?? 0)] = new;
 }
 
 public func IsEnd() {
-  if(GetDir() == 0 && Inside(GetPhase(), 1,2)) return(1);
-  if(GetDir() == 1 && GetPhase() == 0) return(1);
-  if(GetDir() == 2 && GetPhase() == 0) return(1);
+  if(And(Equal(GetDir(), nil), Inside(GetPhase(), 1,2))) return(1);
+  if(And(Equal(GetDir(), 1), Equal(GetPhase(), nil))) return(1);
+  if(And(Equal(GetDir(), 2), Equal(GetPhase(), nil))) return(1);
 }
 
 /* Globales */
@@ -296,15 +321,15 @@ global func UpdatePipesystem() {
 public func Serialize(array& extra)
 {
 	if (left)
-		extra[GetLength(extra)] = ["ConnectTo(Object(%d), PIPE_Left)", left];
+		extra[(GetLength(extra) ?? 0)] = ["ConnectTo(Object(%d), PIPE_Left)", left];
 	if (right)
-		extra[GetLength(extra)] = ["ConnectTo(Object(%d), PIPE_Right)", right];
+		extra[(GetLength(extra) ?? 0)] = ["ConnectTo(Object(%d), PIPE_Right)", right];
 	if (up)
-		extra[GetLength(extra)] = ["ConnectTo(Object(%d), PIPE_Up)", up];
+		extra[(GetLength(extra) ?? 0)] = ["ConnectTo(Object(%d), PIPE_Up)", up];
 	if (down)
-		extra[GetLength(extra)] = ["ConnectTo(Object(%d), PIPE_Down)", down];
-	if (GetClrModulation() == RGB())
-		extra[GetLength(extra)] = "Solid()";
-	if (power != 1)
-		extra[GetLength(extra)] = Format("ChangePower(%d)", power);
+		extra[(GetLength(extra) ?? 0)] = ["ConnectTo(Object(%d), PIPE_Down)", down];
+	if (Equal(GetClrModulation(), RGB()))
+		extra[(GetLength(extra) ?? 0)] = "Solid()";
+	if (!Equal(power, 1))
+		extra[(GetLength(extra) ?? 0)] = Format("ChangePower(%d)", power);
 }

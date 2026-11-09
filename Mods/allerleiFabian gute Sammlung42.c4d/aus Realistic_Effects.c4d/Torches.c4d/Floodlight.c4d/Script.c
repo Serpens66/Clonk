@@ -1,6 +1,6 @@
 /*-- Scheinwerfer --*/
 
-#strict
+#strict 3
 
 #include BOB1 // Gebäude-Hilfsobjekt
 
@@ -10,10 +10,10 @@ local rot, gruen, blau,r,g,b,a, intensi,nunHSL, farbt,saett,hellig,h,s,l,standr,
 
 protected func Initialize()
 {
-if (GetEnergy() > 30)
-{  pLight = CreateObject(FLHH, 0,0, GetOwner());
+if ((GetEnergy() ?? 0) > 30)
+{  pLight = CreateObject(FLHH, nil,nil, GetOwner());
 	pLight -> Activate(this());}
-  manager=CreateObject(BMAN,0,0,GetOwner());
+  manager=CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
 // standardwerte für das Licht
 standr=235;
@@ -35,8 +35,8 @@ public func SwitchLights() {
 
 func Energy()
 {
-if (GetEnergy() > 30)
-{ DoEnergy(-5); Log("energie da"); Sound("Click");  pLight = CreateObject(FLHH, 0,0, GetOwner());
+if ((GetEnergy() ?? 0) > 30)
+{ DoEnergy(-5); Log("energie da"); Sound("Click");  pLight = CreateObject(FLHH, nil,nil, GetOwner());
 	pLight -> Activate(this());}
  else   {Log("keine energie da");Sound("Error");};
 return(1);
@@ -52,9 +52,9 @@ if (pLight) {Log("keine energie da");RemoveObject(pLight);}
 
 private func CheckNight()
 {
-  if (!mlight && LightNeeded)
+  if (And(!mlight, LightNeeded))
   TurnLightOn();
-  if (mlight && !LightNeeded)
+  if (And(mlight, !LightNeeded))
   TurnLightOff();
 }
 
@@ -70,10 +70,10 @@ if(!blau) blau=standb;
 b=blau;
 if(!intensi) intensi=standa;
 a=intensi;
-r=BoundBy(r,0,255);
-g=BoundBy(g,0,255);
-b=BoundBy(b,0,255);
-a=BoundBy(a,0,255);
+r=BoundBy(r,nil,255);
+g=BoundBy(g,nil,255);
+b=BoundBy(b,nil,255);
+a=BoundBy(a,nil,255);
   var iColor;
 if(!nunHSL)  iColor = RGBa(r,g,b,a);
 if(nunHSL) {
@@ -83,9 +83,9 @@ if(!saett) saett=195;
 s=saett;
 if(!hellig) hellig=39;
 l=hellig;
-h=BoundBy(h,0,255);
-s=BoundBy(s,0,255);
-l=BoundBy(l,0,255);
+h=BoundBy(h,nil,255);
+s=BoundBy(s,nil,255);
+l=BoundBy(l,nil,255);
 iColor = HSLa(h,s,l,a);
            }
   mlight = AddLight(2200, iColor, this());
@@ -115,28 +115,28 @@ if(!hellig) hellig=39;
 l=hellig;
 
 //auf Standard zurücksetzen, wenn alle drei RGB Werte 1000
-if(iWert1==1000 && iWert2==1000 && iWert3==1000)
-{nunHSL=0;rot=standr;gruen=standg;blau=standb;intensi=standa;if(mlight) {RemoveObject(mlight);TurnLightOn();}return();}
+if(And(And(Equal(iWert1, 1000), Equal(iWert2, 1000)), Equal(iWert3, 1000)))
+{nunHSL=nil;rot=standr;gruen=standg;blau=standb;intensi=standa;if(mlight) {RemoveObject(mlight);TurnLightOn();}return;}
 
-if(iWert1) {nunHSL=0;rot=iWert1;}
-if(iWert2) {nunHSL=0;gruen=iWert2;}
-if(iWert3) {nunHSL=0;blau=iWert3;}
+if(iWert1) {nunHSL=nil;rot=iWert1;}
+if(iWert2) {nunHSL=nil;gruen=iWert2;}
+if(iWert3) {nunHSL=nil;blau=iWert3;}
 // intensität wird nur hinzuaddiert
 if(!intensi) {intensi=a;}
-if(iWert4) {intensi+=iWert4;intensi=BoundBy(intensi,1,255);Message("Durchsichtigkeit: %v",this(),intensi);}
+if(iWert4) {S42MigrationAssign(intensi, "+=", (iWert4 ?? 0));intensi=BoundBy(intensi,1,255);Message("Durchsichtigkeit: %v",this(),intensi);}
 if(!rot) {rot=r;}
 if(!gruen) {gruen=g;}
 if(!blau) {blau=b;}
 if(iWert5) {nunHSL=1;farbt=iWert5;} 
 if(iWert6) {nunHSL=1;saett=iWert6;}
 if(iWert7) {nunHSL=1;hellig=iWert7;}
-if(iWert8) {nunHSL=1;farbt+=iWert8;farbt=BoundBy(farbt,1,255);Message("Farbton: %v",this(),farbt);}
-if(iWert9) {nunHSL=1;saett+=iWert9;saett=BoundBy(saett,1,255);Message("Sättigung: %v",this(),saett);}
-if(iWert10) {nunHSL=1;hellig+=iWert10;hellig=BoundBy(hellig,1,255);Message("Helligkeit: %v",this(),hellig);}
+if(iWert8) {nunHSL=1;S42MigrationAssign(farbt, "+=", (iWert8 ?? 0));farbt=BoundBy(farbt,1,255);Message("Farbton: %v",this(),farbt);}
+if(iWert9) {nunHSL=1;S42MigrationAssign(saett, "+=", (iWert9 ?? 0));saett=BoundBy(saett,1,255);Message("Sättigung: %v",this(),saett);}
+if(iWert10) {nunHSL=1;S42MigrationAssign(hellig, "+=", (iWert10 ?? 0));hellig=BoundBy(hellig,1,255);Message("Helligkeit: %v",this(),hellig);}
 
-rot=BoundBy(rot,0,255);
-gruen=BoundBy(gruen,0,255);
-blau=BoundBy(blau,0,255);
+rot=BoundBy(rot,nil,255);
+gruen=BoundBy(gruen,nil,255);
+blau=BoundBy(blau,nil,255);
 
 //damit es aktualisiert wird:
 if(mlight) {RemoveObject(mlight);TurnLightOn();}
@@ -160,7 +160,7 @@ private func TurnLightOff()
 
 protected func Construction()
 {
-  basement = CreateObject(BS06,0,+8,GetOwner());
+  basement = CreateObject(BS06,nil,+8,GetOwner());
 }
 
 protected func ControlLeft()
@@ -194,10 +194,12 @@ ShowInfoBar(IBRE,this(),GetEnergy(),100,10,1);
 
 public func SetRotation(int iR, int iOwn)
 {
+  iR ??= 0;
+  iOwn ??= 0;
   iR = BoundBy(iR, -90, 90);
   SetR(iOwn);
 
-  if(pLight) pLight->SetR(iR+GetR());
+  if(pLight) pLight->SetR((iR ?? 0)+(GetR() ?? 0));
   if(pLight) pLight->RotateLight();
 }
 
@@ -236,9 +238,9 @@ public func PreDestruction()
 public func CheckEnergy()
 {
   // Energieverbrauch
-  if (!FindObject(ENRG) || FindObject(NELI)) DoEnergy(100);
+  if (Or(!FindObject(ENRG), FindObject(NELI))) DoEnergy(100);
 if (pLight ) DoEnergy(-50);
-if (GetEnergy() < 50) {Energyweg();};
+if ((GetEnergy() ?? 0) < 50) {Energyweg();};
   return(1);
 }
 
@@ -249,5 +251,5 @@ if (GetEnergy() < 50) {Energyweg();};
 
 
 
-public func EnoughEnergy() { return(GetEnergy() >= 5); }
+public func EnoughEnergy() { return((GetEnergy() ?? 0) >= 5); }
 public func IsEnergyConsumer() { return(1); }

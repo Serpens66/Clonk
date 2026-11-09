@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local pAimingClonk, pOriginalCaster;
 
@@ -8,8 +8,8 @@ public func Activate(object pCaster, object pRealcaster)
   Sound("Magic1");
   // Zauber wählen
   idMagic = GetRandomSpellID();
-  if(idMagic==GetID()) return(Message("$TxtNothing$!",pCaster), RemoveObject());
-  pMagic=CreateObject(idMagic,0,0,GetOwner());
+  if(Equal(idMagic, GetID())) return(S42MigrationFirst(Message("$TxtNothing$!",pCaster), RemoveObject()));
+  pMagic=CreateObject(idMagic,nil,nil,GetOwner());
   Message(GetName(pMagic),pCaster);
   // Zauberobjekt ist this() für eventuelle Zielaufrufe
   pOriginalCaster = pCaster;
@@ -21,20 +21,20 @@ public func Activate(object pCaster, object pRealcaster)
   // Zaubern
   if (pMagic->Activate(this(),pRealcaster)) return(true);
   // Zauberfehlschlag
-  return(Message("$TxtNothing$!",pCaster), RemoveObject());
+  return(S42MigrationFirst(Message("$TxtNothing$!",pCaster), RemoveObject()));
 }
 
 private func GetRandomSpellID()
   {
   var idDef, idMagic, i;
-  while(idDef=GetDefinition(i++,C4D_Magic))
+  while(idDef=GetDefinition(S42MigrationStep(i, 1, true),C4D_Magic))
     if(!Random(i)) idMagic=idDef;
   return (idMagic);
   }
 
 protected func WannaRemove() {
   // manche Zauber hängen gerne Effekte an den Caster, oder lassen ihn zielen
-  if(!GetEffectCount(0,this()) && !pAimingClonk) RemoveObject();
+  if(And(!GetEffectCount(nil,this()), !pAimingClonk)) RemoveObject();
 }
 
 protected func AttachTargetLost() {
@@ -54,7 +54,7 @@ public func SpellSucceeded(id idSpell, object pAimingClnk)
   {
   // Clonk hat fertig gezaubert: Magie für Zufallszauber trainieren und weg
   if (pOriginalCaster) pOriginalCaster->~SpellSucceeded(GetID());
-  pAimingClonk = 0;
+  pAimingClonk = nil;
   return(true);
   }
   
@@ -62,7 +62,7 @@ public func SpellFailed(id idSpell, object pAimingClnk)
   {
   // Zauber beim Zielen abgebrochen: Magie für Zufallszauber restaurieren
   if (pOriginalCaster) pOriginalCaster->~SpellFailed(GetID());
-  pAimingClonk = 0;
+  pAimingClonk = nil;
   return(true);
   }
 

@@ -1,6 +1,6 @@
 /*-- Dynamo --*/
 
-#strict 2
+#strict 3
 
 #include BAS2
 
@@ -13,7 +13,7 @@ public func ContextProduction(pCaller)
 }
 
 protected func IsBuilt() {
-  return(GetCon() >= 100);
+  return((GetCon() ?? 0) >= 100);
 }
 
 func ContainedThrow() { return(1); }
@@ -33,11 +33,11 @@ public func ContainedDown(pCaller)
 
 func StartWork(pWorker)
   {
-  if(GetAction() == "Working") return(Message("$TxtAlreadyInUse$", pWorker)); 
+  if(S42MigrationEqual(GetAction(), "Working")) return(Message("$TxtAlreadyInUse$", pWorker));
   // Arbeit beginnen
-  AddCommand(pWorker,"Call",this(),0,0,0, 0, "Work", 0, 1);  
+  AddCommand(pWorker,"Call",this(),nil,nil,nil, nil, "Work", nil, 1);
   // Vorher: Position einnehmen
-  AddCommand(pWorker,"MoveTo",0,GetX()+10,GetY());
+  AddCommand(pWorker,"MoveTo",nil,(GetX() ?? 0)+10,GetY());
   }
 
 func Work(pWorker)
@@ -81,7 +81,7 @@ private func WorkCancel(pWorker)
   {
   if(!pWorker) pWorker=FindObject2(Find_OCF(OCF_CrewMember),Find_Container(this()));
   // Arbeit abbrechen
-  if (GetAction() == "Working") SetAction("Idle");
+  if (S42MigrationEqual(GetAction(), "Working")) SetAction("Idle");
   if(!pWorker) return(1);
   Exit(pWorker,10,10);
   SetDir(DIR_Left, pWorker);

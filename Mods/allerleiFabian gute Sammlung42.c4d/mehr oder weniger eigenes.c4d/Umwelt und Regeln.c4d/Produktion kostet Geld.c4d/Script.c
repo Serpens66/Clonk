@@ -1,6 +1,6 @@
 /*-- Baustoffe zurück --*/
 
-#strict
+#strict 3
 
 // wird in Destruction Objekt von SpaceEmpire genereal geregelt.
 

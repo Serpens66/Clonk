@@ -1,6 +1,6 @@
 /*-- Holzkohle --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -9,6 +9,6 @@ protected func Initialize()
 
 private func Splitting()
 {
-  Enter(Contained(),CreateObject(COAL,0,0,GetOwner()));
-  RemoveObject(0,1);
+  Enter(Contained(),CreateObject(COAL,nil,nil,GetOwner()));
+  RemoveObject(nil,1);
 }

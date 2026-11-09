@@ -1,5 +1,5 @@
 // Anti-Lag
-#strict
+#strict 3
 
 public func Initialize()
 {
@@ -19,7 +19,7 @@ global func IsAntiLag()
 
 // Standartauswahl?
 
-func IsDefaultRule() {return IsNetwork()||GetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_ATLG");}
+func IsDefaultRule() {return Or(IsNetwork(), GetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_ATLG"));}
 
 public func IsChoosen()
 {
@@ -28,5 +28,5 @@ public func IsChoosen()
 
 public func IsNotChoosen()
 {
-  return SetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_ATLG",false);
+  return SetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_ATLG",nil);
 }

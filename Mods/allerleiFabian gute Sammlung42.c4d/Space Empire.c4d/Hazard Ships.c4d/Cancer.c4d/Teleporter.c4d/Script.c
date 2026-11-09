@@ -1,6 +1,6 @@
 /*-- Teleporter --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -15,7 +15,7 @@ func Bezug(_vessel)
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   RemoveObject();
   return(1);
@@ -25,7 +25,7 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -33,7 +33,7 @@ protected func RejectCollect()
 
 func ContainedDownDouble()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this());
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(vessel,pilot);
   Sound("Airlock1");
   return(1);
@@ -44,9 +44,9 @@ func ContainedDownDouble()
 func ContainedDig(pByObj) 
 {
   pilot=pByObj;
-  CreateMenu(A56B,Par(0),0,0,0,0);
-  AddMenuItem("%s","BeamUp",CT_1,Par(0)); 
-  AddMenuItem("%s","BeamDown",CT_2,Par(0));   		
+  CreateMenu(A56B,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s","BeamUp",CT_1,Par(nil));
+  AddMenuItem("%s","BeamDown",CT_2,Par(nil));
   return(1);
 }
 
@@ -58,7 +58,7 @@ func Check()
   {
   if(!Hostile (GetOwner(Beam), GetOwner(this())))
   {
-  Enter(vessel,Contents(0,Beam));
+  Enter(vessel,Contents(nil,Beam));
 //  Enter(this(),Contents(0,Beam));
   vessel->TelFXUp();
   pilot2 = (Beam->Hit());
@@ -66,11 +66,11 @@ func Check()
   }
   }
   
-  if(Beam=FindObject (SCB_, -35, 0, 70, 50))
+  if(Beam=FindObject (SCB_, -35, nil, 70, 50))
   {
   if(!Hostile (GetOwner(Beam), GetOwner(this())))
   {
-  Enter(vessel,Contents(0,Beam));
+  Enter(vessel,Contents(nil,Beam));
 //  Enter(this(),Contents(0,Beam));
   vessel->TelFXDown();
   pilot2 = (Beam->Hit());
@@ -80,20 +80,20 @@ func Check()
   
   if(beamup)
   {
-  if(Crew=FindObject (HZCK, -5, 20, 10, 200,0,0,0,NoContainer()))
+  if(Crew=FindObject (HZCK, -5, 20, 10, 200,nil,nil,nil,NoContainer()))
   {
-  if (PathFree(GetX(), GetY()+35, GetX(Crew), GetY(Crew)))
+  if (PathFree(GetX(), (GetY() ?? 0)+35, GetX(Crew), GetY(Crew)))
   {
   if(!Hostile (GetOwner(Crew), GetOwner(this())))
   {
-  Beam=CreateObject(SCB_,GetX(Crew)-GetX(),GetY(Crew)-GetY(),GetOwner(this()));
+  Beam=CreateObject(SCB_,(GetX(Crew) ?? 0)-(GetX() ?? 0),(GetY(Crew) ?? 0)-(GetY() ?? 0),GetOwner(this()));
 //  Enter(Beam,Crew);
   Enter(this(),Crew);
   pilot2 = (Beam->Up());
   Sound("Cloak2",this());
-  beamup=0;
+  beamup=nil;
 //  Enter(this(),pilot2);
-  return(vessel->TelLight(0));
+  return(vessel->TelLight(nil));
   }
   }
   }
@@ -108,7 +108,7 @@ func BeamDown()
   Beam=CreateContents(SCB_);
   Enter(Beam,pilot);
   Beam->Down();
-  Exit(Beam,0,60,0,0,20,0);
+  Exit(Beam,nil,60,nil,nil,20,nil);
   Sound("Cloak2",this());
   return(1);
 }
@@ -123,7 +123,7 @@ func BeamUp()
   if(!beamup)
   {
   Message("Suchmodus deaktiviert.",this());
-  return(vessel->TelLight(0));
+  return(vessel->TelLight(nil));
   }
   vessel->TelLight(1); 
   return(1);
@@ -160,8 +160,8 @@ func ContainedRight()
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 

@@ -1,6 +1,6 @@
 /*-- Bohrturm --*/
 
-#strict
+#strict 3
 #appendto DRCK
 
 func Initialize(a,b,c,d,e,f,g)
@@ -12,11 +12,11 @@ return(_inherited(a,b,c,d,e,f,g));
 
 public func GetTriggerName(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return("Pumpen");
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return("Aufhören zu Pumpen");
 	}
@@ -25,11 +25,11 @@ public func GetTriggerName(a)
 
 public func Trigger(a,pSensor)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return(Pumping());
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return(Waiting());
 	}

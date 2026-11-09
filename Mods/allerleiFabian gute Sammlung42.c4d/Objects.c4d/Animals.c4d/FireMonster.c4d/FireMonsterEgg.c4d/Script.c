@@ -1,6 +1,6 @@
 /*-- Feuermonsterei --*/
 
-#strict
+#strict 3
 
 /* TimerCall */
 
@@ -27,11 +27,11 @@ protected func Damage()
   
 private func DoBreak()
 {
-  if (!ActIdle()) return(0);
-  if (GBackSolid()) return(0);
+  if (!ActIdle()) return(nil);
+  if (GBackSolid()) return(nil);
   Sound("EggBreak");
   SetAction("Break");
-  var pMonster = CreateConstruction(FMNS,0,0,-1,40);
+  var pMonster = CreateConstruction(FMNS,nil,nil,-1,40);
   pMonster->Birth();
   return(1);
 }

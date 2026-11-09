@@ -1,6 +1,6 @@
 /*-- Verbrannter Holz-Wachturm --*/
 
-#strict
+#strict 3
 
 local exit;
 local battlements;

@@ -1,6 +1,6 @@
 /*-- Wipfjagd --*/
 
-#strict
+#strict 3
 #include OREM
 
 // Anzahl Wipfe die Sterben dürfen
@@ -11,23 +11,23 @@ local DeadWipfs;
 func Initialize() {
   
   // 1x WPHT = 0 AllowedDeaths
-  AllowedDeaths = 0;
+  AllowedDeaths = nil;
   
   var pGoal;
   if (pGoal = FindObject(WPHT)) 
   {
     // 2x WPHT = 2 AllowedDeaths
-    if (LocalN("AllowedDeaths", pGoal) == 0) 
+    if (Equal(LocalN("AllowedDeaths", pGoal), nil))
       LocalN("AllowedDeaths", pGoal) = 1;
     // 3x WPHT = 3 AllowedDeaths usw.  
-    ++LocalN("AllowedDeaths", pGoal);    
+    S42MigrationStep(LocalN("AllowedDeaths", pGoal), 1);
     // Nicht genug Wipfe da?
-    var i = LocalN("AllowedDeaths", pGoal) - ObjectCount(WIPF) + 1 + Random(3);
+    var i = (LocalN("AllowedDeaths", pGoal) ?? 0) - (ObjectCount(WIPF) ?? 0) + 1 + (Random(3) ?? 0);
     // Noch welche erzeugen
-    while (i > 0)
+    while ((i ?? 0) > 0)
     {
       PlaceAnimal(WIPF);
-      i--;
+      S42MigrationStep(i, -1, true);
     }    
     // Kontrolle an das erste Spielzielobjekt übergeben
     return(RemoveObject());
@@ -40,19 +40,19 @@ public func IsFulfilled()
 {
   //Ob es wohl besser wäre, wenn das Wipf seinen Tod per Scriptfunktion an das Spielziel meldete?
   var pWipf;
-  while (pWipf = FindObject(DWPF,0,0,0,0,OCF_Fullcon(),0,0,0,pWipf))
-    if (!Local(0, pWipf)) 
+  while (pWipf = FindObject(DWPF,nil,nil,nil,nil,OCF_Fullcon,nil,nil,nil,pWipf))
+    if (!Local(nil, pWipf))
     {
-      SetLocal(0, 1, pWipf);
-      ++DeadWipfs;
+      SetLocal(nil, 1, pWipf);
+      S42MigrationStep(DeadWipfs, 1);
     }
 
-  if (DeadWipfs > AllowedDeaths) 
+  if ((DeadWipfs ?? 0) > (AllowedDeaths ?? 0))
   {
     var i = GetPlayerCount(); 
-    while (i--) 
+    while (S42MigrationStep(i, -1, true))
       EliminatePlayer(GetPlayerByIndex(i));
-    return (0);
+    return (nil);
   }
   return(!FindObject(WIPF));
 }
@@ -61,7 +61,7 @@ public func SellID() { return (WIPF); }
 
 protected func Activate(plr) 
 {
-  if (DeadWipfs>AllowedDeaths) return(MessageWindow(Format("$MsgFailed$"),plr));
+  if ((DeadWipfs ?? 0)>(AllowedDeaths ?? 0)) return(MessageWindow(Format("$MsgFailed$"),plr));
   if (IsFulfilled()) return(MessageWindow(Format("$MsgSuccess$"),plr));
   MessageWindow(Format("$MsgTodo$",ObjectCount(WIPF),DeadWipfs,AllowedDeaths),plr);
 }

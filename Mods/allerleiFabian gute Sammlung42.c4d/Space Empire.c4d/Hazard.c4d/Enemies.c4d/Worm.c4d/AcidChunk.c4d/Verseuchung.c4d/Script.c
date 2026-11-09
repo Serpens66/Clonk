@@ -1,6 +1,6 @@
 /*-- Verseuchung --*/
 
-#strict
+#strict 3
 
 local fade;
 
@@ -14,28 +14,31 @@ func Check()
 {
 	for(var enemy in FindTargets(this(),40)) {
 		if(enemy->GetAlive()) {
-			var abzug = fade/50;
-			if(!Random(8))DoDmg(Max(0,4-abzug),DMG_Bio,enemy);
+			var abzug = (fade ?? 0)/50;
+			if(!Random(8))DoDmg(Max(nil,4-(abzug ?? 0)),DMG_Bio,enemy);
 		}
 	}
 	
-	if(GetActTime() > 200)
+	if((GetActTime() ?? 0) > 200)
 		DoFade(5);
 }
 
 func OnHit(int dmg, int type, object from)
 {
-	if(type == DMG_Fire)
+	dmg ??= 0;
+	type ??= 0;
+	if(Equal(type, DMG_Fire))
 		DoFade(5);
-	if(type == DMG_Explosion)
+	if(Equal(type, DMG_Explosion))
 		DoFade(25);
 }
 
 func DoFade(int change)
 {
-	fade += change;
+	change ??= 0;
+	S42MigrationAssign(fade, "+=", (change ?? 0));
 	
-	if(fade > 250)
+	if((fade ?? 0) > 250)
 		RemoveObject();
 	
 	SetClrModulation(RGBa(255,255,255,fade));
@@ -43,7 +46,7 @@ func DoFade(int change)
 
 public func IsBulletTarget(id ID)  // nur von feuer zerstörbar
 {
-	if(ID == FFLM || ID==FLMB)
+	if(Or(Equal(ID, FFLM), Equal(ID, FLMB)))
 		return(true);
-	return(false);
+	return(nil);
 }

@@ -1,6 +1,6 @@
 /*-- Bohrturmleitung --*/
 
-#strict
+#strict 3
 
 local pDerrick;
 
@@ -12,7 +12,7 @@ public func Init(derrick, pipehead)
 
 public func Adjust()
 {
-  if (!GetActionTarget() || !pDerrick)
+  if (Or(!GetActionTarget(), !pDerrick))
     return(RemoveObject());
-  SetPosition(GetX(pDerrick), GetY(pDerrick) + GetObjHeight(pDerrick) / 2);
+  SetPosition(GetX(pDerrick), (GetY(pDerrick) ?? 0) + (GetObjHeight(pDerrick) ?? 0) / 2);
 }

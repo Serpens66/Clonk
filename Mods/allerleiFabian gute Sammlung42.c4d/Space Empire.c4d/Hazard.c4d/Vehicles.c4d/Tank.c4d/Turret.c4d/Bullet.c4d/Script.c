@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local shooter;
 local explo;
@@ -9,7 +9,7 @@ local nospeed;
 func Construction(object byObj) {
   // nichts? :C
   if(!byObj)
-    return();
+    return;
   // Waffe?
   shooter = GetShooter(byObj);
 	
@@ -18,27 +18,30 @@ func Construction(object byObj) {
 
 public func Launch(int xdir, int ydir)
 {
-  AddEffect("HitCheck", this(), 1, 1, 0, SHT1,shooter,true);
+  xdir ??= 0;
+  ydir ??= 0;
+  AddEffect("HitCheck", this(), 1, 1, nil, SHT1,shooter,true);
   SetSpeed(xdir, ydir);
   SetAction("Travel");
 }
 
 public func SetExplo(int ex) {
+  ex ??= 0;
   explo = ex;
 }
 
 public func Hit() {
 if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(explo);
-else FakeExplode(explo,0,0,explo);
+else FakeExplode(explo,nil,nil,explo);
 }
 
 public func HitObject(obj) { Hit(); }
 
 func Traveling () {
-  SetR(Angle(0,0,GetXDir(),GetYDir()));
+  SetR(Angle(nil,nil,GetXDir(),GetYDir()));
   
   // wie, liegt das rum?! kaputtmachen
-  if(!GetXDir() && !GetYDir()) {
+  if(And(!GetXDir(), !GetYDir())) {
 	if(!nospeed) {
 		nospeed = true;
 	}
@@ -46,9 +49,9 @@ func Traveling () {
 		Hit();
 	}
   } else {
-	nospeed = false;
+	nospeed = nil;
   }
 
-  CreateParticle("Smoke2", 0, 0, RandomX(-15, 15), -5,
+  CreateParticle("Smoke2", nil, nil, RandomX(-15, 15), -5,
                            RandomX(80, 160), RGBa(100,100,100,60)); 
 }

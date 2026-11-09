@@ -1,12 +1,12 @@
 /*-- Scheinwerfer --*/
 
-#strict
+#strict 3
 
 local pLight;
 
 protected func Initialize()
 {
-  pLight = CreateObject(FLHO, 0,0, -1);
+  pLight = CreateObject(FLHO, nil,nil, -1);
 	pLight -> Activate(this());
 }
 
@@ -34,10 +34,12 @@ public func ControlDigDouble()
 
 public func SetRotation(int iR, int iOwn)
 {
+  iR ??= 0;
+  iOwn ??= 0;
   iR = BoundBy(iR, -90, 90);
   SetR(iOwn);
 
-  pLight->SetR(iR+GetR());
+  pLight->SetR((iR ?? 0)+(GetR() ?? 0));
   pLight->RotateLight();
 }
 

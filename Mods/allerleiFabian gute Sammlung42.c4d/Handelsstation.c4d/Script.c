@@ -2,93 +2,104 @@
 
 local caller, own, value, Player, Objekt, oldValue, basement;
 
-#strict
+#strict 3
 
 
 /* - - - - - - - - Algemeines: - - - - - - - */
 
 //Überprüfen, ob der gewählte Spieler eine Handelsstation hat:
-HasStation:
+func HasStation(...) {
   var obj;
-  while(obj = FindObject(HSSN,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Par(0))
-      if(GetCon(obj)==100)
+  while(obj = FindObject(HSSN,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Par(nil)))
+      if(Equal(GetCon(obj), 100))
         return(obj);
-  while(obj = FindObject(AEHN,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Par(0))
-      if(GetCon(obj)==100)
+  while(obj = FindObject(AEHN,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Par(nil)))
+      if(Equal(GetCon(obj), 100))
         return(obj);
-  return(0);
+  return(nil);
+}
 
-IsSpam:
+func IsSpam(...) {
   var obj;
-  while(obj = FindObject(SMSR,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==own)
-      if(ObjectCall(obj,"Object")==Par(0))
+  while(obj = FindObject(SMSR,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), own))
+      if(Equal(ObjectCall(obj,"Object"), Par(nil)))
         return(obj);
-  return(0);
+  return(nil);
+}
 
-HasSpam:
+func HasSpam(...) {
   var obj;
-  while(obj = FindObject(SMSR,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Par(0))
-      if(ObjectCall(obj,"Object")==own)
+  while(obj = FindObject(SMSR,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Par(nil)))
+      if(Equal(ObjectCall(obj,"Object"), own))
         return(1);
-  return(0);
+  return(nil);
+}
 
 //Der Kleine Effekt:
-Effekt:
+func Effekt(...) {
   CreateObject(LIGT,8,-20);
   return(1);
+}
 
 //Blitz:
 //  LaunchLightning(GetX(this()),GetY(this()) ,GetX(Par(0))-GetX(this()), 0 //,GetY(Par(0))-GetY(this()), 0);
 //  return(1);
 
-Effekt2:
+func Effekt2(...) {
 var obj;
-ObjectCall(obj=CreateObject(EFKT,0,0),"SetTarget",Par(0),Par(2),Par(3),Par(4),Par(5));
+ObjectCall(obj=CreateObject(EFKT,nil,nil),"SetTarget",Par(nil),Par(2),Par(3),Par(4),Par(5));
 if(Par(1))
   Enter(obj,Par(1));
 return(1);
+}
 
 //Hat der Spieler bereits eine Handelsstation?
-Construction:
+func Construction(...) {
   own = GetOwner();
   var obj;
-  if(HasStation(own)!=0)
+  if(!Equal(HasStation(own), nil))
 {
     Sound("Error");
     Message("Du hast bereits eine Handelsstation!",this());
     RemoveObject();
     return(1);
 }
-  basement = CreateObject(BS13,0,+8,GetOwner());
+  basement = CreateObject(BS13,nil,+8,GetOwner());
   return(1);
+}
 
 //Eingangssteuerung:
 
-ActivateEntrance:
+func ActivateEntrance(...) {
   if(ActIdle()) SetAction("Opening");
   return(1);
+}
 
-SoundOpen: return(Sound("SteelGate2"));
-SoundClose: return(Sound("SteelGate2"));
-Offen: return(SetEntrance(1));
-Close: return(SetEntrance(0));
+func SoundOpen(...) { return(Sound("SteelGate2"));
+}
+func SoundClose(...) { return(Sound("SteelGate2"));
+}
+func Offen(...) { return(SetEntrance(1));
+}
+func Close(...) { return(SetEntrance(nil));
+}
 
 //Loren werden geleert:
-Check:
+func Check(...) {
   var obj,Sender;
-  while(obj=FindObject(LORY,-10,-10,21,21,0,0,0,this(),obj))
+  while(obj=FindObject(LORY,-10,-10,21,21,nil,nil,nil,this(),obj))
     GrabContents(obj);
 
 //Von einer Station zur anderen Beamen:
-  while(obj=FindObject(0,0,0,0,0,OCF_CrewMember(),0,0,this(),obj))
+  while(obj=FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,nil,nil,this(),obj))
     if(Sender=FindContents(SNDR,obj))
-      if(GetOwner(obj)!=own)
+      if(!Equal(GetOwner(obj), own))
 {
-        Exit(obj,0,0);
+        Exit(obj,nil,nil);
         var Station=HasStation(GetOwner(obj));
         Effekt();
         Effekt2(Station,obj,1);
@@ -97,14 +108,15 @@ Check:
         RemoveObject(Sender);
 }
 //Chips entfernen:
-  while(obj=FindObject(0,0,0,0,0,OCF_CrewMember(),0,0,this(),obj))
-    if(GetOwner(obj)==own)
+  while(obj=FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,nil,nil,this(),obj))
+    if(Equal(GetOwner(obj), own))
       if(Sender=FindContents(SNDR,obj))
 {
         Effekt();
         RemoveObject(Sender);
 }
   return(1);
+}
 
 protected func Destruction()
 {
@@ -116,17 +128,17 @@ protected func Destruction()
 
 /* - - - - - - - Das Hauptmenü: - - - - - - - */
 
-ContainedUp:
-  if(GetOwner(Par(0))!=own)
+func ContainedUp(...) {
+  if(!Equal(GetOwner(Par(nil)), own))
 {
     Sound("Error");
     Message("Das ist kein Clonk von %s!",this(),GetPlayerName(own));
-    return(0);
+    return(nil);
 }
 
   Sound("Click");
-  caller=Par(0);
-  CreateMenu(HSSN,caller,0,0,0,0,0,0);
+  caller=Par(nil);
+  CreateMenu(HSSN,caller,nil,nil,nil,nil,nil,nil);
   AddMenuItem("Verkaufsliste erstellen","SellList",LIST,caller);
   AddMenuItem("Kaufen","Buy",_BUY,caller);
   AddMenuItem("Geld geben","Money",MONY,caller);
@@ -134,65 +146,71 @@ ContainedUp:
   AddMenuItem("Spam - Menü","Spams",SPAM,caller);
   AddMenuItem("Clonk transferieren","Transfer",TRAN,caller);
   return(1);
+}
 
 /* - - - - - - - Geld an einen anderen Spieler geben: - - - - - - - */
 
-Money:
+func Money(...) {
   Sound("Click");
-  CreateMenu(MONY,caller,0,0,"Keine weiteren Spieler mit Handelsstation gefunden!",0,0,0);
+  CreateMenu(MONY,caller,nil,nil,"Keine weiteren Spieler mit Handelsstation gefunden!",nil,nil,nil);
   var i;
   var Players = GetPlayerCount();
-  for (i; Players; ++i) 
+  for (i; Players; S42MigrationStep(i, 1))
   {
-    if (i != own)
-      if(HasStation(i)!=0)
-        AddMenuItem(Format("Geld an %s geben",GetPlayerName(i)) , "SetMoneyAmount",STMY,caller,0,i);
-    --Players;
+    if (!Equal(i, own))
+      if(!Equal(HasStation(i), nil))
+        AddMenuItem(Format("Geld an %s geben",GetPlayerName(i)) , "SetMoneyAmount",STMY,caller,nil,i);
+    S42MigrationStep(Players, -1);
   }
   return(1);
+}
 
-SetMoneyAmount:
+func SetMoneyAmount(...) {
   Sound("Click");
-  value=0;
+  value=nil;
   ShowM();
   Player=Par(1);
-  CreateMenu(STMY,caller,0,0,0,0,0,1);
-  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,0,0);
-  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,0,1);
-  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,0,2);
-  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,0,3);
-  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,0,4);
-  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,0,5);
-  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,0,6);
-  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,0,7);
-  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,0,8);
-  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,0,9);
+  CreateMenu(STMY,caller,nil,nil,nil,nil,nil,1);
+  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,nil,nil);
+  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,nil,1);
+  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,nil,2);
+  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,nil,3);
+  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,nil,4);
+  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,nil,5);
+  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,nil,6);
+  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,nil,7);
+  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,nil,8);
+  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,nil,9);
   AddMenuItem("Letzte Stelle löschen","Delete",BACK,caller);
   AddMenuItem("Geldbetrag geben","GiveMoney",OKAY,caller);
   return(1);
+}
 
-AddNumber:
-  if(value >= 1000)
+func AddNumber(...) {
+  if((value ?? 0) >= 1000)
     return(1);
 
   Sound("Click");
   var ZSave = value;
-  value=value*10+Par(1);
+  value=(value ?? 0)*10+(Par(1) ?? 0);
   ShowM();
   return(1);
+}
 
-ShowM:
+func ShowM(...) {
   Message("Geldbetrag: %d",this(),value);
   return(1);
+}
 
-Delete:
-  value=value / 10;
+func Delete(...) {
+  value=(value ?? 0) / 10;
   ShowM();
   Sound("Click");
   return(1);
+}
 
-GiveMoney:
-  if(GetWealth(own)<value)
+func GiveMoney(...) {
+  if((GetWealth(own) ?? 0)<(value ?? 0))
 {
     Sound("Error");
     Message("Du hast nicht genug Geld dafür!",this());
@@ -204,195 +222,210 @@ GiveMoney:
   var Station=HasStation(Player);
   Effekt();
 //  Blitz(Station);
-  Effekt2(Station,0,2,value,Player);
-  SetWealth(own,GetWealth(own)-value);
-  Message("%s hat %d Geldpunkte an %s gegeben.",0,GetPlayerName(own),value,GetPlayerName(Player));
+  Effekt2(Station,nil,2,value,Player);
+  SetWealth(own,(GetWealth(own) ?? 0)-(value ?? 0));
+  Message("%s hat %d Geldpunkte an %s gegeben.",nil,GetPlayerName(own),value,GetPlayerName(Player));
   return(1);
+}
 
 /* - - - - - - - Angeboterstellung: - - - - - - - */
 
-SellList:
+func SellList(...) {
   Sound("Click");
-  CreateMenu(LIST,caller,0,0,0,0,0,0);
+  CreateMenu(LIST,caller,nil,nil,nil,nil,nil,nil);
   AddMenuItem("Kleine Objekte","Objects",KEOE,caller);
   AddMenuItem("Fahrzeuge","Vehicles",FRZE,caller);
   AddMenuItem("Liste angucken","LookOnList",LEGN,caller);
   return(1);
+}
 
 //Liste angucken:
-LookOnList:
+func LookOnList(...) {
   Sound("Click");
-  CreateMenu(LEGN,caller,0,0,"Verkaufsliste ist Leer",0,0,0);
+  CreateMenu(LEGN,caller,nil,nil,"Verkaufsliste ist Leer",nil,nil,nil);
   var obj;
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==own)
-      AddMenuItem(Format("%s (%d)",GetName(0,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"ChangeIt",ObjectCall(obj,"Object"),caller,ContentsCount(ObjectCall(obj,"Object"),this()),obj);
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), own))
+      AddMenuItem(Format("%s (%d)",GetName(nil,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"ChangeIt",ObjectCall(obj,"Object"),caller,ContentsCount(ObjectCall(obj,"Object"),this()),obj);
   return(1);
+}
 
-ChangeIt:
+func ChangeIt(...) {
   Sound("Click");
   value=ObjectCall(Par(1),"Preis");
   Objekt=ObjectCall(Par(1),"Object");
   ShowM();
-  CreateMenu(LIST,caller,0,0,0,0,0,1);
-  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,0,0);
-  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,0,1);
-  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,0,2);
-  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,0,3);
-  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,0,4);
-  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,0,5);
-  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,0,6);
-  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,0,7);
-  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,0,8);
-  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,0,9);
+  CreateMenu(LIST,caller,nil,nil,nil,nil,nil,1);
+  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,nil,nil);
+  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,nil,1);
+  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,nil,2);
+  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,nil,3);
+  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,nil,4);
+  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,nil,5);
+  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,nil,6);
+  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,nil,7);
+  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,nil,8);
+  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,nil,9);
   AddMenuItem("Letzte Stelle löschen","Delete",BACK,caller);
-  AddMenuItem("Eintrag löschen","DeleteThis",DELE,caller,0,Par(1));
-  AddMenuItem("Eintrag Ändern","Change",OKAY,caller,0,Par(1));
+  AddMenuItem("Eintrag löschen","DeleteThis",DELE,caller,nil,Par(1));
+  AddMenuItem("Eintrag Ändern","Change",OKAY,caller,nil,Par(1));
   AddMenuItem("Originalwert ansehen","Normal",NO_M,caller);
   return(1);
+}
 
-Normal:
+func Normal(...) {
   Sound("Click");
-  Message("Der Wert von %s ist: %d",this(),GetName(0,Objekt),GetValue(0,Objekt));
+  Message("Der Wert von %s ist: %d",this(),GetName(nil,Objekt),GetValue(nil,Objekt));
   return(1);
+}
 
-DeleteThis:
+func DeleteThis(...) {
   Sound("Click");
   CloseMenu(caller);
-  Message("%s wurde aus der Verkaufsliste entfernt.",this(),GetName(0,ObjectCall(Par(1),"Object")));
+  Message("%s wurde aus der Verkaufsliste entfernt.",this(),GetName(nil,ObjectCall(Par(1),"Object")));
   RemoveObject(Par(1));
   return(1);
+}
 
-Change:
+func Change(...) {
   Sound("Click");
   var obj = Par(1);
   CloseMenu(caller);
   ObjectCall(obj,"SetSaver",Objekt,value);
   SetOwner(own,obj);
-  Message("%s kostet bei dir nun %d",this(),GetName(0,Objekt),value);
+  Message("%s kostet bei dir nun %d",this(),GetName(nil,Objekt),value);
   return(1);
+}
 
 func Objects()
 {
   Sound("Click");
-  CreateMenu(KEOE,caller,0,0,"Keine Objekte gefunden!",0,0,0);
+  CreateMenu(KEOE,caller,nil,nil,"Keine Objekte gefunden!",nil,nil,nil);
   var obj, num;
-  while(obj = (GetDefinition(num,C4D_Object())))
-{if (GetCategory(0,obj)&2048)
+  while(obj = (GetDefinition(num,C4D_Object)))
+{if ((GetCategory(nil,obj) ?? 0)&2048)
 {
-    AddMenuItem(Format("%s (%d) auf Verkaufsliste setzten",GetName(0,obj),GetValue(0,obj)),"AddOnList",obj,caller);
+    AddMenuItem(Format("%s (%d) auf Verkaufsliste setzten",GetName(nil,obj),GetValue(nil,obj)),"AddOnList",obj,caller);
 }
-    num++;
+    S42MigrationStep(num, 1, true);
 }
   return(1);
 }
 
-Vehicles:
+func Vehicles(...) {
   Sound("Click");
-  CreateMenu(FRZE,caller,0,0,"Keine Fahrzeuge gefunden!",0,0,0);
+  CreateMenu(FRZE,caller,nil,nil,"Keine Fahrzeuge gefunden!",nil,nil,nil);
   var obj, num;
-  while(obj = GetDefinition(num,C4D_Vehicle()))
-{if (GetCategory(0,obj)&2048)
+  while(obj = GetDefinition(num,C4D_Vehicle))
+{if ((GetCategory(nil,obj) ?? 0)&2048)
 {
-    AddMenuItem(Format("%s (%d) auf Verkaufsliste setzten",GetName(0,obj),GetValue(0,obj)),"AddOnList",obj,caller);
+    AddMenuItem(Format("%s (%d) auf Verkaufsliste setzten",GetName(nil,obj),GetValue(nil,obj)),"AddOnList",obj,caller);
 }
-    num++;
+    S42MigrationStep(num, 1, true);
 }
   return(1);
+}
 
-AddOnList:
+func AddOnList(...) {
   Sound("Click");
   var obj;
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==own)
-      if(ObjectCall(obj,"Object")==Par(0))
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), own))
+      if(Equal(ObjectCall(obj,"Object"), Par(nil)))
 {
         Message("Dieser Eintrag ist bereits vorhanden, und kann bearbeitet werden!",this());
-        ChangeIt(0,obj);
+        ChangeIt(nil,obj);
         return(1);
 }
-  Objekt=Par(0);
-  value=0;
+  Objekt=Par(nil);
+  value=nil;
   Preis();
   return(1);
+}
 
-Preis:
+func Preis(...) {
   Sound("Click");
-  value=0;
+  value=nil;
   ShowM();
   Player=Par(1);
-  CreateMenu(LIST,caller,0,0,0,0,0,1);
-  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,0,0);
-  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,0,1);
-  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,0,2);
-  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,0,3);
-  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,0,4);
-  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,0,5);
-  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,0,6);
-  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,0,7);
-  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,0,8);
-  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,0,9);
+  CreateMenu(LIST,caller,nil,nil,nil,nil,nil,1);
+  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,nil,nil);
+  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,nil,1);
+  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,nil,2);
+  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,nil,3);
+  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,nil,4);
+  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,nil,5);
+  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,nil,6);
+  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,nil,7);
+  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,nil,8);
+  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,nil,9);
   AddMenuItem("Letzte Stelle löschen","Delete",BACK,caller);
   AddMenuItem("In Verkaufsliste setzen","SaveIt",OKAY,caller);
   AddMenuItem("Originalwert ansehen","Normal",NO_M,caller);
   return(1);
+}
 
-SaveIt:
+func SaveIt(...) {
   CloseMenu(caller);
   Sound("Click");
   Sound("Ding",1);
 
   var obj;
-  ObjectCall(obj=CreateObject(SAVE,0,0),"SetSaver",Objekt,value);
+  ObjectCall(obj=CreateObject(SAVE,nil,nil),"SetSaver",Objekt,value);
   SetOwner(own,obj);
-  Message("%s wurde mit einem Kostenbetrag von %d in die Verkaufsliste eingetragen!",this(),GetName(0,Objekt),value);
-  Message("%s hat ein neues Verkaufsangebot: %s (%d)",0,GetPlayerName(own),GetName(0,Objekt),value);
+  Message("%s wurde mit einem Kostenbetrag von %d in die Verkaufsliste eingetragen!",this(),GetName(nil,Objekt),value);
+  Message("%s hat ein neues Verkaufsangebot: %s (%d)",nil,GetPlayerName(own),GetName(nil,Objekt),value);
   return(1);
+}
 
 /* - - - - - - - Objekte Kaufen: - - - - - - - */
 
-Buy:
+func Buy(...) {
   Sound("Click");
-  CreateMenu(_BUY,caller,0,0,"Keine weiteren Spieler mit Handelsstation gefunden!",0,0,0);
+  CreateMenu(_BUY,caller,nil,nil,"Keine weiteren Spieler mit Handelsstation gefunden!",nil,nil,nil);
   var i;
   var Players = GetPlayerCount();
-  value=0;
-  for (i; Players; ++i) 
+  value=nil;
+  for (i; Players; S42MigrationStep(i, 1))
   {
-    if (i != own)
-      if(HasStation(i)!=0)
-        AddMenuItem(Format("Von %s Kaufen",GetPlayerName(i)) , "BuyFrom",KAUF,caller,0,i);
-    --Players;
+    if (!Equal(i, own))
+      if(!Equal(HasStation(i), nil))
+        AddMenuItem(Format("Von %s Kaufen",GetPlayerName(i)) , "BuyFrom",KAUF,caller,nil,i);
+    S42MigrationStep(Players, -1);
   }
   return(1);
+}
 
-BuyFrom:
+func BuyFrom(...) {
   Sound("Click");
   Player = Par(1);
   BuyMenu();
   return(1);
+}
 
-BuyMenu:
-  CreateMenu(_BUY,caller,0,0,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),0,0,1);
+func BuyMenu(...) {
+  CreateMenu(_BUY,caller,nil,nil,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),nil,nil,1);
   var obj;
   var Station=HasStation(Player);
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Player)
-      AddMenuItem(Format("%s (%d) kaufen",GetName(0,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"BuyIt",ObjectCall(obj,"Object"),caller,ContentsCount(ObjectCall(obj,"Object"),Station),obj);
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Player))
+      AddMenuItem(Format("%s (%d) kaufen",GetName(nil,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"BuyIt",ObjectCall(obj,"Object"),caller,ContentsCount(ObjectCall(obj,"Object"),Station),obj);
   return(1);
-
-GetIndexOf: //C4Object Objekt
-  var obj, num;
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Player)
-{
-      if(obj==Par(0))
-        return(num);
-      num++;
 }
-  return(0);
 
-BuyIt:
+func GetIndexOf(...) { //C4Object Objekt
+  var obj, num;
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Player))
+{
+      if(Equal(obj, Par(nil)))
+        return(num);
+      S42MigrationStep(num, 1, true);
+}
+  return(nil);
+}
+
+func BuyIt(...) {
   if(HasSpam(Player))
 {
     Sound("Error");
@@ -409,11 +442,11 @@ BuyIt:
   if(!FindContents(Objekt,station))
 {
     Sound("Error");
-    Message("Der Vorrat von %s an %s ist erschöpft!",this(),GetPlayerName(Player),GetName(0,Objekt));
+    Message("Der Vorrat von %s an %s ist erschöpft!",this(),GetPlayerName(Player),GetName(nil,Objekt));
     return(1);
 }
 
-  if(GetWealth(own)<value)
+  if((GetWealth(own) ?? 0)<(value ?? 0))
 {
     Sound("Error");
     Message("Du hast nicht genug Geld! Benötigt wird %d.",this(),value);
@@ -425,245 +458,264 @@ BuyIt:
   if(!obj)
 {
     Sound("Error");
-    Message("Der Vorrat von %s an %s ist erschöpft!",this(),GetPlayerName(Player),GetName(0,Objekt));
+    Message("Der Vorrat von %s an %s ist erschöpft!",this(),GetPlayerName(Player),GetName(nil,Objekt));
     return(1);
 }
   Effekt();
-  Exit(obj,0,0);
+  Exit(obj,nil,nil);
 ObjectCall(station,"Effekt2",this(),obj,1);
 //  Blitz(station);
-  SetWealth(own,GetWealth(own)-value);
-  SetWealth(Player,GetWealth(Player)+value);
+  SetWealth(own,(GetWealth(own) ?? 0)-(value ?? 0));
+  SetWealth(Player,(GetWealth(Player) ?? 0)+(value ?? 0));
   Sound("Uncash");
-  Message("%s hat von %s %s für %d gekauft.",0,GetPlayerName(own),GetPlayerName(Player),GetName(0,Objekt),value);
+  Message("%s hat von %s %s für %d gekauft.",nil,GetPlayerName(own),GetPlayerName(Player),GetName(nil,Objekt),value);
   BuyMenu();
   SelectMenuItem(GetIndexOf(Par(1)),caller);
   return(1);
+}
 
 /* - - - - - - - Eine Meldung an einen Spieler senden: - - - - - - - */
 
 //Spieler auswählen:
-Meldung:
+func Meldung(...) {
   Sound("Click");
-  CreateMenu(MELD,caller,0,0,"Keine Weiteren Spieler mit Handelsstation gefunden!",0,0,0);
+  CreateMenu(MELD,caller,nil,nil,"Keine Weiteren Spieler mit Handelsstation gefunden!",nil,nil,nil);
   var i;
   var Players = GetPlayerCount();
-  for (i; Players; ++i) 
+  for (i; Players; S42MigrationStep(i, 1))
   {
     if (!GetPlayerName(i)) continue;
-    if (i != own)
-      if(HasStation(i)!=0)
-        AddMenuItem(Format("%s eine Meldung überbringen",GetPlayerName(i)) , "MeldHim",MELD,caller,0,i);
-    --Players;
+    if (!Equal(i, own))
+      if(!Equal(HasStation(i), nil))
+        AddMenuItem(Format("%s eine Meldung überbringen",GetPlayerName(i)) , "MeldHim",MELD,caller,nil,i);
+    S42MigrationStep(Players, -1);
   }
   return(1);
+}
 
 //Meldungstext auswählen:
-MeldHim:
+func MeldHim(...) {
   Sound("Click");
   Player=Par(1);
-  CreateMenu(MELD,caller,0,0,0,0,0,0);
+  CreateMenu(MELD,caller,nil,nil,nil,nil,nil,nil);
   AddMenuItem("Meldung: Kosten zu hoch","MTooMuch",MKZH,caller);
   AddMenuItem("Meldung: Verkaufsanfrage","MNochNicht",MFDV,caller);
   AddMenuItem("Meldung: Benötige Geld","MKohleHer",MBGD,caller);
   AddMenuItem("Meldung: Vorrat erschöpft","MNetMerDa",MNMD,caller);
   return(1);
+}
 
 /* - - - - - Meldung: Kosten zu hoch - - - - - */
 
-MTooMuch:
+func MTooMuch(...) {
   Sound("Click");
   Message("Wähle das Verkaufsangebot des Spielers aus, das deiner Meinung nach zu teuer ist:",this());
-  CreateMenu(MELD,caller,0,0,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),0,0,0);
+  CreateMenu(MELD,caller,nil,nil,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),nil,nil,nil);
   var obj;
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Player)
-      AddMenuItem(Format("%s (%d) als zu teuer markieren",GetName(0,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"CostTooMuch",ObjectCall(obj,"Object"),caller,0,obj);
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Player))
+      AddMenuItem(Format("%s (%d) als zu teuer markieren",GetName(nil,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"CostTooMuch",ObjectCall(obj,"Object"),caller,nil,obj);
   return(1);
+}
 
-CostTooMuch:
+func CostTooMuch(...) {
   Sound("Click");
   Message("Gib den Betrag ein, der deiner Meinung nach angemessen ist:",this());
   Objekt=ObjectCall(Par(1),"Object");
   oldValue=ObjectCall(Par(1),"Preis");
-  CreateMenu(MELD,caller,0,0,0,0,0,1);
-  value=0;
+  CreateMenu(MELD,caller,nil,nil,nil,nil,nil,1);
+  value=nil;
   ShowM();
-  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,0,0);
-  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,0,1);
-  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,0,2);
-  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,0,3);
-  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,0,4);
-  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,0,5);
-  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,0,6);
-  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,0,7);
-  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,0,8);
-  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,0,9);
+  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,nil,nil);
+  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,nil,1);
+  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,nil,2);
+  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,nil,3);
+  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,nil,4);
+  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,nil,5);
+  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,nil,6);
+  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,nil,7);
+  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,nil,8);
+  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,nil,9);
   AddMenuItem("Letzte Stelle löschen","Delete",BACK,caller);
-  AddMenuItem("Geldbetrag vorschlagen","Suggest",OKAY,caller,0,Par(1));
+  AddMenuItem("Geldbetrag vorschlagen","Suggest",OKAY,caller,nil,Par(1));
   return(1);
+}
 
-Suggest:
+func Suggest(...) {
   CloseMenu(caller);
-  PlrMessage("%s findet, das dieses Angebot zu teuer ist: %s (%d).|%s schlägt vor, dass %d ein angemessener Preis sei!",Player,GetPlayerName(own),GetName(0,Objekt),oldValue,GetPlayerName(own),value);
+  PlrMessage("%s findet, das dieses Angebot zu teuer ist: %s (%d).|%s schlägt vor, dass %d ein angemessener Preis sei!",Player,GetPlayerName(own),GetName(nil,Objekt),oldValue,GetPlayerName(own),value);
   Message("Meldung an %s weitergeleitet.",this(),GetPlayerName(Player));
   Sound("Meldung",1);
   return(1);
+}
 
 /* - - - - - Meldung: Verkaufsanfrage - - - - - */
 
-MNochNicht:
+func MNochNicht(...) {
   Sound("Click");
   Message("Wähle das Objekt, das man bei %s kaufen können soll:",this(),GetPlayerName(Player));
-  CreateMenu(MELD,caller,0,0,0,0,0,0);
+  CreateMenu(MELD,caller,nil,nil,nil,nil,nil,nil);
 //Kleine Objekte:
   var obj, num;
-  while(obj = GetDefinition(num,C4D_Object()))
+  while(obj = GetDefinition(num,C4D_Object))
 {
-    AddMenuItem(Format("%s (%d) vorschlagen",GetName(0,obj),GetValue(0,obj)),"NewSuggest",obj,caller);
-    num++;
+    AddMenuItem(Format("%s (%d) vorschlagen",GetName(nil,obj),GetValue(nil,obj)),"NewSuggest",obj,caller);
+    S42MigrationStep(num, 1, true);
 }
 //Fahrzeuge:
-  while(obj = GetDefinition(num,C4D_Vehicle()))
+  while(obj = GetDefinition(num,C4D_Vehicle))
 {
-    AddMenuItem(Format("%s (%d) vorschlagen",GetName(0,obj),GetValue(0,obj)),"NewSuggest",obj,caller);
-    num++;
+    AddMenuItem(Format("%s (%d) vorschlagen",GetName(nil,obj),GetValue(nil,obj)),"NewSuggest",obj,caller);
+    S42MigrationStep(num, 1, true);
 }
   return(1);
+}
 
-NewSuggest:
+func NewSuggest(...) {
   CloseMenu(caller);
-  PlrMessage("%s hat einen neuen Verkaufsvorschlag gemacht: %s",Player,GetPlayerName(own),GetName(0,Par(0)));
+  PlrMessage("%s hat einen neuen Verkaufsvorschlag gemacht: %s",Player,GetPlayerName(own),GetName(nil,Par(nil)));
   Message("Meldung an %s weitergeleitet.",this(),GetPlayerName(Player));
   Sound("Meldung",1);
   return(1);
+}
 
 /* - - - - - Meldung: Benötige Geld - - - - - */
 
-MKohleHer:
+func MKohleHer(...) {
   Sound("Click");
   Message("Gib ein, wieviel Geld du benötigst:",this());
-  CreateMenu(MELD,caller,0,0,0,0,0,1);
-  value=0;
+  CreateMenu(MELD,caller,nil,nil,nil,nil,nil,1);
+  value=nil;
   ShowM();
-  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,0,0);
-  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,0,1);
-  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,0,2);
-  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,0,3);
-  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,0,4);
-  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,0,5);
-  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,0,6);
-  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,0,7);
-  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,0,8);
-  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,0,9);
+  AddMenuItem("0 Hinzufügen","AddNumber",ZERO,caller,nil,nil);
+  AddMenuItem("1 Hinzufügen","AddNumber",_ONE,caller,nil,1);
+  AddMenuItem("2 Hinzufügen","AddNumber",_TWO,caller,nil,2);
+  AddMenuItem("3 Hinzufügen","AddNumber",THRE,caller,nil,3);
+  AddMenuItem("4 Hinzufügen","AddNumber",FOUR,caller,nil,4);
+  AddMenuItem("5 Hinzufügen","AddNumber",FIVE,caller,nil,5);
+  AddMenuItem("6 Hinzufügen","AddNumber",_SIX,caller,nil,6);
+  AddMenuItem("7 Hinzufügen","AddNumber",SEVN,caller,nil,7);
+  AddMenuItem("8 Hinzufügen","AddNumber",EIGT,caller,nil,8);
+  AddMenuItem("9 Hinzufügen","AddNumber",NINE,caller,nil,9);
   AddMenuItem("Letzte Stelle löschen","Delete",BACK,caller);
-  AddMenuItem("Nachfragen","Ask",OKAY,caller,0,Par(1));
+  AddMenuItem("Nachfragen","Ask",OKAY,caller,nil,Par(1));
   return(1);
+}
 
-Ask:
+func Ask(...) {
   CloseMenu(caller);
   PlrMessage("%s bittet um eine Spende von %d",Player,GetPlayerName(own),value);
   Message("Meldung an %s weitergeleitet.",this(),GetPlayerName(Player));
   Sound("Meldung",1);
   return(1);
+}
 
 /* - - - - - Meldung: Vorrat erschöpft - - - - - */
 
-MNetMerDa:
+func MNetMerDa(...) {
   Sound("Click");
   Message("Wähle das Objekt, das bei %s nicht mehr da ist:",this(),GetPlayerName(Player));
-  CreateMenu(MELD,caller,0,0,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),0,0,0);
+  CreateMenu(MELD,caller,nil,nil,Format("Spieler %s hat keine Verkaufsangebote!",GetPlayerName(Player)),nil,nil,nil);
   var obj;
-  while(obj = FindObject(SAVE,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==Player)
-      AddMenuItem(Format("%s (%d) als nicht mehr da markieren",GetName(0,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"NMD",ObjectCall(obj,"Object"),caller,0,obj);
+  while(obj = FindObject(SAVE,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), Player))
+      AddMenuItem(Format("%s (%d) als nicht mehr da markieren",GetName(nil,ObjectCall(obj,"Object")),ObjectCall(obj,"Preis")),"NMD",ObjectCall(obj,"Object"),caller,nil,obj);
   return(1);
+}
 
-NMD:
+func NMD(...) {
   CloseMenu(caller);
-  PlrMessage("%s sagt, dass dein Vorrat an %s erschöpft ist",Player,GetPlayerName(own),GetName(0,Par(0)));
+  PlrMessage("%s sagt, dass dein Vorrat an %s erschöpft ist",Player,GetPlayerName(own),GetName(nil,Par(nil)));
   Message("Meldung an %s weitergeleitet.",this(),GetPlayerName(Player));
   Sound("Meldung",1);
   return(1);
+}
 
 /* - - - - - - - Spam - Menü: - - - - - - - */
 
-Spams:
+func Spams(...) {
   Sound("Click");
-  CreateMenu(SPAM,caller,0,0,0,0,0,0);
+  CreateMenu(SPAM,caller,nil,nil,nil,nil,nil,nil);
   AddMenuItem("Vorhandenen Spam löschen","DeleteSpam",DESM,caller);
   AddMenuItem("Neuen Spam einrichten","AddSpam",ADDS,caller);
   return(1);
+}
 
 /* - - - - - Spieler aus Spamliste entfernen: - - - - - */
 
-DeleteSpam:
+func DeleteSpam(...) {
   Sound("Click");
-  CreateMenu(DESM,caller,0,0,"Keine Spams eingerichtet!",0,0,0);
+  CreateMenu(DESM,caller,nil,nil,"Keine Spams eingerichtet!",nil,nil,nil);
   var obj;
-  while(obj = FindObject(SMSR,0,0,0,0,0,0,0,0,obj))
-    if(GetOwner(obj)==own)
-      AddMenuItem(Format("%s nicht mehr als Spam behandeln",GetPlayerName(ObjectCall(obj,"Object"))),"DeleteThisSpam",DESM,caller,0,obj);
+  while(obj = FindObject(SMSR,nil,nil,nil,nil,nil,nil,nil,nil,obj))
+    if(Equal(GetOwner(obj), own))
+      AddMenuItem(Format("%s nicht mehr als Spam behandeln",GetPlayerName(ObjectCall(obj,"Object"))),"DeleteThisSpam",DESM,caller,nil,obj);
   return(1);
+}
 
-DeleteThisSpam:
+func DeleteThisSpam(...) {
   Sound("Click");
   Message("%s wurde aus Spamliste entfernt",this(),GetPlayerName(ObjectCall(Par(1),"Object")));
   RemoveObject(Par(1));
   return(1);
+}
 
 /* - - - - - Neuen Spam einrichten - - - - - */
 
-AddSpam:
+func AddSpam(...) {
   Sound("Click");
-  CreateMenu(ADDS,caller,0,0,"Keine weiteren Spieler mit Handelsstation gefunden!",0,0,0);
+  CreateMenu(ADDS,caller,nil,nil,"Keine weiteren Spieler mit Handelsstation gefunden!",nil,nil,nil);
   var i;
   var Players = GetPlayerCount();
-  for (i; Players; ++i) 
+  for (i; Players; S42MigrationStep(i, 1))
   {
-    if (i != own)
-      if(HasStation(i)!=0)
-        if(IsSpam(i)==0)
-          AddMenuItem(Format("%s als Spam behandeln",GetPlayerName(i)) , "NewSpam",ADDS,caller,0,i);
-    --Players;
+    if (!Equal(i, own))
+      if(!Equal(HasStation(i), nil))
+        if(Equal(IsSpam(i), nil))
+          AddMenuItem(Format("%s als Spam behandeln",GetPlayerName(i)) , "NewSpam",ADDS,caller,nil,i);
+    S42MigrationStep(Players, -1);
   }
   return(1);
+}
 
-NewSpam:
+func NewSpam(...) {
   var obj;
-  ObjectCall(obj = CreateObject(SMSR,0,0),"SetSaver",Par(1));
+  ObjectCall(obj = CreateObject(SMSR,nil,nil),"SetSaver",Par(1));
   SetOwner(own,obj);
   Message("%s wird ab sofort als Spam behandelt!",this(),GetPlayerName(Par(1)));
   Sound("Ding",1);
   return(1);
+}
 
 /* - - - - - - - Clonk transferieren: - - - - - - - */
 
-Transfer:
+func Transfer(...) {
   Sound("Click");
-  CreateMenu(TRAN,caller,0,0,"Keine Clonks in der Handelsstation",0,0,0);
+  CreateMenu(TRAN,caller,nil,nil,"Keine Clonks in der Handelsstation",nil,nil,nil);
   var obj;
-  while(obj = FindObject(0,0,0,0,0,OCF_CrewMember(),0,0,this(),obj))
-    AddMenuItem(Format("%s transferieren",GetName(obj)),"Target",GetID(obj),caller,0,obj);
+  while(obj = FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,nil,nil,this(),obj))
+    AddMenuItem(Format("%s transferieren",GetName(obj)),"Target",GetID(obj),caller,nil,obj);
   return(1);
+}
 
-Target:
+func Target(...) {
   Sound("Click");
   Objekt=Par(1);
-  CreateMenu(TRAN,caller,0,0,"Keine weiteren Spieler mit Handelsstation gefunden!",0,0,0);
+  CreateMenu(TRAN,caller,nil,nil,"Keine weiteren Spieler mit Handelsstation gefunden!",nil,nil,nil);
   var i;
   var Players = GetPlayerCount();
-  for (i; Players; ++i) 
+  for (i; Players; S42MigrationStep(i, 1))
   {
-    if (i != own)
-      if(HasStation(i)!=0)
-        if(IsSpam(i)==0)
- AddMenuItem(Format("%s zur Handelsstation von %s transferieren",GetName(Objekt),GetPlayerName(i)) , "Trans",TRAN,caller,0,i);
-    --Players;
+    if (!Equal(i, own))
+      if(!Equal(HasStation(i), nil))
+        if(Equal(IsSpam(i), nil))
+ AddMenuItem(Format("%s zur Handelsstation von %s transferieren",GetName(Objekt),GetPlayerName(i)) , "Trans",TRAN,caller,nil,i);
+    S42MigrationStep(Players, -1);
   }
 // außenposten keine alte grafik, und für zukunft gibts das uplinksystem
 //  AddMenuItem("Clonk in Außenposten transferieren","CTransfer",TRN2,caller);
   return(1);
+}
 
 func Trans()
 {
@@ -678,8 +730,8 @@ if(!GetPlrKnowledge(GetOwner(Objekt),HATR)) {PlayerMessage(GetOwner(Objekt),"du 
 }
 
   Effekt();
-  Exit(Objekt,0,0);
-  Effekt2(obj,Objekt,0);
+  Exit(Objekt,nil,nil);
+  Effekt2(obj,Objekt,nil);
 //  Blitz(obj);
   Sound("Magic1",1);
   SetOwner(GetOwner(caller),obj = CreateContents(SNDR,caller));	
@@ -689,19 +741,21 @@ if(!GetPlrKnowledge(GetOwner(Objekt),HATR)) {PlayerMessage(GetOwner(Objekt),"du 
 
 /* - - - - - - - Clonk in Außenposten transferieren: - - - - - - - */
 
-CTransfer:
-  CreateMenu(TRN2,caller,0,0,"Du hast keine Außenposten!",0,0,0);
+func CTransfer(...) {
+  CreateMenu(TRN2,caller,nil,nil,"Du hast keine Außenposten!",nil,nil,nil);
   var obj;
-  while(obj=FindObject(ANPN,0,0,0,0,0,0,0,NoContainer(),obj))
-    if(GetOwner(obj)==own)
-      AddMenuItem(Format("%s",ObjectCall(obj,"ANPNIndex")),"CTrans",ANPN,caller,0,obj);
+  while(obj=FindObject(ANPN,nil,nil,nil,nil,nil,nil,nil,NoContainer(),obj))
+    if(Equal(GetOwner(obj), own))
+      AddMenuItem(Format("%s",ObjectCall(obj,"ANPNIndex")),"CTrans",ANPN,caller,nil,obj);
   return(1);
+}
 
-CTrans:
+func CTrans(...) {
   CloseMenu(caller);
   Sound("Magic1");
   Effekt();
  // Blitz(Par(1));
-  Exit(caller,0,0);
+  Exit(caller,nil,nil);
   Effekt2(Par(1),caller,1);
   return(1);
+}

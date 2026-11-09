@@ -1,6 +1,6 @@
 /*-- Bunker --*/
 
-#strict
+#strict 3
 #include BOB1 // Gebäude-Hilfsobjekt
 #include XFER
 
@@ -16,7 +16,7 @@ func PrintEnergy()
 
 protected func Construction()
 {
-  basement=CreateObject(BS22,0,8,GetOwner());
+  basement=CreateObject(BS22,nil,8,GetOwner());
   return(1);
 }
 
@@ -36,9 +36,9 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager=CreateObject(BMAN,30,0,GetOwner());
+  manager=CreateObject(BMAN,30,nil,GetOwner());
   manager->Init(this(),1);
-  manager->InitLight(0,-10);
+  manager->InitLight(nil,-10);
   
   amorable = 1;
   return(1);
@@ -49,15 +49,15 @@ protected func ContainedDigDouble()  // Igel-Modus
   [Igel-Modus]
   if (HasEMP()) return(Sound("Error"));
   if (!amorable) { Sound("Error"); Message("Panzerung defekt!",this()); }
-  if (ActIdle() && amorable) SetAction("CloseWall"); 
-  if (GetAction() eq "WallClosed") SetAction("OpenWall"); 
+  if (And(ActIdle(), amorable)) SetAction("CloseWall");
+  if (!!SEqual(GetAction(), "WallClosed")) SetAction("OpenWall");
   return(1);
 }
 
 private func amored()
 {
-  if ((GetAction() eq "CloseWall") || (GetAction() eq "WallClosed")) return(1);
-  return(0);
+  if (Or((!!SEqual(GetAction(), "CloseWall")), (!!SEqual(GetAction(), "WallClosed")))) return(1);
+  return(nil);
 }
 
 protected func ContainedDown()  // Im Igel-Modus kann man nicht raus
@@ -70,13 +70,13 @@ protected func InfoContainedUp()
 {
   [Statusabfrage]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),GetEnergy(),100,5,1);
   return(1);
 }
 
 protected func Sound1() { Sound("AmorClose"); return(1); }
-public func EnoughEnergy() { return(GetEnergy() >= 10); }
+public func EnoughEnergy() { return((GetEnergy() ?? 0) >= 10); }
 
 
 
@@ -89,7 +89,7 @@ private func DoorClosed()
 {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
       GrabContents(obj);
 }
@@ -103,7 +103,7 @@ protected func ContainedUp(caller)
   if (!uplink)  return(InfoContainedUp());
   if (HasEMP()) return(Sound("Error"));
   uplink->KeyUp(caller);
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),GetEnergy(),100,5,1);
 }
 
@@ -111,16 +111,16 @@ protected func ContainedDig(caller)
 {
   [Verkauf|Image=UPLI|Condition=GetUplink]
   var uplink = GetUplink();
-  if (!uplink)  return(0);
+  if (!uplink)  return(nil);
   if (HasEMP()) return(Sound("Error"));
   uplink->KeyDig(caller);
 }
 
 private func GetUplink() 
 { 
-  var uplink = FindObject(UPLB,0,0,0,0,0,"Turn",this());
+  var uplink = FindObject(UPLB,nil,nil,nil,nil,nil,"Turn",this());
   if (!uplink)
-      uplink = FindObject(UPLT,0,0,0,0,0,"Turn",this());
+      uplink = FindObject(UPLT,nil,nil,nil,nil,nil,"Turn",this());
   return(uplink);
 }
 
@@ -130,10 +130,10 @@ private func GetUplink()
 // Eigenschaften
 public func GetMaxDamage()
 {
-  if ((GetDamage() >= 900) && amored()) { 
+  if (And(((GetDamage() ?? 0) >= 900), amored())) {
     DoDamage(-26000);
     SetAction("OpenWall"); 
-    amorable=0; 
+    amorable=nil;
   }
   if (amored()) {return(1000);} 
   return(700);

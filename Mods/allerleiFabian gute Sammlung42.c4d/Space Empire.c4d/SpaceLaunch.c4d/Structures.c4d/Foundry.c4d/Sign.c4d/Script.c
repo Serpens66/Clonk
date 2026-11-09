@@ -1,6 +1,6 @@
 /*-- Anzeigen-Objekt --*/
 
-#strict
+#strict 3
 
 local furnace, show;
 
@@ -24,16 +24,16 @@ protected func Check()
   show = furnace->GetSignInfo();
   if (!oldshow)
   {
-    if (show==1)  return(SetAction("Nothing"));
-    if (show==2)  return(SetAction("ShowB4M"));
-    if (show==3)  return(SetAction("ShowE4M"));
-    if (show==4)  return(SetAction("ShowB4E"));
+    if (Equal(show, 1))  return(SetAction("Nothing"));
+    if (Equal(show, 2))  return(SetAction("ShowB4M"));
+    if (Equal(show, 3))  return(SetAction("ShowE4M"));
+    if (Equal(show, 4))  return(SetAction("ShowB4E"));
     return(1);
   }
-  if (show == oldshow)
+  if (Equal(show, oldshow))
     return(1);
   SetAction("Flicker");
-  show = 0;
+  show = nil;
   return(1);
 }
 

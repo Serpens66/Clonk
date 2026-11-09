@@ -1,11 +1,11 @@
 /*-- Baum --*/
 
-#strict
+#strict 3
 
 /*-- Eingangssteuerung --*/
 
 func Completion() {
-  SetCategory(C4D_Vehicle());
+  SetCategory(C4D_Vehicle);
   return(1);
 }
 
@@ -15,7 +15,7 @@ protected func ContainedUp(caller)
 {
   [Kauf|Image=UPLI|Condition=GetUplink]
   var uplink = GetUplink();
-  if (!uplink)  return(0);
+  if (!uplink)  return(nil);
   if (HasEMP()) return(Sound("Error"));
   uplink->KeyUp(caller);
 }
@@ -24,16 +24,16 @@ protected func ContainedDig(caller)
 {
   [Verkauf|Image=UPLI|Condition=GetUplink]
   var uplink = GetUplink();
-  if (!uplink)  return(0);
+  if (!uplink)  return(nil);
   if (HasEMP()) return(Sound("Error"));
   uplink->KeyDig(caller);
 }
 
 private func GetUplink() 
 { 
-  var uplink = FindObject(UPLB,0,0,0,0,0,"Turn",this());
+  var uplink = FindObject(UPLB,nil,nil,nil,nil,nil,"Turn",this());
   if (!uplink)
-      uplink = FindObject(UPLT,0,0,0,0,0,"Turn",this());
+      uplink = FindObject(UPLT,nil,nil,nil,nil,nil,"Turn",this());
   return(uplink);
 }
 
@@ -44,7 +44,7 @@ private func DoorClosed()
 {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
       GrabContents(obj);
 }
@@ -69,7 +69,7 @@ private func OpenEntrance()
 
 private func CloseEntrance()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
 }
 
 private func SoundOpenDoor()
@@ -89,16 +89,16 @@ private func DoorClosed()
 
 protected func Completion()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
   return(_inherited());
 }
 
 func Ejection(obj) {
-  if (GetAction () eq "DoorOpen") SetAction ("DoorOpen");
+  if (!!SEqual(GetAction (), "DoorOpen")) SetAction ("DoorOpen");
   return( _inherited (obj) );
 }
 
 func Collection2(obj) {
-  if (GetAction () eq "DoorOpen") SetAction ("DoorOpen");
+  if (!!SEqual(GetAction (), "DoorOpen")) SetAction ("DoorOpen");
  return( _inherited (obj) );
 }

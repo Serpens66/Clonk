@@ -1,6 +1,6 @@
 /*-- T-Flint --*/
 
-#strict
+#strict 3
 
 local trg;
 
@@ -11,12 +11,12 @@ public func Activate(pClonk)
  Sound("Fuse");
  SetAction("Activated");
  // Picture anpassen
- SetPicture(0, 12 + 64, 64, 64);
+ SetPicture(nil, 12 + 64, 64, 64);
  return(1);
 }
 
 private func Spring() {
-  Fling(trg, GetXDir(trg, 10)/5, (GetYDir(trg, 10)/5)-RandomX(1,3));
+  Fling(trg, (GetXDir(trg, 10) ?? 0)/5, ((GetYDir(trg, 10) ?? 0)/5)-(RandomX(1,3) ?? 0));
   RemoveObject(this());
   return(1);
 }                   

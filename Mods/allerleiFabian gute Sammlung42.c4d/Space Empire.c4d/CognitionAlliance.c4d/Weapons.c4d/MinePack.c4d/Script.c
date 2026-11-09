@@ -1,58 +1,62 @@
 /*-- Minenpack --*/
 
-#strict
+#strict 3
 
 local minecount;
 
 
 /* Initialisierung */
 
-protected Initialize:
+protected func Initialize(...) {
   SetAction("Five");
   minecount = 5;
   return(1);
+}
 
 /* In Minen umwandeln */
 
-protected Activate:
+protected func Activate(...) {
   var mine;
   while (minecount)
   {
-    mine = CreateContents(CWMN,Par(0));
-    SetOwner(GetOwner(Par(0)), mine);
-    --minecount;
+    mine = CreateContents(CWMN,Par(nil));
+    SetOwner(GetOwner(Par(nil)), mine);
+    S42MigrationStep(minecount, -1);
   }
   Sound("Connect");
   return(RemoveObject());
+}
 
 /* Minen sollen gepackt werden */
 
-public PackMines:
+public func PackMines(...) {
   // Pack anfangs leer
-  minecount = 0;
+  minecount = nil;
   // bis zu fünf Minen hier rein
   var mine;
-  while ((mine = FindContents(CWMN,Contained())) && (minecount < 5))
+  while (And((mine = FindContents(CWMN,Contained())), ((minecount ?? 0) < 5)))
   {
-    ++minecount;
+    S42MigrationStep(minecount, 1);
     RemoveObject(mine);
   }
   if (!minecount)
     return(RemoveObject());
   // richtige Action & Titelbild setzen
-  if (minecount==1)  { SetAction("One");   SetPicture(110, 120, 35,  40); }
-  if (minecount==2)  { SetAction("Two");   SetPicture(110, 80,  35,  40);  }
-  if (minecount==3)  { SetAction("Three"); SetPicture(110, 40,  35,  40);  }
-  if (minecount==4)  { SetAction("Four");  SetPicture(110, 0,   35,  40);   }
-  if (minecount==5)  { SetAction("Five");  SetPicture( 10, 0,  100, 115);  }
+  if (Equal(minecount, 1))  { SetAction("One");   SetPicture(110, 120, 35,  40); }
+  if (Equal(minecount, 2))  { SetAction("Two");   SetPicture(110, 80,  35,  40);  }
+  if (Equal(minecount, 3))  { SetAction("Three"); SetPicture(110, 40,  35,  40);  }
+  if (Equal(minecount, 4))  { SetAction("Four");  SetPicture(110, nil,   35,  40);   }
+  if (Equal(minecount, 5))  { SetAction("Five");  SetPicture( 10, nil,  100, 115);  }
   // Sound
   Sound("Connect");
   return(1);
+}
 
 /* Wert bei Verkauf */
 
-protected CalcValue:
-  return(minecount*6);
+protected func CalcValue(...) {
+  return((minecount ?? 0)*6);
+}
 
 /* Eigenschaften */
 

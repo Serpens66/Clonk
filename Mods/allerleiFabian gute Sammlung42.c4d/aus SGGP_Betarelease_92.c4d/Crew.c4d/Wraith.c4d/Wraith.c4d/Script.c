@@ -1,6 +1,6 @@
 /*---- Wraith ----*/
 
-#strict
+#strict 3
 #include CLNK
 #include HZCK
 
@@ -8,7 +8,7 @@ local SDestroy;
 
 public func Zated()
 {
-  if(GetAction() eq "Lie")
+  if(!!SEqual(GetAction(), "Lie"))
   {
    SetAction("Lie");
    EMPShockEffect(50);
@@ -29,11 +29,11 @@ protected func Initialize()
 
 public func FindKnockClonk() 
 {
-  if(FindObject(0,-15,-15,30,30,OCF_Alive(),"Lie",0,NoContainer()))
+  if(FindObject(nil,-15,-15,30,30,OCF_Alive,"Lie",nil,NoContainer()))
   {
    return(1); 
   }
-  return();
+  return;
 }
 
 //Die Funktion zum Aussaugen des Feindes
@@ -43,13 +43,13 @@ protected func ContextSuck()
   [$CtxSuck$|Image=MEPU:4|Condition=FindKnockClonk]
   // Lebensenergie aussaugen
 
-  if(GetAction(this()) eq "Suck")
+  if(!!SEqual(GetAction(this()), "Suck"))
   {
    SetAction("Walk");
    return(1);
   }
 
-  if(!FindObject(0,-10,-10,20,20,OCF_Alive()))
+  if(!FindObject(nil,-10,-10,20,20,OCF_Alive))
   {
    Message("Hier ist keine Nahrung!",this());
    return(1);
@@ -62,10 +62,10 @@ protected func ContextSuck()
 
 protected func Suck()
 {
-  if(FindObject(0,-10,-10,20,20,OCF_Alive()))
+  if(FindObject(nil,-10,-10,20,20,OCF_Alive))
   {
-   FindObject(0,-10,-10,20,20,OCF_Alive())->SetAction("Lie");
-   DoEnergy(-1,FindObject(0,-10,-10,20,20,OCF_Alive()));
+   FindObject(nil,-10,-10,20,20,OCF_Alive)->SetAction("Lie");
+   DoEnergy(-1,FindObject(nil,-10,-10,20,20,OCF_Alive));
    DoEnergy(1,this());
    SetAction("Suck");
    return(1);
@@ -85,24 +85,24 @@ protected func ContextDestroy()
 
 private func DestroyerCheck() 
 {
-  if(GetAction(this()) eq "Lie")
+  if(!!SEqual(GetAction(this()), "Lie"))
   {
-   return();
+   return;
   }
 
-  if(SDestroy == 1)
+  if(Equal(SDestroy, 1))
   {
    return(1);
   }
-  return();
+  return;
 }
 
 
 private func Control2Contents (string command, par1, par2, par3, par4)
 {
-  if(GetAction() S= "Push")
-    return(0);
+  if(!!SEqual(GetAction(), "Push"))
+    return(nil);
   if(ObjectCall(Contents(), command, this(), par1, par2, par3, par4))
     return(1);
-  return(0);
+  return(nil);
 }

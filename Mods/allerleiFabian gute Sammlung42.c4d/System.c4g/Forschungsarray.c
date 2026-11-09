@@ -1,7 +1,7 @@
     /* -- Research accounts -- */
 // von Drome, damit Forschungskosten nicht doppelt abgerechnet werden, wenn eine forschung abgebrochen wurde
      
-    #strict 2
+    #strict 3
      
     static aResearchAcc;
     static globArrayBaustellenRegel;
@@ -18,31 +18,33 @@
      
     // Verbucht eine Forschung auf dem Konto von Spieler idPlayer
     global func AddToResearchAcc(id idTopic, int iPlayer) {
+      iPlayer ??= 0;
       var iPlayerID = GetPlayerID(iPlayer); // Player IDs sind schön eindeutig
-      if(GetLength(aResearchAcc) < iPlayerID) // Spieler hat noch kein Konto?
+      if((GetLength(aResearchAcc) ?? 0) < (iPlayerID ?? 0)) // Spieler hat noch kein Konto?
         SetLength(aResearchAcc, iPlayerID); // Jetzt schon!
-      if(GetType(aResearchAcc[iPlayerID-1]) != C4V_Array) // Konto noch nicht initialisiert?
-        aResearchAcc[iPlayerID-1] = []; // Erledigt!
-      SetLength(aResearchAcc[iPlayerID-1], GetLength(aResearchAcc[iPlayerID-1])+1); // Konto verlängern
-      aResearchAcc[iPlayerID-1][GetLength(aResearchAcc[iPlayerID-1])-1] = idTopic; // Neue Buchung eintragen
+      if(!S42MigrationEqual(GetType(aResearchAcc[(iPlayerID ?? 0)-1]), C4V_Array)) // Konto noch nicht initialisiert?
+        aResearchAcc[(iPlayerID ?? 0)-1] = []; // Erledigt!
+      SetLength(aResearchAcc[(iPlayerID ?? 0)-1], (GetLength(aResearchAcc[(iPlayerID ?? 0)-1]) ?? 0)+1); // Konto verlängern
+      aResearchAcc[(iPlayerID ?? 0)-1][(GetLength(aResearchAcc[(iPlayerID ?? 0)-1]) ?? 0)-1] = idTopic; // Neue Buchung eintragen
     }
      
     // Nützlich und so
     global func InArray(array arr, val) {
-      for(var i=0; i<GetLength(arr); i++) {
-        if(arr[i] == val)
+      for(var i=nil; (i ?? 0)<(GetLength(arr) ?? 0); S42MigrationStep(i, 1, true)) {
+        if(S42MigrationEqual(arr[(i ?? 0)], val))
           return true;
       }
-      return false;
+      return nil;
     }
      
     // Prüft ob eine Forschung schon verbucht ist
     global func AccHasResearch(id idTopic, int iPlayer) {
+      iPlayer ??= 0;
       var iPlayerID = GetPlayerID(iPlayer);
-      if(GetLength(aResearchAcc) < iPlayerID)
-        return false;
-      if(GetType(aResearchAcc[iPlayerID-1]) != C4V_Array)
-        return false;
-      return InArray(aResearchAcc[iPlayerID-1], idTopic);
+      if((GetLength(aResearchAcc) ?? 0) < (iPlayerID ?? 0))
+        return nil;
+      if(!S42MigrationEqual(GetType(aResearchAcc[(iPlayerID ?? 0)-1]), C4V_Array))
+        return nil;
+      return InArray(aResearchAcc[(iPlayerID ?? 0)-1], idTopic);
     }
 

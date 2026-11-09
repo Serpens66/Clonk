@@ -1,6 +1,6 @@
 /*-- Kampfbasis --*/
 
-#strict
+#strict 3
 #include BOB1 // Gebäude-Hilfsobjekt
 #include CNBS
 #include XFER
@@ -9,7 +9,7 @@ local basement, manager, weapon1, weapon2, dir;
 
 protected func Construction()
 {
-  basement=CreateObject(BS22,0,8,GetOwner());
+  basement=CreateObject(BS22,nil,8,GetOwner());
   return(1);
 }
 
@@ -30,9 +30,9 @@ public func PreDestruction()
 
 protected func Initialize()
 {  
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
-  manager->InitLight(0,-10);
+  manager->InitLight(nil,-10);
   return(1);
 }
 
@@ -50,27 +50,27 @@ public func SelectWeapons(caller)
 {
   [Waffenwechsel]
   // Menü zum Waffenwechsel
-  CreateMenu(GetID(), caller, this(),1, "Waffenwechsel",0,1);
+  CreateMenu(GetID(), caller, this(),1, "Waffenwechsel",nil,1);
   
   // linke Waffe
 //  AddMenuItem("linke Waffe",       "noop",         SYW1,caller, 0,0,"linken Waffenslot besetzen",  2,0);
-  AddMenuItem("Links: keine Waffe",       "ChangeWeapon", SYNW,caller, 0,0,"keine Bewaffnung",            2,0, GetCost());
+  AddMenuItem("Links: keine Waffe",       "ChangeWeapon", SYNW,caller, nil,nil,"keine Bewaffnung",            2,nil, GetCost());
   if (GetPlrKnowledge(GetOwner(),CPG1))
-    AddMenuItem("Links: Plasmakanone1",   "ChangeWeapon", CPG1,caller, 0,0,0,                             2,0, GetCost(CPG1));
+    AddMenuItem("Links: Plasmakanone1",   "ChangeWeapon", CPG1,caller, nil,nil,nil,                             2,nil, GetCost(CPG1));
   if (GetPlrKnowledge(GetOwner(),CPG2))
-    AddMenuItem("Links: Plasmakanone2",   "ChangeWeapon", CPG2,caller, 0,0,0,                             2,0, GetCost(CPG2));
+    AddMenuItem("Links: Plasmakanone2",   "ChangeWeapon", CPG2,caller, nil,nil,nil,                             2,nil, GetCost(CPG2));
   if (GetPlrKnowledge(GetOwner(),CMG1))
-    AddMenuItem("Links: Maschinengewehr", "ChangeWeapon", CMG1,caller, 0,0,0,                             2,0, GetCost(CERA));
+    AddMenuItem("Links: Maschinengewehr", "ChangeWeapon", CMG1,caller, nil,nil,nil,                             2,nil, GetCost(CERA));
   
   // rechte Waffe  
 //  AddMenuItem("rechte Waffe",      "noop",         SYW1,caller, 0,0,"rechten Waffenslot besetzen", 2,1);
-  AddMenuItem("Rechts: keine Waffe",       "ChangeWeapon", SYNW,caller, 0,1,"keine Bewaffnung",            2,0, GetCost());
+  AddMenuItem("Rechts: keine Waffe",       "ChangeWeapon", SYNW,caller, nil,1,"keine Bewaffnung",            2,nil, GetCost());
   if (GetPlrKnowledge(GetOwner(),CPG1))
-    AddMenuItem("Rechts: Plasmakanone1",   "ChangeWeapon", CPG1,caller, 0,1,0,                             2,0, GetCost(CPG1));
+    AddMenuItem("Rechts: Plasmakanone1",   "ChangeWeapon", CPG1,caller, nil,1,nil,                             2,nil, GetCost(CPG1));
   if (GetPlrKnowledge(GetOwner(),CPG2))
-    AddMenuItem("Plasmakanone2",   "ChangeWeapon", CPG2,caller, 0,1,0,                             2,0, GetCost(CPG2));
+    AddMenuItem("Plasmakanone2",   "ChangeWeapon", CPG2,caller, nil,1,nil,                             2,nil, GetCost(CPG2));
   if (GetPlrKnowledge(GetOwner(),CMG1))
-    AddMenuItem("Rechts: Maschinengewehr", "ChangeWeapon", CMG1,caller, 0,1,0,                             2,0, GetCost(CERA));
+    AddMenuItem("Rechts: Maschinengewehr", "ChangeWeapon", CMG1,caller, nil,1,nil,                             2,nil, GetCost(CERA));
   
   return(1);
 }
@@ -78,32 +78,33 @@ public func SelectWeapons(caller)
 // ne kleine Funktion, die nix macht
 private func noop() { return(1); }
 
-public HasWeaponSelection: return(1);   // sagt dem Uplink, dass hier Waffenwechsel möglich ist
+public func HasWeaponSelection(...) { return(1);   // sagt dem Uplink, dass hier Waffenwechsel möglich ist
+}
 
 protected func ChangeWeapon(ID)
 {
   dir = Par(1);
   // nochmal das gleiche gewählt?
-  if (ID == SYNW) ID = 0;
+  if (Equal(ID, SYNW)) ID = nil;
   if (dir) {
-    if (ID == GetID(weapon1)) return(0);
-    if (!ID && !weapon1)      return(0);
+    if (Equal(ID, GetID(weapon1))) return(nil);
+    if (And(!ID, !weapon1))      return(nil);
   }
   else {
-    if (ID == GetID(weapon2)) return(0);
-    if (!ID && !weapon2)      return(0);
+    if (Equal(ID, GetID(weapon2))) return(nil);
+    if (And(!ID, !weapon2))      return(nil);
   }
   // genug Geld da?
   var cost = GetCost(ID);
-  if (GetWealth(GetOwner()) < cost)
+  if ((GetWealth(GetOwner()) ?? 0) < (cost ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", this());
     Sound("Error");
-    return(0);
+    return(nil);
   }
   // bezahlen
-  DoWealth(GetOwner(), -cost);
-  if (cost > 0) Sound("UnCash");
+  DoWealth(GetOwner(), -(cost ?? 0));
+  if ((cost ?? 0) > 0) Sound("UnCash");
            else Sound("Cash");
   // alte Waffe weg
   if (dir)
@@ -116,11 +117,11 @@ protected func ChangeWeapon(ID)
   if (!ID) return(1);
   // neue Waffe erzeugen
   if (dir) {
-    weapon1 = CreateObject(ID, 0,-100,GetOwner());
+    weapon1 = CreateObject(ID, nil,-100,GetOwner());
     weapon1->Init(this(),1,-33,-2,1);  //links
   }    
   else {
-    weapon2 = CreateObject(ID, 0,-100,GetOwner());
+    weapon2 = CreateObject(ID, nil,-100,GetOwner());
     weapon2->Init(this(),1,+33,-2,-1);  // rechts
   }
   return(1);
@@ -128,22 +129,22 @@ protected func ChangeWeapon(ID)
 
 private func GetCost(ID)
 {
-  var cost = 0;
+  var cost = nil;
   if (dir) {
     // Waffe bereits verwendet?
-    if (!ID && !weapon1)      return(0);
-    if (ID == GetID(weapon1)) return(0);
+    if (And(!ID, !weapon1))      return(nil);
+    if (Equal(ID, GetID(weapon1))) return(nil);
     // Kostenberechnung
-    if (ID)     cost += GetValue(0,ID);         // neue Waffe kostet was
-    if (weapon1) cost -= GetValue(weapon1)*4/5;   // alte wird für 80% des Wertes verkauft
+    if (ID)     S42MigrationAssign(cost, "+=", (GetValue(nil,ID) ?? 0));         // neue Waffe kostet was
+    if (weapon1) S42MigrationAssign(cost, "-=", (GetValue(weapon1) ?? 0)*4/5);   // alte wird für 80% des Wertes verkauft
   }
   else {
     // Waffe bereits verwendet?
-    if (!ID && !weapon2)      return(0);
-    if (ID == GetID(weapon2)) return(0);
+    if (And(!ID, !weapon2))      return(nil);
+    if (Equal(ID, GetID(weapon2))) return(nil);
     // Kostenberechnung
-    if (ID)     cost += GetValue(0,ID);         // neue Waffe kostet was
-    if (weapon2) cost -= GetValue(weapon2)*4/5;   // alte wird für 80% des Wertes verkauft
+    if (ID)     S42MigrationAssign(cost, "+=", (GetValue(nil,ID) ?? 0));         // neue Waffe kostet was
+    if (weapon2) S42MigrationAssign(cost, "-=", (GetValue(weapon2) ?? 0)*4/5);   // alte wird für 80% des Wertes verkauft
   }
   return(cost);
 }
@@ -154,7 +155,7 @@ private func GetCost(ID)
 public func EnoughEnergy()
 {
   if (weapon1)
-    return(GetEnergy() > weapon1->~EnergyNeed());
+    return((GetEnergy() ?? 0) > (weapon1->~EnergyNeed() ?? 0));
   // wenn keine Waffe montiert, kein Energie-Symbol anzeigen
   return(1);
 }

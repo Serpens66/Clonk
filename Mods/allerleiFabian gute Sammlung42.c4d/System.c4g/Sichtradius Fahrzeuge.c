@@ -1,7 +1,7 @@
 /*-- Sichtradius appendto Fahrzeuge, zusätzlich noch reparierbar und Scahdenssymbol --*/
 
 
-#strict 2
+#strict 3
 
 #appendto LORY
 #appendto BALN
@@ -26,7 +26,7 @@
 func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-feindlichen Spielern ebenfalls diesen sichtradius mithilfe eines hilfsobjekts zu geben
 {
     if(FindObject(SSSI)) return(50);
-    return(0);
+    return(nil);
 }
 
 
@@ -47,7 +47,7 @@ var hp;
 var schaden;
 hp = GetDefCoreVal("BlastIncinerate","DefCore");
 schaden = GetDamage();
-if (schaden >= hp) {Incinerate();};
+if ((schaden ?? 0) >= (hp ?? 0)) {Incinerate();};
 _inherited(a,b,c,d,e,f,g);
 }
 

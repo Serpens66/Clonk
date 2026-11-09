@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local cloud;
 
@@ -7,14 +7,14 @@ public func Activate(pCaster,pRealcaster)
   var pClonk= pRealcaster;
   if(!pClonk) pClonk= pCaster;
   var iMat= Material("Water");
-  if(GetID(Contents(0,pClonk))== ABRL) iMat= Material("Acid");
-  if(GetID(Contents(0,pClonk))== LBRL) iMat= Material("Lava");
-  if(GetID(Contents(0,pClonk))== OBRL) iMat= Material("Oil");
-  cloud= CreateObject(FXP1,-GetX(pClonk),-GetY(pClonk),NO_OWNER());
-  if(!cloud) return(0);
+  if(Equal(GetID(Contents(nil,pClonk)), ABRL)) iMat= Material("Acid");
+  if(Equal(GetID(Contents(nil,pClonk)), LBRL)) iMat= Material("Lava");
+  if(Equal(GetID(Contents(nil,pClonk)), OBRL)) iMat= Material("Oil");
+  cloud= CreateObject(FXP1,-(GetX(pClonk) ?? 0),-(GetY(pClonk) ?? 0),NO_OWNER);
+  if(!cloud) return(nil);
   cloud-> Activate(iMat,LandscapeWidth(),100);
   Sound("Magic1");
-  Schedule("RemoveObject()",1000,0,cloud);
+  Schedule("RemoveObject()",1000,nil,cloud);
   RemoveObject();
   return(1);
 }

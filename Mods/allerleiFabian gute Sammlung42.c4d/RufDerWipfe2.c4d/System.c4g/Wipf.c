@@ -1,6 +1,6 @@
 /*-- Wipfe --*/
 
-#strict
+#strict 3
 #appendto WIPF
 
 protected func Activity()
@@ -9,15 +9,15 @@ protected func Activity()
   if (!Random(15)) Sound("Snuff*");
 
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
   
   // Köder fressen
   if(Bait)
   {
-    if(ObjectDistance(Bait, this()) <= 35)
+    if((ObjectDistance(Bait, this()) ?? 0) <= 35)
       Bait->~RejectEat();
-    if(ObjectDistance(Bait, this()) <= 15)
-      if(GetAction() eq "Walk")
+    if((ObjectDistance(Bait, this()) ?? 0) <= 15)
+      if(!!SEqual(GetAction(), "Walk"))
       {
         SetAction("Eat");
         SetXDir();
@@ -26,9 +26,9 @@ protected func Activity()
 
   var pBait;
   // Soll nicht zu einfach sein...
-  if (!Random(GetEnergy()/3*2))
+  if (!Random((GetEnergy() ?? 0)/3*2))
     // Etwas zu essen in der Nähe?
-    for(pBait in FindObjects(Find_Distance(500), Find_NoContainer(), Find_Func("IsAnimalFoodstuff"),Find_Not(Find_OCF(OCF_InLiquid | OCF_InSolid))))
+    for(pBait in FindObjects(Find_Distance(500), Find_NoContainer(), Find_Func("IsAnimalFoodstuff"),Find_Not(Find_OCF((OCF_InLiquid ?? 0) | (OCF_InSolid ?? 0)))))
       {
         // ...hinrennen
         SetCommand(this(), "Follow", pBait);
@@ -37,31 +37,31 @@ protected func Activity()
       }
 
   // Nur im Gehen oder Schwimmen
-  if (GetAction() ne "Walk" && GetAction() ne "Swim") return();
+  if (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))) return;
 
   // Auftauchen, wenn der Atem ausgeht
-  if (InLiquid() && GetBreath() <= 25 && GetComDir() != COMD_Up())
-   SetComDir(COMD_Up());
+  if (And(And(InLiquid(), (GetBreath() ?? 0) <= 25), !Equal(GetComDir(), COMD_Up)))
+   SetComDir(COMD_Up);
 
   // Brennenden Objekten ausweichen
   var pBurning;
-  if(pBurning = FindObject(0, -!GetDir()*80,-30,80,35, OCF_OnFire()))
+  if(pBurning = FindObject(nil, -(!GetDir() ?? 0)*80,-30,80,35, OCF_OnFire))
   {
-   if(!Random(5) || !SpaceToFlee(pBurning))
+   if(Or(!Random(5), !SpaceToFlee(pBurning)))
    {
-    if(GetDir()) SetComDir(COMD_Right());
-    else SetComDir(COMD_Left());
+    if(GetDir()) SetComDir(COMD_Right);
+    else SetComDir(COMD_Left);
     Jump();
    }
    else
    {
-    if(GetComDir()==COMD_Left()) SetComDir(COMD_Right());
-    else SetComDir(COMD_Left());
+    if(Equal(GetComDir(), COMD_Left)) SetComDir(COMD_Right);
+    else SetComDir(COMD_Left);
    }
   }
 
   // Nichts machen
-  if (Random(2)) return();
+  if (Random(2)) return;
 
   // Freigraben, falls er feststeckt
   if(Stuck()) return(DigFree());
@@ -71,11 +71,11 @@ protected func Activity()
     Reproduction();
 
   // Springen
-  if (GetAction() eq "Walk")
+  if (!!SEqual(GetAction(), "Walk"))
    if (!Random(3)) return(Jump());
 
   // Hinsetzen
-  if (GetAction() eq "Walk")
+  if (!!SEqual(GetAction(), "Walk"))
     if (!Random(3)) return(SetAction("Sit"));
 
   // Umdrehen
@@ -85,14 +85,14 @@ protected func Activity()
 
 public func Eating()
 {
-  if(!Bait)return 0;
+  if(!Bait)return nil;
   Sound("Munch*");
-  Schedule("Sound(\"Snuff*\")",5,1+Random(2),this());
+  Schedule("Sound(\"Snuff*\")",5,1+(Random(2) ?? 0),this());
   Bait->~Eat(this());
   return(1);
 }
 
 public func Feed(iVal)
 {
-  DoEnergy(iVal/2);
+  DoEnergy((iVal ?? 0)/2);
 }

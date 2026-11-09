@@ -1,12 +1,13 @@
 /*-- Sauerstoff-Pack (leer) --*/
 
-#strict
+#strict 3
 
-protected Hit:
+protected func Hit(...) {
   Sound("RockHit");
   return(1);
+}
 
-protected CheckAir:
+protected func CheckAir(...) {
   // nur an der Luft
   if (GBackLiquid())    return(1);
   if (GBackSemiSolid()) return(1);
@@ -15,7 +16,9 @@ protected CheckAir:
   Sound("Heal");
   ChangeDef(SO2P);
   return(1);
+}
 
 /* Verkaufen als volles O2-Pack */
 
-public SellTo: return(SO2P);
+public func SellTo(...) { return(SO2P);
+}

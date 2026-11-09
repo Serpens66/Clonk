@@ -1,6 +1,6 @@
 /*-- Lanze --*/
 
-#strict
+#strict 3
 
 /* Status */
 public func IsLance()
@@ -13,9 +13,9 @@ public func Activate(pClonk)
 {           
   [$CtrlActivateDesc$]        
   // Der Clonk kann dieses Objekt nicht verwenden
-  if (!pClonk->~CanUse(GetID())) return(0);
+  if (!pClonk->~CanUse(GetID())) return(nil);
   // Ritter trägt schon eine Lanze
-  if (pClonk->~HasLance()) return(0);
+  if (pClonk->~HasLance()) return(nil);
   // Anlegen
   Sound("Connect");
   ChangeDef(LNCA);
@@ -33,7 +33,7 @@ protected func CollectCheck()
 {
   // Die Lanze kann durch Anfassen eingesammelt werden
   var pObj;
-  if (pObj = FindObject(0,0,0,0,0, OCF_CrewMember(), "Push", this()))
+  if (pObj = FindObject(nil,nil,nil,nil,nil, OCF_CrewMember, "Push", this()))
     if (!pObj->~RejectCollect(GetID(this()), this()))
       Enter(pObj);
 }

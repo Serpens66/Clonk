@@ -1,27 +1,30 @@
 /*-- Explosions Dummy  --*/
 
-#strict
+#strict 3
 
-protected Initialize:
+protected func Initialize(...) {
 	local kiddie_modus;
-	kiddie_modus=0;
+	kiddie_modus=nil;
 	local count;
 	count=3;
 	SetAction("LOOP");
   return(1);
+}
 	
 
-protected countdown:
-	--count;
-	if(kiddie_modus == 0)
+protected func countdown(...) {
+	S42MigrationStep(count, -1);
+	if(Equal(kiddie_modus, nil))
 	{
-		if(LessThan(count,0))  Explode(60);
+		if(LessThan(count,nil))  Explode(60);
 	}
-	if(kiddie_modus == 1)
+	if(Equal(kiddie_modus, 1))
 	{
-		if(LessThan(count,0))  Message("B",this());
+		if(LessThan(count,nil))  Message("B",this());
 		if(LessThan(count,-100))  RemoveObject();
 	}
 
 	return(1);
-nicht_markieren: return(1);
+}
+func nicht_markieren(...) { return(1);
+}

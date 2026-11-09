@@ -1,6 +1,6 @@
 /*-- Wasserfass --*/
 
-#strict
+#strict 3
 
 #include BARL
 
@@ -11,7 +11,7 @@ public func BarrelMaterialName() { return("Water"); }
 // Fassermittlungskette
 global func GetBarrelType(iMaterial)
 {
-  if (iMaterial == Material("Water")) return(WBRL);
+  if (Equal(iMaterial, Material("Water"))) return(WBRL);
   return(_inherited(iMaterial));
 }
 
@@ -19,15 +19,15 @@ global func GetBarrelType(iMaterial)
 protected func CalcValue()
 {
   // Bit 1 gesetzt: Fasswert
-  if (BarrelConfiguration() & 1) return (inherited());
+  if ((BarrelConfiguration() ?? 0) & 1) return (inherited());
   // ansonsten reduzierter Fasswert
-  return(Max(inherited()-1));
+  return(Max((inherited() ?? 0)-1));
 }
 
 protected func SellTo()
 {
   // Fasskonfiguration: Gegebenenfalls Verkauf zum gefüllten Wasserfass
-  if (BarrelConfiguration() & 4) return(GetID());
+  if ((BarrelConfiguration() ?? 0) & 4) return(GetID());
   // Ansonsten beim Verkauf entleeren
   return(_inherited());
 }
@@ -40,13 +40,13 @@ public func BarrelEject()
   var check_container = NoContainer();
   while (check_container)
     {
-    while (obj = FindObject(0, -20, -15, 40, 30, OCF_OnFire(), 0,0, check_container, obj))
-      if (wamnt >= Random(Min(GetMass(obj), GetMass(0, GetID(obj)))))
+    while (obj = FindObject(nil, -20, -15, 40, 30, OCF_OnFire, nil,nil, check_container, obj))
+      if ((wamnt ?? 0) >= (Random(Min(GetMass(obj), GetMass(nil, GetID(obj)))) ?? 0))
       {
         fExt=1; Extinguish(obj);
       }
     // Ebenfalls Containerkette nach oben checken
-    if (check_container == NoContainer())
+    if (Equal(check_container, NoContainer()))
       check_container = Contained();
     else
       check_container = Contained(check_container);

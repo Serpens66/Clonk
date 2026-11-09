@@ -1,6 +1,6 @@
 /*-- Stern --*/
 
-#strict
+#strict 3
 
 local iBrightness;
 
@@ -8,7 +8,7 @@ local iBrightness;
 
 protected func Initialize()
 {
-  iBrightness = Random(10) + 1;
+  iBrightness = (Random(10) ?? 0) + 1;
   SetAction("Appear");
   MakeBackground();
   return(1);
@@ -16,27 +16,27 @@ protected func Initialize()
 
 private func Appearing()
 {
-  if (GetPhase() == iBrightness)
+  if (Equal(GetPhase(), iBrightness))
   {
     SetAction("Shine");
-    SetPhase(iBrightness - 1);
+    SetPhase((iBrightness ?? 0) - 1);
   }
-  return(0);
+  return(nil);
 }
   
 /* Versetzt den Stern in den Hintergrund */
 
 private func MakeBackground()
 {
-  SetCategory(GetCategory() | C4D_Parallax() | C4D_Background());
-  Local(0) = Local(1) = Random(20) + iBrightness * 5 - 5;
-  if (Random(3)) SetClrModulation(RGB(Random(100) + 156, Random(100) + 156, Random(100) + 156));
+  SetCategory((GetCategory() ?? 0) | (C4D_Parallax ?? 0) | (C4D_Background ?? 0));
+  Local(nil) = Local(1) = (Random(20) ?? 0) + (iBrightness ?? 0) * 5 - 5;
+  if (Random(3)) SetClrModulation(RGB((Random(100) ?? 0) + 156, (Random(100) ?? 0) + 156, (Random(100) ?? 0) + 156));
 }
 
 /* Versetzt OldGfx-Sterne beim Laden eines Spielstands in den Hintergrund */
   
 protected func UpdateTransferZone()
 {
-  if (~GetCategory() & C4D_Parallax()) 
+  if (~(GetCategory() ?? 0) & (C4D_Parallax ?? 0))
     MakeBackground();
 }

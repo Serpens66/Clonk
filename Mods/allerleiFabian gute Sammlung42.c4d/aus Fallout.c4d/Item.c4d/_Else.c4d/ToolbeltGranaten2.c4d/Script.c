@@ -1,6 +1,6 @@
 /*-- Gürtel groß Munition --*/
 
-#strict
+#strict 3
 #include GEAR
 
 
@@ -36,46 +36,46 @@ var pack_id = GRAP;
 var in_ammobag= GetAmmo(ammo_id,pClonk);
 var maximum = ammo_id->MaxAmmo(pClonk);
 var packed = pack_id->AmmoCount();
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
-if(in_ammobag>maximum)
-{ DoAmmo(ammo_id,-packed,pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
+if((in_ammobag ?? 0)>(maximum ?? 0))
+{ DoAmmo(ammo_id,-(packed ?? 0),pClonk); CreateObject(pack_id,AbsX(GetX()),AbsY(GetY()),GetOwner());}
 in_ammobag= GetAmmo(ammo_id,pClonk);
 
 

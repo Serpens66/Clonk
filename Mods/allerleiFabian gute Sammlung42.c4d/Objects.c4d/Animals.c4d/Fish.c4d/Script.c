@@ -1,6 +1,6 @@
 /*-- Fisch --*/
 
-#strict
+#strict 3
 #include ANIM
 
 local Bait; // Verfolgter Köder
@@ -16,16 +16,16 @@ protected func Initialize() { return(Birth()); }
 private func Activity() 
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  if (GetAction() eq "Walk") WalkDir();
+  if (!!SEqual(GetAction(), "Walk")) WalkDir();
   
   // Schwimmt gerade zu einem Köder
   if (Bait)
   {
     // Köder taugt nix mehr...
-    if (GetAction(Bait) ne "Bait") 
-      Bait = 0;
+    if (!SEqual(GetAction(Bait), "Bait"))
+      Bait = nil;
     // ...ansonsten weiter verfolgen und nicht ablenken lassen
     else
       return(1);
@@ -33,13 +33,13 @@ private func Activity()
     
   var pBait;
   // Nur wenn der Fisch ausgewachsen ist
-  if (GetCon()==100) 
+  if (Equal(GetCon(), 100))
    // Soll nicht zu einfach sein...
    if (!Random(5))
      // Ein Köder in der Nähe?
-     if (pBait = FindObject( 0, -250,-250,500,500, OCF_InLiquid, "Bait"))
+     if (pBait = FindObject( nil, -250,-250,500,500, OCF_InLiquid, "Bait"))
        // Je nach Köderqualität...
-      if (Random(100) < pBait->~IsBait())
+      if ((Random(100) ?? 0) < (pBait->~IsBait() ?? 0))
       {
          // ...hinschwimmen
          SetCommand(this(), "Follow", pBait);
@@ -53,59 +53,59 @@ private func Activity()
   
   // Vor Bedrohungen flüchten
   var found_threat;
-  if (!Contained() && InLiquid()) 
+  if (And(!Contained(), InLiquid()))
   {
     // Keine Regelobjekte, Luftblasen etc.
     for (var threat in FindObjects(Find_Distance(100),
-      Find_Category(C4D_Living | C4D_Object | C4D_Vehicle | C4D_Structure),
-      Find_Not(Find_Category(C4D_Background | C4D_Parallax)), Find_Not(Find_ID(FXU1)),
+      Find_Category((C4D_Living ?? 0) | (C4D_Object ?? 0) | (C4D_Vehicle ?? 0) | (C4D_Structure ?? 0)),
+      Find_Not(Find_Category((C4D_Background ?? 0) | (C4D_Parallax ?? 0))), Find_Not(Find_ID(FXU1)),
       // Keine toten Clonks
       Find_Or(Find_Not(Find_Func("IsClonk")), Find_OCF(OCF_Alive)),
       Sort_Distance()))
     {
       // Bedrohung bewegt sich nicht?
-      if (Inside(GetXDir(threat), -2, +2) && Inside(GetYDir(threat), -3, +3)) continue;
+      if (And(Inside(GetXDir(threat), -2, +2), Inside(GetYDir(threat), -3, +3))) continue;
       // Kontakt zum Boden?
       if (GetContact(threat, -1, 8)) continue;
       // Bedrohung nicht im Wasser oder in einem Container -> Nächstes Objekt
-      if (!InLiquid(threat) || Contained(threat)) continue;
+      if (Or(!InLiquid(threat), Contained(threat))) continue;
       // Keine unsichtbaren Objekte
       if (GetVisibility(threat)) continue;
       // Sind ziemlich naiv und schwimmen nicht vor anderen Tieren weg
-      if (!GetAlive(threat) || threat->~IsClonk()) {
+      if (Or(!GetAlive(threat), threat->~IsClonk())) {
         found_threat = true;
-        var xdist = GetX(threat) - GetX();
-        var ydist = GetY(threat) - GetY();
+        var xdist = (GetX(threat) ?? 0) - (GetX() ?? 0);
+        var ydist = (GetY(threat) ?? 0) - (GetY() ?? 0);
         var axdist = Abs(xdist);
         var aydist = Abs(ydist);
-        var xsign = xdist / axdist;
-        var ysign = ydist / aydist;
-        var fleex = GetX() - xsign * (1500 / BoundBy(axdist, 20, 80)); // 20..80 -> 70..15
-        var fleey = GetY() - ysign * (1000 / BoundBy(aydist, 20, 80)); // 20..80 -> 50..10
-        SetCommand(this(), "MoveTo", 0, fleex, fleey, 0, true);
+        var xsign = (xdist ?? 0) / (axdist ?? 0);
+        var ysign = (ydist ?? 0) / (aydist ?? 0);
+        var fleex = (GetX() ?? 0) - (xsign ?? 0) * (1500 / (BoundBy(axdist, 20, 80) ?? 0)); // 20..80 -> 70..15
+        var fleey = (GetY() ?? 0) - (ysign ?? 0) * (1000 / (BoundBy(aydist, 20, 80) ?? 0)); // 20..80 -> 50..10
+        SetCommand(this(), "MoveTo", nil, fleex, fleey, nil, true);
       }
     }
   }
   
   // Bewegung zum Fischturm (hat hoehere Prioritaet als Gefahren) (Tiefsee)
-  var fish_tower = FindObject(FSTW, -250, -250, 500, 500, OCF_Fullcon() );
+  var fish_tower = FindObject(FSTW, -250, -250, 500, 500, OCF_Fullcon );
   // nicht das U-Boot steuern wenn darin befindlich :D
   if(!Contained()) 
     // Fischturm gefunden
     if(fish_tower)
     {
-      SetCommand(this(), "MoveTo", 0, GetX(fish_tower) - 150 + Random(300), GetY(fish_tower) - 150 + Random(300) );
+      SetCommand(this(), "MoveTo", nil, (GetX(fish_tower) ?? 0) - 150 + (Random(300) ?? 0), (GetY(fish_tower) ?? 0) - 150 + (Random(300) ?? 0) );
       found_threat = true;
     }
 
   // Wenn keine Bedrohung mehr oder nicht im Wasser aufhören zu fliehen
-  if (!InLiquid() || Contained() || (!found_threat && GetCommand() eq "MoveTo")) 
+  if (Or(Or(!InLiquid(), Contained()), (And(!found_threat, !!SEqual(GetCommand(), "MoveTo")))))
     SetCommand(this(), "None");
   
   // Schwimmverhalten
-  if (!GBackLiquid(0, -8) && GetAction() ne "Walk") return(SetComDir(COMD_Down));
+  if (And(!GBackLiquid(nil, -8), !SEqual(GetAction(), "Walk"))) return(SetComDir(COMD_Down));
   if (Random(2)) return(1);
-  if (GetAction()ne"Swim") return(1);
+  if (!SEqual(GetAction(), "Swim")) return(1);
   if (!Random(10)) return(SetComDir(COMD_Up));
   if (!Random(10)) return(SetComDir(COMD_Down));
 
@@ -116,8 +116,8 @@ private func Activity()
 
 private func WalkDir()
 {
-  SetComDir(COMD_Left());
-  if (Random(2)) SetComDir(COMD_Right());
+  SetComDir(COMD_Left);
+  if (Random(2)) SetComDir(COMD_Right);
   return(1);
 }
 
@@ -126,7 +126,7 @@ private func WalkDir()
 protected func ContactLeft()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnRight());
 }
@@ -134,7 +134,7 @@ protected func ContactLeft()
 protected func ContactRight()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnLeft());
 }
@@ -142,20 +142,20 @@ protected func ContactRight()
 protected func ContactTop()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
   return(1);
 }
 
 protected func ContactBottom()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  if (GetAction() ne "Walk") SetComDir(COMD_Up());
-  if (Random(10)) SetComDir(COMD_Right());
-  if (Random(10)) SetComDir(COMD_Left());
+  if (!SEqual(GetAction(), "Walk")) SetComDir(COMD_Up);
+  if (Random(10)) SetComDir(COMD_Right);
+  if (Random(10)) SetComDir(COMD_Left);
   return(1);
 }
 
@@ -163,19 +163,19 @@ protected func ContactBottom()
 
 private func TurnRight()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() < 0) SetXDir(0);
-  SetDir(DIR_Right());
-  SetComDir(COMD_Right());
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
+  SetDir(DIR_Right);
+  SetComDir(COMD_Right);
   return(1);
 }
 
 private func TurnLeft()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() > 0) SetXDir(0);
-  SetDir(DIR_Left());
-  SetComDir(COMD_Left());
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
+  SetDir(DIR_Left);
+  SetComDir(COMD_Left);
   return(1);
 }
 
@@ -211,13 +211,13 @@ public func Eat(object pByObject)
 public func Cook()
 {
   ChangeDef(CFSH);
-  SetAlive(0);
+  SetAlive(nil);
   return(1);
 }
 
 protected func Death()
 {
-  SetDir(0);
+  SetDir(nil);
   ChangeDef(DFSH);
   SetAction("Dead");
   return(1);
@@ -227,7 +227,7 @@ protected func Death()
 
 private func SpecialReprodCond()
 {
-  return(GetAction() eq "Swim");
+  return(!!SEqual(GetAction(), "Swim"));
 }
 
 public func Birth()
@@ -236,17 +236,17 @@ public func Birth()
   if (pEnv=FindObject(CLFS)) pEnv->CLFS::Colorize(this());
   else SetColorDw(RGB(255,255,255));
   SetAction("Swim");
-  SetComDir(COMD_Left());
-  if(Random(2)) SetComDir(COMD_Right());
+  SetComDir(COMD_Left);
+  if(Random(2)) SetComDir(COMD_Right);
 }
 
 public func RejectEntrance(pContainer)
 {
   // Aquaclonks/Hydroclonks können ungeachtet der Regel immer einsammeln
   // (In Tiefsee sind Fische die einzige Möglichkeit, Energie aufzuladen!)
-  if (pContainer->~IsAquaClonk()) return();
+  if (pContainer->~IsAquaClonk()) return;
   // Fischtürme sollten auch immer funktionieren
-  if (pContainer->~IsFishTower()) return();
+  if (pContainer->~IsFishTower()) return;
   // ANIM-Definition (Einsammelbare Tiere)
   return(_inherited(pContainer, ...));
 }
@@ -257,10 +257,10 @@ protected func RejectCollect(c4ID, pObject)
 {
  var iEffectNumber, pSorcerer;
  if (iEffectNumber = GetEffect("PossessionSpell", this()))
-  if (pSorcerer = EffectVar(0, this(), iEffectNumber))
+  if (pSorcerer = EffectVar(nil, this(), iEffectNumber))
    if (!GetEffect("IntCollectionDelay", this()))
     if (!pSorcerer->Contents())
-     if (!(pObject->GetOCF() & OCF_Living()))
+     if (!((pObject->GetOCF() ?? 0) & (OCF_Living ?? 0)))
       Collect(pObject, pSorcerer);
  return(1);
 }
@@ -268,9 +268,9 @@ protected func RejectCollect(c4ID, pObject)
 protected func ControlCommand(szCommand, pTarget, iTx, iTy)
 {
  // Bewegungskommando
- if (szCommand eq "MoveTo")
+ if (!!SEqual(szCommand, "MoveTo"))
   return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
- return(0);
+ return(nil);
 }
 
 protected func ContainedLeft(object caller)
@@ -296,7 +296,7 @@ protected func ContainedUp(object caller)
   [$TxtMovement$]
   SetCommand(this(),"None");
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
-    SetComDir(COMD_Up());
+    SetComDir(COMD_Up);
   return(1);
 }
 
@@ -306,7 +306,7 @@ protected func ContainedDown(object caller)
   SetCommand(this(),"None");
   if(Contained()) return SetCommand(this, "Exit");
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
-    SetComDir(COMD_Down());
+    SetComDir(COMD_Down);
   return(1);
 }
 
@@ -314,24 +314,26 @@ protected func ContainedDown(object caller)
 
 private func ClearDir(bool fX)
 {
-  if(fX && GetXDir())
+  fX ??= false;
+  if(And(fX, GetXDir()))
   {
-    if(GetXDir() > 0) SetXDir(Max(GetXDir() - 2, 0));
-    else SetXDir(Min(GetXDir() + 2, 0));
+    if((GetXDir() ?? 0) > 0) SetXDir(Max((GetXDir() ?? 0) - 2, nil));
+    else SetXDir(Min((GetXDir() ?? 0) + 2, nil));
   }
-  if(!fX && GetYDir())
+  if(And(!fX, GetYDir()))
   {
-    if(GetYDir() > 0) SetYDir(Max(GetYDir() - 2, 0));
-    else SetYDir(Min(GetYDir() + 2, 0));
+    if((GetYDir() ?? 0) > 0) SetYDir(Max((GetYDir() ?? 0) - 2, nil));
+    else SetYDir(Min((GetYDir() ?? 0) + 2, nil));
   }
 }
 
 public func ContainedUpdate(object self, int comdir)
 {
+  comdir ??= 0;
   SetComDir(comdir);
   ClearScheduleCall(this(), "ClearDir");
-  if(comdir == COMD_Down || comdir == COMD_Up) ScheduleCall(this(), "ClearDir", 1, (Abs(GetXDir())+1)/2, true);
-  if(comdir == COMD_Left || comdir == COMD_Right) ScheduleCall(this(), "ClearDir", 1, (Abs(GetYDir())+1)/2, false);
+  if(Or(Equal(comdir, COMD_Down), Equal(comdir, COMD_Up))) ScheduleCall(this(), "ClearDir", 1, ((Abs(GetXDir()) ?? 0)+1)/2, true);
+  if(Or(Equal(comdir, COMD_Left), Equal(comdir, COMD_Right))) ScheduleCall(this(), "ClearDir", 1, ((Abs(GetYDir()) ?? 0)+1)/2, nil);
 
   return(1);
 }
@@ -341,9 +343,9 @@ protected func ContainedThrow()
  [$TxtDrop$]
  var iEffectNumber, pSorcerer;
  if (iEffectNumber = GetEffect("PossessionSpell", this()))
-  if (pSorcerer = EffectVar(0, this(), iEffectNumber))
+  if (pSorcerer = EffectVar(nil, this(), iEffectNumber))
   {
-   if (pSorcerer->Contents()) pSorcerer->Contents()->Exit(0,0,6);
+   if (pSorcerer->Contents()) pSorcerer->Contents()->Exit(nil,nil,6);
    AddEffect("IntCollectionDelay", this(), 1, 70);
   }
  return(1);

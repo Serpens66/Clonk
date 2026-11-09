@@ -1,6 +1,6 @@
 /* Rakete */
 
-#strict
+#strict 3
 #include MISS
 
 local pTarget;
@@ -18,7 +18,7 @@ public func MaxHomingAngle() { return(60); }
 private func Traveling()
 {
   // kommt nich weiter
-  if(GetActTime() >= MaxTime()) return(Hit());
+  if((GetActTime() ?? 0) >= (MaxTime() ?? 0)) return(Hit());
 
   // Effekte
   Smoking();
@@ -27,7 +27,7 @@ private func Traveling()
   Accelerate();
 
   // nur lenken wenn schon etwas fliegend
-  if(GetActTime() < HomingBegin()) return();
+  if((GetActTime() ?? 0) < (HomingBegin() ?? 0)) return;
 
   // lenken
   if(pTarget) FollowTarget();
@@ -50,7 +50,7 @@ private func FindTarget() {
     // Winkel nicht zu groß?
     var myAngle = GetR();
     var objAngle = Angle(GetX(),GetY(),GetX(pT),GetY(pT));
-    if(Abs(Normalize(myAngle-objAngle,-180)) > MaxHomingAngle()) continue;
+    if((Abs(Normalize((myAngle ?? 0)-(objAngle ?? 0),-180)) ?? 0) > (MaxHomingAngle() ?? 0)) continue;
 
     // Sichtlinie?
     if(!PathFree(GetX(),GetY(),GetX(pT),GetY(pT))) continue;
@@ -65,10 +65,10 @@ private func FollowTarget() {
     var iDAngle = Angle(GetX(),GetY(),GetX(pTarget),GetY(pTarget));
     var iAngle = GetR();
     
-    var iDiff = Normalize(iDAngle - iAngle,-180);
+    var iDiff = Normalize((iDAngle ?? 0) - (iAngle ?? 0),-180);
     var iTurn = Min(Abs(iDiff),6);
 
-    SetR(iAngle+iTurn*((iDiff > 0)*2-1));
+    SetR((iAngle ?? 0)+(iTurn ?? 0)*((((iDiff ?? 0) > 0) ?? 0)*2-1));
 }
 
 public func NoDecoDamage() { return(true); }

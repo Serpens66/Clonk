@@ -1,6 +1,6 @@
 /* Unsichtbarkeitszauber mit Effektsystem */
 
-#strict
+#strict 3
 
 // EffectVars:
 //   0 - Vorheriger Sichtbarkeitsstatus
@@ -17,19 +17,19 @@ public func Activate(object pCaster, object pCaster2)
   // Objektkomponente vorhanden
   if(pCom) {
     // alle Objekte in der Nähe zur Unsichtbarmachung in Erwägung ziehen
-    while(pObj=FindObject(0,0,0,-1,-1,0,0,0,NoContainer(),pObj)) {
+    while(pObj=FindObject(nil,nil,nil,-1,-1,nil,nil,nil,NoContainer(),pObj)) {
       // nur Freunde (außer wenn eine bestimmte Regel aktiviert ist)
-      if(Hostile(GetOwner(pObj),GetOwner(pCaster)) && !ObjectCount(NTMG)) continue;
+      if(And(Hostile(GetOwner(pObj),GetOwner(pCaster)), !ObjectCount(NTMG))) continue;
       // nur Objekte die einen Besitzer haben
-      if(GetOwner(pObj)==-1) continue;
+      if(Equal(GetOwner(pObj), -1)) continue;
       // Objekt zu weit weg oder schon genug Objekte unsichtbar gemacht 
-      if(ObjectDistance(pObj,pCaster)>100 || (iCnt++)>RandomX(3,5)) break;
-      AddEffect("InvisPSpell",pObj,1400,1111,0,GetID());
+      if(Or((ObjectDistance(pObj,pCaster) ?? 0)>100, (S42MigrationStep(iCnt, 1, true))>(RandomX(3,5) ?? 0))) break;
+      AddEffect("InvisPSpell",pObj,1400,1111,nil,GetID());
     }
   }
-  if(iCnt>1) RemoveObject(pCom);
+  if((iCnt ?? 0)>1) RemoveObject(pCom);
   // Zauberer unsichtbar machen (40sec)
-  else AddEffect("InvisPSpell", pCaster, 200, 1400, 0, GetID());
+  else AddEffect("InvisPSpell", pCaster, 200, 1400, nil, GetID());
   // Fertig - das Zauberobjekt wird nun nicht mehr gebraucht
   return(RemoveObject());
   }
@@ -37,10 +37,12 @@ public func Activate(object pCaster, object pCaster2)
 protected func FxInvisPSpellStart(object pTarget, int iEffectNumber, int iTemp)
   {
   // Vorherige Sichtbarkeit des Zauberers speichern
-  EffectVar(0, pTarget, iEffectNumber) = GetVisibility(pTarget);
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
+  EffectVar(nil, pTarget, iEffectNumber) = GetVisibility(pTarget);
   EffectVar(1, pTarget, iEffectNumber) = GetClrModulation(pTarget);
   // Zauberer unsichtbar machen
-  SetVisibility(VIS_Owner() | VIS_Allies() | VIS_God(), pTarget);
+  SetVisibility((VIS_Owner ?? 0) | (VIS_Allies ?? 0) | (VIS_God ?? 0), pTarget);
   // Halbdurchsichtig bläulich für den Besitzer und Verbündete
   SetClrModulation(ModulateColor(GetClrModulation(pTarget),RGBa(127,127,255,127)), pTarget);
   // Fertig
@@ -50,7 +52,10 @@ protected func FxInvisPSpellStart(object pTarget, int iEffectNumber, int iTemp)
 protected func FxInvisPSpellStop(object pTarget, int iEffectNumber, int iCause, bool fTemp)
   {
   // Status wiederherstellen
-  SetVisibility(   EffectVar(0, pTarget, iEffectNumber), pTarget);
+  iEffectNumber ??= 0;
+  iCause ??= 0;
+  fTemp ??= false;
+  SetVisibility(   EffectVar(nil, pTarget, iEffectNumber), pTarget);
   SetClrModulation(EffectVar(1, pTarget, iEffectNumber), pTarget);
   // Fertig
   return(1);
@@ -61,15 +66,17 @@ protected func FxInvisPSpellEffect(szNewEffect, pTarget, iEffectNumber)
   // Andere Unsichtbarkeitszauber aufnehmen
   if (SEqual(szNewEffect, "InvisPSpell")) return(-2);
   // Sonst keine Behandlung
-  return();
+  return;
   }
 
 protected func FxInvisPSpellAdd(object pTarget, int iEffectNumber, string szNewEffect, int iNewTimer)
   {
   // Effekt aufrechnen: Rest vom alten Timer ermitteln
-  var iOldTimer = GetEffect(0, pTarget, iEffectNumber, 3) - GetEffect(0, pTarget, iEffectNumber, 6);
+  iEffectNumber ??= 0;
+  iNewTimer ??= 0;
+  var iOldTimer = (GetEffect(nil, pTarget, iEffectNumber, 3) ?? 0) - (GetEffect(nil, pTarget, iEffectNumber, 6) ?? 0);
   // Diesen Effekt mit neuem Timer weiterführen
-  ChangeEffect(0, pTarget, iEffectNumber, szNewEffect, iOldTimer + iNewTimer);
+  ChangeEffect(nil, pTarget, iEffectNumber, szNewEffect, (iOldTimer ?? 0) + (iNewTimer ?? 0));
   // Fertig
   return(1);
   }

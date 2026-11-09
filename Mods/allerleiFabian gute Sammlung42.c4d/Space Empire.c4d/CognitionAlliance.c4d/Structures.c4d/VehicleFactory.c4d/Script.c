@@ -1,6 +1,6 @@
 /*-- Fahrzeugfabrik --*/
 
-#strict
+#strict 3
 #include BOB1   // Gebäude-Hilfsobjekt
 #include XFER   // Transfer-Script
 
@@ -12,7 +12,7 @@ public func IsWaste(){ return(10);}
 
 protected func Construction()
 {
-  basement = CreateObject(BS30,0,8,GetOwner());
+  basement = CreateObject(BS30,nil,8,GetOwner());
 }
 
 protected func Destruction()
@@ -35,10 +35,10 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
   manager->InitLight(-20,39);
-  producer = CreateObject(C_F3,0,0,GetOwner());
+  producer = CreateObject(C_F3,nil,nil,GetOwner());
   hangar = CreateObject(CVFH,-29,31,GetOwner());
   producer->Init(this(),hangar);
   hangar->Init(this());

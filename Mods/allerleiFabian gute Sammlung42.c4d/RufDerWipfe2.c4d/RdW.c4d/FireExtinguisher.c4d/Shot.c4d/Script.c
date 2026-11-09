@@ -1,6 +1,6 @@
 /*-- Löschschuss --*/
 
-#strict
+#strict 3
 
 
 /* Initialisierung */
@@ -15,9 +15,9 @@ protected func Initialize()
 
 public func ExtinguishFire()
 {
-  var obj = FindObject2(Find_AtPoint(),Find_OCF(OCF_OnFire()));
+  var obj = FindObject2(Find_AtPoint(),Find_OCF(OCF_OnFire));
   if (!obj) return(1);
-  if(Random(GetDefHeight(GetID(obj))*GetCon(obj)/100/2)) return 0;
+  if(Random((GetDefHeight(GetID(obj)) ?? 0)*(GetCon(obj) ?? 0)/100/2)) return nil;
   Extinguish(obj);
   Sound("Pshshsh");
   return(Remove());
@@ -27,7 +27,7 @@ public func ExtinguishFire()
 
 protected func Hit()
 {
-  var ph = BoundBy(GetPhase(),0,6);
+  var ph = BoundBy(GetPhase(),nil,6);
   SetAction("Attach");
   SetPhase(ph);
   return(1);

@@ -1,24 +1,25 @@
 /*-- MG-Aufsatz --*/
 
-#strict
+#strict 3
 
 #include WEPN
 
 public func HandSize() { return(1000); }
 public func HandX()    { return(7000); }
-public func HandY()    { return(0); }
+public func HandY()    { return(nil); }
 
 public func FMData1(int data)
 {
-  if(data == FM_AmmoID)    return(STAM);
-  if(data == FM_AmmoLoad)  return(500);
+  data ??= 0;
+  if(Equal(data, FM_AmmoID))    return(STAM);
+  if(Equal(data, FM_AmmoLoad))  return(500);
 
-  if(data == FM_Reload)    return(6);
-  if(data == FM_Recharge)  return(6);
+  if(Equal(data, FM_Reload))    return(6);
+  if(Equal(data, FM_Recharge))  return(6);
 
-  if(data == FM_AmmoUsage) return(1);
-  if(data == FM_AmmoRate)  return(1);
-  if(data == FM_Auto)      return(1);
+  if(Equal(data, FM_AmmoUsage)) return(1);
+  if(Equal(data, FM_AmmoRate))  return(1);
+  if(Equal(data, FM_Auto))      return(1);
 
 //  return(Default(data));
 }

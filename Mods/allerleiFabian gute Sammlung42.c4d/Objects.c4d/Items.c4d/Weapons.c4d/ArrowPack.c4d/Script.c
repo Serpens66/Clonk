@@ -1,6 +1,6 @@
 /*-- Pfeilpaket --*/
 
-#strict
+#strict 3
 
 /* Initialisierung */
 
@@ -33,7 +33,7 @@ public func Unpack(pTo)
   // Effekt zum Deaktivieren des Pfeilpackens
   AddEffect("IntNoPacking", pTo, 1);
   // Pfeile erzeugen
-  for(var i = 0; i < PackCount(); i++)
+  for(var i = nil; (i ?? 0) < (PackCount() ?? 0); S42MigrationStep(i, 1, true))
     CreateContents(UnpackTo(), pTo);
   // Effekt wieder entfernen
   RemoveEffect("IntNoPacking", pTo);
@@ -53,14 +53,14 @@ protected func Activate(pClonk)
 /* Pfeilverwaltung */
 local iUsedItems;
 
-public func PackCount() { return(MaxPackCount()-LocalN("iUsedItems")); }
+public func PackCount() { return((MaxPackCount() ?? 0)-(LocalN("iUsedItems") ?? 0)); }
 
-public func SetPackCount(iAmount) { iUsedItems = PackCount()-iAmount; UpdatePicture(); UpdateMass(); }
+public func SetPackCount(iAmount) { iUsedItems = (PackCount() ?? 0)-(iAmount ?? 0); UpdatePicture(); UpdateMass(); }
 
 public func DoPackCount(iChange) 
 {
-  iUsedItems-=iChange;
-  if(PackCount()<=0) return(RemoveObject());
+  S42MigrationAssign(iUsedItems, "-=", (iChange ?? 0));
+  if((PackCount() ?? 0)<=0) return(RemoveObject());
   UpdatePicture();
   // Masse anpassen
   UpdateMass();
@@ -82,17 +82,17 @@ public func GetItem()
 public func SplitPack(iAmount, pClonk)
 {
   // Nur wenn überhaut so viele Teile da sind
-  if(iAmount >= MaxPackCount()-iUsedItems) return(0);
+  if((iAmount ?? 0) >= (MaxPackCount() ?? 0)-(iUsedItems ?? 0)) return(nil);
   // 0 Absplitten? nee
-  if(!iAmount) return(0);
+  if(!iAmount) return(nil);
   // Vom Packet werden iAmount Teile abgetrennt und in ein neues Pack gesteckt
-  var pSplit = CreateObject(GetID(), 0,GetDefBottom()-GetY(), GetOwner());
+  var pSplit = CreateObject(GetID(), nil,(GetDefBottom() ?? 0)-(GetY() ?? 0), GetOwner());
   pSplit->SetPackCount(iAmount);
-  DoPackCount(-iAmount);
+  DoPackCount(-(iAmount ?? 0));
   return(1);
 }
 
-public func IsNotFull() { return(MaxPackCount() > PackCount()); }
+public func IsNotFull() { return((MaxPackCount() ?? 0) > (PackCount() ?? 0)); }
 
 /* Einsammeln */
 public func Entrance(pClonk)
@@ -114,36 +114,36 @@ public func JoinPack(pClonk)
   {
     iAmount = PackCount();
     // Wie viel Platz ist im neuen Paket?
-    iChange = MaxPackCount() - obj->PackCount();
+    iChange = (MaxPackCount() ?? 0) - (obj->PackCount() ?? 0);
     // Wir können aber höchstens so viele abgeben wie wir haben
-    if(iChange>iAmount) iChange = iAmount;
+    if((iChange ?? 0)>(iAmount ?? 0)) iChange = iAmount;
     // Pfeile abgeben
     obj->DoPackCount(iChange);
     // Wenn das Paket leer ist aufhören
-    if(iAmount-iChange<=0) return(RemoveObject());
-    DoPackCount(-iChange);
+    if((iAmount ?? 0)-(iChange ?? 0)<=0) return(RemoveObject());
+    DoPackCount(-(iChange ?? 0));
   }
-  return();
+  return;
 }
 
 /* Grafik anpassen */
 public func UpdatePicture()
 {
-  if(PackCount()>9)
+  if((PackCount() ?? 0)>9)
   {
-    SetGraphics(0,0,GetNumberID(PackCount()/10),1,GFXOV_MODE_Picture);    
-    SetObjDrawTransform(400,0,-12000,0,400,+10000, this(), 1);
+    SetGraphics(nil,nil,GetNumberID((PackCount() ?? 0)/10),1,GFXOV_MODE_Picture);
+    SetObjDrawTransform(400,nil,-12000,nil,400,+10000, this(), 1);
   }
-  else SetGraphics(0,0,0,1,0);  
+  else SetGraphics(nil,nil,nil,1,nil);
 
-  SetGraphics(0,0,GetNumberID(Mod(PackCount(),10)),2,GFXOV_MODE_Picture);   
-  SetObjDrawTransform(400,0,-5000,0,400,+10000, this(), 2);
+  SetGraphics(nil,nil,GetNumberID(Mod(PackCount(),10)),2,GFXOV_MODE_Picture);
+  SetObjDrawTransform(400,nil,-5000,nil,400,+10000, this(), 2);
 }
 
 /* Masse anpassen */
 public func UpdateMass()
 {
-  SetMass(GetMass(0,UnpackTo())*Max(PackCount(),1));
+  SetMass((GetMass(nil,UnpackTo()) ?? 0)*(Max(PackCount(),1) ?? 0));
 }
 
 /* ID des passenden Zahlobjektes ausgeben */
@@ -157,14 +157,16 @@ private func GetNumberID(i)
 public func CalcValue(object pInBase, int iForPlayer)
 {
   // Je nach Anzahl
-  return(GetValue(0, GetID())*PackCount()/MaxPackCount());
+  iForPlayer ??= 0;
+  return((GetValue(nil, GetID()) ?? 0)*(PackCount() ?? 0)/(MaxPackCount() ?? 0));
 }
 
 protected func SellTo(int iPlr)
 {
   // Nicht volle Pfeilpakete werden zunächst nur zu einem Pfeile Heimatbasismaterial verkauft
   // Im Sale-Callback werden zusätzliche Pfeile angerechnet und ggf. HomebaseMaterial zusammengefasst
-  if (PackCount() < MaxPackCount()) return UnpackTo();
+  iPlr ??= 0;
+  if ((PackCount() ?? 0) < (MaxPackCount() ?? 0)) return UnpackTo();
   // Volle Pakete sind kein Problem
   return GetID();
 }
@@ -173,18 +175,19 @@ protected func Sale(int iPlr)
 {
   // Heimatbasismaterial anpassen
   // Paket war voll? Dann stimmt der normale Verkauf
+  iPlr ??= 0;
   var cnt = PackCount(), cntpack = MaxPackCount(), idArrow;
-  if (cnt == cntpack) return();
+  if (Equal(cnt, cntpack)) return;
   // Ansonsten wurde nur zu einem Pfeil dem Heimatbasismaterial angerechnet. Zusätzliche Pfeile ins Heimatbasismaterial
   idArrow = UnpackTo();
-  if (cnt > 1) DoHomebaseMaterial(iPlr, idArrow, cnt-1);
+  if ((cnt ?? 0) > 1) DoHomebaseMaterial(iPlr, idArrow, (cnt ?? 0)-1);
   // Und Heimatbasispfeile zu Paketen zusammenfassen
   if (cntpack)
     {
-    cnt = GetHomebaseMaterial(iPlr, idArrow) / cntpack;
+    cnt = (GetHomebaseMaterial(iPlr, idArrow) ?? 0) / (cntpack ?? 0);
     if (cnt)
       {
-      DoHomebaseMaterial(iPlr, idArrow, -cnt*cntpack);
+      DoHomebaseMaterial(iPlr, idArrow, -(cnt ?? 0)*(cntpack ?? 0));
       DoHomebaseMaterial(iPlr, GetID(), cnt);
       }
     }

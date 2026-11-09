@@ -1,12 +1,12 @@
 /*-- Schlitten --*/
 
-#strict
+#strict 3
 
 local crane, clamp, xdir;
 
 protected func Initialize() {
-  SetName(GetName(0,GetID()));
-  clamp = CreateObject(CLMP, 0, 25, GetOwner());
+  SetName(GetName(nil,GetID()));
+  clamp = CreateObject(CLMP, nil, 25, GetOwner());
   clamp->Set(this());
 }
 
@@ -20,7 +20,7 @@ public func Adjust() {
   // Position anpassen
   var iX = GetX(), iY;
   // Etwas unterhalb der Schiene
-  iY = GetY(crane)+5;
+  iY = (GetY(crane) ?? 0)+5;
   // X-Wert nicht gut
   if(NotInRange()) iX = Back2Crane();
 
@@ -28,47 +28,53 @@ public func Adjust() {
 }
 
 public func NotInRange() {
-  if(!Inside(GetX(), crane->~LeftX()+10, crane->~RightX()-10))
+  if(!Inside(GetX(), (crane->~LeftX() ?? 0)+10, (crane->~RightX() ?? 0)-10))
     return(1);
 }
 
 public func Back2Crane() {
-  return(BoundBy(GetX(), crane->~LeftX()+10, crane->~RightX()-10));
+  return(BoundBy(GetX(), (crane->~LeftX() ?? 0)+10, (crane->~RightX() ?? 0)-10));
 }
 
 /* Konsolensteuerung */
 
 public func ConsoleControl(int i) {
-  if(i == 1) return("$ControlCrane$");
+  i ??= 0;
+  if(Equal(i, 1)) return("$ControlCrane$");
 }
 
 public func ConsoleControlled(int i, int Clonk) {
+  i ??= 0;
+  Clonk ??= 0;
   var pClonk = Object(Clonk);
-  if(!pClonk) return();
+  if(!pClonk) return;
   // Wird bereits kontrolliert?
-  if(GetEffect("Controller", this())) return(Sound("Error", 0, pClonk, 100, GetOwner(pClonk)+1));
+  if(GetEffect("Controller", this())) return(Sound("Error", nil, pClonk, 100, (GetOwner(pClonk) ?? 0)+1));
   // Steuerung übernehmen
-  AddEffect("Controller", this(), 99, 2, this(), 0, GetOwner(pClonk), pClonk);
+  AddEffect("Controller", this(), 99, 2, this(), nil, GetOwner(pClonk), pClonk);
   SetCursor(GetOwner(pClonk), this(), 1,1);
 }
 
 public func FxControllerStart(object target, int no, int temp, int owner, object clonk) {
-  if(temp) return();
-  EffectVar(0, target, no) = owner;
+  no ??= 0;
+  temp ??= 0;
+  owner ??= 0;
+  if(temp) return;
+  EffectVar(nil, target, no) = owner;
   EffectVar(1, target, no) = clonk;
 }
 
 public func FxControllerTimer(target, no) {
-  if(GetCursor(EffectVar(0, target, no)) != target || !EffectVar(1, target, no))
+  if(Or(!Equal(GetCursor(EffectVar(nil, target, no)), target), !EffectVar(1, target, no)))
   {
     target->Stop();
     return(-1);
   }
-  if(EffectVar(1, target, no)->GetAction() ne "Push" ||
-     EffectVar(1, target, no)->GetActionTarget()->GetID() != CONS)
+  if(Or(!SEqual(EffectVar(1, target, no)->GetAction(), "Push"),
+     !Equal(EffectVar(1, target, no)->GetActionTarget()->GetID(), CONS)))
    {
      target->Stop();
-     SetCursor(EffectVar(0, target, no), EffectVar(1, target, no));
+     SetCursor(EffectVar(nil, target, no), EffectVar(1, target, no));
      return(-1);
    }
   // Bewegung überprüfen
@@ -77,6 +83,8 @@ public func FxControllerTimer(target, no) {
 
 func CrewSelection(bool deselect, bool cursoronly)
 { 
+  deselect ??= false;
+  cursoronly ??= false;
   if(deselect)
   {
     RemoveEffect("Controller2",this());
@@ -84,14 +92,14 @@ func CrewSelection(bool deselect, bool cursoronly)
   }
   else
   {
-    AddEffect("Controller2", this(), 99, 2, this(), 0, GetController(), this());
+    AddEffect("Controller2", this(), 99, 2, this(), nil, GetController(), this());
     SetPlrView(GetController(), clamp);
   }
 }
 
 func FxController2Effect(string neweffect)
 {
-  if(neweffect S= "Controller2")
+  if(!!SEqual(neweffect, "Controller2"))
     return(-1);
 }
 
@@ -103,15 +111,15 @@ func FxController2Timer()
 /* Steuerung */
 
 public func ControlLeft(object obj) {
-  if(xdir > -2)
-    xdir -= 2;
+  if((xdir ?? 0) > -2)
+    S42MigrationAssign(xdir, "-=", 2);
   
   SetPlrView(GetController(obj), clamp);
 }
 
 public func ControlRight(object obj) {
-  if(xdir < 2)
-    xdir += 2;
+  if((xdir ?? 0) < 2)
+    S42MigrationAssign(xdir, "+=", 2);
     
   SetPlrView(GetController(obj), clamp);
 }
@@ -135,36 +143,36 @@ public func ControlThrow(object obj) {
 }
 
 public func ControlDig(object obj) {
-  xdir = 0;
+  xdir = nil;
   
   SetPlrView(GetController(obj), clamp);
 }
 
 public func CheckMovement() {
   // Außerhalb der Reichweite
-  if(NotInRange()) { Adjust(); xdir=0; }
+  if(NotInRange()) { Adjust(); xdir=nil; }
   // Der Greifer stößt irgendwo gegen
   if(clamp)
-    if(clamp->GBackSolid(xdir * 3, 0))
-      xdir = 0;
+    if(clamp->GBackSolid((xdir ?? 0) * 3, nil))
+      xdir = nil;
   // Bei Bewegung Geräusch
-  if(xdir != 0) Sound("Elevator", 0, this(), 50, 0, 1);
-  else Sound("Elevator", 0, this(), 50, 0, -1);
+  if(!Equal(xdir, nil)) Sound("Elevator", nil, this(), 50, nil, 1);
+  else Sound("Elevator", nil, this(), 50, nil, -1);
 
-  SetPosition(GetX() + xdir, GetY());
+  SetPosition((GetX() ?? 0) + (xdir ?? 0), GetY());
 }
 
 public func CheckY() {
   // Überprüft, ob die Schiene weg ist
   if(!crane) return(RemoveObject());
-  if(GetY() != GetY(crane)+10) Adjust();
+  if(!Equal(GetY(), (GetY(crane) ?? 0)+10)) Adjust();
   // Die Schiene sollte eigentlich nicht bewegt werden :0
 }
 
 public func Stop() {
-  xdir = 0;
-  Sound("Elevator", 0, this(), 100, 0, -1);
-  clamp->LocalN("ydir") = 0;
+  xdir = nil;
+  Sound("Elevator", nil, this(), 100, nil, -1);
+  clamp->LocalN("ydir") = nil;
 }
 
 // Maus macht mich zZ kaputt
@@ -172,15 +180,17 @@ protected func ControlCommand() { return(1); }
 
 /* Serialisierung */
 
-public func NoSerialize() { return !false; }
+public func NoSerialize() { return !nil; }
 
 public func Reconfigure(int dx, int dy, object load)
 {
-	SetPosition(GetX()+dx, GetY());
-	clamp->SetPosition(GetX(clamp), GetY(clamp)+dy);
+	dx ??= 0;
+	dy ??= 0;
+	SetPosition((GetX() ?? 0)+(dx ?? 0), GetY());
+	clamp->SetPosition(GetX(clamp), (GetY(clamp) ?? 0)+(dy ?? 0));
 	if (load) {
 		clamp->LocalN("load") = load;
 		clamp->SetAction("Load");
-		clamp->AddEffect("Loading", load, 99, 1, clamp, 0, GetX(load)-GetX(clamp), GetY(load)-GetY(clamp));
+		clamp->AddEffect("Loading", load, 99, 1, clamp, nil, (GetX(load) ?? 0)-(GetX(clamp) ?? 0), (GetY(load) ?? 0)-(GetY(clamp) ?? 0));
 	}
 }

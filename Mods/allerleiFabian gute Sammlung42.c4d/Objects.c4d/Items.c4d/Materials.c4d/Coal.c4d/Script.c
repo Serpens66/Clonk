@@ -1,10 +1,10 @@
 /*--- Kohle ---*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
-  if (Stuck()) SetPosition(GetX(), GetY() - 2);
+  if (Stuck()) SetPosition(GetX(), (GetY() ?? 0) - 2);
   return(1);
 }
 

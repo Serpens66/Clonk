@@ -1,15 +1,16 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
 func Initialize() {
-  CreateParticle("PSpark",0,0,0,0,RandomX(100,200),
+  CreateParticle("PSpark",nil,nil,nil,nil,RandomX(100,200),
                  RGBa(64,255,32,100+50),this());
   return(1);
 }
 
-Remove:
-  CreateParticle("PSpark",0,0,0,0,RandomX(100,200),
+func Remove(...) {
+  CreateParticle("PSpark",nil,nil,nil,nil,RandomX(100,200),
                  RGBa(64,255,32,100+50),this());
   RemoveObject();
-  return(0);
+  return(nil);
+}

@@ -1,6 +1,6 @@
 /*-- Pumpe --*/
 
-#strict
+#strict 3
 #include BOB2
 
 local basement, manager;
@@ -11,18 +11,18 @@ local Switch, TransferReady;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
   // Pumpbetrieb gleich aufnehmen
   SetAction("Pumping");
   CreateContents(BARL);
   Switch = 1;
-  TransferReady = 0;
+  TransferReady = nil;
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS06,0,+8,GetOwner());
+  basement = CreateObject(BS06,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -46,7 +46,7 @@ public func PreDestruction()
 protected func ControlDig(caller)
 {
   [Ein/Ausschalten]
-  if (Hostile(GetController(caller),GetOwner())) return(0);
+  if (Hostile(GetController(caller),GetOwner())) return(nil);
   if (HasEMP()) return(Sound("Error"));
   Switch = !Switch;
   if (Switch) SwitchOn();
@@ -69,7 +69,7 @@ private func SwitchOff()
 
 public func AcceptTransfer()
 {
-  return(Switch && EnoughEnergy());
+  return(And(Switch, EnoughEnergy()));
 }
 
 
@@ -81,8 +81,8 @@ private func CheckEnergy()
   if (HasEMP()) SetAction("Idle");
   // Pump-Aktion nach EMP reeaktivieren
   if (ActIdle())
-    if (Switch && EnoughEnergy()) SetAction("Pumping");
-                             else return(0);
+    if (And(Switch, EnoughEnergy())) SetAction("Pumping");
+                             else return(nil);
   // Energieverbrauch
   DoEnergy(-10);
   // keine Energie mehr?
@@ -92,12 +92,16 @@ private func CheckEnergy()
 
 /* Energie */
 
-public EnoughEnergy: return(GetEnergy() >= 10);
-public IsEnergyConsumer: return(1);
+public func EnoughEnergy(...) { return((GetEnergy() ?? 0) >= 10);
+}
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* Eigenschaften */
 
-public InfoBarSize:  return(1);
-public GetMaxDamage: return(50);
+public func InfoBarSize(...) {  return(1);
+}
+public func GetMaxDamage(...) { return(50);
+}
 

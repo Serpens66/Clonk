@@ -1,6 +1,6 @@
 /*-- Wasser-Sensor --*/
 
-#strict
+#strict 3
 #include SENS
 
 func Initialize()
@@ -11,9 +11,9 @@ func Initialize()
 
 func Timer()
 {
-	state = 0;
+	state = nil;
 	if(GBackLiquid())
-		SetBit(state,0,1);
+		SetBit(state,nil,1);
 	else
 		SetBit(state,1,1);
 	TriggerActions();
@@ -21,5 +21,5 @@ func Timer()
 
 public func GetAdditionalInfo()
 {
-	return(0);//noch nix
+	return(nil);//noch nix
 }

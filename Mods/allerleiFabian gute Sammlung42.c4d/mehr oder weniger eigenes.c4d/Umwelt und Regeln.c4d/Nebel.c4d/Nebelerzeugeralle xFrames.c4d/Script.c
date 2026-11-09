@@ -1,6 +1,6 @@
 /*-- Nebelerzeuger alles x Frames erzeugen --*/
 
-#strict
+#strict 3
 
 local windvorherr;
 
@@ -24,9 +24,9 @@ private func DoNebel()
 {
 if (!Random(3)) // mit einer chance von 1 zu 3 werden alle 20.000Frames zwischen 1 und 6 Nebelobjekte erstellt 
   {
-  if(ObjectCount2(Find_ID(NBL4))>=1) RemoveAll(NBL4);
-  if(ObjectCount2(Find_ID(NBL2))>=1) RemoveAll(NBL2);
-if(ObjectCount2(Find_ID(NBL1))>=1) RemoveAll(NBL1);
+  if((ObjectCount2(Find_ID(NBL4)) ?? 0)>=1) RemoveAll(NBL4);
+  if((ObjectCount2(Find_ID(NBL2)) ?? 0)>=1) RemoveAll(NBL2);
+if((ObjectCount2(Find_ID(NBL1)) ?? 0)>=1) RemoveAll(NBL1);
 CreateObject(NBL1);
 Log("Nebelerzeuger und frame-Entferner erzeugt");
 CreateObject(NBL4);

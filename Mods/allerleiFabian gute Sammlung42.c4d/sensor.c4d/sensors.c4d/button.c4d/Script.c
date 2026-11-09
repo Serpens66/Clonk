@@ -1,6 +1,6 @@
 /*-- Knopf --*/
 
-#strict
+#strict 3
 #include SENS
 
 local last_user;
@@ -18,7 +18,7 @@ private func Timer()
 
 func Reset()
 {
-	SetState(state,0,2);//Nicht Gedrückt!
+	SetState(state,nil,2);//Nicht Gedrückt!
 }
 
 public func ControlThrow(pClonk)
@@ -38,10 +38,10 @@ public func ActivateEntrance(pObj)
 public func Trigger(pByObj)
 {
 	last_user = pByObj;
-	SetState(state,0,1);//Knopf wurde gedrückt!
+	SetState(state,nil,1);//Knopf wurde gedrückt!
 	Sound("Grab");
 	SetGraphics("Down");
-        ScheduleCall(0,"ResetGraphics",20);
+        ScheduleCall(nil,"ResetGraphics",20);
 	TriggerActions();
 	Reset();
 }

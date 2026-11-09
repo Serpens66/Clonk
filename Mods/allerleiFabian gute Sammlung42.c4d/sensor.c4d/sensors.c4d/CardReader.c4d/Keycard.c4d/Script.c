@@ -1,13 +1,14 @@
 /*-- Keycard --*/
 
-#strict
+#strict 3
 
 local Keynumber;
 
 public func SetKeyNumber(int iBits)
 {
+  iBits ??= 0;
   Keynumber = iBits;
-  SetClrModulation (HSL (BoundBy(Keynumber,0,255),255,127));
+  SetClrModulation (HSL (BoundBy(Keynumber,nil,255),255,127));
 }
 
 public func GetKeyNumber()

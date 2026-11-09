@@ -1,6 +1,6 @@
 /*-- Anzünderobjekt --*/
  
-#strict 2
+#strict 3
 
 local slimy, iDamage, iLight;
 local shooter; // Dingens/Clonk das den Schuss abgefeuert hat.
@@ -17,21 +17,26 @@ func Construction(object byObj) {
   // Waffe?
   shooter = GetShooter(byObj);
   
-  direction = 2 * GetDir(shooter) - 1;
+  direction = 2 * (GetDir(shooter) ?? 0) - 1;
 
   maxlifetime = 40;
-  hits = 0;
+  hits = nil;
 }
 
 
 public func MaxLifeTime() { return maxlifetime; }
 
 public func SetMaxLifetime(int max) {
+	max ??= 0;
 	maxlifetime = max;
 }
 
 public func Launch(int xdir, int ydir, bool slime, int iDamagepar)
 {
+  xdir ??= 0;
+  ydir ??= 0;
+  slime ??= false;
+  iDamagepar ??= 0;
   slimy = slime;
   iDamage = iDamagepar;
   if(!iDamage)
@@ -39,7 +44,7 @@ public func Launch(int xdir, int ydir, bool slime, int iDamagepar)
 
   SetSpeed(xdir,ydir);
   SetAction("Fly");
-  AddEffect("HitCheck", this(), 1,1, 0,GetID(this),shooter);
+  AddEffect("HitCheck", this(), 1,1, nil,GetID(this),shooter);
 //  if(slimy) { TurnLightOnN();}
 //  else { TurnLightOn();}
 }
@@ -50,18 +55,18 @@ protected func Flying()
 
   if(InLiquid()) {
     // Blubberblubber
-    for(var i=0; i<5; ++i) Bubble(RandomX(-5,+5),RandomX(-5,5));
+    for(var i=nil; (i ?? 0)<5; S42MigrationStep(i, 1)) Bubble(RandomX(-5,+5),RandomX(-5,5));
     RemoveObject();
 	return;
   }
 
-  if(GetActTime() > MaxLifeTime()-Random(5)) {
+  if((GetActTime() ?? 0) > (MaxLifeTime() ?? 0)-(Random(5) ?? 0)) {
     RemoveObject();
     return;
   }
   
-  if(!Random(4) && GetActTime() > MaxLifeTime()/4)
-    SetYDir(GetYDir()+RandomX(-4,2));
+  if(!Random(4) && (GetActTime() ?? 0) > (MaxLifeTime() ?? 0)/4)
+    SetYDir((GetYDir() ?? 0)+(RandomX(-4,2) ?? 0));
 
   if(slimy) {
     CastSlimeEffects(GetActTime());
@@ -74,16 +79,16 @@ public func HitObject(object pObj)
 {
   var color = FIRE_Green;
   // 100..70
-  var schwaecher = Max(100 - hits*20,0);
+  var schwaecher = Max(100 - (hits ?? 0)*20,nil);
   //Message("@%d%",this,schwaecher);
   // Energie abziehen und langsamer machen
   if(!slimy) 
   {
     color = FIRE_Red;
-    DoDmg(iDamage*schwaecher/100, DMG_Fire, pObj,1);
+    DoDmg((iDamage ?? 0)*(schwaecher ?? 0)/100, DMG_Fire, pObj,1);
   }
   else {
-    if (GetOCF(pObj) & OCF_Chop || pObj->~IsBulletGrasTarget() ) 
+    if ((GetOCF(pObj) ?? 0) & (OCF_Chop ?? 0) || pObj->~IsBulletGrasTarget() )
     {
 // sorgt dafür, dass getroffene Pflanzen "krank" werden. Dies wird allerdings schnell wieder durch das Umweltschutz-objekt rückgängig gemacht, sofern die Umwelt unverschmutzt ist.
 var graphics;
@@ -91,17 +96,17 @@ graphics = "Krank";
 if(!pObj->~ChangeGraphic(graphics))
         FadeGraphics(graphics,pObj);
     }
-    else { DoDmg(iDamage*schwaecher/100, DMG_Bio, pObj, 1);}
+    else { DoDmg((iDamage ?? 0)*(schwaecher ?? 0)/100, DMG_Bio, pObj, 1);}
        }
 
-  hits++;
+  S42MigrationStep(hits, 1, true);
   
   //falls feuer anzündbares anzünden, aber nicht lebewesen.
 if(!slimy)
  {
   if(pObj) //existiert es überhaupt noch?
-    if(pObj->GetOCF() & OCF_Inflammable) {
-      if(!(pObj->GetOCF() & OCF_Living))
+    if((pObj->GetOCF() ?? 0) & (OCF_Inflammable ?? 0)) {
+      if(!((pObj->GetOCF() ?? 0) & (OCF_Living ?? 0)))
         Incinerate(pObj);
 	  else
 	    AddFireEffect(pObj,50,color,1);
@@ -111,27 +116,28 @@ if(!slimy)
 
 protected func CastFireEffects(int time)
 {
+  time ??= 0;
   var maxtime = MaxLifeTime();
-  var dir = (GetXDir()>0)*2-1;
-  var angle = Angle(0,0,GetXDir(),GetYDir());
+  var dir = (((GetXDir() ?? 0)>0) ?? 0)*2-1;
+  var angle = Angle(nil,nil,GetXDir(),GetYDir());
   
-  var ntime = 40*time/maxtime;
+  var ntime = 40*(time ?? 0)/(maxtime ?? 0);
 
-  for (var i = 0; i < 3; i++) 
+  for (var i = nil; (i ?? 0) < 3; S42MigrationStep(i, 1, true))
   {
 
-    var xoff = RandomX(-2,5)+ntime/2;
-	var yoff = RandomX(-ntime , ntime);
+    var xoff = (RandomX(-2,5) ?? 0)+(ntime ?? 0)/2;
+	var yoff = RandomX(-(ntime ?? 0) , ntime);
   
-    var xdir = +Cos(angle,yoff)-Sin(angle,xoff);
-    var ydir = +Sin(angle,yoff)+Cos(angle,xoff);
+    var xdir = (+(Cos(angle,yoff) ?? 0) ?? 0)-(Sin(angle,xoff) ?? 0);
+    var ydir = (+(Sin(angle,yoff) ?? 0) ?? 0)+(Cos(angle,xoff) ?? 0);
 	
-    var size = 20 + ntime*6;
+    var size = 20 + (ntime ?? 0)*6;
 
-	var x = Sin(angle,(+10-2*i));
-    var y = RandomX(-size,size)/20;
+	var x = Sin(angle,((+10 ?? 0)-2*(i ?? 0)));
+    var y = (RandomX(-(size ?? 0),size) ?? 0)/20;
 
-	var alpha = BoundBy(180 + (time-maxtime*3/4)*2,0,255);
+	var alpha = BoundBy(180 + ((time ?? 0)-(maxtime ?? 0)*3/4)*2,nil,255);
     var color = RGBa(255, 255, 255, alpha);
 
     CreateParticle("Fire2", x, y, xdir, ydir, size, color);
@@ -141,28 +147,29 @@ protected func CastFireEffects(int time)
 
 protected func CastSlimeEffects(int time)
 {
+  time ??= 0;
   var maxtime = MaxLifeTime();
-  var dir = (GetXDir()>0)*2-1;
-  var angle = Angle(0,0,GetXDir(),GetYDir());
+  var dir = (((GetXDir() ?? 0)>0) ?? 0)*2-1;
+  var angle = Angle(nil,nil,GetXDir(),GetYDir());
   
-  var ntime = 40*time/maxtime;
+  var ntime = 40*(time ?? 0)/(maxtime ?? 0);
   
-  for (var i = 0; i < 3; i++) 
+  for (var i = nil; (i ?? 0) < 3; S42MigrationStep(i, 1, true))
   {
 
     var xoff = RandomX(-2,5);
-	var yoff = RandomX(-ntime , ntime)/2;
+	var yoff = (RandomX(-(ntime ?? 0) , ntime) ?? 0)/2;
   
-    var xdir = +Cos(angle,yoff)-Sin(angle,xoff);
-    var ydir = +Sin(angle,yoff)+Cos(angle,xoff);
+    var xdir = (+(Cos(angle,yoff) ?? 0) ?? 0)-(Sin(angle,xoff) ?? 0);
+    var ydir = (+(Sin(angle,yoff) ?? 0) ?? 0)+(Cos(angle,xoff) ?? 0);
 	
-    var size = 20 + ntime*8;
+    var size = 20 + (ntime ?? 0)*8;
 
-	var x = (+10-2*i)*dir;
-    var y = RandomX(-size,size)/20;
+	var x = ((+10 ?? 0)-2*(i ?? 0))*(dir ?? 0);
+    var y = (RandomX(-(size ?? 0),size) ?? 0)/20;
 
-	var alpha = BoundBy(ntime ,0,255);
-    var color = RGBa(100, 255, 0, alpha);
+	var alpha = BoundBy(ntime ,nil,255);
+    var color = RGBa(100, 255, nil, alpha);
 
     CreateParticle("AlienPlasma", x, y, xdir, ydir, size, color);
   }  
@@ -179,6 +186,8 @@ protected func CastSlimeEffects(int time)
 
 private func FxHitCheckStart(object target, int effect, int temp, object byObj)
 {
+  effect ??= 0;
+  temp ??= 0;
   if(temp) return;
   if(!byObj)
     byObj = target;
@@ -186,20 +195,22 @@ private func FxHitCheckStart(object target, int effect, int temp, object byObj)
     byObj = (byObj->Contained());
   EffectVar(2, target, effect) = byObj;
   EffectVar(3, target, effect) = GetID(byObj);
-  EffectVar(4, target, effect) = false;
+  EffectVar(4, target, effect) = nil;
 }
 
 private func FxHitCheckTimer(object target, int effect, int time)
 {
+  effect ??= 0;
+  time ??= 0;
   var obj;
   // Oh man. :O
   var x = GetX(target);
   var y = GetY(target);
-  var angle = Angle(0,0,GetXDir(target),GetYDir(target));
+  var angle = Angle(nil,nil,GetXDir(target),GetYDir(target));
   var maxlife = target->~MaxLifeTime();
-  var sq = 30*time/maxlife;
-  var wdt = 20 + Abs(Cos(angle, sq));
-  var hgt = 20 + Abs(Sin(angle, sq));
+  var sq = 30*(time ?? 0)/(maxlife ?? 0);
+  var wdt = 20 + (Abs(Cos(angle, sq)) ?? 0);
+  var hgt = 20 + (Abs(Sin(angle, sq)) ?? 0);
   
   //target->SetObjDrawTransform(wdt*1000/4,0,0,0,hgt*1000/4);
   
@@ -211,17 +222,17 @@ private func FxHitCheckTimer(object target, int effect, int time)
   // Wir suchen nach Objekten entlang der Linie die wir uns seit dem letzten Check
   // bewegt haben. Und sortieren sie nach Distanz (nähere zuerst)
 
-  for(obj in FindObjects(Find_InRect(x-wdt/2,y-hgt/2,wdt,hgt),Find_NoContainer()))
+  for(obj in FindObjects(Find_InRect((x ?? 0)-(wdt ?? 0)/2,(y ?? 0)-(hgt ?? 0)/2,wdt,hgt),Find_NoContainer()))
   {
 		// Excludes
-		if(obj == target) continue;
-		if(obj == exclude) continue;
+		if(S42MigrationEqual(obj, target)) continue;
+		if(S42MigrationEqual(obj, exclude)) continue;
 		
 		// CheckEnemy
 		if(!CheckEnemy(obj,target)) continue;
 
 		// IsBulletTarget oder Alive
-		if(obj->~IsBulletExtraTarget(GetID(target),target,EffectVar(2, target, effect))|| GetOCF(obj) & OCF_Chop || obj->~IsBulletGrasTarget(GetID(target),target,EffectVar(2, target, effect))) {
+		if(obj->~IsBulletExtraTarget(GetID(target),target,EffectVar(2, target, effect))|| (GetOCF(obj) ?? 0) & (OCF_Chop ?? 0) || obj->~IsBulletGrasTarget(GetID(target),target,EffectVar(2, target, effect))) {
 			return target->~HitObject(obj);
 	  }
   }
@@ -234,9 +245,9 @@ private func FxHitCheckTimer(object target, int effect, int time)
 	    // Wir suchen alle Objekte mit der ID unseres Schützens an unserer momentanen Stelle
 	    for(var foo in FindObjects(Find_AtPoint(x,y),Find_ID(EffectVar(3, target, effect))))
 	    	// und schauen, ob es der Schütze ist.
-	      if(foo == EffectVar(2, target, effect))
+	      if(S42MigrationEqual(foo, EffectVar(2, target, effect)))
 	        // wir haben den Schützen gefunden -> Er ist noch an unserer Position
-	        ready = false;
+	        ready = nil;
 	    // wir haben den Schützen nicht gefunden
 	    if(ready)
 	      // -> Wir treffen ihn ab jetzt.
@@ -248,7 +259,7 @@ private func FxHitCheckTimer(object target, int effect, int time)
 func MeltIce(iX,iY)
 {
   DigFree(iX, iY, 12);
-  CastPXS("Water", 5, 10, iX, iY+RandomX(-6, 6));
+  CastPXS("Water", 5, 10, iX, (iY ?? 0)+(RandomX(-6, 6) ?? 0));
 }
 
 // aus eke reloaded
@@ -259,54 +270,54 @@ protected func Hit()
 
   var m = GetMaterial(direction);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*2);
+  var m = GetMaterial((direction ?? 0)*2);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*3);
+  var m = GetMaterial((direction ?? 0)*3);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
@@ -314,18 +325,18 @@ ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
  {
   var m = GetMaterial(direction,1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
@@ -333,94 +344,94 @@ ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
  {
   var m = GetMaterial(direction,-1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*2,1);
+  var m = GetMaterial((direction ?? 0)*2,1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*2,-1);
+  var m = GetMaterial((direction ?? 0)*2,-1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*3,1);
+  var m = GetMaterial((direction ?? 0)*3,1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // noch nichts?
   if (!offset) 
  {
-  var m = GetMaterial(direction*3,-1);
+  var m = GetMaterial((direction ?? 0)*3,-1);
   var offset;  
-  if (m == Material("Snow"))
+  if (S42MigrationEqual(m, Material("Snow")))
   {
-    offset = direction * 10;
+    offset = (direction ?? 0) * 10;
   }
-  if (m == Material("Ice"))
+  if (S42MigrationEqual(m, Material("Ice")))
   { 
-    offset = direction * 20;
+    offset = (direction ?? 0) * 20;
   }
  }
 if(offset)
 {
-ScheduleCall(0,"MeltIce",12,0,GetX(),GetY());
+ScheduleCall(nil,"MeltIce",12,nil,GetX(),GetY());
 }
 
   // andere Materialien

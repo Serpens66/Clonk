@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 public func IsBulletTarget() { return(true); }
 public func NoDecoDamage() { return(true); }
@@ -12,9 +12,9 @@ func Initialize()
 
 private func Traveling()
 {
-  SetXDir(0);
-  SetYDir(0);
-  CreateParticle("Thrust",0,0,GetXDir()/2,GetYDir()/2,RandomX(80,100),RGBa(0,50,250,60),0,0);
+  SetXDir(nil);
+  SetYDir(nil);
+  CreateParticle("Thrust",nil,nil,(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(80,100),RGBa(nil,50,250,60),nil,nil);
   return(1);
 }
 
@@ -27,7 +27,7 @@ func Hit() {
 
 private func HitObject() {
   Sound("EMP");
-  CreateObject(SHCK, 0, 0, GetOwner())->SetMaxSize(15);
+  CreateObject(SHCK, nil, nil, GetOwner())->SetMaxSize(15);
   RemoveObject();
 }
 

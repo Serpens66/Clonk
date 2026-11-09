@@ -1,6 +1,6 @@
 /*-- Lichtschein #2 --*/
 
-#strict
+#strict 3
 
 // Lichtschein für Feuer, auch fackel und lagerfeuer
 
@@ -17,29 +17,29 @@ public func Init(target, vx, vy, size, clr, pulsing,fNoChange)
   if (clr)  color = clr;
        else color = RGB(255,255,255);
 
-  SetVertex(0,0,vx);
-  SetVertex(0,1,vy);
+  SetVertex(nil,nil,vx);
+  SetVertex(nil,1,vy);
   SetAction("Attach",target);
-  SetPosition(GetX(target)+GetVertex(0,0,target)-vx,
-              GetY(target)+GetVertex(0,1,target)-vy);
+  SetPosition((GetX(target) ?? 0)+(GetVertex(nil,nil,target) ?? 0)-(vx ?? 0),
+              (GetY(target) ?? 0)+(GetVertex(nil,1,target) ?? 0)-(vy ?? 0));
   ResetModulation();
-  if(GetCategory(target)&C4D_Parallax)
+  if((GetCategory(target) ?? 0)&(C4D_Parallax ?? 0))
   {
-    Local(0)=Local(0,target);
+    Local(nil)=Local(nil,target);
     Local(1)=Local(1,target);
-    SetCategory(GetCategory()|C4D_Parallax);
+    SetCategory((GetCategory() ?? 0)|(C4D_Parallax ?? 0));
   }
   // Pulsieren?
   if(pulsing)
   {
     if(!GetEffect("Pulse",this))
-      AddEffect("Pulse",this,10,2+IsNetwork()*2,this);
+      AddEffect("Pulse",this,10,2+(IsNetwork() ?? 0)*2,this);
   }
   else
   {
     var iEffect;
     if(iEffect = GetEffect("Pulse", this))
-      RemoveEffect(0, this, iEffect);
+      RemoveEffect(nil, this, iEffect);
   }
   nochange=fNoChange;
 // nur einschalten, wenn lichter erlaubt
@@ -49,18 +49,18 @@ if(!ObjectCount(FI_R))  TurnOn();
 //Wenn das Licht kein Ziel mehr hat -> weg damit.
 protected func AttachTargetLost() {
   RemoveObject();
-  return();
+  return;
 }
 
 func CheckTarget()
 {
-    if(!GetActionTarget()) {RemoveObject();return();}
+    if(!GetActionTarget()) {RemoveObject();return;}
 }
 
 public func FxPulseTimer()
 {
   var Con=GetCon();
-  SetCon(BoundBy(Con+RandomX(-3,+3),iCon/2,iCon+iCon/2));
+  SetCon(BoundBy((Con ?? 0)+(RandomX(-3,+3) ?? 0),(iCon ?? 0)/2,(iCon ?? 0)+(iCon ?? 0)/2));
 }
 
 private func ResetModulation()
@@ -68,7 +68,7 @@ private func ResetModulation()
   if(nochange)
     SetClrModulation(color);
   else
-    SetClrModulation(SetRGBaValue(color,15+dayhelligkeit*255/100,0));
+    SetClrModulation(SetRGBaValue(color,15+(dayhelligkeit ?? 0)*255/100,nil));
 }
 
 public func IsLight(){  return true;}

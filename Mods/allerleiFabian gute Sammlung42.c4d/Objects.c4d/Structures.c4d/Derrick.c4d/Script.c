@@ -1,6 +1,6 @@
 /*--- Bohrturm ---*/
 
-#strict
+#strict 3
 
 #include CXEC
 
@@ -23,7 +23,7 @@ protected func Initialize()
 public func LineConnectType()
 {
   // Schon ein Abflussrohr da? Dann machen wir mit Energie weiter.
-  if (FindObject(DPIP, 0,0,0,0, 0, "Connect", this()) )
+  if (FindObject(DPIP, nil,nil,nil,nil, nil, "Connect", this()) )
     return(PWRL);
   // Sonst Abfluss.
   return(DPIP);
@@ -35,10 +35,10 @@ private func PipeHeadCheck()
   if (!pDrillHead) 
   {              
     // Bohrkopf
-    pDrillHead = CreateObject(PIPH, 0, 36, GetOwner());
+    pDrillHead = CreateObject(PIPH, nil, 36, GetOwner());
     SetAction("Pump", pDrillHead);
     ObjectSetAction(pDrillHead, "Stop", this());
-    CreateObject(DPLI, 0, 0, -1)->DPLI::Init(this(), pDrillHead);
+    CreateObject(DPLI, nil, nil, -1)->DPLI::Init(this(), pDrillHead);
   }
   return(pDrillHead);
 }
@@ -47,7 +47,7 @@ private func PipeHeadCheck()
 
 public func AcceptTransfer()
 {
-  return (GetAction() S= "Pump");
+  return (!!SEqual(GetAction(), "Pump"));
 }
 
 /* Steuerung */
@@ -56,11 +56,11 @@ private func StartDrillHead(object pCaller)
 {
   PipeHeadCheck();
   Sound("Click");
-  if (!EnergyCheck(1000)) return(0);
-  SetComDir(COMD_Down(), pDrillHead);
+  if (!EnergyCheck(1000)) return(nil);
+  SetComDir(COMD_Down, pDrillHead);
   ObjectSetAction(pDrillHead, "Drill");
   SetPlrView(pCaller->GetController(), pDrillHead);
-  DigFreeRect(GetX(pDrillHead)-1, GetY() + GetObjHeight() / 2, 3, GetY(pDrillHead) - GetY() - GetObjHeight() / 2);
+  DigFreeRect((GetX(pDrillHead) ?? 0)-1, (GetY() ?? 0) + (GetObjHeight() ?? 0) / 2, 3, (GetY(pDrillHead) ?? 0) - (GetY() ?? 0) - (GetObjHeight() ?? 0) / 2);
 }
 
 protected func ControlDownSingle(pCaller)
@@ -83,8 +83,8 @@ protected func ControlUp(pCaller)
   [$CtrlRetractDesc$|Image=PIPH]
   PipeHeadCheck();
   Sound("Click");
-  if (!EnergyCheck(1000)) return(0);
-  SetComDir(COMD_Up(), pDrillHead);
+  if (!EnergyCheck(1000)) return(nil);
+  SetComDir(COMD_Up, pDrillHead);
   ObjectSetAction(pDrillHead, "Move");
   SetPlrView(pCaller->GetController(),pDrillHead);
 }
@@ -93,8 +93,8 @@ private func StopDrillHead(object pCaller)
 {
   Sound("Click");
   ObjectSetAction(pDrillHead, "Stop");
-  SetComDir(COMD_Stop(), pDrillHead);
-  SetYDir(0, pDrillHead);
+  SetComDir(COMD_Stop, pDrillHead);
+  SetYDir(nil, pDrillHead);
   SetPlrView(pCaller->GetController(), pDrillHead);
 }
 
@@ -105,7 +105,7 @@ protected func ControlLeft(pCaller)
     StopDrillHead(pCaller);
   else
   {
-    AddCommand(pCaller, "Call", this(), 0,0,0,0, "ContMoveLeft");
+    AddCommand(pCaller, "Call", this(), nil,nil,nil,nil, "ContMoveLeft");
     AddCommand(pCaller, "UnGrab");
   }
 }
@@ -117,7 +117,7 @@ protected func ControlRight(pCaller)
     StopDrillHead(pCaller);
   else
   {
-    AddCommand(pCaller, "Call", this(), 0,0,0,0, "ContMoveRight");
+    AddCommand(pCaller, "Call", this(), nil,nil,nil,nil, "ContMoveRight");
     AddCommand(pCaller, "UnGrab");
   }
 }
@@ -156,16 +156,16 @@ protected func Pumping()
 protected func ReadyToPump()
 {
   // Abflussrohr suchen
-  var pDrainPipe = FindObject(DPIP,0,0,0,0,0,"Connect",this());
+  var pDrainPipe = FindObject(DPIP,nil,nil,nil,nil,nil,"Connect",this());
   // Kein Abflussrohr da: pumpen
   if (!pDrainPipe) return(1);
   // Abflussrohr ist gar nicht oder an einen Leitungsbausatz angeschlossen: pumpen
   var pPumpTarget = GetActionTarget(1, pDrainPipe);
-  if (!pPumpTarget || (GetID(pPumpTarget)==LNKT)) return(1);
+  if (Or(!pPumpTarget, (Equal(GetID(pPumpTarget), LNKT)))) return(1);
   // Kapazität für gepumptes Material im Zielobjekt prüfen
-  if (!CheckCapacity(pPumpTarget, 12, GetMaterial(0, GetY(pDrillHead) - GetY())))
+  if (!CheckCapacity(pPumpTarget, 12, GetMaterial(nil, (GetY(pDrillHead) ?? 0) - (GetY() ?? 0))))
     // Keine ausreichende Kapazität: nicht pumpen
-    return(0);
+    return(nil);
   // Ansonsten: pumpen
   return(1);
 }
@@ -177,32 +177,32 @@ private func CheckCapacity(pTarget, iAmount, iMaterial)
   var objBarrel;
   if (BarrelID)
   {
-    while (objBarrel = FindObject(BarrelID,0,0,0,0,0,0,0,pTarget,objBarrel))
+    while (objBarrel = FindObject(BarrelID,nil,nil,nil,nil,nil,nil,nil,pTarget,objBarrel))
       if (!objBarrel->BarrelIsFull())
-        if ((iAmount -= objBarrel->BarrelMaxFill() - objBarrel->GetAmount()) <= 0)
+        if (((S42MigrationAssign(iAmount, "-=", (objBarrel->BarrelMaxFill() ?? 0) - (objBarrel->GetAmount() ?? 0))) ?? 0) <= 0)
           // Noch Kapazität vorhanden
           return(1);
   }
   // Leere Fässer suchen
   BarrelID = EmptyBarrelID();
-  objBarrel = 0;
+  objBarrel = nil;
   if (BarrelID)
   {
-    while (objBarrel = FindObject(BarrelID,0,0,0,0,0,0,0,pTarget,objBarrel))
-      if ((iAmount -= objBarrel->BarrelMaxFill()) <= 0)
+    while (objBarrel = FindObject(BarrelID,nil,nil,nil,nil,nil,nil,nil,pTarget,objBarrel))
+      if (((S42MigrationAssign(iAmount, "-=", (objBarrel->BarrelMaxFill() ?? 0))) ?? 0) <= 0)
         // Noch Kapazität vorhanden
         return(1);
   }
   // Keine Kapazität vorhanden
-  return(0);
+  return(nil);
 }
 
 /* Zerstörung */
 
-protected func Incineration() { if (pBarrel) RemoveObject(pBarrel); pBarrel=0; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=0; }
-protected func IncinerationEx() { if (pBarrel) RemoveObject(pBarrel); pBarrel=0; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=0; }
+protected func Incineration() { if (pBarrel) RemoveObject(pBarrel); pBarrel=nil; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=nil; }
+protected func IncinerationEx() { if (pBarrel) RemoveObject(pBarrel); pBarrel=nil; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=nil; }
 protected func Destruction() 
-{ if (pBarrel) RemoveObject(pBarrel); pBarrel=0; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=0; return(_inherited() ); }
+{ if (pBarrel) RemoveObject(pBarrel); pBarrel=nil; if (pDrillHead) RemoveObject(pDrillHead); pDrillHead=nil; return(_inherited() ); }
 
 
 /* Forschung */

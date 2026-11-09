@@ -1,6 +1,6 @@
 /*-- LiftPlate --*/
 
-#strict
+#strict 3
 #include ELEV
 
 
@@ -20,9 +20,9 @@ public func Destroy()
 {
   // Fragmente
   var obj, i;
-  for (i = 0; i < 5; ++i)
+  for (i = nil; (i ?? 0) < 5; S42MigrationStep(i, 1))
   {
-    obj = CreateObject(SFRX, Random(50)-25, Random(8), GetOwner());
+    obj = CreateObject(SFRX, (Random(50) ?? 0)-25, Random(8), GetOwner());
     obj->Settings(i);
   }
   // Explosion
@@ -33,6 +33,8 @@ public func Destroy()
 
 /* Eigenschaften */
 
-public GetMaxDamage: return(60);
-public Repairable: return(1);
+public func GetMaxDamage(...) { return(60);
+}
+public func Repairable(...) { return(1);
+}
 

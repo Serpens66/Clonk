@@ -1,6 +1,6 @@
 /*-- Sprengpfeil --*/
 
-#strict
+#strict 3
 
 #include ARRW
 
@@ -17,9 +17,9 @@ public func Launch(object pByObject)
 
 /* Pfeileigenschaften */
 public func PackTo() {  return(XARP); }
-public func ArrowStrength() { return(2+Random(2)); }
+public func ArrowStrength() { return(2+(Random(2) ?? 0)); }
 public func ArrowTumbleRandom() {return(2);}
-public func ArrowStopsOnHit() { return(0); }
+public func ArrowStopsOnHit() { return(nil); }
 
 /* Aufschlag */
 
@@ -27,8 +27,8 @@ protected func Hit()
 {
   if (Armed)
    if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))
-    Explode(Random(5) + 10);
-   else FakeExplode(Random(5) + 10,0,0,Random(5) + 10);
+    Explode((Random(5) ?? 0) + 10);
+   else FakeExplode((Random(5) ?? 0) + 10,nil,nil,(Random(5) ?? 0) + 10);
 }
 
 /* Treffer */

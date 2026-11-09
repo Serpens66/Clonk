@@ -1,6 +1,6 @@
 /*-- Geschützkanzel --*/
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -19,7 +19,7 @@ func Bezug(_vessel)
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   if(waffensys) RemoveObject(waffensys);
   RemoveObject();
@@ -29,19 +29,19 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Check()
 {
-  if(GetR()<0) if(GetR()>-120)
+  if((GetR() ?? 0)<0) if((GetR() ?? 0)>-120)
   {
-  SetRDir(0);
+  SetRDir(nil);
   SetR(-120);
   }
-  if(GetR()>0) if(GetR()<120)
+  if((GetR() ?? 0)>0) if((GetR() ?? 0)<120)
   {
-  SetRDir(0);
+  SetRDir(nil);
   SetR(121);
   }
 }
@@ -50,22 +50,22 @@ func Check()
 
 func ContainedUp()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedDown()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedDownDouble()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(vessel,pilot);
   DoAmmo(STAM, GetAmmo(STAM,waffensys), pilot); 
   DoAmmo(MIAM, GetAmmo(MIAM,waffensys), pilot); 
   if(waffensys) RemoveObject(waffensys);
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedRight()
@@ -81,7 +81,7 @@ func ContainedLeft()
 func ContainedThrow() 
 {
   if(!waffensys) Waffensystem();
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   ObjectCall(waffensys,"ControlThrow",pilot);
   return(1);
 }
@@ -96,16 +96,16 @@ func ContainedDigDouble()
 
 func Waffensystem()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   if(waffensys=CreateContents(CHWS, pilot))
   {
-  while(GetID(Contents(0,pilot))!=CHWS)   ShiftContents(pilot);
+  while(!Equal(GetID(Contents(nil,pilot)), CHWS))   ShiftContents(pilot);
   }
   return(1);
 }
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }

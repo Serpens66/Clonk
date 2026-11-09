@@ -1,11 +1,11 @@
-#strict
+#strict 3
 
 local verbraucht, value, restmunition, faktor;
 
 public func IsAmmoPacket() { return(true); }
 public func AmmoID()       { return(STAM); }
 public func AmmoCount()    { return(50); }
-public func AmmoCountRest() {return(AmmoCount()-verbraucht); }
+public func AmmoCountRest() {return((AmmoCount() ?? 0)-(verbraucht ?? 0)); }
 
 // Damit eine variable Menge ausgegeben wird:
 /* Initialisierung */
@@ -14,7 +14,7 @@ protected func Initialize()
 {
   restmunition=AmmoCount();
   value = GetDefCoreVal("Value", "DefCore");
-  faktor = (value*100)/restmunition;
+  faktor = ((value ?? 0)*100)/(restmunition ?? 0);
 }
 
 
@@ -23,22 +23,24 @@ protected func Initialize()
 protected func CalcValue()
 {
   var lastvalue = value;
-  value = (restmunition*faktor)/100;
+  value = ((restmunition ?? 0)*(faktor ?? 0))/100;
   return(lastvalue);
 }
 
-public HasAdditionalDesc: return(1);
+public func HasAdditionalDesc(...) { return(1);
+}
 
-public GiveAdditionalDesc:
+public func GiveAdditionalDesc(...) {
   return(Format("Inhalt: %d Munition",restmunition));
+}
 
 
 func RestAmmoreduzieren(zahl)
 {
-verbraucht+=zahl;
+S42MigrationAssign(verbraucht, "+=", (zahl ?? 0));
 //Log("Ammo reduziert");
 restmunition=AmmoCountRest();
-if(restmunition<=0) RemoveObject();
+if((restmunition ?? 0)<=0) RemoveObject();
 return(1);
 }
 
@@ -71,33 +73,33 @@ protected func Activate(object pObj) {		// Doppelgraben
 
 public func MayTransfer(object pObj)
 {
-  if(!pObj) return(false);
+  if(!pObj) return(nil);
   var MaxAmmo;
   MaxAmmo = AmmoID()->~MaxAmmo(pObj);
   if(MaxAmmo)
 // geändert, weil durch variable werte immer das maximum erreicht werden kann
-    if(GetAmmo(AmmoID(),pObj) == MaxAmmo)
-      return(false);
+    if(Equal(GetAmmo(AmmoID(),pObj), MaxAmmo))
+      return(nil);
   return(true);
 }
 
 public func TransferAmmo(object pObj)		// Ammo dem Clonk geben
 {
-if(GetID(pObj)!=HZCK) {PlayerMessage(GetOwner(pObj),"Nur Hazardclonks können Munition aufnehmen",pObj); return(0);}
+if(!Equal(GetID(pObj), HZCK)) {PlayerMessage(GetOwner(pObj),"Nur Hazardclonks können Munition aufnehmen",pObj); return(nil);}
 
   var MaxAmmo;
   MaxAmmo = AmmoID()->~MaxAmmo(pObj);
 
-  if(!pObj) return(false);
-  if(NoAmmo()) return(false);
+  if(!pObj) return(nil);
+  if(NoAmmo()) return(nil);
   
   // nicht wenn er schon zu viel hat
   if(!MayTransfer(pObj)) {
     PlayerMessage(GetOwner(pObj),"$NotMoreAmmo$",pObj,AmmoID());
-    return();
+    return;
   }
 
-    if(GetAmmo(AmmoID(),pObj) + AmmoCountRest() <= MaxAmmo)
+    if((GetAmmo(AmmoID(),pObj) ?? 0) + (AmmoCountRest() ?? 0) <= (MaxAmmo ?? 0))
 {
   // Nachricht ausgeben
   HelpMessage(GetOwner(pObj),"$Collected$",pObj,AmmoCountRest(),AmmoID());
@@ -107,12 +109,12 @@ if(GetID(pObj)!=HZCK) {PlayerMessage(GetOwner(pObj),"Nur Hazardclonks können Mun
   return(true);}
 
 // wird auf MaxAmmo aufgestockt und die Restmunition im Pack reduziert
-    if(GetAmmo(AmmoID(),pObj) + AmmoCountRest() > MaxAmmo)
+    if((GetAmmo(AmmoID(),pObj) ?? 0) + (AmmoCountRest() ?? 0) > (MaxAmmo ?? 0))
 {
-var zahl=(MaxAmmo-GetAmmo(AmmoID(),pObj));
+var zahl=((MaxAmmo ?? 0)-(GetAmmo(AmmoID(),pObj) ?? 0));
   // Nachricht ausgeben
-  HelpMessage(GetOwner(pObj),"$Collected$",pObj,(MaxAmmo-GetAmmo(AmmoID(),pObj)),AmmoID());
-  DoAmmo(AmmoID(),(MaxAmmo-GetAmmo(AmmoID(),pObj)),pObj);
+  HelpMessage(GetOwner(pObj),"$Collected$",pObj,((MaxAmmo ?? 0)-(GetAmmo(AmmoID(),pObj) ?? 0)),AmmoID());
+  DoAmmo(AmmoID(),((MaxAmmo ?? 0)-(GetAmmo(AmmoID(),pObj) ?? 0)),pObj);
   pObj->~AmmoTransferred();
   if(!OnTransfer()) {RestAmmoreduzieren(zahl);}
 
@@ -128,7 +130,7 @@ protected func Damage()
     if (Contained()->~IsClonk())
     {
       Extinguish();
-      return(0);
+      return(nil);
     }
   // Explosion - verzögert, um Endlosrekursion zu verhindern
   Schedule("Explode(20)", 1);

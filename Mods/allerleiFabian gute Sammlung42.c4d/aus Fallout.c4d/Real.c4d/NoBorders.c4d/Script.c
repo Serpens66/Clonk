@@ -1,6 +1,6 @@
 /*-- Keine Grenzen! --*/
 
-#strict
+#strict 3
 
 protected func Initialize(){
 
@@ -9,18 +9,18 @@ protected func Initialize(){
 
 protected func Check(){
   // Links
-  while(Var()=FindObject(0,0,0,40,LandscapeHeight(),0,0,0,0,Var()))
-    if(!(GetCategory(Var())&C4D_StaticBack()))
-      if(GetX(Var())-GetDefCoreVal("Width","DefCore",GetID(Var()))/2<2)
-        if(GetXDir(Var())<0 || GetComDir(Var())==COMD_Left()) 
-          SetPosition(LandscapeWidth()-GetDefCoreVal("Width","DefCore",GetID(Var()))/2,GetY(Var()),Var());
+  while(Var()=FindObject(nil,nil,nil,40,LandscapeHeight(),nil,nil,nil,nil,Var()))
+    if(!((GetCategory(Var()) ?? 0)&(C4D_StaticBack ?? 0)))
+      if((GetX(Var()) ?? 0)-(GetDefCoreVal("Width","DefCore",GetID(Var())) ?? 0)/2<2)
+        if(Or((GetXDir(Var()) ?? 0)<0, Equal(GetComDir(Var()), COMD_Left)))
+          SetPosition((LandscapeWidth() ?? 0)-(GetDefCoreVal("Width","DefCore",GetID(Var())) ?? 0)/2,GetY(Var()),Var());
 
   // Rechts
-  while(Var()=FindObject(0,LandscapeWidth()-40,0,40,LandscapeHeight(),0,0,0,0,Var()))
-    if(!(GetCategory(Var())&C4D_StaticBack()))
-      if(GetX(Var())+GetDefCoreVal("Width","DefCore",GetID(Var()))/2>LandscapeWidth()-2)
-        if(GetXDir(Var())>0 || GetComDir(Var())==COMD_Right())
-          SetPosition(GetDefCoreVal("Width","DefCore",GetID(Var()))/2,GetY(Var()),Var());
+  while(Var()=FindObject(nil,(LandscapeWidth() ?? 0)-40,nil,40,LandscapeHeight(),nil,nil,nil,nil,Var()))
+    if(!((GetCategory(Var()) ?? 0)&(C4D_StaticBack ?? 0)))
+      if((GetX(Var()) ?? 0)+(GetDefCoreVal("Width","DefCore",GetID(Var())) ?? 0)/2>(LandscapeWidth() ?? 0)-2)
+        if(Or((GetXDir(Var()) ?? 0)>0, Equal(GetComDir(Var()), COMD_Right)))
+          SetPosition((GetDefCoreVal("Width","DefCore",GetID(Var())) ?? 0)/2,GetY(Var()),Var());
 
   return(1);}
 

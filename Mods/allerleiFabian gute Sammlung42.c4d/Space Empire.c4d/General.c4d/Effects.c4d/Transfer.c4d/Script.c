@@ -1,6 +1,6 @@
 /*-- Transfer --*/
 
-#strict
+#strict 3
 
 local xferCaller, xferTarget,transferclonk,building;
 
@@ -14,9 +14,9 @@ private func TransferMenu(caller)
 {
   // Menü öffnen
   xferCaller = caller;
-  if (GetOwner(xferCaller) != GetOwner())
+  if (!Equal(GetOwner(xferCaller), GetOwner()))
     return(1);
-  CreateMenu(GetID(),xferCaller,0,0,"Transfer",0,1);
+  CreateMenu(GetID(),xferCaller,nil,nil,"Transfer",nil,1);
   // Gebäude mit Uplink
   AddBase(UPLB);
   AddBase(UPLT);
@@ -75,21 +75,21 @@ if(!(upl ->~ StatusFreigabe())){
 private func AddBase(uplinkID)
 {
   var upl, obj;
-  while (upl = FindObject(uplinkID,0,0,-1,-1, 0,"Turn",0,0, upl))
+  while (upl = FindObject(uplinkID,nil,nil,-1,-1, nil,"Turn",nil,nil, upl))
   {
-if((Hostile(GetOwner(upl),GetOwner()))) return(0);
-    obj = GetActionTarget(0,upl);
-    if (ObjectDistance(obj) > 500)
+if((Hostile(GetOwner(upl),GetOwner()))) return(nil);
+    obj = GetActionTarget(nil,upl);
+    if ((ObjectDistance(obj) ?? 0) > 500)
       return(1);
 
-if(GetOwner(obj)==GetOwner()){
-    AddMenuItem(Format("Holen <- %s", GetName(obj)), "TransferIn", XFER,xferCaller, 0,upl, "Transfer hier hinein",2,0);
-    AddMenuItem(Format("Senden -> %s",GetName(obj)), "TransferOut",XFER,xferCaller, 0,upl, "Transfer hier heraus",2,1);}
+if(Equal(GetOwner(obj), GetOwner())){
+    AddMenuItem(Format("Holen <- %s", GetName(obj)), "TransferIn", XFER,xferCaller, nil,upl, "Transfer hier hinein",2,nil);
+    AddMenuItem(Format("Senden -> %s",GetName(obj)), "TransferOut",XFER,xferCaller, nil,upl, "Transfer hier heraus",2,1);}
 
 if(upl->~StatusFreigabe())
-if(GetOwner(obj)!=GetOwner()){
-    AddMenuItem(Format("Holen <- %s von %s", GetName(obj), GetPlayerName(GetOwner(obj))), "TransferIn", XFER,xferCaller, 0,upl, "Transfer hier hinein",2,0);
-    AddMenuItem(Format("Senden -> %s von %s",GetName(obj), GetPlayerName(GetOwner(obj))), "TransferOut",XFER,xferCaller, 0,upl, "Transfer hier heraus",2,1);}
+if(!Equal(GetOwner(obj), GetOwner())){
+    AddMenuItem(Format("Holen <- %s von %s", GetName(obj), GetPlayerName(GetOwner(obj))), "TransferIn", XFER,xferCaller, nil,upl, "Transfer hier hinein",2,nil);
+    AddMenuItem(Format("Senden -> %s von %s",GetName(obj), GetPlayerName(GetOwner(obj))), "TransferOut",XFER,xferCaller, nil,upl, "Transfer hier heraus",2,1);}
   }
 }
 
@@ -98,17 +98,17 @@ if(GetOwner(obj)!=GetOwner()){
 private func Add2Menu(objID)
 {
   var obj;
-  while (obj = FindObject(objID,0,0,-1,-1, OCF_Fullcon(), 0,0,0, obj))
+  while (obj = FindObject(objID,nil,nil,-1,-1, OCF_Fullcon, nil,nil,nil, obj))
    { if((Hostile(GetOwner(obj),GetOwner()))) return(1);
-      if (ObjectDistance(obj) > 500) return(1);
+      if ((ObjectDistance(obj) ?? 0) > 500) return(1);
 
-if (!(Contained(obj)) && GetOwner(obj)==GetOwner()) {
-    AddMenuItem(Format("Holen <- %s", GetName(obj)), "TransferIn", XFER,xferCaller, 0,obj, "Transfer hier hinein",2,0);
-    AddMenuItem(Format("Senden -> %s",GetName(obj)), "TransferOut",XFER,xferCaller, 0,obj, "Transfer hier heraus",2,1);}
+if (And(!(Contained(obj)), Equal(GetOwner(obj), GetOwner()))) {
+    AddMenuItem(Format("Holen <- %s", GetName(obj)), "TransferIn", XFER,xferCaller, nil,obj, "Transfer hier hinein",2,nil);
+    AddMenuItem(Format("Senden -> %s",GetName(obj)), "TransferOut",XFER,xferCaller, nil,obj, "Transfer hier heraus",2,1);}
 
-if(!(Contained(obj)) && GetOwner(obj)!=GetOwner()){
-    AddMenuItem(Format("Holen <- %s von %s", GetName(obj), GetPlayerName(GetOwner(obj))), "TransferIn", XFER,xferCaller, 0,obj, "Transfer hier hinein",2,0);
-    AddMenuItem(Format("Senden -> %s von %s",GetName(obj), GetPlayerName(GetOwner(obj))), "TransferOut",XFER,xferCaller, 0,obj, "Transfer hier heraus",2,1);}
+if(And(!(Contained(obj)), !Equal(GetOwner(obj), GetOwner()))){
+    AddMenuItem(Format("Holen <- %s von %s", GetName(obj), GetPlayerName(GetOwner(obj))), "TransferIn", XFER,xferCaller, nil,obj, "Transfer hier hinein",2,nil);
+    AddMenuItem(Format("Senden -> %s von %s",GetName(obj), GetPlayerName(GetOwner(obj))), "TransferOut",XFER,xferCaller, nil,obj, "Transfer hier heraus",2,1);}
     }
 }
 
@@ -119,20 +119,20 @@ private func TransferIn(par0, target, selection)
   xferTarget = target;
   var xferT2 = target;
   if (target->~IsUplink())
-    xferT2 = GetActionTarget(0,target);
+    xferT2 = GetActionTarget(nil,target);
   CreateMenu(GetID(xferTarget), xferCaller);
-  AddMenuItem("Senden-Modus aktivieren", "TransferOut", XFER,xferCaller, 0,xferTarget, "Wechseln in den Senden-Modus",2,1);
+  AddMenuItem("Senden-Modus aktivieren", "TransferOut", XFER,xferCaller, nil,xferTarget, "Wechseln in den Senden-Modus",2,1);
   // nichts versendbares
-  if (!(FindObject(0,0,0,0,0,OCF_Collectible(),0,0,xferT2)) && !FindObject2(Find_Func("IsTransferabl")))
+  if (And(!(FindObject(nil,nil,nil,nil,nil,OCF_Collectible,nil,nil,xferT2)), !FindObject2(Find_Func("IsTransferabl"))))
     return(1);
-  AddMenuItem("Alles holen", "TransferInAll", XFER,xferCaller, 0,0, "Alles hier herein transferieren",2,2);
+  AddMenuItem("Alles holen", "TransferInAll", XFER,xferCaller, nil,nil, "Alles hier herein transferieren",2,2);
   // Auflistung
 
 for(var clonk in FindObjects(Find_Container(xferT2),Find_Or(Find_ID(HZCK),Find_ID(CLNK))))
-{ AddMenuItem(Format("Den %v holen",GetName(clonk)), "DoTransferIn", GetID(clonk),xferCaller, 0,clonk);}
+{ AddMenuItem(Format("Den %v holen",GetName(clonk)), "DoTransferIn", GetID(clonk),xferCaller, nil,clonk);}
 
 for(var vehicle in FindObjects(Find_Container(xferT2), Find_Or(Find_Or(Find_ID(SHTL),Find_ID(TANK),Find_ID(CVLA),Find_ID(SUB1),Find_ID(CAN_),Find_ID(CCD_),Find_ID(CGC_),Find_ID(MAM_),Find_ID(TSP_),Find_ID(TCN_)),Find_ID(SCR_))))
-{ AddMenuItem(Format("Das %v holen",GetName(vehicle)), "DoTransferIn", GetID(vehicle),xferCaller, 0,vehicle);}
+{ AddMenuItem(Format("Das %v holen",GetName(vehicle)), "DoTransferIn", GetID(vehicle),xferCaller, nil,vehicle);}
 
 
   var i, count, bool;
@@ -146,22 +146,22 @@ for(var vehicle in FindObjects(Find_Container(xferT2), Find_Or(Find_Or(Find_ID(S
 //if(GetDefCoreVal("NoGet", "DefCore", objID)) return(1);
 
     count = 1;
-    ++i;
-    while ((obj = Contents(i,xferT2)) && (GetID(obj) == objID))
+    S42MigrationStep(i, 1);
+    while (And((obj = Contents(i,xferT2)), (Equal(GetID(obj), objID))))
     {
-      ++count;
-      ++i;
+      S42MigrationStep(count, 1);
+      S42MigrationStep(i, 1);
     }
-    if(objID!=CLNK && objID!=HZCK && objID!=SHTL && objID!=TANK && objID!=CVLA && objID!=SUB1 && objID!=CAN_ && objID!=CCD_ && objID!=CGC_ && objID!=MAM_ && objID!=TSP_ && objID!=TCN_ && objID!=SCR_ && (!(GetDefCoreVal("NoGet", "DefCore", objID))) )  // keine Clonks, die sind bereits nach Namen sortiert und keine 
+    if(And(And(And(And(And(And(And(And(And(And(And(And(And(!Equal(objID, CLNK), !Equal(objID, HZCK)), !Equal(objID, SHTL)), !Equal(objID, TANK)), !Equal(objID, CVLA)), !Equal(objID, SUB1)), !Equal(objID, CAN_)), !Equal(objID, CCD_)), !Equal(objID, CGC_)), !Equal(objID, MAM_)), !Equal(objID, TSP_)), !Equal(objID, TCN_)), !Equal(objID, SCR_)), (!(GetDefCoreVal("NoGet", "DefCore", objID)))) )  // keine Clonks, die sind bereits nach Namen sortiert und keine
    if (bool)
     {
       AddMenuItem("%s holen", "DoTransferIn", objID,xferCaller, count,num);
-      ++num;
+      S42MigrationStep(num, 1);
     }
   }
 //if (selection && GetType(selection)==C4V_C4Object()) selection=1;
-  while (selection >= num)
-    --selection;
+  while ((selection ?? 0) >= (num ?? 0))
+    S42MigrationStep(selection, -1);
   SelectMenuItem(selection,xferCaller);
 }
 
@@ -171,20 +171,20 @@ private func TransferOut(par0, target, selection)
   xferTarget = target;
   var xferT2 = target;
   if (target->~IsUplink())
-    xferT2 = GetActionTarget(0,target);
+    xferT2 = GetActionTarget(nil,target);
   CreateMenu(GetID(), xferCaller);
-  AddMenuItem("Holen-Modus aktivieren", "TransferIn", XFER,xferCaller, 0,xferTarget, "Wechseln in den Holen-Modus",2,0);
+  AddMenuItem("Holen-Modus aktivieren", "TransferIn", XFER,xferCaller, nil,xferTarget, "Wechseln in den Holen-Modus",2,nil);
   // nichts versendbares
-  if (!(FindObject(0,0,0,0,0,OCF_Collectible(),0,0,this())) &&  !FindObject2(Find_Func("IsTransferabl")))
+  if (And(!(FindObject(nil,nil,nil,nil,nil,OCF_Collectible,nil,nil,this())),  !FindObject2(Find_Func("IsTransferabl"))))
     return(1);
-  AddMenuItem("Alles senden", "TransferOutAll", XFER,xferCaller, 0,0, "Alles hier heraus transferieren",2,3);
+  AddMenuItem("Alles senden", "TransferOutAll", XFER,xferCaller, nil,nil, "Alles hier heraus transferieren",2,3);
   // Auflistung
 
 for(var clonk in FindObjects(Find_Container(),Find_Or(Find_ID(HZCK),Find_ID(CLNK))))
-{ AddMenuItem(Format("Den %v senden",GetName(clonk)), "DoTransferOut", GetID(clonk),xferCaller, 0,clonk);}
+{ AddMenuItem(Format("Den %v senden",GetName(clonk)), "DoTransferOut", GetID(clonk),xferCaller, nil,clonk);}
 
 for(var vehicle in FindObjects(Find_Container(),Find_Or(Find_Or(Find_ID(SHTL),Find_ID(TANK),Find_ID(CVLA),Find_ID(SUB1),Find_ID(CAN_),Find_ID(CCD_),Find_ID(CGC_),Find_ID(MAM_),Find_ID(TSP_),Find_ID(TCN_)),Find_ID(SCR_))))
-{ AddMenuItem(Format("Das %v senden",GetName(vehicle)), "DoTransferOut", GetID(vehicle),xferCaller, 0,vehicle);}
+{ AddMenuItem(Format("Das %v senden",GetName(vehicle)), "DoTransferOut", GetID(vehicle),xferCaller, nil,vehicle);}
 
   var i, count, bool;
   var obj, objID;
@@ -197,81 +197,81 @@ for(var vehicle in FindObjects(Find_Container(),Find_Or(Find_Or(Find_ID(SHTL),Fi
 //if(GetDefCoreVal("NoGet", "DefCore", objID)) return(1);
 
     count = 1;
-    ++i;
-    while ((obj = Contents(i)) && (GetID(obj) == objID))
+    S42MigrationStep(i, 1);
+    while (And((obj = Contents(i)), (Equal(GetID(obj), objID))))
     {
-      ++count;
-      ++i;
+      S42MigrationStep(count, 1);
+      S42MigrationStep(i, 1);
     }
-    if(objID!=CLNK && objID!=HZCK && objID!=SHTL && objID!=TANK && objID!=CVLA && objID!=SUB1 && objID!=CAN_ && objID!=CCD_ && objID!=CGC_ && objID!=MAM_ && objID!=TSP_ && objID!=TCN_ && objID!=SCR_ && (!(GetDefCoreVal("NoGet", "DefCore", objID))) )  // keine Clonks, die sind bereits nach Namen sortiert und keine 
+    if(And(And(And(And(And(And(And(And(And(And(And(And(And(!Equal(objID, CLNK), !Equal(objID, HZCK)), !Equal(objID, SHTL)), !Equal(objID, TANK)), !Equal(objID, CVLA)), !Equal(objID, SUB1)), !Equal(objID, CAN_)), !Equal(objID, CCD_)), !Equal(objID, CGC_)), !Equal(objID, MAM_)), !Equal(objID, TSP_)), !Equal(objID, TCN_)), !Equal(objID, SCR_)), (!(GetDefCoreVal("NoGet", "DefCore", objID)))) )  // keine Clonks, die sind bereits nach Namen sortiert und keine
     if (bool)
     {
       AddMenuItem("%s senden", "DoTransferOut", objID,xferCaller, count,num);
-      ++num;
+      S42MigrationStep(num, 1);
     }
 }
 //if (selection && GetType(selection)==C4V_C4Object()) selection=1;
-  while (selection >= num)
-    --selection;
+  while ((selection ?? 0) >= (num ?? 0))
+    S42MigrationStep(selection, -1);
   SelectMenuItem(selection, xferCaller);
 }
 
 private func DoTransferIn(objID, num)
 {
-if (objID!=CLNK && objID!=HZCK && objID!=SHTL && objID!=TANK && objID!=CVLA && objID!=SUB1 && objID!=CAN_ && objID!=CCD_ && objID!=CGC_ && objID!=MAM_ && objID!=TSP_ && objID!=TCN_ && objID!=SCR_)
+if (And(And(And(And(And(And(And(And(And(And(And(And(!Equal(objID, CLNK), !Equal(objID, HZCK)), !Equal(objID, SHTL)), !Equal(objID, TANK)), !Equal(objID, CVLA)), !Equal(objID, SUB1)), !Equal(objID, CAN_)), !Equal(objID, CCD_)), !Equal(objID, CGC_)), !Equal(objID, MAM_)), !Equal(objID, TSP_)), !Equal(objID, TCN_)), !Equal(objID, SCR_)))
 {
   // Fehlerprüfung
   var obj;
-  if (xferTarget->~IsUplink()) obj = FindContents(objID, GetActionTarget(0,xferTarget));
+  if (xferTarget->~IsUplink()) obj = FindContents(objID, GetActionTarget(nil,xferTarget));
                           else obj = FindContents(objID, xferTarget);
-  if (!obj || ObjectDistance(xferTarget) > 500)
+  if (Or(!obj, (ObjectDistance(xferTarget) ?? 0) > 500))
     return(Message("Transfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS, GetX(xferTarget)-GetX(), GetY(xferTarget)-GetY(), GetOwner());
+  var transport = CreateObject(TRNS, (GetX(xferTarget) ?? 0)-(GetX() ?? 0), (GetY(xferTarget) ?? 0)-(GetY() ?? 0), GetOwner());
   transport->Init(this());
   Enter(transport, obj);
   // Menü wieder öffnen
-  return(TransferIn(0,xferTarget,num));}
+  return(TransferIn(nil,xferTarget,num));}
 
-if (objID==CLNK || objID==HZCK|| objID==SHTL || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK || objID==TANK){
+if (Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Equal(objID, CLNK), Equal(objID, HZCK)), Equal(objID, SHTL)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK)), Equal(objID, TANK))){
   var obj=num;
-  if (!obj || ObjectDistance(xferTarget) > 500)
+  if (Or(!obj, (ObjectDistance(xferTarget) ?? 0) > 500))
     return(Message("Transfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS, GetX(xferTarget)-GetX(), GetY(xferTarget)-GetY(), GetOwner());
+  var transport = CreateObject(TRNS, (GetX(xferTarget) ?? 0)-(GetX() ?? 0), (GetY(xferTarget) ?? 0)-(GetY() ?? 0), GetOwner());
   transport->Init(this());
   Enter(transport, obj);
   // Menü wieder öffnen
-  return(TransferIn(0,xferTarget));}
+  return(TransferIn(nil,xferTarget));}
 }
 
 private func DoTransferOut(objID, num)
 {
-if (objID==CLNK || objID==HZCK|| objID==SHTL || objID==TANK || objID==CVLA || objID==SUB1 || objID==CAN_ || objID==CCD_ || objID==CGC_ || objID==MAM_ || objID==TSP_ || objID==TCN_ || objID==SCR_)
+if (Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Equal(objID, CLNK), Equal(objID, HZCK)), Equal(objID, SHTL)), Equal(objID, TANK)), Equal(objID, CVLA)), Equal(objID, SUB1)), Equal(objID, CAN_)), Equal(objID, CCD_)), Equal(objID, CGC_)), Equal(objID, MAM_)), Equal(objID, TSP_)), Equal(objID, TCN_)), Equal(objID, SCR_)))
 {
   // Fehlerprüfung
   var obj = FindContents(objID);
-  if (!obj || ObjectDistance(xferTarget) > 500)
+  if (Or(!obj, (ObjectDistance(xferTarget) ?? 0) > 500))
     return(Message("Transfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS,0,0,GetOwner());
+  var transport = CreateObject(TRNS,nil,nil,GetOwner());
   transport->Init(xferTarget);
   Enter(transport, obj);
   // Menü wieder öffnen
-  return(TransferOut(0,xferTarget,num));}
+  return(TransferOut(nil,xferTarget,num));}
 
-if (objID==CLNK || objID==HZCK|| objID==SHTL || objID==TANK || objID==CVLA || objID==SUB1 || objID==CAN_ || objID==CCD_ || objID==CGC_ || objID==MAM_ || objID==TSP_ || objID==TCN_ || objID==SCR_)
+if (Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Equal(objID, CLNK), Equal(objID, HZCK)), Equal(objID, SHTL)), Equal(objID, TANK)), Equal(objID, CVLA)), Equal(objID, SUB1)), Equal(objID, CAN_)), Equal(objID, CCD_)), Equal(objID, CGC_)), Equal(objID, MAM_)), Equal(objID, TSP_)), Equal(objID, TCN_)), Equal(objID, SCR_)))
 {
   // Fehlerprüfung
   var obj = num;
-  if (!obj || ObjectDistance(xferTarget) > 500)
+  if (Or(!obj, (ObjectDistance(xferTarget) ?? 0) > 500))
     return(Message("ClonkTransfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS,0,0,GetOwner());
+  var transport = CreateObject(TRNS,nil,nil,GetOwner());
   transport->Init(xferTarget);
   Enter(transport, obj);
   // Menü wieder öffnen
-  return(TransferOut(0,xferTarget));}
+  return(TransferOut(nil,xferTarget));}
 
 
 }
@@ -279,37 +279,37 @@ if (objID==CLNK || objID==HZCK|| objID==SHTL || objID==TANK || objID==CVLA || ob
 private func TransferInAll()
 {
   // Fehlerprüfung
-  if (ObjectDistance(xferTarget) > 500)
+  if ((ObjectDistance(xferTarget) ?? 0) > 500)
     return(Message("Transfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS, GetX(xferTarget)-GetX(), GetY(xferTarget)-GetY(), GetOwner());
+  var transport = CreateObject(TRNS, (GetX(xferTarget) ?? 0)-(GetX() ?? 0), (GetY(xferTarget) ?? 0)-(GetY() ?? 0), GetOwner());
   transport->Init(this());
   if (xferTarget->~IsUplink())
-    xferTarget = GetActionTarget(0,xferTarget);
+    xferTarget = GetActionTarget(nil,xferTarget);
   var i, obj;
   while (obj = Contents(i,xferTarget))
 //  if (GetOCF(obj) & OCF_Collectible())
-    if (GetOCF(obj) & OCF_Collectible() || FindObject2(Find_Func("IsTransferabl")))
+    if (Or((GetOCF(obj) ?? 0) & (OCF_Collectible ?? 0), FindObject2(Find_Func("IsTransferabl"))))
       Enter(transport, obj);
     else
-      ++i;
+      S42MigrationStep(i, 1);
 }
 
 private func TransferOutAll()
 {
   // Fehlerprüfung
-  if (ObjectDistance(xferTarget) > 500)
+  if ((ObjectDistance(xferTarget) ?? 0) > 500)
     return(Message("Transfer nicht möglich", this()));
   // Transport starten
-  var transport = CreateObject(TRNS,0,0,GetOwner());
+  var transport = CreateObject(TRNS,nil,nil,GetOwner());
   transport->Init(xferTarget);
   var i, obj;
   while (obj = Contents(i))
  // if (GetOCF(obj) & OCF_Collectible())
-    if (GetOCF(obj) & OCF_Collectible() || FindObject2(Find_Func("IsTransferabl")))
+    if (Or((GetOCF(obj) ?? 0) & (OCF_Collectible ?? 0), FindObject2(Find_Func("IsTransferabl"))))
       Enter(transport, obj);
     else
-      ++i;
+      S42MigrationStep(i, 1);
 }
 
 
@@ -321,19 +321,19 @@ public func TransferArrival()
 
  for (var obj in FindObjects(Find_Container(this())))
  {
-if (GetID(obj)==SHTL) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(SHTL,0,0,owner);}
-if (GetID(obj)==TANK) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(TANK,0,0,owner);}
-if (GetID(obj)==CVLA) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(CVLA,0,0,owner);}
-if (GetID(obj)==SUB1) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(SUB1,0,0,owner);}
-if (GetID(obj)==CAN_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(CAN_,0,0,owner);}
-if (GetID(obj)==CCD_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(CCD_,0,0,owner);}
-if (GetID(obj)==CGC_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(CGC_,0,0,owner);}
-if (GetID(obj)==MAM_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(MAM_,0,0,owner);}
-if (GetID(obj)==TSP_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(TSP_,0,0,owner);}
-if (GetID(obj)==TCN_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(TCN_,0,0,owner);}
-if (GetID(obj)==SCR_) {var owner=GetOwner(obj);var inhalt=Contents(0,obj);RemoveObject(obj);var obj=CreateObject(SCR_,0,0,owner);}
+if (Equal(GetID(obj), SHTL)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(SHTL,nil,nil,owner);}
+if (Equal(GetID(obj), TANK)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(TANK,nil,nil,owner);}
+if (Equal(GetID(obj), CVLA)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(CVLA,nil,nil,owner);}
+if (Equal(GetID(obj), SUB1)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(SUB1,nil,nil,owner);}
+if (Equal(GetID(obj), CAN_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(CAN_,nil,nil,owner);}
+if (Equal(GetID(obj), CCD_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(CCD_,nil,nil,owner);}
+if (Equal(GetID(obj), CGC_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(CGC_,nil,nil,owner);}
+if (Equal(GetID(obj), MAM_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(MAM_,nil,nil,owner);}
+if (Equal(GetID(obj), TSP_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(TSP_,nil,nil,owner);}
+if (Equal(GetID(obj), TCN_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(TCN_,nil,nil,owner);}
+if (Equal(GetID(obj), SCR_)) {var owner=GetOwner(obj);var inhalt=Contents(nil,obj);RemoveObject(obj);var obj=CreateObject(SCR_,nil,nil,owner);}
 
-if(GetID(obj)==SHTL || GetID(obj)==TANK || GetID(obj)==CVLA || GetID(obj)==SUB1 || GetID(obj)==CAN_ || GetID(obj)==CCD_ || GetID(obj)==CGC_ || GetID(obj)==MAM_ || GetID(obj)==TSP_ || GetID(obj)==TCN_ || GetID(obj)==SCR_)
+if(Or(Or(Or(Or(Or(Or(Or(Or(Or(Or(Equal(GetID(obj), SHTL), Equal(GetID(obj), TANK)), Equal(GetID(obj), CVLA)), Equal(GetID(obj), SUB1)), Equal(GetID(obj), CAN_)), Equal(GetID(obj), CCD_)), Equal(GetID(obj), CGC_)), Equal(GetID(obj), MAM_)), Equal(GetID(obj), TSP_)), Equal(GetID(obj), TCN_)), Equal(GetID(obj), SCR_)))
 {
 var hangaar= FindObject2(Find_ID(CVFH),Find_Distance(200));
     if(hangaar)Enter(hangaar, obj); if(inhalt) CreateContents(inhalt,obj);}

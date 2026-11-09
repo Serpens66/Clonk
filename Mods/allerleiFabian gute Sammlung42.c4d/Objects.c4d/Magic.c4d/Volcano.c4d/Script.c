@@ -1,24 +1,24 @@
-#strict
+#strict 3
 
 protected func Activate(object pCaster, object pRealcaster)
 {
-  var iX = (GetDir(pCaster) * 2 - 1) * RandomX(100, 120);
+  var iX = ((GetDir(pCaster) ?? 0) * 2 - 1) * (RandomX(100, 120) ?? 0);
   var iY = RandomX(100, 200);
-  var iDY = 0;
+  var iDY = nil;
   var thickness = RandomX(16, 28);
   var mat = "Lava";
   // Effekt prüfen
   var iResult;
-  if (iResult = CheckEffect("VolcanoNSpell", 0, 150)) return(iResult != -1 && RemoveObject());
+  if (iResult = CheckEffect("VolcanoNSpell", nil, 150)) return(And(!Equal(iResult, -1), RemoveObject()));
   // in der Luft soll kein Vulkan erzeugt werden
-  while (!GBackSolid(iX,iDY) && iDY+GetY() <= LandscapeHeight()) iDY+=5;
+  while (And(!GBackSolid(iX,iDY), (iDY ?? 0)+(GetY() ?? 0) <= (LandscapeHeight() ?? 0))) S42MigrationAssign(iDY, "+=", 5);
   // wenn das Landstück unter der Stelle wo der Vulkan
   // erzeugt werden soll nicht hoch genug ist (100px), wie vorher mit Y = LandscapeHeight() zaubern
-  if (!GBackSolid(iX,iY+iDY))
-    if (!GBackSolid(iX,(iY=100)+iDY))
+  if (!GBackSolid(iX,(iY ?? 0)+(iDY ?? 0)))
+    if (!GBackSolid(iX,((iY=100) ?? 0)+(iDY ?? 0)))
     {
       iY = AbsY(LandscapeHeight());
-      iDY= 0;
+      iDY= nil;
     }
     
 /*
@@ -45,7 +45,7 @@ protected func Activate(object pCaster, object pRealcaster)
 
   
   // Vulkan ausbrechen lassen
-  LaunchVolcano(BoundBy(GetX() + iX,0,LandscapeWidth()),BoundBy(GetY() + iY + iDY,0,LandscapeHeight()), thickness, mat);
+  LaunchVolcano(BoundBy((GetX() ?? 0) + (iX ?? 0),nil,LandscapeWidth()),BoundBy((GetY() ?? 0) + (iY ?? 0) + (iDY ?? 0),nil,LandscapeHeight()), thickness, mat);
   Sound("Lava*");
   RemoveObject();
   return(1);

@@ -1,22 +1,23 @@
-#strict 2
+#strict 3
 
 /*-- Teams für besitzerlose Objekte --*/
 
 // iTeam = 0 entfernt die Teamzugehörigkeit
 global func SetTeam(int iTeam, object pObject)
 {
+	iTeam ??= 0;
 	if(!pObject)
 		if(!(pObject = this))
 			return;
 	// Null / unter Null?
-	if(iTeam <= 0) return RemoveEffect("OwnerlessTeam", pObject);
+	if((iTeam ?? 0) <= 0) return RemoveEffect("OwnerlessTeam", pObject);
 	// nur für besitzerlose Objekte
-	if(GetOwner(pObject) != NO_OWNER) return;
+	if(!S42MigrationEqual(GetOwner(pObject), NO_OWNER)) return;
 	// Team setzen
 	var eff = GetEffect("OwnerlessTeam", pObject);
 	if(!eff)
 	  eff = AddEffect("OwnerlessTeam", pObject, 1);
-	EffectVar(0, pObject, eff) = iTeam;
+	EffectVar(nil, pObject, eff) = iTeam;
 	return eff;
 }
 
@@ -25,11 +26,11 @@ global func GetTeam(object pObject)
 {
 	if(!pObject)
 		if(!(pObject = this))
-			return 0;
+			return nil;
 	
 	// für besitzerlose wird der Effekt gefragt, ansonsten ganz normal
-	if(GetOwner(pObject) == NO_OWNER) {
-		return EffectVar(0, pObject, GetEffect("OwnerlessTeam", pObject));
+	if(S42MigrationEqual(GetOwner(pObject), NO_OWNER)) {
+		return EffectVar(nil, pObject, GetEffect("OwnerlessTeam", pObject));
 	} else {
 		return GetPlayerTeam(GetOwner(pObject));
 	}
@@ -43,20 +44,21 @@ global func GetTeam(object pObject)
 // tote Feinde gelten hier als keine Feinde
 global func CheckEnemy(object pObj, object pObj2, bool findEnemy) {
 
-  if(!pObj) return false;
+  findEnemy ??= false;
+  if(!pObj) return nil;
 
   if(!pObj2)
     pObj2 = this;
-  if(!pObj2) return false;
+  if(!pObj2) return nil;
   
   // tote Lebewesen nicht treffen
-  if(GetCategory(pObj) & C4D_Living)
+  if((GetCategory(pObj) ?? 0) & (C4D_Living ?? 0))
 	if(!GetAlive(pObj))
-		return false;
+		return nil;
 		
-  if(GetCategory(pObj2) & C4D_Living)
+  if((GetCategory(pObj2) ?? 0) & (C4D_Living ?? 0))
 	if(!GetAlive(pObj2))
-		return false;
+		return nil;
 
   var own1 = GetOwner(pObj);
   var own2 = GetOwner(pObj2);
@@ -67,8 +69,8 @@ global func CheckEnemy(object pObj, object pObj2, bool findEnemy) {
   }
   
   // eines der Objekte  hat keinen Besitzer
-  var noown1 = (own1 == NO_OWNER);
-  var noown2 = (own2 == NO_OWNER);
+  var noown1 = (S42MigrationEqual(own1, NO_OWNER));
+  var noown2 = (S42MigrationEqual(own2, NO_OWNER));
   
   var team1 = GetTeam(pObj);
   var team2 = GetTeam(pObj2);
@@ -77,7 +79,7 @@ global func CheckEnemy(object pObj, object pObj2, bool findEnemy) {
 
 	// im selben Team: nicht treffen/finden
 	// 0 ist kein Team
-    if( (team1 == team2) && (team1 || team2)) { }
+    if( (S42MigrationEqual(team1, team2)) && (team1 || team2)) { }
 	
 	// beide haben kein Team aber beide haben keinen Besitzer: nicht treffen/finden
 	else if( !(team1 || team2) && noown1 && noown2) { }
@@ -105,7 +107,7 @@ global func CheckEnemy(object pObj, object pObj2, bool findEnemy) {
 	}
   }
 	
-  return false;
+  return nil;
 }
 
 // angegebenes Objekt ist grundsätzlich würdig, ein Ziel zu sein
@@ -113,31 +115,35 @@ global func CheckEnemy(object pObj, object pObj2, bool findEnemy) {
 // ansonsten gleiche Parameter wie FindTargets
 global func CheckTarget(object pTarget, object pObj, int maxDist, int maxAngle, int angle, bool disregardLineOfSight) {
 
+  maxDist ??= 0;
+  maxAngle ??= 0;
+  angle ??= 0;
+  disregardLineOfSight ??= false;
   if(!pObj)
     pObj = this;
 
   // kein Objekt ist nicht gut
-  if(!pTarget) return false;
+  if(!pTarget) return nil;
 	
-  if(pObj == pTarget) {
-	return false;
+  if(S42MigrationEqual(pObj, pTarget)) {
+	return nil;
   }
   
   if(Contained(pTarget)) {
-	return false;
+	return nil;
   }
   
-  if(!(pTarget->~IsBulletTarget(GetID(pObj),0,pObj) || pTarget->GetOCF() & OCF_Alive)) {
-	return false;
+  if(!(pTarget->~IsBulletTarget(GetID(pObj),nil,pObj) || (pTarget->GetOCF() ?? 0) & (OCF_Alive ?? 0))) {
+	return nil;
   }
   
   if(!CheckEnemy(pTarget,pObj, true)) {
-	return false;
+	return nil;
   }
   
   // unsichtbare Objekte werden halt einfach nicht gesehen...
   if(!CheckVisibility(pTarget, pObj)) {
-	return false;
+	return nil;
   }
   
   if(maxDist) {
@@ -152,15 +158,15 @@ global func CheckTarget(object pTarget, object pObj, int maxDist, int maxAngle, 
 	
 	if(!disregardLineOfSight)
 		if(!PathFree(x,y,ox,oy)) {
-			return false;
+			return nil;
 		}
 		
-	var diffAngle = Abs(Normalize(Angle(x,y,ox,oy)-angle,-180));
-	if(diffAngle > maxAngle){
-	    return false;
+	var diffAngle = Abs(Normalize((Angle(x,y,ox,oy) ?? 0)-(angle ?? 0),-180));
+	if((diffAngle ?? 0) > (maxAngle ?? 0)){
+	    return nil;
 	}
-	if(maxDist < Distance(x,y,ox,oy)) {
-		return false;
+	if((maxDist ?? 0) < (Distance(x,y,ox,oy) ?? 0)) {
+		return nil;
 	}
   
   }
@@ -176,6 +182,10 @@ global func CheckTarget(object pTarget, object pObj, int maxDist, int maxAngle, 
 // disregardLineOfSight - ob das Objekt hinter einr Wand ist, ist egal (opt)
 global func FindTargets(object pObj, int maxDist, int maxAngle, int angle, bool disregardLineOfSight) {
 
+  maxDist ??= 0;
+  maxAngle ??= 0;
+  angle ??= 0;
+  disregardLineOfSight ??= false;
   if(!pObj)
     pObj = this;
 
@@ -193,7 +203,7 @@ global func FindTargets(object pObj, int maxDist, int maxAngle, int angle, bool 
 		Find_Exclude(pObj),
         Find_NoContainer(),
         Find_Or(
-                Find_Func("IsBulletTarget",GetID(pObj),0,pObj),
+                Find_Func("IsBulletTarget",GetID(pObj),nil,pObj),
                 Find_OCF(OCF_Alive)),
 		Sort_Distance()
 		//Find_Hostile(GetOwner()),  // schon in CheckEnemy drin
@@ -213,8 +223,8 @@ global func FindTargets(object pObj, int maxDist, int maxAngle, int angle, bool 
 				continue;
 		
 		// Im Suchkegel
-		var diffAngle = Abs(Normalize(Angle(x,y,ox,oy)-angle,-180));
-		if(diffAngle > maxAngle)
+		var diffAngle = Abs(Normalize((Angle(x,y,ox,oy) ?? 0)-(angle ?? 0),-180));
+		if((diffAngle ?? 0) > (maxAngle ?? 0))
 		    continue;
 		
 		// unsichtbare Ziele
@@ -222,7 +232,7 @@ global func FindTargets(object pObj, int maxDist, int maxAngle, int angle, bool 
 			continue;
 		
 		// dann rein in Ergebnismenge...
-		targets[GetLength(targets)] = pT;
+		targets[(GetLength(targets) ?? 0)] = pT;
 	}
 	
 	return targets;

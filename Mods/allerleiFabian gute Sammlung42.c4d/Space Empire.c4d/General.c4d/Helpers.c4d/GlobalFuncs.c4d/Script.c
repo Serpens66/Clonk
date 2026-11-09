@@ -1,24 +1,24 @@
 /*-- Funktionen --*/
 
-#strict
+#strict 3
 
 
 /* exaktere Sin und Cos durch Interpolation */
 
 global func Sin10(angle, radius)     // angle in 1/10 Grad (0 bis 3600)
 {
-  var k = angle % 10;
-  var s = Sin(angle/10, radius*10) * (10-k);
-  s += Sin(angle/10+1, radius*10) * k;
-  return((s+50) / 100);
+  var k = (angle ?? 0) % 10;
+  var s = (Sin((angle ?? 0)/10, (radius ?? 0)*10) ?? 0) * (10-(k ?? 0));
+  S42MigrationAssign(s, "+=", (Sin((angle ?? 0)/10+1, (radius ?? 0)*10) ?? 0) * (k ?? 0));
+  return(((s ?? 0)+50) / 100);
 }
 
 global func Cos10(angle, radius)
 {
-  var k = angle % 10;
-  var s = Cos(angle/10, radius*10) * (10-k);
-  s += Cos(angle/10+1, radius*10) * k;
-  return((s+50) / 100);
+  var k = (angle ?? 0) % 10;
+  var s = (Cos((angle ?? 0)/10, (radius ?? 0)*10) ?? 0) * (10-(k ?? 0));
+  S42MigrationAssign(s, "+=", (Cos((angle ?? 0)/10+1, (radius ?? 0)*10) ?? 0) * (k ?? 0));
+  return(((s ?? 0)+50) / 100);
 }
 
 
@@ -42,8 +42,8 @@ global func AddSomeKnowledges(player, plan1, plan2, plan3, plan4, plan5, plan6, 
 
 global func ObjectInsertMaterial(imat, Target)
 {
-  if (imat == -1) return(0);   // kein Material?
-  if (!Target) return(0);      // kein Zielobjekt?
+  if (Equal(imat, -1)) return(nil);   // kein Material?
+  if (!Target) return(nil);      // kein Zielobjekt?
 
 //Tank aus Landwirtschaft:
 	if (Target->~IsLiquidContainer())
@@ -65,7 +65,7 @@ global func ObjectInsertMaterial(imat, Target)
       return(barrel->BarrelDoFill(1));
   }
   // kein Fass? Dann Objekt überlaufen lassen
-  InsertMaterial(imat, GetX(Target)-GetX(), GetY(Target)-GetY());
+  InsertMaterial(imat, (GetX(Target) ?? 0)-(GetX() ?? 0), (GetY(Target) ?? 0)-(GetY() ?? 0));
   return(1);
 }
 
@@ -74,13 +74,13 @@ private func FindFillBarrel(InObj, type)
   // auffüllbares Fass im Objekt suchen
   var obj;
   var i = -1;
-  while (obj = Contents(++i, InObj))
-    if (GetID(obj) == type)
+  while (obj = Contents(S42MigrationStep(i, 1), InObj))
+    if (Equal(GetID(obj), type))
       if (!obj->BarrelIsFull())
         return(obj);
   // Nix? Dann halt ein leeres Fass suchen und füllen
   obj = FindContents(EmptyBarrelID(), InObj);
-  if (!obj) return(0);
+  if (!obj) return(nil);
   ChangeDef(type, obj);
   return(obj);
 }
@@ -93,25 +93,25 @@ global func GetTargetProjectile(Range, posX, posY, pathclosed)     // Geschosse
   var obj;
   while (1)
   {
-    obj = FindObject(0, posX,posY,-1,-1, OCF_HitSpeed2(),0,0,NoContainer(),obj);
+    obj = FindObject(nil, posX,posY,-1,-1, OCF_HitSpeed2,nil,nil,NoContainer(),obj);
     if (!obj) break;
-    if (Distance(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)) > Range) return(0);
+    if ((Distance((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)) ?? 0) > (Range ?? 0)) return(nil);
     if (obj->~IsProjectile())
-      if (GetOwner(obj) != GetOwner())
-       if (Hostile(GetOwner(),GetOwner(obj)) || GetOwner(obj)==-1) // nur feindliche und ohne besitzer
-        if ((GetXDir(obj)**2 + GetYDir(obj)**2) > 2500)
+      if (!Equal(GetOwner(obj), GetOwner()))
+       if (Or(Hostile(GetOwner(),GetOwner(obj)), Equal(GetOwner(obj), -1))) // nur feindliche und ohne besitzer
+        if (((GetXDir(obj) ?? 0)**2 + (GetYDir(obj) ?? 0)**2) > 2500)
           if(pathclosed) 
            return(obj);
      if (obj->~IsProjectile())
-      if (GetOwner(obj) != GetOwner())
-       if (Hostile(GetOwner(),GetOwner(obj)) || GetOwner(obj)==-1) // nur feindliche und ohne besitzer
-        if ((GetXDir(obj)**2 + GetYDir(obj)**2) > 2500)
+      if (!Equal(GetOwner(obj), GetOwner()))
+       if (Or(Hostile(GetOwner(),GetOwner(obj)), Equal(GetOwner(obj), -1))) // nur feindliche und ohne besitzer
+        if (((GetXDir(obj) ?? 0)**2 + (GetYDir(obj) ?? 0)**2) > 2500)
           if(!pathclosed)
-          if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+          if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
             return(obj);
-      return(0);
+      return(nil);
   }
-  return(0);
+  return(nil);
 }
 
 
@@ -120,17 +120,17 @@ global func GetTargetZapGlobal(Range, posX, posY, pathclosed)     // Zaps auch a
   var obj;
   while (1)
   {
-    obj = FindObject(ZAP1, posX, posY,-1,-1, 0,0,0,NoContainer(),obj);
+    obj = FindObject(ZAP1, posX, posY,-1,-1, nil,nil,nil,NoContainer(),obj);
     if (!obj) break;
-    if (Distance(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)) > Range) return(0);
+    if ((Distance((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)) ?? 0) > (Range ?? 0)) return(nil);
     if(pathclosed) 
            return(obj);
     if(!pathclosed)
-    if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+    if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
       return(obj);
-      return(0);
+      return(nil);
   }
-  return(0);
+  return(nil);
 }
 
 
@@ -142,10 +142,10 @@ global func GetTargetDetonation(Range,ID , posX, posY,pathclosed)     // alle Sp
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
-return(0);
+return(nil);
 }
 
 global func GetTargetHostileDetonation(Range, ID, posX, posY,pathclosed)     // feindliche/besitzerlose Sprengsätze, Minen
@@ -156,34 +156,34 @@ global func GetTargetHostileDetonation(Range, ID, posX, posY,pathclosed)     // 
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
-return(0);
+return(nil);
 }
 
 global func GetTargetCrew(Range, posX, posY,pathclosed,container)     // verfeindetes Crewmitglied
 {
   var obj;
   if(!container)
-  for ( obj in FindObjects(Find_Distance(Range),Find_NoContainer(0),Find_OCF(OCF_Alive),Find_OCF(OCF_CrewMember), Find_Or(Find_Hostile(GetOwner(0)),Find_Owner(-1)) ) )
+  for ( obj in FindObjects(Find_Distance(Range),Find_NoContainer(nil),Find_OCF(OCF_Alive),Find_OCF(OCF_CrewMember), Find_Or(Find_Hostile(GetOwner(nil)),Find_Owner(-1)) ) )
   {
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
   if(container)
-for ( obj in FindObjects(Find_Distance(Range),Find_OCF(OCF_CrewMember),Find_OCF(OCF_Alive), Find_Or(Find_Hostile(GetOwner(0)),Find_Owner(-1)) ) )
+for ( obj in FindObjects(Find_Distance(Range),Find_OCF(OCF_CrewMember),Find_OCF(OCF_Alive), Find_Or(Find_Hostile(GetOwner(nil)),Find_Owner(-1)) ) )
   {
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
-return(0);
+return(nil);
 }
 
 global func GetTargetCrewAllied(Range, posX, posY,pathclosed,container)     // verbündetes Crewmitglied
@@ -195,7 +195,7 @@ global func GetTargetCrewAllied(Range, posX, posY,pathclosed,container)     // v
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
 if(container)
@@ -204,10 +204,10 @@ if(container)
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
-return(0);
+return(nil);
 }
 
 
@@ -217,32 +217,32 @@ global func GetTargetVehicle(Range, posX, posY,pathclosed,container)     // gegn
   if(!container)
   for ( obj in FindObjects(Find_Distance(Range),Find_Or(Find_Func("IsVehicleProduct"),Find_OCF(OCF_Entrance),Find_Func("IsHazardShip")), Find_NoContainer(),Find_Hostile(GetOwner())) )
   {
-  if (GetCategory(obj) & C4D_Vehicle())
+  if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
      {
     if(!Hostile(GetOwner(),GetController(obj))) continue; // nur, wenn der Controller feindlich ist 
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
      }
   }
 if(container) // findet auch Objekte in Gebäuden/Fahrzeugen
   for ( obj in FindObjects(Find_Distance(Range),Find_Or(Find_Func("IsVehicleProduct"),Find_OCF(OCF_Entrance),Find_Func("IsHazardShip")),Find_Hostile(GetOwner())) )
   {
-  if (GetCategory(obj) & C4D_Vehicle())
+  if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
      {
     if(!Hostile(GetOwner(),GetController(obj))) continue; // nur, wenn der Controller feindlich ist 
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
      }
   }
-return(0);
+return(nil);
 }
 
 
@@ -252,13 +252,13 @@ global func GetTargetVehicleAllied(Range, posX, posY,pathclosed,container)     /
   if(!container)
   for ( obj in FindObjects(Find_Distance(Range),Find_Or(Find_Func("IsVehicleProduct"),Find_OCF(OCF_Entrance),Find_Func("IsHazardShip")), Find_NoContainer(),Find_Allied(GetController())) )
   {
-  if (GetCategory(obj) & C4D_Vehicle())
+  if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
      {
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
      }
   }
@@ -266,17 +266,17 @@ global func GetTargetVehicleAllied(Range, posX, posY,pathclosed,container)     /
   if(container) // findet auch Objekte in Gebäuden/Fahrzeugen
   for ( obj in FindObjects(Find_Distance(Range),Find_Or(Find_Func("IsVehicleProduct"),Find_OCF(OCF_Entrance),Find_Func("IsHazardShip")),Find_Allied(GetController())) )
   {
-  if (GetCategory(obj) & C4D_Vehicle())
+  if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
      {
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
      }
   }
-return(0);
+return(nil);
 }
 
 
@@ -285,20 +285,20 @@ global func GetTargetAnimal(Range, posX, posY,pathclosed)     // alle Tiere
   var obj;
   while (1)
   {
-    obj = FindObject(0, posX, posY,-1,-1, OCF_Alive(),0,0,NoContainer(),obj);
+    obj = FindObject(nil, posX, posY,-1,-1, OCF_Alive,nil,nil,NoContainer(),obj);
     if (!obj) break;
-    if (Distance(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)) > Range) return(0);
-    if (obj->~IsAnimalAim() || obj->~IsAnimal() )
+    if ((Distance((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)) ?? 0) > (Range ?? 0)) return(nil);
+    if (Or(obj->~IsAnimalAim(), obj->~IsAnimal()) )
      {
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
      }
-      return(0);
+      return(nil);
   }
-  return(0);
+  return(nil);
 }
 
 global func GetOtherThreats(Range, posX, posY,pathclosed,container) // findet Objekte mit "IsThreat" funktion(also bedrohung), sofern sie keinen Besitzer haben (findet also auch scorpion angriffe. Wenn der scorpion einem menschen gehört und dieser aussteigt, wird nur der kontroller auf kein"besitzer" umgestellt, der besitzer bleibt der spieler)
@@ -308,12 +308,12 @@ global func GetOtherThreats(Range, posX, posY,pathclosed,container) // findet Ob
   for ( obj in FindObjects(Find_Distance(Range),Find_Func("IsThreat"), Find_NoContainer(),Find_Owner(-1) ))
   {
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
-    if(GetOCF(obj) & OCF_Living && !(GetOCF(obj) & OCF_Alive)) // wenn totes Lebewesen, dann continue
+    if(And((GetOCF(obj) ?? 0) & (OCF_Living ?? 0), !((GetOCF(obj) ?? 0) & (OCF_Alive ?? 0)))) // wenn totes Lebewesen, dann continue
     continue;
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
 
@@ -321,12 +321,12 @@ global func GetOtherThreats(Range, posX, posY,pathclosed,container) // findet Ob
   for ( obj in FindObjects(Find_Distance(Range),Find_Func("IsThreat"),Find_Owner(-1) ))
   {
     if(obj->~IsHazardShip()) return(obj); // da diese aus vielen bauteilen bestehen, ist selten pathfree
-    if(GetOCF(obj) & OCF_Living && !(GetOCF(obj) & OCF_Alive)) // wenn totes Lebewesen, dann continue
+    if(And((GetOCF(obj) ?? 0) & (OCF_Living ?? 0), !((GetOCF(obj) ?? 0) & (OCF_Alive ?? 0)))) // wenn totes Lebewesen, dann continue
     continue;
     if(pathclosed)
            return(obj);
     if(!pathclosed)
-        if (PathFree(GetX()+posX,GetY()+posY,GetX(obj),GetY(obj)))
+        if (PathFree((GetX() ?? 0)+(posX ?? 0),(GetY() ?? 0)+(posY ?? 0),GetX(obj),GetY(obj)))
            return(obj);
   }
 }
@@ -337,8 +337,8 @@ global func GetOtherThreats(Range, posX, posY,pathclosed,container) // findet Ob
 global func CheckPWRL(caller) 
 {
   var line;
-  while (line = FindObject(PWRL,0,0,0,0, 0,"Connect",caller,0, line))
-    if (GetActionTarget(0,line) == caller) return(1);
-  return(0);
+  while (line = FindObject(PWRL,nil,nil,nil,nil, nil,"Connect",caller,nil, line))
+    if (Equal(GetActionTarget(nil,line), caller)) return(1);
+  return(nil);
 }
 

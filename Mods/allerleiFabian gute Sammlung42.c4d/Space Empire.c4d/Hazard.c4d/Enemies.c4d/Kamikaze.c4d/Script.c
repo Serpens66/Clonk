@@ -1,6 +1,6 @@
 /*--Kamikaze --*/
 
-#strict
+#strict 3
 #include ALN2
 
 local hurt;
@@ -10,7 +10,7 @@ local hurt;
 func StartLuring()
 {
   if(hurt)
-    return();
+    return;
   inherited();
 }
 
@@ -18,7 +18,7 @@ func StartLuring()
 private func Bite(object pPrey)
 {
   // Beißen!11
-  DoDmg(3+Random(10)*GetCon()/100, DMG_Explosion, pPrey);
+  DoDmg(3+(Random(10) ?? 0)*(GetCon() ?? 0)/100, DMG_Explosion, pPrey);
   // Beißsperre, damit man nicht dauerhüpft
   AddEffect("NoBite", this(), 99, 50, this());
   
@@ -37,7 +37,7 @@ private func Bite(object pPrey)
 // Schleim schleudern
 private func GlobTo(object pPrey)
 {
-  return(); //kann er nicht :(
+  return; //kann er nicht :(
 }
 
 public func Birth()
@@ -63,12 +63,12 @@ protected func Death()
 
 func CheckLiquid()
 {
-  return(); // kein Tod in wasser mehr
-  if(!GBackLiquid(0,-3))
-    return();
-  if(GetMaterial(0,-3) == Material("Water"))
+  return; // kein Tod in wasser mehr
+  if(!GBackLiquid(nil,-3))
+    return;
+  if(Equal(GetMaterial(nil,-3), Material("Water")))
   {
-    ExtractMaterialAmount(0,0, Material("Water"), GetMass());
+    ExtractMaterialAmount(nil,nil, Material("Water"), GetMass());
     CastPXS("Lava",GetMass(),GetMass());
     Death();
   }
@@ -76,7 +76,9 @@ func CheckLiquid()
 
 public func OnDmg(int iDmg, int iType) {
   //Flame
-  if(iType == DMG_Fire) {
+  iDmg ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Fire)) {
     return(25);
   }
   else
@@ -92,22 +94,26 @@ func OnHit() {
 private func Detonate() {
   var r = 25;
   if(glob)
-    r += 10;
+    S42MigrationAssign(r, "+=", 10);
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Schedule(Format("Explode(%d)",r),1); 
  else Schedule(Format("FakeExplode(%d,0,0,%d)",r,r),1);
 }
 
 func FxHurtTimer(object pTarget, int iEffectNumber, int iEffectTime) {
+  iEffectNumber ??= 0;
+  iEffectTime ??= 0;
   var x,y;
-  if(GetAction() eq "Hangle")
+  if(!!SEqual(GetAction(), "Hangle"))
     y = 2;
-  if(GetAction() eq "Scale")
-    x = (GetDir()*2-1) * 5;
-    CreateParticle("Thrust",RandomX(-4,4)+x,RandomX(-4,4)+y,GetXDir()/2,GetYDir()/2,RandomX(100,300),RGBa(255,200,200,100),0,0);
-  CreateParticle("Fire",RandomX(-2,2)+x,Random(2)+y,0,RandomX(-6,-12),RandomX(100,180),RGBa(255,RandomX(224,255),0,160));
-  CreateParticle("Fire2",RandomX(-2,2)+x,Random(2)+y,0,RandomX(-8,-14),RandomX(100,180),RGBa(255,255,255,128));
+  if(!!SEqual(GetAction(), "Scale"))
+    x = ((GetDir() ?? 0)*2-1) * 5;
+    CreateParticle("Thrust",(RandomX(-4,4) ?? 0)+(x ?? 0),(RandomX(-4,4) ?? 0)+(y ?? 0),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(100,300),RGBa(255,200,200,100),nil,nil);
+  CreateParticle("Fire",(RandomX(-2,2) ?? 0)+(x ?? 0),(Random(2) ?? 0)+(y ?? 0),nil,RandomX(-6,-12),RandomX(100,180),RGBa(255,RandomX(224,255),nil,160));
+  CreateParticle("Fire2",(RandomX(-2,2) ?? 0)+(x ?? 0),(Random(2) ?? 0)+(y ?? 0),nil,RandomX(-8,-14),RandomX(100,180),RGBa(255,255,255,128));
 }
 
 func FxHurtEffect (string szNewEffectName, object pTarget, int iEffectNumber, int iNewEffectNumber) {
-	if(szNewEffectName S= "Hurt") return(-1);
+	iEffectNumber ??= 0;
+	iNewEffectNumber ??= 0;
+	if(!!SEqual(szNewEffectName, "Hurt")) return(-1);
 }

@@ -1,15 +1,15 @@
 /*-- Goldmine --*/
 
-#strict
+#strict 3
 #include OREM
 
 public func IsFulfilled()
 {
   // Gold noch nicht gezählt?
   var GoldCnt = GetMaterialCount(Material("Gold"));
-  if (GoldCnt == -1) return();
+  if (Equal(GoldCnt, -1)) return;
   // Noch zu viel?
-  if (GoldCnt >= 150) return();
+  if ((GoldCnt ?? 0) >= 150) return;
   // Noch Goldstücke abzubauen?
   return(!ObjectCount(GOLD));
 }
@@ -22,10 +22,10 @@ protected func Activate(iPlayer)
   if (IsFulfilled()) 
     return(MessageWindow("$MsgGoalFulfilled$", iPlayer));
   // Noch nicht alles abgebaut (fest Menge noch unbekannt)
-  if (GetMaterialCount(Material("Gold")) == -1)
+  if (Equal(GetMaterialCount(Material("Gold")), -1))
     return(MessageWindow(Format("$MsgGoalUnfulfilled2$", ObjectCount(GOLD)), iPlayer));
   // Noch nicht alles abgebaut ( -50 statt -150 weil beim / 100 abgerundet wird )
-  var amountSolid = Max((GetMaterialCount(Material("Gold")) - 50) / 100, 0);
+  var amountSolid = Max(((GetMaterialCount(Material("Gold")) ?? 0) - 50) / 100, nil);
   MessageWindow(Format("$MsgGoalUnfulfilled$", amountSolid, ObjectCount(GOLD)), iPlayer);
 }
 

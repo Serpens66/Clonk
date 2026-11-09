@@ -1,6 +1,6 @@
 /*-- leere Pressluftflasche --*/
 
-#strict
+#strict 3
 
 local fill;
 
@@ -18,16 +18,16 @@ protected func Hit()
 
 protected func CheckFill()
 {  
-  if (!Contained() && !InLiquid())
+  if (And(!Contained(), !InLiquid()))
   {
-    fill+=5;
+    S42MigrationAssign(fill, "+=", 5);
     ChangeDef(CABO,this()); 
     return(1);
   }
   
-  if (Contained() && !InLiquid(Contained()))
+  if (And(Contained(), !InLiquid(Contained())))
   {
-    fill+=5;
+    S42MigrationAssign(fill, "+=", 5);
     ChangeDef(CABO,this()); 
   }
   return(1);
@@ -35,6 +35,7 @@ protected func CheckFill()
 
 /* Infos */
 
-public GetAmmoPercent: return(fill*100/500);
+public func GetAmmoPercent(...) { return((fill ?? 0)*100/500);
+}
 
 protected func SellTo() { return(CABO); }

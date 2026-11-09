@@ -1,6 +1,6 @@
 /* Object Set */
 
-#strict
+#strict 3
 #include L_ST
 #include L_AI
 
@@ -30,19 +30,20 @@ public func IsSet() { return(true); }
 
 // Add an item
 public func AddItem(object item) {
-	if(!item) return(false);
+	if(!item) return(nil);
 	// already in list? return false
-	if(GetInfo(item,0)) return(false);
+	if(GetInfo(item,nil)) return(nil);
 
 	var length = GetLength(aItems);
-	aItems[length] = item;
-	SetInfo(item,0,length);
+	aItems[(length ?? 0)] = item;
+	SetInfo(item,nil,length);
 	return(true);
 }
 
 // Remove an item
 public func RemoveItem(object item, bool fRemove) {
 	// to prevent nulls in the array
+	fRemove ??= false;
 	var ret = ReorderArray(item);
 
 	// delete info of the object that is out of the set
@@ -56,29 +57,31 @@ public func RemoveItem(object item, bool fRemove) {
 
 // Get iPos item of ID idObj
 public func GetItemByID(id idObj, int iPos) {
-	if(!idObj) return(false);
-	if(iPos < 0) return(false);
+	iPos ??= 0;
+	if(!idObj) return(nil);
+	if((iPos ?? 0) < 0) return(nil);
 	
 	// search for objects of that id
 	var item;
-	for(var i=0; item = GetItem(i); ++i) {
+	for(var i=nil; item = GetItem(i); S42MigrationStep(i, 1)) {
 		// found one of this id
-		if(GetID(item) == idObj) {
+		if(Equal(GetID(item), idObj)) {
 			if(!iPos) return(item);
-			else iPos--;
+			else S42MigrationStep(iPos, -1, true);
 		}
 	}
 	// not found
-	return(false);
+	return(nil);
 }
 
 // Remove all
 public func Clear(bool fRemove) {
 	// remove object infos
+	fRemove ??= false;
 	var length = GetLength(aItems);
-	for(var i=1; i<length ;++i) {
-		ClearInfo(aItems[i]);
-		if(fRemove) aItems[i]->RemoveObject();
+	for(var i=1; (i ?? 0)<(length ?? 0) ;S42MigrationStep(i, 1)) {
+		ClearInfo(aItems[(i ?? 0)]);
+		if(fRemove) aItems[(i ?? 0)]->RemoveObject();
 	}
 	
 	aItems = CreateArray(1);
@@ -88,29 +91,32 @@ public func Clear(bool fRemove) {
 
 // get item
 public func GetItem(int i) {
-	if(i < 0) return( false );
+	i ??= 0;
+	if((i ?? 0) < 0) return( nil );
 	// see Initialize for reason. array starts at 1
-	if(i >= GetLength(aItems)-1) return(false);
-	return(aItems[i+1]);
+	if((i ?? 0) >= (GetLength(aItems) ?? 0)-1) return(nil);
+	return(aItems[(i ?? 0)+1]);
 }
 
 // automatically remove objects out of set on removal
 public func FxIntInfoStop(object pObj, int iNum, int iReason) {
 	// if object is removed
-	if(iReason == 3) {
-		this()->ReorderArray(0,EffectVar(0,pObj,iNum));
+	iNum ??= 0;
+	iReason ??= 0;
+	if(Equal(iReason, 3)) {
+		this()->ReorderArray(nil,EffectVar(nil,pObj,iNum));
 	}
 }
 
 // count. If id is given, count objects of that ID
 public func GetItemCount(id idObj) {
-	if(!idObj) return(GetLength(aItems)-1);
+	if(!idObj) return((GetLength(aItems) ?? 0)-1);
 
-	var sum = 0;
+	var sum = nil;
 	// search for objects of that id
 	var length = GetLength(aItems);
-	for(var i=1; i<length ;++i) {
-		if(GetID(aItems[i]) == idObj) sum++;
+	for(var i=1; (i ?? 0)<(length ?? 0) ;S42MigrationStep(i, 1)) {
+		if(Equal(GetID(aItems[(i ?? 0)]), idObj)) S42MigrationStep(sum, 1, true);
 	}
 	return(sum);
 }
@@ -120,26 +126,27 @@ private func GetItemPosition(item) {
 	// since there can be only one pointer to the same object
 	// there is no second parameter
 	if(!item) return(-1);
-	var info = GetInfo(item,0);
+	var info = GetInfo(item,nil);
 	if(!info) return(-1);
 	return(info);
 }
 
 private func ReorderArray(deleteditem, int num) {
+	num ??= 0;
 	if(!num) {
 		num = GetItemPosition(deleteditem);
-		if(num == -1) return(false);
+		if(Equal(num, -1)) return(nil);
 	}
 
-	var last = GetLength(aItems)-1;
+	var last = (GetLength(aItems) ?? 0)-1;
 	// overwrite this entry with the last one
-	aItems[num] = aItems[last];
+	aItems[(num ?? 0)] = aItems[(last ?? 0)];
 	SetLength(aItems,last);
 	// ... will keep the array small and without nulls...
 	
 	// change info in the switched object if it was not the last one
-	if(num != last) {
-		SetInfo(aItems[num],0,num);
+	if(!Equal(num, last)) {
+		SetInfo(aItems[(num ?? 0)],nil,num);
 	}
 	return(true);
 }

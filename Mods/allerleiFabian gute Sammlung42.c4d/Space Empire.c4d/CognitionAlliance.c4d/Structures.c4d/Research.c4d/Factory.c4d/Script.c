@@ -1,6 +1,6 @@
 /*-- Forshcungslabor-Fabrikobjekt --*/
 
-#strict
+#strict 3
 #include FCOB
 
 local target;
@@ -12,16 +12,16 @@ local restime, kosten,kosten2, restime2,restimevorrechnung,restimevorrechnung2, 
 
 func KeyDig()
 {
-if(daueranzeige==0) {daueranzeige=1;ShowTemp(); return();}
-if(daueranzeige==1) {daueranzeige=0;ShowTemp(); return();}
+if(Equal(daueranzeige, nil)) {daueranzeige=1;ShowTemp(); return;}
+if(Equal(daueranzeige, 1)) {daueranzeige=nil;ShowTemp(); return;}
 }
 
 //TimerCall
 func ShowTemp()
 {
-if(daueranzeige==0) return();
+if(Equal(daueranzeige, nil)) return;
 var temperat;
-temperat = GetTemperature() / 2;  // geteilt durch 2 weil -50 bis 50°C realisterische Werte sind
+temperat = (GetTemperature() ?? 0) / 2;  // geteilt durch 2 weil -50 bis 50°C realisterische Werte sind
 Message(Format("Temperatur:%d°C Umweltverschmutzung/ Umweltbelastbarkeit: |%d/%d",temperat,globalpollutionanzeige, globalnature),Factory);
 }
 
@@ -30,29 +30,29 @@ public func IsWaste(){ return(10);}
 
 /* Produktionsmenü */
 
-protected func ResearchObjects(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Object())); }
-protected func ResearchVehicles(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Vehicle())); }
-protected func ResearchStructures(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Structure())); }
+protected func ResearchObjects(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Object)); }
+protected func ResearchVehicles(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Vehicle)); }
+protected func ResearchStructures(idImage, pClonk) { return(SelectResearchCategory(idImage, pClonk, C4D_Structure)); }
 
 private func OpenProductionMenu(symbol, clonk)
 { 
   // Hauptmenü erzeugen
   CreateMenu(RSR1, clonk, this());
-  if (Product) AddMenuItem("$TxtContinuedevelopement$", "SelectResearch", Product, clonk, 0, clonk);
-  AddMenuItem("$TxtResearchs$", "ResearchObjects", RSR3, clonk, 0, clonk);
-  AddMenuItem("$TxtResearchs$", "ResearchVehicles", RSR4, clonk, 0, clonk);
-  AddMenuItem("$TxtResearchs$", "ResearchStructures", RSR5, clonk, 0, clonk);
+  if (Product) AddMenuItem("$TxtContinuedevelopement$", "SelectResearch", Product, clonk, nil, clonk);
+  AddMenuItem("$TxtResearchs$", "ResearchObjects", RSR3, clonk, nil, clonk);
+  AddMenuItem("$TxtResearchs$", "ResearchVehicles", RSR4, clonk, nil, clonk);
+  AddMenuItem("$TxtResearchs$", "ResearchStructures", RSR5, clonk, nil, clonk);
 }
 
 protected func SelectResearchCategory(idImage, pClonk, dwCategory)
 {
   // Auswahlmenü erzeugen
-  CreateMenu(idImage, pClonk, this(), 0, "$TxtNothingelsetoresearc$",0,1);
+  CreateMenu(idImage, pClonk, this(), nil, "$TxtNothingelsetoresearc$",nil,1);
   // Alle geladenen Baupläne überprüfen
   var i,idDef,iPlr=GetOwner(pClonk);
-  while (idDef = GetDefinition(i++, dwCategory))
+  while (idDef = GetDefinition(S42MigrationStep(i, 1, true), dwCategory))
     // Passende Kategorie
-    if (GetCategory(0, idDef) & C4D_Knowledge())
+    if ((GetCategory(nil, idDef) ?? 0) & (C4D_Knowledge ?? 0))
       // Dem Spieler noch nicht bekannt
       if (!GetPlrKnowledge(iPlr,idDef))
       {
@@ -61,40 +61,40 @@ protected func SelectResearchCategory(idImage, pClonk, dwCategory)
 //für anzeige
   kostenvorrechnung2 = DefinitionCall(idDef, "GetResearchCosts", this(), pClonk);
   if(GetLength(hashSpielRegeln))
-    kosten=kostenvorrechnung2*HashGet(hashSpielRegeln, "Forschungskosten")/10;
+    kosten=(kostenvorrechnung2 ?? 0)*(HashGet(hashSpielRegeln, "Forschungskosten") ?? 0)/10;
   else 
     {kosten=kostenvorrechnung2;}
 
   restimevorrechnung2 = DefinitionCall(idDef, "GetResearchTime", this(), pClonk);
     if(GetLength(hashSpielRegeln))
-       restime2=restimevorrechnung2*HashGet(hashSpielRegeln, "Forschungszeit")/10;
+       restime2=(restimevorrechnung2 ?? 0)*(HashGet(hashSpielRegeln, "Forschungszeit") ?? 0)/10;
     else {restime2=restimevorrechnung2;}
     var idBase = DefinitionCall(idDef,"GetResearchBase"), fHasBase, j;
-    fHasBase = !idBase || GetPlrKnowledge(iPlr,idBase); j=1;
+    fHasBase = Or(!idBase, GetPlrKnowledge(iPlr,idBase)); j=1;
     // Erweiterte Forschungsgrundlagen
-    while (idBase = DefinitionCall(idDef, Format("GetResearchBase%d", ++j)))
-      if (!GetPlrKnowledge(iPlr,idBase)) fHasBase=0;
+    while (idBase = DefinitionCall(idDef, Format("GetResearchBase%d", S42MigrationStep(j, 1))))
+      if (!GetPlrKnowledge(iPlr,idBase)) fHasBase=nil;
     var BaseList = DefinitionCall(idDef, "GetResearchBaseList"); // eine liste
     if (BaseList)
       for(var idBase in BaseList)  
-          if (!GetPlrKnowledge(iPlr,idBase)) fHasBase=0;
+          if (!GetPlrKnowledge(iPlr,idBase)) fHasBase=nil;
     // Ist schon durch etwas anderes erforschbar? (Zugbrücke rechts -> Zugbrücke links etc.)
     var link;
     if (link = DefinitionCall(idDef, "GetResearchLink"))
-      if (GetName(0, link)) // Linkdefinition auch tatsächlich geladen?
+      if (GetName(nil, link)) // Linkdefinition auch tatsächlich geladen?
         if(!GetPlrKnowledge(iPlr, link) ) // Linkdefinition noch nicht erforscht? (passiert durch SetPlrKnowledge-Aufrufe oder Szenariovorgaben)
           continue;
     // Menüeintrag hinzufügen. Die Ausnahmen sind nur dazu da, damit eine zusatzinfo erscheint, dass die Forschung keine Pflicht ist, um andere Forschungen freizuschalten
      //   if (fHasBase) AddMenuItem("$TxtResearchs$", "SelectResearch", idDef, pClonk, 0, pClonk);
   var freiwilligliste = gForschungfreiwilligliste();
-  var dabei = 0; 
+  var dabei = nil;
   for(var element in freiwilligliste)
   {
-      if (idDef==element)
-          {if (fHasBase) AddMenuItem(Format("%s (%d C. %d Zeit) erforschen, freiwillig!",GetName(0,idDef),kosten,restime2),"SelectResearch",idDef, pClonk, 0, pClonk); dabei = 1;}
+      if (Equal(idDef, element))
+          {if (fHasBase) AddMenuItem(Format("%s (%d C. %d Zeit) erforschen, freiwillig!",GetName(nil,idDef),kosten,restime2),"SelectResearch",idDef, pClonk, nil, pClonk); dabei = 1;}
   }
-if (dabei==0){
-if (fHasBase) AddMenuItem(Format("%s (%d C. %d Zeit) erforschen",GetName(0,idDef),kosten,restime2),"SelectResearch",idDef, pClonk, 0, pClonk);
+if (Equal(dabei, nil)){
+if (fHasBase) AddMenuItem(Format("%s (%d C. %d Zeit) erforschen",GetName(nil,idDef),kosten,restime2),"SelectResearch",idDef, pClonk, nil, pClonk);
       }}  
   return(1);  
 }
@@ -103,36 +103,36 @@ if (fHasBase) AddMenuItem(Format("%s (%d C. %d Zeit) erforschen",GetName(0,idDef
 
 private func SelectResearch(productID, clonk)
 {
-   if(productID==Product) return(ContinueProduction());
+   if(Equal(productID, Product)) return(ContinueProduction());
    // Spieler hat diesen Bauplan schon?
     if (GetPlrKnowledge(clonk->GetOwner(), productID))
     {
-      Message("$TxtAlreadyDeveloped$", this(), GetName(0, productID));
+      Message("$TxtAlreadyDeveloped$", this(), GetName(nil, productID));
       Sound("Error");
-      return(0); 
+      return(nil);
     }
    
    kostenvorrechnung = DefinitionCall(productID, "GetResearchCosts", this(), clonk);
    if(GetLength(hashSpielRegeln))
-        kosten2=kostenvorrechnung*HashGet(hashSpielRegeln, "Forschungskosten")/10;
+        kosten2=(kostenvorrechnung ?? 0)*(HashGet(hashSpielRegeln, "Forschungskosten") ?? 0)/10;
    else{kosten2=kostenvorrechnung;}
 
     // wenn noch nie angefangen, dann prüfen ob genug Geld
     if (!AccHasResearch(productID, GetOwner()))
     {
-      if(GetWealth(GetOwner())< kosten2)
-        return(Message("$NotEnoughMoney$",this()),Sound("Error"));
+      if((GetWealth(GetOwner()) ?? 0)< (kosten2 ?? 0))
+        return(S42MigrationFirst(Message("$NotEnoughMoney$",this()),Sound("Error")));
     } 
     
   // Produktion starten
   Product = productID;
   if(GetLength(hashSpielRegeln)) ProdFactor = HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit"); else ProdFactor = 100;    // Standard: 100%
   // alles auf Anfang
-  CurrentPT = 0;
-  NextStepPT = 0;
-  FullPT = 0;
+  CurrentPT = nil;
+  NextStepPT = nil;
+  FullPT = nil;
   FullPT = DefinitionCall(Product, "GetResearchTime");
-  if(GetLength(hashSpielRegeln)) FullPT = FullPT * HashGet(hashSpielRegeln, "Forschungszeit")/10;
+  if(GetLength(hashSpielRegeln)) FullPT = (FullPT ?? 0) * (HashGet(hashSpielRegeln, "Forschungszeit") ?? 0)/10;
   
   // Update für Fortschrittsanzeige
   ShowInfoBar(IBRP, Factory, CurrentPT, FullPT, -1);
@@ -140,7 +140,7 @@ private func SelectResearch(productID, clonk)
   // wenn noch nie vorher angefangen, dann Geld abziehen und zur Liste der angefangenen Projekte hinzufügen
 if (!AccHasResearch(Product, GetOwner()))
 {
-  SetWealth(GetOwner(),GetWealth(GetOwner())- kosten2);
+  SetWealth(GetOwner(),(GetWealth(GetOwner()) ?? 0)- (kosten2 ?? 0));
   Sound("Cash");
   AddToResearchAcc(Product, GetOwner());
 }
@@ -157,15 +157,15 @@ private func ProductionEndCall(productID)
       // Gelinkte Forschungsziele sind automatisch auch erforscht
       // (Linke Zugbrücke -> Rechte Zugbrücke etc.)
       var def_num, def;
-      while (def = GetDefinition(def_num++)) 
+      while (def = GetDefinition(S42MigrationStep(def_num, 1, true)))
       {
         var link;
         if (link = DefinitionCall(def, "GetResearchLink"))
-          if (link == productID)
+          if (Equal(link, productID))
             SetPlrKnowledge(GetOwner(), def);
       }
       // Nachricht ausgeben
-      Message("$Txtsdeveloped$", this(), GetName(0, productID));
+      Message("$Txtsdeveloped$", this(), GetName(nil, productID));
     
     if(!Random(7)) CreateContents(HMWS,Factory);
     var verbrannt;
@@ -184,22 +184,22 @@ public func KeyUp(caller)
 private func ContinueProduction()
 {
   // weiter mit der Herstellung
-  if (GetAction() eq "Wait")
+  if (!!SEqual(GetAction(), "Wait"))
     SetAction("Process");
 }
 
 private func Process()
 {
   // noch genug Energie da?
-  if (NeedEnergy() && (GetEnergy(Factory) < 25))
+  if (And(NeedEnergy(), ((GetEnergy(Factory) ?? 0) < 25)))
     return(SetAction("CheckEnergy"));
   DoEnergy(-10, Factory);
   // weiter mit der Herstellung
-  if (CurrentPT < FullPT)
+  if ((CurrentPT ?? 0) < (FullPT ?? 0))
   {
-    ++CurrentPT;
+    S42MigrationStep(CurrentPT, 1);
     // Update für Fortschrittsanzeige
-    ShowInfoBar(IBRP, Factory, CurrentPT,FullPT, 0,1);
+    ShowInfoBar(IBRP, Factory, CurrentPT,FullPT, nil,1);
     return(DoSmoke());
   }
   // komplett fertig
@@ -215,31 +215,31 @@ private func GetResearchGoal(id idType, object pWorker)
   // Kategorie
   var category;
   
-  if(idType == RSR3) category = C4D_Object();
-  if(idType == RSR4) category = C4D_Vehicle();
-  if(idType == RSR5) category = C4D_Structure();
+  if(Equal(idType, RSR3)) category = C4D_Object;
+  if(Equal(idType, RSR4)) category = C4D_Vehicle;
+  if(Equal(idType, RSR5)) category = C4D_Structure;
   
   // Alle geladenen Definitionen überprüfen
   var i = -1, id;
-  while (id = GetDefinition(++i,category) )
+  while (id = GetDefinition(S42MigrationStep(i, 1),category) )
     // Ist ein Bauplan
-    if(GetCategory(0, id) & C4D_Knowledge() )
+    if((GetCategory(nil, id) ?? 0) & (C4D_Knowledge ?? 0) )
       // Dem Spieler noch nicht bekannt
       if(!GetPlrKnowledge(GetOwner(pWorker), id) )
       {
         // Grundlage bekannt
         var base = DefinitionCall(id, "GetResearchBase");
-        if(!base || GetPlrKnowledge(GetOwner(pWorker), base))
+        if(Or(!base, GetPlrKnowledge(GetOwner(pWorker), base)))
           return(id);
       }
 
   // Zur Zeit kein weiteres Ziel
-  return(0);
+  return(nil);
 }
 
 protected func Waiting()
 {
-  if (CurrentPT < FullPT)
+  if ((CurrentPT ?? 0) < (FullPT ?? 0))
     SetAction("Process");
 }
 
@@ -248,7 +248,7 @@ protected func Waiting()
 
 private func DoSmoke()
 {
-  if (!Random(2)) Smoke(24,-39, 5+Random(6));
+  if (!Random(2)) Smoke(24,-39, 5+(Random(6) ?? 0));
   Sound("Research");
   return(1);
 }

@@ -1,6 +1,6 @@
 /*-- Bunkerfahrstuhl --*/
 
-#strict
+#strict 3
 #include BW5C // Burgteilfunktion
 #include CXEC // Energieversorgung
 
@@ -21,7 +21,7 @@ public func Construction()
   return(_inherited());
 }
 
-public func RecheckBasement() { return(0); }
+public func RecheckBasement() { return(nil); }
 
 protected func Initialize()
 {
@@ -31,7 +31,7 @@ protected func Initialize()
     SetGraphics();
     // Fahrstuhlkorb erzeugen
     SetAction("LiftCase", pCase = CreateObject(CPEC, +0, +37, GetOwner()));
-    if (pCase) LocalN("RangeTop", pCase) = GetY() + 23;
+    if (pCase) LocalN("RangeTop", pCase) = (GetY() ?? 0) + 23;
   }
   // An Aufzuege anpassen
   CheckAdjust();
@@ -42,15 +42,15 @@ protected func Initialize()
 public func CheckAdjust()
 {
   // Aufzuege unten und oben suchen
-  var cpel_down = FindCastlePart(0, GetObjHeight() / 2);
-  var cpel_up = FindCastlePart(0, -GetObjHeight() / 2);
+  var cpel_down = FindCastlePart(nil, (GetObjHeight() ?? 0) / 2);
+  var cpel_up = FindCastlePart(nil, -(GetObjHeight() ?? 0) / 2);
   // Und anpassen
   if (cpel_down)
-    if (GetID(cpel_down) == BE5C)
-      AdjustTo(COMD_Down(), cpel_down);
+    if (Equal(GetID(cpel_down), BE5C))
+      AdjustTo(COMD_Down, cpel_down);
   if (cpel_up)
-    if (GetID(cpel_up) == BE5C)
-      AdjustTo(COMD_Up(), cpel_up);
+    if (Equal(GetID(cpel_up), BE5C))
+      AdjustTo(COMD_Up, cpel_up);
 }
 
 /* Schachterzeugung */
@@ -58,50 +58,51 @@ public func CheckAdjust()
 public func AdjustTo(int iDir, object pToObj) 
 {
   // Ausrichtung nach unten
-  if (iDir==COMD_Down()) 
+  iDir ??= 0;
+  if (Equal(iDir, COMD_Down))
   {
     // Das untere Burgteil ist ein Fahrstuhl 
     // -> untere Burgteil muss zum Schacht werden und dieses Burgteil zum Fahrstuhl
-    if ((GetID(pToObj) == BE5C) && !LocalN("is_shaft", pToObj)) 
+    if (And((Equal(GetID(pToObj), BE5C)), !LocalN("is_shaft", pToObj)))
     {
       // ggf. Stromleitung nach oben legen - leider gibt es kein Find_ActionTarget2
       for (var pwrline in FindObjects(Find_ID(PWRL)))
-        if (GetActionTarget(0, pwrline) == pToObj)
+        if (Equal(GetActionTarget(nil, pwrline), pToObj))
           SetActionTargets(this(), GetActionTarget(1, pwrline), pwrline);
-        else if (GetActionTarget(1, pwrline) == pToObj)
-          SetActionTargets(GetActionTarget(0, pwrline), this(), pwrline);
+        else if (Equal(GetActionTarget(1, pwrline), pToObj))
+          SetActionTargets(GetActionTarget(nil, pwrline), this(), pwrline);
       // Umwandeln
       ToShaft(pToObj);
       ToElevator(this());
     }
     // Das untere Burgteil ist ein Schacht
     // -> dieses Burgteil muss zum Fahrstuhl werden
-    if ((GetID(pToObj) == BE5C) && LocalN("is_shaft", pToObj)) 
+    if (And((Equal(GetID(pToObj), BE5C)), LocalN("is_shaft", pToObj)))
     	ToElevator(this());
   }
   // Ausrichtung nach oben
-  if (iDir == COMD_Up())
+  if (Equal(iDir, COMD_Up))
     // oberes Burgteil ist ein Fahrstuhl oder Schacht
     // -> Dieses Burgteil muss ein Schacht sein
-    if (GetID(pToObj) == BE5C) 
+    if (Equal(GetID(pToObj), BE5C))
     	ToShaft(this());
 }
 
 public func ToShaft(object pObj) 
 {
-  if (pObj && !LocalN("is_shaft", pObj))
+  if (And(pObj, !LocalN("is_shaft", pObj)))
   {
     ObjectSetAction(pObj, "Idle");
     // Fahrstuhlkorb entfernen
-    var korb = GetActionTarget(0, pObj);
-    if (korb && GetID(korb) == CPEC)
+    var korb = GetActionTarget(nil, pObj);
+    if (And(korb, Equal(GetID(korb), CPEC)))
     {
-      LocalN("oElev", korb) = 0;
+      LocalN("oElev", korb) = nil;
       RemoveObject(korb);
     }
-    LocalN("pCase", pObj) = 0;
+    LocalN("pCase", pObj) = nil;
     // Solidmask entfernen
-    SetSolidMask(42,13,40,5,0,13,pObj);
+    SetSolidMask(42,13,40,5,nil,13,pObj);
     // umwandeln
     SetGraphics("Shaft",pObj);
     LocalN("is_shaft",pObj)=1;
@@ -111,23 +112,23 @@ public func ToShaft(object pObj)
 
 public func ToElevator(object pObj) 
 {
-  if (pObj && LocalN("is_shaft", pObj))
+  if (And(pObj, LocalN("is_shaft", pObj)))
   {
     // Fahrstuhlkorb erzeugen
-    var korb = CreateObject(CPEC, GetX(pObj) - GetX(), GetY(pObj) - GetY() + 37, GetOwner(pObj));
-    if (!korb) return(0);
+    var korb = CreateObject(CPEC, (GetX(pObj) ?? 0) - (GetX() ?? 0), (GetY(pObj) ?? 0) - (GetY() ?? 0) + 37, GetOwner(pObj));
+    if (!korb) return(nil);
     if (!ObjectSetAction(pObj, "LiftCase", korb))
     {
       RemoveObject(korb);
-      return(0);
+      return(nil);
     }
     LocalN("pCase", pObj) = korb;
-    LocalN("RangeTop", korb) = GetY(pObj) + 23;
+    LocalN("RangeTop", korb) = (GetY(pObj) ?? 0) + 23;
     // Solidmask erzeugen
-    SetSolidMask(0,14,40,5,0,14,pObj);
+    SetSolidMask(nil,14,40,5,nil,14,pObj);
     // umwandeln
-    SetGraphics(0,pObj);
-    LocalN("is_shaft",pObj)=0;
+    SetGraphics(nil,pObj);
+    LocalN("is_shaft",pObj)=nil;
     LocalN("type_set",pObj)=1;
   }
 }
@@ -137,7 +138,7 @@ public func ToElevator(object pObj)
 public func RemoveCase()
 {
   // Komplett, aber kein Fahrstuhlkorb: reduzieren für Wiederaufbau/Reparatur
-  if (GetCon() == 100)
+  if (Equal(GetCon(), 100))
   {
     SetAction("Idle");
     DoCon(-1);
@@ -149,14 +150,15 @@ public func RemoveCase()
 public func CreateShaft(int iLength)
 {
   // SolidMask des Fahrstuhlkorbs wegschieben
+  iLength ??= 0;
   var oCase, iCaseY;
   if (oCase = GetActionTarget())
   {
   	iCaseY = oCase->GetY();
-  	SetPosition(oCase->GetX(), GetY() - 20, oCase);
+        SetPosition(oCase->GetX(), (GetY() ?? 0) - 20, oCase);
   }
   // Schacht freigraben
-  DigFreeRect(GetX() - 12, GetY() + 25, 24, iLength);
+  DigFreeRect((GetX() ?? 0) - 12, (GetY() ?? 0) + 25, 24, iLength);
   // Fahrstuhlkorb zurückschieben
   if (oCase) 
   	SetPosition(oCase->GetX(), iCaseY, oCase);

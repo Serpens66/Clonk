@@ -1,11 +1,12 @@
 /* --- Fass --- */
 
-#strict 2
+#strict 3
 
 #appendto BARL
 
 //Besser fürs suchen
 public func IsBarrelMaterial(int dnMaterial)
 {
-	return dnMaterial == BarrelMaterial();
+	dnMaterial ??= 0;
+	return S42MigrationEqual(dnMaterial, BarrelMaterial());
 }

@@ -1,6 +1,6 @@
 /*-- Phoenixattacken --*/
 
-#strict
+#strict 3
 local maufeinmal,maktuell;
 
 func Activate()
@@ -13,16 +13,16 @@ protected func Initialize()
 {
   // Eigene Position festlegen
   SetPosition();
-  DynMessage("*Ein Feuerschweif am Himmel*",0,48,RGBa(233,115,7,0));
+  DynMessage("*Ein Feuerschweif am Himmel*",nil,48,RGBa(233,115,7,nil));
   return(1);
 }
 
 /* Eventuell Vogel erstellen */
 private func DoVogel()
 {
-  maufeinmal = ObjectCount(PH_A)+1 ;
+  maufeinmal = (ObjectCount(PH_A) ?? 0)+1 ;
   maktuell= ObjectCount2(Find_ID(PHNX), Find_OCF(OCF_Alive));
-  if (maktuell>=maufeinmal) return(1);
+  if ((maktuell ?? 0)>=(maufeinmal ?? 0)) return(1);
   var pVogel = CreateObject(PHNX, Random(LandscapeWidth()), 50, -1);
   SetR(-180, pVogel);
   return(1);

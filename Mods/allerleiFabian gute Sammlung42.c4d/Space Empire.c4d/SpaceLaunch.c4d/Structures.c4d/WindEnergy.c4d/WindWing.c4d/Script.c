@@ -1,6 +1,6 @@
 /*-- Windrad --*/
 
-#strict
+#strict 3
 
 
 /* Initialisierung */
@@ -14,7 +14,7 @@ protected func Destruction()
 {
   // MotionBlur-Effekt löschen
   var obj;
-  while (obj = FindObject(SWWF, 0,0,0,0, 0,"Fade",this()))
+  while (obj = FindObject(SWWF, nil,nil,nil,nil, nil,"Fade",this()))
     RemoveObject(obj);
 }
 
@@ -31,24 +31,24 @@ protected func Wind2Turn()
 {
   var windenergy = GetActionTarget();
   // EMP-Einwirkung?
-  if (FindObject(SEMP, 0,0,0,0, 0,"Active",windenergy))
+  if (FindObject(SEMP, nil,nil,nil,nil, nil,"Active",windenergy))
   {
-    SetRDir(0);
+    SetRDir(nil);
     DoEnergy(-100, windenergy);
     return(1);
   }
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy(windenergy)),windenergy);
   // Energie erzeugen
-  DoEnergy(Abs(GetRDir()*3), windenergy);
-  SetRDir(GetWind()/4);
+  DoEnergy(Abs((GetRDir() ?? 0)*3), windenergy);
+  SetRDir((GetWind() ?? 0)/4);
   // Update für Energieanzeige
-  ShowInfoBar(IBRE, windenergy, Abs(GetWind()),100, 0,1);
+  ShowInfoBar(IBRE, windenergy, Abs(GetWind()),100, nil,1);
 }
 
 private func CreateFading()
 {
   // MotionBlur-Effekt erzeugen
-  CreateObject(SWWF,0,0,GetOwner())->Init(this(), GetR());
+  CreateObject(SWWF,nil,nil,GetOwner())->Init(this(), GetR());
 }
 

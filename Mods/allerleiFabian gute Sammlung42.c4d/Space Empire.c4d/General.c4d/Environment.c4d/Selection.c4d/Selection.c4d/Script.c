@@ -8,7 +8,7 @@
  */
 
 
-#strict
+#strict 3
 
 local selection, party;
 local px, py;
@@ -20,14 +20,14 @@ global func GetPlayerParty(player)
 {
   // bei 1 ist es ein CoAl-Spieler, bei 2 ein SLC-Spieler
   var obj = FindObjectOwner(SEL1, player);
-  if (!obj) return(0);
+  if (!obj) return(nil);
   return(obj->GetParty());
 }
 
 global func SetPlayerParty(player, plrparty)
 {
   var obj = FindObjectOwner(SEL1, player);
-  if (!obj) obj = CreateObject(SEL1, 0,0, player);
+  if (!obj) obj = CreateObject(SEL1, nil,nil, player);
   obj->SetParty(plrparty);
 }
 
@@ -37,21 +37,21 @@ global func SetPlayerParty(player, plrparty)
 protected func Initialize()
 {
   // bisher keine Wahl getroffen
-  party = 0;
+  party = nil;
   // nur für den Besitzer zu sehen
-  SetVisibility(VIS_Owner());
+  SetVisibility(VIS_Owner);
   // Auswahl positionieren
-  var obj = FindObjectOwner(0,GetOwner(),0,0,0,0,OCF_CrewMember());
+  var obj = FindObjectOwner(nil,GetOwner(),nil,nil,nil,nil,OCF_CrewMember);
   px = GetX(obj);
-  py = GetY(obj) - 50;
-  SetPosition(BoundBy(px, 250, LandscapeWidth()-250),
-              BoundBy(py, 150, LandscapeHeight()-150));
+  py = (GetY(obj) ?? 0) - 50;
+  SetPosition(BoundBy(px, 250, (LandscapeWidth() ?? 0)-250),
+              BoundBy(py, 150, (LandscapeHeight() ?? 0)-150));
   // alle Objeke des Spielers erstmal hier herein
-  obj = 0;
-  while (obj = FindObjectOwner(0,GetOwner(),0,0,0,0,0,0,0,obj))
+  obj = nil;
+  while (obj = FindObjectOwner(nil,GetOwner(),nil,nil,nil,nil,nil,nil,nil,obj))
   {
     // Gebäude bleiben stehen
-    if (!(GetOCF(obj) & OCF_Exclusive()))
+    if (!((GetOCF(obj) ?? 0) & (OCF_Exclusive ?? 0)))
       Enter(this(), obj);
   }
   // Aktion setzen
@@ -78,7 +78,7 @@ protected func Selecting()
 {
   // höchstrangiger Clonk muss ausgewählt bleiben
   var clonk = GetHiRank(GetOwner());
-  if (GetCursor(GetOwner()) != clonk)
+  if (!Equal(GetCursor(GetOwner()), clonk))
     SetCursor(GetOwner(),clonk);
 }
 
@@ -86,7 +86,7 @@ protected func Waiting()
 {
   Selecting();
   // gerade beim Warten und Spiel startet schon?
-  if (!FindObjectOwner(GetID(),GetPlayerByIndex(0)))
+  if (!FindObjectOwner(GetID(),GetPlayerByIndex(nil)))
     return(RemoveObject());
 }
 
@@ -96,11 +96,11 @@ protected func Waiting()
 protected func ContainedRight()
 {
   [CoAl wählen]
-  if (GetAction() ne "Select")
+  if (!SEqual(GetAction(), "Select"))
     return(1);
   Sound("Click");
-  if (selection != 1)
-    CreateObject(SEL2,0,0,GetOwner())->Init(1, this());
+  if (!Equal(selection, 1))
+    CreateObject(SEL2,nil,nil,GetOwner())->Init(1, this());
   selection = 1;
   return(1);
 }
@@ -108,11 +108,11 @@ protected func ContainedRight()
 protected func ContainedLeft()
 {
   [SL wählen]
-  if (GetAction() ne "Select")
+  if (!SEqual(GetAction(), "Select"))
     return(1);
   Sound("Click");
-  if (selection != 2)
-    CreateObject(SEL2,0,0,GetOwner())->Init(2, this());
+  if (!Equal(selection, 2))
+    CreateObject(SEL2,nil,nil,GetOwner())->Init(2, this());
   selection = 2;
   return(1);
 }
@@ -120,14 +120,14 @@ protected func ContainedLeft()
 protected func ContainedThrow()
 {
   [Auswahl bestätigen]
-  if (GetAction() ne "Select")
+  if (!SEqual(GetAction(), "Select"))
     return(1);
   if (!selection)
     return(Sound("Error"));
   Sound("Click");
   // je nach Auswahl...
   var str;
-  if (selection == 1)
+  if (Equal(selection, 1))
   {
     Select_CoAl();
     str = "Cognition Alliance";
@@ -139,23 +139,23 @@ protected func ContainedThrow()
   }
   // Log-Message
   var i = Random(5);
-  if (i == 0)  Log("%s spielt mit der %s",         GetPlayerName(GetOwner()), str);
-  if (i == 1)  Log("%s kämpft für die %s",         GetPlayerName(GetOwner()), str);
-  if (i == 2)  Log("%s unterstützt die %s",        GetPlayerName(GetOwner()), str);
-  if (i == 3)  Log("%s wählte die %s",             GetPlayerName(GetOwner()), str);
-  if (i == 4)  Log("%s entschied sich für die %s", GetPlayerName(GetOwner()), str);
+  if (Equal(i, nil))  Log("%s spielt mit der %s",         GetPlayerName(GetOwner()), str);
+  if (Equal(i, 1))  Log("%s kämpft für die %s",         GetPlayerName(GetOwner()), str);
+  if (Equal(i, 2))  Log("%s unterstützt die %s",        GetPlayerName(GetOwner()), str);
+  if (Equal(i, 3))  Log("%s wählte die %s",             GetPlayerName(GetOwner()), str);
+  if (Equal(i, 4))  Log("%s entschied sich für die %s", GetPlayerName(GetOwner()), str);
   // Unterobjekte löschen
   var obj;
-  while (obj = FindObject(SEL2,0,0,0,0,0,0,this()))
+  while (obj = FindObject(SEL2,nil,nil,nil,nil,nil,nil,this()))
     RemoveObject(obj);
   // Inhalt raus
-  obj = 0;
+  obj = nil;
   while (obj = Contents())
-    Exit(obj, px-GetX()+Random(25)-12,
-              py-GetY()+50);
+    Exit(obj, (px ?? 0)-(GetX() ?? 0)+(Random(25) ?? 0)-12,
+              (py ?? 0)-(GetY() ?? 0)+50);
   // minimieren
   SetAction("Minimized");
-  SetPosition(0,0);
+  SetPosition(nil,nil);
 }
 
 

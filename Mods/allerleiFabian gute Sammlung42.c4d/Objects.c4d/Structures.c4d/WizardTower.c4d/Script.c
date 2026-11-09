@@ -1,6 +1,6 @@
 /*-- Zauberturm --*/
 
-#strict
+#strict 3
 
 #include DOOR
 #include BAS2
@@ -12,8 +12,8 @@ protected func Initialize()
 {
   SetAction("Ready");
   // Nach rechts ausgerichtet, wenn in der linken Landschaftshälfte
-  if (GetX() < LandscapeWidth()/2) 
-    SetDir(DIR_Right());
+  if ((GetX() ?? 0) < (LandscapeWidth() ?? 0)/2)
+    SetDir(DIR_Right);
   return(1);
 }
 
@@ -37,15 +37,15 @@ protected func ContentsCheck()
 
 private func ConvertCrystal() 
 {
-  if (!IsConvertReady()) return(0);
+  if (!IsConvertReady()) return(nil);
   var crystal = FindContents(CRYS);
-  if (!crystal) return(0);
+  if (!crystal) return(nil);
   
   if (!crystal->~Apply(this()) )
     if(DoMagicEnergy(+10) )
       RemoveObject(crystal);
     else
-      return(0);
+      return(nil);
 
   SetAction("Energize");
   Sound("Electric");
@@ -55,21 +55,21 @@ private func ConvertCrystal()
 public func LightningStrike() 
 {
   // Nur wenn fertig gebaut
-  if (GetCon() < 100) return(0);
+  if ((GetCon() ?? 0) < 100) return(nil);
   // Energiegewinnung
-  for(var i = 0; i < 10; ++ i)
+  for(var i = nil; (i ?? 0) < 10; S42MigrationStep( i, 1))
     DoMagicEnergy(1);
   // Sound
   Sound("Electric");
   // Effekt-Aktion
-  if (GetAction() ne "Ready") return(0);
+  if (!SEqual(GetAction(), "Ready")) return(nil);
   SetAction("Energize");
   return(1);
 }
 
 protected func RefillMagic() {  // alle 100 Frames
   // Nur wenn fertig gebaut
-  if (GetCon() < 100) return(0);
+  if ((GetCon() ?? 0) < 100) return(nil);
   DoMagicEnergy(+1);
 }
 
@@ -77,33 +77,35 @@ protected func RefillMagic() {  // alle 100 Frames
 
 public func DoMagicCall(object caster, id spell_id, int direction)
 {
+  direction ??= 0;
   DoMagic(spell_id, caster, direction);
 }
  	 
 protected func DoMagic(id spell_id, object caster, int direction)
 {
-  if (!caster) return();
+  direction ??= 0;
+  if (!caster) return;
 
   // Zaubernden Clonk in den Turm bewegen, wenn er nicht drin ist
-  if (caster->Contained() != this())
+  if (!Equal(caster->Contained(), this()))
   {
     SetCommand(caster, "None");
-    AddCommand(caster, "Call", this(), spell_id, direction, 0,0, "DoMagicCall");
+    AddCommand(caster, "Call", this(), spell_id, direction, nil,nil, "DoMagicCall");
     AddCommand(caster, "Enter", this());
     return(1);
   }
 
   // Nicht bereit: etwas warten, dann erneut versuchen
-  if (GetAction() ne "Ready")
+  if (!SEqual(GetAction(), "Ready"))
   {
     SetCommand(caster, "None");
-    AddCommand(caster, "Call", this(), spell_id, direction, 0,0, "DoMagicCall");
-    AddCommand(caster, "Wait", 0,0,0,0,0, 10);
+    AddCommand(caster, "Call", this(), spell_id, direction, nil,nil, "DoMagicCall");
+    AddCommand(caster, "Wait", nil,nil,nil,nil,nil, 10);
     return(1);
   }
 
   // Richtung setzen
-  if (direction > 0)
+  if ((direction ?? 0) > 0)
     AimRight(caster);
   else
     AimLeft(caster);
@@ -113,7 +115,7 @@ protected func DoMagic(id spell_id, object caster, int direction)
   {
     Sound("Error");
     Message("$TxtNotEnoughEnergy$", this());
-    return();
+    return;
   }
 
   // Nicht genug alchemische Komponenten
@@ -121,14 +123,14 @@ protected func DoMagic(id spell_id, object caster, int direction)
   {
     Sound("Error");
     Message("$TxtNotEnoughIngredients$",this(),GetNeededAlcStr(spell_id,this(),caster));
-    return();
+    return;
   }
   
   // Zauberobjekt erschaffen und aktivieren
-  if (CreateObject(spell_id, 0, 0, GetController(caster))->~Activate(this(), caster)) 
+  if (CreateObject(spell_id, nil, nil, GetController(caster))->~Activate(this(), caster))
   {
     // Energie abziehen
-    DoMagicEnergy(-Value(spell_id));
+    DoMagicEnergy(-(Value(spell_id) ?? 0));
 
     // alchemische Zutaten abziehen
     if(ObjectCount(ALCO)) ReduceAlchem(spell_id,this(),caster);
@@ -144,7 +146,7 @@ protected func DoMagic(id spell_id, object caster, int direction)
   {
     SetAction("Ready");
     Sound("Error");
-    return(0);
+    return(nil);
   }
   
   // Fertig
@@ -168,6 +170,7 @@ public func SpellFailed(id idSpell, object pByClonk)
 public func SelectSpell(object caller, int direction)
 {
   // Forschung abbrechen
+  direction ??= 0;
   CancelResearch();
   // Menü erzeugen und mit den Zaubersprüchen des Turmbesitzers füllen
   // Gehört der Turm keinem gülötigen Besitzer, stattdessen Zauber des Clonks nehmen
@@ -175,36 +178,36 @@ public func SelectSpell(object caller, int direction)
   var spell_num;
   var spell_id;
   var iPlr = GetOwner(); if (!GetPlayerName(iPlr)) iPlr = GetOwner(caller);
-  while (spell_id = GetPlrMagic(iPlr, 0, spell_num++)) 
+  while (spell_id = GetPlrMagic(iPlr, nil, S42MigrationStep(spell_num, 1, true)))
     if(!spell_id->~NoTowerMagic() )
       {
       //AddMenuItem("$TxtDoMagic$", "DoMagic", spell_id, caller, 0, caller);
       var strCommand = Format("Object(%d)->DoMagic(%i,Object(%d),%d)", ObjectNumber(this()), spell_id, ObjectNumber(caller), direction);
-      AddMenuItem("$TxtDoMagic$", strCommand, spell_id, caller, 0, caller);
+      AddMenuItem("$TxtDoMagic$", strCommand, spell_id, caller, nil, caller);
       }
   // Zauber erforschbar
-  if (ObjectCount(WTRS) && (caller->Contained() == this())) 
+  if (And(ObjectCount(WTRS), (Equal(caller->Contained(), this()))))
   {
     // Neue Forschung starten
-    AddMenuItem("$TxtResearchs$", "ResearchMenu", RSR6, caller, 0, caller);
+    AddMenuItem("$TxtResearchs$", "ResearchMenu", RSR6, caller, nil, caller);
     // Laufende Forschung fortsetzen
-    if (target) AddMenuItem("$TxtContinuedevelopement$", "SelectResearch", target, caller, 0, caller);
+    if (target) AddMenuItem("$TxtContinuedevelopement$", "SelectResearch", target, caller, nil, caller);
   }
   return(1);
 }
 
 public func AimLeft() 
 {
-  if (GetDir() == DIR_Left()) return(0);
-  SetDir(DIR_Left());
+  if (Equal(GetDir(), DIR_Left)) return(nil);
+  SetDir(DIR_Left);
   Sound("Lever1");
   return(1);
 }
 
 public func AimRight() 
 {
-  if (GetDir() == DIR_Right()) return(0);
-  SetDir(DIR_Right());
+  if (Equal(GetDir(), DIR_Right)) return(nil);
+  SetDir(DIR_Right);
   Sound("Lever1");
   return(1);
 }
@@ -213,14 +216,14 @@ public func AimRight()
 
 protected func ActivateEntrance() 
 {
-  if (GetAction() ne "Ready") return(1);
+  if (!SEqual(GetAction(), "Ready")) return(1);
   SetAction("OpenDoor");  
   return(1);
 }
 
 private func MagicCloseEntrance() 
 {
-  SetEntrance(0);
+  SetEntrance(nil);
   return(1);
 }
 
@@ -231,7 +234,7 @@ public func ContainedLeft(object pCaller)
   [$TxtAimspellsleft$]
   CancelResearch();
   AimLeft(pCaller);
-  SelectSpell(pCaller, 0);
+  SelectSpell(pCaller, nil);
   return(1);
 }
 
@@ -248,12 +251,12 @@ public func ContainedDown(object pClonk)
 {
   [$TxtCancelresearch$|Image=RSR2]
   CancelResearch();
-  return(0);
+  return(nil);
 }
 
 /* Status */
 
-public func IsConvertReady() { return(GetAction()S="Ready"); }
+public func IsConvertReady() { return(!!SEqual(GetAction(), "Ready")); }
 
 /* Forschen */
 
@@ -265,26 +268,26 @@ local restime; // Benötigte Gesamtzeit zum Forschen
 protected func ResearchMenu(idImage, pClonk) 
 {
   // Auswahlmenü erzeugen
-  CreateMenu(idImage, pClonk, this(), 0, "$TxtNothingLeft$");
+  CreateMenu(idImage, pClonk, this(), nil, "$TxtNothingLeft$");
   // Alle geladenen Sprüche überprüfen
   var i,idDef,iPlr=GetOwner(pClonk);
-  while (idDef = GetDefinition(i++, C4D_Magic()))
+  while (idDef = GetDefinition(S42MigrationStep(i, 1, true), C4D_Magic))
     // Dem Spieler noch nicht bekannt
     if (!(GetPlrMagic(iPlr,idDef))) {
       // Keine Forschungsgrundlage nötig oder Forschungsgrundlage vorhanden
       var idBase = DefinitionCall(idDef,"GetResearchBase"), fHasBase, j;
-      fHasBase = !idBase || GetPlrMagic(iPlr,idBase); j=1;
+      fHasBase = Or(!idBase, GetPlrMagic(iPlr,idBase)); j=1;
       // Erweiterte Forschungsgrundlagen
-      while (idBase = DefinitionCall(idDef, Format("GetResearchBase%d", ++j)))
-        if (!GetPlrMagic(iPlr,idBase)) fHasBase=0;
+      while (idBase = DefinitionCall(idDef, Format("GetResearchBase%d", S42MigrationStep(j, 1))))
+        if (!GetPlrMagic(iPlr,idBase)) fHasBase=nil;
       // Ist schon durch etwas anderes erforschbar? (Zugbrücke rechts -> Zugbrücke links etc.)
       var link;
       if (link = DefinitionCall(idDef, "GetResearchLink"))
-        if (GetName(0, link)) // Linkdefinition auch tatsächlich geladen?
+        if (GetName(nil, link)) // Linkdefinition auch tatsächlich geladen?
           if(!GetPlrKnowledge(iPlr, link) ) // Linkdefinition noch nicht erforscht? (passiert durch SetPlrKnowledge-Aufrufe oder Szenariovorgaben)
             continue;
       // Menüeintrag hinzufügen
-      if (fHasBase) AddMenuItem("$TxtResearchs$", "SelectResearch", idDef, pClonk, 0, pClonk);
+      if (fHasBase) AddMenuItem("$TxtResearchs$", "SelectResearch", idDef, pClonk, nil, pClonk);
     }
   return(1);  
 }
@@ -292,11 +295,11 @@ protected func ResearchMenu(idImage, pClonk)
 public func SelectResearch(def, clonk)
 {
   // Anfangen
-  AddCommand(clonk, "Call", this(), def, 0, 0, 0, "StartResearch", 10, 1);
+  AddCommand(clonk, "Call", this(), def, nil, nil, nil, "StartResearch", 10, 1);
   // Vorher ins Labor gehen
-  if (Contained(clonk) != this())
+  if (!Equal(Contained(clonk), this()))
   {
-    AddCommand(clonk, "Wait", 0, 0, 0, 0, 40);
+    AddCommand(clonk, "Wait", nil, nil, nil, nil, 40);
     AddCommand(clonk, "Enter", this());
   } 
 }
@@ -312,19 +315,19 @@ protected func StartResearch(clonk, def)
   // Spieler hat diesen Bauplan schon
   if (GetPlrMagic(clonk->GetOwner(), def))
   {
-    Message("$TxtAlreadyDeveloped$", this(), GetName(0, def));
+    Message("$TxtAlreadyDeveloped$", this(), GetName(nil, def));
     Sound("Error");
-    target = 0;
-    return 0; 
+    target = nil;
+    return nil;
   }
   // Bisherige Forschung abbrechen
   CancelResearch();
   // nur, wenn ansonsten inaktiv oder schon am Forschen
-  if (GetAction() ne "Ready") return(0);
+  if (!SEqual(GetAction(), "Ready")) return(nil);
   // Besitzer anpassen (der Besitzer des forschenden Clonks erhält den Bauplan)
   SetOwner(GetOwner(clonk));
   // Neues Forschungsziel: Fortschritt zurücksetzen
-  if (def != target) progress = 0;
+  if (!Equal(def, target)) progress = nil;
   // Forschungsziel und Gesamtzeit setzen
   restime = DefinitionCall(target=def, "GetResearchTime", this(), clonk);
   // Forschungsaktion starten
@@ -335,21 +338,21 @@ protected func StartResearch(clonk, def)
 private func Researching()
 {
   // Kein Ziel
-  if (!target) return(0);
+  if (!target) return(nil);
   // Effekte TODO: Sparks
   //if (Random(3)) Smoke(5+8*Random(2),-23,3+Random(8));
   // Fortschritt
-  var Process = Min(++progress*4 / restime, 3);
+  var Process = Min(S42MigrationStep(progress, 1)*4 / (restime ?? 0), 3);
   Process = Format("Research%d", Process);
-  if (Process ne GetAction()) SetAction(Process);
+  if (!SEqual(Process, GetAction())) SetAction(Process);
   // Forschung abbrechen, wenn irgendein Clonk im Inneren das Gebäude verlassen möchte
   var pObj;
-  while (pObj = FindObject(0, 0,0,0,0, OCF_CrewMember, 0,0, this(), pObj))
-    if (pObj->GetCommand() eq "Exit")
+  while (pObj = FindObject(nil, nil,nil,nil,nil, OCF_CrewMember, nil,nil, this(), pObj))
+    if (!!SEqual(pObj->GetCommand(), "Exit"))
       return(CancelResearch());    
   // Weitermachen
   if (!restime) restime=100;
-  if (progress < restime) return(1);
+  if ((progress ?? 0) < (restime ?? 0)) return(1);
   // Forschung abgeschlossen
   Sound("ResearchDone");
   // Dem Spieler den neuen Bauplan verpassen
@@ -363,18 +366,18 @@ private func Researching()
   // Gelinkte Forschungsziele sind automatisch auch erforscht
   // (Linke Zugbrücke -> Rechte Zugbrücke etc.)
   var def_num, def;
-  while (def = GetDefinition(def_num++)) 
+  while (def = GetDefinition(S42MigrationStep(def_num, 1, true)))
   {
     var link;
     if (link = DefinitionCall(def, "GetResearchLink"))
-      if (link == target)
+      if (Equal(link, target))
         SetPlrMagic(GetOwner(), def);
   }
   // Nachricht ausgeben
-  Message("$Txtsdeveloped$", this(), GetName(0, target));
+  Message("$Txtsdeveloped$", this(), GetName(nil, target));
   // Forschung beenden
   CancelResearch();
-  target = 0;
+  target = nil;
   // Fertig
   return(1);  
 }
@@ -390,7 +393,7 @@ public func ContextResearch(clonk)
 public func ContextMagicLeft(object caller)
 {
   [$TxtAimspellsleft$|Image=MCMS|Condition=CanMagic]
-  SelectSpell(caller, 0);
+  SelectSpell(caller, nil);
 }
 
 public func ContextMagicRight(object caller)
@@ -403,12 +406,12 @@ public func ContextMagicRight(object caller)
 
 protected func CanResearch() 
 {
-  return (ObjectCount(WTRS) && GetCon () >= 100);
+  return (And(ObjectCount(WTRS), (GetCon () ?? 0) >= 100));
 }
 
 public func CanMagic(object caller)
 {
   var iPlr = GetOwner(); 
   if (!GetPlayerName(iPlr)) iPlr = caller->GetOwner();
-  return(GetPlrMagic(caller->GetOwner()) != 0);
+  return(!Equal(GetPlrMagic(caller->GetOwner()), nil));
 }

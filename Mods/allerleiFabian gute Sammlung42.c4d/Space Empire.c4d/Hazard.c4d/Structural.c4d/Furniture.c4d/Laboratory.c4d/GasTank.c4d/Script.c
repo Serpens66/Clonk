@@ -1,6 +1,6 @@
 /*-- Gastank --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -10,7 +10,7 @@ protected func Initialize()
 
 func Damage(a,b,c,d,e,f)
 {
-if(GetDamage()>100) Incinerate();
+if((GetDamage() ?? 0)>100) Incinerate();
 _inherited(a,b,c,d,e,f);
 }
 
@@ -19,12 +19,12 @@ protected func Incineration()
   /* Mächtiger Badabumm! */
 
   // TIM1 nicht geladen
-  if(!GetCategory(0, TIM1)) return(InstaExplode());
+  if(!GetCategory(nil, TIM1)) return(InstaExplode());
   // TIM1 ist geladen. Also kleine Bomben verteilen!
-  for(var i=0, tim ; i < 7 ; i++)
+  for(var i=nil, tim ; (i ?? 0) < 7 ; S42MigrationStep(i, 1, true))
     {
     tim = CreateObject(TIM1, RandomX(-80, 80), RandomX(-20,20), -1);
-    Schedule(Format("Explode()", 20+Random(20)), 25 + Random(25), 0, tim);
+    Schedule(Format("Explode()", 20+(Random(20) ?? 0)), 25 + (Random(25) ?? 0), nil, tim);
     }
   // Und explodieren!
   return(InstaExplode());
@@ -33,10 +33,10 @@ protected func Incineration()
 private func InstaExplode()
 {
   /* Viel Effekt */
-  CastParticles("Wave", 7+Random(5), RandomX(35,55), 0,0, 30,60, RGBa(0,0,200,50), RGBa(20,20,255,100));
-  CastParticles("Glas", 15+Random(5), 100, 0,0, 60,100, RGBa(200,200,200), RGBa(200,200,200));
-  AddLightFlash(120, 0,0, RGBa(255,255,200,100));
-  Sparks(7+Random(5), RGBa(255,255,150,100));
+  CastParticles("Wave", 7+(Random(5) ?? 0), RandomX(35,55), nil,nil, 30,60, RGBa(nil,nil,200,50), RGBa(20,20,255,100));
+  CastParticles("Glas", 15+(Random(5) ?? 0), 100, nil,nil, 60,100, RGBa(200,200,200), RGBa(200,200,200));
+  AddLightFlash(120, nil,nil, RGBa(255,255,200,100));
+  Sparks(7+(Random(5) ?? 0), RGBa(255,255,150,100));
   /* Rauch und Explosionen! */
   return(Explode(120));
 }

@@ -1,6 +1,6 @@
 /*-- Feuerleitstand --*/
 
-#strict
+#strict 3
 
 public func ReadyToFire()   { return(true); }
 
@@ -11,7 +11,7 @@ func Initialize()
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   if(waffensys) RemoveObject(waffensys);
   RemoveObject();
@@ -21,7 +21,7 @@ func Explosion()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Check()
@@ -32,29 +32,29 @@ func Check()
 
 func ContainedUp()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedDown()
 {
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedDownDouble()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
-  sphere=FindObject(TSP_, 0,0,-1,-1, 0,0,0); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
+  sphere=FindObject(TSP_, nil,nil,-1,-1, nil,nil,nil);
   if(sphere->Besetzt()) 
   {
   Message("Sphäre besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Enter(sphere,pilot);
   DoAmmo(ENAM, GetAmmo(ENAM,waffensys), pilot); 
   DoAmmo(MIAM, GetAmmo(MIAM,waffensys), pilot); 
   if(waffensys) RemoveObject(waffensys);
-  return(SetRDir(0));
+  return(SetRDir(nil));
 }
 
 func ContainedRight()
@@ -78,7 +78,7 @@ func ContainedThrow()
 {
 
   if(!waffensys) Waffensystem();
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   ObjectCall(waffensys,"ControlThrow",pilot);
   return(1);
 }
@@ -100,16 +100,16 @@ func Waffenmodi()
 
 func Waffensystem()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()))
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   if(waffensys=CreateContents(TSWS, pilot))
   {
-  while(GetID(Contents(0,pilot))!=TSWS)   ShiftContents(pilot);
+  while(!Equal(GetID(Contents(nil,pilot)), TSWS))   ShiftContents(pilot);
   }
   return(1);
 }
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }

@@ -1,6 +1,6 @@
 /*-- Gerüst --*/
 
-#strict 2
+#strict 3
 
 local pOverlay;
 
@@ -16,71 +16,71 @@ public func ControlDig(pClonk)
 {
   if(Hostile(GetOwner(),GetOwner(pClonk))) return(1);
   if(pOverlay) RemoveObject(pOverlay);
-   if(GetAction() == "Schieflinks") 
+   if(S42MigrationEqual(GetAction(), "Schieflinks"))
  {
    SetPosition(GetX(),GetY(),pClonk);
    SetAction("Rueckschieflinks");
    return(1);
   }
 
-if(GetAction() == "Schiefrechts") 
+if(S42MigrationEqual(GetAction(), "Schiefrechts"))
  {
    SetPosition(GetX(),GetY(),pClonk);
    SetAction("Rueckschiefrechts");
    return(1);
   }
 
-if(GetAction() == "Linksschief") 
+if(S42MigrationEqual(GetAction(), "Linksschief"))
  {
    SetPosition(GetX(),GetY(),pClonk);
    SetAction("Ruecklinksschief");
    return(1);
   }
 
-if(GetAction() == "Rechtsschief") 
+if(S42MigrationEqual(GetAction(), "Rechtsschief"))
  {
    SetPosition(GetX(),GetY(),pClonk);
    SetAction("Rueckrechtsschief");
    return(1);
   }
 
-if(GetAction() == "Rechtsod") 
+if(S42MigrationEqual(GetAction(), "Rechtsod"))
  {
    SetAction("Rueckrechtsod");
    return(1);
   }
 
-if(GetAction() == "Linksod") 
+if(S42MigrationEqual(GetAction(), "Linksod"))
  {
    SetAction("Ruecklinksod");
    return(1);
   }
 
-if(GetAction() == "Rechts") 
+if(S42MigrationEqual(GetAction(), "Rechts"))
  {
    SetAction("Rueckrechts");
    return(1);
   }
 
-if(GetAction() == "Links") 
+if(S42MigrationEqual(GetAction(), "Links"))
  {
    SetAction("Ruecklinks");
    return(1);
   }
 
-if(GetAction() == "Beide") 
+if(S42MigrationEqual(GetAction(), "Beide"))
  {
    SetAction("Rueckbeide");
    return(1);
   }
 
-if(GetAction() == "Oben") 
+if(S42MigrationEqual(GetAction(), "Oben"))
  {
     SetAction("Rueckoben");
     return(1);
   }
 
-if(GetAction() == "Normal")
+if(S42MigrationEqual(GetAction(), "Normal"))
  {
   return(Menu(pClonk));
   }
@@ -92,12 +92,12 @@ func Oben() {
 }
 func SolidOben() 
 {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-  SetSolidMask(22,44,22,22,0,0);
+  SetSolidMask(22,44,22,22,nil,nil);
  return(1);
 }
 
@@ -127,57 +127,57 @@ func Beide() {
 }
 
 func Schieflinks2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(110,44,22,22,0,0);
+    SetSolidMask(110,44,22,22,nil,nil);
    return(1);
 }
 
 func Schiefrechts2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(176,44,22,22,0,0);
+    SetSolidMask(176,44,22,22,nil,nil);
    return(1);
 }
 
 func Rechts2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(66,44,22,22,0,0);
+    SetSolidMask(66,44,22,22,nil,nil);
    return(1);
 }
 
 func Links2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(44,44,22,22,0,0);
+    SetSolidMask(44,44,22,22,nil,nil);
    return(1);
 }
 
 func Beide2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(88,44,22,22,0,0);
+    SetSolidMask(88,44,22,22,nil,nil);
    return(1);
 }
 
 func Normal() {
-    SetSolidMask(0,22,22,22,0,0);
+    SetSolidMask(nil,22,22,22,nil,nil);
    return(1);
 }
 
@@ -193,12 +193,12 @@ func Rechtsod() {
 }
 
 func Rechtsod2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(132,44,22,22,0,0);
+    SetSolidMask(132,44,22,22,nil,nil);
    return(1);
 }
 
@@ -208,12 +208,12 @@ func Linksod() {
 }
 
 func Linksod2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(198,44,22,22,0,0);
+    SetSolidMask(198,44,22,22,nil,nil);
    return(1);
 }
 
@@ -223,12 +223,12 @@ func Rechtsschief() {
 }
 
 func Rechtsschief2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(154,44,22,22,0,0);
+    SetSolidMask(154,44,22,22,nil,nil);
    return(1);
 }
 func Linksschief() {
@@ -237,70 +237,70 @@ func Linksschief() {
 }
 
 func Linksschief2() {
-  if(GetName(0, HZCK))
+  if(GetName(nil, HZCK))
   {
-   pOverlay = CreateObject(2X2H,0,12,GetOwner());
-   Local(0,pOverlay)=this();
+   pOverlay = CreateObject(2X2H,nil,12,GetOwner());
+   Local(nil,pOverlay)=this();
   }
-    SetSolidMask(220,44,22,22,0,0);
+    SetSolidMask(220,44,22,22,nil,nil);
    return(1);
 }
 
 public func Menu(pClonk, object pObj) {
 
-  if(pObj = FindObject2(Find_AtPoint(0,12),Find_Exclude(),Find_NoContainer(),Find_ID(GRUS),Find_Allied(GetOwner()), )) 
+  if(pObj = FindObject2(Find_AtPoint(nil,12),Find_Exclude(),Find_NoContainer(),Find_ID(GRUS),Find_Allied(GetOwner()), ))
   {
-   if(GetX() - GetX(pObj) >= (-5) && GetX() - GetX(pObj) <= (5))
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) >= (-5) && (GetX() ?? 0) - (GetX(pObj) ?? 0) <= (5))
     {
-     SetPosition(GetX(pObj),GetY(pObj)-22,0);
+     SetPosition(GetX(pObj),(GetY(pObj) ?? 0)-22,nil);
     }
-   if(GetX() - GetX(pObj) < (-5))
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) < (-5))
     {
-     SetPosition(GetX(pObj)-11,GetY(pObj)-22,0);
+     SetPosition((GetX(pObj) ?? 0)-11,(GetY(pObj) ?? 0)-22,nil);
     }
-   if(GetX() - GetX(pObj) > 5)
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) > 5)
     {
-     SetPosition(GetX(pObj)+11,GetY(pObj)-22,0);
+     SetPosition((GetX(pObj) ?? 0)+11,(GetY(pObj) ?? 0)-22,nil);
     }
   }
-  if(pObj = FindObject2(Find_AtPoint(0,12),Find_Exclude(),Find_NoContainer(),Find_ID(KLZ1),Find_Allied(GetOwner()), )) 
+  if(pObj = FindObject2(Find_AtPoint(nil,12),Find_Exclude(),Find_NoContainer(),Find_ID(KLZ1),Find_Allied(GetOwner()), ))
   {
-   if(GetX() - GetX(pObj) >= (-5) && GetX() - GetX(pObj) <= (5))
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) >= (-5) && (GetX() ?? 0) - (GetX(pObj) ?? 0) <= (5))
     {
-     SetPosition(GetX(pObj),GetY(pObj)-16,0);
+     SetPosition(GetX(pObj),(GetY(pObj) ?? 0)-16,nil);
     }
-   if(GetX() - GetX(pObj) < (-5))
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) < (-5))
     {
-     SetPosition(GetX(pObj)-11,GetY(pObj)-16,0);
+     SetPosition((GetX(pObj) ?? 0)-11,(GetY(pObj) ?? 0)-16,nil);
     }
-   if(GetX() - GetX(pObj) > 5)
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) > 5)
     {
-     SetPosition(GetX(pObj)+11,GetY(pObj)-16,0);
+     SetPosition((GetX(pObj) ?? 0)+11,(GetY(pObj) ?? 0)-16,nil);
     }
   }
-  if(pObj = FindObject2(Find_AtPoint(0,12),Find_Exclude(),Find_NoContainer(),Find_ID(KLZ2),Find_Allied(GetOwner()), )) 
+  if(pObj = FindObject2(Find_AtPoint(nil,12),Find_Exclude(),Find_NoContainer(),Find_ID(KLZ2),Find_Allied(GetOwner()), ))
   {
-   if(GetX() - GetX(pObj) < 0)
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) < 0)
     {
-     SetPosition(GetX(pObj)-5,GetY(pObj)-16,0);
+     SetPosition((GetX(pObj) ?? 0)-5,(GetY(pObj) ?? 0)-16,nil);
     }
-   if(GetX() - GetX(pObj) >= 0)
+   if((GetX() ?? 0) - (GetX(pObj) ?? 0) >= 0)
     {
-     SetPosition(GetX(pObj)+6,GetY(pObj)-16,0);
+     SetPosition((GetX(pObj) ?? 0)+6,(GetY(pObj) ?? 0)-16,nil);
     }
   }
    CreateMenu(GetID(),pClonk);
-   AddMenuItem("Decke verfestigen","Oben",GetID(),pClonk,0,0,0,2,1);
-   AddMenuItem("schiefe Ebene nach Links","Schieflinks",GetID(),pClonk,0,0,0,2,5);
-   AddMenuItem("schiefe Ebene nach Rechts","Schiefrechts",GetID(),pClonk,0,0,0,2,8);
-   AddMenuItem("rechte Außenwand und Decke","Rechts",GetID(),pClonk,0,0,0,2,3);
-   AddMenuItem("linke Außenwand und Decke","Links",GetID(),pClonk,0,0,0,2,2);
+   AddMenuItem("Decke verfestigen","Oben",GetID(),pClonk,nil,nil,nil,2,1);
+   AddMenuItem("schiefe Ebene nach Links","Schieflinks",GetID(),pClonk,nil,nil,nil,2,5);
+   AddMenuItem("schiefe Ebene nach Rechts","Schiefrechts",GetID(),pClonk,nil,nil,nil,2,8);
+   AddMenuItem("rechte Außenwand und Decke","Rechts",GetID(),pClonk,nil,nil,nil,2,3);
+   AddMenuItem("linke Außenwand und Decke","Links",GetID(),pClonk,nil,nil,nil,2,2);
    //AddMenuItem("beide Außenwände","Beide",GetID(),pClonk,0,0,0,2,4);
 
-   AddMenuItem("rechte Außenwand","Rechtsod",GetID(),pClonk,0,0,0,2,6);
-   AddMenuItem("linke Außenwand","Linksod",GetID(),pClonk,0,0,0,2,9);
-   AddMenuItem("rechte Außenwand mit schiefer Ebene","Rechtsschief",GetID(),pClonk,0,0,0,2,7);
-   AddMenuItem("linke Außenwand mit schiefer Ebene","Linksschief",GetID(),pClonk,0,0,0,2,10);
+   AddMenuItem("rechte Außenwand","Rechtsod",GetID(),pClonk,nil,nil,nil,2,6);
+   AddMenuItem("linke Außenwand","Linksod",GetID(),pClonk,nil,nil,nil,2,9);
+   AddMenuItem("rechte Außenwand mit schiefer Ebene","Rechtsschief",GetID(),pClonk,nil,nil,nil,2,7);
+   AddMenuItem("linke Außenwand mit schiefer Ebene","Linksschief",GetID(),pClonk,nil,nil,nil,2,10);
 
    //AddMenuItem("Aufzug","Aufzug",KLAU,pClonk);
 }
@@ -311,7 +311,7 @@ public func MaxDamage() {
 
 protected func Damage() {
   // Bei mehr als maximalem Schaden
-  if (GetDamage() >= MaxDamage()) 
+  if ((GetDamage() ?? 0) >= (MaxDamage() ?? 0))
   {
    if(pOverlay) RemoveObject(pOverlay);
    Incinerate();

@@ -1,6 +1,6 @@
 /*--- Saw ---*/
 
-#strict
+#strict 3
 #include DK8Z
 
 

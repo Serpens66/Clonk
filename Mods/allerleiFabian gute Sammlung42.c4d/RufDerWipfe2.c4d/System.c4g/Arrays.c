@@ -1,17 +1,17 @@
 /*-- Arrays --*/
 
-#strict
+#strict 3
 
 //Löscht ein Item aus einem Array
 global func DeleteArrayItem(iNumber, &aArray)
 {
  var temp=[];
- for(var cnt;cnt<GetLength(aArray);cnt++)
+ for(var cnt;(cnt ?? 0)<(GetLength(aArray) ?? 0);S42MigrationStep(cnt, 1, true))
  {
-  if(cnt==iNumber)continue;
-  var dif=0;
-  if(cnt>iNumber)dif=-1;
-  temp[cnt+dif]=aArray[cnt];
+  if(Equal(cnt, iNumber))continue;
+  var dif=nil;
+  if((cnt ?? 0)>(iNumber ?? 0))dif=-1;
+  temp[(cnt ?? 0)+(dif ?? 0)]=aArray[(cnt ?? 0)];
  } 
  
  aArray=temp;
@@ -22,16 +22,16 @@ global func DeleteArrayItem(iNumber, &aArray)
 global func DeleteArrayItem2(iNumber,&aArray)
 {
  //Ein ganz leeres Array?
- if(GetLength(aArray)==1)return((aArray=CreateArray()));
+ if(Equal(GetLength(aArray), 1))return((aArray=CreateArray()));
  //Wenn das letzte Element ist diese Funktion auch nciht toller.
- if(GetLength(aArray)-1==iNumber)
+ if(Equal((GetLength(aArray) ?? 0)-1, iNumber))
  return(DeleteArrayItem(iNumber, aArray));
  
  //Los!
- var last=aArray[GetLength(aArray)-1];
- aArray[GetLength(aArray)-1]=0;
- SetLength(aArray,GetLength(aArray)-1);
- aArray[iNumber]=last;
+ var last=aArray[(GetLength(aArray) ?? 0)-1];
+ aArray[(GetLength(aArray) ?? 0)-1]=nil;
+ SetLength(aArray,(GetLength(aArray) ?? 0)-1);
+ aArray[(iNumber ?? 0)]=last;
  return(aArray);
 }
 
@@ -39,9 +39,9 @@ global func DeleteArrayItem2(iNumber,&aArray)
 global func GetArrayItemPosition(value,aArray)
 {
  var number=-1;
- for(var cnt=0;cnt<GetLength(aArray);cnt++)
+ for(var cnt=nil;(cnt ?? 0)<(GetLength(aArray) ?? 0);S42MigrationStep(cnt, 1, true))
  {
-  if(aArray[cnt] == value)
+  if(Equal(aArray[(cnt ?? 0)], value))
   {
    number=cnt;
    break;
@@ -55,16 +55,16 @@ global func GetArrayItemPosition(value,aArray)
 //Fügt ein Item am Ende eines Array ein
 global func PushBack(value,&aArray)
 {
- return(aArray[GetLength(aArray)]=value);
+ return(aArray[(GetLength(aArray) ?? 0)]=value);
 }
 
 //Fügt ein Item am Anfang ein
 global func PushFront(value,&aArray)
 {
  var aNew=[];
- aNew[GetLength(aNew)]=value;
- for(var cnt=0;cnt<GetLength(aArray);cnt++)
- aNew[GetLength(aNew)]=aArray[cnt];
+ aNew[(GetLength(aNew) ?? 0)]=value;
+ for(var cnt=nil;(cnt ?? 0)<(GetLength(aArray) ?? 0);S42MigrationStep(cnt, 1, true))
+ aNew[(GetLength(aNew) ?? 0)]=aArray[(cnt ?? 0)];
  
  aArray=aNew;
  return(1);

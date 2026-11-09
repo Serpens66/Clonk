@@ -1,6 +1,6 @@
 /* Warp */
 
-#strict
+#strict 3
 
 public func Activate(caster) {
   // Zaubernden Clonk finden
@@ -21,7 +21,7 @@ private func Warp(clonk)
   GetWarpPosition(ox, oy);
   
   // Keine passende Warpposition
-  if(ox == -1 && oy == -1) return(0, Message("$TxtNoPlace$",clonk) );
+  if(And(Equal(ox, -1), Equal(oy, -1))) return(S42MigrationFirst(nil, Message("$TxtNoPlace$",clonk) ));
 
   // Objekt wird vorsichtshalber nach draußen versetzt
 //  Exit(clonk);
@@ -31,10 +31,10 @@ private func Warp(clonk)
   
   // Richtungsfaktor ermitteln
   var dir = GetDir(clonk);
-  if(dir == DIR_Left() ) dir = -1;
+  if(Equal(dir, DIR_Left) ) dir = -1;
   
   // Warplöcher erzeugen
-  var startwarp = CreateObject(WARP, BoundBy(65 * dir, -GetX(), LandscapeWidth() - GetX()), 10, -1);
+  var startwarp = CreateObject(WARP, BoundBy(65 * (dir ?? 0), -(GetX() ?? 0), (LandscapeWidth() ?? 0) - (GetX() ?? 0)), 10, -1);
   var endwarp = CreateObject(WARP, AbsX(ox), AbsY(oy), -1);
   
   // Warplöcher verbinden
@@ -55,7 +55,7 @@ private func GetWarpPosition(&x, &y)
       x = y = -1;
     else
       { x = GetX(obj); y = GetY(obj); }
-    var n = (ObjectDistance(obj) < 100) && ((i++) < 100);
+    var n = And(((ObjectDistance(obj) ?? 0) < 100), ((S42MigrationStep(i, 1, true)) < 100));
     RemoveObject(obj);
     if(!n) break;
   }

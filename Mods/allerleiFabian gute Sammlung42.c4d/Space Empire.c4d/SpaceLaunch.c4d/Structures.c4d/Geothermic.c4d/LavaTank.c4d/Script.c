@@ -1,6 +1,6 @@
 /*-- LavaTank-Objekt --*/
 
-#strict
+#strict 3
 
 local iFill, iSwitch, GeoPlant;
 
@@ -10,7 +10,7 @@ local iFill, iSwitch, GeoPlant;
 protected func Initialize()
 {
   iFill = 300;  // ein bisschen Füllung für den Anfang
-  iSwitch = 0;  // ausschalten
+  iSwitch = nil;  // ausschalten
   return(1);
 }
 
@@ -25,8 +25,10 @@ public func Init(plant)
 
 /* Füllstand */
 
-public GetFill: return(iFill);
-public GetMaxFill: return(4000);   // 20 Fässer voll
+public func GetFill(...) { return(iFill);
+}
+public func GetMaxFill(...) { return(4000);   // 20 Fässer voll
+}
 
 
 /* Füllstand ändern */
@@ -34,41 +36,44 @@ public GetMaxFill: return(4000);   // 20 Fässer voll
 public func DoFill(plus)
 {
   var fill0 = iFill;
-  iFill = BoundBy(iFill+plus, 0, GetMaxFill());
-  return(iFill != fill0);
+  iFill = BoundBy((iFill ?? 0)+(plus ?? 0), nil, GetMaxFill());
+  return(!Equal(iFill, fill0));
 }
 
 
 /* Ein-/Ausschalter */
 
-public SwitchOnOff:
+public func SwitchOnOff(...) {
   // Ein/Ausschalten vom Geothermalwerk aus
   iSwitch = !iSwitch;
   if (iSwitch) return(SwitchOn());
   return(SwitchOff());
+}
 
-private SwitchOn:
+private func SwitchOn(...) {
   Message("eingeschaltet",GeoPlant);
   Sound("Energize");
   SetAction("Process");
   return(1);
+}
 
-private SwitchOff:
+private func SwitchOff(...) {
   Message("ausgeschaltet",GeoPlant);
   Sound("DeEnergize");
   return(1);
+}
 
 
 /* Inhalts- und Produktions-Überwachung */
 
-public CheckOn:
+public func CheckOn(...) {
   // EMP-Einwirkung?
   if (HasEMP(GeoPlant)) return(1);
   // weiter nur jedes dritte Mal
-  if (GetPhase() % 3) return(1);
+  if ((GetPhase() ?? 0) % 3) return(1);
   // Energieerzeugung
-  if (iFill && iSwitch)
-    if (GetEnergy(GeoPlant) < 50)   // wird auch was gebraucht?
+  if (And(iFill, iSwitch))
+    if ((GetEnergy(GeoPlant) ?? 0) < 50)   // wird auch was gebraucht?
     {
       DoFill(-3);
       GeoPlant->EnergyProduction();
@@ -77,17 +82,18 @@ public CheckOn:
   if (!iSwitch)
     SetAction("Off");
   return(1);
+}
 
 private func GetFromBarrel(barrelID)
 {
   var obj, barrelfill;
   var maxfill = GetMaxFill();
-  while ((obj = FindObject(barrelID,0,0,0,0, 0,0,0,GeoPlant,obj)) && (iFill < maxfill))
+  while (And((obj = FindObject(barrelID,nil,nil,nil,nil, nil,nil,nil,GeoPlant,obj)), ((iFill ?? 0) < (maxfill ?? 0))))
   {
     // Fassinhalt ermitteln, nicht mehr als Restplatz im Tank
-    barrelfill = BoundBy(obj->GetAmount(), 0, maxfill-iFill);
+    barrelfill = BoundBy(obj->GetAmount(), nil, (maxfill ?? 0)-(iFill ?? 0));
     // aus dem Fass nehmen und in den Tank füllen
-    obj->BarrelDoFill(-barrelfill);
+    obj->BarrelDoFill(-(barrelfill ?? 0));
     DoFill(barrelfill);
   }
   return(1);
@@ -101,8 +107,8 @@ protected func CheckFill()
   GetFromBarrel(DBRL);
   GetFromBarrel(LBRL);
   // Füllstand anzeigen
-  var newDir = (iFill+200)*9 / GetMaxFill();
-  if (GetDir() != newDir)
+  var newDir = ((iFill ?? 0)+200)*9 / (GetMaxFill() ?? 0);
+  if (!Equal(GetDir(), newDir))
     SetDir(newDir);
   return(1);
 }

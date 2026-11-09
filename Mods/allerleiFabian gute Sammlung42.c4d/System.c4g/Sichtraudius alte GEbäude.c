@@ -1,7 +1,7 @@
 /*-- Sichtradius appendto alte Gebäude --*/
 
 
-#strict 2
+#strict 3
 
 #appendto ANVL
 #appendto BRDG
@@ -83,7 +83,7 @@
 func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-feindlichen Spielern ebenfalls diesen sichtradius mithilfe eines hilfsobjekts zu geben
 {
     if(FindObject(SSSI)) return(70); // nur wenn Sicht von Dingen aktiviert ist
-    return(0);
+    return(nil);
 }
 
 public func Completion(a,b,c,d)
@@ -99,7 +99,7 @@ var hp;
 var schaden;
 hp = GetDefCoreVal("BlastIncinerate","DefCore");
 schaden = GetDamage();
-if (schaden >= hp) {Incinerate();};
+if ((schaden ?? 0) >= (hp ?? 0)) {Incinerate();};
 _inherited(a,b,c,d,e,f,g);
 }
 

@@ -1,6 +1,6 @@
 /*-- Wurfrakete --*/
 
-#strict
+#strict 3
 
 
 /* Aktivierung */
@@ -8,15 +8,15 @@
 public func ControlThrow(clonk)
 {
   // nur wenn Clonk nicht klettert oder hangelt
-  if ((GetAction(clonk) eq "Scale") ||
-      (GetAction(clonk) eq "Hangle"))
-    return(0);
+  if (Or((!!SEqual(GetAction(clonk), "Scale")),
+      (!!SEqual(GetAction(clonk), "Hangle"))))
+    return(nil);
   // umwandeln
   SetOwner(GetController(clonk));
   ChangeDef(STR0);
   ObjectCall(this(), "Init", GetDir(clonk));
   // Null zurück, damit auch geworfen wird
-  return(0);
+  return(nil);
 }
 
 

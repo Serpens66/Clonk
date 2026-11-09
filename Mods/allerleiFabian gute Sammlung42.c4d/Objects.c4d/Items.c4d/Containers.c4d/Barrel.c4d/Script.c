@@ -1,6 +1,6 @@
 /*-- Fass --*/
 
-#strict
+#strict 3
 
 // Anzahl Materialpixel, die in ein Fass passen
 static const BARL_MaxFill = 200;
@@ -23,7 +23,7 @@ global func EmptyBarrelID() { return(BARL); }
 protected func SellTo()
 {
   // Fasskonfiguration: Gegebenenfalls Verkauf zum gefüllten Fass
-  if (BarrelConfiguration() & 2) return(GetID());
+  if ((BarrelConfiguration() ?? 0) & 2) return(GetID());
   // Ansonsten beim Verkauf entleeren
   return(EmptyBarrelID());
 }
@@ -34,28 +34,28 @@ private func FillCheck()
 {
   // Wenn das normale Fass per ChangeDef zurueckgeaendert wurde
   // koennte die Fuellvariable noch voll sein
-  if(BarrelMaterial() == -1)
+  if(Equal(BarrelMaterial(), -1))
   {
   	if(iFillLevel)
-  		iFillLevel=0;
+                iFillLevel=nil;
   }
   
   // Material an aktueller Position überprüfen
   var iMaterial;
-  if ( ((iMaterial = GetMaterial()) == -1) || (iMaterial == iBackMaterial) ) return(0);
+  if ( Or((Equal((iMaterial = GetMaterial()), -1)), (Equal(iMaterial, iBackMaterial))) ) return(nil);
   // Fass für dieses Material suchen
   var idBarrel;
   if (!(idBarrel = GetBarrelType(iMaterial))) return(iBackMaterial = iMaterial);
   // Fass füllen wenn entweder leer oder mit dem gleichen Material aufgefüllt werden kann
-  if(BarrelMaterial() != -1 && BarrelMaterial() != iMaterial) return(0);
+  if(And(!Equal(BarrelMaterial(), -1), !Equal(BarrelMaterial(), iMaterial))) return(nil);
   // Wenn nicht bereits voll
-  if(iFillLevel >= BarrelMaxFill()) return(0);
+  if((iFillLevel ?? 0) >= (BarrelMaxFill() ?? 0)) return(nil);
   // Fass füllen
-  iFillLevel += ExtractMaterialAmount(0, 0, iMaterial, BarrelMaxFill() - iFillLevel);
+  S42MigrationAssign(iFillLevel, "+=", (ExtractMaterialAmount(nil, nil, iMaterial, (BarrelMaxFill() ?? 0) - (iFillLevel ?? 0)) ?? 0));
   // Zum vollen Fass werden, wenn wir es nicht bereits sind
-  if(BarrelMaterial() == -1)
+  if(Equal(BarrelMaterial(), -1))
   {
-    iFillMaterial = iMaterial+1;
+    iFillMaterial = (iMaterial ?? 0)+1;
     ChangeDef(idBarrel);
   }
   return(1);
@@ -68,7 +68,7 @@ public func GetAmount() { return(iFillLevel); }
 
 // Füllmaterial
 public func BarrelMaterial() { return(-1); }
-public func BarrelMaterialName() { return(); }
+public func BarrelMaterialName() { return; }
 
 // Maximale Füllung
 public func BarrelMaxFill() { return(BARL_MaxFill); }
@@ -76,11 +76,13 @@ public func BarrelMaxFill() { return(BARL_MaxFill); }
 // Füllung erhöhen/verringern
 public func BarrelDoFill(int iChange, int iMat)
 {
-  var iNewFill = BoundBy(iFillLevel + iChange, 0, BarrelMaxFill());
-  if (iNewFill == iFillLevel) return();
-  iNewFill -= iFillLevel; iFillLevel += iNewFill;
+  iChange ??= 0;
+  iMat ??= 0;
+  var iNewFill = BoundBy((iFillLevel ?? 0) + (iChange ?? 0), nil, BarrelMaxFill());
+  if (Equal(iNewFill, iFillLevel)) return;
+  S42MigrationAssign(iNewFill, "-=", (iFillLevel ?? 0)); S42MigrationAssign(iFillLevel, "+=", (iNewFill ?? 0));
   // Aktuelles Füllmaterial ggf. überschreiben
-  if (iMat && iChange>0) iFillMaterial = iMat;
+  if (And(iMat, (iChange ?? 0)>0)) iFillMaterial = iMat;
   // Tatsächliche Änderung des Füllstandes zurückgeben
   return(iNewFill);
 }
@@ -88,7 +90,7 @@ public func BarrelDoFill(int iChange, int iMat)
 // Fass voll?
 public func BarrelIsFull() 
 { 
-  return(iFillLevel == BarrelMaxFill());
+  return(Equal(iFillLevel, BarrelMaxFill()));
 }
 
 // Ein Pixel Füllung entfernen
@@ -112,9 +114,9 @@ public func BarrelExtractLiquid()
 // Wert = Wert(Leeres Fass) + (Wert(Volles Fass) - Wert(Leeres Fass)) * (Füllung / MaxFüllung)
 protected func CalcValue()
 {
-  var iValueEmpty = GetValue(0, EmptyBarrelID());
-  var iValueFull = GetValue(0, GetID());
-  return(iValueEmpty + ((iValueFull - iValueEmpty) * iFillLevel) / BarrelMaxFill());
+  var iValueEmpty = GetValue(nil, EmptyBarrelID());
+  var iValueFull = GetValue(nil, GetID());
+  return((iValueEmpty ?? 0) + (((iValueFull ?? 0) - (iValueEmpty ?? 0)) * (iFillLevel ?? 0)) / (BarrelMaxFill() ?? 0));
 }
 
 /* Aufschlag */ 
@@ -132,7 +134,7 @@ private func BarrelEject()
   if (!(strMaterial = BarrelMaterialName())) return(1);
   Sound("Splash1");
   CastPXS(strMaterial, iFillLevel, 20);
-  iFillLevel = 0;
+  iFillLevel = nil;
   ChangeDef(EmptyBarrelID());
   return(1);  
 }

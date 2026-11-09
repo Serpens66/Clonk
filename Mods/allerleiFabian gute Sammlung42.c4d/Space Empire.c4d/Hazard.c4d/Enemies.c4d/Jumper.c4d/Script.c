@@ -1,6 +1,6 @@
 /*--Springer --*/
 
-#strict
+#strict 3
 
 local glob;
 local lure; //lauern!
@@ -12,17 +12,17 @@ protected func Initialize()
   SetAction("Walk");
   SetDir(Random(2));
   // Gruppen-KI
-  AddEffect("GroupKI", this(), 1, 0, this());
+  AddEffect("GroupKI", this(), 1, nil, this());
   // Schadenseffekt
-  AddEffect("DmgCheck",this(),1,0);
+  AddEffect("DmgCheck",this(),1,nil);
   
   Need4Speed();
 }
 
 protected func Need4Speed()
 {
-	SetPhysical("Walk", 90000 + RandomX(-10,10)*1000, PHYS_Temporary);
-	ScheduleCall(this(), "Need4Speed", Random(200)+100);
+	SetPhysical("Walk", 90000 + (RandomX(-10,10) ?? 0)*1000, PHYS_Temporary);
+	ScheduleCall(this(), "Need4Speed", (Random(200) ?? 0)+100);
 }
 
 /* Aktivität */
@@ -30,31 +30,31 @@ protected func Need4Speed()
 protected func Activity()
 {
   // Gerade verhindert?
-  if(!Ready()) return();
+  if(!Ready()) return;
 
   // Rumangreifen
   if(ReadyToBite())
   {
-    var l = lure+1;
+    var l = (lure ?? 0)+1;
     // Nur wenn möglich
-    for(var prey in FindTargets(this, 150/l))
+    for(var prey in FindTargets(this, 150/(l ?? 0)))
           // Hinrennen / anspringen
           return(Attack(prey));
   }
     
     // Auftauchen, wenn der Atem ausgeht
-  if(InLiquid() && GetBreath() <= 25 && GetComDir() != COMD_Up())
-    SetComDir(COMD_Up());
+  if(And(And(InLiquid(), (GetBreath() ?? 0) <= 25), !Equal(GetComDir(), COMD_Up)))
+    SetComDir(COMD_Up);
     
 	// Wir machen auch mal Zufallsjump! Aber Hechtjumplike!
 	if(!Random(31))
 	{
 		Jump();
-		SetYDir(GetYDir()/2);
+		SetYDir((GetYDir() ?? 0)/2);
 	}
 
   // Kommando?
-  if(GetCommand()) return();
+  if(GetCommand()) return;
 
   // Schleimglobs nehmen
   if(!glob)
@@ -68,23 +68,23 @@ protected func Activity()
   }
   else
   {
-    if(GetAction() eq "Scale")
-      glob->SetVertexXY(0, 0, -9*(GetDir()*2-1));
+    if(!!SEqual(GetAction(), "Scale"))
+      glob->SetVertexXY(nil, nil, -9*((GetDir() ?? 0)*2-1));
     else
-      glob->SetVertexXY(0, -9*(GetDir()*2-1), 3);
+      glob->SetVertexXY(nil, -9*((GetDir() ?? 0)*2-1), 3);
   }
 
   if(IsLuring())
-    return();
+    return;
   
   //Auflauern!
   if(!GetEffect("JumpedToTop",this()))
-  if(!Random(50) && (GetAction() S= "Hangle" || GetAction() S= "Scale") && GetActTime() > 100)
-    if(GetLength(FindObjects(Find_Func("IsAlien"),Find_Func("IsLuring"),Find_InRect(-150, -150, 300, 300))) < 3)
+  if(And(And(!Random(50), (Or(!!SEqual(GetAction(), "Hangle"), !!SEqual(GetAction(), "Scale")))), (GetActTime() ?? 0) > 100))
+    if((GetLength(FindObjects(Find_Func("IsAlien"),Find_Func("IsLuring"),Find_InRect(-150, -150, 300, 300))) ?? 0) < 3)
     {
       //Sind wir eh nicht zu weit über dem Boden? Sonst finden wir ja nie Beute.
-      for(var x=1; x <= 5; x++)
-        if(GBackSolid(0,10*x-1))
+      for(var x=1; (x ?? 0) <= 5; S42MigrationStep(x, 1, true))
+        if(GBackSolid(nil,10*(x ?? 0)-1))
         {
           StartLuring();
           break;
@@ -96,22 +96,22 @@ protected func Activity()
   
   // Rumlaufen, aber nicht zuviel wechseln, sonst sieht es so aus, als wäre er verwirrt!
   if(!Random(10)) {
-    if(GetAction() eq "Walk" || GetAction() eq "Hangle")
+    if(Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "Hangle")))
       {
-      if(Random(2)) SetComDir(COMD_Left());
-      else SetComDir(COMD_Right());
+      if(Random(2)) SetComDir(COMD_Left);
+      else SetComDir(COMD_Right);
       }
-    if(GetAction() eq "Scale")
+    if(!!SEqual(GetAction(), "Scale"))
       {
-      if(Random(2)) SetComDir(COMD_Up());
-      else SetComDir(COMD_Down());
+      if(Random(2)) SetComDir(COMD_Up);
+      else SetComDir(COMD_Down);
       }
   }
   // Niedrige Decke in der nähe? noch wenige kletternde?
   if(!Random(10)) {
     var aliencount = GetLength(FindObjects(Find_ID(GetID()),Find_InRect(-150, -50, 300, 100)));
     var hanglingaliens = GetLength(FindObjects(Find_ID(GetID()),Find_InRect(-150, -50, 300, 100),Find_Action("Hangle")));
-    if(hanglingaliens < aliencount/2) {
+    if((hanglingaliens ?? 0) < (aliencount ?? 0)/2) {
       // An die Decke springen!
 			JumpToTop();
     }
@@ -120,23 +120,23 @@ protected func Activity()
 
 private func JumpToTop() {
   var dist;
-  for(dist=0; dist < 80; dist += 2)
-    if(GBackSolid(0,-dist))
+  for(dist=nil; (dist ?? 0) < 80; S42MigrationAssign(dist, "+=", 2))
+    if(GBackSolid(nil,-(dist ?? 0)))
     {
       SetAction("Walk"); //teh hax!
       Jump();
-      SetXDir(GetXDir()/4);
-      SetYDir(AdjustSpeed(-dist));
+      SetXDir((GetXDir() ?? 0)/4);
+      SetYDir(AdjustSpeed(-(dist ?? 0)));
       //Erfolgreich gesprungen!
       return(true);
     }
     
-  return(false);
+  return(nil);
 }
 
 public func Ready() // Wenn das Alien gerade nichts tun kann
 {
-  if(GetAction() eq "Jump") return();
+  if(!!SEqual(GetAction(), "Jump")) return;
 
   return(1);
 }
@@ -147,10 +147,11 @@ public func Ready() // Wenn das Alien gerade nichts tun kann
 public func Attack(object pPrey, bool noKI)
 {
   // Geth nicht?!
-  if(!ReadyToBite()) return();
-  if(!pPrey) return();
+  noKI ??= false;
+  if(!ReadyToBite()) return;
+  if(!pPrey) return;
 
-  if(GetX(pPrey)-GetX())
+  if((GetX(pPrey) ?? 0)-(GetX() ?? 0))
     SetDir(DIR_Right);
   else
     SetDir(DIR_Left);
@@ -167,22 +168,22 @@ public func Attack(object pPrey, bool noKI)
     GroupAttack(pPrey);
   
   // ZU nah?
-  if(ObjectDistance(pPrey) < 30 && GetAction() ne "Hangle")
+  if(And((ObjectDistance(pPrey) ?? 0) < 30, !SEqual(GetAction(), "Hangle")))
   {
     // Beißen!
     Bite(pPrey);
     // und etwas Distanz gewinnen
     SetAction("Walk");
     Jump();
-    SetXDir((GetDir()*2-1)*10);
+    SetXDir(((GetDir() ?? 0)*2-1)*10);
     SetYDir(-10);
   }
   
   // Nah genug zum krassen Angriff?
-  if(ObjectDistance(pPrey) <= 100)
+  if((ObjectDistance(pPrey) ?? 0) <= 100)
   {
     //kleiner Gegner, Decke da oder einfach nur Random? :D
-    if(GetAction() eq "Walk" && (GetY(pPrey)-GetY() > 5 || !Random(3)) && Abs(GetX(pPrey)-GetX()) > 50)
+    if(And(And(!!SEqual(GetAction(), "Walk"), (Or((GetY(pPrey) ?? 0)-(GetY() ?? 0) > 5, !Random(3)))), (Abs((GetX(pPrey) ?? 0)-(GetX() ?? 0)) ?? 0) > 50))
     {
       if(!JumpToTop())
         return(JumpTo(pPrey));
@@ -190,7 +191,7 @@ public func Attack(object pPrey, bool noKI)
       {
         AddEffect("CoolWalljumpAttack",this(),200);
       
-        return();
+        return;
       }
     }
     else
@@ -213,8 +214,8 @@ private func JumpTo(object pPrey)
   SetAction("Walk"); // *hax*
   Jump();
   // Geschwindigkeit anpassen
-  SetXDir(AdjustSpeed(GetX(pPrey)-GetX()));
-  SetYDir(AdjustSpeed(GetY(pPrey)-GetY()));
+  SetXDir(AdjustSpeed((GetX(pPrey) ?? 0)-(GetX() ?? 0)));
+  SetYDir(AdjustSpeed((GetY(pPrey) ?? 0)-(GetY() ?? 0)));
   // Geräusch
   Sound("JumperAttack");
   // Effekt dranfügen
@@ -225,17 +226,18 @@ private func JumpTo(object pPrey)
 private func AdjustSpeed(int iSpeed)
 {
   // Richtung speichern
-  var dir = iSpeed / Abs(iSpeed);
+  iSpeed ??= 0;
+  var dir = (iSpeed ?? 0) / (Abs(iSpeed) ?? 0);
   // Min- und Maxwerte anpassen
   iSpeed = BoundBy(Abs(iSpeed), 20, 55);
-  return(iSpeed*dir*GetCon()/100);
+  return((iSpeed ?? 0)*(dir ?? 0)*(GetCon() ?? 0)/100);
 }
 
 // Beißen
 private func Bite(object pPrey)
 {
   // Beißen!11
-  DoDmg(3+Random(10)*GetCon()/100, DMG_Melee, pPrey);
+  DoDmg(3+(Random(10) ?? 0)*(GetCon() ?? 0)/100, DMG_Melee, pPrey);
   // Beißsperre, damit man nicht dauerhüpft
   AddEffect("NoBite", this(), 99, 50, this());
 }
@@ -243,16 +245,16 @@ private func Bite(object pPrey)
 // Schleim schleudern
 private func GlobTo(object pPrey)
 {
-  if(!glob) return();
+  if(!glob) return;
   // Glob entfernen
   RemoveObject(glob);
   var sGlob;
-  if(GetAction() eq "Scale")
-     sGlob = CreateObject(SLST, 0, 18*(GetDir()*2-1), GetOwner());
+  if(!!SEqual(GetAction(), "Scale"))
+     sGlob = CreateObject(SLST, nil, 18*((GetDir() ?? 0)*2-1), GetOwner());
   else
-     sGlob = CreateObject(SLST, 18*(GetDir()*2-1), -3, GetOwner());
+     sGlob = CreateObject(SLST, 18*((GetDir() ?? 0)*2-1), -3, GetOwner());
   // Feuern
-  sGlob->Launch(AdjustSpeed(GetX(pPrey)-GetX()), AdjustSpeed(GetY(pPrey)-GetY()));
+  sGlob->Launch(AdjustSpeed((GetX(pPrey) ?? 0)-(GetX() ?? 0)), AdjustSpeed((GetY(pPrey) ?? 0)-(GetY() ?? 0)));
   // Beißpause
   AddEffect("NoBite", this(), 99, 25, this());
 }
@@ -260,20 +262,20 @@ private func GlobTo(object pPrey)
 public func StartLuring()
 {
   if(IsLuring())
-    return();
+    return;
   //wir lauern
   lure=1;
   //tarnen!
   FadeOut(this(),120);
   //nichstun und warten.
-  SetCommand(0,"None");
+  SetCommand(nil,"None");
   SetComDir(COMD_Stop);
 }
 
 public func StopLuring()
 {
   //nicht mehr lauern
-  lure = 0;
+  lure = nil;
   //farbe!
   StopFading();
 }
@@ -283,7 +285,7 @@ func StartHangling()
   // Machen wir gerade Walljump-Attacke?
   if(!GetEffect("CoolWalljumpAttack", this()))
     //nö, nichts tun.
-    return();
+    return;
     
   if(GetCommand())
     SetCommand(this(), "None");
@@ -329,24 +331,26 @@ protected func GroupAttack(object pPrey)
 
 public func OnDmg(int iDmg, int iType) {
   //Melee
-  if(iType == DMG_Melee)
+  iDmg ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Melee))
     return(40);
   //Projectile
-  if(iType == DMG_Projectile)
-    return(0);
+  if(Equal(iType, DMG_Projectile))
+    return(nil);
   //Flame
-  if(iType == DMG_Fire) {
-    AddFireEffect(this(),(5*iDmg*(105))/100);
+  if(Equal(iType, DMG_Fire)) {
+    AddFireEffect(this(),(5*(iDmg ?? 0)*(105))/100);
     return(-50);
   }
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(-10);
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(50);
   //Bio
-  if(iType == DMG_Bio) {
+  if(Equal(iType, DMG_Bio)) {
     return(90);
   }
 }
@@ -355,7 +359,9 @@ public func OnDmg(int iDmg, int iType) {
 func OnHit(int dmg, int type, object by)
 {
   // verzögert...
-  ScheduleCall(this(), "OnHit2", 5, 0, by);
+  dmg ??= 0;
+  type ??= 0;
+  ScheduleCall(this(), "OnHit2", 5, nil, by);
 }
 
 protected func OnHit2(object by)
@@ -367,19 +373,19 @@ protected func OnHit2(object by)
     //nach feinden suchen und so
     return(Activity());
   
-  if(ObjectDistance(obj,this()) < 200)
+  if((ObjectDistance(obj,this()) ?? 0) < 200)
     Attack(obj);
 }
 
 func CheckLiquid()
 {
-  return(); // erstmal kein Tod im wasser mehr, ist sonst zu leicht.
-  if(!GBackLiquid(0,-3))
-    return();
-  if(GetMaterial(0,-3) == Material("Water"))
+  return; // erstmal kein Tod im wasser mehr, ist sonst zu leicht.
+  if(!GBackLiquid(nil,-3))
+    return;
+  if(Equal(GetMaterial(nil,-3), Material("Water")))
   {
-    ExtractMaterialAmount(0,0, Material("Water"), GetMass());
-    CastPXS("Acid",GetMass()*5,GetMass());
+    ExtractMaterialAmount(nil,nil, Material("Water"), GetMass());
+    CastPXS("Acid",(GetMass() ?? 0)*5,GetMass());
     Death();
   }
 }
@@ -388,12 +394,12 @@ func CheckLiquid()
 
 public func ReadyToBite()
 {
-  if(GetEffect("NoBite", this())) return();
+  if(GetEffect("NoBite", this())) return;
 
   return(
-    GetAction() eq "Walk" ||
-    GetAction() eq "Scale" ||
-    GetAction() eq "Hangle"
+    Or(Or(!!SEqual(GetAction(), "Walk"),
+    !!SEqual(GetAction(), "Scale")),
+    !!SEqual(GetAction(), "Hangle"))
   );
 }
 
@@ -430,19 +436,22 @@ public func FxBiteTimer()
 public func FxBiteEffect(string EffectName)
 {
   // Nur ein Beiß-Effekt
-  if(EffectName == "Bite") return(-1);
+  if(Equal(EffectName, "Bite")) return(-1);
 }
 
 public func FxNoBiteEffect(string EffectName)
 {
   // Kein Beiß-Effekt gerade
-  if(EffectName == "Bite") return(-1);
+  if(Equal(EffectName, "Bite")) return(-1);
 }
 
 public func FxGroupKIDamage(object target, int no, int iDmg, int iCause)
 {
   // Angeschossen?
-  if(iCause == 32 || iCause == 33 || iCause == 35)
+  no ??= 0;
+  iDmg ??= 0;
+  iCause ??= 0;
+  if(Or(Or(Equal(iCause, 32), Equal(iCause, 33)), Equal(iCause, 35)))
     // Feinde in weiter Ferne suchen
     for(var prey in FindTargets(this,400))
           {

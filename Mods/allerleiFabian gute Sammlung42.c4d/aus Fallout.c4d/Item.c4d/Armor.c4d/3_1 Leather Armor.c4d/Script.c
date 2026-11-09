@@ -1,6 +1,6 @@
 /*-- Leather Armor --*/
 
-#strict
+#strict 3
 #include GEAR
 
 /* Status */
@@ -20,10 +20,10 @@ public func GearEffect(object pClonk)
 
 func MakeGraphic(pClonk)
 {
-  var iPortraitCount = 0; 
+  var iPortraitCount = nil;
   var strGraphics = "Agent";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait(Format("%s%d", strGraphics, 1) , pClonk,S_L2, 0, 0);
+  SetPortrait(Format("%s%d", strGraphics, 1) , pClonk,S_L2, nil, nil);
 }
 
 public func GearEffectReset(object pClonk)
@@ -33,32 +33,32 @@ public func GearEffectReset(object pClonk)
 if(stuufe)
 {
 
-if(stuufe>=1 && stuufe<=9)
+if(And((stuufe ?? 0)>=1, (stuufe ?? 0)<=9))
 {SetGraphics("Normal",pClonk);  //Hazardclonk mit Clonkgrafik
   var iPortraitCount = 5; 
   var strGraphics = "";
-SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, CLNK, 0, 0);}
+SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, CLNK, nil, nil);}
 
-if(stuufe>=10 && stuufe<=14 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=14), !(pClonk->~IstBauarbeiter())))
 {SetPortrait("random", pClonk, S_XX); SetGraphics("SG1",pClonk);}  //Hazardclonk mit SG1 Grafik
 
 // Bisher nur eine Grafik für alle Stufen ab 10
-if(stuufe>=10 && stuufe<=20 && pClonk->~IstBauarbeiter())
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=20), pClonk->~IstBauarbeiter()))
 { SetPortrait("random", pClonk, X_12); 
 SetGraphics("Bauer",pClonk);}  //Hazardclonk mit Arbeiter Grafik
 
-if(stuufe>=15 && stuufe<=19 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=15, (stuufe ?? 0)<=19), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}  //Hazardclonk Grafik
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}  //Hazardclonk Grafik
 
-if(stuufe==20 && !(pClonk->~IstBauarbeiter()))
+if(And(Equal(stuufe, 20), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("Future",pClonk);
 SetPortrait("FutureP", pClonk, HZCK);} //Hazardclonk Future Grafik, Future Portrait
 }
 
   // reset graphics and portrait
  else { SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}
   Sound("Connect");
 }
 
@@ -66,28 +66,30 @@ SetPortrait("FutureP", pClonk, HZCK);} //Hazardclonk Future Grafik, Future Portr
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   //Melee
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(5);     // 25% Melee
   //Projectile
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(10);     // 20% Projektile
   //Flame
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(90);   // 20% Flame
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(60);     // 20% Explosion
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(-5);    // 30% Energy
   //Plazma
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(-5);     // 10% Plazma
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
-    return(0);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
+  if(Equal(iType, DMG_BetterProjectile))
+    return(nil);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 }
 
 public func IsAnvilProduct() { return(1); }

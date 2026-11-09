@@ -1,6 +1,6 @@
 /*-- Zikaden --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -12,7 +12,7 @@ protected func Initialize()
 private func Cicadas()
 {
   // Nur bei Nacht aktiv
-  if (!IsNight()) return(0);  
+  if (!IsNight()) return(nil);
   if (!Random(20)) Sound("Cicada*",1);
 }
 

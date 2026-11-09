@@ -1,19 +1,21 @@
 /*-- Sauerstoff-Pack (voll) --*/
 
-#strict
+#strict 3
 
-protected Hit:
+protected func Hit(...) {
   Sound("RockHit");
   return(1);
+}
 
-protected CheckBreath:
+protected func CheckBreath(...) {
   var obj = Contained();
   if (!obj) return(1);
-  if (!(GetOCF(obj) & OCF_Alive())) return(1);
-  if (GetBreath(obj) > 30) return(1);
+  if (!((GetOCF(obj) ?? 0) & (OCF_Alive ?? 0))) return(1);
+  if ((GetBreath(obj) ?? 0) > 30) return(1);
   DoBreath(500, Contained());
   Sound("Breath");
   ChangeDef(SO2E);
   return(1);
+}
 
 public func IsRefineryProduct() { return(1); }

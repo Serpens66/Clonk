@@ -1,8 +1,8 @@
-#strict
+#strict 3
 
 local alpha;
 
-func Destruct(){ return(alpha+=10);}
+func Destruct(){ return(S42MigrationAssign(alpha, "+=", 10));}
 
 func NoAction() //Keine Äktschn!
 {
@@ -14,7 +14,7 @@ func NoAction() //Keine Äktschn!
 func Destructing()
 {
   SetClrModulation(RGBa(255,255,255,alpha));
-  alpha+=5;
-  if(alpha>200) {ObjectSetAction(GetActionTarget(),"Walk"); RemoveObject();}
+  S42MigrationAssign(alpha, "+=", 5);
+  if((alpha ?? 0)>200) {ObjectSetAction(GetActionTarget(),"Walk"); RemoveObject();}
   return(1);
 }

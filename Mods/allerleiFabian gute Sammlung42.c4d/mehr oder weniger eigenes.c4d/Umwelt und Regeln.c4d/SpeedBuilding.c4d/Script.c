@@ -1,6 +1,6 @@
 /*-- Schnelle Produktion --*/
 
-#strict
+#strict 3
 
 protected func Activate(iByPlayer)
 {

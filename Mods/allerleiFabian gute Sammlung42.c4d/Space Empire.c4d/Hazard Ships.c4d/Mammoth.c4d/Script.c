@@ -1,6 +1,6 @@
 /* Mammoth-APC-Carrier */
 
-#strict
+#strict 3
 
 public func IsHazardShip()  { return(true); }
 public func IsBulletTarget(){ return(true); }
@@ -15,10 +15,10 @@ func Ownerkontrolle()
 {
 var owner,obj;
 for (obj in FindObjects(Find_Or(Find_Container(this()),Find_Container(pod1),Find_Container(pod2),Find_Container(turbine))) )
-if(obj->~IsClonk() && GetController()==-1) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
+if(And(obj->~IsClonk(), Equal(GetController(), -1))) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
   {
   owner=GetOwner(obj);
-  if(GetOwner(obj)!=GetOwner(this()))
+  if(!Equal(GetOwner(obj), GetOwner(this())))
     {
   Sound("BipBipBip");
   Message("%v geht in den Besitz von %v über.",this(),GetName(this()),GetPlayerName(owner));
@@ -41,23 +41,23 @@ protected func Initialize()
 {
   maxspeed=18;
   minspeed=-18;
-  tarspeed=0;
-  carry=0;
+  tarspeed=nil;
+  carry=nil;
   ampli=13;
   SetAction("Landed");
   SetEntrance(1);
   //Turbine anbringen
-  turbine=CreateObject(MAT_,0,0,GetOwner());
+  turbine=CreateObject(MAT_,nil,nil,GetOwner());
   ObjectSetAction(turbine,"Attaching",this());
   SetActionData(256 + 9 , turbine);
-  turbine->Rotinit(0,-75,75);
+  turbine->Rotinit(nil,-75,75);
   //Pods
-  pod1=CreateObject(MAP_,0,0,GetOwner());
+  pod1=CreateObject(MAP_,nil,nil,GetOwner());
   ObjectSetAction(pod1,"Attaching",this());
   SetActionData(256 + 2 , pod1);
   pod1->Pod(+175,+100,+130,this(),+10);
 
-  pod2=CreateObject(MAP_,0,0,GetOwner());
+  pod2=CreateObject(MAP_,nil,nil,GetOwner());
   ObjectSetAction(pod2,"Attaching",this());
   SetActionData(256 + 3 , pod2);
   pod2->Pod(-100,-175,-130,this(),-10);
@@ -68,24 +68,24 @@ protected func Initialize()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 //Schaden & Aufprall
 func ContactTop()
 {
-  return(Funken(0,-12));
+  return(Funken(nil,-12));
 }
 
 func ContactBottom()
 {
-  return(Funken(0,12));
+  return(Funken(nil,12));
 }
 
 func ContactLeft()
@@ -102,11 +102,11 @@ func Funken(x,y)
 {
   if (SEqual(GetAction(),"Fly")) SetAction("Fall");
   var colspeed;
-  colspeed=Sqrt(GetYDir()*GetYDir()+GetXDir()*GetXDir());
-  if(colspeed<20) return(0);
+  colspeed=Sqrt((GetYDir() ?? 0)*(GetYDir() ?? 0)+(GetXDir() ?? 0)*(GetXDir() ?? 0));
+  if((colspeed ?? 0)<20) return(nil);
   Sound("Dragonimpact*");
-  CreateParticle("Funken",RandomX(-3,3)+x,RandomX(-3,3)+y,RandomX(-10,10),RandomX(-10,-20),RandomX(40,60));
-  if(colspeed>50) DoDamage(colspeed/3);
+  CreateParticle("Funken",(RandomX(-3,3) ?? 0)+(x ?? 0),(RandomX(-3,3) ?? 0)+(y ?? 0),RandomX(-10,10),RandomX(-10,-20),RandomX(40,60));
+  if((colspeed ?? 0)>50) DoDamage((colspeed ?? 0)/3);
   return(1);
 }
 
@@ -121,41 +121,43 @@ func Removal()
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
   Removal();
   //Wrack
   var wrack;
   wrack=CreateObject(_MB1);
   SetR(GetR(),wrack);
-  SetXDir(GetXDir()+20,wrack);
-  SetYDir(GetYDir()+20,wrack);
+  SetXDir((GetXDir() ?? 0)+20,wrack);
+  SetYDir((GetYDir() ?? 0)+20,wrack);
   wrack=CreateObject(_MB2);
   SetR(GetR(),wrack);
-  SetXDir(GetXDir()-20,wrack);
-  SetYDir(GetYDir()-20,wrack);
-  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(60); else FakeExplode(60,0,0,60);
+  SetXDir((GetXDir() ?? 0)-20,wrack);
+  SetYDir((GetYDir() ?? 0)-20,wrack);
+  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(60); else FakeExplode(60,nil,nil,60);
   return(1);
 }
 
 public func OnDmg(int iDmg, int iType)
 { 
   //Mögliche Resistenzen berücksichtigen
-  if(iType & DMG_Projectile)
+  iDmg ??= 0;
+  iType ??= 0;
+  if((iType ?? 0) & (DMG_Projectile ?? 0))
     return(90);
-  if(iType & DMG_Fire)
+  if((iType ?? 0) & (DMG_Fire ?? 0))
     return(80);
-  if(iType & DMG_Explosion)
+  if((iType ?? 0) & (DMG_Explosion ?? 0))
     return(80);
-  if(iType & DMG_Energy)
+  if((iType ?? 0) & (DMG_Energy ?? 0))
     return(40);
-  if(iType & DMG_Bio)
+  if((iType ?? 0) & (DMG_Bio ?? 0))
     return(50);
 }
 
 func Damage()
 {
-  if(GetDamage()<300) return(1);
+  if((GetDamage() ?? 0)<300) return(1);
   Explosion();
   return(1);
 }
@@ -163,12 +165,12 @@ func Damage()
 
 func Landcheck() {
   //Besitzer zuweisen
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) 
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this()))
   {
   //SetOwner(GetOwner(pilot));
-  SetEntrance(0);
+  SetEntrance(nil);
   }
-  if(Inside(GetR(),-2,2)) SetR(0);
+  if(Inside(GetR(),-2,2)) SetR(nil);
   //Schaden
   Smoke();
   return(1);   
@@ -177,7 +179,7 @@ func Landcheck() {
 func Hover()  {
   yspeed=GetYDir();
   ampli=yspeed;
-  if(ampli>25)
+  if((ampli ?? 0)>25)
   {
   //bouncen
   mode=1;
@@ -186,8 +188,8 @@ func Hover()  {
   else
   {
   //oszillieren
-  mode=0;
-  counter=0;
+  mode=nil;
+  counter=nil;
   }
   SetAction("Hover");
   return(1);
@@ -197,28 +199,28 @@ func Hovercheck() {
   var x,y;
   x=GetX();
   y=GetY();
-  if(ampli<13) ampli=13;
+  if((ampli ?? 0)<13) ampli=13;
   //X-Komponente
-  xspeed=GetR()*2;
-  if(xspeed<0) xspeed-=5; //warum auch immer notwendig.
+  xspeed=(GetR() ?? 0)*2;
+  if((xspeed ?? 0)<0) S42MigrationAssign(xspeed, "-=", 5); //warum auch immer notwendig.
   SetXDir(xspeed);
   //Y-Komponente
-  if(counter>360) counter=0;
-  counter+=10;
+  if((counter ?? 0)>360) counter=nil;
+  S42MigrationAssign(counter, "+=", 10);
   if(!mode)yspeed=Sin(counter,ampli);
-  if (mode && (!PathFree(x, y, x, y+45))) yspeed=Sin(counter,ampli);
-  if(ampli>13) ampli-=10;
+  if (And(mode, (!PathFree(x, y, x, (y ?? 0)+45)))) yspeed=Sin(counter,ampli);
+  if((ampli ?? 0)>13) S42MigrationAssign(ampli, "-=", 10);
   //Carry-Rotation
   if(carry) Carryrot();
   //Steigung?
-  if(!PathFree(x, y, x+4*xspeed, y+45)) yspeed-=3;
+  if(!PathFree(x, y, (x ?? 0)+4*(xspeed ?? 0), (y ?? 0)+45)) S42MigrationAssign(yspeed, "-=", 3);
   SetYDir(yspeed);
   //Übersteuerungsschutzsystem
-  if(GetR()<-15) {SetRDir(0); SetR(-15);}
-  if(GetR()>+15) {SetRDir(0); SetR(+15);}
-  SetR(GetR()*5,turbine);
+  if((GetR() ?? 0)<-15) {SetRDir(nil); SetR(-15);}
+  if((GetR() ?? 0)>(+15 ?? 0)) {SetRDir(nil); SetR(+15);}
+  SetR((GetR() ?? 0)*5,turbine);
   //Altitude-Check
-  if (PathFree(x, y, x, y+70)) Fall();
+  if (PathFree(x, y, x, (y ?? 0)+70)) Fall();
   //Schaden
   Smoke();
   return(1); 
@@ -234,15 +236,15 @@ func Fallcheck() {
   x=GetX();
   y=GetY(); 
   //X-Komponente
-  xspeed=GetR()*2;
-  if(xspeed<0) xspeed+=3;
+  xspeed=(GetR() ?? 0)*2;
+  if((xspeed ?? 0)<0) S42MigrationAssign(xspeed, "+=", 3);
   SetXDir(xspeed);
   //Übersteuerungsschutzsystem
-  if(GetR()<-15) {SetRDir(0); SetR(-15);}
-  if(GetR()>+15) {SetRDir(0); SetR(+15);}
-  SetR(GetR()*5,turbine);
+  if((GetR() ?? 0)<-15) {SetRDir(nil); SetR(-15);}
+  if((GetR() ?? 0)>(+15 ?? 0)) {SetRDir(nil); SetR(+15);}
+  SetR((GetR() ?? 0)*5,turbine);
   //Altitude-Check
-  if (!PathFree(x, y, x, y+70)) Hover();
+  if (!PathFree(x, y, x, (y ?? 0)+70)) Hover();
   //Schaden
   Smoke();
   return(1);   
@@ -252,31 +254,31 @@ func Fly()
 {
   var x,y;
   //X-Komponente
-  xspeed=GetR()*3;
-  if(xspeed<0) xspeed+=3;
+  xspeed=(GetR() ?? 0)*3;
+  if((xspeed ?? 0)<0) S42MigrationAssign(xspeed, "+=", 3);
   SetXDir(xspeed);
   //Y-Komponente
   yspeed=GetYDir();
-  if(yspeed<tarspeed) {y=yspeed-Cos(GetR(turbine),20)-2;}
-  if(yspeed>tarspeed) {y=yspeed+Cos(GetR(turbine),20);}
-  if(counter>360) counter=0;
-  counter+=10;
-  if(!mode)y+=Sin(counter,13);
+  if((yspeed ?? 0)<(tarspeed ?? 0)) {y=(yspeed ?? 0)-(Cos(GetR(turbine),20) ?? 0)-2;}
+  if((yspeed ?? 0)>(tarspeed ?? 0)) {y=(yspeed ?? 0)+(Cos(GetR(turbine),20) ?? 0);}
+  if((counter ?? 0)>360) counter=nil;
+  S42MigrationAssign(counter, "+=", 10);
+  if(!mode)S42MigrationAssign(y, "+=", (Sin(counter,13) ?? 0));
   SetYDir(y);
   //Carry-Rotation
   if(carry) Carryrot();
   //Rauch
-  x=-Sin(GetR(turbine),18)+RandomX(-2,2);
-  y=+Cos(GetR(turbine),18)+RandomX(-2,2);
-  CreateParticle("Smoke2",x,y,x*2,y*2,50,RGBa(220,200,180,0),0,0); 
+  x=-(Sin(GetR(turbine),18) ?? 0)+(RandomX(-2,2) ?? 0);
+  y=(+(Cos(GetR(turbine),18) ?? 0) ?? 0)+(RandomX(-2,2) ?? 0);
+  CreateParticle("Smoke2",x,y,(x ?? 0)*2,(y ?? 0)*2,50,RGBa(220,200,180,nil),nil,nil);
   //Übersteuerungsschutzsystem
-  if(GetR()<-15) {SetRDir(0); SetR(-15);}
-  if(GetR()>+15) {SetRDir(0); SetR(+15);}
-  SetR(GetR()*5,turbine);
+  if((GetR() ?? 0)<-15) {SetRDir(nil); SetR(-15);}
+  if((GetR() ?? 0)>(+15 ?? 0)) {SetRDir(nil); SetR(+15);}
+  SetR((GetR() ?? 0)*5,turbine);
   //Altitude-Check
   x=GetX();
   y=GetY();  
-  if (!PathFree(x, y, x, y+40)) Hover();
+  if (!PathFree(x, y, x, (y ?? 0)+40)) Hover();
   //Schaden
   Smoke();
   return(1);
@@ -286,29 +288,29 @@ func Fly()
 
 func ContainedLeft()
 {
-  if(GetR()<=-10) return(1);
+  if((GetR() ?? 0)<=-10) return(1);
   SetRDir(-2);
   return(1);
 }
 
 func ContainedRight()
 {
-  if(GetR()>=10) return(1);
+  if((GetR() ?? 0)>=10) return(1);
   SetRDir(2);
   return(1);
 }
 
 func ContainedUp()
 {
-  if(tarspeed<maxspeed) tarspeed+=18;
-  SetRDir(0);
+  if((tarspeed ?? 0)<(maxspeed ?? 0)) S42MigrationAssign(tarspeed, "+=", 18);
+  SetRDir(nil);
   return(1);
 }
 
 func ContainedDown()
 {
-  if(tarspeed>minspeed) tarspeed-=18;
-  SetRDir(0);
+  if((tarspeed ?? 0)>(minspeed ?? 0)) S42MigrationAssign(tarspeed, "-=", 18);
+  SetRDir(nil);
   return(1);
 }
 
@@ -318,9 +320,9 @@ func ContainedUpDouble()
   {
   return(SetAction("Fall"));
   }
-  if ((SEqual(GetAction(),"Hover") || SEqual(GetAction(),"Fall"))) 
+  if ((Or(SEqual(GetAction(),"Hover"), SEqual(GetAction(),"Fall"))))
   {
-  aspeed=0;
+  aspeed=nil;
   return(SetAction("Fly"));
   }
   return(1);
@@ -328,22 +330,22 @@ func ContainedUpDouble()
 
 func ContainedThrow() 
 {
-  if(GetID(carry)==DRA_){ObjectSetAction(carry,"Landed"); Drop(); carry=0; return(1);}
-  if(GetID(carry)==MAL_){ObjectSetAction(carry,"Start");  Drop(); carry=0; return(1);}  
-  if(carry) if(!SEqual(GetAction(carry),"Attaching")){carry=0; return(1);}
+  if(Equal(GetID(carry), DRA_)){ObjectSetAction(carry,"Landed"); Drop(); carry=nil; return(1);}
+  if(Equal(GetID(carry), MAL_)){ObjectSetAction(carry,"Start");  Drop(); carry=nil; return(1);}
+  if(carry) if(!SEqual(GetAction(carry),"Attaching")){carry=nil; return(1);}
   if(carry) return(1);
-  if(carry=FindObject(DRA_,-25,10,50,50,0,"Landed"))
+  if(carry=FindObject(DRA_,-25,10,50,50,nil,"Landed"))
   {
   Sound("Connect");
   ObjectSetAction(carry,"Attaching",this());
-  SetActionData(0,carry);
+  SetActionData(nil,carry);
   return(1);
   }
-  if(carry=FindObject(MAL_,-25,10,50,50,0,"Landed"))
+  if(carry=FindObject(MAL_,-25,10,50,50,nil,"Landed"))
   {
   Sound("Connect");
   ObjectSetAction(carry,"Attaching",this());
-  SetActionData(0,carry);
+  SetActionData(nil,carry);
   return(1);
   }
   return(1);
@@ -357,8 +359,8 @@ func Drop()
 
 func Carryrot()
 {
-  if(ccounter>360) ccounter=0;
-  ccounter+=5;
+  if((ccounter ?? 0)>360) ccounter=nil;
+  S42MigrationAssign(ccounter, "+=", 5);
   SetR(Sin(ccounter,5),carry);
 }
 
@@ -370,23 +372,23 @@ func ContainedDigDouble()
 //Menüsteuerung
 func ContainedDig()
 {
-  CreateMenu(DRA_,Par(0),0,0,0,0);
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s","Schadenskontrolle",MMA5,Par(0)); //Ausstieg
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  if(pod2->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(0)); //Podeinstieg
-  if(!(pod2->Besetzt())) AddMenuItem("%s","Pod2",MMA3,Par(0)); //Podeinstieg
-  AddMenuItem("%s","Triebwerk",MMA2,Par(0));   //Triebwerk
-  if(pod1->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(0)); //Podeinstieg
-  if(!(pod1->Besetzt())) AddMenuItem("%s","Pod1",MMA3,Par(0)); //Podeinstieg
-  AddMenuItem("%s",0,M66G,Par(0));  //Freiraum
-  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(0));  //Licht ein
-  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(0));  //Licht aus
-  AddMenuItem("%s","Ausstieg",MMA4,Par(0));    //Ausstieg
-  SelectMenuItem(7,Par(0)); 
+  CreateMenu(DRA_,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s","Schadenskontrolle",MMA5,Par(nil)); //Ausstieg
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  if(pod2->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(nil)); //Podeinstieg
+  if(!(pod2->Besetzt())) AddMenuItem("%s","Pod2",MMA3,Par(nil)); //Podeinstieg
+  AddMenuItem("%s","Triebwerk",MMA2,Par(nil));   //Triebwerk
+  if(pod1->Besetzt())    AddMenuItem("%s","Occp",MMA6,Par(nil)); //Podeinstieg
+  if(!(pod1->Besetzt())) AddMenuItem("%s","Pod1",MMA3,Par(nil)); //Podeinstieg
+  AddMenuItem("%s",nil,M66G,Par(nil));  //Freiraum
+  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(nil));  //Licht ein
+  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(nil));  //Licht aus
+  AddMenuItem("%s","Ausstieg",MMA4,Par(nil));    //Ausstieg
+  SelectMenuItem(7,Par(nil));
   return(1);
 }
 
@@ -408,13 +410,13 @@ func TurnLightOff()
 func Occp()
 {
   Sound("Error");
-  return(0);
+  return(nil);
 }
 
 func Triebwerk()
 {
   //Übersteuerungsschutzsystem
-  if(GetR()<-10 || GetR()>+10) 
+  if(Or((GetR() ?? 0)<-10, (GetR() ?? 0)>(+10 ?? 0)))
   {
   Message("In dieser Position nicht möglich!",this());
   Sound("Error");
@@ -428,7 +430,7 @@ func Triebwerk()
   }
   if (SEqual(GetAction(),"Landed"))
   {
-  heat=CreateObject(PRQ_,0,0,GetOwner());
+  heat=CreateObject(PRQ_,nil,nil,GetOwner());
   ObjectSetAction(heat,"Attaching",this());
   SetAction("Hover");
   }
@@ -438,11 +440,11 @@ func Triebwerk()
 
 func Ausstieg()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Sound("Airlock1");
   if (!SEqual(GetAction(),"Landed")) return(Kapsel());
   Exit(pilot);
-  pilot=0;
+  pilot=nil;
   SetEntrance(1);
   return(1);
 }
@@ -452,7 +454,7 @@ func Kapsel()
 {
   kapsel=CreateContents(DRK_);
   Enter(kapsel,pilot);
-  Exit(kapsel,0,0,GetR(),GetXDir()/10,GetYDir()/10-10,0);
+  Exit(kapsel,nil,nil,GetR(),(GetXDir() ?? 0)/10,(GetYDir() ?? 0)/10-10,nil);
   ObjectSetAction(kapsel,"Start");
   if(heat) RemoveObject(heat);
   Sound("Rocket");
@@ -467,48 +469,50 @@ func Schadenskontrolle()
   Message("Kein Schaden.",this());
   return(1);
   }
-  Message("Schaden: %d%.",this(),GetDamage()/3);
+  Message("Schaden: %d%.",this(),(GetDamage() ?? 0)/3);
   return(1);
 }
 
 func Smoke()
 {
   //Schaden sichtbar machen
-  if(GetDamage()>=80)
-  CreateParticle("Smoke2",43+RandomX(-2,2),15+RandomX(-2,2),GetXDir()/10,-20+GetYDir()/10,GetDamage()/3,RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=140)
-  CreateParticle("Smoke2",-43+RandomX(-2,2),15+RandomX(-2,2),GetXDir()/10,-20+GetYDir()/10,GetDamage()/3,RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=190)
+  if((GetDamage() ?? 0)>=80)
+  CreateParticle("Smoke2",43+(RandomX(-2,2) ?? 0),15+(RandomX(-2,2) ?? 0),(GetXDir() ?? 0)/10,-20+(GetYDir() ?? 0)/10,(GetDamage() ?? 0)/3,RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=140)
+  CreateParticle("Smoke2",-43+(RandomX(-2,2) ?? 0),15+(RandomX(-2,2) ?? 0),(GetXDir() ?? 0)/10,-20+(GetYDir() ?? 0)/10,(GetDamage() ?? 0)/3,RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=190)
   {
-  CreateParticle("Thrust",RandomX(-5,5),RandomX(-5,5),GetXDir()/2,GetYDir()/2,RandomX(70,90),RGBa(255,200,200,60),0,0);
-  CreateParticle("Smoke2",RandomX(-5,5),RandomX(-5,5),GetXDir()/2,GetYDir()/2,RandomX(40,60),RGBa(220,200,180,0),0,0);
+  CreateParticle("Thrust",RandomX(-5,5),RandomX(-5,5),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(70,90),RGBa(255,200,200,60),nil,nil);
+  CreateParticle("Smoke2",RandomX(-5,5),RandomX(-5,5),(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(40,60),RGBa(220,200,180,nil),nil,nil);
   }
-  if(GetDamage()>=190)
-  if(Random(250-GetDamage()*2)==1) DoDamage(2);
+  if((GetDamage() ?? 0)>=190)
+  if(Equal(Random(250-(GetDamage() ?? 0)*2), 1)) DoDamage(2);
   return(1);
 }
 
 func Pod1()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(pod1,pilot);
-  pilot=0;
+  pilot=nil;
   SetEntrance(1);
 }
 
 func Pod2()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(pod2,pilot);
-  pilot=0;
+  pilot=nil;
   SetEntrance(1);
 }
 
 global func Normalize(int iAngle, int iStart) {
-  var iEnd = 360+iStart;
+  iAngle ??= 0;
+  iStart ??= 0;
+  var iEnd = 360+(iStart ?? 0);
   
-  while(iAngle<iStart) iAngle += 360;
-  while(iAngle>=iEnd) iAngle -= 360;
+  while((iAngle ?? 0)<(iStart ?? 0)) S42MigrationAssign(iAngle, "+=", 360);
+  while((iAngle ?? 0)>=(iEnd ?? 0)) S42MigrationAssign(iAngle, "-=", 360);
 
   return(iAngle);
 }
@@ -516,7 +520,8 @@ global func Normalize(int iAngle, int iStart) {
 
 
 
-public IsVehicleProduct: return(1);
+public func IsVehicleProduct(...) { return(1);
+}
 
 
 

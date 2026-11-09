@@ -1,6 +1,6 @@
 /*-- Flammenwerfer --*/
 
-#strict
+#strict 3
 
 local ammocount, restshots;
 
@@ -10,7 +10,7 @@ local ammocount, restshots;
 public func Fire()
 {
   // noch beim Nachladen
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // noch Munition vorhanden?
   if (!ammocount)
     // versuchen, nachzuladen
@@ -20,28 +20,28 @@ public func Fire()
   // los geht's
   restshots = GetShotsPerAmmo();
   SetAction("Fire");
-  --ammocount;
+  S42MigrationStep(ammocount, -1);
 }
 
 public func Firing()
 {
   var ammo, dirX, dirY;
   var i = GetFlamesPerShot();
-  while (--i)
+  while (S42MigrationStep(i, -1))
   {
     // Ammo erzeugen
     ammo = CreateContents(SFLA);
     SetOwner(GetOwner(Contained()),ammo);
     // Richtung festlegen
-    if (GetDir(Contained())) dirX = +50+Random(10);
-                        else dirX = -50-Random(10);
-    dirY = Random(10) - 5;
+    if (GetDir(Contained())) dirX = (+50 ?? 0)+(Random(10) ?? 0);
+                        else dirX = -50-(Random(10) ?? 0);
+    dirY = (Random(10) ?? 0) - 5;
     // Ammo abfeuern
-    Exit(ammo, (GetXDir()+dirX)/4, -1);
-    ammo->Launch(GetXDir()/2+dirX, GetYDir()/2+dirY);
+    Exit(ammo, ((GetXDir() ?? 0)+(dirX ?? 0))/4, -1);
+    ammo->Launch((GetXDir() ?? 0)/2+(dirX ?? 0), (GetYDir() ?? 0)/2+(dirY ?? 0));
   }
   // Ammo verbrauchen
-  --restshots;
+  S42MigrationStep(restshots, -1);
   // Ammo-Anzeige des Clonks
   Contained()->~RefreshAmmoInfo();
   // irgendwann wieder aufhören
@@ -55,9 +55,9 @@ public func Firing()
 public func LoadAmmo()
 {
   // Waffe hat noch Ammo
-  if (ammocount) return(0);
+  if (ammocount) return(nil);
   // Waffe wird nicht getragen
-  if (!Contained()) return(0);
+  if (!Contained()) return(nil);
   // beim Träger nach Ammopaket suchen
   var ammo = FindContents(GCAN, Contained());
   if (!ammo)
@@ -81,15 +81,21 @@ public func Selection()
 
 /* Infos */
 
-public GetAmmoPercent: return((ammocount*100 + restshots*100/GetShotsPerAmmo()) / GetAmmoPerGasCan());
+public func GetAmmoPercent(...) { return(((ammocount ?? 0)*100 + (restshots ?? 0)*100/(GetShotsPerAmmo() ?? 0)) / (GetAmmoPerGasCan() ?? 0));
+}
 
 
 /* Eigenschaften */
 
-private GetFlamesPerShot: return(4);      // SLC: 4;   CoAl: 5
-private GetShotsPerAmmo:  return(30);     // SLC: 30;  CoAl: 20
-private GetAmmoPerGasCan: return(8);      // SLC: 8;   CoAl: 10
+private func GetFlamesPerShot(...) { return(4);      // SLC: 4;   CoAl: 5
+}
+private func GetShotsPerAmmo(...) {  return(30);     // SLC: 30;  CoAl: 20
+}
+private func GetAmmoPerGasCan(...) { return(8);      // SLC: 8;   CoAl: 10
+}
 
-public IsWeapon: return(1);
-public IsWeaponProduct: return(1);
+public func IsWeapon(...) { return(1);
+}
+public func IsWeaponProduct(...) { return(1);
+}
 

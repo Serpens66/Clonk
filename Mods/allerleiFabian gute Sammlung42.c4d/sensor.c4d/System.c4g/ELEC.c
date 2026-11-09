@@ -1,6 +1,6 @@
 /*-- Fahrstuhlkorb --*/
 
-#strict
+#strict 3
 #appendto ELEC
 #appendto ELE_
 
@@ -35,23 +35,23 @@ return(_inherited(a,b,c,d,e,f,g));
 
 public func GetTriggerName(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return("Hoch");
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return("Runter");
 	}
-	if(a==3)
+	if(Equal(a, 3))
 	{
 		return("Stop");
 	}
-	if(a==4)
+	if(Equal(a, 4))
 	{
 		return("GoToSensor");
 	}
-	if(a==5)
+	if(Equal(a, 5))
 	{
 		return("GoToSpecial");
 	}
@@ -60,26 +60,26 @@ public func GetTriggerName(a)
 
 public func Trigger(a,pSensor,anySpecial)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return(DoControlUp(pSensor));
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return(DoControlDown(pSensor));
 	}
-	if(a==3)
+	if(Equal(a, 3))
 	{
 		return(DoControlStop(pSensor));
 	}
-	if(a==4)
+	if(Equal(a, 4))
 	{
 		return(SetMoveTo(GetY(pSensor)));
 	}
-	if(a==5)
+	if(Equal(a, 5))
 	{
 		if(anySpecial)
-		  if(GetType(anySpecial) == C4V_C4Object)
+		  if(Equal(GetType(anySpecial), C4V_C4Object))
 		    return(SetMoveTo(GetY(pSensor)));
 	}
         return(1);	

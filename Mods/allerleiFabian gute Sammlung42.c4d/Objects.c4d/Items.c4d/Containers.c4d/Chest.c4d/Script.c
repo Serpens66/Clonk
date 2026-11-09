@@ -1,6 +1,6 @@
 /*-- Truhe --*/
 
-#strict
+#strict 3
 
 local fLocked;
 
@@ -14,26 +14,27 @@ protected func Initialize()
 
 protected func Open()
 {
-  if (GetAction() ne "Closed") return();
+  if (!SEqual(GetAction(), "Closed")) return;
   // Truhe ist abgeschlossen
   if (fLocked)
   {
     Message("$MsgLocked$", this());
     Sound("Click");
-    return();
+    return;
   }
   SetAction("Opening");
 }
   
 protected func Close()
 {
-  if (GetAction() ne "Open") return();  
+  if (!SEqual(GetAction(), "Open")) return;
   SetAction("Closing");	    
 }
 
 protected func Grabbed(object pClonk, bool fGrab)
 {
   // Die Truhe wurde gerade angefasst oder losgelassen
+  fGrab ??= false;
   CheckGrab();
 }
 
@@ -53,7 +54,7 @@ protected func GrabLost(object pClonk)
 private func CheckGrab()
 {
   // Die Truhe soll sich selbst öffnen, wenn (mindestens) ein Clonk sie anfasst...
-  if (FindObject(0,0,0,0,0,OCF_CrewMember(),"Push",this()))
+  if (FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,"Push",this()))
     Open();
   // ...und schließen, wenn nicht
   else
@@ -78,7 +79,7 @@ public func Unlock()
   // Nicht abgeschlossen
   if (!fLocked) return(1);
   // Aufschließen
-  fLocked = false;
+  fLocked = nil;
   Sound("Click");  
   CheckGrab();
   return(1);
@@ -94,7 +95,7 @@ protected func RejectCollect(id idObj, object pObj)
     return(true);
   }
   // Nicht abgeschlossen: Hineinlegen okay
-  return(false);
+  return(nil);
 }
 
 protected func RejectContents()
@@ -107,7 +108,7 @@ protected func RejectContents()
     return(true);
   }
   // Nicht abgeschlossen: Herausnehmen okay
-  return(false);
+  return(nil);
 }
 
 // Sound-Effekte
@@ -127,5 +128,5 @@ protected func Closing()
 protected func ControlDig(object pClonk)
 {
   // Herausnehmen per Graben: Holen-Menü öffnen
-  pClonk->SetCommand(0, "Get", this(), 0,0, 0, 1);
+  pClonk->SetCommand(nil, "Get", this(), nil,nil, nil, 1);
 }

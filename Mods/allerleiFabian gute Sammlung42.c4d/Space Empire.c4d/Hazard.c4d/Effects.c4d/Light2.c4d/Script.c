@@ -1,6 +1,6 @@
 /*-- Licht --*/
 
-#strict
+#strict 3
 
 local iColor, bAmbience, iF;
 
@@ -11,8 +11,10 @@ TurnOff();  // dadurch werden die lichter erst sichtbar, wenn sie an die gewünsc
 
 //Licht initialisieren, Parameter setzen, etc.
 protected func Init(int iSize, int iColor, object pTarget, string cGraphics) {
-  if(bAmbience && !IsDark())
-    Schedule("RemoveObject()",1,0,this());
+  iSize ??= 0;
+  iColor ??= 0;
+  if(And(bAmbience, !IsDark()))
+    Schedule("RemoveObject()",1,nil,this());
 //Werte
   if(!iSize)
     iSize = GetCon();  
@@ -27,7 +29,7 @@ protected func Init(int iSize, int iColor, object pTarget, string cGraphics) {
   ChangeGraphics(cGraphics);
   SetPosition(GetX(pTarget),GetY(pTarget));
   SetAction("Attach",pTarget);
-  Schedule("SetPlrViewRange(FogViewRange(),this(),1)",2,0,0);  // gibt den Sichtradius erst 2Frames später, so wird das nervige flackern beim schießen mit leuchtenden Kugeln verhindert (weil aus i-einen Grund das Licht dort ganz kurz über dem clonk erstellt wird).. problem nun auch in den Kugeln mit schedule gelöst, aber hier schadets ja nicht
+  Schedule("SetPlrViewRange(FogViewRange(),this(),1)",2,nil,nil);  // gibt den Sichtradius erst 2Frames später, so wird das nervige flackern beim schießen mit leuchtenden Kugeln verhindert (weil aus i-einen Grund das Licht dort ganz kurz über dem clonk erstellt wird).. problem nun auch in den Kugeln mit schedule gelöst, aber hier schadets ja nicht
 // nur einschalten, wenn lichter erlaubt
 if(!ObjectCount(NOLI))  TurnOn();
 }
@@ -40,12 +42,12 @@ func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-fei
 //Wenn das Licht kein Ziel mehr hat -> weg damit.
 protected func AttachTargetLost() {
   RemoveObject();
-  return();
+  return;
 }
 
 func CheckTarget()
 {
-    if(!GetActionTarget()) {RemoveObject();return();}
+    if(!GetActionTarget()) {RemoveObject();return;}
 }
 
 //Licht ausschalten
@@ -56,12 +58,13 @@ public func TurnOn() { SetVisibility(VIS_All);  }
 
 // größe des Lichts ändern
 public func ChangeSize(int iNewSize) { 
+  iNewSize ??= 0;
   var alphamod, sizemod;
   CalcLight(alphamod, sizemod);
 
   iF = iNewSize;
   // SetCon(iF*sizemod/100);
-  SetObjDrawTransform(iF*sizemod/10,0,0,0,iF*sizemod/10);
+  SetObjDrawTransform((iF ?? 0)*(sizemod ?? 0)/10,nil,nil,nil,(iF ?? 0)*(sizemod ?? 0)/10);
 }
 
 // Licht updaten... verändert keine Werte sondern
@@ -74,6 +77,7 @@ public func Update() {
 //Farbe des Lichts ändern
 public func ChangeColor(int iNewColor) {
   
+  iNewColor ??= 0;
   iColor = iNewColor;
   
   //Wenn keine dunkelheit ist
@@ -88,7 +92,7 @@ public func ChangeColor(int iNewColor) {
   
   var r,g,b,a;
   SplitRGBaValue(iColor,r,g,b,a);
-  iNewColor = RGBa(r,g,b,Min(a+60+alphamod,255));
+  iNewColor = RGBa(r,g,b,Min((a ?? 0)+60+(alphamod ?? 0),255));
   
   SetClrModulation(iNewColor);
   
@@ -97,7 +101,7 @@ public func ChangeColor(int iNewColor) {
 
 //Grafik ändern
 public func ChangeGraphics(string cNewGraphics) {
-  SetGraphics(cNewGraphics, 0, GetID());
+  SetGraphics(cNewGraphics, nil, GetID());
 }
 
 //festlegen, dass es ein Licht ist.
@@ -108,9 +112,11 @@ public func NoWarp() { return(true); }
 
 //erzeugt ein Licht mit Größe und Farbe und hängt es an pTarget
 global func AddLight2(int iSize, int iColor, object pTarget) {
+  iSize ??= 0;
+  iColor ??= 0;
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
 //if(FindObject(KOHE) && (!(FindObject(TS9Z)))) return(); // kein 400er Licht, wenn Helligkeitswechsel deaktiviert und kein Kriegsnebel vorhanden
   
   return(CreateLight(LIG2, iSize, iColor, pTarget));
@@ -118,18 +124,22 @@ global func AddLight2(int iSize, int iColor, object pTarget) {
 
 
 global func AddLightHalf2(int iSize, int iColor, object pTarget) {
+  iSize ??= 0;
+  iColor ??= 0;
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
 //if(FindObject(KOHE) && (!(FindObject(TS9Z)))) return(); // kein 400er Licht, wenn Helligkeitswechsel deaktiviert und kein Kriegsnebel vorhanden
   
   return(CreateLight(LIG2, iSize, iColor, pTarget, "Half"));
 }
 
 global func AddLightCone2(int iSize, int iColor, object pTarget) {
+  iSize ??= 0;
+  iColor ??= 0;
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
 //if(FindObject(KOHE) && (!(FindObject(TS9Z)))) return(); // kein 400er Licht, wenn Helligkeitswechsel deaktiviert und kein Kriegsnebel vorhanden
   
   return(CreateLight(LGC2, iSize, iColor, pTarget));
@@ -137,14 +147,15 @@ global func AddLightCone2(int iSize, int iColor, object pTarget) {
 
 //Ambience-Light, Umgebungslicht, nicht sichtbar wenn keine Dunkelheit herrscht.
 global func AddLightAmbience2(int iSize, object pTarget, string cGraphics) {
+  iSize ??= 0;
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
 //if(FindObject(KOHE) && (!(FindObject(TS9Z)))) return();  // kein 400er Licht, wenn Helligkeitswechsel deaktiviert und kein Kriegsnebel vorhanden
       
-  var light = CreateObject(LIG2,0,0,GetController(pTarget));
+  var light = CreateObject(LIG2,nil,nil,GetController(pTarget));
   light->LocalN("bAmbience") = true;
-  light->Init(iSize*5, RGBa(255,255,255,50), pTarget, cGraphics);
+  light->Init((iSize ?? 0)*5, RGBa(255,255,255,50), pTarget, cGraphics);
   
   return(light);
 }

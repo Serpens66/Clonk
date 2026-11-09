@@ -1,6 +1,6 @@
 /* Has agility functionality */
 
-#strict
+#strict 3
 
 /* Dieses Script bietet die Grundfunktionalität der Beweglichkeit des
     Hazardclonks. Um diese Funktionalität zu bedienen, im inkludierenden
@@ -26,41 +26,41 @@ private func ControlAgility(string strControl) {
 	// return 0 if the rest of the clonks script should be executed
     
     var pCrew,i=1; // i bei 1 starten, weil der befehl nicht nochmal an den hauptclonk geschickt werden soll
-    if(this()==GetCursor(GetOwner())) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damit befehl nur einmal ausgeführt wird)
-    while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+    if(Equal(this(), GetCursor(GetOwner()))) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damit befehl nur einmal ausgeführt wird)
+    while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
     {
         pCrew->~ControlAgility(strControl);
     }
     
 	// left
-	if(strControl eq "ControlLeft") {
+	if(!!SEqual(strControl, "ControlLeft")) {
 		if(this()->IsJumping()) {
 			SetDir(DIR_Left);
 			SetComDir(COMD_Left); 
 		}
 		
 		var iEff = AddEffect("ControlStack", this, 110, 5, this);
-		EffectVar(0, this, iEff) = COMD_Left;
-		return 0;
+		EffectVar(nil, this, iEff) = COMD_Left;
+		return nil;
 	}
   
 	// right
-	if(strControl eq "ControlRight") {
+	if(!!SEqual(strControl, "ControlRight")) {
 		if(this()->IsJumping()) {
 			SetDir(DIR_Right);
 			SetComDir(COMD_Right); 
 		}
 		
 		var iEff = AddEffect("ControlStack", this, 110, 5, this);
-		EffectVar(0, this, iEff) = COMD_Right;
-		return 0;
+		EffectVar(nil, this, iEff) = COMD_Right;
+		return nil;
 	}
   
 	// left double
-	if(strControl eq "ControlLeftDouble") {
+	if(!!SEqual(strControl, "ControlLeftDouble")) {
 		if(MayFlip())
 		{
-			if(GetDir() == DIR_Left)
+			if(Equal(GetDir(), DIR_Left))
 				ForwardFlip(-30);
 			else
 				BackFlip(-30);
@@ -70,10 +70,10 @@ private func ControlAgility(string strControl) {
 	}
 
 	// right double
-	if(strControl eq "ControlRightDouble") {
+	if(!!SEqual(strControl, "ControlRightDouble")) {
 		if(MayFlip())
 		{
-			if(GetDir() == DIR_Right)
+			if(Equal(GetDir(), DIR_Right))
 				ForwardFlip(-30);
 			else
 				BackFlip(-30);
@@ -83,28 +83,28 @@ private func ControlAgility(string strControl) {
 	}
 	
 	// up
-	if(strControl eq "ControlUp") {
-		if(WildcardMatch(GetAction(), "Scale*") && GetActTime() < 5)
+	if(!!SEqual(strControl, "ControlUp")) {
+		if(And(WildcardMatch(GetAction(), "Scale*"), (GetActTime() ?? 0) < 5))
 			EffectVar(2, this, AddEffect("ControlStack", this, 110, 5, this)) = true;
 
 		if(GetEffect("ControlStack", this))
 			EffectVar(1, this, GetEffect("ControlStack", this)) = COMD_Up;
 
-		return 0;
+		return nil;
 	}
 	
-	if(strControl eq "ControlUpDouble") {
-		if((this()->IsJumping() || GetAction() eq "JetpackFlight") && !GetEffect("ExtraJump", this))
-			if(GetYDir() <= 5)
+	if(!!SEqual(strControl, "ControlUpDouble")) {
+		if(And((Or(this()->IsJumping(), !!SEqual(GetAction(), "JetpackFlight"))), !GetEffect("ExtraJump", this)))
+			if((GetYDir() ?? 0) <= 5)
 				return ExtraJump();
 			
-		return 0;
+		return nil;
 	}
 	
 }
 
 private func MayFlip() {
-	if(this()->IsJumping() || GetAction() eq "JetpackFlight")
+	if(Or(this()->IsJumping(), !!SEqual(GetAction(), "JetpackFlight")))
 	  if(!GetEffect("ExtraJump", this))
 	    return(true);
 }
@@ -116,28 +116,29 @@ private func MayFlip() {
 public func JumpStart(bool bBackflip)
 {
 	// Clonk auf festem Boden?
+	bBackflip ??= false;
 	if (!GetEffect("ExtraJump", this)) {
-		var iEff, iComd, iStr = 0, iYDir = 0;
+		var iEff, iComd, iStr = nil, iYDir = nil;
 		if(iEff = GetEffect("ControlStack", this))
 		{
-			if(EffectVar(1, this, iEff) != COMD_Up && !bBackflip) return;
+			if(And(!Equal(EffectVar(1, this, iEff), COMD_Up), !bBackflip)) return;
 			if(EffectVar(2, this, iEff)) { iYDir = -60; iStr = -40; }
-			iComd = EffectVar(0, this, iEff);
+			iComd = EffectVar(nil, this, iEff);
 
-			RemoveEffect(0, this, iEff);
-			if(iComd == COMD_Left)
+			RemoveEffect(nil, this, iEff);
+			if(Equal(iComd, COMD_Left))
 			{
-				if(GetDir() == DIR_Left)
-					ForwardFlip(iStr, 0, iYDir);
+				if(Equal(GetDir(), DIR_Left))
+					ForwardFlip(iStr, nil, iYDir);
 				else
-					BackFlip(iStr, 0, iYDir);
+					BackFlip(iStr, nil, iYDir);
 			}
-			if(iComd == COMD_Right)
+			if(Equal(iComd, COMD_Right))
 			{
-				if(GetDir() == DIR_Left)
-					BackFlip(iStr, 0, iYDir);
+				if(Equal(GetDir(), DIR_Left))
+					BackFlip(iStr, nil, iYDir);
 				else
-					ForwardFlip(iStr, 0, iYDir);
+					ForwardFlip(iStr, nil, iYDir);
 			}
 		}
 	}
@@ -149,9 +150,9 @@ public func JumpStart(bool bBackflip)
 
 public func ReleaseLadderStop() {
 	//Backflip! :D
-	if(this()->ReleaseLadder(-20*(GetDir()*2-1))) {
+	if(this()->ReleaseLadder(-20*((GetDir() ?? 0)*2-1))) {
 	  SetAction("BackFlip");
-	  ScheduleCall(0, "BackFlipBoost", 1, 1);
+	  ScheduleCall(nil, "BackFlipBoost", 1, 1);
 	  AddEffect("ExtraJump", this, 111, 5, this);
 	}
 }
@@ -160,45 +161,55 @@ public func ReleaseLadderStop() {
 
 protected func ExtraJump()
 {
-	var jump = GetPhysical("Jump", 0) * 100 / GetPhysical("Jump", 0,0, GetID());
-	SetYDir(-40 * jump / 100);
-	SetXDir(GetXDir() / 2);
+	var jump = (GetPhysical("Jump", nil) ?? 0) * 100 / (GetPhysical("Jump", nil,nil, GetID()) ?? 0);
+	SetYDir(-40 * (jump ?? 0) / 100);
+	SetXDir((GetXDir() ?? 0) / 2);
 	AddEffect("ExtraJump", this, 111, 5, this);
 }
 
 protected func FxExtraJumpTimer()
 {
-	if(!WildcardMatch(GetAction(), "Jump*")
-	&& !WildcardMatch(GetAction(), "*Flip")
-	&& !WildcardMatch(GetAction(), "*Flight")
-	&& GetAction() ne "Dive")
+	if(And(And(And(!WildcardMatch(GetAction(), "Jump*")
+	, !WildcardMatch(GetAction(), "*Flip"))
+	, !WildcardMatch(GetAction(), "*Flight"))
+	, !SEqual(GetAction(), "Dive")))
 			return -1;
 }
 
 protected func BackFlip(int iStr, bool fNoJumpCalc, int iYDir)
 {
+	iStr ??= 0;
+	fNoJumpCalc ??= false;
+	iYDir ??= 0;
 	SetAction("BackFlip");
-	ScheduleCall(0, "FlipBoost", 1, 1, !GetDir(), iStr, fNoJumpCalc, iYDir);
+	ScheduleCall(nil, "FlipBoost", 1, 1, !GetDir(), iStr, fNoJumpCalc, iYDir);
         AddEffect("ExtraJump", this, 111, 5, this);
 }
 
 protected func ForwardFlip(int iStr, bool fNoJumpCalc, int iYDir)
 {
-	if(!iStr && !iYDir) { iStr = -20; iYDir = -45; }
+	iStr ??= 0;
+	fNoJumpCalc ??= false;
+	iYDir ??= 0;
+	if(And(!iStr, !iYDir)) { iStr = -20; iYDir = -45; }
 	SetAction("ForwardFlip");
-	ScheduleCall(0, "FlipBoost", 1, 1, GetDir(), iStr, fNoJumpCalc, iYDir);
+	ScheduleCall(nil, "FlipBoost", 1, 1, GetDir(), iStr, fNoJumpCalc, iYDir);
         AddEffect("ExtraJump", this, 111, 5, this);
 }
 
 protected func FlipBoost(int iDir, int iStr, bool fNoJumpCalc, int iYDir)
 {
+	iDir ??= 0;
+	iStr ??= 0;
+	fNoJumpCalc ??= false;
+	iYDir ??= 0;
 	if(!iYDir) iYDir = -24;
-	iDir = iDir *2 -1;
-	var jump = GetPhysical("Jump", 0) * 100 / GetPhysical("Jump", 0,0, GetID());
-	jump = BoundBy(jump + iStr, 0, 300);
+	iDir = (iDir ?? 0) *2 -1;
+	var jump = (GetPhysical("Jump", nil) ?? 0) * 100 / (GetPhysical("Jump", nil,nil, GetID()) ?? 0);
+	jump = BoundBy((jump ?? 0) + (iStr ?? 0), nil, 300);
 	if(fNoJumpCalc) jump = iStr;
-	SetXDir(40 * iDir * jump / 100);
-	SetYDir(iYDir * jump / 100);
+	SetXDir(40 * (iDir ?? 0) * (jump ?? 0) / 100);
+	SetYDir((iYDir ?? 0) * (jump ?? 0) / 100);
 }
 
 //  Alte Funktion wird noch von ReleaseLadderStop benutzt
@@ -208,9 +219,9 @@ protected func FlipBoost(int iDir, int iStr, bool fNoJumpCalc, int iYDir)
 protected func BackFlipBoost()
 {
   // Wenn die Sprungkraft gerade verändert ist, gilt das auch für den Backflip
-  var jump = GetPhysical("Jump", 0) * 100 / GetPhysical("Jump", 0,0, GetID());
-  SetXDir(40*((GetXDir()>0)*2-1) * jump / 100); // SetXDir(GetXDir()/*<-20*/* 3/2);
-  SetYDir(-24 * jump / 100);
+  var jump = (GetPhysical("Jump", nil) ?? 0) * 100 / (GetPhysical("Jump", nil,nil, GetID()) ?? 0);
+  SetXDir(40*((((GetXDir() ?? 0)>0) ?? 0)*2-1) * (jump ?? 0) / 100); // SetXDir(GetXDir()/*<-20*/* 3/2);
+  SetYDir(-24 * (jump ?? 0) / 100);
 }
 
 // ^
@@ -218,7 +229,8 @@ protected func BackFlipBoost()
 
 public func FxControlStackEffect(string newEffect, object pTarget, int iNo)
 {
-	if(newEffect ne "ControlStack") return;
-	ChangeEffect(0, pTarget, iNo, 0, -1);
+	iNo ??= 0;
+	if(!SEqual(newEffect, "ControlStack")) return;
+	ChangeEffect(nil, pTarget, iNo, nil, -1);
 	return -2;
 }

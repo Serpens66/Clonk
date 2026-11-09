@@ -1,6 +1,6 @@
 /* Rakete */
 
-#strict
+#strict 3
 
 local iSpeed, iDamage, exploding;
 local shooter;
@@ -12,64 +12,67 @@ public func MaxSpeed() { return(180); }
 func Construction(object byObj) {
   // nichts? :C
   if(!byObj)
-    return();
+    return;
   // Waffe?
   shooter = GetShooter(byObj);
 }
 
 public func Launch(int iAngle, int iDmg, int speed)
 {
+  iAngle ??= 0;
+  iDmg ??= 0;
+  speed ??= 0;
   if(!speed) speed = 20;
   iSpeed = speed;
   iDamage = iDmg;
   if(!iDamage) iDamage = 35;
 
-  SetR(+iAngle);
-  SetXDir(+Sin(iAngle,iSpeed));
-  SetYDir(-Cos(iAngle,iSpeed));
+  SetR(+(iAngle ?? 0));
+  SetXDir(+(Sin(iAngle,iSpeed) ?? 0));
+  SetYDir(-(Cos(iAngle,iSpeed) ?? 0));
   SetAction("Travel");
 
-  AddLight(500,RGB(255,127,0),this(),GLOW);
+  AddLight(500,RGB(255,127,nil),this(),GLOW);
 
-  AddEffect("HitCheck", this(), 1,1, 0, SHST,shooter,true);
+  AddEffect("HitCheck", this(), 1,1, nil, SHST,shooter,true);
 }
 
 /* Timer */
 
 private func Accelerate() { 
-  if(iSpeed < MaxSpeed())
-    iSpeed += Acceleration();
+  if((iSpeed ?? 0) < (MaxSpeed() ?? 0))
+    S42MigrationAssign(iSpeed, "+=", (Acceleration() ?? 0));
 
-  SetXDir(+Sin(GetR(),iSpeed));
-  SetYDir(-Cos(GetR(),iSpeed));
+  SetXDir(+(Sin(GetR(),iSpeed) ?? 0));
+  SetYDir(-(Cos(GetR(),iSpeed) ?? 0));
 }
 
 private func Smoking() {
 
-  var dist = Distance(0,0,GetXDir(),GetYDir());
-  var maxx = +Sin(GetR(),dist/10);
-  var maxy = -Cos(GetR(),dist/10);
+  var dist = Distance(nil,nil,GetXDir(),GetYDir());
+  var maxx = +(Sin(GetR(),(dist ?? 0)/10) ?? 0);
+  var maxy = -(Cos(GetR(),(dist ?? 0)/10) ?? 0);
   var ptrdist = 50;
 
-  for(var i=0; i<dist; i+=ptrdist) {
+  for(var i=nil; (i ?? 0)<(dist ?? 0); S42MigrationAssign(i, "+=", (ptrdist ?? 0))) {
 
-    var x = -maxx*i/dist;
-    var y = -maxy*i/dist;
+    var x = -(maxx ?? 0)*(i ?? 0)/(dist ?? 0);
+    var y = -(maxy ?? 0)*(i ?? 0)/(dist ?? 0);
 
 
     var rand = RandomX(-30,30);
-    var xdir = +Sin(GetR()+rand,20);
-    var ydir = -Cos(GetR()+rand,20);
+    var xdir = +(Sin((GetR() ?? 0)+(rand ?? 0),20) ?? 0);
+    var ydir = -(Cos((GetR() ?? 0)+(rand ?? 0),20) ?? 0);
 
-    CreateParticle("Thrust",x,y,GetXDir()/2,GetYDir()/2,RandomX(80,100),RGBa(255,200,200,60),0,0);
-    CreateParticle("Smoke2",x,y,xdir,ydir,RandomX(100,120),RGBa(220,200,180,0),0,0);
+    CreateParticle("Thrust",x,y,(GetXDir() ?? 0)/2,(GetYDir() ?? 0)/2,RandomX(80,100),RGBa(255,200,200,60),nil,nil);
+    CreateParticle("Smoke2",x,y,xdir,ydir,RandomX(100,120),RGBa(220,200,180,nil),nil,nil);
   }
 }
 
 private func Traveling()
 {
   // kommt nich weiter
-  if(GetActTime() >= MaxTime()) return(Hit());
+  if((GetActTime() ?? 0) >= (MaxTime() ?? 0)) return(Hit());
 
   // beschleunigen
   Accelerate();
@@ -86,17 +89,17 @@ private func Hit() {
 
 private func HitObject(object pObject) {
   exploding = true;
-  BlastObjects(GetX(), GetY(), iDamage/2);
-  BlastObjects(GetX(), GetY(), iDamage/2);
+  BlastObjects(GetX(), GetY(), (iDamage ?? 0)/2);
+  BlastObjects(GetX(), GetY(), (iDamage ?? 0)/2);
 if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(iDamage);
 else
-FakeExplode(50,0,0,iDamage); // weil schaden klein sein soll, ist auch explosion klein. Damits nicht so langweilig aussieht, noch eine fakeexplode
+FakeExplode(50,nil,nil,iDamage); // weil schaden klein sein soll, ist auch explosion klein. Damits nicht so langweilig aussieht, noch eine fakeexplode
   // der erste wert von FakeExplode ist das Aussehen der explosion. Der vierte wert ist BlastObjects, also Explosionsschaden, der aber keine auswirkung auf die Erde hat
 }
 
 
 public func Damage() {
-  if(GetDamage() > 20 && !exploding)
+  if(And((GetDamage() ?? 0) > 20, !exploding))
     Hit();
 }
 

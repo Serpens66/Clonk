@@ -1,6 +1,6 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
 	local random_animation;
 	local links_rechts;
@@ -9,16 +9,16 @@
 	local counter;
 	local alpha;
 
-protected Initialize:
+protected func Initialize(...) {
 
-	alpha=0;
+	alpha=nil;
 	ruttel_wirkung=2;
 	links_rechts=1;
 	counter=200;
 
 
 
-	random_animation=Random(15)+1;
+	random_animation=(Random(15) ?? 0)+1;
 	if(Equal(random_animation,1)) SetAction("1");
 	if(Equal(random_animation,2)) SetAction("2");
 	if(Equal(random_animation,3)) SetAction("3");
@@ -35,50 +35,57 @@ protected Initialize:
 	if(Equal(random_animation,14)) SetAction("14");
 	if(Equal(random_animation,15)) SetAction("15");
   return(1);
+}
 
-protected fade_out_rauch: 
-	--counter;
-	if(GreaterThan(counter,0))
+protected func fade_out_rauch(...) {
+	S42MigrationStep(counter, -1);
+	if(GreaterThan(counter,nil))
 	{
-		if(Equal(nach_rechtsDIR,2)) SetPosition(GetX()+Random(2),GetY());
-		if(Equal(nach_rechtsDIR,1)) SetPosition(GetX()-Random(2),GetY());
-		if(Equal(nach_rechtsDIR,0)) SetPosition(GetX(),GetY());
+		if(Equal(nach_rechtsDIR,2)) SetPosition((GetX() ?? 0)+(Random(2) ?? 0),GetY());
+		if(Equal(nach_rechtsDIR,1)) SetPosition((GetX() ?? 0)-(Random(2) ?? 0),GetY());
+		if(Equal(nach_rechtsDIR,nil)) SetPosition(GetX(),GetY());
 	}
 
 	fade_out();
-	if(LessThan(GetCon(),250)) SetVar(2,Div(GetCon(),1000)+1);
+	if(LessThan(GetCon(),250)) SetVar(2,(Div(GetCon(),1000) ?? 0)+1);
 	DoCon(Var(2));
 	if(Equal(links_rechts,1))
 	{
-		SetPosition(GetX()-Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)-(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=2;
 		return(1);
 	}
 	if(Equal(links_rechts,2))
 	{
-		SetPosition(GetX()+Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)+(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=1;
 		return(1);
 	}
+}
 
-public nach_rechts:
+public func nach_rechts(...) {
 	nach_rechtsDIR=2;
 	return(1);
-public nach_links:
+}
+public func nach_links(...) {
 	nach_rechtsDIR=1;
 	return(1);
-public be_static:
-	nach_rechtsDIR=0;
+}
+public func be_static(...) {
+	nach_rechtsDIR=nil;
 	return(1);
+}
 
-private fade_out:
+private func fade_out(...) {
 	
-	++alpha;
-	SetVar(0,alpha/20);
-	SetClrModulation(RGBa(255,255,255,Var(0)));
-	if(Var(0) > 225)
+	S42MigrationStep(alpha, 1);
+	SetVar(nil,(alpha ?? 0)/20);
+	SetClrModulation(RGBa(255,255,255,Var(nil)));
+	if((Var(nil) ?? 0) > 225)
 	{
 		RemoveObject();
 	}
 	return(1);
-nicht_markieren: return(1);
+}
+func nicht_markieren(...) { return(1);
+}

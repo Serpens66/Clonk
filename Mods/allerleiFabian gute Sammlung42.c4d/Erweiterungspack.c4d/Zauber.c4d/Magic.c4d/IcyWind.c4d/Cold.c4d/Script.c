@@ -1,10 +1,10 @@
 /*-- Kältewarnung --*/
 
-#strict 2
+#strict 3
 
 protected func Initialize()
 {
-  SetAlive(0);
+  SetAlive(nil);
   return;
 }
 
@@ -26,7 +26,7 @@ protected func WarningX()
 {
   if (InBase(GetActionTarget()))
   {
-    if(GetActTime()>300) RemoveObject();
+    if((GetActTime() ?? 0)>300) RemoveObject();
   } else {
     SetAction("WarnCold",GetActionTarget());
   }
@@ -37,6 +37,6 @@ private func InBase(object obj)
 {
   return obj &&
     obj->Contained() &&
-    obj->Contained()->GetBase() != NO_OWNER &&
+    !S42MigrationEqual(obj->Contained()->GetBase(), NO_OWNER) &&
     !Hostile(obj->Contained()->GetBase(), obj->GetOwner());
 }

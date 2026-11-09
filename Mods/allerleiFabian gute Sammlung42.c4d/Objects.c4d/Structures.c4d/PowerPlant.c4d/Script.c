@@ -1,6 +1,6 @@
 /*-- Kraftwerk --*/
 
-#strict
+#strict 3
 
 #include DOOR
 #include BAS4
@@ -32,14 +32,14 @@ private func SoundCloseDoor()
   
 func Collection(obj) // wenn etwas betritt
 {
-    if(GetID(obj)==WOOD || GetID(obj)==COAL) obj->~DoCon(-1);  // damit es beim automatischen buaen nicht rausgenommen wird
+    if(Or(Equal(GetID(obj), WOOD), Equal(GetID(obj), COAL))) obj->~DoCon(-1);  // damit es beim automatischen buaen nicht rausgenommen wird
     Sound("Clonk");
     return(_inherited(obj));
 }
 
 func Ejection(obj) // wenn etwas verlässt
 {
-    if(GetID(obj)==WOOD || GetID(obj)==COAL) obj->~DoCon(100);
+    if(Or(Equal(GetID(obj), WOOD), Equal(GetID(obj), COAL))) obj->~DoCon(100);
     return(_inherited(obj));
 }
 
@@ -47,14 +47,14 @@ func Ejection(obj) // wenn etwas verlässt
 
 private func Burning()
 {
-  if(!pLight) {pLight=CreateObject(LGFL,0,0,-1);pLight->~Init(this,0,-6,300,RGB(75,60,10),true);}  // Licht, wenn burning
+  if(!pLight) {pLight=CreateObject(LGFL,nil,nil,-1);pLight->~Init(this,nil,-6,300,RGB(75,60,10),true);}  // Licht, wenn burning
   // Rauch
   Smoke(-15,-20,12);
   Smoke(-1,-23,8);
   // Energieerzeugung
   DoEnergy(+50);
   // Weiter
-  if(GetActTime() < GetBurnTime()) return(1);
+  if((GetActTime() ?? 0) < (GetBurnTime() ?? 0)) return(1);
   // Fertig
   SetAction("Idle");
 }
@@ -69,7 +69,7 @@ private func ContentsCheck()
   if(!ActIdle()) return(1);
   if(pLight) {RemoveObject(pLight);}  // Licht weg, wenn idle
   var i = -1, obj, def;
-  while(obj = Contents(++i) )
+  while(obj = Contents(S42MigrationStep(i, 1)) )
   {
     if(obj->~IsLorry() )
     {
@@ -78,18 +78,18 @@ private func ContentsCheck()
   }
 
   // Erstes Inhaltsobjekt prüfen
-  obj = Contents(0);
+  obj = Contents(nil);
   def = GetID(obj);
   
   // Alles außer Brennmaterial raus
-  if(def != COAL && def != OBRL && def != WOOD && def != LB9I)
+  if(And(And(And(!Equal(def, COAL), !Equal(def, OBRL)), !Equal(def, WOOD)), !Equal(def, LB9I)))
     SetCommand(obj, "Exit");
     
   // Wird Energie benötigt
   if(!CheckEnergyNeedChain() ) return(1);
   
   // Holz?
-  if(ContentsCount(WOOD) > 1)
+  if((ContentsCount(WOOD) ?? 0) > 1)
     return(BurnWood() );
     
   // Öl?
@@ -111,7 +111,7 @@ verbrannt->Verbrannt(GetID(),IsWaste());
 private func BurnWood()
 {
   // Zwei Holz löschen
-  for(var i = 0; i < 2; ++ i)
+  for(var i = nil; (i ?? 0) < 2; S42MigrationStep( i, 1))
     RemoveObject(FindContents(WOOD) );
 
 if(!Random(2))
@@ -128,7 +128,7 @@ private func BurnOil()
 {
   // Fass entleeren
   var barrel = FindContents(OBRL);
-  if(!barrel) return(0);
+  if(!barrel) return(nil);
   ChangeDef(BARL, barrel);
   
   // Los geth.

@@ -1,6 +1,6 @@
 /*-- Chemiefabrik --*/
 
-#strict
+#strict 3
 
 /* Nutzt die Grundfunktionalität der Werkstatt. */
 
@@ -12,9 +12,9 @@ public func IsWaste(){ return(20);}
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner()); // fuer das Energiezeichen
+  manager = CreateObject(BMAN,nil,nil,GetOwner()); // fuer das Energiezeichen
   manager->Init(this(),1); // wenn initlight nicht aufgerufen wird, gibts kein licht
-  producer = CreateObject(C_F8,0,0,GetOwner()); 
+  producer = CreateObject(C_F8,nil,nil,GetOwner());
   producer->Init(this()); 
   return(1);
 }

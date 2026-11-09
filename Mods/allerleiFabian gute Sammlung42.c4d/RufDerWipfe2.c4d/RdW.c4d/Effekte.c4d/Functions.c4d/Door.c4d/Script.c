@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #include _ZF9
 
 local Door;
@@ -8,7 +8,7 @@ public func Initialize()
   _inherited();
   if(!Door)
     Door=CreateDoor(this(),DoorID());
-  SetEntrance(0);
+  SetEntrance(nil);
 }
 
 public func Destruction()
@@ -30,15 +30,15 @@ public func DoorID()  { return DO1_;}
 global func CreateDoor(pTarget,idDef,iX,iY)
 {
   if(!pTarget)  pTarget=this();
-  if(!pTarget)  return false;
+  if(!pTarget)  return nil;
   if(!idDef)    idDef=DO1_;
-  if(!GetDefCoreVal("Entrance","DefCore",GetID(pTarget),2)) return false;
-  if(!iX)       iX=GetDefCoreVal("Entrance","DefCore",GetID(pTarget),0)+pTarget->~DoorXOffset();
-  if(!iY)       iY=GetDefCoreVal("Entrance","DefCore",GetID(pTarget),1)+pTarget->~DoorYOffset();
-  var pDoor = CreateObject(idDef,AbsX(GetX(pTarget)+iX),AbsY(GetY(pTarget)+iY),GetOwner(pTarget));
+  if(!GetDefCoreVal("Entrance","DefCore",GetID(pTarget),2)) return nil;
+  if(!iX)       iX=(GetDefCoreVal("Entrance","DefCore",GetID(pTarget),nil) ?? 0)+(pTarget->~DoorXOffset() ?? 0);
+  if(!iY)       iY=(GetDefCoreVal("Entrance","DefCore",GetID(pTarget),1) ?? 0)+(pTarget->~DoorYOffset() ?? 0);
+  var pDoor = CreateObject(idDef,AbsX((GetX(pTarget) ?? 0)+(iX ?? 0)),AbsY((GetY(pTarget) ?? 0)+(iY ?? 0)),GetOwner(pTarget));
   pDoor->~Set(pTarget,iX,iY);
   return pDoor;
 }
 
 public func DoorXOffset(){  return 3;}
-public func DoorYOffset(){  return 0;}
+public func DoorYOffset(){  return nil;}

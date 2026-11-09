@@ -1,6 +1,6 @@
 /*-- Energieversorgung --*/
 
-#strict
+#strict 3
 
 public func ContextEnergy(pCaller)
 {
@@ -12,11 +12,11 @@ public func ContextEnergy(pCaller)
 public func NeedsEnergy() // nur wahr, wenn eine stromleitung gebraucht wird.
 {
   // Energieverbrauch nicht aktiviert
-  if (!FindObject(ENRG)) return(0);  
+  if (!FindObject(ENRG)) return(nil);
   // Objekt ist kein Energieverbraucher (oder noch nicht fertig)
-  if (!(GetOCF() & OCF_PowerConsumer)) return(0);
+  if (!((GetOCF() ?? 0) & (OCF_PowerConsumer ?? 0))) return(nil);
   // Energieleitung ist bereits angeschlossen
-  if (FindObject(PWRL,0,0,0,0,0,"Connect",this())) return(0);
+  if (FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",this())) return(nil);
   // Objekt braucht noch Energieversorgung
   return(1);
 }

@@ -1,6 +1,6 @@
 /*-- Lorenwipf --*/
 
-#strict
+#strict 3
 
 local count;
 
@@ -13,18 +13,18 @@ public func AttachTo(obj) {
 }
 
 public func IncreaseCount() {
-  count++;
+  S42MigrationStep(count, 1, true);
   UpdateGraphic();
 }
 
 public func DecreaseCount() {
-  count--;
+  S42MigrationStep(count, -1, true);
   UpdateGraphic();
 }
 
 public func UpdateGraphic() {
   // Keine Wipfe mehr in der Lore -> Entfernen
-  if (count <= 0) return(RemoveObject());
+  if ((count ?? 0) <= 0) return(RemoveObject());
   // Grafik anpassen
   SetAction(Format("Wipf%d", BoundBy(count, 1, 3)));
 }

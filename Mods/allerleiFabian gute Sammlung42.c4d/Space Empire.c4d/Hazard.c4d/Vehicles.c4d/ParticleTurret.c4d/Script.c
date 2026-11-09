@@ -1,51 +1,52 @@
 /*-- Particle Cannon --*/
 
-#strict 2
+#strict 3
 #include FLAK
 
 private func CalculateRifle(&oX, &oY)
 {
-	var angle = Crosshair->GetAngle() + GetR();
+	var angle = (Crosshair->GetAngle() ?? 0) + (GetR() ?? 0);
 
 	// Korrektur für Mitte (speziell für diese Grafik)
 	var correction = CenterFix();
 	
-	var x = +Sin(angle, 25-(correction/5));
-	var y = -Cos(angle, 15+correction/20);
+	var x = +(Sin(angle, 25-((correction ?? 0)/5)) ?? 0);
+	var y = -(Cos(angle, 15+(correction ?? 0)/20) ?? 0);
 	
 	// circle x,y
 	// min->max breite: 0->4
 	// min->max höhe: 1->2
 	var cx, cy;
-	cx = correction/25;
-	cy = 2 - correction/90;
+	cx = (correction ?? 0)/25;
+	cy = 2 - (correction ?? 0)/90;
 	
-	x += Sin(30+180*Rifle, cx);
-	y += Cos(60+180*Rifle, cy);
+	S42MigrationAssign(x, "+=", (Sin(30+180*(Rifle ?? 0), cx) ?? 0));
+	S42MigrationAssign(y, "+=", (Cos(60+180*(Rifle ?? 0), cy) ?? 0));
 	
-	if(++Rifle > 1)
-		Rifle = 0;
+	if(S42MigrationStep(Rifle, 1) > 1)
+		Rifle = nil;
 	
 	oX = x;
-	oY = y-3;
+	oY = (y ?? 0)-3;
 }
 
 /** Waffenzeugs **/
 
 public func FMData1(int data)
 {
-	if(data == FM_Name)			return("$Auto$");
-	if(data == FM_AmmoID)		return(PTAM);
+	data ??= 0;
+	if(S42MigrationEqual(data, FM_Name))			return("$Auto$");
+	if(S42MigrationEqual(data, FM_AmmoID))		return(PTAM);
 
-	if(data == FM_AmmoLoad)		return(40);
-	if(data == FM_AmmoRate)		return(1);
-	if(data == FM_AmmoUsage)	return(8);
+	if(S42MigrationEqual(data, FM_AmmoLoad))		return(40);
+	if(S42MigrationEqual(data, FM_AmmoRate))		return(1);
+	if(S42MigrationEqual(data, FM_AmmoUsage))	return(8);
 
-	if(data == FM_Reload)		return(100);
-	if(data == FM_Recharge)		return(80);
+	if(S42MigrationEqual(data, FM_Reload))		return(100);
+	if(S42MigrationEqual(data, FM_Recharge))		return(80);
 
-	if(data == FM_Damage)		return(30);
-	if(data == FM_Auto)			return(false);
+	if(S42MigrationEqual(data, FM_Damage))		return(30);
+	if(S42MigrationEqual(data, FM_Auto))			return(nil);
 
 	return(Default(data));
 }
@@ -53,7 +54,7 @@ public func FMData1(int data)
 public func Fire1()
 {
 	Sound("ParticleShot");
-	ScheduleCall(0,"FireLaser",6,5);
+	ScheduleCall(nil,"FireLaser",6,5);
 }
 
 public func FMData2() {}
@@ -71,7 +72,7 @@ public func FireLaser() {
   laser->Set(angle,8,900,20,this());
 
   // Effekte
-  MuzzleFlash(250,user,x,y,angle,RGBa(100,100,255,0));
+  MuzzleFlash(250,user,x,y,angle,RGBa(100,100,255,nil));
 
   // Sound
   //Sound("LaserShot",0,laser);
@@ -81,7 +82,7 @@ public func LaserStrike(object pTarget) {	// Laser trifft
   DoDmg(GetFMData(FM_Damage, 1), DMG_Energy, pTarget);
   
   // geht durch...
-  return 0;
+  return nil;
 }
 
 public func ControlLeft()

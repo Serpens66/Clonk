@@ -1,8 +1,8 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
-protected Initialize:
+protected func Initialize(...) {
 	
 	local random_animation;
 	local links_rechts;
@@ -19,7 +19,7 @@ protected Initialize:
 
 
 
-	random_animation=Random(15)+1;
+	random_animation=(Random(15) ?? 0)+1;
 	if(Equal(random_animation,1)) SetAction("1");
 	if(Equal(random_animation,2)) SetAction("2");
 	if(Equal(random_animation,3)) SetAction("3");
@@ -36,44 +36,45 @@ protected Initialize:
 	if(Equal(random_animation,14)) SetAction("14");
 	if(Equal(random_animation,15)) SetAction("15");
   return(1);
+}
 
-protected fade_out_rauch: 
+protected func fade_out_rauch(...) {
 	
-	if(nach_rechtsDIR == 1)
+	if(Equal(nach_rechtsDIR, 1))
 	{
-		--counter_y;
-		if(counter_y > 40) SetPosition(GetX(),GetY()-1);
-		if(counter_y < 40) SetPosition(GetX(),GetY()+1);
-		if(counter_y < -20)	counter_y=100;
-		if(counter_y <100) 
+		S42MigrationStep(counter_y, -1);
+		if((counter_y ?? 0) > 40) SetPosition(GetX(),(GetY() ?? 0)-1);
+		if((counter_y ?? 0) < 40) SetPosition(GetX(),(GetY() ?? 0)+1);
+		if((counter_y ?? 0) < -20)	counter_y=100;
+		if((counter_y ?? 0) <100)
 		{
-			--counter_x;
-			if(counter_x > 40) SetPosition(GetX()-2,GetY());
-			if(counter_x < 40) SetPosition(GetX()+2,GetY());
-			if(counter_x < -20)	counter_x=100;
+			S42MigrationStep(counter_x, -1);
+			if((counter_x ?? 0) > 40) SetPosition((GetX() ?? 0)-2,GetY());
+			if((counter_x ?? 0) < 40) SetPosition((GetX() ?? 0)+2,GetY());
+			if((counter_x ?? 0) < -20)	counter_x=100;
 		}
 	}
 	
-	if(nach_rechtsDIR == 2)
+	if(Equal(nach_rechtsDIR, 2))
 	{
-		--counter_y;
-		if(counter_y > 40) SetPosition(GetX(),GetY()-1);
-		if(counter_y < 40) SetPosition(GetX(),GetY()+1);
-		if(counter_y < -20)	counter_y=100;
-		if(counter_y <100) 
+		S42MigrationStep(counter_y, -1);
+		if((counter_y ?? 0) > 40) SetPosition(GetX(),(GetY() ?? 0)-1);
+		if((counter_y ?? 0) < 40) SetPosition(GetX(),(GetY() ?? 0)+1);
+		if((counter_y ?? 0) < -20)	counter_y=100;
+		if((counter_y ?? 0) <100)
 		{
-			--counter_x;
-			if(counter_x > 40) SetPosition(GetX()+2,GetY());
-			if(counter_x < 40) SetPosition(GetX()-2,GetY());
-			if(counter_x < -20)	counter_x=100;
+			S42MigrationStep(counter_x, -1);
+			if((counter_x ?? 0) > 40) SetPosition((GetX() ?? 0)+2,GetY());
+			if((counter_x ?? 0) < 40) SetPosition((GetX() ?? 0)-2,GetY());
+			if((counter_x ?? 0) < -20)	counter_x=100;
 		}
 	}
-	if(nach_rechtsDIR == 0)
+	if(Equal(nach_rechtsDIR, nil))
 	{
-		--counter_y;
-		if(counter_y > 0) SetPosition(GetX(),GetY()-1);
-		if(counter_y < 0) SetPosition(GetX(),GetY()+1);
-		if(counter_y < -20)	counter_y=20;
+		S42MigrationStep(counter_y, -1);
+		if((counter_y ?? 0) > 0) SetPosition(GetX(),(GetY() ?? 0)-1);
+		if((counter_y ?? 0) < 0) SetPosition(GetX(),(GetY() ?? 0)+1);
+		if((counter_y ?? 0) < -20)	counter_y=20;
 	
 	}
 	
@@ -81,49 +82,55 @@ protected fade_out_rauch:
 	
 
 	fade_out();
-	if(LessThan(GetCon(),400)) SetVar(2,Div(GetCon(),1000)+3);
+	if(LessThan(GetCon(),400)) SetVar(2,(Div(GetCon(),1000) ?? 0)+3);
 	DoCon(Var(2));
 	
 	if(Equal(links_rechts,1))
 	{
-		SetPosition(GetX()-Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)-(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=2;
 		return(1);
 	}
 	if(Equal(links_rechts,2))
 	{
-		SetPosition(GetX()+Random(ruttel_wirkung),GetY());
+		SetPosition((GetX() ?? 0)+(Random(ruttel_wirkung) ?? 0),GetY());
 		links_rechts=1;
 		return(1);
 	}
+}
 
-public start:
+public func start(...) {
 	ObjectCall(CreateObject(ABPR),"nach_links");
 	ObjectCall(CreateObject(ABPR),"static");
 	nach_rechtsDIR=2;
 	return(1);
-public nach_links:
+}
+public func nach_links(...) {
 	nach_rechtsDIR=1;
 	return(1);
-public static:
-	counter_y=counter_y+50;
-	nach_rechtsDIR=0;
+}
+public func static(...) {
+	counter_y=(counter_y ?? 0)+50;
+	nach_rechtsDIR=nil;
 	return(1);
+}
 
-private fade_out:
+private func fade_out(...) {
 	
-	++alpha;
-	++alpha;
-	++alpha;
-	++alpha;
-	++alpha;
-	++alpha;
-	++alpha;
-	SetVar(0,alpha/20);
-	SetClrModulation(RGBa(255,255,255,Var(0)));
-	if(Var(0) > 225)
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	S42MigrationStep(alpha, 1);
+	SetVar(nil,(alpha ?? 0)/20);
+	SetClrModulation(RGBa(255,255,255,Var(nil)));
+	if((Var(nil) ?? 0) > 225)
 	{
 		RemoveObject();
 	}
 	return(1);
-nicht_markieren: return(1);
+}
+func nicht_markieren(...) { return(1);
+}

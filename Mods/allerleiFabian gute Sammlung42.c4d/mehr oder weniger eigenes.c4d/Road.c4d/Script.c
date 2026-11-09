@@ -2,20 +2,20 @@
 
 // unzerstörbare Fundamentteile, die als Straße fungieren
 
-#strict
+#strict 3
 
 local basement;
 
 private func BasementID() { return(_ROA); }
 private func BasementWidth() { return(72); }
-func IsBasement(){return(0);}  //einziges Fundament, welches zerstörbar und reparierbar ist, weil einzeln baubar
+func IsBasement(){return(nil);}  //einziges Fundament, welches zerstörbar und reparierbar ist, weil einzeln baubar
 
 
 /* Fertigstellung */
 
 protected func Initialize()
 {
-  if(GetID() != BasementID() ) return(0);
+  if(!Equal(GetID(), BasementID()) ) return(nil);
   SetAction("Consolidate");
   MoveOutClonks();
   return(_inherited() );
@@ -23,7 +23,7 @@ protected func Initialize()
 
 private func Consolidated()
 {
-  if(GetID() != BasementID() ) return(0);
+  if(!Equal(GetID(), BasementID()) ) return(nil);
   
   // Das Fundament ist fertig und abgesunken: in den Hintergrund (fixieren)
   SetCategory(1);
@@ -52,16 +52,16 @@ protected func Damage(iChange, iByPlayer)
 
 private func MoveOutClonks() {
   var pObj;
-  if(GetID()!=BasementID()) return(0);
-  while(pObj=FindObject(0,-BasementWidth()/2-10,-15,BasementWidth()+20,25,OCF_Collectible() | OCF_Grab() | OCF_Alive(),0,0,NoContainer(),pObj))
+  if(!Equal(GetID(), BasementID())) return(nil);
+  while(pObj=FindObject(nil,-(BasementWidth() ?? 0)/2-10,-15,(BasementWidth() ?? 0)+20,25,(OCF_Collectible ?? 0) | (OCF_Grab ?? 0) | (OCF_Alive ?? 0),nil,nil,NoContainer(),pObj))
     if(!DefinitionCall(GetID(pObj),"IsBridge"))
       MoveOutClonk(pObj);
 }
   
 private func MoveOutClonk(object pObj) {
-  if(GetID()!=BasementID()) return(0);
-  while(Stuck(pObj) && Inside(GetY(pObj)-GetY(),-15,+5))
-    SetPosition(GetX(pObj),GetY(pObj)-1,pObj);  
+  if(!Equal(GetID(), BasementID())) return(nil);
+  while(And(Stuck(pObj), Inside((GetY(pObj) ?? 0)-(GetY() ?? 0),-15,+5)))
+    SetPosition(GetX(pObj),(GetY(pObj) ?? 0)-1,pObj);
 }
   
 /*-- Gebäude-Objekte --*/
@@ -70,17 +70,17 @@ private func MoveOutClonk(object pObj) {
 
 protected func Construction()
 {
-  if(GetID() == BasementID() ) return(0);
+  if(Equal(GetID(), BasementID()) ) return(nil);
   // Nur wenn noch kein Fundament vorhanden: Damit bei Überladung von
   // Fundamentobjekten nicht Fundamente mehrfach erstellt werden.
-  if(!basement) basement = CreateObject(BasementID(), 0, 8, GetOwner() );
+  if(!basement) basement = CreateObject(BasementID(), nil, 8, GetOwner() );
   return(_inherited() );
 }
   
 protected func Destruction()
 {
-  if(GetID() == BasementID() ) return(0);
-  CastObjects(ROCK,1,15,0,-5);
+  if(Equal(GetID(), BasementID()) ) return(nil);
+  CastObjects(ROCK,1,15,nil,-5);
   if(basement) RemoveObject(basement);
   return(_inherited() );
 }

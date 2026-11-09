@@ -1,6 +1,6 @@
 /*-- Gerüst --*/
 
-#strict
+#strict 3
 
 local Aussenwand,Verschluss,MQC;
 
@@ -8,34 +8,34 @@ protected func Initialize()
 {
   MQC=1;
   SetAction("Exist");
-  if(!FindGeruest(-25,20) && !FindGeruest(-70,-25) && !FindGeruest(20,-25) && !FindGeruest(-25,-70))
+  if(And(And(And(!FindGeruest(-25,20), !FindGeruest(-70,-25)), !FindGeruest(20,-25)), !FindGeruest(-25,-70)))
     {
-    MQC=0;
+    MQC=nil;
     return(1);
     }
   var pClonk= GetCursor(GetOwner());
-  CreateMenu(GetID(),pClonk,this(),0,"$Adjustment$",0,1);
-  if(FindGeruest(-70,-25)) AddMenuItem("$Left$","Ausrichtung",LMM1,pClonk,0,FindGeruest(-70,-25),"");
-  if(FindGeruest(20,-25))  AddMenuItem("$Right$","Ausrichtung",LMM5,pClonk,0,FindGeruest(20,-25),"");
-  if(FindGeruest(-25,20))  AddMenuItem("$Down$","Ausrichtung",LMM7,pClonk,0,FindGeruest(-25,20),"");
-  if(FindGeruest(-25,-70)) AddMenuItem("$Up","Ausrichtung",LMM3,pClonk,0,FindGeruest(-25,-70),"");
-  AddMenuItem("$NoAdjustment$","Ausrichtung",MCMX,pClonk,0,pClonk,"");
+  CreateMenu(GetID(),pClonk,this(),nil,"$Adjustment$",nil,1);
+  if(FindGeruest(-70,-25)) AddMenuItem("$Left$","Ausrichtung",LMM1,pClonk,nil,FindGeruest(-70,-25),"");
+  if(FindGeruest(20,-25))  AddMenuItem("$Right$","Ausrichtung",LMM5,pClonk,nil,FindGeruest(20,-25),"");
+  if(FindGeruest(-25,20))  AddMenuItem("$Down$","Ausrichtung",LMM7,pClonk,nil,FindGeruest(-25,20),"");
+  if(FindGeruest(-25,-70)) AddMenuItem("$Up","Ausrichtung",LMM3,pClonk,nil,FindGeruest(-25,-70),"");
+  AddMenuItem("$NoAdjustment$","Ausrichtung",MCMX,pClonk,nil,pClonk,"");
 }
 
 private func Ausrichtung(idItem,obj)
 {
-  if(idItem == MCMX) CloseMenu(obj);
-  if(idItem == LMM1) { SetPosition(GetX(obj) +38,GetY(obj)); Sound("Connect"); }
-  if(idItem == LMM3) { SetPosition(GetX(obj),GetY(obj) +40); Sound("Connect"); }
-  if(idItem == LMM5) { SetPosition(GetX(obj) -38,GetY(obj)); Sound("Connect"); }
-  if(idItem == LMM7) { SetPosition(GetX(obj),GetY(obj) -40); Sound("Connect"); }
-  MQC=0;
+  if(Equal(idItem, MCMX)) CloseMenu(obj);
+  if(Equal(idItem, LMM1)) { SetPosition((GetX(obj) ?? 0) +38,GetY(obj)); Sound("Connect"); }
+  if(Equal(idItem, LMM3)) { SetPosition(GetX(obj),(GetY(obj) ?? 0) +40); Sound("Connect"); }
+  if(Equal(idItem, LMM5)) { SetPosition((GetX(obj) ?? 0) -38,GetY(obj)); Sound("Connect"); }
+  if(Equal(idItem, LMM7)) { SetPosition(GetX(obj),(GetY(obj) ?? 0) -40); Sound("Connect"); }
+  MQC=nil;
 }
 
 private func FindGeruest(iX,iY)
 {
   var obj;
-  while(obj= FindObject(0,iX,iY,50,50,0,0,0,0,obj))
+  while(obj= FindObject(nil,iX,iY,50,50,nil,nil,nil,nil,obj))
    if(ObjectCall(obj,"IsGeruest"))
     return(obj);
 }
@@ -45,16 +45,16 @@ protected func MenuQueryCancel() { return(MQC); }
 protected func ControlUp(pClonk)
 {
   [Menü]
-  if(GetCon() < 100) return();
-  if((GetOwner() != GetOwner(pClonk)) && (GetOwner()!= NO_OWNER())) return();
+  if((GetCon() ?? 0) < 100) return;
+  if(And((!Equal(GetOwner(), GetOwner(pClonk))), (!Equal(GetOwner(), NO_OWNER)))) return;
   var phase= GetPhase();
   CreateMenu(GetID(),pClonk);
-  if(phase != 0) AddMenuItem("$Normal$","Change",GetID(),pClonk);
-  if(phase != 1) AddMenuItem("$Fence$","Change",GetID(),pClonk,0,1,0,2,1);
-  if(phase != 2) AddMenuItem("$ExternalWallLeft$","Change",GetID(),pClonk,0,2,0,2,2);
-  if(phase != 3) AddMenuItem("$ExternalWallRight$","Change",GetID(),pClonk,0,3,0,2,3);
-  if(phase != 4) AddMenuItem("$ExternalWalls$","Change",GetID(),pClonk,0,4,0,2,4);
-  if(Verschluss) AddMenuItem("$OpenTrapdoor$","Open",DCKL,pClonk,0,0,0,2,1);
+  if(!Equal(phase, nil)) AddMenuItem("$Normal$","Change",GetID(),pClonk);
+  if(!Equal(phase, 1)) AddMenuItem("$Fence$","Change",GetID(),pClonk,nil,1,nil,2,1);
+  if(!Equal(phase, 2)) AddMenuItem("$ExternalWallLeft$","Change",GetID(),pClonk,nil,2,nil,2,2);
+  if(!Equal(phase, 3)) AddMenuItem("$ExternalWallRight$","Change",GetID(),pClonk,nil,3,nil,2,3);
+  if(!Equal(phase, 4)) AddMenuItem("$ExternalWalls$","Change",GetID(),pClonk,nil,4,nil,2,4);
+  if(Verschluss) AddMenuItem("$OpenTrapdoor$","Open",DCKL,pClonk,nil,nil,nil,2,1);
 	       else AddMenuItem("$CloseTrapdoor$","Close",DCKL,pClonk);
   AddMenuItem("$TearOff$","Abreissen",CXCN,pClonk);
 }
@@ -62,9 +62,9 @@ protected func ControlUp(pClonk)
 private func Change(idItem,iPhase)
 {
   Sound("Build*");
-  if(GetAction() ne "Exist") SetAction("Exist");
+  if(!SEqual(GetAction(), "Exist")) SetAction("Exist");
   SetPhase(iPhase);
-  SetSolidMask(iPhase*50,40,50,40);
+  SetSolidMask((iPhase ?? 0)*50,40,50,40);
   if(Inside(iPhase,3,4))
     {
     if(!Aussenwand) Aussenwand= CreateObject(ASNW,+19,+20,GetOwner());
@@ -89,14 +89,14 @@ private func Abreissen()
   RemoveAussenwand();
   RemoveVerschluss();
   CreateObject(CNKT,+5,+15,GetOwner());
-  ScheduleCall(this(),"Abriss",1,GetCon() +5);
+  ScheduleCall(this(),"Abriss",1,(GetCon() ?? 0) +5);
   // Zur Sicherheit...
   Schedule("RemoveObject()",105);
 }
 
 private func Abriss()
 {
-  if(!this()) return(0);
+  if(!this()) return(nil);
   DoCon(-1);
   if(!Random(25)) Sound("Build*");
 }

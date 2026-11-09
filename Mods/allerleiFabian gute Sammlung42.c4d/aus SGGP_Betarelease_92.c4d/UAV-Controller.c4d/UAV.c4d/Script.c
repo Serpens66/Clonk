@@ -1,6 +1,6 @@
 /*-- UAV --*/
 
-#strict
+#strict 3
 
 local on;
 local dir;
@@ -33,14 +33,14 @@ func Launch()
 {
   if(on)
   {
-   Sound("UAVTriebwerk",0,0,0,0,-1);
+   Sound("UAVTriebwerk",nil,nil,nil,nil,-1);
    SetGraphics("2");
    Sound("Click");
-   on = 0;
+   on = nil;
   }
   else
   {
-   Sound("UAVTriebwerk",0,0,0,0,1);
+   Sound("UAVTriebwerk",nil,nil,nil,nil,1);
    SetAction("Spin");
    SetGraphics();
    SetDirec(dir);
@@ -68,34 +68,34 @@ func Hit3()
 
 func Right()
 {
-  if(!on) { return(); }
-  if(dir == 5)
+  if(!on) { return; }
+  if(Equal(dir, 5))
   {
    dir = 360;
    return(1);
   }
-  dir -= 5;
+  S42MigrationAssign(dir, "-=", 5);
   return(1);
 }
 
 func Left()
 {
-  if(!on) { return(); }
-  if(dir == 360)
+  if(!on) { return; }
+  if(Equal(dir, 360))
   {
    dir = 5;
    return(1);
   }
-  dir += 5;
+  S42MigrationAssign(dir, "+=", 5);
   return(1);
 }
 
 func Damage()
 {
-  if(GetDamage() > 50)
+  if((GetDamage() ?? 0) > 50)
   {
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))   Explode(15);
- else FakeExplode(15,0,0,15);
+ else FakeExplode(15,nil,nil,15);
   }
   return(1);
 }
@@ -105,22 +105,23 @@ func Check()
   if(on)
   {
    SetDirec(dir);
-   SetYDir(-1*(Sin((dir),speed)));
+   SetYDir(-1*((Sin((dir),speed)) ?? 0));
    SetXDir(Cos((dir),speed));
   }
   else
   {
    SetDirec(dir);
-   SetYDir(0);
-   SetXDir(0);
+   SetYDir(nil);
+   SetXDir(nil);
   }
   return(1);
 }
 
 func SetDirec(int angle)
 {
+  angle ??= 0;
   SetAction("Spin");
-  SetPhase((angle)/4);
+  SetPhase(((angle) ?? 0)/4);
   return(1);
 }
 

@@ -1,6 +1,6 @@
 /* globale Log-Funktionen */
 
-#strict
+#strict 3
 
 static LOG_debug;
 
@@ -28,7 +28,7 @@ global func DebugMessage(string msg,  name) {
 
 // Checks wether the debug mode is on
 global func Debug(name) {
-  if(!LOG_debug) return(false);
+  if(!LOG_debug) return(nil);
 
   // this namespace on
   if(LOG_debug->ContainsItem(name)) return(true);
@@ -36,11 +36,12 @@ global func Debug(name) {
   // generally on
   if(LOG_debug->ContainsItem("all")) return(true);
       
-  return(false);
+  return(nil);
 }
 
 global func DebugMode(bool switch, name) {
 
+  switch ??= false;
   if(!name) name = "all";
 
   // create the set?
@@ -53,7 +54,7 @@ global func DebugMode(bool switch, name) {
   }
   // off
   else {
-    if(name == "all") LOG_debug->Clear();
+    if(Equal(name, "all")) LOG_debug->Clear();
     else LOG_debug->RemoveItem(name);
   }
 }

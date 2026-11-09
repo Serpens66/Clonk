@@ -1,6 +1,6 @@
 /*-- Flak --*/
 
-#strict
+#strict 3
 #include WEPN
 
 local Crosshair;
@@ -9,7 +9,7 @@ local Rifle; // aus welchem Rohr wir gerade ballern
 func Initialize()
 {
   SetAction("Aim");
-  SetPhase(GetActMapVal("Length",GetAction())/3); // Nach oben Schaun
+  SetPhase((GetActMapVal("Length",GetAction()) ?? 0)/3); // Nach oben Schaun
   
   // Schadenseffekt
   AddDamageEffect(this);
@@ -23,10 +23,11 @@ func Initialize()
 public func Grabbed(object byObj, bool grabbed)
 {
 	// Abfassen! :(
+	grabbed ??= false;
 	if(!grabbed)
 	{
 		EndAim();
-		return();
+		return;
 	}
 	
 	if(GetUser())
@@ -44,7 +45,7 @@ public func Grabbed(object byObj, bool grabbed)
 
 public func GrabLost()
 {
-	Grabbed(0,true);
+	Grabbed(nil,true);
 }
 
 
@@ -76,17 +77,18 @@ private func StartAngle() { return(90); }
 // Winkel -> Phase
 private func RtoP(int angle)
 {
+	angle ??= 0;
 	var phases = GetActMapVal("Length",GetAction());
 
 	// -180 bis +180
 	angle = Normalize(angle,-180);
 	// Maximale Drehung nach unten
-	angle = BoundBy(angle,-StartAngle(),+StartAngle());
+	angle = BoundBy(angle,-(StartAngle() ?? 0),+(StartAngle() ?? 0));
 	// 0 bis 2*StartAngle()
-	angle += StartAngle();
+	S42MigrationAssign(angle, "+=", (StartAngle() ?? 0));
 	
 	// umrechnen von 0..2*StartAngle() nach 0..phases-1
-	var p = angle*(phases-1)/2/StartAngle();
+	var p = (angle ?? 0)*((phases ?? 0)-1)/2/(StartAngle() ?? 0);
 	
 	return(p);
 }
@@ -96,9 +98,9 @@ private func PtoR()
 {
 	var phases = GetActMapVal("Length",GetAction());
 	
-	var a = GetPhase()*2*StartAngle()/(phases-1);
+	var a = (GetPhase() ?? 0)*2*(StartAngle() ?? 0)/((phases ?? 0)-1);
 	
-	a -= StartAngle();
+	S42MigrationAssign(a, "-=", (StartAngle() ?? 0));
 	
 	return(a);
 }
@@ -107,10 +109,13 @@ private func PtoR()
 
 public func ControlCommand(string strCommand, object pTarget, int iTx, int iTy, object pTarget2, int iData, object pCmdObj)
 {
-	if(strCommand eq "MoveTo") {
+	iTx ??= 0;
+	iTy ??= 0;
+	iData ??= 0;
+	if(!!SEqual(strCommand, "MoveTo")) {
 		var angle = Normalize(Angle(GetX(),GetY(),iTx,iTy),-180);
 		// max angle
-		angle = BoundBy(angle,-StartAngle(),+StartAngle());
+		angle = BoundBy(angle,-(StartAngle() ?? 0),+(StartAngle() ?? 0));
 		
 		Crosshair->SetAngle(angle);
 		SetPhase(RtoP(angle));
@@ -144,12 +149,15 @@ public func ControlThrow()
 
 public func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 {
-	if(comdir == COMD_Left)
+	comdir ??= 0;
+	dig ??= false;
+	throw ??= false;
+	if(Equal(comdir, COMD_Left))
 		AimUpdate(GetUser(), COMD_Up, 1, "ControlConf");
-	else if(comdir == COMD_Right)
+	else if(Equal(comdir, COMD_Right))
 		AimUpdate(GetUser(), COMD_Down, 1, "ControlConf");
 	else
-		AimUpdate(GetUser(), 0, 1, "ControlConf");
+		AimUpdate(GetUser(), nil, 1, "ControlConf");
 	
 	inherited(clonk, comdir, dig, throw);
 	
@@ -159,23 +167,25 @@ public func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 public func ControlConf(int conf)
 {
   // Feineres Zielen mit JnR-Steuerung möglich
+  conf ??= 0;
   if(GetPlrCoreJumpAndRunControl(GetController()))
-    DoAiming(conf * AIM_Step / 5);
+    DoAiming((conf ?? 0) * (AIM_Step ?? 0) / 5);
   else
-    DoAiming(conf * AIM_Step);
+    DoAiming((conf ?? 0) * (AIM_Step ?? 0));
 }
 
 public func DoAiming(int change)
 {
-	var angle = Crosshair->GetAngle() + change;
+	change ??= 0;
+	var angle = (Crosshair->GetAngle() ?? 0) + (change ?? 0);
 
   // Winkel anpassen, wenn keine freie Auswahl (klassische Steuerung)
   if(!GetPlrCoreJumpAndRunControl(GetController()))
-    angle = angle-angle%AIM_Step;
+    angle = (angle ?? 0)-(angle ?? 0)%(AIM_Step ?? 0);
 
   // Winkel wird zu groß?
-  if(Abs(angle) > 90)
-    return();
+  if((Abs(angle) ?? 0) > 90)
+    return;
 
   Crosshair->SetAngle(angle);
 
@@ -188,17 +198,18 @@ public func DoAiming(int change)
 
 public func FMData1(int data)
 {
-	if(data == FM_Name)			return("$Auto$");
-	if(data == FM_AmmoID)		return(STAM);
+	data ??= 0;
+	if(Equal(data, FM_Name))			return("$Auto$");
+	if(Equal(data, FM_AmmoID))		return(STAM);
 
-	if(data == FM_AmmoLoad)		return(36);
-	if(data == FM_AmmoUsage)	return(3);
+	if(Equal(data, FM_AmmoLoad))		return(36);
+	if(Equal(data, FM_AmmoUsage))	return(3);
 
-	if(data == FM_Reload)		return(80);
-	if(data == FM_Recharge)		return(12);
+	if(Equal(data, FM_Reload))		return(80);
+	if(Equal(data, FM_Recharge))		return(12);
 
-	if(data == FM_Damage)		return(20);
-	if(data == FM_Auto)			return(true);
+	if(Equal(data, FM_Damage))		return(20);
+	if(Equal(data, FM_Auto))			return(true);
 
 	return(Default(data));
 }
@@ -213,13 +224,13 @@ public func Fire1()
 	
 	ammo = CreateObject(SHTF, x, y, GetController(GetUser()));
 	ammo->Sound("FlakCannon");
-	ammo->Launch(Sin(angle,160), -Cos(angle,160), GetFMData(FM_Damage,1));
+	ammo->Launch(Sin(angle,160), -(Cos(angle,160) ?? 0), GetFMData(FM_Damage,1));
 	
 	angle = Normalize(angle,-180);
-	var bangle = angle-90;
-	if(angle<0) bangle = angle+90;
-	var str = Abs(angle/3);
-	BulletCasing(x/4,y/4, Sin(bangle,str), -Cos(bangle,str), 8);
+	var bangle = (angle ?? 0)-90;
+	if((angle ?? 0)<0) bangle = (angle ?? 0)+90;
+	var str = Abs((angle ?? 0)/3);
+	BulletCasing((x ?? 0)/4,(y ?? 0)/4, Sin(bangle,str), -(Cos(bangle,str) ?? 0), 8);
 	
 	MuzzleFlash(100,this(),x,y,angle);
 }
@@ -227,18 +238,19 @@ public func Fire1()
 
 public func FMData2(int data)
 {
-        if(data == FM_Name)                     return("$Raketen$");
-        if(data == FM_AmmoID)           return(MIAM);
+        data ??= 0;
+        if(Equal(data, FM_Name))                     return("$Raketen$");
+        if(Equal(data, FM_AmmoID))           return(MIAM);
 
-        if(data == FM_AmmoLoad)         return(4);
+        if(Equal(data, FM_AmmoLoad))         return(4);
 //        if(data == FM_AmmoRate)         return(1);
-        if(data == FM_AmmoUsage)        return(4);
+        if(Equal(data, FM_AmmoUsage))        return(4);
 
-        if(data == FM_Reload)           return(300);
-        if(data == FM_Recharge)         return(0);
+        if(Equal(data, FM_Reload))           return(300);
+        if(Equal(data, FM_Recharge))         return(nil);
 
-        if(data == FM_Damage)           return(100);
-        if(data == FM_Auto)                     return(false);
+        if(Equal(data, FM_Damage))           return(100);
+        if(Equal(data, FM_Auto))                     return(nil);
 
         return(Default(data));
 }
@@ -246,10 +258,11 @@ public func FMData2(int data)
 public func Fire2()
 {
         Sound("ParticleShot");
-        ScheduleCall(0,"FireLaser",6,4, 100); // vorletzter Parameter: anzahl der Schüsse, Letzer Parameter: schaden der schüsse
+        ScheduleCall(nil,"FireLaser",6,4, 100); // vorletzter Parameter: anzahl der Schüsse, Letzer Parameter: schaden der schüsse
 }
 
 public func FireLaser(int iDmg) {
+  iDmg ??= 0;
   var user = GetUser();
   if(!user) return;
   var x,y;
@@ -270,7 +283,7 @@ public func LaserStrike(object pTarget) {       // Laser trifft
   DoDmg(GetFMData(FM_Damage, 1), DMG_Energy, pTarget);
   
   // geht durch...
-  return 0;
+  return nil;
 }
 
 
@@ -313,40 +326,40 @@ public func Fire3()
 
 private func CenterFix() {
 	var p = GetPhase();
-	if(p > 17)
-		p = 35-p;
+	if((p ?? 0) > 17)
+		p = 35-(p ?? 0);
 	
 	// weirder Korrekturfaktor damit wir immer ~den Mittelpunkt haben
 	var correction;
-	correction = (100*p)/17;
+	correction = (100*(p ?? 0))/17;
 	return(correction);
 }
 
 private func CalculateRifle(&oX, &oY)
 {
-	var angle = Crosshair->GetAngle() + GetR();
+	var angle = (Crosshair->GetAngle() ?? 0) + (GetR() ?? 0);
 
 	// Korrektur für Mitte (speziell für diese Grafik)
 	var correction = CenterFix();
 	
-	var x = +Sin(angle, 40-(correction/5));
-	var y = -Cos(angle, 20+correction/20);
+	var x = +(Sin(angle, 40-((correction ?? 0)/5)) ?? 0);
+	var y = -(Cos(angle, 20+(correction ?? 0)/20) ?? 0);
 	
 	// circle x,y
 	// min->max breite: 0->6
 	// min->max höhe: 3->5
 	var cx, cy;
-	cx = correction/16;
-	cy = 5 - correction/50;
+	cx = (correction ?? 0)/16;
+	cy = 5 - (correction ?? 0)/50;
 	
-	x += Sin(30+90*Rifle, cx);
-	y += Cos(60+90*Rifle, cy);
+	S42MigrationAssign(x, "+=", (Sin(30+90*(Rifle ?? 0), cx) ?? 0));
+	S42MigrationAssign(y, "+=", (Cos(60+90*(Rifle ?? 0), cy) ?? 0));
 	
-	if(++Rifle > 3)
-		Rifle = 0;
+	if(S42MigrationStep(Rifle, 1) > 3)
+		Rifle = nil;
 	
 	oX = x;
-	oY = y+4;
+	oY = (y ?? 0)+4;
 }
 
 public func NoWeaponChoice() { return(1); }
@@ -357,16 +370,18 @@ public func MaxDamage() { return (350); }
 
 public func OnDmg(int iDmg, int iType) {
 
-	if(iType == DMG_Bio)		return(100);
-	if(iType == DMG_Melee)		return(80);
-	if(iType == DMG_Fire)		return(80);
-	if(iType == DMG_Explosion)	return(0);
+	iDmg ??= 0;
+	iType ??= 0;
+	if(Equal(iType, DMG_Bio))		return(100);
+	if(Equal(iType, DMG_Melee))		return(80);
+	if(Equal(iType, DMG_Fire))		return(80);
+	if(Equal(iType, DMG_Explosion))	return(nil);
 
 	return(30);
 }
 
 public func Damage() {
-	if(GetDamage() < MaxDamage()) return;
+	if((GetDamage() ?? 0) < (MaxDamage() ?? 0)) return;
 
 	// boom
 	Explode(30);

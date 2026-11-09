@@ -1,11 +1,14 @@
 /*-- Spawnpoint --*/
 
-#strict
+#strict 3
 
 local initialized, angle, spawntimer, objs, nextobj, timer;
 
 global func PlaceBonusSpawnpoint(array ids, int iX, int iY, int timer)
 {
+  iX ??= 0;
+  iY ??= 0;
+  timer ??= 0;
   var spwn = CreateObject(BSPN, iX, iY, -1);
   spwn->AddBonusList(ids);
   if(timer)
@@ -23,17 +26,17 @@ public func AddBonusList(array ids)
 
 public func AddBonus(id idB)
 {
-  objs[GetLength(objs)] = idB;
+  objs[(GetLength(objs) ?? 0)] = idB;
 }
 
 public func RemoveBonus(id idB)
 {
   var newarray = CreateArray();
   for(var bon in objs)
-    if(bon != idB)
-      newarray[GetLength(newarray)] = bon;
+    if(!Equal(bon, idB))
+      newarray[(GetLength(newarray) ?? 0)] = bon;
   objs = newarray;
-  if(nextobj == idB)
+  if(Equal(nextobj, idB))
     GetRandomBonus();
 }
 
@@ -43,7 +46,7 @@ protected func Initialize()
 {
   // Standardtimer = 2500 Frames
   spawntimer = 2500;
-  SetClrModulation(RGBa(0,0,0,255));
+  SetClrModulation(RGBa(nil,nil,nil,255));
   objs = CreateArray();
 }
 
@@ -59,14 +62,14 @@ protected func Timer()
   if(!GetLength(objs))
     {
     // Nicht mehr initialisiert
-    initialized = false;
-    return();
+    initialized = nil;
+    return;
     }
   // Tolle Effekt starten
-  angle += 10;
-  if(angle >= 360) angle = 0;
-  SetObjDrawTransform(1000, 0,0,0, 1000, Sin(angle, 8)*1000 - 2000,0, 1);
-  if(Random(2)) CreateParticle("NoGravSpark", RandomX(-5,5), RandomX(5,10), 0, -5, 25, nextobj->~Color());
+  S42MigrationAssign(angle, "+=", 10);
+  if((angle ?? 0) >= 360) angle = nil;
+  SetObjDrawTransform(1000, nil,nil,nil, 1000, (Sin(angle, 8) ?? 0)*1000 - 2000,nil, 1);
+  if(Random(2)) CreateParticle("NoGravSpark", RandomX(-5,5), RandomX(5,10), nil, -5, 25, nextobj->~Color());
   // Timer runterzählen
   if(timer) DecreaseTimer();
 }
@@ -78,7 +81,7 @@ private func Initialized()
   // Unsichtbar werden
   SetAction("Invis");
   // Transformation
-  SetObjDrawTransform(1000, 0,0,0, 1000, -5000,0, 1);
+  SetObjDrawTransform(1000, nil,nil,nil, 1000, -5000,nil, 1);
   Local() = true;
   // Initialisiert
   initialized = true;
@@ -89,25 +92,25 @@ private func Initialized()
 private func DecreaseTimer()
 {
   // Timer runterzählen
-  timer -= 5;
-  if(timer <= 0)
+  S42MigrationAssign(timer, "-=", 5);
+  if((timer ?? 0) <= 0)
   {
     // Objekt ist wieder da
-    timer = 0;
+    timer = nil;
     Local() = true;
-    SetVisibility(VIS_All());
+    SetVisibility(VIS_All);
   }
 }
 
 public func RejectEntrance(object pClonk)
 {
   // Objekt ist ein Clonk?
-  if(!(GetOCF(pClonk) & OCF_CrewMember)) return(1);
+  if(!((GetOCF(pClonk) ?? 0) & (OCF_CrewMember ?? 0))) return(1);
   // Darf einsammeln
   if(Local())
   {
     if(nextobj->~Activate(pClonk)) {
-      Sound("Grab", 0, pClonk, 0, GetOwner(pClonk)+1);
+      Sound("Grab", nil, pClonk, nil, (GetOwner(pClonk) ?? 0)+1);
       Collected(GetOwner(pClonk));
     }
   }
@@ -117,11 +120,12 @@ public func RejectEntrance(object pClonk)
 private func Collected(int iPlr) // Regelt, dass ein Spieler das Objekt einsammelt
 {
   // Timer hochsetzen
+  iPlr ??= 0;
   timer = spawntimer;
   // Nicht mehr einsammelbar
-  Local() = false;
+  Local() = nil;
   // Nicht mehr sichtbar
-  SetVisibility(VIS_God());
+  SetVisibility(VIS_God);
   // Neuen Bonus auswählen
   GetRandomBonus();
 }
@@ -129,6 +133,6 @@ private func Collected(int iPlr) // Regelt, dass ein Spieler das Objekt einsamme
 private func GetRandomBonus()
 {
   // nextobj belegen
-  nextobj = objs[Random(GetLength(objs))];
-  SetGraphics(0, 0, nextobj, 1, 1);
+  nextobj = objs[(Random(GetLength(objs)) ?? 0)];
+  SetGraphics(nil, nil, nextobj, 1, 1);
 }

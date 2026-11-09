@@ -1,6 +1,6 @@
 /*-- T-Flint --*/
 
-#strict
+#strict 3
 
 public func ExplodeSize() {
   return(20);
@@ -12,7 +12,7 @@ protected func Hit() {
   Sound("Fuse");
   SetAction("Activated");
   // Picture anpassen
-  SetPicture(0, 12 + 64, 64, 64);
+  SetPicture(nil, 12 + 64, 64, 64);
   return(1);
 }
 
@@ -23,20 +23,20 @@ public func Activate()
  Sound("Fuse");
  SetAction("Activated");
  // Picture anpassen
- SetPicture(0, 12 + 64, 64, 64);
+ SetPicture(nil, 12 + 64, 64, 64);
  return(1);
 }
 
 private func BlowUp() {
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))
   Explode(ExplodeSize());
- else FakeExplode(ExplodeSize(),0,0,ExplodeSize());
+ else FakeExplode(ExplodeSize(),nil,nil,ExplodeSize());
   return(1);
 }                   
                     
 public func MagicExtinguish() {
   // kann durch Zauber "Löschen" gelöscht werden
-  if(GetAction() ne "Activated") return(0);
+  if(!SEqual(GetAction(), "Activated")) return(nil);
   DoExtinguish();
   return(1);
 }
@@ -45,7 +45,7 @@ private func DoExtinguish() {
   Sound("Pshshsh");
   SetAction("Idle");  
   // Picture zurücksetzen
-  SetPicture(0, 12, 64, 64);
+  SetPicture(nil, 12, 64, 64);
 }
 
 /* Produkteigenschaften */

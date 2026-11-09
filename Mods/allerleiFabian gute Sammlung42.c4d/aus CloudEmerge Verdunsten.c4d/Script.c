@@ -1,11 +1,12 @@
 /*-- Verdunsten --*/
 
-#strict
+#strict 3
 
-protected Initialize:
+protected func Initialize(...) {
   // Eigene Position festlegen
   SetPosition();
   return(1);
+}
 
 func IsVariabelChooseable2() {return(1);}
 
@@ -15,15 +16,15 @@ func DoClouds()
 var temperaturaktuell;
 temperaturaktuell=GetTemperature();
   // wenn tag und zwischen 10 - 30°C,  leichtes verdunsten
-  if(temperaturaktuell>19 && temperaturaktuell<60 && !(IsNight()))  
+  if(And(And((temperaturaktuell ?? 0)>19, (temperaturaktuell ?? 0)<60), !(IsNight())))
   {Verdunsten(1); return(1);}
 
   // wenn tag und zwischen 30 - 40°C,  normales verdunsten
-  if(temperaturaktuell>59 && temperaturaktuell<80 && !(IsNight()))  
+  if(And(And((temperaturaktuell ?? 0)>59, (temperaturaktuell ?? 0)<80), !(IsNight())))
   {Verdunsten(2); return(1);}
 
   // wenn tag und über 40°C, starkes verdunsten
-  if(temperaturaktuell>80 && !(IsNight()))  
+  if(And((temperaturaktuell ?? 0)>80, !(IsNight())))
   {Verdunsten();return(1);}
 
   return(1);
@@ -33,59 +34,59 @@ temperaturaktuell=GetTemperature();
 func Verdunsten(izahl)
 {
  if (HashGet(hashSpielRegeln, "Verdunstennormal")) // kann auch 0 sein
- if(izahl==1 && !Random(HashGet(hashSpielRegeln, "Verdunstennormal"))) // z.b mit Chance 1/6 gehts weiter
+ if(And(Equal(izahl, 1), !Random(HashGet(hashSpielRegeln, "Verdunstennormal")))) // z.b mit Chance 1/6 gehts weiter
       {var i;
-  for(i=LandscapeWidth()/320;i>0;i--)
+  for(i=(LandscapeWidth() ?? 0)/320;(i ?? 0)>0;S42MigrationStep(i, -1, true))
   {
-      Var(0)=Random(LandscapeWidth());
+      Var(nil)=Random(LandscapeWidth());
       // Horizont ermitteln
-      while ( Var(1)<LandscapeHeight() && !GBackSemiSolid(Var(0),Var(1)) )
-        Var(1)+=10;
-      while ( Var(1)>0 && GBackSemiSolid(Var(0),Var(1)) )
-        --Var(1);
-      Var(1)++;
+      while ( And((Var(1) ?? 0)<(LandscapeHeight() ?? 0), !GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationAssign(Var(1), "+=", 10);
+      while ( And((Var(1) ?? 0)>0, GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationStep(Var(1), -1);
+      S42MigrationStep(Var(1), 1, true);
       // Wasser? verdunsten
-      if(GetMaterial(Var(0),Var(1)) == Material("Water"))
+      if(Equal(GetMaterial(Var(nil),Var(1)), Material("Water")))
       {
-        ExtractLiquid(Var(0),Var(1));
+        ExtractLiquid(Var(nil),Var(1));
       }
   }
     }
  if (HashGet(hashSpielRegeln, "Verdunstenwarm")) // kann auch 0 sein
- if(izahl==2 && !Random(HashGet(hashSpielRegeln, "Verdunstenwarm")))
+ if(And(Equal(izahl, 2), !Random(HashGet(hashSpielRegeln, "Verdunstenwarm"))))
       {var i;
-  for(i=LandscapeWidth()/320;i>0;i--)
+  for(i=(LandscapeWidth() ?? 0)/320;(i ?? 0)>0;S42MigrationStep(i, -1, true))
   {
-      Var(0)=Random(LandscapeWidth());
+      Var(nil)=Random(LandscapeWidth());
       // Horizont ermitteln
-      while ( Var(1)<LandscapeHeight() && !GBackSemiSolid(Var(0),Var(1)) )
-        Var(1)+=10;
-      while ( Var(1)>0 && GBackSemiSolid(Var(0),Var(1)) )
-        --Var(1);
-      Var(1)++;
+      while ( And((Var(1) ?? 0)<(LandscapeHeight() ?? 0), !GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationAssign(Var(1), "+=", 10);
+      while ( And((Var(1) ?? 0)>0, GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationStep(Var(1), -1);
+      S42MigrationStep(Var(1), 1, true);
       // Wasser? verdunsten
-      if(GetMaterial(Var(0),Var(1)) == Material("Water"))
+      if(Equal(GetMaterial(Var(nil),Var(1)), Material("Water")))
       {
-        ExtractLiquid(Var(0),Var(1));
+        ExtractLiquid(Var(nil),Var(1));
       }
   }
     }
  if (HashGet(hashSpielRegeln, "Verdunstenheiß")) // kann auch 0 sein
- if(!izahl && !Random(HashGet(hashSpielRegeln, "Verdunstenheiß"))) 
+ if(And(!izahl, !Random(HashGet(hashSpielRegeln, "Verdunstenheiß"))))
     {var i;
-  for(i=LandscapeWidth()/320;i>0;i--)
+  for(i=(LandscapeWidth() ?? 0)/320;(i ?? 0)>0;S42MigrationStep(i, -1, true))
   {
-      Var(0)=Random(LandscapeWidth());
+      Var(nil)=Random(LandscapeWidth());
       // Horizont ermitteln
-      while ( Var(1)<LandscapeHeight() && !GBackSemiSolid(Var(0),Var(1)) )
-        Var(1)+=10;
-      while ( Var(1)>0 && GBackSemiSolid(Var(0),Var(1)) )
-        --Var(1);
-      Var(1)++;
+      while ( And((Var(1) ?? 0)<(LandscapeHeight() ?? 0), !GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationAssign(Var(1), "+=", 10);
+      while ( And((Var(1) ?? 0)>0, GBackSemiSolid(Var(nil),Var(1))) )
+        S42MigrationStep(Var(1), -1);
+      S42MigrationStep(Var(1), 1, true);
       // Wasser? verdunsten
-      if(GetMaterial(Var(0),Var(1)) == Material("Water"))
+      if(Equal(GetMaterial(Var(nil),Var(1)), Material("Water")))
       {
-        ExtractLiquid(Var(0),Var(1));
+        ExtractLiquid(Var(nil),Var(1));
       }
   }
     }

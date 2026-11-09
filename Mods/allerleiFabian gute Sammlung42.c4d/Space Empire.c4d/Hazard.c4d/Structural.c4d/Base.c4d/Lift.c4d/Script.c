@@ -1,6 +1,6 @@
 /*-- Lift --*/
 
-#strict
+#strict 3
 
 // Lokale Variable: Feuerfarbe :')
 local UpperY, LowerY, WaitComDir, WaitY;
@@ -9,7 +9,7 @@ local rgb;
 protected func Initialize()
 {
   AddEffect("Sparks", this(), 1, 4, this());
-  rgb=RGB(40+Random(120), 40+Random(120), 40+Random(120));
+  rgb=RGB(40+(Random(120) ?? 0), 40+(Random(120) ?? 0), 40+(Random(120) ?? 0));
   SetAction("Travel");
   UpdateTransferZone();
   return(1);
@@ -18,32 +18,34 @@ protected func Initialize()
 public func FxSparksTimer(target, number, time)
 {
 	// Funken! :D
-	CreateParticle("PSpark", 0, -20, RandomX(-1,1), RandomX(-1,1)-GetYDir()/4, 50+Random(80), rgb, this(), true);
-	CreateParticle("PSpark", 0, +20, RandomX(-1,1), RandomX(-1,1)-GetYDir()/4, 50+Random(80), rgb, this(), true);
+	CreateParticle("PSpark", nil, -20, RandomX(-1,1), (RandomX(-1,1) ?? 0)-(GetYDir() ?? 0)/4, 50+(Random(80) ?? 0), rgb, this(), true);
+	CreateParticle("PSpark", nil, +20, RandomX(-1,1), (RandomX(-1,1) ?? 0)-(GetYDir() ?? 0)/4, 50+(Random(80) ?? 0), rgb, this(), true);
 }
 
 func FlareUp()
 {
-	for(var i=3; i>0; --i)
-		CreateParticle("PSpark", 0, -20, RandomX(-4,4), RandomX(-2,-4), 130+Random(80), rgb, this(), true);
+	for(var i=3; (i ?? 0)>0; S42MigrationStep(i, -1))
+		CreateParticle("PSpark", nil, -20, RandomX(-4,4), RandomX(-2,-4), 130+(Random(80) ?? 0), rgb, this(), true);
 }
 
 func FlareDown()
 {
-	for(var i=3; i>0; --i)
-		CreateParticle("PSpark", 0, +20, RandomX(-4,4), RandomX(2,4), 130+Random(80), rgb, this(), true);
+	for(var i=3; (i ?? 0)>0; S42MigrationStep(i, -1))
+		CreateParticle("PSpark", nil, +20, RandomX(-4,4), RandomX(2,4), 130+(Random(80) ?? 0), rgb, this(), true);
 }
 
 /* Steuerung */
 
 public func ControlCommand (string command, object target, int x, int y) {
   // Bewegungskommando vertikal
-  if (command eq "MoveTo") {
-    if (Inside(x - GetX(),-16,+16)) {
-      if (y < GetY())
-        return(SetComDir(COMD_Up()));
-      if (y > GetY())
-        return(SetComDir(COMD_Down()));
+  x ??= 0;
+  y ??= 0;
+  if (!!SEqual(command, "MoveTo")) {
+    if (Inside((x ?? 0) - (GetX() ?? 0),-16,+16)) {
+      if ((y ?? 0) < (GetY() ?? 0))
+        return(SetComDir(COMD_Up));
+      if ((y ?? 0) > (GetY() ?? 0))
+        return(SetComDir(COMD_Down));
     }
   }
   // Andere Kommandos nicht auswerten
@@ -52,16 +54,19 @@ public func ControlCommand (string command, object target, int x, int y) {
 public func ControlUpdate(object caller, int comdir, bool dig, bool throw)
 {
   // Remove horizontal Comdir component
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   if(ComDirLike(comdir, COMD_Right)) comdir = ComDirTransform(comdir, COMD_Left);
   if(ComDirLike(comdir, COMD_Left)) comdir = ComDirTransform(comdir, COMD_Right);
 
-  if(comdir != GetComDir())
+  if(!Equal(comdir, GetComDir()))
     Sound("Click");
 
   // Clear X/Y-Dir
-  SetXDir(0);
-  if(!ComDirLike(comdir, COMD_Up) && !ComDirLike(comdir, COMD_Down))
-    SetYDir(0);
+  SetXDir(nil);
+  if(And(!ComDirLike(comdir, COMD_Up), !ComDirLike(comdir, COMD_Down)))
+    SetYDir(nil);
 
   // Ab geth.
   SetComDir(comdir);
@@ -73,8 +78,8 @@ public func ControlUp (object caller) {
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
   {
     Sound("Click");
-    SetComDir(COMD_Up());
-    SetXDir(0);
+    SetComDir(COMD_Up);
+    SetXDir(nil);
     SetAction("Travel");
   }
   return(1);
@@ -84,8 +89,8 @@ public func ControlDownSingle (object caller) {
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
   {
     Sound("Click");
-    SetComDir(COMD_Down());
-    SetXDir(0);
+    SetComDir(COMD_Down);
+    SetXDir(nil);
     SetAction("Travel");
   }
   return(1);
@@ -95,8 +100,8 @@ public func ControlLeft (object caller) {
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
   {
     Sound("Click");
-    SetComDir(COMD_Stop());
-    SetYDir(0);
+    SetComDir(COMD_Stop);
+    SetYDir(nil);
     SetAction("Travel");
   }
   return(1);
@@ -106,8 +111,8 @@ public func ControlRight (object caller) {
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
   {
     Sound("Click");
-    SetComDir(COMD_Stop());
-    SetYDir(0);
+    SetComDir(COMD_Stop);
+    SetYDir(nil);
     SetAction("Travel");
   }
   return(1);
@@ -144,13 +149,13 @@ public func ControlLeftReleased (object caller) {
 /* Kontakt */
 
 protected func ContactTop () {
-  Wait(COMD_Down());
+  Wait(COMD_Down);
   return(1);
 }
 
 protected func ContactBottom () {
   UnstuckClonks();
-  Wait(COMD_Up());
+  Wait(COMD_Up);
   return(1);
 }
 
@@ -165,6 +170,7 @@ protected func ContactRight () {
 }
 
 public func SetYTop (int iNewTop) {
+  iNewTop ??= 0;
   return(UpperY = iNewTop);
 }
   
@@ -176,12 +182,13 @@ private func YTop () {
 
 private func Stop () {
   SetAction("Travel");
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetSpeed();
   return(1);
 }
 
 private func Wait (int iComDir) {
+  iComDir ??= 0;
   Stop();
   // Aktion Wait ruft als EndCall ResumeTravel auf
   SetAction("Wait"); 
@@ -198,55 +205,55 @@ private func ResumeTravel () { // EndCall von Aktion Wait
 
 private func Automatic () { // EndCall von Aktion Travel
   // Keine Automatik, wenn ein Clonk mitfährt
-  if (Passenger()) return(0); 
+  if (Passenger()) return(nil);
   // Zu einem wartenden Clonk hinfahren
   if (SpeedToVertical()) return(1);
   // Eigenständige Bewegung beginnen
   if (SelfTravel()) return(1);
-  return(0);
+  return(nil);
 }
 
 private func SelfTravel () {
   // Nur wenn angehalten
-  if (GetComDir() != COMD_Stop()) return(0);
+  if (!Equal(GetComDir(), COMD_Stop)) return(nil);
   // Eigenständige Bewegung je nach zugelassener Richtung beginnen
-  SetComDir(COMD_Up());
+  SetComDir(COMD_Up);
   return(1);
 }
 
 private func SpeedToVertical () {
   var WaitClonk;
-  if(!(WaitClonk=FindObject(0, -50,-1000,100,2000, OCF_CrewMember(),0,0,NoContainer()))) return();
-  if(Inside(WaitClonk->GetX(), GetX() - 12, GetX() + 12))
-    if(Inside(WaitClonk->GetY(), GetY() - 40, GetY() - 20))
-      return();
-  if (GetComDir(WaitClonk) != COMD_Stop()) return();
-  if(!Inside(GetY(WaitClonk), UpperY-50, LowerY+50)) return();
+  if(!(WaitClonk=FindObject(nil, -50,-1000,100,2000, OCF_CrewMember,nil,nil,NoContainer()))) return;
+  if(Inside(WaitClonk->GetX(), (GetX() ?? 0) - 12, (GetX() ?? 0) + 12))
+    if(Inside(WaitClonk->GetY(), (GetY() ?? 0) - 40, (GetY() ?? 0) - 20))
+      return;
+  if (!Equal(GetComDir(WaitClonk), COMD_Stop)) return;
+  if(!Inside(GetY(WaitClonk), (UpperY ?? 0)-50, (LowerY ?? 0)+50)) return;
   SetAction("SpeedToY");
-  WaitY = Max(GetY(WaitClonk), YTop()-10);
+  WaitY = Max(GetY(WaitClonk), (YTop() ?? 0)-10);
   return(1);
 }
 
 /* Aktion */
 
 private func CheckYTop () { // PhaseCall von Travel
-  if (GetY() > YTop()-10) return(0);
-  SetPosition(GetX(), YTop()-10);
+  if ((GetY() ?? 0) > (YTop() ?? 0)-10) return(nil);
+  SetPosition(GetX(), (YTop() ?? 0)-10);
   ContactTop();
   return(1);
 }
 
 private func SpeedToY () { // StartCall von SpeedToY
-  SetYDir(BoundBy(WaitY - GetY(), -50, 50));
-  if (Inside(WaitY-GetY(),-4,+2)) return(Stop());
-  if(GetYDir() < 0) FlareDown();
+  SetYDir(BoundBy((WaitY ?? 0) - (GetY() ?? 0), -50, 50));
+  if (Inside((WaitY ?? 0)-(GetY() ?? 0),-4,+2)) return(Stop());
+  if((GetYDir() ?? 0) < 0) FlareDown();
   else FlareUp();
   return(1);
 }
 
 private func UnstuckClonks () { // Sucht Clonks in der SolidMask und setzt sie auf die Platte
   var pClonk;
-  while(pClonk = FindObject(0,-25,0,50,25, OCF_CrewMember, 0,0, NoContainer(), pClonk))
+  while(pClonk = FindObject(nil,-25,nil,50,25, OCF_CrewMember, nil,nil, NoContainer(), pClonk))
     if(Stuck(pClonk))
       SetPosition(GetX(pClonk), GetY(), pClonk);
 }
@@ -254,7 +261,7 @@ private func UnstuckClonks () { // Sucht Clonks in der SolidMask und setzt sie a
 /* Status */
 
 private func Passenger () {
-  return( FindObject(0, -24,-13,48,16, OCF_CrewMember(),0,0,NoContainer()) );
+  return( FindObject(nil, -24,-13,48,16, OCF_CrewMember,nil,nil,NoContainer()) );
 }
 
 /* Transfer */
@@ -262,56 +269,58 @@ private func Passenger () {
 protected func UpdateTransferZone () {
   // Obergrenze ermitteln
   var y1 = -20, y2 = +20;
-  while(GetY() + y1 > 5 && !GBackSolid(0, y1))
-    y1-=5;
+  while(And((GetY() ?? 0) + (y1 ?? 0) > 5, !GBackSolid(nil, y1)))
+    S42MigrationAssign(y1, "-=", 5);
   // Untergrenze ermitteln
-  while(GetY() + y2 < LandscapeHeight()-5 && !GBackSolid(0, y2+15))
-    y2+=5;
+  while(And((GetY() ?? 0) + (y2 ?? 0) < (LandscapeHeight() ?? 0)-5, !GBackSolid(nil, (y2 ?? 0)+15)))
+    S42MigrationAssign(y2, "+=", 5);
   // Transferzone setzen
-  SetTransferZone(-23,y1,48,y2-y1 +10);
+  SetTransferZone(-23,y1,48,(y2 ?? 0)-(y1 ?? 0) +10);
   // Ober- und Untergrenze speichern
-  UpperY = GetY() + y1;
-  LowerY = GetY() + y2;
+  UpperY = (GetY() ?? 0) + (y1 ?? 0);
+  LowerY = (GetY() ?? 0) + (y2 ?? 0);
   return(1);
 }
 
 protected func ControlTransfer (object pObj, int iX, int iY) {
   // Durchgang am Boden des Fahrstuhlschachts: nicht warten
-  if(Inside(GetY(pObj) - LowerY, -10, +10))
-    if(Inside(iY - LowerY, -10, +10))
-      return();
+  iX ??= 0;
+  iY ??= 0;
+  if(Inside((GetY(pObj) ?? 0) - (LowerY ?? 0), -10, +10))
+    if(Inside((iY ?? 0) - (LowerY ?? 0), -10, +10))
+      return;
 
   // Zielposition
   // Maximale Obergrenze
   iY = Max(iY, UpperY);
 
   // Fahrstuhl mit Clonk an Zielposition: anhalten, erledigt
-  if(Inside(iY - GetY(), -5, +5))
+  if(Inside((iY ?? 0) - (GetY() ?? 0), -5, +5))
     if(Passenger())
-      return(0,Stop());
+      return(S42MigrationFirst(nil,Stop()));
 
   // Fahrstuhl noch nicht beim Clonk: warten
-  if(!Inside(GetY() - GetY(pObj) -15, +15))
+  if(!Inside((GetY() ?? 0) - (GetY(pObj) ?? 0) -15, +15))
     return(1);
 
   // Fahrstuhl nur in der Mitte anfassen
-  if(!Inside(GetX() - GetX(pObj), -15, +15))
-    return(AddCommand(pObj,"MoveTo",this(),0,0,0,15));
+  if(!Inside((GetX() ?? 0) - (GetX(pObj) ?? 0), -15, +15))
+    return(AddCommand(pObj,"MoveTo",this(),nil,nil,nil,15));
 
   // Fahrstuhl anfassen
-  if(GetAction(pObj) ne "Push" || GetActionTarget(0, pObj) != this())
+  if(Or(!SEqual(GetAction(pObj), "Push"), !Equal(GetActionTarget(nil, pObj), this())))
     return(AddCommand(pObj,"Grab",this()));
 
   // Fahrstuhl zur Zielposition steuern
-  if(iY < GetY())
-    return(SetComDir(COMD_Up()));  
-  return(SetComDir(COMD_Down()));
+  if((iY ?? 0) < (GetY() ?? 0))
+    return(SetComDir(COMD_Up));
+  return(SetComDir(COMD_Down));
 }
 
 /* Serialisierung */
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("SetYTop(%d)", UpperY);
-	extra[GetLength(extra)] = Format("LocalN(\"rgb\")=%d", rgb);
+	extra[(GetLength(extra) ?? 0)] = Format("SetYTop(%d)", UpperY);
+	extra[(GetLength(extra) ?? 0)] = Format("LocalN(\"rgb\")=%d", rgb);
 }

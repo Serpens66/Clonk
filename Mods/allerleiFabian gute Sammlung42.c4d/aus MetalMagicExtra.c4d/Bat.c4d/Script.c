@@ -1,11 +1,11 @@
 /*-- Fledermaus --*/
 
-#strict 2
+#strict 3
 
 public func IsPossessible() { return 1; }
 public func IsThreat() {return(true);}
 
-public func SearchRange() { if(GetAction()=="Hang") return(50); return(150); }
+public func SearchRange() { if(S42MigrationEqual(GetAction(), "Hang")) return(50); return(150); }
 
 local pTarget;
 local pMaster;
@@ -50,7 +50,7 @@ protected func Activity()
   // Nur wenn noch lebt
   if(!GetAlive()) return;
   // Ger‰usche machen
-  if (GetAction()=="Fly") Sound("BatFly*");
+  if (S42MigrationEqual(GetAction(), "Fly")) Sound("BatFly*");
 
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
   if (GetEffect("PossessionSpell", this)) return;
@@ -58,50 +58,50 @@ protected func Activity()
   // Gegner suchen
   if(!pTarget && !GetCommand())
   {
-    if(GetOwner()==-1) pTarget = FindObject2(Find_Distance(SearchRange()), Find_OCF(OCF_CrewMember | OCF_Prey), Find_NoContainer());
-    else pTarget = FindObject2(Find_Distance(SearchRange()), Find_Hostile(GetOwner()), Find_OCF(OCF_CrewMember | OCF_Prey), Find_NoContainer());//FindObject(0, -SearchRange(), -SearchRange(), SearchRange()*2, SearchRange()*2, OCF_CrewMember | OCF_Prey, 0, 0, NoContainer());
-    if(pTarget) if(GetAction()=="Hang") SetAction("Fly");
+    if(S42MigrationEqual(GetOwner(), -1)) pTarget = FindObject2(Find_Distance(SearchRange()), Find_OCF((OCF_CrewMember ?? 0) | (OCF_Prey ?? 0)), Find_NoContainer());
+    else pTarget = FindObject2(Find_Distance(SearchRange()), Find_Hostile(GetOwner()), Find_OCF((OCF_CrewMember ?? 0) | (OCF_Prey ?? 0)), Find_NoContainer());//FindObject(0, -SearchRange(), -SearchRange(), SearchRange()*2, SearchRange()*2, OCF_CrewMember | OCF_Prey, 0, 0, NoContainer());
+    if(pTarget) if(S42MigrationEqual(GetAction(), "Hang")) SetAction("Fly");
   }
   
   // Beute am Maul beiﬂen
   if (Attack()) return;
   
   // Angreifen
-  if(!pMaster || ObjectDistance(pMaster)<300 || OnFire())
+  if(!pMaster || (ObjectDistance(pMaster) ?? 0)<300 || OnFire())
   if(pTarget)
   {
     // Wenn Gegner im Haus, tot oder zu weit weg abbrechen    
-    if(Contained(pTarget)) { SetCommand(this, "None"); return pTarget=0; }   
-    if(!GetAlive(pTarget)) { SetCommand(this, "None"); return pTarget=0; }
-    if(ObjectDistance(pTarget)>SearchRange()) { SetCommand(this, "None"); return pTarget=0; }
+    if(Contained(pTarget)) { SetCommand(this, "None"); return pTarget=nil; }
+    if(!GetAlive(pTarget)) { SetCommand(this, "None"); return pTarget=nil; }
+    if((ObjectDistance(pTarget) ?? 0)>(SearchRange() ?? 0)) { SetCommand(this, "None"); return pTarget=nil; }
     // sonst zum Gegner fliegen
-    var iFromSide = +1; if (GetX(pTarget)>GetX()) iFromSide = -1;
-    SetCommand(this, "MoveTo", 0, GetX(pTarget) + 13 * iFromSide, GetY(pTarget));
-    if(iFromSide>0 && GetDir()) TurnLeft();
-    if(iFromSide<0 && !GetDir()) TurnRight();
+    var iFromSide = +1; if ((GetX(pTarget) ?? 0)>(GetX() ?? 0)) iFromSide = -1;
+    SetCommand(this, "MoveTo", nil, (GetX(pTarget) ?? 0) + 13 * (iFromSide ?? 0), GetY(pTarget));
+    if((iFromSide ?? 0)>0 && GetDir()) TurnLeft();
+    if((iFromSide ?? 0)<0 && !GetDir()) TurnRight();
     return;
   }
   if(pMaster && !OnFire())
   {
-    if(!GetAlive(pMaster)) return pMaster = 0;
-    if(ObjectDistance(pMaster)>150)
+    if(!GetAlive(pMaster)) return pMaster = nil;
+    if((ObjectDistance(pMaster) ?? 0)>150)
     {
-      CastParticles("PxSpark", 10,20,0,0,50,80,RGB(100,0,200), RGB(100,0,200));
+      CastParticles("PxSpark", 10,20,nil,nil,50,80,RGB(100,nil,200), RGB(100,nil,200));
       SetPosition(GetX(pMaster), GetY(pMaster));
-      CastParticles("PxSpark", 10,20,0,0,50,80,RGB(100,0,200), RGB(100,0,200));
+      CastParticles("PxSpark", 10,20,nil,nil,50,80,RGB(100,nil,200), RGB(100,nil,200));
     }
     // zum Meister fliegen
-    var iFromSide = +1; if (GetX(pMaster)>GetX()) iFromSide = -1;
-    SetCommand(this, "MoveTo", 0, GetX(pMaster), GetY(pMaster));
-    if(iFromSide>0 && GetDir()) TurnLeft();
-    if(iFromSide<0 && !GetDir()) TurnRight();
+    var iFromSide = +1; if ((GetX(pMaster) ?? 0)>(GetX() ?? 0)) iFromSide = -1;
+    SetCommand(this, "MoveTo", nil, GetX(pMaster), GetY(pMaster));
+    if((iFromSide ?? 0)>0 && GetDir()) TurnLeft();
+    if((iFromSide ?? 0)<0 && !GetDir()) TurnRight();
     return;
   }
 
-  if(GetAction()=="Hang" && GetActTime()>35*30) if(!Random(100)) SetAction("Fly");
+  if(S42MigrationEqual(GetAction(), "Hang") && (GetActTime() ?? 0)>35*30) if(!Random(100)) SetAction("Fly");
   
   // Nichts machen
-  if (Random(2) || GetAction() != "Fly") return 1;
+  if (Random(2) || !S42MigrationEqual(GetAction(), "Fly")) return 1;
 
   // Nach oben oder unten fliegen
   SetComDir(COMD_Up);
@@ -124,12 +124,12 @@ protected func HitCheck()
 public func Attack(object pAttack)
 {
   // W‰hrend des Fliegens kann alle 2 Sekunden einmal gebissen werden
-  if (GetEffect("IntAttackDelay", this) || GetAction() != "Fly") return;
+  if (GetEffect("IntAttackDelay", this) || !S42MigrationEqual(GetAction(), "Fly")) return;
 
   // Beute suchen
   var aEnemy = Find_Not(Find_Owner(-1));
-  if(GetOwner()>=0) aEnemy = Find_Hostile(GetOwner());
-  pAttack = FindObject2(Find_AtPoint(-10+20*GetDir()), Find_OCF(OCF_Prey), Find_NoContainer(), aEnemy);
+  if((GetOwner() ?? 0)>=0) aEnemy = Find_Hostile(GetOwner());
+  pAttack = FindObject2(Find_AtPoint(-10+20*(GetDir() ?? 0)), Find_OCF(OCF_Prey), Find_NoContainer(), aEnemy);
 
   if (!pAttack) return;
 
@@ -137,7 +137,7 @@ public func Attack(object pAttack)
   {
     // Schaden machen und schleudern      
     Punch(pAttack);
-    if(GetX(pAttack) < GetX(this))
+    if((GetX(pAttack) ?? 0) < (GetX(this) ?? 0))
       Fling(pAttack, -1, -1);
     else
       Fling(pAttack, 1, -1);
@@ -156,7 +156,7 @@ protected func Survive()
   if (GetEffect("PossessionSpell", this)) return;
 
   // Nicht in Fl¸ssigkeiten oder brennende Objekte fliegen
-  if (InLiquid() || GBackLiquid(GetXDir()*2, GetYDir()*2) || GBackLiquid(GetXDir()*3, GetYDir()*3) || FindObject(0, -20 + GetXDir() * 2, -20 + GetYDir() * 2, 40, 40, OCF_OnFire))
+  if (InLiquid() || GBackLiquid((GetXDir() ?? 0)*2, (GetYDir() ?? 0)*2) || GBackLiquid((GetXDir() ?? 0)*3, (GetYDir() ?? 0)*3) || FindObject(nil, -20 + (GetXDir() ?? 0) * 2, -20 + (GetYDir() ?? 0) * 2, 40, 40, OCF_OnFire))
    SetComDir(COMD_Up);
 }
 
@@ -208,8 +208,8 @@ protected func ContactBottom()
 
 public func TurnRight()
 {
-  if (Stuck() || GetAction() != "Fly") return;
-  if (GetXDir() < 0) SetXDir(0);
+  if (Stuck() || !S42MigrationEqual(GetAction(), "Fly")) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
   SetDir(DIR_Right);
   SetComDir(COMD_Right); 
   return 1;
@@ -217,8 +217,8 @@ public func TurnRight()
 
 public func TurnLeft()
 {
-  if (Stuck() || GetAction() != "Fly") return;
-  if (GetXDir() > 0) SetXDir(0);
+  if (Stuck() || !S42MigrationEqual(GetAction(), "Fly")) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
   SetDir(DIR_Left);
   SetComDir(COMD_Left); 
   return 1;
@@ -238,9 +238,9 @@ protected func CatchBlow(iLevel, pObject)
 protected func ControlCommand(szCommand, pTarget, iTx, iTy)
 {
  // Bewegungskommando
- if (szCommand == "MoveTo")
+ if (S42MigrationEqual(szCommand, "MoveTo"))
   return SetCommand(this,szCommand, pTarget, iTx, iTy);
- return 0;
+ return nil;
 }
 
 protected func ContainedLeft()
@@ -271,7 +271,7 @@ protected func ContainedDown()
 {
  [$TxtMovement$]
  SetCommand(this, "None");
- if(GetAction()=="Hang") SetAction("Fly");
+ if(S42MigrationEqual(GetAction(), "Hang")) SetAction("Fly");
  SetComDir(COMD_Down);
  return 1;
 }
@@ -302,9 +302,9 @@ public func Summoned(pClonk)
 
 public func CreateBat()
 {
-  var pBat = CreateObject(BAT1, 0, 0, GetOwner());
+  var pBat = CreateObject(BAT1, nil, nil, GetOwner());
   LocalN("pMaster", pBat) = pMaster;
-  AddEffect("FriendProtection",pBat,20,0,pBat);
+  AddEffect("FriendProtection",pBat,20,nil,pBat);
 }
 
 /* Schutz vor Freunden */
@@ -319,9 +319,9 @@ public func FxFriendProtectionDamage(pTarget,iEffectNumber,iDmgEngy,iCause,iPlr)
  if(GetPlayerName(iPlr))
    if(!Hostile(iPlr,GetOwner(pTarget)))
    {
-    if(iCause == 35) { Extinguish(pTarget); return; }
-    if(iDmgEngy > 0) return iDmgEngy;
-    return 0;
+    if(S42MigrationEqual(iCause, 35)) { Extinguish(pTarget); return; }
+    if((iDmgEngy ?? 0) > 0) return iDmgEngy;
+    return nil;
    }
  
  return iDmgEngy;

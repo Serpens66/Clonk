@@ -1,9 +1,9 @@
 /*-- Vogel --*/
 
-#strict
+#strict 3
 /*-- Vogel --*/
 
-#strict
+#strict 3
 
 #include ANIM
 
@@ -13,15 +13,15 @@ local pNest;
 private func ReproductionRate()     { return(2000); }  // Die Chance, dass in einem Timerintervall eine Vermehrung stattfindet
 
 
-public func IsPossessible() { return(0); }
+public func IsPossessible() { return(nil); }
 
 /* Initialisierung */
 
 protected func Initialize()
 {
   SetAction("Fly");
-  if (Random(2)) return(SetComDir(COMD_Right()));
-  return(SetComDir(COMD_Left()));
+  if (Random(2)) return(SetComDir(COMD_Right));
+  return(SetComDir(COMD_Left));
 }
 
 
@@ -29,9 +29,9 @@ protected func Initialize()
 // Nur im Fliegen
 private func SpecialReprodCond()
 {	
-  if(Contained()) return();
-  if(GetCommand()) return();
-  return(GetAction()S="Fly");
+  if(Contained()) return;
+  if(GetCommand()) return;
+  return(!!SEqual(GetAction(), "Fly"));
 }
 
 private func SpecialRepr()
@@ -39,9 +39,9 @@ private func SpecialRepr()
 //  if(FindContents(BIRD)) return(1);
 	
   // Wenn das Nest nicht mehr am Baum hängt wird es verworfen
-  if(pNest) if(GetAction(pNest) ne "Be") pNest = 0;
+  if(pNest) if(!SEqual(GetAction(pNest), "Be")) pNest = nil;
   // oder wenn das Nest geflutet wurde
-  if(pNest) if(GBackSemiSolid(GetX(pNest)-GetX(), GetY(pNest)-GetY())) pNest = 0;
+  if(pNest) if(GBackSemiSolid((GetX(pNest) ?? 0)-(GetX() ?? 0), (GetY(pNest) ?? 0)-(GetY() ?? 0))) pNest = nil;
 
   // Kein Nest da? Dann schnell eines bauenn
   if(!pNest)
@@ -50,9 +50,9 @@ private func SpecialRepr()
     if(pTree)
     {
       var id = GetID(pTree);	    
-      SetCommand(this(), "Call", this(), pTree, 0, 0, "BuildNest");
+      SetCommand(this(), "Call", this(), pTree, nil, nil, "BuildNest");
       // Schönes Plätzchen in der Baumkrone suchen
-      AddCommand(this(), "MoveTo", 0, GetX(pTree)+GetDefOffset(id)+Random(GetDefWidth(id)-20)+10, GetY(pTree)+GetDefOffset(id, 1)+Random(GetDefHeight(id)-GetDefFireTop(id)-20)+10);
+      AddCommand(this(), "MoveTo", nil, (GetX(pTree) ?? 0)+(GetDefOffset(id) ?? 0)+(Random((GetDefWidth(id) ?? 0)-20) ?? 0)+10, (GetY(pTree) ?? 0)+(GetDefOffset(id, 1) ?? 0)+(Random((GetDefHeight(id) ?? 0)-(GetDefFireTop(id) ?? 0)-20) ?? 0)+10);
     }
     // Damit das Vermehrungssteuerungsobjekt schon den neuen Vogel sieht
     // und nicht ständig neue Nester bauen lässt
@@ -61,7 +61,7 @@ private func SpecialRepr()
   }
   
   // Manchmal im Nest ein Ei legen
-  if(pNest && !FindObject(BEGG, 0, 0, 0, 0, 0, 0, pNest))
+  if(And(pNest, !FindObject(BEGG, nil, nil, nil, nil, nil, nil, pNest)))
   {
     // Damit das Vermehrungssteuerungsobjekt schon den neuen Vogel sieht
     // und nicht ständig neue Nester bauen lässt
@@ -79,9 +79,9 @@ private func FindTree()
               Find_Not(Find_OCF(OCF_OnFire)), Find_Func("IsStanding")))
    {
       // Außerdem sollte er ausgewachesen sein
-      if(GetCon(obj)<100) continue;
+      if((GetCon(obj) ?? 0)<100) continue;
       // nicht unter Wasser
-      if(GBackSemiSolid(GetX(obj)-GetX(), GetY(obj)-GetY())) continue;
+      if(GBackSemiSolid((GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0))) continue;
       // und noch kein Nest haben
       if(FindObject2(Find_ID(NEST), Find_ActionTarget(obj))) continue;
       return(obj);
@@ -90,30 +90,30 @@ private func FindTree()
 
 public func BuildNest(pThis, pTree)
 {
-  if(!pTree) return(0);
-  if(GetX(pTree)<GetX()) SetDir(0);
+  if(!pTree) return(nil);
+  if((GetX(pTree) ?? 0)<(GetX() ?? 0)) SetDir(nil);
   else SetDir(1);
-  pNest = CreateConstruction(NEST, -12+24*GetDir(), +5, -1, 50);
+  pNest = CreateConstruction(NEST, -12+24*(GetDir() ?? 0), +5, -1, 50);
   LocalN("pTree", pNest) = pTree;
   ObjectSetAction(pNest, "Be", pTree);
   SetAction("BuildNest");
   SetComDir(COMD_Stop);
-  SetXDir(0);
-  SetYDir(0);
+  SetXDir(nil);
+  SetYDir(nil);
 }
 
 protected func Build()
 {
   // Nest bauen	
-  if(!pNest || OnFire(pNest)) return(SetAction("Fly"), Activity());	
+  if(Or(!pNest, OnFire(pNest))) return(S42MigrationFirst(SetAction("Fly"), Activity()));
   DoCon(10, pNest);
-  if(GetCon(pNest)>=100) { SetAction("Fly"); FlyToNest(); }
+  if((GetCon(pNest) ?? 0)>=100) { SetAction("Fly"); FlyToNest(); }
 }
 
 private func FlyToNest()
 {
   // Ins Nest fliegen und dort das Brüten anfangen	
-  SetCommand(this(), "Call", this(), 0, 0, 0, "StartBreeding");
+  SetCommand(this(), "Call", this(), nil, nil, nil, "StartBreeding");
 //  AddCommand(this(), "Enter", pNest);
   AddCommand(this(), "MoveTo", pNest); 
 }
@@ -130,7 +130,7 @@ protected func LayEgg()
   // Ein Ei legen
   var pEgg = CreateObject(BEGG);
   pEgg->SetAction("Nest", pNest);
-  SetPosition(GetX(pNest), GetY(pNest)-1, pEgg);
+  SetPosition(GetX(pNest), (GetY(pNest) ?? 0)-1, pEgg);
   if(FindContents(BIRD))
     Enter(pEgg, FindContents(BIRD));
   Exit();
@@ -143,15 +143,15 @@ protected func LayEgg()
 public func Birth()
 {
   SetAction("Fly");
-  if (Random(2)) SetComDir(COMD_Left());
-  else SetComDir(COMD_Right());
+  if (Random(2)) SetComDir(COMD_Left);
+  else SetComDir(COMD_Right);
   return(1);
 }
 
 protected func HitCheck()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Einen Ballon oder ein Luftschiff zum attackieren suchen
   return(Attack());
@@ -160,12 +160,12 @@ protected func HitCheck()
 public func Attack(object pAttack)
 {
   // Nur während des Fliegens kann gebissen werden
-  if (GetAction() ne "Fly") return();
+  if (!SEqual(GetAction(), "Fly")) return;
 
   // Einen Ballon oder ein Luftschiff suchen
-  if (!pAttack) pAttack = FindObject(BALN, -20,0,40,30, 0, 0,0, NoContainer());
-  if (!pAttack) pAttack = FindObject(BLMP, -30,0,60,40, 0, 0,0, NoContainer());
-  if (!pAttack) return();
+  if (!pAttack) pAttack = FindObject(BALN, -20,nil,40,30, nil, nil,nil, NoContainer());
+  if (!pAttack) pAttack = FindObject(BLMP, -30,nil,60,40, nil, nil,nil, NoContainer());
+  if (!pAttack) return;
 
   // Reinbeißen!
   pAttack->~Poke();
@@ -176,11 +176,11 @@ public func Attack(object pAttack)
 protected func Survive()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   // Nicht in Flüssigkeiten oder brennende Objekte fliegen
-  if (InLiquid() || GBackLiquid(GetXDir()*2, GetYDir()*2) || GBackLiquid(GetXDir()*3, GetYDir()*3) || FindObject(0, -20 + GetXDir() * 2, -20 + GetYDir() * 2, 40, 40, OCF_OnFire()))
-   SetComDir(COMD_Up());
+  if (Or(Or(Or(InLiquid(), GBackLiquid((GetXDir() ?? 0)*2, (GetYDir() ?? 0)*2)), GBackLiquid((GetXDir() ?? 0)*3, (GetYDir() ?? 0)*3)), FindObject(nil, -20 + (GetXDir() ?? 0) * 2, -20 + (GetYDir() ?? 0) * 2, 40, 40, OCF_OnFire)))
+   SetComDir(COMD_Up);
 }
 
 /* Kontakte */
@@ -188,7 +188,7 @@ protected func Survive()
 protected func ContactLeft()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnRight());
 }
@@ -196,7 +196,7 @@ protected func ContactLeft()
 protected func ContactRight()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   return(TurnLeft());
 }
@@ -204,36 +204,36 @@ protected func ContactRight()
 protected func ContactTop()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  return(SetComDir(COMD_Down()));
+  return(SetComDir(COMD_Down));
 }
 
 protected func ContactBottom()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
-  return(SetComDir(COMD_Up()));
+  return(SetComDir(COMD_Up));
 }
 
 /* Aktionen */
 
 public func TurnRight()
 {
-  if (Stuck() || GetAction() ne "Fly") return();
-  if (GetXDir() < 0) SetXDir(0);
-  SetDir(DIR_Right());
-  SetComDir(COMD_Right()); 
+  if (Or(Stuck(), !SEqual(GetAction(), "Fly"))) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
+  SetDir(DIR_Right);
+  SetComDir(COMD_Right);
   return(1);
 }
 
 public func TurnLeft()
 {
-  if (Stuck() || GetAction() ne "Fly") return();
-  if (GetXDir() > 0) SetXDir(0);
-  SetDir(DIR_Left());
-  SetComDir(COMD_Left()); 
+  if (Or(Stuck(), !SEqual(GetAction(), "Fly"))) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
+  SetDir(DIR_Left);
+  SetComDir(COMD_Left);
   return(1);
 }
 
@@ -252,9 +252,9 @@ protected func CatchBlow(iLevel, pObject)
 protected func ControlCommand(szCommand, pTarget, iTx, iTy)
 {
  // Bewegungskommando
- if (szCommand eq "MoveTo")
+ if (!!SEqual(szCommand, "MoveTo"))
   return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
- return(0);
+ return(nil);
 }
 
 protected func ContainedLeft(object caller)
@@ -280,7 +280,7 @@ protected func ContainedUp(object caller)
   [$TxtMovement$]
   SetCommand(this(), "None");
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
-    SetComDir(COMD_Up());
+    SetComDir(COMD_Up);
   return(1);
 }
 
@@ -290,7 +290,7 @@ protected func ContainedDown(object caller)
   SetCommand(this(), "None");
   if(Contained()) SetCommand(this, "Exit");
   if(!GetPlrCoreJumpAndRunControl(caller->GetController()))
-    SetComDir(COMD_Down());
+    SetComDir(COMD_Down);
   return(1);
 }
 
@@ -298,30 +298,32 @@ protected func ContainedDown(object caller)
 
 private func ClearDir(bool fX)
 {
-  if(fX && GetXDir())
+  fX ??= false;
+  if(And(fX, GetXDir()))
   {
-    if(GetXDir() > 0) SetXDir(Max(GetXDir() - 2, 0));
-    else SetXDir(Min(GetXDir() + 2, 0));
+    if((GetXDir() ?? 0) > 0) SetXDir(Max((GetXDir() ?? 0) - 2, nil));
+    else SetXDir(Min((GetXDir() ?? 0) + 2, nil));
   }
-  if(!fX && GetYDir())
+  if(And(!fX, GetYDir()))
   {
-    if(GetYDir() > 0) SetYDir(Max(GetYDir() - 2, 0));
-    else SetYDir(Min(GetYDir() + 2, 0));
+    if((GetYDir() ?? 0) > 0) SetYDir(Max((GetYDir() ?? 0) - 2, nil));
+    else SetYDir(Min((GetYDir() ?? 0) + 2, nil));
   }
 }
 
 protected func ContainedUpdate(object controller, int comdir)
 {
+  comdir ??= 0;
   SetComDir(comdir);
   ClearScheduleCall(this(), "ClearDir");
-  if(comdir == COMD_Up || comdir == COMD_Down || comdir == COMD_Stop)
-    ScheduleCall(this(), "ClearDir", 1, (Abs(GetXDir())+1)/2, true);
-  if(comdir == COMD_Left || comdir == COMD_Right || comdir == COMD_Stop)
-    ScheduleCall(this(), "ClearDir", 1, (Abs(GetYDir())+1)/2, false);
+  if(Or(Or(Equal(comdir, COMD_Up), Equal(comdir, COMD_Down)), Equal(comdir, COMD_Stop)))
+    ScheduleCall(this(), "ClearDir", 1, ((Abs(GetXDir()) ?? 0)+1)/2, true);
+  if(Or(Or(Equal(comdir, COMD_Left), Equal(comdir, COMD_Right)), Equal(comdir, COMD_Stop)))
+    ScheduleCall(this(), "ClearDir", 1, ((Abs(GetYDir()) ?? 0)+1)/2, nil);
 
-  if(comdir == COMD_UpRight || comdir == COMD_Right || comdir == COMD_DownRight)
+  if(Or(Or(Equal(comdir, COMD_UpRight), Equal(comdir, COMD_Right)), Equal(comdir, COMD_DownRight)))
     SetDir(DIR_Right);
-  if(comdir == COMD_UpLeft || comdir == COMD_Left || comdir == COMD_DownLeft)
+  if(Or(Or(Equal(comdir, COMD_UpLeft), Equal(comdir, COMD_Left)), Equal(comdir, COMD_DownLeft)))
     SetDir(DIR_Left);
 
   return(1);
@@ -348,7 +350,7 @@ protected func ContainedDigDouble()
 protected func Eating()
 {
   // Köder weg
-  if(!Bait) return();
+  if(!Bait) return;
   // Köder fressen
   RemoveObject(Bait);
   // Schmeckt gut
@@ -370,36 +372,36 @@ protected func Activity()
   if (!Random(25)) Sound("Raven*");
 
   // Gegner suchen
-  if(!pTarget && !GetCommand())
-    pTarget = FindObject(0, -SearchRange(), -SearchRange(), SearchRange()*2, SearchRange()*2, OCF_CrewMember, 0, 0, NoContainer());
+  if(And(!pTarget, !GetCommand()))
+    pTarget = FindObject(nil, -(SearchRange() ?? 0), -(SearchRange() ?? 0), (SearchRange() ?? 0)*2, (SearchRange() ?? 0)*2, OCF_CrewMember, nil, nil, NoContainer());
   
   // Beute am Maul beißen
-  if (Attack()) return();
+  if (Attack()) return;
   
   // Angreifen
   if(pTarget)
   {
     // Wenn Gegner im Haus, tot oder zu weit weg abbrechen	  
-    if(Contained(pTarget)) return(pTarget=0, SetCommand(this(), "None"));	 
-    if(!GetAlive(pTarget)) return(pTarget=0, SetCommand(this(), "None"));
-    if(ObjectDistance(pTarget)>SearchRange()) return(pTarget=0, SetCommand(this(), "None"));
+    if(Contained(pTarget)) return(S42MigrationFirst(pTarget=nil, SetCommand(this(), "None")));
+    if(!GetAlive(pTarget)) return(S42MigrationFirst(pTarget=nil, SetCommand(this(), "None")));
+    if((ObjectDistance(pTarget) ?? 0)>(SearchRange() ?? 0)) return(S42MigrationFirst(pTarget=nil, SetCommand(this(), "None")));
     // sonst zum Gegner fliegen
-    var iFromSide = +1; if (GetX(pTarget)>GetX()) iFromSide = -1;
-    SetCommand(this(), "MoveTo", 0, GetX(pTarget) + 13 * iFromSide, GetY(pTarget));
-    if(iFromSide>0 && GetDir()) TurnLeft();
-    if(iFromSide<0 && !GetDir()) TurnRight();
-    return();
+    var iFromSide = +1; if ((GetX(pTarget) ?? 0)>(GetX() ?? 0)) iFromSide = -1;
+    SetCommand(this(), "MoveTo", nil, (GetX(pTarget) ?? 0) + 13 * (iFromSide ?? 0), GetY(pTarget));
+    if(And((iFromSide ?? 0)>0, GetDir())) TurnLeft();
+    if(And((iFromSide ?? 0)<0, !GetDir())) TurnRight();
+    return;
   }
   
   // Nichts machen
-  if (Random(2) || GetAction() ne "Fly") return(1);
+  if (Or(Random(2), !SEqual(GetAction(), "Fly"))) return(1);
 
   // Nach oben oder unten fliegen
-  SetComDir(COMD_Up());
-  if (Random(2)) SetComDir(COMD_Down());
+  SetComDir(COMD_Up);
+  if (Random(2)) SetComDir(COMD_Down);
 
   // Nicht zu hoch fliegen
-  if(GetY()<0) SetComDir(COMD_Down());
+  if((GetY() ?? 0)<0) SetComDir(COMD_Down);
 
   // Nichts machen
   if (!Random(4)) return(1);
@@ -412,22 +414,22 @@ protected func Activity()
 public func Attack(object pAttack)
 {
   // Während des Fliegens kann alle 2 Sekunden einmal gebissen werden
-  if (GetEffect("IntAttackDelay", this()) || GetAction() ne "Fly") return();
+  if (Or(GetEffect("IntAttackDelay", this()), !SEqual(GetAction(), "Fly"))) return;
 
   // Beute suchen
-  pAttack = FindObject(0, -14 + 28 * GetDir(), 0, 0, 0, OCF_Prey(), 0, 0, NoContainer());
+  pAttack = FindObject(nil, -14 + 28 * (GetDir() ?? 0), nil, nil, nil, OCF_Prey, nil, nil, NoContainer());
   
   // Einen Ballon oder ein Luftschiff suchen
-  if (!pAttack) pAttack = FindObject(BALN, -20,0,40,30, 0, 0,0, NoContainer());
-  if (!pAttack) pAttack = FindObject(BLMP, -30,0,60,40, 0, 0,0, NoContainer());
-  if (!pAttack) return();
+  if (!pAttack) pAttack = FindObject(BALN, -20,nil,40,30, nil, nil,nil, NoContainer());
+  if (!pAttack) pAttack = FindObject(BLMP, -30,nil,60,40, nil, nil,nil, NoContainer());
+  if (!pAttack) return;
 
   if(GetAlive(pAttack))
   {
     // Schaden machen und schleudern	  
     Punch(pAttack);
     if(pAttack) // nach dem punch noch da
-    if(GetX(pAttack) < GetX(this()))
+    if((GetX(pAttack) ?? 0) < (GetX(this()) ?? 0))
       Fling(pAttack, -1, -1);
     else
       Fling(pAttack, 1, -1);

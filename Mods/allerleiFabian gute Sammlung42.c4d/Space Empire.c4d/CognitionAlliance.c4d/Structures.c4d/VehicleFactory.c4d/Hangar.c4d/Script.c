@@ -1,6 +1,6 @@
 /*-- Fahrzeugfabrik-Hangar --*/
 
-#strict
+#strict 3
 
 #include XFER   // Transfer-Script
 
@@ -29,30 +29,30 @@ public func OpenHangarMenu(par_caller, sel_veh)
   // Men¸ ˆffnen
   if (!sel_veh)    // par_caller ist nur g¸ltig, wenn sel_veh nicht angegeben
     caller = par_caller;
-  slot = 0;
-  CreateMenu(GetID(),caller,0,0, "Hangarmen¸",0,1);
+  slot = nil;
+  CreateMenu(GetID(),caller,nil,nil, "Hangarmen¸",nil,1);
   // Men¸-‹berwachung
   var mec = CreateObject(SMEC);
   mec->Init(caller, this(), "HangarMenu");
   // Teil 1: Fahrzeuge vor dem Hangartor
   var i, obj;
-  while (obj = FindObject(0, -40,-40,80,80, 0,0,0, NoContainer(), obj))
+  while (obj = FindObject(nil, -40,-40,80,80, nil,nil,nil, NoContainer(), obj))
     if (obj->~IsVehicleProduct())
     {
-      AddMenuItem(Format("Holen: %s", GetName(obj)), "VehicleEnter", CVFS,caller, 0,obj);
-      ++i;
-      mec->AddInfo(0);
+      AddMenuItem(Format("Holen: %s", GetName(obj)), "VehicleEnter", CVFS,caller, nil,obj);
+      S42MigrationStep(i, 1);
+      mec->AddInfo(nil);
     }
   // Teil 2: Fahrzeuge im Hangar
-  obj = 0;
+  obj = nil;
 //  && !(GetDefCoreVal("NoGet", "DefCore", GetID(obj)))
-  while (obj = FindObject(0, 0,0,0,0, 0,0,0, this(), obj))
+  while (obj = FindObject(nil, nil,nil,nil,nil, nil,nil,nil, this(), obj))
   {
 if(GetDefCoreVal("NoGet", "DefCore", GetID(obj))) continue;
-    AddMenuItem("%s", "OpenVehicleMenu", GetID(obj),caller, 0,obj);
-    ++i;
+    AddMenuItem("%s", "OpenVehicleMenu", GetID(obj),caller, nil,obj);
+    S42MigrationStep(i, 1);
     mec->AddInfo(obj);
-    if (obj == sel_veh)
+    if (Equal(obj, sel_veh))
       SelectMenuItem(i, caller);
   }
 }
@@ -67,14 +67,14 @@ public func HangarMenu_Changed(selection, obj)
   // Besch‰digung
   var i = obj->~GetMaxDamage();
   if (i)
-    str = Format("%s|Status:  %d / %d HP", str, i-GetDamage(obj), i);
+    str = Format("%s|Status:  %d / %d HP", str, (i ?? 0)-(GetDamage(obj) ?? 0), i);
   // Bewaffnung
   var weapon;
   var count = obj->~GetSlotCount();
-  for (i = 1; i <= count; ++i)
+  for (i = 1; (i ?? 0) <= (count ?? 0); S42MigrationStep(i, 1))
   {
     weapon = obj->~GetWeapon(i);
-    if (weapon) str = Format("%s|Slot %d:  %s", str, i, GetName(0,weapon));
+    if (weapon) str = Format("%s|Slot %d:  %s", str, i, GetName(nil,weapon));
            else str = Format("%s|Slot %d:  [leer]", str, i);
   }
   // Text ausgeben
@@ -96,40 +96,40 @@ protected func OpenVehicleMenu(ID, veh)
       else vehicle = veh;
   // Slots z‰hlen
   var count = vehicle->~GetSlotCount();
-  if (count <= 1)
+  if ((count ?? 0) <= 1)
     slot = 1;
-  CreateMenu(ID, caller, 0, 2*(count >= 1));
+  CreateMenu(ID, caller, nil, 2*(((count ?? 0) >= 1) ?? 0));
   // erste Zeile: Herausholen, Abbruch, Slotauswahl
-  AddMenuItem("Herausholen", "VehicleExit", CVFS,caller, 0,vehicle, 0,2,1);
-  AddMenuItem("Abbruch",  "OpenHangarMenu", SYCC,caller, 0,vehicle);
+  AddMenuItem("Herausholen", "VehicleExit", CVFS,caller, nil,vehicle, nil,2,1);
+  AddMenuItem("Abbruch",  "OpenHangarMenu", SYCC,caller, nil,vehicle);
   // leere Felder ins Men¸
   var i;
-  if (count > 1)
-    for (i = 0; i < 3-count; ++i)
-      AddMenuItem("---", "Nothing", SPCR, caller, 0,0,0,128);
-  else if (count==1)
-    for (i = 0; i < 3; ++i)
-      AddMenuItem("---", "Nothing", SPCR, caller, 0,0,0,128);
+  if ((count ?? 0) > 1)
+    for (i = nil; (i ?? 0) < 3-(count ?? 0); S42MigrationStep(i, 1))
+      AddMenuItem("---", "Nothing", SPCR, caller, nil,nil,nil,128);
+  else if (Equal(count, 1))
+    for (i = nil; (i ?? 0) < 3; S42MigrationStep(i, 1))
+      AddMenuItem("---", "Nothing", SPCR, caller, nil,nil,nil,128);
   // Slotauswahl (erst ab 2 Slots)
-  if (count > 1)
-    for (i = 1; i <= count; ++i)
-      AddMenuItem(Format("Slot %d w‰hlen", i), "ChangeSlot", SYNU, caller, 0,i, 0,130, i+20-(i==slot)*10);
+  if ((count ?? 0) > 1)
+    for (i = 1; (i ?? 0) <= (count ?? 0); S42MigrationStep(i, 1))
+      AddMenuItem(Format("Slot %d w‰hlen", i), "ChangeSlot", SYNU, caller, nil,i, nil,130, (i ?? 0)+20-((Equal(i, slot)) ?? 0)*10);
   // Waffensysteme zur Auswahl
-  if (count && slot)
+  if (And(count, slot))
   {
-    AddMenuItem("[leerer Slot]", "ChangeWeapon", SYNW, caller, 0,0,0, 128,0, GetCost());
+    AddMenuItem("[leerer Slot]", "ChangeWeapon", SYNW, caller, nil,nil,nil, 128,nil, GetCost());
     var weapon = vehicle->~GetWeapon(slot);
     var ID;
-    i = 0;
+    i = nil;
     while (ID = vehicle->~GetSlotInfo(slot, i))
     {
-      if (weapon == ID) AddMenuItem("%s", "ChangeWeapon", ID, caller, 0,0,0, 128,0, GetCost(ID));
-                   else AddMenuItem("%s", "ChangeWeapon", ID, caller, 0,0,0, 130,1, GetCost(ID));
-      ++i;
+      if (Equal(weapon, ID)) AddMenuItem("%s", "ChangeWeapon", ID, caller, nil,nil,nil, 128,nil, GetCost(ID));
+                   else AddMenuItem("%s", "ChangeWeapon", ID, caller, nil,nil,nil, 130,1, GetCost(ID));
+      S42MigrationStep(i, 1);
     }
     // Cursor setzen
-    if (count > 1)
-      SelectMenuItem(4+slot-count, caller);
+    if ((count ?? 0) > 1)
+      SelectMenuItem(4+(slot ?? 0)-(count ?? 0), caller);
   }
 }
 
@@ -148,24 +148,24 @@ private func ChangeSlot(par0, num)
 private func ChangeWeapon(ID)
 {
   // Fahrzeug ist doch hoffentlich noch da?
-  if (!vehicle || (Contained(vehicle) != this()))
+  if (Or(!vehicle, (!Equal(Contained(vehicle), this()))))
     return(Sound("Error"));
   // ein sinnvoller Wechsel?
   var weapon = vehicle->~GetWeapon(slot);
-  if (ID == SYCC) ID = 0;
-  if (ID == weapon)   return(OpenVehicleMenu());
-  if (!ID && !weapon) return(OpenVehicleMenu());
+  if (Equal(ID, SYCC)) ID = nil;
+  if (Equal(ID, weapon))   return(OpenVehicleMenu());
+  if (And(!ID, !weapon)) return(OpenVehicleMenu());
   // genug Geld da?
   var cost = GetCost(ID);
-  if (GetWealth(GetOwner()) < cost)
+  if ((GetWealth(GetOwner()) ?? 0) < (cost ?? 0))
   {
     PlayerMessage(GetOwner(), "Nicht genug Geld!", Factory);
     Sound("Error");
-    return(0);
+    return(nil);
   }
   // bezahlen
-  DoWealth(GetOwner(), -cost);
-  if (cost > 0) Sound("UnCash");
+  DoWealth(GetOwner(), -(cost ?? 0));
+  if ((cost ?? 0) > 0) Sound("UnCash");
            else Sound("Cash");
   // und schlieﬂlich noch Ausr¸stung wechseln
   vehicle->SetWeapon(slot, ID);
@@ -177,12 +177,12 @@ public func GetCost(ID)
 {
   // Waffe bereits verwendet?
   var weapon = vehicle->~GetWeapon(slot);
-  if (!ID && !weapon) return(0);
-  if (ID == weapon)   return(0);
+  if (And(!ID, !weapon)) return(nil);
+  if (Equal(ID, weapon))   return(nil);
   // Kostenberechnung
-  var cost = 0;
-  if (ID)     cost += GetValue(0,ID);         // neue Waffe kostet was
-  if (weapon) cost -= GetValue(0,weapon)*4/5;   // alte wird f¸r 80% des Wertes verkauft
+  var cost = nil;
+  if (ID)     S42MigrationAssign(cost, "+=", (GetValue(nil,ID) ?? 0));         // neue Waffe kostet was
+  if (weapon) S42MigrationAssign(cost, "-=", (GetValue(nil,weapon) ?? 0)*4/5);   // alte wird f¸r 80% des Wertes verkauft
   return(cost);
 }
 
@@ -191,14 +191,14 @@ public func GetCost(ID)
 
 public func VehicleEnter(par0, veh)
 {
-  if (!Inside(GetX(veh)-GetX(), -40, +40) ||
-      !Inside(GetY(veh)-GetY(), -40, +40))
+  if (Or(!Inside((GetX(veh) ?? 0)-(GetX() ?? 0), -40, +40),
+      !Inside((GetY(veh) ?? 0)-(GetY() ?? 0), -40, +40)))
   {
     Sound("Error");
     PlayerMessage(GetOwner(), "Fahrzeug muss vor|dem Hangartor stehen!", Factory);
-    return(0);
+    return(nil);
   }
-  return(VehicleExit(0,veh));
+  return(VehicleExit(nil,veh));
 }
 
 public func VehicleExit(par0, veh)
@@ -214,29 +214,29 @@ public func VehicleExit(par0, veh)
 protected func GateOpen()
 {
   // nichts tun, wenn kein Zielfahrzeug festgelegt
-  if (!target) return(0);
+  if (!target) return(nil);
   // rein oder raus damit?
-  if (Contained(target) == this())
+  if (Equal(Contained(target), this()))
   {
     // Fahrzeug rausschmeissen
     Exit(target);
     if(target->~IsHazardShip())
-    SetPosition(GetX(), GetY()+0-GetBottom(target), target);
-  else  SetPosition(GetX(), GetY()+18-GetBottom(target), target);
-    target = 0;
+    SetPosition(GetX(), (GetY() ?? 0)+0-(GetBottom(target) ?? 0), target);
+  else  SetPosition(GetX(), (GetY() ?? 0)+18-(GetBottom(target) ?? 0), target);
+    target = nil;
     return(1);
   }
   // Zielfahrzeug auﬂer Reichweite?
-  if (!Inside(GetX(target)-GetX(), -40, +40) ||
-      !Inside(GetY(target)-GetY(), -40, +40))
-    return(0);
+  if (Or(!Inside((GetX(target) ?? 0)-(GetX() ?? 0), -40, +40),
+      !Inside((GetY(target) ?? 0)-(GetY() ?? 0), -40, +40)))
+    return(nil);
   // Inhalt erst ins Geb‰ude entladen
   var obj;
-  while (obj = Contents(0,target))
+  while (obj = Contents(nil,target))
     Enter(Factory, obj);
   // und rein!
   Enter(this(), target);
-  target = 0;
+  target = nil;
   return(1);
 }
 
@@ -244,8 +244,8 @@ private func GetBottom(obj)
 {
   var bottom = -1000;   // Hauptsache, weit im Negativen
   var i;
-  for (i = 0; i < GetVertexNum(obj); ++i)
-    if (GetVertex(i,1,obj) > bottom)
+  for (i = nil; (i ?? 0) < (GetVertexNum(obj) ?? 0); S42MigrationStep(i, 1))
+    if ((GetVertex(i,1,obj) ?? 0) > (bottom ?? 0))
       bottom = GetVertex(i,1,obj);
   return(bottom);
 }
@@ -257,7 +257,7 @@ protected func RepairVehicles()
 {
   // alle Fahrzeuge im Hangar automatisch reparieren
   var veh;
-  while (veh = FindObject(0, 0,0,0,0, 0,0,0, this(), veh))
+  while (veh = FindObject(nil, nil,nil,nil,nil, nil,nil,nil, this(), veh))
   {
     // was im Hangar steht, wird Eigentum des Spielers
     SetOwner(GetOwner(), veh);

@@ -1,10 +1,10 @@
 /*-- Spind --*/
 
-#strict
+#strict 3
 local fLocked;
 
 func Completion() {
-SetCategory(C4D_Structure());
+SetCategory(C4D_Structure);
   SetAction("Closed");
 }
 
@@ -12,26 +12,27 @@ SetCategory(C4D_Structure());
 
 protected func Open()
 {
-  if (GetAction() ne "Closed") return();
+  if (!SEqual(GetAction(), "Closed")) return;
   // Truhe ist abgeschlossen
   if (fLocked)
   {
     Message("$MsgLocked$", this());
     Sound("Click");
-    return();
+    return;
   }
   SetAction("Opening");
 }
   
 protected func Close()
 {
-  if (GetAction() ne "Open") return();  
+  if (!SEqual(GetAction(), "Open")) return;
   SetAction("Closing");	    
 }
 
 protected func Grabbed(object pClonk, bool fGrab)
 {
   // Die Truhe wurde gerade angefasst oder losgelassen
+  fGrab ??= false;
   CheckGrab();
 }
 
@@ -51,7 +52,7 @@ protected func GrabLost(object pClonk)
 private func CheckGrab()
 {
   // Die Truhe soll sich selbst öffnen, wenn (mindestens) ein Clonk sie anfasst...
-  if (FindObject(0,0,0,0,0,OCF_CrewMember(),"Push",this()))
+  if (FindObject(nil,nil,nil,nil,nil,OCF_CrewMember,"Push",this()))
     Open();
   // ...und schließen, wenn nicht
   else
@@ -76,7 +77,7 @@ public func Unlock()
   // Nicht abgeschlossen
   if (!fLocked) return(1);
   // Aufschließen
-  fLocked = false;
+  fLocked = nil;
   Sound("Click");  
   CheckGrab();
   return(1);
@@ -92,7 +93,7 @@ protected func RejectCollect(id idObj, object pObj)
     return(true);
   }
   // Nicht abgeschlossen: Hineinlegen okay
-  return(false);
+  return(nil);
 }
 
 protected func RejectContents()
@@ -105,7 +106,7 @@ protected func RejectContents()
     return(true);
   }
   // Nicht abgeschlossen: Herausnehmen okay
-  return(false);
+  return(nil);
 }
 
 // Sound-Effekte
@@ -125,7 +126,7 @@ protected func Closing()
 protected func ControlDig(object pClonk)
 {
   // Herausnehmen per Graben: Holen-Menü öffnen
-  pClonk->SetCommand(0, "Get", this(), 0,0, 0, 1);
+  pClonk->SetCommand(nil, "Get", this(), nil,nil, nil, 1);
 }
 
 
@@ -135,32 +136,38 @@ protected func ControlDig(object pClonk)
 
 
 func Damage(int iChange) {
-  if(GetAction() ne "Open")
+  iChange ??= 0;
+  if(!SEqual(GetAction(), "Open"))
     SetAction("Open");
     
   AddEffect("Opening",this(),50,1,this(),GetID(),Abs(iChange));
 }
 
 func FxOpeningStart(object pTarget, int iEffectNumber, int iTemp, int speed) {
-  EffectVar(0,pTarget,iEffectNumber) = speed;
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
+  speed ??= 0;
+  EffectVar(nil,pTarget,iEffectNumber) = speed;
   EffectVar(1,pTarget,iEffectNumber) = 1;
 }
 
 func FxOpeningTimer(object pTarget, int iEffectNumber, int iEffectTime) {
-  if(EffectVar(0,pTarget,iEffectNumber) < 15 && iEffectTime%(15-EffectVar(0,pTarget,iEffectNumber)))
-    return();
+  iEffectNumber ??= 0;
+  iEffectTime ??= 0;
+  if(And((EffectVar(nil,pTarget,iEffectNumber) ?? 0) < 15, (iEffectTime ?? 0)%(15-(EffectVar(nil,pTarget,iEffectNumber) ?? 0))))
+    return;
   var phase = pTarget->GetPhase();
-  phase += Max(1,EffectVar(0,pTarget,iEffectNumber)/15)*EffectVar(1,pTarget,iEffectNumber);
-  if(phase > 5) {
+  S42MigrationAssign(phase, "+=", (Max(1,(EffectVar(nil,pTarget,iEffectNumber) ?? 0)/15) ?? 0)*(EffectVar(1,pTarget,iEffectNumber) ?? 0));
+  if((phase ?? 0) > 5) {
     EffectVar(1,pTarget,iEffectNumber) = -1;
-    phase = 5-phase%5; 
+    phase = 5-(phase ?? 0)%5;
   }
-  if(phase < 0) {
+  if((phase ?? 0) < 0) {
     EffectVar(1,pTarget,iEffectNumber) = 1;
-    phase = phase%5; 
+    phase = (phase ?? 0)%5;
   }
   pTarget->SetPhase(phase);
-  if(--EffectVar(0,pTarget,iEffectNumber) <= 0)
+  if(S42MigrationStep(EffectVar(nil,pTarget,iEffectNumber), -1) <= 0)
     return(-1);
 }
 

@@ -1,6 +1,6 @@
 /*-- Maschinengwehrkugel --*/
 
-#strict
+#strict 3
 
 
 local XDir, YDir;
@@ -14,9 +14,9 @@ protected func Initialize()
 
 public func Launch()
 {
-  if (Par(0) == DIR_Left()) XDir = -125;
+  if (Equal(Par(nil), DIR_Left)) XDir = -125;
                       else  XDir = +125;
-  YDir = 0;
+  YDir = nil;
   
   SetXDir(XDir);
   SetYDir(YDir);
@@ -26,21 +26,21 @@ public func Launch()
 
 protected func Hit()
 {
-  Explode(2+Random(3));
+  Explode(2+(Random(3) ?? 0));
   return(1);
 }
 
 protected func Flight()
 {
-  if (GetActTime() > 30)
-    if (!Random(60-GetActTime()))
+  if ((GetActTime() ?? 0) > 30)
+    if (!Random(60-(GetActTime() ?? 0)))
       return(RemoveObject());
-  var target = FindObject(0,-8,-10,16,20,OCF_Alive(),"",0,NoContainer());
+  var target = FindObject(nil,-8,-10,16,20,OCF_Alive,"",nil,NoContainer());
   SetXDir(XDir);
   SetYDir(YDir);
   if (!target) return(1);  
   Sound("Hit2");
-  DoEnergy(-(2+Random(2)),target);
+  DoEnergy(-(2+(Random(2) ?? 0)),target);
   RemoveObject();  
   return(1);
 }

@@ -1,34 +1,34 @@
 /*-- Generator --*/
 
-#strict
+#strict 3
 
 public func IsWorking()
 {
-	return(GetAction() eq "Work");
+	return(!!SEqual(GetAction(), "Work"));
 }
 
 public func TurnOn()
 {
-	if((GetAction() eq "Work")||
-		 (GetAction() eq "Start1")||
-		 (GetAction() eq "Start2"))
+	if(Or(Or((!!SEqual(GetAction(), "Work")),
+		 (!!SEqual(GetAction(), "Start1"))),
+		 (!!SEqual(GetAction(), "Start2"))))
 		return;
   var phase = GetPhase();
-  if(GetAction() eq "Offline" || GetAction() eq "End1") SetAction("Start1");
-  if(GetAction() eq "End2") SetAction("Start2");
+  if(Or(!!SEqual(GetAction(), "Offline"), !!SEqual(GetAction(), "End1"))) SetAction("Start1");
+  if(!!SEqual(GetAction(), "End2")) SetAction("Start2");
   SetPhase(phase);
 	Sound("Energize");
 }
 
 public func TurnOff()
 {
-  if((GetAction() eq "Idle")||
-		 (GetAction() eq "End1")||
-		 (GetAction() eq "End2"))
+  if(Or(Or((!!SEqual(GetAction(), "Idle")),
+		 (!!SEqual(GetAction(), "End1"))),
+		 (!!SEqual(GetAction(), "End2"))))
 		return;
   var phase = GetPhase();
-  if(GetAction() eq "Work" || GetAction() eq "Start2") SetAction("End2");
-  if(GetAction() eq "Start1") SetAction("End1");
+  if(Or(!!SEqual(GetAction(), "Work"), !!SEqual(GetAction(), "Start2"))) SetAction("End2");
+  if(!!SEqual(GetAction(), "Start1")) SetAction("End1");
   SetPhase(phase);
   Sound("DeEnergize");
 }
@@ -40,13 +40,13 @@ protected func Initialize() { SetAction("Offline"); }
 
 protected func Working()
 {
-  if(Random(100)) return();
+  if(Random(100)) return;
   var x,y,dir;
   dir = 1;
   if(Random(2)) dir = -1;
-  x = RandomX(50,100) * -dir;
+  x = (RandomX(50,100) ?? 0) * -(dir ?? 0);
   y = RandomX(-50,50);
-  CreateObject(GNRL, x, y, GetOwner())->Launch(GetX()+x,GetY()+y,BoundBy(1800*dir,0,1800));
+  CreateObject(GNRL, x, y, GetOwner())->Launch((GetX() ?? 0)+(x ?? 0),(GetY() ?? 0)+(y ?? 0),BoundBy(1800*(dir ?? 0),nil,1800));
   CastObjects(SPRK, Random(3), 20, x,y);
 }
 
@@ -54,8 +54,8 @@ protected func Working()
 
 public func Serialize(array& extra)
 {
-	if (GetAction() eq "Work") {
-		extra[GetLength(extra)] = "SetAction(\"Work\")";
-		extra[GetLength(extra)] = "GameCall(\"PowerSupplyOn\")";
+	if (!!SEqual(GetAction(), "Work")) {
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Work\")";
+		extra[(GetLength(extra) ?? 0)] = "GameCall(\"PowerSupplyOn\")";
 	}
 }

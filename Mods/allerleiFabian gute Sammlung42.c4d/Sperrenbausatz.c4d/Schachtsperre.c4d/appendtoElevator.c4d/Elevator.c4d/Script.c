@@ -1,6 +1,6 @@
 /*-- Burgfahrstuhl --*/
 
-#strict
+#strict 3
 #appendto F_EL // metall
 #appendto ELEF // normal
 // #appendto CPEL // burg

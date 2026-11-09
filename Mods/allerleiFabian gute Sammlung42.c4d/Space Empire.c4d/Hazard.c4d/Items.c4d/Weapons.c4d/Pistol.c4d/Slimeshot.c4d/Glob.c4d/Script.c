@@ -1,6 +1,6 @@
 /*-- Schleimklumpen --*/
 
-#strict
+#strict 3
 
 local target, // Klebezielobjekt
       damage; // Evtl. Schaden
@@ -15,7 +15,7 @@ func Initialize() {
 
 public func AttachTo(pClonk)    // An einem Clonk heften
 {
-  SetVertexXY(0, GetX()-GetX(pClonk)+GetVertex(0, 0, pClonk), GetY()-GetY(pClonk)+GetVertex(0, 1, pClonk));
+  SetVertexXY(nil, (GetX() ?? 0)-(GetX(pClonk) ?? 0)+(GetVertex(nil, nil, pClonk) ?? 0), (GetY() ?? 0)-(GetY(pClonk) ?? 0)+(GetVertex(nil, 1, pClonk) ?? 0));
   SetAction("AGlobbing", pClonk);
 
   if(!DecreasePhysical(pClonk)) return(RemoveObject());
@@ -24,10 +24,10 @@ public func AttachTo(pClonk)    // An einem Clonk heften
 private func DecreasePhysical(object pClonk)
 {
   // Maximal 30% des Gesamtwertes von Walk ~!/$&)=%/
-  if(GetPhysical("Walk", 2, pClonk) <= GetPhysical("Walk", 1, 0, GetID(pClonk))*7/10)
-    return(0);
+  if((GetPhysical("Walk", 2, pClonk) ?? 0) <= (GetPhysical("Walk", 1, nil, GetID(pClonk)) ?? 0)*7/10)
+    return(nil);
   // Effekt starten
-  AddEffect("Slimed", pClonk, 50, 800, 0, GetID());
+  AddEffect("Slimed", pClonk, 50, 800, nil, GetID());
   return(1);
 }
 
@@ -42,23 +42,23 @@ public func Glob2Ground(iDamage)
 protected func Check()
 {
   var living;
-  while(living = FindObject(0, -5,-5, 10,10, OCF_Living(), 0,0, NoContainer(), living))
-    if(GetAlive(living) && !(living)->~IsAlien())
+  while(living = FindObject(nil, -5,-5, 10,10, OCF_Living, nil,nil, NoContainer(), living))
+    if(And(GetAlive(living), !(living)->~IsAlien()))
       return(HitLiving(living));
-  while(living = FindObject(0, 1,1, 0,0, OCF_Living(), 0,0, NoContainer(), living))
-    if(GetAlive(living) && !(living)->~IsAlien())
+  while(living = FindObject(nil, 1,1, nil,nil, OCF_Living, nil,nil, NoContainer(), living))
+    if(And(GetAlive(living), !(living)->~IsAlien()))
       return(HitLiving(living));
 
-  if(GetActTime() >= 600) return(Boom());
+  if((GetActTime() ?? 0) >= 600) return(Boom());
 
 }
 
 private func HitLiving(target)
 {
   // Maximal 30% des Gesamtwertes von Walk ~!/$&)=%/
-  if(!(GetPhysical("Walk", 2, target) <= GetPhysical("Walk", 1, 0, GetID(target))*7/10))
+  if(!((GetPhysical("Walk", 2, target) ?? 0) <= (GetPhysical("Walk", 1, nil, GetID(target)) ?? 0)*7/10))
     // Effekt starten
-    AddEffect("Slimed", target, 101, 1500, 0, GetID());
+    AddEffect("Slimed", target, 101, 1500, nil, GetID());
 
   // Schaden roflol
   DoDmg(damage, DMG_Bio, target);
@@ -83,24 +83,25 @@ protected func AttachTargetLost()
 
 public func FxSlimedStart(target, no, temp,int iStrength)
 {
+  iStrength ??= 0;
   if(temp)
-    if(GetPhysical("Walk", 2, target) <= GetPhysical("Walk", 1, 0, GetID(target))*7/10)
-      return(0);
+    if((GetPhysical("Walk", 2, target) ?? 0) <= (GetPhysical("Walk", 1, nil, GetID(target)) ?? 0)*7/10)
+      return(nil);
 
   // Variablen
   // 0: Walk
   // 1: Jump
   // 2: Scale
   // 3: Hangle
-  EffectVar(0, target, no) = GetPhysical("Walk", 1, 0, GetID(target))*1/10;
-  EffectVar(1, target, no) = GetPhysical("Jump", 1, 0, GetID(target))*1/10;
-  EffectVar(2, target, no) = GetPhysical("Scale", 1, 0, GetID(target))*1/10;
-  EffectVar(3, target, no) = GetPhysical("Hangle", 1, 0, GetID(target))*1/10;
+  EffectVar(nil, target, no) = (GetPhysical("Walk", 1, nil, GetID(target)) ?? 0)*1/10;
+  EffectVar(1, target, no) = (GetPhysical("Jump", 1, nil, GetID(target)) ?? 0)*1/10;
+  EffectVar(2, target, no) = (GetPhysical("Scale", 1, nil, GetID(target)) ?? 0)*1/10;
+  EffectVar(3, target, no) = (GetPhysical("Hangle", 1, nil, GetID(target)) ?? 0)*1/10;
 
-  SetPhysical("Walk", GetPhysical("Walk", 0, target)-EffectVar(0, target, no), 2, target);
-  SetPhysical("Jump", GetPhysical("Jump", 0, target)-EffectVar(1, target, no), 2, target);
-  SetPhysical("Scale", GetPhysical("Scale", 0, target)-EffectVar(2, target, no), 2, target);
-  SetPhysical("Hangle", GetPhysical("Hangle", 0, target)-EffectVar(3, target, no), 2, target);
+  SetPhysical("Walk", (GetPhysical("Walk", nil, target) ?? 0)-(EffectVar(nil, target, no) ?? 0), 2, target);
+  SetPhysical("Jump", (GetPhysical("Jump", nil, target) ?? 0)-(EffectVar(1, target, no) ?? 0), 2, target);
+  SetPhysical("Scale", (GetPhysical("Scale", nil, target) ?? 0)-(EffectVar(2, target, no) ?? 0), 2, target);
+  SetPhysical("Hangle", (GetPhysical("Hangle", nil, target) ?? 0)-(EffectVar(3, target, no) ?? 0), 2, target);
 
   // blar
   SetClrModulation(RGB(200,255,200), target);
@@ -113,18 +114,18 @@ public func FxSlimedTimer()
 
 public func FxSlimedStop(target, no, reason, temp)
 {
-  SetPhysical("Walk", GetPhysical("Walk", 0, target)+EffectVar(0, target, no), 2, target);
-  SetPhysical("Jump", GetPhysical("Jump", 0, target)+EffectVar(1, target, no), 2, target);
-  SetPhysical("Scale", GetPhysical("Scale", 0, target)+EffectVar(2, target, no), 2, target);
-  SetPhysical("Hangle", GetPhysical("Hangle", 0, target)+EffectVar(3, target, no), 2, target);
+  SetPhysical("Walk", (GetPhysical("Walk", nil, target) ?? 0)+(EffectVar(nil, target, no) ?? 0), 2, target);
+  SetPhysical("Jump", (GetPhysical("Jump", nil, target) ?? 0)+(EffectVar(1, target, no) ?? 0), 2, target);
+  SetPhysical("Scale", (GetPhysical("Scale", nil, target) ?? 0)+(EffectVar(2, target, no) ?? 0), 2, target);
+  SetPhysical("Hangle", (GetPhysical("Hangle", nil, target) ?? 0)+(EffectVar(3, target, no) ?? 0), 2, target);
 
   // blar
-  if(!GetEffect("*Slimed*", target)) SetClrModulation(RGB(0,0,0), target);
+  if(!GetEffect("*Slimed*", target)) SetClrModulation(RGB(nil,nil,nil), target);
 
-  if(temp) return(0);
+  if(temp) return(nil);
 
   // Schleimklumpen entfernen
-  var glob = FindObject(GLOB, 0,0,0,0,0, "AGlobbing", target);
+  var glob = FindObject(GLOB, nil,nil,nil,nil,nil, "AGlobbing", target);
   if(glob) glob->~Boom();
 }
 

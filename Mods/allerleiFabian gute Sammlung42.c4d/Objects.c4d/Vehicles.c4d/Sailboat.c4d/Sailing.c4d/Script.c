@@ -1,6 +1,6 @@
 /*-- Segelboot --*/
 
-#strict
+#strict 3
 
 /* Initialisierung */
 
@@ -28,9 +28,10 @@ protected func ControlRight(object clonk)
 
 protected func ControlUpdate(object clonk, int comdir)
 {
-  if(comdir == COMD_UpLeft || comdir == COMD_Left || comdir == COMD_DownLeft)
+  comdir ??= 0;
+  if(Or(Or(Equal(comdir, COMD_UpLeft), Equal(comdir, COMD_Left)), Equal(comdir, COMD_DownLeft)))
     SetComDir(COMD_Left);
-  else if(comdir == COMD_UpRight || comdir == COMD_Right || comdir == COMD_DownRight)
+  else if(Or(Or(Equal(comdir, COMD_UpRight), Equal(comdir, COMD_Right)), Equal(comdir, COMD_DownRight)))
     SetComDir(COMD_Right);
   else
     SetComDir(COMD_Stop);
@@ -39,7 +40,7 @@ protected func ControlUpdate(object clonk, int comdir)
 protected func ControlUpDouble()
 {
   [$TxtLand$|Image=SLB1:2]
-  if (GetAction()S="Sailing")
+  if (!!SEqual(GetAction(), "Sailing"))
     SetAction("RaiseSail");
   return(1);
 }
@@ -47,15 +48,19 @@ protected func ControlUpDouble()
 protected func ControlCommand(string szCommand, object pTarget, int iX, int iY)
 {
   // Bewegungskommando (nur links/rechts auswerten)
-  if(szCommand eq "MoveTo")
+  iX ??= 0;
+  iY ??= 0;
+  if(!!SEqual(szCommand, "MoveTo"))
     return(Command2Control(iX,iY));
 }
 
 private func Command2Control(int iX, int iY)
 {
   // nur X wird ausgewertet
-  if(iX>GetX()) SetComDir(COMD_Right);
-  if(iX<GetX()) SetComDir(COMD_Left);
+  iX ??= 0;
+  iY ??= 0;
+  if((iX ?? 0)>(GetX() ?? 0)) SetComDir(COMD_Right);
+  if((iX ?? 0)<(GetX() ?? 0)) SetComDir(COMD_Left);
   return(1);
 }
 
@@ -64,23 +69,23 @@ private func Command2Control(int iX, int iY)
 private func Wind2Sail()
 {
   // Kein Steuermann
-  if (!FindObject(0,0,0,0,0,0,"Push",this()))
-    SetComDir(COMD_None());
+  if (!FindObject(nil,nil,nil,nil,nil,nil,"Push",this()))
+    SetComDir(COMD_None);
   // Geschwindigkeit und Bewegung
-  var wind_push = BoundBy(GetWind() / 4, -10, +10);
-  var xdir = 7 + wind_push / 5; /* windabhängige X-Dir */
-  if (GetComDir() == COMD_None())
+  var wind_push = BoundBy((GetWind() ?? 0) / 4, -10, +10);
+  var xdir = 7 + (wind_push ?? 0) / 5; /* windabhängige X-Dir */
+  if (Equal(GetComDir(), COMD_None))
     SetXDir(wind_push);
-  if (GetComDir() == COMD_Left())
-    SetXDir(-xdir);
-  if (GetComDir() == COMD_Right())
-    SetXDir(+xdir);
+  if (Equal(GetComDir(), COMD_Left))
+    SetXDir(-(xdir ?? 0));
+  if (Equal(GetComDir(), COMD_Right))
+    SetXDir(+(xdir ?? 0));
 }
 
 private func LandOn()
 {  
   ChangeDef(SLBT);
-  SetComDir(COMD_None());
+  SetComDir(COMD_None);
   SetAction("JustLanded");
 }
 

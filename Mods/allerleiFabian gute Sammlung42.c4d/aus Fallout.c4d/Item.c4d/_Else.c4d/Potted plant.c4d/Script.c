@@ -1,6 +1,6 @@
 /*--- Holz ---*/
 
-#strict
+#strict 3
 
 local type;
 
@@ -8,14 +8,14 @@ protected func Hit(xDir, yDir)
 {
   Sound("WoodHit*");
   ChangeDef(EI8Z);
-  SetXDir(0-(xDir/10)/5);
-  SetYDir(0-(yDir/10)/5);
+  SetXDir(0-((xDir ?? 0)/10)/5);
+  SetYDir(0-((yDir ?? 0)/10)/5);
   CastObjects(EF8Z,3,5);
   return(1);
 }
 
 protected func Activate() {
-  Exit(0,0,10);
+  Exit(nil,nil,10);
   return(Hit());
 }
 
@@ -39,10 +39,10 @@ public func FxIntBecomePotTimer(pTarget,iEffectNumber,iEffectTime) {
 }
 
 public func Check() {
-  if(MaterialName(GetMaterial()) eq "Oil" && !Random(2)) {
+  if(And(!!SEqual(MaterialName(GetMaterial()), "Oil"), !Random(2))) {
     type = "oil";
-    ExtractMaterialAmount(0,5,Material("Oil"),20);
+    ExtractMaterialAmount(nil,5,Material("Oil"),20);
     ChangeDef(EK8Z);
-    return();
+    return;
   }
 }

@@ -1,6 +1,6 @@
 /*-- Totes Bison --*/
 
-#strict
+#strict 3
 
 /* Verwesung */
 

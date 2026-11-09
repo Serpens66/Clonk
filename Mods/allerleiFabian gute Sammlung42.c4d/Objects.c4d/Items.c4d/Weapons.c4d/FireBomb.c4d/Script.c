@@ -1,6 +1,6 @@
 /*-- Brandbombe --*/
 
-#strict
+#strict 3
 
 local pProduced;
 
@@ -8,7 +8,7 @@ local pProduced;
 protected func Initialize()
 {
   // Wurden wir produziert? Dann gibts das leere Ölfass zurück
-  if(pProduced && Contained() == pProduced)
+  if(And(pProduced, Equal(Contained(), pProduced)))
     CreateContents(BARL, pProduced);
 }
 

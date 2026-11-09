@@ -1,6 +1,6 @@
 /*-- Tiervermehrung --*/
 
-#strict
+#strict 3
 
 // Status
 public func IsAnimal() { return true; }
@@ -25,8 +25,8 @@ private func SpecialReprodCond()
 private func CountMe()
 {
   var ReprodSize = ReproductionAreaSize();
-  var ReprodSizeHalb = ReprodSize  / -2;
-  return(ObjectCount(GetID(this()), ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive()));
+  var ReprodSizeHalb = (ReprodSize ?? 0)  / -2;
+  return(ObjectCount(GetID(this()), ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive));
 }
 
 /* Vermehrung */
@@ -34,21 +34,22 @@ private func CountMe()
 public func Reproduction(bool fRepr)
 {
   // Nicht mehr am Leben
-  if (!GetAlive()) return(0);
+  fRepr ??= false;
+  if (!GetAlive()) return(nil);
   // Noch nicht ausgewachsen
-  if (GetCon() < 100) return(0);
+  if ((GetCon() ?? 0) < 100) return(nil);
 //  if(FindObject(REPR) || !fRepr) return();
   // Spezielle Anforderung nicht erfüllt
-  if (!SpecialReprodCond()) return(0);
+  if (!SpecialReprodCond()) return(nil);
   // Schon zu viele Tiere dieser Art
 //  Log("%d/%d",  ObjectCount(GetID())+1, GetComponent(GetID(), 0, FindObject(REPR)));
-  if(!FindObject(REPR)) { if (CountMe() >= MaxAnimalCount()) return(0); }
-  else if(ObjectCount(GetID())+1 >= GetComponent(GetID(), 0, FindObject(REPR))) return(0);
+  if(!FindObject(REPR)) { if ((CountMe() ?? 0) >= (MaxAnimalCount() ?? 0)) return(nil); }
+  else if((ObjectCount(GetID()) ?? 0)+1 >= (GetComponent(GetID(), nil, FindObject(REPR)) ?? 0)) return(nil);
   // Reproduktion
   if (!SpecialRepr())
   {
     // Normale Reproduktion
-    var pChild = CreateConstruction(GetID(this()), 0, 0, -1, 40);
+    var pChild = CreateConstruction(GetID(this()), nil, nil, -1, 40);
     pChild->~Birth();
   }
   // Erfolg
@@ -60,8 +61,8 @@ public func Reproduction(bool fRepr)
 public func Birth()
 {
   SetAction("Walk");
-  if (Random(2)) SetComDir(COMD_Left());
-  else SetComDir(COMD_Right());
+  if (Random(2)) SetComDir(COMD_Left);
+  else SetComDir(COMD_Right);
   return(1);
 }
 
@@ -74,18 +75,18 @@ public func ForceEnter(object pContainer)
 {
   fForceEnter = 1;
   Enter(pContainer);
-  fForceEnter = 0;
+  fForceEnter = nil;
   return(1);
 }
 
 protected func RejectEntrance(object pContainer)
   {
   // Übergabe (z.B. Clonk->Lore) immer OK
-  if (Contained()) return();
+  if (Contained()) return;
   // Tot auch OK
-  if (!GetAlive()) return();
+  if (!GetAlive()) return;
   // Einsammeln erzwingen OK
-  if (fForceEnter) return();
+  if (fForceEnter) return;
   // Ansonsten abhängig von globaler Einstellung - definiert in Spielregel
   return !ANIM_IsCollectible(pContainer);
   }

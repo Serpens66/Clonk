@@ -1,6 +1,6 @@
 /*-- Plasmaflak --*/
 
-#strict
+#strict 3
 
 #include WEPN
 public func IsWeaponSystem()  { return(true); }
@@ -15,36 +15,38 @@ public func BarrelYOffset(){return(-10000); }
 // Daten für ersten Feuermodus
 public func FMData1(int data)
 {
-  if(data == FM_Name)       return("Plasmakanone");
-  if(data == FM_AmmoID)     return(ENAM);
-  if(data == FM_AmmoLoad)   return(50);
+  data ??= 0;
+  if(Equal(data, FM_Name))       return("Plasmakanone");
+  if(Equal(data, FM_AmmoID))     return(ENAM);
+  if(Equal(data, FM_AmmoLoad))   return(50);
 
-  if(data == FM_Reload)     return(140);
-  if(data == FM_Recharge)   return(5);
+  if(Equal(data, FM_Reload))     return(140);
+  if(Equal(data, FM_Recharge))   return(5);
 
-  if(data == FM_AmmoUsage)  return(1);
-  if(data == FM_AmmoRate)   return(1);
-  if(data == FM_Auto)       return(true);
+  if(Equal(data, FM_AmmoUsage))  return(1);
+  if(Equal(data, FM_AmmoRate))   return(1);
+  if(Equal(data, FM_Auto))       return(true);
 
-  if(data == FM_Damage)     return(20);
+  if(Equal(data, FM_Damage))     return(20);
 
   return(Default(data));
 }
 
 public func FMData2(int data)
 {
-  if(data == FM_Name)       return("nur Gebäude, Plasmakanone");
-  if(data == FM_AmmoID)     return(ENAM);
-  if(data == FM_AmmoLoad)   return(50);
+  data ??= 0;
+  if(Equal(data, FM_Name))       return("nur Gebäude, Plasmakanone");
+  if(Equal(data, FM_AmmoID))     return(ENAM);
+  if(Equal(data, FM_AmmoLoad))   return(50);
 
-  if(data == FM_Reload)     return(140);
-  if(data == FM_Recharge)   return(5);
+  if(Equal(data, FM_Reload))     return(140);
+  if(Equal(data, FM_Recharge))   return(5);
 
-  if(data == FM_AmmoUsage)  return(1);
-  if(data == FM_AmmoRate)   return(1);
-  if(data == FM_Auto)       return(true);
+  if(Equal(data, FM_AmmoUsage))  return(1);
+  if(Equal(data, FM_AmmoRate))   return(1);
+  if(Equal(data, FM_Auto))       return(true);
 
-  if(data == FM_Damage)     return(5);
+  if(Equal(data, FM_Damage))     return(5);
 
   return(Default(data));
 }
@@ -54,7 +56,7 @@ public func FMData2(int data)
 public func Predator()
 {
   local jaeger;
-  if(jaeger=FindObject(CAG_, -20,-20,40,40, 0,0,0,0)) return(1);
+  if(jaeger=FindObject(CAG_, -20,-20,40,40, nil,nil,nil,nil)) return(1);
   return(jaeger);
 }
 
@@ -62,41 +64,41 @@ public func Predator()
 // Feuern im ersten Feuermodus
 public func Fire1()		// ungenaues aber heftiges Minigunfeuer
 { 
-  if(!Predator()) return(0);
+  if(!Predator()) return(nil);
   var user = Contained();
   // Winkel: maximal 5° anvisieren, Streuung von 12°
-  var angle = GetR(jaeger)+RandomX(-3,+3);
+  var angle = (GetR(jaeger) ?? 0)+(RandomX(-3,+3) ?? 0);
   // Schuss an der Mündung der Waffe erstellen...
   var x,y;
-  x=Cos( GetR(jaeger) + 270 ,1);
-  y=Sin( GetR(jaeger) + 270 ,1);
+  x=Cos( (GetR(jaeger) ?? 0) + 270 ,1);
+  y=Sin( (GetR(jaeger) ?? 0) + 270 ,1);
   var ammo = CreateObject(SHT2,x,y,GetController(user));
   ammo->Launch(angle,300,600,8,400,GetFMData(FM_Damage, 1));
 
   // Effekte
-  MuzzleFlash(30,user,x,y,angle,RGBa(96,64,255,0));
+  MuzzleFlash(30,user,x,y,angle,RGBa(96,64,255,nil));
   // Sound
-  Sound("EnergyRifle",0,ammo);
+  Sound("EnergyRifle",nil,ammo);
 }
 
 
 public func Fire2()		// ungenaues aber heftiges Minigunfeuer
 { 
-  if(!Predator()) return(0);
+  if(!Predator()) return(nil);
   var user = Contained();
   // Winkel: maximal 5° anvisieren, Streuung von 12°
-  var angle = GetR(jaeger)+RandomX(-3,+3);
+  var angle = (GetR(jaeger) ?? 0)+(RandomX(-3,+3) ?? 0);
   // Schuss an der Mündung der Waffe erstellen...
   var x,y;
-  x=Cos( GetR(jaeger) + 270 ,1);
-  y=Sin( GetR(jaeger) + 270 ,1);
+  x=Cos( (GetR(jaeger) ?? 0) + 270 ,1);
+  y=Sin( (GetR(jaeger) ?? 0) + 270 ,1);
   var ammo = CreateObject(SH2_,x,y,GetController(user));
   ammo->Launch(angle,300,600,8,400,GetFMData(FM_Damage, 2));
 
   // Effekte
-  MuzzleFlash(30,user,x,y,angle,RGBa(96,64,255,0));
+  MuzzleFlash(30,user,x,y,angle,RGBa(96,64,255,nil));
   // Sound
-  Sound("EnergyRifle",0,ammo);
+  Sound("EnergyRifle",nil,ammo);
 }
 
 
@@ -117,7 +119,7 @@ private func Shoot(object caller)
 
   var ammoid = GetFMData(FM_AmmoID);
   //soll er zielen, zielt aber nicht?
-  if(!(GetUser()->~IsAiming()) && GetFMData(FM_Aim) && !(GetUser()->~AimOverride()))
+  if(And(And(!(GetUser()->~IsAiming()), GetFMData(FM_Aim)), !(GetUser()->~AimOverride())))
     return(stopauto=true); //abbrechen
     
   // Feuern...
@@ -126,17 +128,17 @@ private func Shoot(object caller)
     shooting = true;
 
   // Munition abziehen
-  if(ratecount == 1) {
+  if(Equal(ratecount, 1)) {
     var muni = GetFMData(FM_AmmoUsage);
-    DoAmmo(ammoid,-muni);
+    DoAmmo(ammoid,-(muni ?? 0));
     ratecount = GetFMData(FM_AmmoRate);
   }
-  else { --ratecount; }
+  else { S42MigrationStep(ratecount, -1); }
 
   // Pause nach einem Schuss
   if(GetAmmo(ammoid)) Recharge();
   else {
-    shooting = false;
+    shooting = nil;
     OnEmpty();
     if(GetFMData(FM_Auto)) OnAutoStop(firemode);
 

@@ -28,11 +28,11 @@ var bar = HashGet(hash, "foo"); // Wert mit dem Key "foo" wieder auslesen
 
  */
 
-#strict 2
+#strict 3
 
 /** Create an empty hash. */
 global func CreateHash() {
-	return [0, [[]]];
+	return [nil, [[]]];
 }
 
 /** Insert a value into a hash.
@@ -44,19 +44,19 @@ global func CreateHash() {
 global func HashPut(&hash, key, val) {
 	_Hash_Resize(hash);
 	var hashval = _Hash_HashVal(key);
-	var bidx = _Hash_UMod(hashval, GetLength(hash[_Hash_Bucket]));
-	if(!Inside(bidx, 0, GetLength(hash[_Hash_Bucket]) - 1))
-		Log("bidx out of bounds: %d (of %d)", bidx, GetLength(hash[_Hash_Bucket]) - 1);
-	for(var i = 0; i < GetLength(hash[_Hash_Bucket][bidx]); ++i) {
-		if(key == hash[_Hash_Bucket][bidx][i][_HashNode_Key]) {
-			hash[_Hash_Bucket][bidx][i][_HashNode_Val] = val;
+	var bidx = _Hash_UMod(hashval, GetLength(hash[(_Hash_Bucket ?? 0)]));
+	if(!Inside(bidx, nil, (GetLength(hash[(_Hash_Bucket ?? 0)]) ?? 0) - 1))
+		Log("bidx out of bounds: %d (of %d)", bidx, (GetLength(hash[(_Hash_Bucket ?? 0)]) ?? 0) - 1);
+	for(var i = nil; (i ?? 0) < (GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]) ?? 0); S42MigrationStep(i, 1)) {
+		if(S42MigrationEqual(key, hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Key ?? 0)])) {
+			hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Val ?? 0)] = val;
 			return [hash, bidx, i];
 		}
 	}
-	var ni = GetLength(hash[_Hash_Bucket][bidx]);
-	hash[_Hash_Bucket][bidx][ni] =
+	var ni = GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]);
+	hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(ni ?? 0)] =
 		[key, val, hashval];
-	++hash[_Hash_Size];
+	S42MigrationStep(hash[(_Hash_Size ?? 0)], 1);
 	
 	return [hash, bidx, ni];
 }
@@ -70,13 +70,14 @@ global func HashPut(&hash, key, val) {
  */
 global func HashFind(&hash, key) {
 	var hashval = _Hash_HashVal(key);
-	var bidx = _Hash_UMod(hashval, GetLength(hash[_Hash_Bucket]));
-	for(var i = 0; i < GetLength(hash[_Hash_Bucket][bidx]); ++i) {
-		if(key == hash[_Hash_Bucket][bidx][i][_HashNode_Key]) {
+	var bidx = _Hash_UMod(hashval, GetLength(hash[(_Hash_Bucket ?? 0)]));
+	for(var i = nil; (i ?? 0) < (GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]) ?? 0); S42MigrationStep(i, 1)) {
+		if(S42MigrationEqual(key, hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Key ?? 0)])) {
 			return [hash, bidx, i];
 		}
 	}
-	return HashIterToBack(HashIter(hash));
+	var iter = HashIter(hash);
+	return HashIterToBack(iter);
 }
 
 /** Checks for the existence of an element with a given key.
@@ -85,7 +86,8 @@ global func HashFind(&hash, key) {
  * \return \c true if an element with the key \c key exists, \c false otherwise.
  */
 global func HashContains(&hash, key) {
-	return HashIterHasNext(HashFind(hash, key));
+	var iter = HashFind(hash, key);
+	return HashIterHasNext(iter);
 }
 
 /** Get a value from a hash.
@@ -98,20 +100,21 @@ global func HashContains(&hash, key) {
  * found.
  */
 global func &HashGet(&hash, key, bool returnSuccess) {
+	returnSuccess ??= false;
 	var hashval = _Hash_HashVal(key);
-	var bidx = _Hash_UMod(hashval, GetLength(hash[_Hash_Bucket]));
-	for(var i = 0; i < GetLength(hash[_Hash_Bucket][bidx]); ++i) {
-		if(key == hash[_Hash_Bucket][bidx][i][_HashNode_Key]) {
+	var bidx = _Hash_UMod(hashval, GetLength(hash[(_Hash_Bucket ?? 0)]));
+	for(var i = nil; (i ?? 0) < (GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]) ?? 0); S42MigrationStep(i, 1)) {
+		if(S42MigrationEqual(key, hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Key ?? 0)])) {
 			if(returnSuccess)
-				return [hash[_Hash_Bucket][bidx][i][_HashNode_Val], true];
+				return [hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Val ?? 0)], true];
 			else
-				return hash[_Hash_Bucket][bidx][i][_HashNode_Val];
+				return hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Val ?? 0)];
 		}
 	}
 	if(returnSuccess)
-		return [0, false];
+		return [nil, nil];
 	else
-		return 0;
+		return nil;
 }
 
 /** Remove an element from a hash.
@@ -121,19 +124,19 @@ global func &HashGet(&hash, key, bool returnSuccess) {
  */
 global func HashErase(&hash, key) {
 	var hashval = _Hash_HashVal(key);
-	var bidx = _Hash_UMod(hashval, GetLength(hash[_Hash_Bucket]));
-	var found = false;
-	for(var i = 0; i < GetLength(hash[_Hash_Bucket][bidx]); ++i) {
+	var bidx = _Hash_UMod(hashval, GetLength(hash[(_Hash_Bucket ?? 0)]));
+	var found = nil;
+	for(var i = nil; (i ?? 0) < (GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]) ?? 0); S42MigrationStep(i, 1)) {
 		if(found) {
-			hash[_Hash_Bucket][bidx][i - 1] = hash[_Hash_Bucket][bidx][i];
-		} else if(key == hash[_Hash_Bucket][bidx][i][_HashNode_Key]) {
+			hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0) - 1] = hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)];
+		} else if(S42MigrationEqual(key, hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)][(i ?? 0)][(_HashNode_Key ?? 0)])) {
 			found = true;
 		}
 	}
 	if(found) {
-		SetLength(hash[_Hash_Bucket][bidx],
-		          GetLength(hash[_Hash_Bucket][bidx]) - 1);
-		--hash[_Hash_Size];
+		SetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)],
+		          (GetLength(hash[(_Hash_Bucket ?? 0)][(bidx ?? 0)]) ?? 0) - 1);
+		S42MigrationStep(hash[(_Hash_Size ?? 0)], -1);
 	}
 	_Hash_Resize(hash);
 	return found;
@@ -142,14 +145,14 @@ global func HashErase(&hash, key) {
 /** Returns the number of elements in the hash.
  */
 global func HashSize(&hash) {
-	return hash[_Hash_Size];
+	return hash[(_Hash_Size ?? 0)];
 }
 
 /** Create an iterator on a hash.
  * \param[in] hash The hash to iterate over
  */
 global func HashIter(&hash) {
-	return [hash, 0, 0];
+	return [hash, nil, nil];
 }
 
 /** Checks whether the iterator can advance.
@@ -158,16 +161,16 @@ global func HashIter(&hash) {
  * back of the corresponding hash.
  */
 global func HashIterHasNext(&iter) {
-	var ni = iter[_HashIter_Node];
-	for(var bi = iter[_HashIter_Bucket];
-	    bi < GetLength(iter[_HashIter_Hash][_Hash_Bucket]);
-	    ++bi)
+	var ni = iter[(_HashIter_Node ?? 0)];
+	for(var bi = iter[(_HashIter_Bucket ?? 0)];
+	    (bi ?? 0) < (GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)]) ?? 0);
+	    S42MigrationStep(bi, 1))
 	{
-		if(ni < GetLength(iter[_HashIter_Hash][_Hash_Bucket][bi]))
+		if((ni ?? 0) < (GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(bi ?? 0)]) ?? 0))
 			return true;
-		ni = 0;
+		ni = nil;
 	}
-	return false;
+	return nil;
 }
 
 /** Advances the iterator.
@@ -176,21 +179,21 @@ global func HashIterHasNext(&iter) {
  * the back of the hash.
  */
 global func HashIterNext(&iter) {
-	var ni = iter[_HashIter_Node];
+	var ni = iter[(_HashIter_Node ?? 0)];
 	var val;
-	for(var bi = iter[_HashIter_Bucket];
-	    bi < GetLength(iter[_HashIter_Hash][_Hash_Bucket]);
-	    ++bi)
+	for(var bi = iter[(_HashIter_Bucket ?? 0)];
+	    (bi ?? 0) < (GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)]) ?? 0);
+	    S42MigrationStep(bi, 1))
 	{
-		if(ni < GetLength(iter[_HashIter_Hash][_Hash_Bucket][bi])) {
-			val = iter[_HashIter_Hash][_Hash_Bucket][bi][ni];
-			iter[_HashIter_Bucket] = bi;
-			iter[_HashIter_Node] = ni + 1;
+		if((ni ?? 0) < (GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(bi ?? 0)]) ?? 0)) {
+			val = iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(bi ?? 0)][(ni ?? 0)];
+			iter[(_HashIter_Bucket ?? 0)] = bi;
+			iter[(_HashIter_Node ?? 0)] = (ni ?? 0) + 1;
 			return val;
 		}
-		ni = 0;
+		ni = nil;
 	}
-	return 0;
+	return nil;
 }
 
 /** Checks whether the iterator can step back.
@@ -199,11 +202,11 @@ global func HashIterNext(&iter) {
  * iter points at the beginning of the hash.
  */
 global func HashIterHasPrev(&iter) {
-	if(iter[_HashIter_Node]) return true;
-	for(var bi = iter[_HashIter_Bucket] - 1; bi >= 0; --bi) {
-		if(GetLength(iter[_HashIter_Hash][_Hash_Bucket][bi])) return true;
+	if(iter[(_HashIter_Node ?? 0)]) return true;
+	for(var bi = (iter[(_HashIter_Bucket ?? 0)] ?? 0) - 1; (bi ?? 0) >= 0; S42MigrationStep(bi, -1)) {
+		if(GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(bi ?? 0)])) return true;
 	}
-	return false;
+	return nil;
 }
 
 /** Moves the iterator backwards.
@@ -212,36 +215,36 @@ global func HashIterHasPrev(&iter) {
  * the beginning of the hash.
  */
 global func HashIterPrev(&iter) {
-	if(iter[_HashIter_Node]) {
-		return iter[_HashIter_Hash][_Hash_Bucket][iter[_HashIter_Bucket]]
-		       [--iter[_HashIter_Node]];
+	if(iter[(_HashIter_Node ?? 0)]) {
+		return iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(iter[(_HashIter_Bucket ?? 0)] ?? 0)]
+		       [S42MigrationStep(iter[(_HashIter_Node ?? 0)], -1)];
 	}
-	for(var bi = iter[_HashIter_Bucket] - 1; bi >= 0; --bi) {
-		iter[_HashIter_Node] = GetLength(iter[_HashIter_Hash]
-		                                 [_Hash_Bucket][bi]);
-		if(iter[_HashIter_Node] > 0) {
-			iter[_HashIter_Bucket] = bi;
-			return iter[_HashIter_Hash][_Hash_Bucket][iter[_HashIter_Bucket]]
-			       [--iter[_HashIter_Node]];
+	for(var bi = (iter[(_HashIter_Bucket ?? 0)] ?? 0) - 1; (bi ?? 0) >= 0; S42MigrationStep(bi, -1)) {
+		iter[(_HashIter_Node ?? 0)] = GetLength(iter[(_HashIter_Hash ?? 0)]
+		                                 [(_Hash_Bucket ?? 0)][(bi ?? 0)]);
+		if((iter[(_HashIter_Node ?? 0)] ?? 0) > 0) {
+			iter[(_HashIter_Bucket ?? 0)] = bi;
+			return iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)][(iter[(_HashIter_Bucket ?? 0)] ?? 0)]
+			       [S42MigrationStep(iter[(_HashIter_Node ?? 0)], -1)];
 		}
 	}
-	iter[_HashIter_Bucket] = iter[_HashIter_Node] = 0;
-	return 0;
+	iter[(_HashIter_Bucket ?? 0)] = iter[(_HashIter_Node ?? 0)] = nil;
+	return nil;
 }
 
 /** Moves the iterator to the front of the hash.
  */
 global func HashIterToFront(&iter) {
-	iter[_HashIter_Bucket] = iter[_HashIter_Node] = 0;
+	iter[(_HashIter_Bucket ?? 0)] = iter[(_HashIter_Node ?? 0)] = nil;
 	return iter;
 }
 
 /** Moves the iterator to the back of the hash.
  */
 global func HashIterToBack(&iter) {
-	iter[_HashIter_Bucket] = GetLength(iter[_HashIter_Hash][_Hash_Bucket]) - 1;
-	iter[_HashIter_Node] = GetLength(iter[_HashIter_Hash][_Hash_Bucket]
-	                                 [iter[_HashIter_Bucket]]);
+	iter[(_HashIter_Bucket ?? 0)] = (GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)]) ?? 0) - 1;
+	iter[(_HashIter_Node ?? 0)] = GetLength(iter[(_HashIter_Hash ?? 0)][(_Hash_Bucket ?? 0)]
+	                                 [(iter[(_HashIter_Bucket ?? 0)] ?? 0)]);
 	return iter;
 }
 
@@ -262,16 +265,16 @@ static const _HashIter_Node = 2;
 
 global func _Hash_DebugDump(&hash) {
 	Log("Hash debug dump");
-	Log("Entries: %d. Buckets: %d. Load factor: %d.", hash[_Hash_Size],
-	    GetLength(hash[_Hash_Bucket]), _Hash_LoadFactor(hash));
+	Log("Entries: %d. Buckets: %d. Load factor: %d.", hash[(_Hash_Size ?? 0)],
+	    GetLength(hash[(_Hash_Bucket ?? 0)]), _Hash_LoadFactor(hash));
 	Log("--------------------");
 	var iter = HashIter(hash);
 	var v;
 	for(;;) {
 		v = HashIterNext(iter);
 		if(!v) break;
-		Log("[%d @%d,%d] %s: %v => %s: %v", v[2], iter[_HashIter_Bucket],
-		    iter[_HashIter_Node] - 1,
+		Log("[%d @%d,%d] %s: %v => %s: %v", v[2], iter[(_HashIter_Bucket ?? 0)],
+		    (iter[(_HashIter_Node ?? 0)] ?? 0) - 1,
 		    _Hash_DebugDump_Type(GetType(v[0])), v[0],
 		    _Hash_DebugDump_Type(GetType(v[1])), v[1]);
 	}
@@ -279,67 +282,68 @@ global func _Hash_DebugDump(&hash) {
 }
 
 global func _Hash_DebugDump_Type(int t) {
-	if(t == C4V_String) return "string";
-	if(t == C4V_Int) return "int";
-	if(t == C4V_C4Object) return "object";
-	if(t == C4V_C4ID) return "id";
-	if(t == C4V_Array) return "array";
-	if(t == C4V_Bool) return "bool";
+	t ??= 0;
+	if(S42MigrationEqual(t, C4V_String)) return "string";
+	if(S42MigrationEqual(t, C4V_Int)) return "int";
+	if(S42MigrationEqual(t, C4V_C4Object)) return "object";
+	if(S42MigrationEqual(t, C4V_C4ID)) return "id";
+	if(S42MigrationEqual(t, C4V_Array)) return "array";
+	if(S42MigrationEqual(t, C4V_Bool)) return "bool";
 	return "any";
 }
 
 global func _Hash_Resize(&hash) {
 	var lf = _Hash_LoadFactor(hash);
-	var buckets, bc = GetLength(hash[_Hash_Bucket]);
-	if(lf > 75) {
+	var buckets, bc = GetLength(hash[(_Hash_Bucket ?? 0)]);
+	if((lf ?? 0) > 75) {
 		// MOAR BUCKETS!
-		bc *= 2;
-	} else if(lf < 25) {
+		S42MigrationAssign(bc, "*=", 2);
+	} else if((lf ?? 0) < 25) {
 		// Less buckets
-		bc /= 2; ++bc;
+		S42MigrationAssign(bc, "/=", 2); S42MigrationStep(bc, 1);
 	}
-	if(bc == GetLength(hash[_Hash_Bucket]))
+	if(S42MigrationEqual(bc, GetLength(hash[(_Hash_Bucket ?? 0)])))
 		return;
 	
 	buckets = CreateArray(bc);
-	for(var i = 0; i < bc; ++i) {
-		buckets[i] = [];
+	for(var i = nil; (i ?? 0) < (bc ?? 0); S42MigrationStep(i, 1)) {
+		buckets[(i ?? 0)] = [];
 	}
 	// Move each node to new bucket
-	for(var b in hash[_Hash_Bucket]) {
+	for(var b in hash[(_Hash_Bucket ?? 0)]) {
 		for(var n in b) {
-			buckets[_Hash_UMod(n[_HashNode_Hash], bc)]
-			       [GetLength(buckets[_Hash_UMod(n[_HashNode_Hash],bc)])] = n;
+			buckets[(_Hash_UMod(n[(_HashNode_Hash ?? 0)], bc) ?? 0)]
+			       [(GetLength(buckets[(_Hash_UMod(n[(_HashNode_Hash ?? 0)],bc) ?? 0)]) ?? 0)] = n;
 		}
 	}
-	hash[_Hash_Bucket] = buckets;
+	hash[(_Hash_Bucket ?? 0)] = buckets;
 }
 
 global func _Hash_LoadFactor(&hash) {
-	return hash[_Hash_Size]*100/GetLength(hash[_Hash_Bucket]);
+	return (hash[(_Hash_Size ?? 0)] ?? 0)*100/(GetLength(hash[(_Hash_Bucket ?? 0)]) ?? 0);
 }
 
 global func _Hash_HashVal(val) {
-	var h = 0;
+	var h = nil;
 	if(!val) {
-		return 0;
-	} else if(GetType(val) == C4V_String) {
+		return nil;
+	} else if(S42MigrationEqual(GetType(val), C4V_String)) {
 		// sdbm hash function
-		for(var i = 0, c; c = GetChar(val, i++);) {
-			h = c + (h << 16) + (h << 6) - h;
+		for(var i = nil, c; c = GetChar(val, S42MigrationStep(i, 1, true));) {
+			h = (c ?? 0) + ((h ?? 0) << 16) + ((h ?? 0) << 6) - (h ?? 0);
 		}
 		return h;
-	} else if(GetType(val) == C4V_Int || GetType(val) == C4V_Bool) {
+	} else if(S42MigrationEqual(GetType(val), C4V_Int) || S42MigrationEqual(GetType(val), C4V_Bool)) {
 		// cf. Knuth, sec. 6.4
-		return val * 0x9e3779b1;
-	} else if(GetType(val) == C4V_C4Object) {
+		return (val ?? 0) * 0x9e3779b1;
+	} else if(S42MigrationEqual(GetType(val), C4V_C4Object)) {
 		return _Hash_HashVal(val->ObjectNumber());
-	} else if(GetType(val) == C4V_Array) {
+	} else if(S42MigrationEqual(GetType(val), C4V_Array)) {
 		for(var v in val) {
-			h = _Hash_HashVal(v) + (h << 16) + (h << 6) - h;
+			h = (_Hash_HashVal(v) ?? 0) + ((h ?? 0) << 16) + ((h ?? 0) << 6) - (h ?? 0);
 		}
 		return h;
-	} else if(GetType(val) == C4V_C4ID) {
+	} else if(S42MigrationEqual(GetType(val), C4V_C4ID)) {
 		return _Hash_HashVal(CastInt(val));
 	} else {
 		FatalError("Type not hashable");
@@ -347,6 +351,8 @@ global func _Hash_HashVal(val) {
 }
 
 global func _Hash_UMod(int a, int b) {
-	if(a < 0) a += (Abs(a/b) + 1) * b;
-	return a % b;
+	a ??= 0;
+	b ??= 0;
+	if((a ?? 0) < 0) S42MigrationAssign(a, "+=", ((Abs((a ?? 0)/(b ?? 0)) ?? 0) + 1) * (b ?? 0));
+	return (a ?? 0) % (b ?? 0);
 }

@@ -1,16 +1,17 @@
 /* --- Array Funktionen --- */
 
-#strict 2
+#strict 3
 
 //Gibt das erste Vorkommen an
 global func ArrayDataIndex(array anArray, xnSearch, int dnStart)
 {
+	dnStart ??= 0;
 	if (!GetLength(anArray))
 		return -1;
-	if (dnStart >= GetLength(anArray))
+	if ((dnStart ?? 0) >= (GetLength(anArray) ?? 0))
 		return -1;
-	for (var i = dnStart; i < GetLength(anArray); i++)
-		if (anArray[i] == xnSearch)
+	for (var i = dnStart; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if (S42MigrationEqual(anArray[(i ?? 0)], xnSearch))
 			return i;
 	return -1;
 }
@@ -20,39 +21,41 @@ global func ArrayDataCount(array anArray, xnSearch)
 {
 	if (!GetLength(anArray))
 		return -1;
-	var dtAnz = 0;
+	var dtAnz = nil;
 	for (var xTemp in anArray) 
-		if (xTemp == xnSearch)
-			dtAnz++;
+		if (S42MigrationEqual(xTemp, xnSearch))
+			S42MigrationStep(dtAnz, 1, true);
 	return dtAnz;
 }
 
 //Hängt einen Wert an den Array an
 global func ArrayAdd(& anArray, xnNew, bool bNoDuplicates)
 {
-	if (GetType(anArray) != C4V_Array)
+	bNoDuplicates ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (bNoDuplicates)
 	{
 		var dTemp = ArrayDataIndex(anArray, xnNew);
-		if (dTemp != -1)
+		if (!S42MigrationEqual(dTemp, -1))
 			return dTemp;
 	}
-	anArray[GetLength(anArray)] = xnNew;
-	return GetLength(anArray) - 1;
+	anArray[(GetLength(anArray) ?? 0)] = xnNew;
+	return (GetLength(anArray) ?? 0) - 1;
 }
 
 //Sortiert einen Wert an einer Bestimmten Position ein
 global func ArraySortAdd(& anArray, xnNew, string sSortFunc, bool bReverse)
 {
-	if (GetType(anArray) != C4V_Array)
+	bReverse ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!GetLength(anArray))
 		return ArrayAdd(anArray, xnNew);
 	var i = -1;
-	while (++i < GetLength(anArray))
-		if (anArray[i] != xnNew)
-			if (eval(Format("Sort_%s(%v,%v)", sSortFunc, anArray[i], xnNew)) == bReverse)
+	while (S42MigrationStep(i, 1) < (GetLength(anArray) ?? 0))
+		if (!S42MigrationEqual(anArray[(i ?? 0)], xnNew))
+			if (S42MigrationEqual(eval(Format("Sort_%s(%v,%v)", sSortFunc, anArray[(i ?? 0)], xnNew)), bReverse))
 				return ArrayInsert(anArray, xnNew, i);
 	return ArrayAdd(anArray, xnNew);
 }
@@ -60,54 +63,57 @@ global func ArraySortAdd(& anArray, xnNew, string sSortFunc, bool bReverse)
 //Fügt einen Wert an einer Position ein
 global func ArrayInsert(& anArray, xnNew, int dPosition)
 {
-	if (GetType(anArray) != C4V_Array)
+	dPosition ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (dPosition < 0)
+	if ((dPosition ?? 0) < 0)
 		return -1;
-	if (dPosition >= GetLength(anArray))
+	if ((dPosition ?? 0) >= (GetLength(anArray) ?? 0))
 	{
-		anArray[dPosition] = xnNew;
+		anArray[(dPosition ?? 0)] = xnNew;
 		return dPosition;
 	}
 	var dTemp = GetLength(anArray);
-	while (--dTemp >= dPosition)
+	while (S42MigrationStep(dTemp, -1) >= (dPosition ?? 0))
 	{
-		anArray[dTemp + 1] = anArray[dTemp];
+		anArray[(dTemp ?? 0) + 1] = anArray[(dTemp ?? 0)];
 	}
-	anArray[dPosition] = xnNew;
+	anArray[(dPosition ?? 0)] = xnNew;
 	return dPosition;
 }
 
 //Löscht einen Index (andere Objekte rutschen nach)
 global func ArrayDeleteIndex(& anArray, int dPosition)
 {
-	if (GetType(anArray) != C4V_Array)
+	dPosition ??= 0;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (!Inside(dPosition, 0, GetLength(anArray) - 1))
+	if (!Inside(dPosition, nil, (GetLength(anArray) ?? 0) - 1))
 		return -1;
-	var dTemp = dPosition - 1;
-	while (++dTemp < GetLength(anArray) - 1)
+	var dTemp = (dPosition ?? 0) - 1;
+	while (S42MigrationStep(dTemp, 1) < (GetLength(anArray) ?? 0) - 1)
 	{
-		anArray[dTemp] = anArray[dTemp + 1];
+		anArray[(dTemp ?? 0)] = anArray[(dTemp ?? 0) + 1];
 	}
-	SetLength(anArray, GetLength(anArray) - 1);
+	SetLength(anArray, (GetLength(anArray) ?? 0) - 1);
 	return GetLength(anArray);
 }
 
 //Löscht das erste/alle Vorkommen des Eintrages
 global func ArrayDeleteEntry(& anArray, xnEntry, bool bDuplicates)
 {
-	if (GetType(anArray) != C4V_Array)
+	bDuplicates ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!GetLength(anArray))
-		return 0;
-	var dTemp, dAnz = 0;
-	while (((dTemp = ArrayDataIndex(anArray, xnEntry)) != -1) && (dAnz < 20))
+		return nil;
+	var dTemp, dAnz = nil;
+	while ((!S42MigrationEqual((dTemp = ArrayDataIndex(anArray, xnEntry)), -1)) && ((dAnz ?? 0) < 20))
 	{
 		ArrayDeleteIndex(anArray, dTemp);
 		if (!bDuplicates)
 			return dTemp;
-		dAnz++;
+		S42MigrationStep(dAnz, 1, true);
 	}
 	return dAnz;
 }
@@ -115,14 +121,15 @@ global func ArrayDeleteEntry(& anArray, xnEntry, bool bDuplicates)
 //Schnittmenge zweier Arrays
 global func ArrayAndArray(& anArray, array anArray2, bool bNoDuplicates)
 {
-	if (GetType(anArray) != C4V_Array)
+	bNoDuplicates ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetType(anArray2) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray2), C4V_Array))
 		return -1;
 	if ((!GetLength(anArray)) || (!GetLength(anArray2)))
 	{
 		anArray = [];
-		return 0;
+		return nil;
 	}
 	var aResult = [];
 	for (var xTemp in anArray) 
@@ -135,9 +142,10 @@ global func ArrayAndArray(& anArray, array anArray2, bool bNoDuplicates)
 //Verschmiltz zwei Arrays
 global func ArrayAddArray(& anArray, array anArray2, bool bNoDuplicates)
 {
-	if (GetType(anArray) != C4V_Array)
+	bNoDuplicates ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetType(anArray2) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray2), C4V_Array))
 		return -1;
 	if (!GetLength(anArray2))
 		return GetLength(anArray);
@@ -149,9 +157,9 @@ global func ArrayAddArray(& anArray, array anArray2, bool bNoDuplicates)
 //Löscht alle einträge von Array2 in Array1
 global func ArrayRemoveArrayEntries(& anArray, array anArray2)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	if (GetType(anArray2) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray2), C4V_Array))
 		return -1;
 	if (!GetLength(anArray2))
 		return GetLength(anArray);
@@ -163,7 +171,7 @@ global func ArrayRemoveArrayEntries(& anArray, array anArray2)
 //Löscht alle doppelten Einträge
 global func ArrayRemoveDuplicates(& anArray)
 {
-	if (GetType(anArray) != C4V_Array)
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	var atArray = anArray;
 	anArray = [];
@@ -174,17 +182,18 @@ global func ArrayRemoveDuplicates(& anArray)
 //Sortiert Arrays
 global func ArraySort(& anArray, string sSortFunc, bool bReverse)
 {
-	if (GetType(anArray) != C4V_Array)
+	bReverse ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!GetLength(anArray))
-		return 0;
+		return nil;
 	var i = -1;
-	while (++i < GetLength(anArray) - 1)
-		if (anArray[i] != anArray[i + 1])
-			if (eval(Format("Sort_%s(%v,%v)", sSortFunc, anArray[i], anArray[i + 1])) == bReverse)
+	while (S42MigrationStep(i, 1) < (GetLength(anArray) ?? 0) - 1)
+		if (!S42MigrationEqual(anArray[(i ?? 0)], anArray[(i ?? 0) + 1]))
+			if (S42MigrationEqual(eval(Format("Sort_%s(%v,%v)", sSortFunc, anArray[(i ?? 0)], anArray[(i ?? 0) + 1])), bReverse))
 			{
-				ArraySortAdd(anArray, anArray[i + 1], sSortFunc, bReverse);
-				ArrayDeleteIndex(anArray, i + 2);
+				ArraySortAdd(anArray, anArray[(i ?? 0) + 1], sSortFunc, bReverse);
+				ArrayDeleteIndex(anArray, (i ?? 0) + 2);
 			}
 	return GetLength(anArray);
 }
@@ -196,26 +205,29 @@ global func Sort_IDOrder(id idDef, id idDef2)
 
 global func Sort_NumericOrder(int dInt, int dInt2)
 {
-	return dInt < dInt2;
+	dInt ??= 0;
+	dInt2 ??= 0;
+	return (dInt ?? 0) < (dInt2 ?? 0);
 }
 
 //Filtert den Arrayinhalt
 global func ArrayFilter(& anArray, string sFilterFunc, xnFilterPara, bool bInvert)
 {
-	if (GetType(anArray) != C4V_Array)
+	bInvert ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
 	if (!GetLength(anArray))
-		return 0;
+		return nil;
 	var atArray = [];
 	for (var xtEntry in anArray) 
-		if (GetType(xtEntry) == C4V_C4Object)
+		if (S42MigrationEqual(GetType(xtEntry), C4V_C4Object))
 		{
-			if (eval(Format("Filter_%s(Object(%d),%v)", sFilterFunc, ObjectNumber(xtEntry), xnFilterPara)) != bInvert)
+			if (!S42MigrationEqual(eval(Format("Filter_%s(Object(%d),%v)", sFilterFunc, ObjectNumber(xtEntry), xnFilterPara)), bInvert))
 				ArrayAdd(atArray, xtEntry);
 		}
 		else
 		{
-			if (eval(Format("Filter_%s(%v,%v)", sFilterFunc, xtEntry, xnFilterPara)) != bInvert)
+			if (!S42MigrationEqual(eval(Format("Filter_%s(%v,%v)", sFilterFunc, xtEntry, xnFilterPara)), bInvert))
 				ArrayAdd(atArray, xtEntry);
 		}
 	anArray = atArray;
@@ -225,19 +237,23 @@ global func ArrayFilter(& anArray, string sFilterFunc, xnFilterPara, bool bInver
 //Geschützer Array Zugriff
 global func ArrayData(array anArray, int dnIndex, xExeption)
 {
-	if (Inside(dnIndex, 0, GetLength(anArray) - 1))
-		return anArray[dnIndex];
+	dnIndex ??= 0;
+	if (Inside(dnIndex, nil, (GetLength(anArray) ?? 0) - 1))
+		return anArray[(dnIndex ?? 0)];
 	return xExeption;
 }
 
 //Zahlen im Array anpassen
 global func ArrayBoundBy(& anArray, int dnMin, int dnMax, bool bRemoveDuplicates)
 {
-	if (GetType(anArray) != C4V_Array)
+	dnMin ??= 0;
+	dnMax ??= 0;
+	bRemoveDuplicates ??= false;
+	if (!S42MigrationEqual(GetType(anArray), C4V_Array))
 		return -1;
-	for (var i = 0; i < GetLength(anArray); i++)
-		if ((GetType(anArray[i]) == C4V_Int) || (anArray[i] == 0))
-			anArray[i] = BoundBy(anArray[i], dnMin, dnMax);
+	for (var i = nil; (i ?? 0) < (GetLength(anArray) ?? 0); S42MigrationStep(i, 1, true))
+		if ((S42MigrationEqual(GetType(anArray[(i ?? 0)]), C4V_Int)) || (S42MigrationEqual(anArray[(i ?? 0)], nil)))
+			anArray[(i ?? 0)] = BoundBy(anArray[(i ?? 0)], dnMin, dnMax);
 	if (bRemoveDuplicates)
 		ArrayRemoveDuplicates(anArray);
 	return GetLength(anArray);
@@ -246,5 +262,5 @@ global func ArrayBoundBy(& anArray, int dnMin, int dnMax, bool bRemoveDuplicates
 //Zufälliger Array Eintrag
 global func ArrayRandomEntry(array anArray)
 {
-	return anArray[Random(GetLength(anArray))];
+	return anArray[(Random(GetLength(anArray)) ?? 0)];
 }

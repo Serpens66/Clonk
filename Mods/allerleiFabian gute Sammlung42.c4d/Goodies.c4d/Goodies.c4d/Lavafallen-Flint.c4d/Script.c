@@ -1,8 +1,9 @@
-#strict
+#strict 3
 
-Hit:
+func Hit(...) {
   Explode(30);
     CastObjects(LAVA,10,10);
     CastObjects(LAVA,10,10);
     CastObjects(LAVA,10,10);
    return(1);
+}

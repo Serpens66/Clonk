@@ -1,12 +1,12 @@
 /*-- Superkuppel --*/
 
-#strict
+#strict 3
 
 local air1, air2;
 
 protected func Initialize()     // Initialisierung
 {
-  SetCategory(C4D_StaticBack());
+  SetCategory(C4D_StaticBack);
   // Airlocks erzeugen wenn noch nicht da
   if(!FindObject(AIR3,-380,200))
     {air1=CreateConstruction(AIR3,-380,210,GetOwner(),100,1);
@@ -22,17 +22,17 @@ air2->~SetRight();}
 protected func Damage()         // Schaden
 {
   // Zerstörung bei zuviel Damage
-  if(GetDamage()>500)
-    if(GetCategory()&C4D_StaticBack())
+  if((GetDamage() ?? 0)>500)
+    if((GetCategory() ?? 0)&(C4D_StaticBack ?? 0))
       DamageDestruction();
 }
 
 protected func DamageDestruction()        // Zerstörung
 {
-  DoDamage(-500,0);
+  DoDamage(-500,nil);
   DoCon(-50);
   Sound("DomeDestruct");
-  SetCategory(C4D_Structure());
+  SetCategory(C4D_Structure);
 }
 
 protected func Destruction()        // Abriss
@@ -48,8 +48,8 @@ _inherited();
 protected func Transfer()       // StartCall von Pump
 {
   // Wasser absaugen
-  for(var i=0;i<30;++i)
-    InsertMaterial(ExtractLiquid(0,RandomX(80,100)),-145,-45);
+  for(var i=nil;(i ?? 0)<30;S42MigrationStep(i, 1))
+    InsertMaterial(ExtractLiquid(nil,RandomX(80,100)),-145,-45);
 }
 
 /* Callbacks */

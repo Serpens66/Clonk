@@ -1,35 +1,35 @@
 /*-- Jagd --*/
 
-#strict
+#strict 3
 #include GOAL
 
 public func IsFulfilled()
 {
   // jede Gattung von Viechzeug überprüfen
-  if (FindObject(BIRD)) return(0);
-  if (FindObject(FMNS)) return(0);
-  if (FindObject(FISH)) return(0);
-  if (FindObject(MONS)) return(0);
-  if (FindObject(SHRK)) return(0);
-  if (FindObject(SNKE)) return(0);
-  if (FindObject(WIPF)) return(0);
-  if (FindObject(BEAR)) return(0);
-  if (FindObject(QFSH)) return(0);
-  if (FindObject(_CHP)) return(0);
-  if (FindObject(BBRD)) return(0);
-  if (FindObject(DRGN)) return(0);
-  if (FindObject(HICP)) return(0);
-  if (FindObject(PIRA)) return(0);
-  if (FindObject(SEAL)) return(0);
-  if (FindObject(SPFL)) return(0);
-  if (FindObject(HORS)) return(0);
-  if (FindObject(_IOZ)) return(0);
-  if (FindObject(ICCR)) return(0);
-  if (FindObject(FSKE)) return(0);
-  if (FindObject(SARN)) return(0);
-  if (FindObject(PHNX)) return(0);
-  if (FindObject(GRFN)) return(0);
-  if (FindObject(BAT1)) return(0);
+  if (FindObject(BIRD)) return(nil);
+  if (FindObject(FMNS)) return(nil);
+  if (FindObject(FISH)) return(nil);
+  if (FindObject(MONS)) return(nil);
+  if (FindObject(SHRK)) return(nil);
+  if (FindObject(SNKE)) return(nil);
+  if (FindObject(WIPF)) return(nil);
+  if (FindObject(BEAR)) return(nil);
+  if (FindObject(QFSH)) return(nil);
+  if (FindObject(_CHP)) return(nil);
+  if (FindObject(BBRD)) return(nil);
+  if (FindObject(DRGN)) return(nil);
+  if (FindObject(HICP)) return(nil);
+  if (FindObject(PIRA)) return(nil);
+  if (FindObject(SEAL)) return(nil);
+  if (FindObject(SPFL)) return(nil);
+  if (FindObject(HORS)) return(nil);
+  if (FindObject(_IOZ)) return(nil);
+  if (FindObject(ICCR)) return(nil);
+  if (FindObject(FSKE)) return(nil);
+  if (FindObject(SARN)) return(nil);
+  if (FindObject(PHNX)) return(nil);
+  if (FindObject(GRFN)) return(nil);
+  if (FindObject(BAT1)) return(nil);
   return(1);
 }
 

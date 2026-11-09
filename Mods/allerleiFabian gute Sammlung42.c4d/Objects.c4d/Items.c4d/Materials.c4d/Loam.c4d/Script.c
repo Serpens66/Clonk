@@ -1,13 +1,13 @@
 /*-- Lehmklumpen --*/
 
-#strict
+#strict 3
 
 public func Initialize()
 {
   // Erst alle Komponenten löschen
   var i, id;
-  while(id = GetComponent(0, i++, 0, GetID()) )
-    SetComponent(id, 0, this() );
+  while(id = GetComponent(nil, S42MigrationStep(i, 1, true), nil, GetID()) )
+    SetComponent(id, nil, this() );
   SetComponent(ILOA, 3, this() );
 }
 
@@ -30,21 +30,21 @@ public func Activate(caller)
 {
   [$CtrlActivateDesc$|Image=LMMS]
   // Clonk soll anhalten
-  SetComDir(COMD_Stop(), caller);
+  SetComDir(COMD_Stop, caller);
   // Nur, wenn der Clonk hier bauen kann
-  if (!CheckCanBridgeHere(caller)) return();
+  if (!CheckCanBridgeHere(caller)) return;
   // Menü öffnen
   CreateMenu(LMMS, caller, this());
-  AddMenuItem("$MnuWallLeft$", "MenuWall", LMM1, caller, 0, COMD_Left, 0, 2, 5);
-  AddMenuItem("$MnuWallLeftDiag$", "MenuWall", LMM1, caller, 0, COMD_UpLeft, 0, 2, 6);
-  AddMenuItem("$MnuWallStraight$", "MenuWall", LMM1, caller, 0, COMD_Up, 0, 2, 7);
-  AddMenuItem("$MnuWallRightDiag$", "MenuWall", LMM1, caller, 0, COMD_UpRight, 0, 2, 8);
-  AddMenuItem("$MnuWallRight$", "MenuWall", LMM1, caller, 0, COMD_Right, 0, 2, 9);
-  AddMenuItem("$MnuArrowLeft$", "MenuBridge", LMM1, caller, 0, COMD_Left, 0, 2, 0);
-  AddMenuItem("$MnuArrowLeftDiag$", "MenuBridge", LMM1, caller, 0, COMD_UpLeft, 0, 2, 1);
-  AddMenuItem("$MnuArrowStraight$", "MenuBridge", LMM1, caller, 0, COMD_Up, 0, 2, 2);
-  AddMenuItem("$MnuArrowRightDiag$", "MenuBridge", LMM1, caller, 0, COMD_UpRight, 0, 2, 3);
-  AddMenuItem("$MnuArrowRight$", "MenuBridge", LMM1, caller, 0, COMD_Right, 0, 2, 4);
+  AddMenuItem("$MnuWallLeft$", "MenuWall", LMM1, caller, nil, COMD_Left, nil, 2, 5);
+  AddMenuItem("$MnuWallLeftDiag$", "MenuWall", LMM1, caller, nil, COMD_UpLeft, nil, 2, 6);
+  AddMenuItem("$MnuWallStraight$", "MenuWall", LMM1, caller, nil, COMD_Up, nil, 2, 7);
+  AddMenuItem("$MnuWallRightDiag$", "MenuWall", LMM1, caller, nil, COMD_UpRight, nil, 2, 8);
+  AddMenuItem("$MnuWallRight$", "MenuWall", LMM1, caller, nil, COMD_Right, nil, 2, 9);
+  AddMenuItem("$MnuArrowLeft$", "MenuBridge", LMM1, caller, nil, COMD_Left, nil, 2, nil);
+  AddMenuItem("$MnuArrowLeftDiag$", "MenuBridge", LMM1, caller, nil, COMD_UpLeft, nil, 2, 1);
+  AddMenuItem("$MnuArrowStraight$", "MenuBridge", LMM1, caller, nil, COMD_Up, nil, 2, 2);
+  AddMenuItem("$MnuArrowRightDiag$", "MenuBridge", LMM1, caller, nil, COMD_UpRight, nil, 2, 3);
+  AddMenuItem("$MnuArrowRight$", "MenuBridge", LMM1, caller, nil, COMD_Right, nil, 2, 4);
   // Vorauswahl Senkrecht
   SelectMenuItem(7, caller);
   return(1);
@@ -52,19 +52,23 @@ public func Activate(caller)
 
 protected func MenuWall(id icon, int comdir, bool enterall)
 {
+  comdir ??= 0;
+  enterall ??= false;
   return(StartBridge(Contained(), comdir, true, enterall));  
 }
 
 protected func MenuBridge(id icon, int comdir, bool enterall)
 {  
-  return(StartBridge(Contained(), comdir, false, enterall));  
+  comdir ??= 0;
+  enterall ??= false;
+  return(StartBridge(Contained(), comdir, nil, enterall));
 }
 
 private func CanBridgeHere(object clonk)
 {
   // Nur wenn der Clonk steht und sich im Freien befindet
-  if (GetAction(clonk) ne "Walk") return false;
-  if (Contained(clonk)) return false;
+  if (!SEqual(GetAction(clonk), "Walk")) return nil;
+  if (Contained(clonk)) return nil;
   // Brücke OK
   return true;
 }
@@ -75,14 +79,17 @@ private func CheckCanBridgeHere(object clonk)
   if (CanBridgeHere(clonk)) return true;
   // Brücke nicht OK: Nachricht
   PlayerMessage(GetController(clonk), "$TxtCantBuild$", clonk, GetName(clonk));
-  Sound("Error", false, clonk, 100, GetController(clonk)+1);
-  return false;
+  Sound("Error", nil, clonk, 100, (GetController(clonk) ?? 0)+1);
+  return nil;
 }
 
 public func StartBridge(object clonk, int comdir, bool wall, bool alternate)
 {
   // Nur, wenn der Clonk hier bauen kann
-  if (!CheckCanBridgeHere(clonk)) return();
+  comdir ??= 0;
+  wall ??= false;
+  alternate ??= false;
+  if (!CheckCanBridgeHere(clonk)) return;
   // Evtl. weitere Aktionen durchführen
   this()->~OnBridge();
   // Aktion setzen
@@ -90,7 +97,7 @@ public func StartBridge(object clonk, int comdir, bool wall, bool alternate)
   // Richtung setzen
   clonk->SetComDir(comdir);
   var moveclonk = IsMovingClonkBridge();
-  if (wall && comdir == COMD_Up) moveclonk = false; // Decke über Clonk: Bewegung ist hier etwas blöd, weil sie die Decke ungleichmäßig macht
+  if (And(wall, Equal(comdir, COMD_Up))) moveclonk = nil; // Decke über Clonk: Bewegung ist hier etwas blöd, weil sie die Decke ungleichmäßig macht
   if (alternate) moveclonk = !moveclonk;
   // Brückendaten setzen
   SetBridgeActionData(BridgeTime(), moveclonk, wall, BridgeMaterial(), clonk);

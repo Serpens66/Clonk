@@ -1,17 +1,17 @@
-#strict
+#strict 3
 
 public func IsAmmo()  { return(true); }
 
 public func MaxAmmo(pObj) //pObj ist der Clonk
 {
 //Bauarbeiter können vor Stufe 15 keine Muni aufnehmen, danach nur mit Gürtel ein wenig (alle werte ca durch 6)
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()<15) return(0);
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()>=15 && pObj->MoreAmmo1()) return(75);
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()>=15 && pObj->MoreAmmo2()) return(100);
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()>=15 && pObj->MoreAmmoAllrounder1()) return(60);
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()>=15 && pObj->MoreAmmoAllrounder2()) return(70);
+if(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)<15)) return(nil);
+if(And(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)>=15), pObj->MoreAmmo1())) return(75);
+if(And(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)>=15), pObj->MoreAmmo2())) return(100);
+if(And(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)>=15), pObj->MoreAmmoAllrounder1())) return(60);
+if(And(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)>=15), pObj->MoreAmmoAllrounder2())) return(70);
 // falls noch kein Ergebnis, dann kein Gürtel an:
-if(pObj->~IstBauarbeiter() && pObj->~AktuelleStufe()>=15) return(0);
+if(And(pObj->~IstBauarbeiter(), (pObj->~AktuelleStufe() ?? 0)>=15)) return(nil);
 
 if(pObj->MoreAmmo1()) return(450);   // Gürtel klein für Munition  1,5mal soviel
 if(pObj->MoreAmmo2()) return(600);  // Gürtel groß für Munition  doppelt soviel

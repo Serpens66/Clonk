@@ -1,6 +1,6 @@
 /* Verbranntes Luftschiff */
 
-#strict
+#strict 3
 local mlight;
 
 /* Abbrennen: Eventuell verzögerte ClearDir-Aufrufe verwerfen */

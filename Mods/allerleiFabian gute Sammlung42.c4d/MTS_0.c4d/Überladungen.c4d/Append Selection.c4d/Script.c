@@ -1,6 +1,6 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 #appendto SEL1
 
 local selection, party;

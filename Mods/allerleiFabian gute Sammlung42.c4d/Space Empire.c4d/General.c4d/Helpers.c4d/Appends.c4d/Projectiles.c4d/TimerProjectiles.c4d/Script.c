@@ -1,10 +1,10 @@
-#strict
+#strict 3
 #appendto TFLN
 #appendto STFN
 
 public func Destroy()
 {
-  if (GetAction() eq "Activated")
+  if (!!SEqual(GetAction(), "Activated"))
   {
     CastPXS("FlyAshes",25,25);
     SetAction("TimeOver");
@@ -13,4 +13,5 @@ public func Destroy()
     ProtectedCall(this(),"Hit");
 }
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}

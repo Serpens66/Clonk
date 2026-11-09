@@ -1,27 +1,27 @@
 /*-- Ereignis-Info --*/
 
-#strict
+#strict 3
 
 // Dieses Script ist die Vorlage für andere Ereignis-Infos
 // und sollte deshalb immer #includet werden!
 
 protected func Initialize()
 {
-  SetPosition(0,0);
+  SetPosition(nil,nil);
   // nur für den einen Spieler sichtbar
-  SetVisibility(VIS_Owner());
+  SetVisibility(VIS_Owner);
   // Symbol an unterster Stelle löschen
-  var i = MaxInfos()-1;
+  var i = (MaxInfos() ?? 0)-1;
   var symbol = FindSymbol(i);
   if (symbol)
     symbol->Remove();
   // alle (von unten her) eins nach unten setzen
   while (i)
   {
-    --i;
+    S42MigrationStep(i, -1);
     symbol = FindSymbol(i);
     if (symbol)
-      SetPosition(35,108+i*28, symbol);
+      SetPosition(35,108+(i ?? 0)*28, symbol);
   }
   // sich selbst ganz oben einordnen
   SetPosition(35,80);
@@ -31,17 +31,17 @@ protected func Initialize()
 
 private func PlaySound()
 {
-  Sound("Bip3",1,0,100,GetOwner()+1);
+  Sound("Bip3",1,nil,100,(GetOwner() ?? 0)+1);
 }
 
 private func FindSymbol(position)
 {
   // Symbol an der angegebenen Stelle finden
   var symbol;
-  while (symbol = FindObjectOwner(0,GetOwner(), 35,80+position*28, 1,1, 0,0,0, symbol))
+  while (symbol = FindObjectOwner(nil,GetOwner(), 35,80+(position ?? 0)*28, 1,1, nil,nil,nil, symbol))
     if (symbol->~IsEventInfo())
       return(symbol);
-  return(0);
+  return(nil);
 }
 
 public func Remove()
@@ -55,18 +55,20 @@ public func Remove()
 private func EventFadeOut()
 {
   // ausblenden
-  var alpha = GetActTime()/5;
+  var alpha = (GetActTime() ?? 0)/5;
   SetClrModulation(RGBa(255,255,255,alpha));
   // zum Schluss löschen
-  if (alpha >= 255)
+  if ((alpha ?? 0) >= 255)
     return(Remove());
 }
 
 /* Maximalzahl an Info-Symbolen */
 
-public MaxInfos: return(12);
+public func MaxInfos(...) { return(12);
+}
 
 /* Erkennungsmerkmal */
 
-public IsEventInfo: return(1);
+public func IsEventInfo(...) { return(1);
+}
 

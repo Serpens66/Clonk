@@ -1,6 +1,6 @@
 /*-- Lichter ohne Energie --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

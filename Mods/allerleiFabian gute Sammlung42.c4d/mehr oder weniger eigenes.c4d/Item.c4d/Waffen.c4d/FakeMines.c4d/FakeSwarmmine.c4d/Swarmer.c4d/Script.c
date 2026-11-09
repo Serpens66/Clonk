@@ -1,44 +1,44 @@
 /*-- Schwärmer --*/
 
-#strict
+#strict 3
 #include MIN_
 
 local xdir, ydir;
 
 func Activate() {
-    DoDamage(0);
+    DoDamage(nil);
 
-	var speed = RandomX(0,50);
+	var speed = RandomX(nil,50);
 	var angle = Random(360);
     xdir = Sin(angle, speed);
-    ydir = -Cos(angle, speed);
+    ydir = -(Cos(angle, speed) ?? 0);
 
     SetSpeed(xdir, ydir);
     SetAction("Fly");
     
-    var tmp = CreateObject(MFLG,0,0,GetController());
+    var tmp = CreateObject(MFLG,nil,nil,GetController());
     tmp->Set(this());
     tmp->SetR(Random(360));
     tmp->SetCon(70);
 }
 
 protected func DecreaseSpeed() {
-    if(xdir > 0)
-      xdir--;
-    if(xdir < 0)
-      xdir++;
-    if(ydir > 0)
-      ydir--;
-    if(ydir < 0)
-      ydir++;
+    if((xdir ?? 0) > 0)
+      S42MigrationStep(xdir, -1, true);
+    if((xdir ?? 0) < 0)
+      S42MigrationStep(xdir, 1, true);
+    if((ydir ?? 0) > 0)
+      S42MigrationStep(ydir, -1, true);
+    if((ydir ?? 0) < 0)
+      S42MigrationStep(ydir, 1, true);
 
     SetSpeed(xdir, ydir);
-    if(!(GetActTime()%RandomX(20,22))) Warning();
+    if(!((GetActTime() ?? 0)%(RandomX(20,22) ?? 0))) Warning();
     Check();
 }
 
 protected func Warning() {
-    CreateParticle("PSpark",0,0,0,0,40,RGBa(0,64,255,120),this());
+    CreateParticle("PSpark",nil,nil,nil,nil,40,RGBa(nil,64,255,120),this());
 }
 
 protected func Triggered() {                // ausgelöst (nach delay)
@@ -49,4 +49,4 @@ private func MaxDamage() { return(6); }
 private func ExploDist() { return(16); }
 private func ExploDelay() { return(5); }
 
-public func IsEquipment() { return(0); }
+public func IsEquipment() { return(nil); }

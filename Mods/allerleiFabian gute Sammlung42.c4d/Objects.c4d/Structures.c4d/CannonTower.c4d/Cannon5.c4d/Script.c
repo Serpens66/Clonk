@@ -1,6 +1,6 @@
 /*--- Flammenwerfer ---*/
 
-#strict
+#strict 3
 
 #include CTW3
 
@@ -11,7 +11,7 @@ protected func ConnectID() { return(ACT4); }
 public func LightningStrike()
 {
   // Nur wenn fertig gebaut
-  if (LessThan(GetCon(),100)) return(0);
+  if (LessThan(GetCon(),100)) return(nil);
   // Energiegewinnung
   CreateContents(CRYS);
   // Sound

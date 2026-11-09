@@ -1,12 +1,12 @@
 /*-- Geldbeutel --*/
 
-#strict
+#strict 3
 
 local Money;
 
 public func Activate(pClonk)
 {
-  SetWealth(GetOwner(pClonk),GetWealth(GetOwner(pClonk))+ Money);
+  SetWealth(GetOwner(pClonk),(GetWealth(GetOwner(pClonk)) ?? 0)+ (Money ?? 0));
   if(Money)
     {
     Message("$ShowMoney$",pClonk,Money);

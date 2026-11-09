@@ -1,6 +1,6 @@
 /*-- Chemiefabrik --*/
 
-#strict
+#strict 3
 #include BOB1
 
 local basement, producer, manager;  // Objektpointer für Hilfsobjekte
@@ -11,17 +11,17 @@ public func IsWaste(){ return(10);}
 
 protected func Construction()
 {
-  basement = CreateObject(BS16,0,8,GetOwner()); 
+  basement = CreateObject(BS16,nil,8,GetOwner());
   return(1);
 }
 
 protected func Initialize()
 {
-  manager=CreateObject(BMAN,0,0,GetOwner());
+  manager=CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
   manager->InitLight(-7,-14);
   
-  producer = CreateObject(C_F1,0,0,GetOwner()); 
+  producer = CreateObject(C_F1,nil,nil,GetOwner());
   producer->Init(this());
   return(1);
 }

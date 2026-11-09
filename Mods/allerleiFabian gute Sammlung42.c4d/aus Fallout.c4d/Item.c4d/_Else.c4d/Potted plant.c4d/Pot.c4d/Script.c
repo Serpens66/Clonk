@@ -1,6 +1,6 @@
 /*--- Holz ---*/
 
-#strict
+#strict 3
 
 protected func Hit(xDir, yDir)
 {
@@ -9,7 +9,7 @@ protected func Hit(xDir, yDir)
   var obj = Contents();
   if (obj) {
     Exit(obj);
-    if(GetID(obj) == CY8Z) obj->Activate();
+    if(Equal(GetID(obj), CY8Z)) obj->Activate();
     obj->~Hit();
   }
   return(RemoveObject());
@@ -17,9 +17,9 @@ protected func Hit(xDir, yDir)
 
 protected func Activate(pObj) {
   if (Contents()) return(Message("This pot contains a %v.",this,GetName(Contents())));
-  CreateMenu(EJ8Z,pObj,0,0,"No items nearby.");
+  CreateMenu(EJ8Z,pObj,nil,nil,"No items nearby.");
   for(var pItem in FindObjects (Find_Distance(20), Find_Category(C4D_Object), Find_Exclude(this),Find_NoContainer ()))  
-    AddMenuItem (GetName(pItem), "PutIn",GetID(pItem), pObj,0,pItem, "Put it in the pot"); 
+    AddMenuItem (GetName(pItem), "PutIn",GetID(pItem), pObj,nil,pItem, "Put it in the pot");
   return(1);
 }
 

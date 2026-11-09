@@ -1,6 +1,6 @@
 /*-- Scanner --*/
 
-#strict
+#strict 3
 
 public func Init(lasertower)
 {

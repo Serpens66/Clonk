@@ -1,6 +1,6 @@
 /* Wird abgefeuert */
 
-#strict
+#strict 3
 
 public func Launch()
 {
@@ -11,7 +11,7 @@ public func Launch()
 private func Travel()
 {
   // Treffer-Überprüfung
-  if(FindObject(0,-5,-5,10,10,OCF_Prey(),0,0,NoContainer())) return(Hit());
+  if(FindObject(nil,-5,-5,10,10,OCF_Prey,nil,nil,NoContainer())) return(Hit());
   CastObjects(DFLM,1,1);
 }
   

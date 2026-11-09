@@ -1,6 +1,6 @@
 /*--- Signal ---*/
 
-#strict
+#strict 3
 
 /* Initialisierung */
 
@@ -19,7 +19,7 @@ public func ControlDownSingle()
 {
   [$TxtThrough$|Image=SG01:0]
   Sound("SignalClick");
-  SetPhase(0);
+  SetPhase(nil);
 }
 
 public func ControlUp()
@@ -47,15 +47,15 @@ public func ControlThrow()
 {
   [$TxtLoadunload$|Image=SG01:4]
   Sound("SignalClick");
-  var dir = GetDir() + 1;
-  SetDir(dir * (dir != 3) );
+  var dir = (GetDir() ?? 0) + 1;
+  SetDir((dir ?? 0) * ((!Equal(dir, 3)) ?? 0) );
 }
 
 public func ControlDigDouble(object pClonk)
 {
   [$TxtDeconstruct$|Image=SG01:5]
   Sound("SignalClick");
-  CreateObject(CNKT,0,20,GetOwner(pClonk) );
+  CreateObject(CNKT,nil,20,GetOwner(pClonk) );
   RemoveObject();
 }
 
@@ -64,48 +64,48 @@ public func ControlDigDouble(object pClonk)
 public func ContextDeconstruct(object pClonk)
 {
   [$TxtDeconstruct$|Image=SG01:5|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlDigDouble");
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlDigDouble");
   AddCommand(pClonk,"Grab",this());
 }
 
 public func ContextLoad(object pClonk)
 {
   [$TxtLoadunload$|Image=SG01:4|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlThrow");
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlThrow");
   AddCommand(pClonk,"Grab",this());
 }
 
 public func ContextStopGo(object pClonk)
 {
   [$TxtHaltandgo$|Image=SG01:3|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlUp");  
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlUp");
   AddCommand(pClonk,"Grab",this());
 }
 
 public func ContextStopRight(object pClonk)
 {
   [$TxtHaltandturnright$|Image=SG01:2|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlRight");  
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlRight");
   AddCommand(pClonk,"Grab",this());
 }
 
 public func ContextStopLeft(object pClonk)
 {
   [$TxtHaltandturnleft$|Image=SG01:1|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlLeft");  
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlLeft");
   AddCommand(pClonk,"Grab",this());
 }
 
 public func ContextThrough(object pClonk)
 {
   [$TxtThrough$|Image=SG01:0|Condition=IsBuilt]
-  AddCommand(pClonk,"Call",this(),0,0,0,0,"ControlDownSingle");  
+  AddCommand(pClonk,"Call",this(),nil,nil,nil,nil,"ControlDownSingle");
   AddCommand(pClonk,"Grab",this());
 }
 
 protected func IsBuilt() 
 {
-  return(GetCon() >= 100);
+  return((GetCon() ?? 0) >= 100);
 }
 
 /* Materialtransport */
@@ -113,8 +113,8 @@ protected func IsBuilt()
 public func TrainArrive(object pTrain)
 {
   var dir = GetDir();
-  if(!dir) return(0);
-  return(pTrain->~SignalCall(this(), --dir) );
+  if(!dir) return(nil);
+  return(pTrain->~SignalCall(this(), S42MigrationStep(dir, -1)) );
 }
 
 public func TrainDepart(object pTrain)

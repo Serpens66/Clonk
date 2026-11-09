@@ -1,6 +1,6 @@
 /*-- Cancer --*/
 
-#strict
+#strict 3
 #include XFER   // Transfer-Script
 
 public func IsHazardShip()  { return(true); }
@@ -17,9 +17,9 @@ func Ownerkontrolle()
 {
 var owner,obj;
 for (obj in FindObjects(Find_Or(Find_Container(this()),Find_Container(heat1),Find_Container(heat2),Find_Container(kanzel1),Find_Container(kanzel2),Find_Container(generator),Find_Container(teleporter),Find_Container(bridge))) )
-if(obj->~IsClonk() && GetController()==-1) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
+if(And(obj->~IsClonk(), Equal(GetController(), -1))) // in den besitz des clonks übergehen, sofern es zuvor keinen controller hatte
   {owner=GetOwner(obj);
-  if(GetOwner(obj)!=GetOwner(this()))
+  if(!Equal(GetOwner(obj), GetOwner(this())))
     {
   Sound("BipBipBip");
   Message("%v geht in den Besitz von %v über.",this(),GetName(this()),GetPlayerName(owner));
@@ -46,32 +46,32 @@ SetController(-1);
 //Initialisierung
 func Initialize() {
 
-  counter=0;
+  counter=nil;
   nanites=25;
   SetAction("Schwebe");
   
 //Wärmequelle erstellen
-  heat1=CreateObject(PRQ_,0,0,GetOwner());
+  heat1=CreateObject(PRQ_,nil,nil,GetOwner());
   ObjectSetAction(heat1,"Attaching",this());
   SetActionData(256 + 7 , heat1);
   
-  heat2=CreateObject(PRQ_,0,0,GetOwner());
+  heat2=CreateObject(PRQ_,nil,nil,GetOwner());
   ObjectSetAction(heat2,"Attaching",this());
   SetActionData(256 + 1 , heat2);
   
 //Brücke erstellen und integrieren
-  bridge=CreateObject(CAB_,0,0,GetOwner());
+  bridge=CreateObject(CAB_,nil,nil,GetOwner());
   ObjectSetAction(bridge,"Attaching",this());
   bridge->Bezug(this());  
   
 //Geschütze erstellen und anbringen
-  kanzel1=CreateObject(CAG_,0,0,GetOwner());
+  kanzel1=CreateObject(CAG_,nil,nil,GetOwner());
   ObjectSetAction(kanzel1,"Attaching",this());
   SetActionData(256 + 14 , kanzel1);
   kanzel1->Rotinit(40,10,80);
   kanzel1->Bezug(this());
 
-  kanzel2=CreateObject(CAG_,0,0,GetOwner());
+  kanzel2=CreateObject(CAG_,nil,nil,GetOwner());
   ObjectSetAction(kanzel2,"Attaching",this());
   SetActionData(256 + 13 , kanzel2);
   kanzel2->Rotinit(-40,-80,-10);
@@ -79,15 +79,15 @@ func Initialize() {
 
 
 //Generator erstellen und integrieren
-  generator=CreateObject(CGE_,0,0,GetOwner());
+  generator=CreateObject(CGE_,nil,nil,GetOwner());
   ObjectSetAction(generator,"Attaching",this());
   generator->Bezug(this());
   
 //Teleporter erstellen und integrieren
-  teleporter=CreateObject(CTE_,0,0,GetOwner());
+  teleporter=CreateObject(CTE_,nil,nil,GetOwner());
   ObjectSetAction(teleporter,"Attaching",this());
   teleporter->Bezug(this());
-  ScheduleCall(0,"Empty",10);
+  ScheduleCall(nil,"Empty",10);
   //teleporter->BeamUp();  funktioniert nicht, beamt nicht korrekt rein und Clonk ist gefangen. betreten über baubaren teleporter, danach funktioniert auch interner teleporter
 
 //Scorpions Anhängen
@@ -114,7 +114,7 @@ _inherited(a,b,c,d,e,f);
 func Nachdeparture()
 {
 //um festhängen zu vermeiden
-SetPosition(GetX(),GetY()-20,this());
+SetPosition(GetX(),(GetY() ?? 0)-20,this());
 }
 
 public func Empty()
@@ -137,7 +137,7 @@ public func Waiting()
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -146,83 +146,85 @@ protected func RejectCollect()
 public func OnDmg(int iDmg, int iType)
 { 
   //Mögliche Resistenzen berücksichtigen
-  if(iType & DMG_Projectile)
+  iDmg ??= 0;
+  iType ??= 0;
+  if((iType ?? 0) & (DMG_Projectile ?? 0))
     return(90);
-  if(iType & DMG_Fire)
+  if((iType ?? 0) & (DMG_Fire ?? 0))
     return(80);
-  if(iType & DMG_Explosion)
+  if((iType ?? 0) & (DMG_Explosion ?? 0))
     return(80);
-  if(iType & DMG_Energy)
+  if((iType ?? 0) & (DMG_Energy ?? 0))
     return(40);
-  if(iType & DMG_Bio)
+  if((iType ?? 0) & (DMG_Bio ?? 0))
     return(50);
 }
 
 func Damage()
 {
-  if(GetDamage()>MaxDamage()) Explosion();
-  if(GetDamage()<MaxDamage()-10) return(0);
-  counter=0;
+  if((GetDamage() ?? 0)>(MaxDamage() ?? 0)) Explosion();
+  if((GetDamage() ?? 0)<(MaxDamage() ?? 0)-10) return(nil);
+  counter=nil;
   SetPhysical("Float",200,2);
   SetAction("Down");
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
   ObjectCall(Local(1),"ComDown",this());
   return(1);
 }
 
 func Down()
 {
-  counter++;
-  if(counter>150) Explosion();
+  S42MigrationStep(counter, 1, true);
+  if((counter ?? 0)>150) Explosion();
   Schaden();
 }
 
 func Schaden()
 {
-  if(nanites && GetDamage() && !Random(100-nanites/2))
+  if(And(And(nanites, GetDamage()), !Random(100-(nanites ?? 0)/2)))
   {
   DoDamage(-5,this());
-  nanites--;
+  S42MigrationStep(nanites, -1, true);
   if(!Random(2)) Sound("PRReparatur1");
   if(!Random(1)) Sound("PRReparatur2");
   Sound("PRReparatur3");
-  Sparks(10,RGB(0,0,255),RandomX(-30,30),RandomX(-15,15));
+  Sparks(10,RGB(nil,nil,255),RandomX(-30,30),RandomX(-15,15));
   }
   //Scorpions Reparieren
-  if(nanites && !Scorpcheck1() && GetDamage(scorpion1) && !Random(100-nanites/2))
+  if(And(And(And(nanites, !Scorpcheck1()), GetDamage(scorpion1)), !Random(100-(nanites ?? 0)/2)))
   {
   DoDamage(-5,scorpion1);
-  nanites--;
+  S42MigrationStep(nanites, -1, true);
   if(!Random(2)) Sound("PRReparatur1");
   if(!Random(1)) Sound("PRReparatur2");
   Sound("PRReparatur3");
-  Sparks(10,RGB(0,0,255),-40,15);
+  Sparks(10,RGB(nil,nil,255),-40,15);
   }
 
-  if(nanites && !Scorpcheck2() && GetDamage(scorpion2) && !Random(100-nanites/2))
+  if(And(And(And(nanites, !Scorpcheck2()), GetDamage(scorpion2)), !Random(100-(nanites ?? 0)/2)))
   {
   DoDamage(-5,scorpion2);
-  nanites--;
+  S42MigrationStep(nanites, -1, true);
   if(!Random(2)) Sound("PRReparatur1");
   if(!Random(1)) Sound("PRReparatur2");
   Sound("PRReparatur3");
-  Sparks(10,RGB(0,0,255),40,15);
+  Sparks(10,RGB(nil,nil,255),40,15);
   }
   
   //Schaden sichtbar machen
-  if(GetDamage()>=60)
-  CreateParticle("Smoke2",-10 , 0,GetXDir()/2,-20,15+GetDamage()/6,RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=150)
-  CreateParticle("Smoke2",65 ,10,GetXDir()/2,-20,15+GetDamage()/6,RGBa(220,200,180,0),0,0); 
-  if(GetDamage()>=240)
+  if((GetDamage() ?? 0)>=60)
+  CreateParticle("Smoke2",-10 , nil,(GetXDir() ?? 0)/2,-20,15+(GetDamage() ?? 0)/6,RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=150)
+  CreateParticle("Smoke2",65 ,10,(GetXDir() ?? 0)/2,-20,15+(GetDamage() ?? 0)/6,RGBa(220,200,180,nil),nil,nil);
+  if((GetDamage() ?? 0)>=240)
   {
-  CreateParticle("Smoke2",10 ,0,GetXDir()/2,-20,15+GetDamage()/6,RGBa(220,200,180,0),0,0); 
-  CreateParticle("Thrust",Random(10) ,Random(10),GetXDir()/2,+2,RandomX(70,90),RGBa(10,150,150,60),0,0);
+  CreateParticle("Smoke2",10 ,nil,(GetXDir() ?? 0)/2,-20,15+(GetDamage() ?? 0)/6,RGBa(220,200,180,nil),nil,nil);
+  CreateParticle("Thrust",Random(10) ,Random(10),(GetXDir() ?? 0)/2,+2,RandomX(70,90),RGBa(10,150,150,60),nil,nil);
   }
-  if(GetDamage()>=270)
+  if((GetDamage() ?? 0)>=270)
   {
-  CreateParticle("Smoke2",-3 ,15,GetXDir()/2,-20,50+GetDamage()/6,RGBa(220,200,180,0),0,0); 
-  if(Random(250-GetDamage()*2)==1) DoDamage(3);
+  CreateParticle("Smoke2",-3 ,15,(GetXDir() ?? 0)/2,-20,50+(GetDamage() ?? 0)/6,RGBa(220,200,180,nil),nil,nil);
+  if(Equal(Random(250-(GetDamage() ?? 0)*2), 1)) DoDamage(3);
   }
 }
 
@@ -254,14 +256,14 @@ func Removal()
 
 func Explosion()
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Exit(pilot);
-  if(!sphere)sphere=CreateObject(TSP_,0,0,GetOwner());
+  if(!sphere)sphere=CreateObject(TSP_,nil,nil,GetOwner());
   Removal();
   SetXDir(-30,CreateObject(CB1_,-20,20));
   SetXDir(30,CreateObject(CB2_,20,20));
   if(ObjectCount(GFSD))  GameCall("Flagship",team);
-  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(80); else FakeExplode(80,0,0,80);
+  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(80); else FakeExplode(80,nil,nil,80);
   return(1);
 }
 
@@ -298,8 +300,8 @@ func ContainedThrow(){
 
 func Schwebe()
 {
-  counter=0;
-  SetComDir(COMD_Stop());
+  counter=nil;
+  SetComDir(COMD_Stop);
   SetAction("Bremse");
   return(1);
 }
@@ -307,16 +309,16 @@ func Schwebe()
 
 func Bremse()
 {
-  counter+=1;
-  if(counter>15)
+  S42MigrationAssign(counter, "+=", 1);
+  if((counter ?? 0)>15)
   {
   SetAction("Schwebe");
-  counter=0;
+  counter=nil;
   }
-  if(GetXDir()>0)  SetXDir(GetXDir()-2);  
-  if(GetXDir()<0)  SetXDir(GetXDir()+2);
-  if(GetYDir()>0)  SetYDir(GetYDir()-2);  
-  if(GetYDir()<0)  SetYDir(GetYDir()+2);
+  if((GetXDir() ?? 0)>0)  SetXDir((GetXDir() ?? 0)-2);
+  if((GetXDir() ?? 0)<0)  SetXDir((GetXDir() ?? 0)+2);
+  if((GetYDir() ?? 0)>0)  SetYDir((GetYDir() ?? 0)-2);
+  if((GetYDir() ?? 0)<0)  SetYDir((GetYDir() ?? 0)+2);
   Schaden();
   return(1);
 }
@@ -324,31 +326,31 @@ func Bremse()
 func ContainedDig(pByObj)
 {
   pilot=pByObj;
-  CreateMenu(CAN_,Par(0),0,0,0,0);
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(kanzel2->Besetzt())    AddMenuItem("%s","Geschuetzkanzel2",CM_8,Par(0));  //Geschützkanzel
-  if(!(kanzel2->Besetzt())) AddMenuItem("%s","Geschuetzkanzel2",CM_7,Par(0)); 
-  if(bridge->Besetzt())    AddMenuItem("%s","Bridge",CM_2,Par(0));  //Brücke
-  if(!(bridge->Besetzt())) AddMenuItem("%s","Bridge",CM_1,Par(0)); 
-  if(kanzel1->Besetzt())    AddMenuItem("%s","Geschuetzkanzel1",CM_8,Par(0));  //Geschützkanzel
-  if(!(kanzel1->Besetzt())) AddMenuItem("%s","Geschuetzkanzel1",CM_7,Par(0)); 
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(scorpion1) if(!(scorpion1->Besetzt())) AddMenuItem("%s","Scorpion1",CM_9,Par(0));   //Scorpion
-  if(!scorpion1)  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(scorpion1)  if(scorpion1->Besetzt())    AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(generator->Besetzt())    AddMenuItem("%s","Generator",CM_4,Par(0));  //Generator
-  if(!(generator->Besetzt())) AddMenuItem("%s","Generator",CM_3,Par(0)); 
-  if(scorpion2) if(!(scorpion2->Besetzt())) AddMenuItem("%s","Scorpion2",CM_9,Par(0));   //Scorpion
-  if(!scorpion2)  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(scorpion2)  if(scorpion2->Besetzt())    AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  AddMenuItem("%s",0,M67G,Par(0));  //Freiraum
-  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(0));  //Licht ein
-  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(0));  //Licht aus
-  if(teleporter->Besetzt())    AddMenuItem("%s","Teleporter",CM_6,Par(0));  //Teleporter
-  if(!(teleporter->Besetzt())) AddMenuItem("%s","Teleporter",CM_5,Par(0)); 
-  SelectMenuItem(7,Par(0)); 
+  CreateMenu(CAN_,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(kanzel2->Besetzt())    AddMenuItem("%s","Geschuetzkanzel2",CM_8,Par(nil));  //Geschützkanzel
+  if(!(kanzel2->Besetzt())) AddMenuItem("%s","Geschuetzkanzel2",CM_7,Par(nil));
+  if(bridge->Besetzt())    AddMenuItem("%s","Bridge",CM_2,Par(nil));  //Brücke
+  if(!(bridge->Besetzt())) AddMenuItem("%s","Bridge",CM_1,Par(nil));
+  if(kanzel1->Besetzt())    AddMenuItem("%s","Geschuetzkanzel1",CM_8,Par(nil));  //Geschützkanzel
+  if(!(kanzel1->Besetzt())) AddMenuItem("%s","Geschuetzkanzel1",CM_7,Par(nil));
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(scorpion1) if(!(scorpion1->Besetzt())) AddMenuItem("%s","Scorpion1",CM_9,Par(nil));   //Scorpion
+  if(!scorpion1)  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(scorpion1)  if(scorpion1->Besetzt())    AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(generator->Besetzt())    AddMenuItem("%s","Generator",CM_4,Par(nil));  //Generator
+  if(!(generator->Besetzt())) AddMenuItem("%s","Generator",CM_3,Par(nil));
+  if(scorpion2) if(!(scorpion2->Besetzt())) AddMenuItem("%s","Scorpion2",CM_9,Par(nil));   //Scorpion
+  if(!scorpion2)  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(scorpion2)  if(scorpion2->Besetzt())    AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  AddMenuItem("%s",nil,M67G,Par(nil));  //Freiraum
+  if(!(mlight))AddMenuItem("%s","TurnLightOn",RAL2,Par(nil));  //Licht ein
+  if(mlight)AddMenuItem("%s","TurnLightOff",RAL3,Par(nil));  //Licht aus
+  if(teleporter->Besetzt())    AddMenuItem("%s","Teleporter",CM_6,Par(nil));  //Teleporter
+  if(!(teleporter->Besetzt())) AddMenuItem("%s","Teleporter",CM_5,Par(nil));
+  SelectMenuItem(7,Par(nil));
   return(1);
 }
 
@@ -369,7 +371,7 @@ func TurnLightOff()
 
 func Scorpcheck1()
 {
-  if(scorpion1) if(SEqual(GetAction(scorpion1),"Attaching")) return(0);
+  if(scorpion1) if(SEqual(GetAction(scorpion1),"Attaching")) return(nil);
   return(1);
 }
 
@@ -385,7 +387,7 @@ func Scorpdock1(_scorp)
 
 func Scorpcheck2()
 {
-  if(scorpion2) if(SEqual(GetAction(scorpion2),"Attaching")) return(0);
+  if(scorpion2) if(SEqual(GetAction(scorpion2),"Attaching")) return(nil);
   return(1);
 }
 
@@ -405,7 +407,7 @@ func Geschuetzkanzel1()
   {
   Message("Kanzel besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Enter(kanzel1,pilot);
   Sound("Airlock1");
@@ -419,7 +421,7 @@ func Geschuetzkanzel2()
   {
   Message("Kanzel besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   } 
   Enter(kanzel2,pilot);
   Sound("Airlock1");
@@ -433,7 +435,7 @@ func Generator()
   {
   Message("Generatortraum besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Enter(generator,pilot);
   Sound("Airlock1");
@@ -447,7 +449,7 @@ func Teleporter()
   {
   Message("Teleporterraum besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Enter(teleporter,pilot);
   Sound("Airlock1");
@@ -461,7 +463,7 @@ func Bridge(donot)
   {
   Message("Brücke besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
   Enter(bridge,pilot);
   Sound("Airlock1");
@@ -475,7 +477,7 @@ func Scorpion1(donot)
   {
   Message("Scorpion besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
 
   Enter(scorpion1,pilot);
@@ -490,7 +492,7 @@ func Scorpion2(donot)
   {
   Message("Scorpion besetzt.",this());
   Sound("Error");
-  return(0);
+  return(nil);
   }
 
   Enter(scorpion2,pilot);
@@ -502,7 +504,7 @@ func BrainCheck()
 {
   if(scorpion1) if(!(scorpion1->Besetzt())) return(scorpion1);
   if(scorpion2) if(!(scorpion2->Besetzt())) return(scorpion2);  
-  return(0);
+  return(nil);
 }
 
 func BrainScorpion(scorpion_)
@@ -526,9 +528,9 @@ func TelFXDown()
 
 func TelLight(on)
 {
-  if(on==1)
+  if(Equal(on, 1))
   {
-  pLight=AddLightCone (500, RGB(120,0,255), heat2); 
+  pLight=AddLightCone (500, RGB(120,nil,255), heat2);
   pLight->ChangeSizeXY(2500,5000);
   pLight->ChangeR(180);
   pLight->ChangeOffset(1,-12);
@@ -545,37 +547,37 @@ func Blaster()
   {
   if(pLight) RemoveObject(pLight);
   AddSpawnEffect(heat2,RGBa(220,80,180,100));
-  pLight=AddLightCone (500, RGB(120,0,255), heat2); 
+  pLight=AddLightCone (500, RGB(120,nil,255), heat2);
   pLight->ChangeSizeXY(1000,5000);
   pLight->ChangeR(180);
   pLight->ChangeOffset(1,-12); 
   }
   
-  counter++;
+  S42MigrationStep(counter, 1, true);
   
   var user = Contained();
-  var angle = 180+RandomX(-8,+8);
+  var angle = 180+(RandomX(-8,+8) ?? 0);
   var x,y;
-  x=0;
+  x=nil;
   y=25;
   var ammo = CreateObject(SHT2,x,y,GetOwner());
   // int iAngle, int iSpeed, int iDist, int iSize, int iDmg, int iTrail, int iDmgType
   var speed =250;
-  ammo->Launch(angle,speed,600-Random(50),8,400, 20,0,60);
+  ammo->Launch(angle,speed,600-(Random(50) ?? 0),8,400, 20,nil,60);
 
   // Effekte
-  MuzzleFlash(30,0,x,y,angle,RGBa(96,64,255,0));
+  MuzzleFlash(30,nil,x,y,angle,RGBa(96,64,255,nil));
 
-  if(counter==70)
+  if(Equal(counter, 70))
   {  
-  var ammo = CreateObject(CBB_,x,y+60,GetOwner());
+  var ammo = CreateObject(CBB_,x,(y ?? 0)+60,GetOwner());
   ammo->Down();
   }
   
-  if(counter==100)
+  if(Equal(counter, 100))
   {
   SetAction("Schwebe");
-  counter=0;
+  counter=nil;
   RemoveObject(pLight);
   }
   return(1);
@@ -584,7 +586,7 @@ func Blaster()
 
 func Naniten(do)
 {
-  if(do) nanites+=20;
+  if(do) S42MigrationAssign(nanites, "+=", 20);
   return(nanites);
 }
 
@@ -593,7 +595,8 @@ func Naniten(do)
 
 
 
-public IsVehicleProduct: return(1);
+public func IsVehicleProduct(...) { return(1);
+}
 
 
 

@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 local obj;
 local aArray;
@@ -51,7 +51,7 @@ public func Initialize()
   aArray[37] = PUMP;
   aArray[37] = HLAV;
   
-  SetPosition(0,0);
+  SetPosition(nil,nil);
   return(1);
 }
 
@@ -59,14 +59,14 @@ public func Check()
 {
   for(obj in FindObjects(Find_Not(Find_Action("Throw")),Find_NoContainer()))
   {
-   if(GetMaterial(AbsX(GetX(obj)),AbsX(GetY(obj))) == Material("DuroLava") || GetMaterial(AbsX(GetX(obj)),AbsX(GetY(obj))) == Material("Lava"))
+   if(Or(Equal(GetMaterial(AbsX(GetX(obj)),AbsX(GetY(obj))), Material("DuroLava")), Equal(GetMaterial(AbsX(GetX(obj)),AbsX(GetY(obj))), Material("Lava"))))
    {
     if(FindInArray(GetID(obj),aArray))
     {
      return(1);
     }
     var help;
-    help = (GetDefCoreVal("Width","DefCore",GetID(obj)) + GetDefCoreVal("Height","DefCore",GetID(obj)))/2;
+    help = ((GetDefCoreVal("Width","DefCore",GetID(obj)) ?? 0) + (GetDefCoreVal("Height","DefCore",GetID(obj)) ?? 0))/2;
     obj->CastPXS("FlyAshes",help,50);
     obj->RemoveObject();
    }

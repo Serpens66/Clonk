@@ -1,6 +1,6 @@
 /*--- AppendToMaterials ---*/
 
-#strict
+#strict 3
 #appendto ASHS
 #appendto CNCR
 #appendto ERTH
@@ -11,25 +11,25 @@
 #appendto SNWB
 
 func MaterialMange() {
-if(GetID() == ASHS ){return(200);} 
-if(GetID() == CNCR ){return(100);} 
-if(GetID() == ERTH ){return(200);} 
-if(GetID() == ICE1 ){return(400);} 
-if(GetID() == LIQG ){return(150);} 
-if(GetID() == LOAM ){return(400);} 
-if(GetID() == SAND ){return(200);} 
-if(GetID() == SNWB ){return(400);} 
+if(Equal(GetID(), ASHS) ){return(200);}
+if(Equal(GetID(), CNCR) ){return(100);}
+if(Equal(GetID(), ERTH) ){return(200);}
+if(Equal(GetID(), ICE1) ){return(400);}
+if(Equal(GetID(), LIQG) ){return(150);}
+if(Equal(GetID(), LOAM) ){return(400);}
+if(Equal(GetID(), SAND) ){return(200);}
+if(Equal(GetID(), SNWB) ){return(400);}
 }
 
 func MaterialNameString() { 
-if(GetID() == ASHS ){return("Ashes"); }
-if(GetID() == CNCR ){return("Rock");}
-if(GetID() == ERTH ){return("Earth");}
-if(GetID() == ICE1 ){return("Ice");}
-if(GetID() == LIQG ){return("Granite");}
-if(GetID() == LOAM ){return("Earth");}
-if(GetID() == SAND ){
+if(Equal(GetID(), ASHS) ){return("Ashes"); }
+if(Equal(GetID(), CNCR) ){return("Rock");}
+if(Equal(GetID(), ERTH) ){return("Earth");}
+if(Equal(GetID(), ICE1) ){return("Ice");}
+if(Equal(GetID(), LIQG) ){return("Granite");}
+if(Equal(GetID(), LOAM) ){return("Earth");}
+if(Equal(GetID(), SAND) ){
 if(Random(10)){ return("FlySand");} 
 return("Sand");}
-if(GetID() == SNWB ){return("Snow");}
+if(Equal(GetID(), SNWB) ){return("Snow");}
 }

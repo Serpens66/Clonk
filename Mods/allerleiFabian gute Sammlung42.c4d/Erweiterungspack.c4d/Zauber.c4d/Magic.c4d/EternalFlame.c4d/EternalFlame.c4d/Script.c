@@ -1,18 +1,18 @@
-#strict
+#strict 3
 
 func Completion()
 {
   Sound("Fire");
   SetAction("Burn1");
   SetPhase(Random(14));
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
   return(1);
 }
 
 func ChkIncinerate()
 {
-  while(Var(0)=FindObject(0,-6,-6,12,12,OCF_Prey(),0,0,NoContainer(),Var())) 
-    if(Hostile(GetOwner(),GetOwner(Var()))) if(!OnFire(Var())) Incinerate(Var(0));
+  while(Var(nil)=FindObject(nil,-6,-6,12,12,OCF_Prey,nil,nil,NoContainer(),Var()))
+    if(Hostile(GetOwner(),GetOwner(Var()))) if(!OnFire(Var())) Incinerate(Var(nil));
   return(1);
 }
 

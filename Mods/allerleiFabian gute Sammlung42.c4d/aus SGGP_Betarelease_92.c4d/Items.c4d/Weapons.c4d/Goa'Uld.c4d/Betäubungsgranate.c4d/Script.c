@@ -1,19 +1,19 @@
 /*-- Betäubungsgranate --*/
-#strict
+#strict 3
 local Target;
 local pStructure;
 
 public func Activate()
 {
-  if(GetAction(Contained()) eq "Lie")
+  if(!!SEqual(GetAction(Contained()), "Lie"))
   {
    return(1);
   }
   
-  if(GetAction() eq "Scharf")
+  if(!!SEqual(GetAction(), "Scharf"))
   {
    Contained(this())->SetAction("Throw");
-   Exit(this(), GetDir(Contained())*12-6, 0, 0, GetDir(Contained())*6-3, -3, GetDir(Contained())*60-30);
+   Exit(this(), (GetDir(Contained()) ?? 0)*12-6, nil, nil, (GetDir(Contained()) ?? 0)*6-3, -3, (GetDir(Contained()) ?? 0)*60-30);
    return(1);
   }
 
@@ -25,19 +25,20 @@ public func Activate()
 
 global func KnockWave(int Level,object pTarget)
 {
+  Level ??= 0;
   if(!pTarget)
   {
    Message("KEIN ZIEL!");
    return(1);
   }
-  CreateObject(WRSW,0,0,GetOwner(pTarget))->SetMaxSize(Level);
+  CreateObject(WRSW,nil,nil,GetOwner(pTarget))->SetMaxSize(Level);
   return(1);
 }
 
 protected func Exploden()
 {
   Sound("Connect");
-  CreateObject(WRSW, 0, 0, GetOwner())->SetMaxSize(300);
+  CreateObject(WRSW, nil, nil, GetOwner())->SetMaxSize(300);
   RemoveObject();
   return(1);
 }

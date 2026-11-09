@@ -1,10 +1,10 @@
 /*-- Textschirm --*/
 
-#strict
+#strict 3
 
 func Initialize() {
   SetAction("Animate");
-  SetClrModulation(RGB(0,255,0));
+  SetClrModulation(RGB(nil,255,nil));
 
   AddFrame();
 }

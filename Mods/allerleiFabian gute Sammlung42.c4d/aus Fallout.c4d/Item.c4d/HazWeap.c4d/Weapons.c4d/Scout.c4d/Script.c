@@ -1,6 +1,6 @@
 /*-- SCOUT --*/
 
-#strict
+#strict 3
 
 #include WEPN
 
@@ -15,57 +15,62 @@ public func BarrelXOffset() { return(-14000); }
 
 public func OnReload(int i)
 {
+  i ??= 0;
   Sound("scout_reload");
 }
 
 public func FMData1(int data)
 {
-  if(data == FM_Name)   return("$Standard$");
-  if(data == FM_Icon)     return(GetID());	
-  if(data == FM_AmmoID)   return(SPBT);
-  if(data == FM_AmmoLoad) return(1);
+  data ??= 0;
+  if(Equal(data, FM_Name))   return("$Standard$");
+  if(Equal(data, FM_Icon))     return(GetID());
+  if(Equal(data, FM_AmmoID))   return(SPBT);
+  if(Equal(data, FM_AmmoLoad)) return(1);
 
-  if(data == FM_Reload)   return(250);
-  if(data == FM_Recharge)   return(30);
+  if(Equal(data, FM_Reload))   return(250);
+  if(Equal(data, FM_Recharge))   return(30);
 
-  if(data == FM_Aim)    return(2);
+  if(Equal(data, FM_Aim))    return(2);
 
-  if(data == FM_Damage) return(170);
+  if(Equal(data, FM_Damage)) return(170);
 
   return(Default(data));
 }
 
 public func BotData1(int data)
 {
-  if(data == BOT_Range)    return(1000);
-  if(data == BOT_Power)    return(BOT_Power_LongLoad);
+  data ??= 0;
+  if(Equal(data, BOT_Range))    return(1000);
+  if(Equal(data, BOT_Power))    return(BOT_Power_LongLoad);
 
   return(Default(data));
 }
 
 public func FMData2(int data)
 {
-  if(data == FM_Name)   return("$Erweitert$");
-  if(data == FM_Icon)     return(GetID());	
-  if(data == FM_AmmoID)   return(SPBT);
-  if(data == FM_AmmoLoad) return(2);
+  data ??= 0;
+  if(Equal(data, FM_Name))   return("$Erweitert$");
+  if(Equal(data, FM_Icon))     return(GetID());
+  if(Equal(data, FM_AmmoID))   return(SPBT);
+  if(Equal(data, FM_AmmoLoad)) return(2);
 
-  if(data == FM_Reload)   return(250);
-  if(data == FM_Recharge)   return(30);
+  if(Equal(data, FM_Reload))   return(250);
+  if(Equal(data, FM_Recharge))   return(30);
 
-  if(data == FM_Aim)    return(2);
+  if(Equal(data, FM_Aim))    return(2);
 
-  if(data == FM_Condition) return(GetUpgrade(KRFL));
+  if(Equal(data, FM_Condition)) return(GetUpgrade(KRFL));
 
-  if(data == FM_Damage) return(170);
+  if(Equal(data, FM_Damage)) return(170);
 
   return(Default(data));
 }
 
 public func BotData2(int data)
 {
-  if(data == BOT_Range)    return(1000);
-  if(data == BOT_Power)    return(BOT_Power_LongLoad);
+  data ??= 0;
+  if(Equal(data, BOT_Range))    return(1000);
+  if(Equal(data, BOT_Power))    return(BOT_Power_LongLoad);
 
   return(Default(data));
 }
@@ -76,17 +81,17 @@ public func Fire1()    // Projektilschuss
   var angle = user->~AimAngle(20);
   var x,y; user->~WeaponEnd(x,y);
   var ammo = CreateObject(SHT9,x,y,GetController(user));
-  ammo->Launch(angle,250,1000,5,500,GetFMData(FM_Damage, 1),0,1);
+  ammo->Launch(angle,250,1000,5,500,GetFMData(FM_Damage, 1),nil,1);
   // Sicht verfolgen wenn kein automatischer Schuss
-    if(user==GetCursor(GetOwner()))
+    if(Equal(user, GetCursor(GetOwner())))
     SetPlrView(GetOwner(), ammo);
   // Effekte
   MuzzleFlash(40,user,x,y,angle);
-  var dir = GetDir(user)*2-1;
-  BulletCasing(dir*6,3,-dir*5,-20,5);
+  var dir = (GetDir(user) ?? 0)*2-1;
+  BulletCasing((dir ?? 0)*6,3,-(dir ?? 0)*5,-20,5);
 
   // Sound
-  Sound("scout",0,ammo);
+  Sound("scout",nil,ammo);
 }
 
 
@@ -96,17 +101,17 @@ public func Fire2()    // Projektilschuss
   var angle = user->~AimAngle(20);
   var x,y; user->~WeaponEnd(x,y);
   var ammo = CreateObject(SHT9,x,y,GetController(user));
-  ammo->Launch(angle,250,1000,5,500,GetFMData(FM_Damage, 2),0,1);
+  ammo->Launch(angle,250,1000,5,500,GetFMData(FM_Damage, 2),nil,1);
   // Sicht verfolgen wenn kein automatischer Schuss
-    if(user==GetCursor(GetOwner()))
+    if(Equal(user, GetCursor(GetOwner())))
     SetPlrView(GetOwner(), ammo);
   // Effekte
   MuzzleFlash(40,user,x,y,angle);
-  var dir = GetDir(user)*2-1;
-  BulletCasing(dir*6,3,-dir*5,-20,5);
+  var dir = (GetDir(user) ?? 0)*2-1;
+  BulletCasing((dir ?? 0)*6,3,-(dir ?? 0)*5,-20,5);
 
   // Sound
-  Sound("scout",0,ammo);
+  Sound("scout",nil,ammo);
 }
 
 
@@ -115,9 +120,9 @@ public func Fire2()    // Projektilschuss
 
 public func IsUpgradeable(id uid) {
   if(GetUpgrade(uid))
-    return(false);
+    return(nil);
   
-  if(uid == KRFL) return("$KRFLUpgradeDesc$");
+  if(Equal(uid, KRFL)) return("$KRFLUpgradeDesc$");
 }
 
 public func OnUpgrade(id uid) {
@@ -130,7 +135,7 @@ public func OnUpgrade(id uid) {
 }
 
 public func OnDowngrade(id uid) {
-  if(uid == KRFL) {
+  if(Equal(uid, KRFL)) {
     SetFireMode(1);
     return(true);
   }

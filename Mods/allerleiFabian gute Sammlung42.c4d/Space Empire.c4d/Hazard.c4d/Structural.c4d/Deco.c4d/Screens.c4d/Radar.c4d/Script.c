@@ -1,16 +1,16 @@
 /*-- Radarschirm --*/
 
-#strict
+#strict 3
 
 func Completion() {
-  var x = GetX(), y = GetY() -20;
+  var x = GetX(), y = (GetY() ?? 0) -20;
     SetPosition(x, y);
-SetCategory(C4D_StaticBack());
+SetCategory(C4D_StaticBack);
   SetAction("Animate");
-  SetClrModulation(RGB(0,255,0));
+  SetClrModulation(RGB(nil,255,nil));
 
   AddFrame();
-  Local(0) = AddLight(75,-1); //Licht nur sicherheitshalber speichern, für Änderungen.
+  Local(nil) = AddLight(75,-1); //Licht nur sicherheitshalber speichern, für Änderungen.
   //falls die Farbe per Script erst nacher wo gesetzt wird
-  ScheduleCall(Local(0),"Init",1,0,0,-1);
+  ScheduleCall(Local(nil),"Init",1,nil,nil,-1);
 }

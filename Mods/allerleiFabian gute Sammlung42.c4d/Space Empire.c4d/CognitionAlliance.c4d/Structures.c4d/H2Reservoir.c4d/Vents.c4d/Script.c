@@ -1,6 +1,6 @@
 /*-- Ventilatoren --*/
 
-#strict
+#strict 3
 
 local plant;
 
@@ -11,9 +11,9 @@ protected func Initialize()
 
 public func Init()
 {
-  plant=Par(0);
+  plant=Par(nil);
   SetAction("Rotating",plant);
-  return();
+  return;
 }
 
 protected func Check()

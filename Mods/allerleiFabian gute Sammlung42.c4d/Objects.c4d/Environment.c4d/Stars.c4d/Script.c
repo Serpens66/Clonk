@@ -1,6 +1,6 @@
 /*-- Sternenhimmel --*/
 
-#strict
+#strict 3
 
 
 // Kann mittels des neuen Spielzielauswählers variabel eingestellt werden
@@ -21,13 +21,13 @@ protected func Initialize()
 private func Initialized()
 {
   // Plazierungsfaktor ermitteln
-  var iCount = ObjectCount(GetID()) + 1;
+  var iCount = (ObjectCount(GetID()) ?? 0) + 1;
   // Andere Objekte des gleichen Typs entfernen
   var pOther;
   while (pOther = FindObject(GetID()))
     RemoveObject(pOther);
   // Maximale Anzahl Sterne berechnen
-  MaxCount = (LandscapeWidth() * LandscapeHeight() * iCount) / 20000;
+  MaxCount = ((LandscapeWidth() ?? 0) * (LandscapeHeight() ?? 0) * (iCount ?? 0)) / 20000;
   // Steuerungsaktion
   SetAction("Day");
   return(1);
@@ -44,7 +44,7 @@ private func Day()
 private func Dusk()
 {
   // Alle Sterne plaziert
-  if (GetActTime() > MaxCount) 
+  if ((GetActTime() ?? 0) > (MaxCount ?? 0))
     return(SetAction("Night"));
   // Sterne hinzufügen
   CreateObject(STAR, Random(LandscapeWidth()), Random(LandscapeHeight()), -1);

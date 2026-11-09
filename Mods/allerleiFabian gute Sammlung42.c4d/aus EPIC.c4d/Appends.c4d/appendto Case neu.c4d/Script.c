@@ -1,6 +1,6 @@
 /*-- Fahrstuhlkorb --*/
 
-#strict
+#strict 3
 
 //#include ELEC
 #appendto ELEC 
@@ -34,59 +34,59 @@ private func SelfMovement()
 
 protected func ControlCommand(strCommand, oTarget, iTx, iTy)
 {
-  if (isTrapped) {LoosenCase();	return();}
+  if (isTrapped) {LoosenCase();	return;}
  return(_inherited(strCommand, oTarget, iTx, iTy));
 }
 
 private func DoControlDown(pObj)
 {  
-  if (isTrapped) {LoosenCase();	return();}
+  if (isTrapped) {LoosenCase();	return;}
  return(_inherited(pObj));
 }
 
 private func DoControlUp(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }
 
 private func DoControlStop(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }
 
 private func DoControlRight(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }
 
 private func DoControlLeft(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }
 
 private func DoControlDig(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }
 
 public func DoControlAuto(pObj)
 {
-  if (isTrapped) {LoosenCase();return();}
+  if (isTrapped) {LoosenCase();return;}
  return(_inherited(pObj));
 }  
 
 public func LoosenCase() {
 var dieid;
-if(GetID()==ELEC) dieid=438Z;
-if(GetID()==ELE_) dieid=538Z;
-if(GetID()==BELC) dieid=638Z;
-if(GetID()==ELC2) dieid=738Z;
-  CreateObject(dieid,0,13);
+if(Equal(GetID(), ELEC)) dieid=438Z;
+if(Equal(GetID(), ELE_)) dieid=538Z;
+if(Equal(GetID(), BELC)) dieid=638Z;
+if(Equal(GetID(), ELC2)) dieid=738Z;
+  CreateObject(dieid,nil,13);
   RemoveObject();
 }
 
@@ -104,11 +104,13 @@ public func WireCut() {
 
 func Elevator(int iNum)
 {
+iNum ??= 0;
 return(_inherited(iNum));
 }
 
 func NoEnergy(bool fCheck)
 {
+fCheck ??= false;
 return(_inherited(fCheck));
 }
 
@@ -124,13 +126,14 @@ return(_inherited());
 
 func Halt()
 {
-if (isTrapped) {LoosenCase();return();}
+if (isTrapped) {LoosenCase();return;}
 return(_inherited());
 }
 
 func SetMoveTo(int iSaveX)
 {
-if (isTrapped) {LoosenCase();return();}
+iSaveX ??= 0;
+if (isTrapped) {LoosenCase();return;}
 return(_inherited(iSaveX));
 }
 

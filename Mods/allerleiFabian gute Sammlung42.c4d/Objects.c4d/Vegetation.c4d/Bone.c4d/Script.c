@@ -1,6 +1,6 @@
 /*-- Knochen --*/
 
-#strict
+#strict 3
 
 protected func Hit()
 {
@@ -11,4 +11,4 @@ func IsAlchemContainer() { return(true); }
 func AlchemProcessTime() { return(120); }
 
 func IsManaContainer() { return(true); }
-func ManaProcessTime() { if(GetAction()S="BBON") return(280); return(240); }
+func ManaProcessTime() { if(!!SEqual(GetAction(), "BBON")) return(280); return(240); }

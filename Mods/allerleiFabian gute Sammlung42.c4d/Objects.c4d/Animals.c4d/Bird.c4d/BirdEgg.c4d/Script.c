@@ -1,6 +1,6 @@
 /*-- Vogelei --*/
 
-#strict
+#strict 3
 
 local iBreedTime;
 
@@ -8,8 +8,8 @@ local iBreedTime;
 
 protected func Breed()
 {
-  if(GetAction()S="Nest") iBreedTime++;
-  if(iBreedTime>=50) DoBreak();
+  if(!!SEqual(GetAction(), "Nest")) S42MigrationStep(iBreedTime, 1, true);
+  if((iBreedTime ?? 0)>=50) DoBreak();
 }
   
 /* Einwirkungen */  
@@ -28,7 +28,7 @@ protected func Entrance()
 {
   SetAction("Idle");
   SetActionTargets();
-  iBreedTime=0;
+  iBreedTime=nil;
   if(FindContents(BIRD)) RemoveObject(FindContents(BIRD));
 }
 
@@ -36,12 +36,12 @@ protected func Entrance()
   
 private func DoBreak()
 {
-  if (GetAction()S="Break") return(0);
+  if (!!SEqual(GetAction(), "Break")) return(nil);
   Sound("EggBreak");
   SetAction("Break");
-  if(iBreedTime<25) return(0); // Noch nicht richtig ausgebildeter Vogel
-  if (GBackSolid()) return(0);
-  var pChild = CreateConstruction(BIRD, 0, 0, -1, 40);
+  if((iBreedTime ?? 0)<25) return(nil); // Noch nicht richtig ausgebildeter Vogel
+  if (GBackSolid()) return(nil);
+  var pChild = CreateConstruction(BIRD, nil, nil, -1, 40);
   SetOwner(-1, pChild);
   pChild->~Birth();
 }

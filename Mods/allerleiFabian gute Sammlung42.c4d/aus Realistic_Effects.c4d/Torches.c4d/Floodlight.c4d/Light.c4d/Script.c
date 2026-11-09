@@ -1,6 +1,6 @@
 /*-- Scheinwerfer --*/
 
-#strict
+#strict 3
 #include BLGH
 
 local turn;
@@ -20,12 +20,12 @@ func CreateLight()
 protected func Turning()
 {
 	if(EMPShocked()) return;
-	var anglediff = Normalize(GetR()-GetR(GetActionTarget()),-180);
+	var anglediff = Normalize((GetR() ?? 0)-(GetR(GetActionTarget()) ?? 0),-180);
 
-	if(turn == -1 && anglediff < -90 || turn == +1 && anglediff > 90)
+	if(Or(And(Equal(turn, -1), (anglediff ?? 0) < -90), And(Equal(turn, +1), (anglediff ?? 0) > 90)))
 		return(SetAction("Attach",GetActionTarget()));
 
-	SetR(GetR()+turn);
+	SetR((GetR() ?? 0)+(turn ?? 0));
 	RotateLight();
 }
 
@@ -49,7 +49,7 @@ public func TurnRight()
 
 public func Stop()
 {
-	turn = 0;
+	turn = nil;
 	SetAction("Attach");
 	Sound("CannonStop");
 }

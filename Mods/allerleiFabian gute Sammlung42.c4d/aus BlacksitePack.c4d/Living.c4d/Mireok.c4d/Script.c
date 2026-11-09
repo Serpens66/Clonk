@@ -1,6 +1,6 @@
 /*---- MireokClonk ----*/
 
-#strict
+#strict 3
 // Zauberei - benötigt, wenn der Clonk Zielzauber z.B. aus dem Zauberturm zaubert
 // Auch benötigt für den König
 local pAimer;			// Aktive Zielsteuerung; wird abgrbrochen, wenn der Zauberer gestört wird (Nur Fantasypack)
@@ -19,26 +19,26 @@ protected func FogWar()
 {
 if(GetLength(hashSpielRegeln))
 zahler=HashGet(hashSpielRegeln, "SichtradiusVerhalten");
-else {zahler=0;}
+else {zahler=nil;}
 
-if(zahler==0) {
-if (FrameCounter()<5000) {
+if(Equal(zahler, nil)) {
+if ((FrameCounter() ?? 0)<5000) {
 if(!Random(100))  // zu anfang ab und zu wieder Kriegsnebel deaktivieren, falls er weggeht
-for(var i1=0; i1<GetPlayerCount(); i1++) {
-  SetFoW(0,i1);} }
-return(0);}
+for(var i1=nil; (i1 ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i1, 1, true)) {
+  SetFoW(nil,i1);} }
+return(nil);}
 
 if(!Random(200))  // ab und zu wieder Kriegsnebel erstellen, falls er weggeht
-for(var i1=0; i1<GetPlayerCount(); i1++) {
+for(var i1=nil; (i1 ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i1, 1, true)) {
   SetFoW(1,i1);}
    
-if(zahler==1)
+if(Equal(zahler, 1))
 FogWar1();
 
-if(zahler==2)
+if(Equal(zahler, 2))
 FogWar2();
 
-if(zahler==3)
+if(Equal(zahler, 3))
 if(!Random(100))  // muss nicht sooft gecheckt werden
 FogWar3();
 }
@@ -49,26 +49,26 @@ func Blend()
 {
   // gibt die x und y Koordinaten von Clonk und Granate aus, zu testzwecken.
   //Log(Format("clonk:%v,%v. Granate:%v,%v.",GetX(this()),GetY(this()),Par(0),Par(1)));
- if(Contained()) return(); // Wenn in einem Gebäude/Fahrzeug oderso, dann nicht blenden.
- if(PathFree(GetX(this())-10,GetY(this()),Par(0)-3,Par(1)-5)||PathFree(GetX(this())-10,GetY(this()),Par(0)+3,Par(1)-5)||PathFree(GetX(this())-10,GetY(this()),Par(0),Par(1)-5))  // wenn direkte Verbindung zwischen Clonk und Explosion
+ if(Contained()) return; // Wenn in einem Gebäude/Fahrzeug oderso, dann nicht blenden.
+ if(Or(Or(PathFree((GetX(this()) ?? 0)-10,GetY(this()),(Par(nil) ?? 0)-3,(Par(1) ?? 0)-5), PathFree((GetX(this()) ?? 0)-10,GetY(this()),(Par(nil) ?? 0)+3,(Par(1) ?? 0)-5)), PathFree((GetX(this()) ?? 0)-10,GetY(this()),Par(nil),(Par(1) ?? 0)-5)))  // wenn direkte Verbindung zwischen Clonk und Explosion
   {
-   if((Distance(GetX(this()),GetY(this()),Par(2),Par(1))>1200) || (Par(0)==GetX(this()) && Par(1)==GetY(this())) ) return();  //wenn Distanz größer als 1200, oder Granate dabei (selbe position) dann keine Blendwirkung
+   if(Or(((Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>1200), (And(Equal(Par(nil), GetX(this())), Equal(Par(1), GetY(this()))))) ) return;  //wenn Distanz größer als 1200, oder Granate dabei (selbe position) dann keine Blendwirkung
   
    // clonk hat reingeschaut und ist näher als 600 dran
-   if(Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Left()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this())); ProtectedCall(Var(),"Initialize",0,this());return();} 
-   if(Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Right())  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",0,this());return();}
+   if(And(And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this())); ProtectedCall(Var(),"Initialize",nil,this());return;}
+   if(And(And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",nil,this());return;}
 
    // clonk hat reingeschaut, aber zwischen 600 und 1200 weit weg, dann geht blendung schneller weg
-   if(Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Left()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this())); ProtectedCall(Var(),"Initialize",1,this());return();} 
-   if(Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Right()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}
+   if(And(And(And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this())); ProtectedCall(Var(),"Initialize",1,this());return;}
+   if(And(And(And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
 
    // Clonk hat weggeschaut ist aber näher als 600, dann verschwindets schneller wieder.
-   if(((Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Right()))  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600))  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}  
-   if(((Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Left()))  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600))  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}
+   if((And((And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600)))  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
+   if((And((And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600)))  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
 
    // Clonk hat weggeschaut und ist weiter als 600 weg, dann keine Auswirkung
-   if(((Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Right())) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200))  return();
-   if(((Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Left())) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200))  return();
+   if((And(And((And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200)))  return;
+   if((And(And((And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200)))  return;
   }
  return(1);
 }
@@ -81,27 +81,27 @@ func FogWar1()
  if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
   if(IsNight()) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtHimmel"); else{zielSichtweite = 200;} }// Nacht? Dann eine Sichtweite von 50 anstreben
 
-var z=0;
-while(!GBackSky(GetX(0),GetY(0)-z)) ++z; 
-var himmely = AbsY(GetY(0))-z; // y koordiante über Clonk, wo das erste mal himmer ist
+var z=nil;
+while(!GBackSky(GetX(nil),(GetY(nil) ?? 0)-(z ?? 0))) S42MigrationStep(z, 1);
+var himmely = (AbsY(GetY(nil)) ?? 0)-(z ?? 0); // y koordiante über Clonk, wo das erste mal himmer ist
 
   if(
-(GetMaterial() == Material("Tunnel"))
- && (!PathFree(GetX(0),GetY(0),GetX(0),himmely))  
+And((Equal(GetMaterial(), Material("Tunnel")))
+ , (!PathFree(GetX(nil),GetY(nil),GetX(nil),himmely)))
 ) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagTunnel");  else{zielSichtweite = 120;} } // Tunnel und keine direkte Verbindung zum Himmel? Dann eine Sichtweite von 25 anstreben
 
   if(
-(GetMaterial() == Material("Tunnel")) && IsNight()
- && (!PathFree(GetX(0),GetY(0),GetX(0),himmely))
+And(And((Equal(GetMaterial(), Material("Tunnel"))), IsNight())
+ , (!PathFree(GetX(nil),GetY(nil),GetX(nil),himmely)))
  ) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtTunnel"); else{zielSichtweite = 80;} } // Tunnel+ fehlende Verbindung zum  Himmel? UND Nacht?! Dann eine Sichtweite von 15 anstreben
 
 
-  if(SetSichtweite > zielSichtweite) SetSichtweite -= 1;
-  if(SetSichtweite < zielSichtweite) SetSichtweite += 1;
+  if((SetSichtweite ?? 0) > (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "-=", 1);
+  if((SetSichtweite ?? 0) < (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "+=", 1);
 
 //Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-SetPlrViewRange(SetSichtweite,0,1); 
+SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
@@ -111,12 +111,12 @@ func FogWar2()
  if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
   if(IsNight()) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtHimmel"); else{zielSichtweite = 200;} }// Nacht? Dann eine Sichtweite von 50 anstreben
 
-  if(SetSichtweite > zielSichtweite) SetSichtweite -= 1;
-  if(SetSichtweite < zielSichtweite) SetSichtweite += 1;
+  if((SetSichtweite ?? 0) > (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "-=", 1);
+  if((SetSichtweite ?? 0) < (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "+=", 1);
 
 //Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-SetPlrViewRange(SetSichtweite,0,1); 
+SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
@@ -129,13 +129,13 @@ SetSichtweite = zielSichtweite;
 
 //Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-SetPlrViewRange(SetSichtweite,0,1); 
+SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
 func TimerAusbildung()
 {
-++ausbildungstimer;
+S42MigrationStep(ausbildungstimer, 1);
 }
 
 func StandTimerAusbildung()
@@ -145,18 +145,18 @@ return(ausbildungstimer);
 
 func TimerAusbildungNull()
 {
-ausbildungstimer=0;
+ausbildungstimer=nil;
 }
 
 
 //wenn im ausbildungscamp ausgebildet, erhält der Clonk eine neue Stufe. Diese ist wichtig dafür, wann neue fähigkeiten erlernt werden bzw. die Grafik sich ändert.
 func Stufenanstieg(zahl)
 {
-if(zahl==1) {stufe=5; return(0);} // für den Aufstieg von Clonk zu Hazardclonk die Stufen übernehmen
-if(zahl==10) {stufe=10; return(0);} 
-if(zahl==15) {stufe=15; return(0);} 
-if(zahl==20) {stufe=20; return(0);} 
-++stufe;
+if(Equal(zahl, 1)) {stufe=5; return(nil);} // für den Aufstieg von Clonk zu Hazardclonk die Stufen übernehmen
+if(Equal(zahl, 10)) {stufe=10; return(nil);}
+if(Equal(zahl, 15)) {stufe=15; return(nil);}
+if(Equal(zahl, 20)) {stufe=20; return(nil);}
+S42MigrationStep(stufe, 1);
 }
 
 func AktuelleStufe()
@@ -166,9 +166,9 @@ return(stufe);
 
 func NunBauarbeiter(zahl)
 {
-if(zahl==6) {bauarbeiter=6;return();}
-++bauarbeiter;
-if(zahl==10) bauarbeiter=0;
+if(Equal(zahl, 6)) {bauarbeiter=6;return;}
+S42MigrationStep(bauarbeiter, 1);
+if(Equal(zahl, 10)) bauarbeiter=nil;
 }
 
 func IstBauarbeiter()
@@ -181,32 +181,32 @@ return(bauarbeiter);
 func Klimaschutz(klima)
 {
 //Kälte
-if(klima==1)
+if(Equal(klima, 1))
 {
 // wenn etwas in der Nähe brennt, oder Fackel oder lagerfeuer, kein Schaden.
 var feuer;
 if(feuer = FindObject2(Find_Distance(80),Find_Or(Find_OCF(OCF_OnFire),Find_ID(LAGF),Find_ID(TORC))))
 {
 //nur wenn Feuer brennt
-if(GetID(feuer)==LAGF) if(!(GetAction(feuer) eq "Burn")) return(0);
- if(GetID(feuer)==TORC) if(!(GetAction(feuer) eq "Burning")) return(0);
+if(Equal(GetID(feuer), LAGF)) if(!(!!SEqual(GetAction(feuer), "Burn"))) return(nil);
+ if(Equal(GetID(feuer), TORC)) if(!(!!SEqual(GetAction(feuer), "Burning"))) return(nil);
   return(1);}
-return(0);
+return(nil);
 }
 
 //Hitze
-if(klima==2)
+if(Equal(klima, 2))
 {
 // wenn in Flüssigkeit, kein schaden
-if(GetOCF() & OCF_InLiquid()) return(1);
-return(0);
+if((GetOCF() ?? 0) & (OCF_InLiquid ?? 0)) return(1);
+return(nil);
 }
 }
 
 func RundenErfahrung()
 {
 // gibt die in dieser Runde bereits erhaltene Erfahrung zum Zeitpunkt der Abfrage aus
-return(GetObjectInfoCoreVal("Experience", 0, 0)-starterfahrung);
+return((GetObjectInfoCoreVal("Experience", nil, nil) ?? 0)-(starterfahrung ?? 0));
 }
 
 
@@ -224,9 +224,9 @@ protected func Initialize()
 Pollute();
 SetSichtweite=400;
   // Clonks mit Magiephysikal aus fehlerhaften Szenarien korrigieren
-  if (GetID () == CLNK)
+  if (Equal(GetID (), CLNK))
     if (GetPhysical ("Magic", 1))
-      SetPhysical ("Magic", 0, 1);
+      SetPhysical ("Magic", nil, 1);
   SetAction("Walk");
   SetDir(Random(2));
   // Broadcast für Spielregeln
@@ -236,7 +236,7 @@ Physicsanpassen();
 
 
 //bei Spieleintritt kurz den aktuellen Erfahrungswert speichern, um später rauszufinden, wieiviel Erfahrung in der Runde gesammelt wurde.
-ScheduleCall(0, "Erfahrungerfassen", 50);
+ScheduleCall(nil, "Erfahrungerfassen", 50);
 
 
   return(1);
@@ -245,7 +245,7 @@ ScheduleCall(0, "Erfahrungerfassen", 50);
 //in extrafkt weil es beim kauf von clonks sonst zu fehlern kommen kann
 func Erfahrungerfassen()
 {
-starterfahrung = GetObjectInfoCoreVal("Experience", 0, 0);
+starterfahrung = GetObjectInfoCoreVal("Experience", nil, nil);
 }
 
 
@@ -256,7 +256,7 @@ func Physicsanpassen()
  //AddEffect("LeichenDeath", this, 1, 0, this); // stopp zu finden über der death funktion
 
 //wenn diese Regel aktiviert ist, hat jeder neue Clonk (nur mit ID cLNK), weniger Physics
-if(GetID()==CLNK)
+if(Equal(GetID(), CLNK))
 if(FindObject2(Find_ID(PPP2)))
 {
 SetPhysical("Energy", 20000, PHYS_StackTemporary, this());
@@ -278,20 +278,21 @@ SetPhysical("Fight", 20000, PHYS_StackTemporary, this());
 
 protected func Recruitment(int iPlr) {
   // Alchemieregel: Jeder Clonk kriegt einen angelegten Beutel spendiert
-  if(ObjectCount(ALCO)) CreateObject(ALC_,0,0,-1)->~BelongTo(this());
+  iPlr ??= 0;
+  if(ObjectCount(ALCO)) CreateObject(ALC_,nil,nil,-1)->~BelongTo(this());
   // Broadcast für Crew
   GameCallEx("OnClonkRecruitment", this(), iPlr);
 }
 
 /* Kontext */
 
-public func HasConstructMenu() { return HasKnowledge() && GetPhysical("CanConstruct"); }
-public func HasKnowledge() { return(GetPlrKnowledge(GetOwner(),0,0,C4D_Structure())); }
-public func HasBase()      { return(FindBase(GetOwner()) && GetBase(Contained()) != GetOwner()); }
+public func HasConstructMenu() { return And(HasKnowledge(), GetPhysical("CanConstruct")); }
+public func HasKnowledge() { return(GetPlrKnowledge(GetOwner(),nil,nil,C4D_Structure)); }
+public func HasBase()      { return(And(FindBase(GetOwner()), !Equal(GetBase(Contained()), GetOwner()))); }
 public func ReleaseAllowed() { return(ObjectCount(REAC)); }
-public func AtConstructionSite() { return(!Contained() && FindConstructionSite() && ObjectCount(CNMT)); }
-public func AtEnergySite() { return(!Contained() && FindEnergySite()); }
-public func AtTreeToChop() { return(!Contained() && FindTree() && GetPhysical("CanChop")); }
+public func AtConstructionSite() { return(And(And(!Contained(), FindConstructionSite()), ObjectCount(CNMT))); }
+public func AtEnergySite() { return(And(!Contained(), FindEnergySite())); }
+public func AtTreeToChop() { return(And(And(!Contained(), FindTree()), GetPhysical("CanChop"))); }
 
 public func FindConstructionSite()
 {
@@ -318,7 +319,7 @@ public func ControlLeft()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlLeft(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlLeftDouble()
@@ -338,7 +339,7 @@ protected func ControlLeftReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlLeftReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlRight()
@@ -349,7 +350,7 @@ public func ControlRight()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlRight(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlRightReleased()
@@ -357,7 +358,7 @@ protected func ControlRightReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlRightReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUp()
@@ -371,7 +372,7 @@ protected func ControlUp()
   if(GetPlrCoreJumpAndRunControl(GetController()))
     DolphinJump();
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpReleased()
@@ -379,7 +380,7 @@ protected func ControlUpReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlUpReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpDouble() 
@@ -392,18 +393,18 @@ protected func ControlUpDouble()
 private func DolphinJump()
 {
   // nur wenn an Meeresoberfläche
-  if(!InLiquid()) return(0);
-  if(GBackSemiSolid(0,-1)) return(0);
+  if(!InLiquid()) return(nil);
+  if(GBackSemiSolid(nil,-1)) return(nil);
   // Nicht wenn deaktiviert (z.B. Ohnmacht)
-  if (GetActMapVal("ObjectDisabled", GetAction(), GetID())) return false;
+  if (GetActMapVal("ObjectDisabled", GetAction(), GetID())) return nil;
   // herausspringen
-  SetPosition(GetX(),GetY()-1);
+  SetPosition(GetX(),(GetY() ?? 0)-1);
   SetAction("Jump");
-  SetSpeed(GetXDir(),-BoundBy(GetPhysical("Swim")/2500,24,38));
+  SetSpeed(GetXDir(),-(BoundBy((GetPhysical("Swim") ?? 0)/2500,24,38) ?? 0));
   var iX=GetX(),iY=GetY(),iXDir=GetXDir(),iYDir=GetYDir();
   // Wenn Sprung im Wasser endet und das Wasser tief genug ist, Kopfsprung machen
   if(SimFlight(iX,iY,iXDir,iYDir,25,50))
-    if(GBackLiquid(iX-GetX(),iY-GetY()) && GBackLiquid(iX-GetX(),iY+9-GetY()))
+    if(And(GBackLiquid((iX ?? 0)-(GetX() ?? 0),(iY ?? 0)-(GetY() ?? 0)), GBackLiquid((iX ?? 0)-(GetX() ?? 0),(iY ?? 0)+9-(GetY() ?? 0))))
       SetAction("Dive");
 }
 
@@ -415,7 +416,7 @@ protected func ControlDown()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDown(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownReleased()
@@ -423,7 +424,7 @@ protected func ControlDownReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlDownReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownSingle()
@@ -434,7 +435,7 @@ protected func ControlDownSingle()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDownSingle(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownDouble()
@@ -444,7 +445,7 @@ protected func ControlDownDouble()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDownDouble(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDig()
@@ -455,7 +456,7 @@ protected func ControlDig()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDig(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigReleased()
@@ -463,7 +464,7 @@ protected func ControlDigReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlDigReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigSingle()
@@ -471,7 +472,7 @@ protected func ControlDigSingle()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDigSingle(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigDouble()
@@ -481,33 +482,36 @@ protected func ControlDigDouble()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDigDouble(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlThrow() {
 
   UnHide();
   // Bei vorherigem Doppel-Stop nur Ablegen
-  if (GetPlrDownDouble(GetOwner())) return(0);
+  if (GetPlrDownDouble(GetOwner())) return(nil);
   // Steuerung an Effekt weitergeben 
   if (Control2Effect("ControlThrow")) return(1);
   // Reiten und Werfen
   if (IsRiding())
-    if (Contents(0))
+    if (Contents(nil))
     {
       SetAction("RideThrow");
       return(1);
     }
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpdate(object self, int comdir, bool dig, bool throw)
 {
   // Steuerung an Pferd weiterleiten
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   if(IsRiding()) return(GetActionTarget()->~ControlUpdate(self, comdir, dig, throw));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 
@@ -515,27 +519,27 @@ protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data)
 {
   UnHide();
   // Kommando MoveTo an Pferd weiterleiten
-  if (szCommand eq "MoveTo")
+  if (!!SEqual(szCommand, "MoveTo"))
     if (IsRiding())
       return(GetActionTarget()->~ControlCommand(szCommand, pTarget, iTx, iTy));
   // Anderes Kommando beim Reiten: absteigen (Ausnahme: Context)
-  if (IsRiding() && szCommand ne "Context")
+  if (And(IsRiding(), !SEqual(szCommand, "Context")))
   {
-    SetComDir(COMD_Stop(),GetActionTarget());
+    SetComDir(COMD_Stop,GetActionTarget());
     GetActionTarget()->~ControlDownDouble(this());
   }
   // RejectConstruction Callback beim Bauen durch Drag'n'Drop aus einem Gebaeude-Menu
-  if(szCommand S= "Construct")
+  if(!!SEqual(szCommand, "Construct"))
   {
     // Data ist eigentlich keine ID, sondern ein C4Value* - Damit ein DirectCall
     // möglich ist, muss sie aber zu einer C4ID gecastet werden.
-    if(CastC4ID(Data)->~RejectConstruction(iTx - GetX(), iTy - GetY(), this()) )
+    if(CastC4ID(Data)->~RejectConstruction((iTx ?? 0) - (GetX() ?? 0), (iTy ?? 0) - (GetY() ?? 0), this()) )
     {
       return(1);
     }
   }
   // Kein überladenes Kommando
-  return(0);
+  return(nil);
 }
 
 /* Verwandlung */
@@ -543,11 +547,11 @@ protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data)
 private func RedefinePhysical(szPhys, idTo)
 {
   // Physical-Werte ermitteln
-  var physDefFrom = GetPhysical(szPhys, 0, 0, GetID()),
-      physDefTo   = GetPhysical(szPhys, 0, 0, idTo),
+  var physDefFrom = GetPhysical(szPhys, nil, nil, GetID()),
+      physDefTo   = GetPhysical(szPhys, nil, nil, idTo),
       physCurr    = GetPhysical(szPhys);
   // Neuen Wert berechnen
-  var physNew; if (physDefTo) physNew=BoundBy(physDefTo-physDefFrom+physCurr, 0, 100000);
+  var physNew; if (physDefTo) physNew=BoundBy((physDefTo ?? 0)-(physDefFrom ?? 0)+(physCurr ?? 0), nil, 100000);
   // Neuen Wert für den Reset immer temporär setzen, selbst wenn keine Änderung besteht, damit der Reset richtig funktioniert
   SetPhysical(szPhys, physNew, PHYS_StackTemporary);
   // Fertig
@@ -557,11 +561,13 @@ private func RedefinePhysical(szPhys, idTo)
 protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
   {
   // Ziel-ID in Effektvariable
+  num ??= 0;
+  tmp ??= 0;
   if (tmp)
-    idTo = EffectVar(0, trg, num);
+    idTo = EffectVar(nil, trg, num);
   else
     {
-    EffectVar(0, trg, num) = idTo;
+    EffectVar(nil, trg, num) = idTo;
     EffectVar(1, trg, num) = GetID();
     }
   // Physicals anpassen
@@ -587,7 +593,7 @@ protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
   RedefinePhysical("CorrosionResist", idTo);
   RedefinePhysical("BreatheWater", idTo);
   // Damit Aufwertungen zu nicht-Magiern keine Zauberenergie übrig lassen
-  if (GetPhysical("Magic")/1000 < GetMagicEnergy()) DoMagicEnergy(GetPhysical("Magic")/1000-GetMagicEnergy());
+  if ((GetPhysical("Magic") ?? 0)/1000 < (GetMagicEnergy() ?? 0)) DoMagicEnergy((GetPhysical("Magic") ?? 0)/1000-(GetMagicEnergy() ?? 0));
   // Echtes Redefine nur bei echten Aufrufen (hat zu viele Nebenwirkungen)
   if (tmp) return(FX_OK);
   Redefine(idTo);
@@ -598,39 +604,42 @@ protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
 protected func FxIntRedefineStop(object trg, int num, int iReason, bool tmp)
   {
   // Physicals wiederherstellen
-  ResetPhysical(0, "BreatheWater");
-  ResetPhysical(0, "CorrosionResist");
-  ResetPhysical(0, "CanSwimDig");
-  ResetPhysical(0, "CanChop");
-  ResetPhysical(0, "CanConstruct");
-  ResetPhysical(0, "CanDig");
-  ResetPhysical(0, "Float");
-  ResetPhysical(0, "Magic");
-  ResetPhysical(0, "Fight");
-  ResetPhysical(0, "Push");
-  ResetPhysical(0, "Throw");
-  ResetPhysical(0, "Swim");
-  ResetPhysical(0, "Dig");
-  ResetPhysical(0, "Hangle");
-  ResetPhysical(0, "Scale");
-  ResetPhysical(0, "Jump");
-  ResetPhysical(0, "Walk");
-  ResetPhysical(0, "Breath");
-  ResetPhysical(0, "Energy");
+  num ??= 0;
+  iReason ??= 0;
+  tmp ??= false;
+  ResetPhysical(nil, "BreatheWater");
+  ResetPhysical(nil, "CorrosionResist");
+  ResetPhysical(nil, "CanSwimDig");
+  ResetPhysical(nil, "CanChop");
+  ResetPhysical(nil, "CanConstruct");
+  ResetPhysical(nil, "CanDig");
+  ResetPhysical(nil, "Float");
+  ResetPhysical(nil, "Magic");
+  ResetPhysical(nil, "Fight");
+  ResetPhysical(nil, "Push");
+  ResetPhysical(nil, "Throw");
+  ResetPhysical(nil, "Swim");
+  ResetPhysical(nil, "Dig");
+  ResetPhysical(nil, "Hangle");
+  ResetPhysical(nil, "Scale");
+  ResetPhysical(nil, "Jump");
+  ResetPhysical(nil, "Walk");
+  ResetPhysical(nil, "Breath");
+  ResetPhysical(nil, "Energy");
   // Keine Rückänderung bei temporären Aufrufen oder beim Tod/Löschen
-  if (tmp || iReason) return();
+  if (Or(tmp, iReason)) return;
   // Damit Aufwertungen von nicht-Magiern keine Zauberenergie übrig lassen
-  if (GetPhysical("Magic")/1000 < GetMagicEnergy()) DoMagicEnergy(GetPhysical("Magic")/1000-GetMagicEnergy());
+  if ((GetPhysical("Magic") ?? 0)/1000 < (GetMagicEnergy() ?? 0)) DoMagicEnergy((GetPhysical("Magic") ?? 0)/1000-(GetMagicEnergy() ?? 0));
   // OK; alte Definition wiederherstellen
   Redefine(EffectVar(1, trg, num));
   }
 
 public func Redefine2(idTo)
 {
-  if (GetID() == idTo) return(true);
+  if (Equal(GetID(), idTo)) return(true);
   RemoveEffect("IntRedefine", this());
-  if (GetID() == idTo) return(true);
-  return(!!AddEffect("IntRedefine", this(), 10, 0, this(), 0, idTo));
+  if (Equal(GetID(), idTo)) return(true);
+  return(!!AddEffect("IntRedefine", this(), 10, nil, this(), nil, idTo));
 }
 
 public func Redefine(idTo)
@@ -665,12 +674,12 @@ private func Riding()
   // Pferd steht still: Clonk soll auch still sitzen
   if (GetActionTarget()->~IsStill())
   {
-    if (GetAction() ne "RideStill")
+    if (!SEqual(GetAction(), "RideStill"))
       SetAction("RideStill");
   }
   // Pferd steht nicht still: Clonk soll auch nicht still sitzen
   else
-    if (GetAction() ne "Ride")
+    if (!SEqual(GetAction(), "Ride"))
       SetAction("Ride");
   return(1);
 }
@@ -682,43 +691,43 @@ private func Throwing(pObj)
   // Ggf. zu werfendes Objekt suchen 
   if (!pObj) 
   { 
-    pObj = Contents(0); 
-    if (!Contents()) return(0); 
+    pObj = Contents(nil);
+    if (!Contents()) return(nil);
   } 
   // Wurfparameter berechnen 
   var iX, iY, iR, iXDir, iYDir, iRDir; 
-  if(GetID(pObj) != SPER && !pObj->~IsSpear()) 
+  if(And(!Equal(GetID(pObj), SPER), !pObj->~IsSpear()))
   { 
     // Standardwurf   
-    iX = 0; if (!GetDir()) iX = -iX; 
+    iX = nil; if (!GetDir()) iX = -(iX ?? 0);
     iY = -10; 
     iR = Random(360); 
-    iXDir = GetPhysical("Throw") / 25000; if(!GetDir()) iXDir = -iXDir; 
-    iYDir = -GetPhysical("Throw") / 25000; 
-    iRDir = Random(40) - 20; 
+    iXDir = (GetPhysical("Throw") ?? 0) / 25000; if(!GetDir()) iXDir = -(iXDir ?? 0);
+    iYDir = -(GetPhysical("Throw") ?? 0) / 25000;
+    iRDir = (Random(40) ?? 0) - 20;
   } 
   else 
   { 
     // Speerwurf 
-    iX = 10; if (!GetDir()) iX = -iX; 
+    iX = 10; if (!GetDir()) iX = -(iX ?? 0);
     iY = -6; 
-    iR = 150; if(!GetDir()) iR = 180 - iR; 
-    iXDir = 5; if(!GetDir()) iXDir = -iXDir; 
+    iR = 150; if(!GetDir()) iR = 180 - (iR ?? 0);
+    iXDir = 5; if(!GetDir()) iXDir = -(iXDir ?? 0);
     iYDir = -2; 
-    iRDir = 4; if(!GetDir()) iRDir = -iRDir; 
+    iRDir = 4; if(!GetDir()) iRDir = -(iRDir ?? 0);
   } 
   // Reitet? Eigengeschwindigkeit addieren 
   if (GetActionTarget()) if (IsRiding()) 
   {
-    iXDir += GetXDir(GetActionTarget()) / 10;
+    S42MigrationAssign(iXDir, "+=", (GetXDir(GetActionTarget()) ?? 0) / 10);
     // Steigungen beim Gehen werden leider nicht in die Y-Dir eingerechnet. Bei Steigungen
     // kann es daher vorkommen, dass der Wurf den Reiter vom Pferd haut. Was dagegen tun..?
-    iYDir += GetYDir(GetActionTarget()) / 10; 
+    S42MigrationAssign(iYDir, "+=", (GetYDir(GetActionTarget()) ?? 0) / 10);
   } 
   // Werfen! 
-  Exit(pObj, iX, iY, iR, 0, 0, iRDir); 
-  pObj->SetXDir(GetXDir()+iXDir*10);
-  pObj->SetYDir(GetYDir()+iYDir*10);
+  Exit(pObj, iX, iY, iR, nil, nil, iRDir);
+  pObj->SetXDir((GetXDir() ?? 0)+(iXDir ?? 0)*10);
+  pObj->SetYDir((GetYDir() ?? 0)+(iYDir ?? 0)*10);
   return(1);   
 }
 
@@ -744,9 +753,9 @@ private func Punching()
   
 public func Chopping()
 {
-  if (!GetActTime()) return(); // Erster Schlag kein Sound. Clonk holt noch aus.
+  if (!GetActTime()) return; // Erster Schlag kein Sound. Clonk holt noch aus.
   Sound("Chop*");
-  CastParticles("Dust",Random(3)+1,6,-8+16*GetDir(),1,10,12);
+  CastParticles("Dust",(Random(3) ?? 0)+1,6,-8+16*(GetDir() ?? 0),1,10,12);
   return(1);
 }
 
@@ -760,40 +769,40 @@ private func Building()
   if(FindObject(CNMT))  // nur wenn Baumaterial eingeschaltet ist, dann Material spawnen
   {
   var randomzahl = Random(4);  // damit nicht nur die erste Komponente erstellt wird, sondern bis zu den ersten 4
-  if(bauarbeiter==1) {  var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(100) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 5
+  if(Equal(bauarbeiter, 1)) {  var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(100), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 5
 
-  if(bauarbeiter==2) {var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(95) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 10
+  if(Equal(bauarbeiter, 2)) {var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(95), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 10
 
-  if(bauarbeiter==3) {var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(90) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 15
+  if(Equal(bauarbeiter, 3)) {var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(90), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 15
 
-  if(bauarbeiter==4) {var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(80) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 20
+  if(Equal(bauarbeiter, 4)) {var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(80), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 20
 
-  if(bauarbeiter==5) {var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(70) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 25
+  if(Equal(bauarbeiter, 5)) {var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(70), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 25
 
-  if(bauarbeiter==6) {var building=GetActionTarget(0,this());
-  var baustoff= GetComponent(0,randomzahl,building); if(!Random(60) && baustoff) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 30
+  if(Equal(bauarbeiter, 6)) {var building=GetActionTarget(nil,this());
+  var baustoff= GetComponent(nil,randomzahl,building); if(And(!Random(60), baustoff)) CreateObject(baustoff,AbsX(GetX()),AbsY(GetY()),GetOwner()) ;} //-> ca in 20 Frames 30
   }
   // immer wenn Bauarbeiter schneller bauen
-  if(bauarbeiter==1) {  var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 1)) {  var building=GetActionTarget(nil,this());
   if(!Random(4)) DoCon(1,building);}
-  if(bauarbeiter==2) {var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 2)) {var building=GetActionTarget(nil,this());
   if(!Random(2))DoCon(1,building);}
-  if(bauarbeiter==3) {var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 3)) {var building=GetActionTarget(nil,this());
   if(!Random(4))DoCon(3,building);}
-  if(bauarbeiter==4) {var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 4)) {var building=GetActionTarget(nil,this());
   if(!Random(2))DoCon(2,building);}
-  if(bauarbeiter==5) {var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 5)) {var building=GetActionTarget(nil,this());
   if(!Random(4))DoCon(5,building);}
-  if(bauarbeiter==6) {var building=GetActionTarget(0,this());
+  if(Equal(bauarbeiter, 6)) {var building=GetActionTarget(nil,this());
   if(!Random(2))DoCon(3,building);}
 if (FindObject(SOB_))
 {
-var building=GetActionTarget(0,this());
+var building=GetActionTarget(nil,this());
   DoCon(100,building);}
 
   if (!Random(2)) Sound("Build*");
@@ -816,8 +825,8 @@ private func Digging()
 protected func Scaling()
 {
   var szDesiredAction;
-  if (GetYDir()>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
-  if (GetAction() ne szDesiredAction) SetAction(szDesiredAction);
+  if ((GetYDir() ?? 0)>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
+  if (!SEqual(GetAction(), szDesiredAction)) SetAction(szDesiredAction);
   return(1);   
 }
 
@@ -826,14 +835,14 @@ protected func Scaling()
 protected func QueryCatchBlow(object projectile)
 {
   // Objekt will den Clonk nicht treffen?
-  if (projectile && projectile->~QueryClonkHit(this))
+  if (And(projectile, projectile->~QueryClonkHit(this)))
     return true;;
   // Treffer OK
 }
   
 protected func CatchBlow()
 {
-  if (GetAction() eq "Dead") return(0);
+  if (!!SEqual(GetAction(), "Dead")) return(nil);
   if (!Random(5)) Hurt();
   return(1);
 }
@@ -846,6 +855,7 @@ protected func Hurt()
   
 protected func Grab(object pTarget, bool fGrab)
 {
+  fGrab ??= false;
   Sound("Grab");
   return(1);
 }
@@ -864,9 +874,11 @@ protected func Put()
 
 // wird beim Tod vor Death aufgerufen, sodass die Items noch von der Leiche gegrabt werden können
 protected func FxLeichenDeathStop(object pTarget, int iNr, int iReason) {
-  if(iReason == 4) {
+  iNr ??= 0;
+  iReason ??= 0;
+  if(Equal(iReason, 4)) {
     // Leiche erstellen, welche der Umwelt schädigt.
-   var pCorpse=CreateObject(CORP,0,GetDefBottom()-GetY(),GetOwner());
+   var pCorpse=CreateObject(CORP,nil,(GetDefBottom() ?? 0)-(GetY() ?? 0),GetOwner());
   pCorpse->SetLeiche(this());
   }
 }
@@ -880,8 +892,8 @@ protected func Destruction()
   if (GetAlive())
     GameCallEx("OnClonkDeath", this(), GetKiller());
   // Dies ist das letztes Mannschaftsmitglied: Script benachrichtigen
-  if (GetCrew(GetOwner()) == this())
-    if (GetCrewCount(GetOwner()) == 1)
+  if (Equal(GetCrew(GetOwner()), this()))
+    if (Equal(GetCrewCount(GetOwner()), 1))
       //Nur wenn der Spieler noch lebt und nicht gerade eleminiert wird
       if (GetPlayerName(GetOwner()))
         {
@@ -899,9 +911,9 @@ protected func DeepBreath()
 protected func CheckStuck()
 {                   
   // Verhindert Festhängen am Mittelvertex
-  if(!GetXDir()) if(Abs(GetYDir()) < 5)
-    if(GBackSolid(0, 3))
-      SetPosition(GetX(), GetY() + 1);
+  if(!GetXDir()) if((Abs(GetYDir()) ?? 0) < 5)
+    if(GBackSolid(nil, 3))
+      SetPosition(GetX(), (GetY() ?? 0) + 1);
 }
 
 /* Status */
@@ -942,9 +954,9 @@ public func ContextFeighDeath(pCaller)
 func FeighDeathnow()
 {
   UnHide();
-  portraitt=GetPortrait(0,0,0);
-  portraittID=GetPortrait(0,1,0);
-  SetPortrait("1",0, CG8Z, 0, 0);
+  portraitt=GetPortrait(nil,nil,nil);
+  portraittID=GetPortrait(nil,1,nil);
+  SetPortrait("1",nil, CG8Z, nil, nil);
   Sound("Die");
   DeathAnnounce();
   SetAction("StartFeign");
@@ -961,7 +973,7 @@ public func ContextHide(pCaller)
 }
 
 protected func StartHide() {
-  if(GetActTime() > 100) {
+  if((GetActTime() ?? 0) > 100) {
     Hide();
     SetAction("Walk");
   }
@@ -972,7 +984,7 @@ protected func Hide() {
   isHidden = true;
   SetClrModulation(RGBa(205,205,205,170));
   //if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump" || GetAction() eq "WalkArmed" || GetAction() eq "SwimArmed" || GetAction() eq "JumpArmed") 
- if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump")
+ if(Or(!!SEqual(GetAction(), "HoldWalk"), !!SEqual(GetAction(), "HoldJump")))
   {
     SetClrModulation(RGBa(205,205,205,170),this,1);
     SetClrModulation(RGBa(205,205,205,170),this,2);
@@ -980,18 +992,18 @@ protected func Hide() {
 }
 
 public func UnHide() {
-  isHidden = false;
-  SetClrModulation(RGBa(255,255,255,0));
+  isHidden = nil;
+  SetClrModulation(RGBa(255,255,255,nil));
     //if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump" || GetAction() eq "WalkArmed" || GetAction() eq "SwimArmed" || GetAction() eq "JumpArmed") 
-   if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump")
+   if(Or(!!SEqual(GetAction(), "HoldWalk"), !!SEqual(GetAction(), "HoldJump")))
   {
-    SetClrModulation(RGBa(255,255,255,0), this,1);
-    SetClrModulation(RGBa(255,255,255,0), this,2);
+    SetClrModulation(RGBa(255,255,255,nil), this,1);
+    SetClrModulation(RGBa(255,255,255,nil), this,2);
   }
 }
 
 public func IsHidable() {
-  if ((GetAction() eq "Walk" || GetAction() eq "HoldWalk") && !IsHidden() && (FindObject2(Find_AtPoint (0,0), Find_Category(C4D_Structure | C4D_StaticBack)) || GetMaterial() == 18)) return(true);
+  if (And(And((Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "HoldWalk"))), !IsHidden()), (Or(FindObject2(Find_AtPoint (nil,nil), Find_Category((C4D_Structure ?? 0) | (C4D_StaticBack ?? 0))), Equal(GetMaterial(), 18))))) return(true);
 }
 
 public func IsHidden() {
@@ -1008,16 +1020,16 @@ public func ContextRiseFeighDeath(pCaller)
 
 func RisefromFeighDeath()
 {
-  SetPortrait(Format("%s",portraitt),0 , portraittID); // da lokaler aufruf reicht 0
+  SetPortrait(Format("%s",portraitt),nil , portraittID); // da lokaler aufruf reicht 0
   SetAction("KneelUp");
 }
 
 protected func IsNotFeign() {
-  if(GetAction() ne "Feign" && GetAction() ne "Faint" && GetAction() ne "StartFeign" && GetAction() ne "StartFaint") return(true);
+  if(And(And(And(!SEqual(GetAction(), "Feign"), !SEqual(GetAction(), "Faint")), !SEqual(GetAction(), "StartFeign")), !SEqual(GetAction(), "StartFaint"))) return(true);
 }
 
 protected func IsFeign() {
-  if(GetAction() eq "Feign") return(true);
+  if(!!SEqual(GetAction(), "Feign")) return(true);
 }
 
 public func ContextConstructionSite(pCaller)
@@ -1062,7 +1074,7 @@ public func ContextHome(pCaller)
 public func ContainedCall(string strFunction, object pTarget)
 {
   // Erst das betreffende Gebäude betreten, dann die Zielfunktion aufrufen 
-  SetCommand(this(), "Call", pTarget, this(), 0, 0, strFunction);
+  SetCommand(this(), "Call", pTarget, this(), nil, nil, strFunction);
   AddCommand(this(), "Enter", pTarget);
 }
 
@@ -1073,16 +1085,16 @@ protected func ControlSpecial2()
   [$CtrlMenuDesc$|Image=CXTX]
   // In einem Gebäude oder Fahrzeug: das Kontextmenü des Gebäudes öffnen
   if (Contained())
-    if ((Contained()->GetCategory() & C4D_Structure) || (Contained()->GetCategory() & C4D_Vehicle))
-      return(SetCommand(this(),"Context",0,0,0,Contained()), ExecuteCommand());
+    if (Or(((Contained()->GetCategory() ?? 0) & (C4D_Structure ?? 0)), ((Contained()->GetCategory() ?? 0) & (C4D_Vehicle ?? 0))))
+      return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,Contained()), ExecuteCommand()));
   // Fasst ein Objekt an: Kontextmenü des angefassten Objekts öffnen
-  if (GetAction() eq "Push")
-    return(SetCommand(this(),"Context",0,0,0,GetActionTarget()), ExecuteCommand());
+  if (!!SEqual(GetAction(), "Push"))
+    return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,GetActionTarget()), ExecuteCommand()));
   // Trägt ein Objekt: Kontextmenü des ersten getragenen Objekts öffnen
-  if (Contents(0))
-    return(SetCommand(this(),"Context",0,0,0,Contents(0)), ExecuteCommand());
+  if (Contents(nil))
+    return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,Contents(nil)), ExecuteCommand()));
   // Ansonsten das Kontextmenü des Clonks öffnen
-  return(SetCommand(this(),"Context",0,0,0,this()), ExecuteCommand());
+  return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,this()), ExecuteCommand()));
 }
 
 /* Callback beim Auswahl aus dem Construct-Kontextmenu */
@@ -1090,9 +1102,9 @@ protected func ControlSpecial2()
 public func ControlCommandConstruction(target, x, y, target2, def)
 {
   // Keine Konstruktion erlaubt?
-  if(def->~RejectConstruction(x - GetX(), y - GetY(), this()) )
+  if(def->~RejectConstruction((x ?? 0) - (GetX() ?? 0), (y ?? 0) - (GetY() ?? 0), this()) )
     // Construct-Kommando beenden
-    return(FinishCommand(this(), false, 0) );
+    return(FinishCommand(this(), nil, nil) );
 }
 
 /* Automatische Produktion */
@@ -1101,10 +1113,10 @@ public func ControlCommandAcquire(target, x, y, target2, def)
 {
   //Falls das Teil rumliegt nur aufsammeln
   var obj = GetAvailableObject (def, target2);
-  if (obj) return ();
+  if (obj) return ;
   //Gebäude suchen worin man's herstellen kann  
   if (obj = GetProducerOf (def)) {
-    AddCommand (this (), "Call", this (), 0, 0, 0, 0, "AutoProduction", 0, 1);
+    AddCommand (this (), "Call", this (), nil, nil, nil, nil, "AutoProduction", nil, 1);
     obj -> HowToProduce (this(), def);
     return (1);
   }
@@ -1117,8 +1129,8 @@ public func AutoProductionFailed()
   var def = GetCommand (this (), 5, 1);
   if (!FindContents(def)) {
     var obj = GetAvailableObject (def, GetCommand (this (), 4, 1));
-    if (obj) return (AddCommand (this(), "Get", obj,0,0,0,40));
-    AddCommand (this(), "Buy", 0, 0, 0, 0, 100, GetCommand(this(), 5, 1), 0, 3);
+    if (obj) return (AddCommand (this(), "Get", obj,nil,nil,nil,40));
+    AddCommand (this(), "Buy", nil, nil, nil, nil, 100, GetCommand(this(), 5, 1), nil, 3);
   }
   return (1);
 }
@@ -1126,10 +1138,10 @@ public func AutoProductionFailed()
 public func GetProducerOf(def)
 {
   // Nur Objekte mit typischen OCFs befragen damit's schneller geht.
-  var obj, prod, ocf = OCF_Container () | OCF_Exclusive () | OCF_Entrance () | OCF_LineConstruct () | OCF_PowerConsumer ();
-  while (obj = FindObject (0, -500, -250, 1000, 500, ocf,0,0,0, obj))
+  var obj, prod, ocf = (OCF_Container  ?? 0) | (OCF_Exclusive  ?? 0) | (OCF_Entrance  ?? 0) | (OCF_LineConstruct  ?? 0) | (OCF_PowerConsumer  ?? 0);
+  while (obj = FindObject (nil, -500, -250, 1000, 500, ocf,nil,nil,nil, obj))
     if (obj -> ~IsProducerOf (this (), def))
-      if (!prod || ObjectDistance (prod) > ObjectDistance (obj))
+      if (Or(!prod, (ObjectDistance (prod) ?? 0) > (ObjectDistance (obj) ?? 0)))
         prod = obj;
   return (prod);
 }
@@ -1140,7 +1152,7 @@ public func GetProducerOf(def)
 public func ContextPermanentModeTurnOn(pCaller) 
 {
   [$TxtPermanentModeTurnOn$|Image=ECS1:5|Condition=GrabbingNonPermanentElevator]
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       GetActionTarget()->DoControlAuto(this());
 }
@@ -1148,27 +1160,27 @@ public func ContextPermanentModeTurnOn(pCaller)
 public func ContextPermanentModeTurnOff(pObj) 
 {
   [$TxtPermanentModeTurnOff$|Image=ECS1:5|Condition=GrabbingPermanentElevator]
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       GetActionTarget()->DoControlAuto(this());
 }
 
 private func GrabbingNonPermanentElevator()
 {
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       if (GetActionTarget()->IsNotInPermanentMode())
         return(1);
-  return(0);        
+  return(nil);
 }
 
 private func GrabbingPermanentElevator()
 {
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       if (GetActionTarget()->IsInPermanentMode())
         return(1);
-  return(0);        
+  return(nil);
 }
 
 
@@ -1188,35 +1200,35 @@ public func Drink(object pDrink)
 public func RejectCollect(id idObject, object pObject)
 {
  return(1);
-  if(GetAction() eq "Faint") return(1);
+  if(!!SEqual(GetAction(), "Faint")) return(1);
   // Objekt kann gepackt werden
   // automatisches Packen aber nur wenn die Paktteile nicht extra gezählt werden
   if(!IsSpecialItem(pObject)) if(pObject->~JoinPack(this())) return(1);
     
   // Objektaufnahme mit Limit verhindern, wenn bereits genug getragen
-  if(pObject->~CarryLimit() && ContentsCount(idObject) >= pObject->~CarryLimit() ) return(1);
+  if(And(pObject->~CarryLimit(), (ContentsCount(idObject) ?? 0) >= (pObject->~CarryLimit() ?? 0)) ) return(1);
     
   // Spezialitem?
   var i, iCount;
   if(i = IsSpecialItem(pObject))
   {
     // Noch genug Platz für das ganze Packet?
-    if(GetSpecialCount(GetMaxSpecialCount(i-1))+Max(pObject->~PackCount(),1)<=GetMaxSpecialCount(i-1, 1)) return(0);
-    iCount = GetMaxSpecialCount(i-1, 1)-GetSpecialCount(GetMaxSpecialCount(i-1));
+    if((GetSpecialCount(GetMaxSpecialCount((i ?? 0)-1)) ?? 0)+(Max(pObject->~PackCount(),1) ?? 0)<=(GetMaxSpecialCount((i ?? 0)-1, 1) ?? 0)) return(nil);
+    iCount = (GetMaxSpecialCount((i ?? 0)-1, 1) ?? 0)-(GetSpecialCount(GetMaxSpecialCount((i ?? 0)-1)) ?? 0);
     // Ansonten so viel wie geht rein
-    if(pObject->~SplitPack(pObject->~PackCount()-iCount)) return(0);
+    if(pObject->~SplitPack((pObject->~PackCount() ?? 0)-(iCount ?? 0))) return(nil);
     else return(1);
   }
   
-  return(GetNonSpecialCount()>=MaxContentsCount());
+  return((GetNonSpecialCount() ?? 0)>=(MaxContentsCount() ?? 0));
 }
 
 /* Itemlimit */
 
 public func MaxContentsCount() { 
-if(bauarbeiter==1 || bauarbeiter==2 || bauarbeiter==3) return(3);
-if(bauarbeiter==4 || bauarbeiter==5) return(4);
-if(bauarbeiter==6) return(5);
+if(Or(Or(Equal(bauarbeiter, 1), Equal(bauarbeiter, 2)), Equal(bauarbeiter, 3))) return(3);
+if(Or(Equal(bauarbeiter, 4), Equal(bauarbeiter, 5))) return(4);
+if(Equal(bauarbeiter, 6)) return(5);
 return(1); }
 
 
@@ -1234,7 +1246,7 @@ private func GetObjectCount(idObj)
   var idUnpackedObj; 
   if (idUnpackedObj = idObj->~UnpackTo()) 
     // Auch verschachtelte Pakete mitzählen 
-    return(GetObjectCount(idUnpackedObj) * idObj->PackCount()); 
+    return((GetObjectCount(idUnpackedObj) ?? 0) * (idObj->PackCount() ?? 0));
   // Ansonsten ist es nur ein Objekt 
   return(1); 
   }
@@ -1244,14 +1256,14 @@ private func GetSpecialCount(szTest)
   { 
   var iCnt, pObj; 
   // Einzelne Pfeile... 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(ObjectCall(pObj, szTest)) 
-      iCnt++; 
+      S42MigrationStep(iCnt, 1, true);
   // Pakete... 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~UnpackTo())
       if(DefinitionCall(pObj->~UnpackTo(), szTest))
-        iCnt += GetObjectCount(pObj); 
+        S42MigrationAssign(iCnt, "+=", (GetObjectCount(pObj) ?? 0));
   // Wert zurückgeben 
   return(iCnt); 
   }
@@ -1261,16 +1273,16 @@ private func IsSpecialItem(pObj)
 {
   // Spezialitem?
   var j=-1;
-  while(GetMaxSpecialCount(++j, 1))
+  while(GetMaxSpecialCount(S42MigrationStep(j, 1), 1))
     if(ObjectCall(pObj, GetMaxSpecialCount(j)))
-      return(j+1);
+      return((j ?? 0)+1);
   // Spezialitempacket?
   if(pObj->~UnpackTo())
   {
     j=-1;
-    while(GetMaxSpecialCount(++j, 1))
+    while(GetMaxSpecialCount(S42MigrationStep(j, 1), 1))
       if(DefinitionCall(pObj->~UnpackTo(), GetMaxSpecialCount(j)))
-        return(j+1);
+        return((j ?? 0)+1);
   }
 }
 
@@ -1279,10 +1291,10 @@ private func GetNonSpecialCount()
   { 
   var iCnt, pObj; 
   // Inventar einzeln auf nicht-Spezial überprüfen 
-  for(var i = 0; pObj = Contents(i); i++)
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     // Spezialitems nicht zählen
     if(!IsSpecialItem(pObj))
-        iCnt++;
+        S42MigrationStep(iCnt, 1, true);
    
   // Wert zurückgeben 
   return(iCnt); 
@@ -1319,15 +1331,15 @@ public func DescendVehicle()
 private func Control2Effect(string szControl)
   {
   // Von Effektzahl abwärts zählen
-  var i = GetEffectCount(0, this()), iEffect;
+  var i = GetEffectCount(nil, this()), iEffect;
   var res;
-  while (i--)
+  while (S42MigrationStep(i, -1, true))
     {
     // Effekte mit Control im Namen benachrichtigen	  
     iEffect = GetEffect("*Control*", this(), i);
     //  Message("%s", this(), GetEffect(0, this(), iEffect, 1));
-    if ( GetEffect(0, this(), iEffect, 1) )
-      res += EffectCall(this(), iEffect, szControl);
+    if ( GetEffect(nil, this(), iEffect, 1) )
+      S42MigrationAssign(res, "+=", (EffectCall(this(), iEffect, szControl) ?? 0));
     }
   return(res);
   }
@@ -1349,11 +1361,11 @@ public func GetArrow()
   { 
   // Einzelne Pfeile suchen 
   var pObj, pArrow; 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrow()) 
       return(pObj); 
   // Bei Bedarf Pakete aufteilen 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrowPack())
     {
       // Pfeil aus Paket verwenden
@@ -1363,25 +1375,25 @@ public func GetArrow()
         return(FindSingleArrow());
     }
   // Keine Pfeile gefunden 
-  return(0); 
+  return(nil);
   } 
 
 public func FindSingleArrow() 
   { 
   // Einzelne Pfeile suchen 
   var pObj; 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrow()) 
       return(pObj); 
   // Keiner gefunden 
-  return(0); 
+  return(nil);
   } 
   
 public func GetComboArrow() 
   { 
   // Pfeile als Komboobjekt: Nur wenn das erste Inventarobjekt ein Pfeil ist
-  var pObj = Contents(0), pArrow;
-  if (!pObj) return();
+  var pObj = Contents(nil), pArrow;
+  if (!pObj) return;
   if(pObj->~IsArrow()) return(pObj); 
   // Bei Bedarf Pakete aufteilen 
   if(pObj->~IsArrowPack())
@@ -1393,7 +1405,7 @@ public func GetComboArrow()
       return(FindSingleArrow());
     }
   // Keine Pfeile gefunden 
-  return(0);
+  return(nil);
   } 
 
 /* Pfeile im Inventar zählen */ 
@@ -1409,13 +1421,13 @@ public func SpellFailed(id idSpell, object pByCaller)
 {
   // Umleiten an eigentliche Zauberquelle? (Buch, Zauberturm, etc.)
   var pSpellOrigin = pAimedSpellOrigin;
-  pAimedSpellOrigin = 0;
-  if (pSpellOrigin && pSpellOrigin != this())
+  pAimedSpellOrigin = nil;
+  if (And(pSpellOrigin, !Equal(pSpellOrigin, this())))
     // Auch bei nicht erfolgreicher Umleitung abbrechen: Das zaubernde Objekt hat im Normalfall die Zutaten/Zauberenergie für den
     // Zauber bereit gestellt, und diese sollten nicht an den Clonk zurück gegeben werden
     return (pSpellOrigin->~SpellFailed(idSpell, this()));
   // Magieenergie zurückgeben
-  DoMagicEnergy(Value(idSpell), 0, true);
+  DoMagicEnergy(Value(idSpell), nil, true);
   // Alchemische Zutaten zurückgeben
   if(ObjectCount(ALCO)) IncreaseAlchem(idSpell);
 }
@@ -1425,8 +1437,8 @@ public func SpellSucceeded(id idSpell, object pByCaller)
   // Umleiten an eigentliche Zauberquelle? (Buch, Zauberturm, etc.)
   // LocalN als Workaround um ChangeDefs im Zauber
   var pSpellOrigin = LocalN("pAimedSpellOrigin");
-  LocalN("pAimedSpellOrigin") = 0;
-  if (pSpellOrigin && pSpellOrigin != this())
+  LocalN("pAimedSpellOrigin") = nil;
+  if (And(pSpellOrigin, !Equal(pSpellOrigin, this())))
     // Auch bei nicht erfolgreicher Umleitung abbrechen: Das zaubernde Objekt hat im Normalfall das Magietraining schon erledigt
     return (pSpellOrigin->~SpellSucceeded(idSpell, this()));
   // Globaler Aufruf für Zauber
@@ -1445,15 +1457,15 @@ public func DoSpellAim(object pSpell, object pSpellOrigin)
   {
   pAimedSpell = pSpell;
   pAimedSpellOrigin = pSpellOrigin;
-  pAimer = CreateAimer(this(), this(), GetDir()*180-90);
+  pAimer = CreateAimer(this(), this(), (GetDir() ?? 0)*180-90);
 
-  if (!pAimer) return(0);
+  if (!pAimer) return(nil);
   
   // Callback an die Zauberquelle, dass noch gezielt wird
   if (pSpellOrigin) pSpellOrigin->~SpellAiming(pSpell, this());
 
   // Zielvorgang für Zauber
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetCastAction();
   return(pAimer);
   }
@@ -1461,13 +1473,14 @@ public func DoSpellAim(object pSpell, object pSpellOrigin)
 public func OnAimerEnter(int iAngle)
   {
   // Zauber weg?
+  iAngle ??= 0;
   if (!pAimedSpell) return(OnAimerAbort(iAngle));
   var idSpell = GetID(pAimedSpell);
   // Aktivität
   SetMagicAction();
   // Zauber benachrichtigen
   if (!pAimedSpell->~ActivateAngle(this(), iAngle))
-    return(0, SpellFailed(idSpell));
+    return(S42MigrationFirst(nil, SpellFailed(idSpell)));
   // OK; Zauber erfolgreich
   return(SpellSucceeded(idSpell));
   }
@@ -1475,22 +1488,23 @@ public func OnAimerEnter(int iAngle)
 public func AimingAngle(int iAngle)
   {
   // Zauber weg?
+  iAngle ??= 0;
   if (!pAimedSpell) return(OnAimerAbort(iAngle));
   // Zielaktion setzen, wenn im Laufen. Das ist etwas ungeschickt, weil damit
   // die Magic-Aktion abgebrochen wird, die der Magier bereits bis zur Haelfte
   // durchgefuehrt hat. Dummerweise laesst sich frueher nicht feststellen, ob
   // der auszufuehrende Zauber einen Aimer brauchen wird...
   if(GetActMapVal("Name", "AimMagic") )
-    if(GetAction() S= "Walk" || GetAction() S= "Magic")
+    if(Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "Magic")))
       SetAction("AimMagic");
 
   // Phase anpassen
-  if(GetAction() S= "AimMagic")
+  if(!!SEqual(GetAction(), "AimMagic"))
     {
     // Auch richtigen Winkel verwenden wenn nach links gedreht
     var iHalfAngle = iAngle;
-    if(iHalfAngle < 0) iHalfAngle = -iHalfAngle;
-    SetPhase(BoundBy((iHalfAngle + 9) / 18, 0, 9) );
+    if((iHalfAngle ?? 0) < 0) iHalfAngle = -(iHalfAngle ?? 0);
+    SetPhase(BoundBy(((iHalfAngle ?? 0) + 9) / 18, nil, 9) );
     }
   // Weitergabe an den Zauber
   return(pAimedSpell->~AimingAngle(this(), iAngle));
@@ -1499,6 +1513,7 @@ public func AimingAngle(int iAngle)
 public func OnAimerAbort(int iAngle)
   {
   // Aktivität zurücksetzen
+  iAngle ??= 0;
   EndMagicAction();
   // Benachrichtigung
   if (!pAimedSpell) return(1);
@@ -1506,7 +1521,7 @@ public func OnAimerAbort(int iAngle)
   if (!pAimedSpell->~AbortAiming(this()))
     // Standardaktion: Zauber löschen
     RemoveObject(pAimedSpell);
-  pAimedSpell = 0;
+  pAimedSpell = nil;
   // OK; Zauber nicht erfolgreich
   return(SpellFailed(idSpell));
   }
@@ -1514,10 +1529,11 @@ public func OnAimerAbort(int iAngle)
 public func DoSpellSelect(object pSpell, int iRadius, object pSpellOrigin)
   {
   // Zauber sichern
+  iRadius ??= 0;
   pAimedSpell = pSpell;
   pAimedSpellOrigin = pSpellOrigin;
   pAimer = CreateSelector(pSpell, this(), iRadius);
-  if (!pAimer) return();
+  if (!pAimer) return;
   // Callback an die Zauberquelle, dass noch gezielt wird
   if (pSpellOrigin) pSpellOrigin->~SpellAiming(pSpell, this());
   // Zielvorgang für Zauber
@@ -1535,7 +1551,7 @@ public func OnSelectorEnter(object pTarget)
   SetMagicAction();
   // Zauber benachrichtigen
   if (!pAimedSpell->~ActivateTarget(this(), pTarget))
-    return(0, SpellFailed(idSpell));
+    return(S42MigrationFirst(nil, SpellFailed(idSpell)));
   // OK; Zauber erfolgreich
   return(SpellSucceeded(idSpell));
   }
@@ -1550,7 +1566,7 @@ public func OnSelectorAbort()
   if (!pAimedSpell->~AbortSelecting(this()))
     // Standardaktion: Zauber löschen
     RemoveObject(pAimedSpell);
-  pAimedSpell = 0;
+  pAimedSpell = nil;
   // OK; Zauber nicht erfolgreich
   return(SpellFailed(idSpell));
   }
@@ -1569,7 +1585,7 @@ public func Abort() {} // dummy call to instantiate function name
 
 /*---- HazardClonk ----*/
 
-#strict
+#strict 3
 #include CLNK
 
 #include L_DR	// can have drone (with context menu)
@@ -1610,18 +1626,18 @@ AutoCollectIstAnlokal=1;
 
 func Autoistaus()
 {
-AutoCollectIstAnlokal=0;
+AutoCollectIstAnlokal=nil;
 }
 
 
 public func Chopping()
 {
-  if (!GetActTime()) return(); // Erster Schlag kein Sound. Clonk holt noch aus.
-  if(bauarbeiter==1 ||bauarbeiter==2  ) DoDamage(15, GetActionTarget());
-  if(bauarbeiter==3 ||bauarbeiter==4  ) DoDamage(30, GetActionTarget());
-  if(bauarbeiter==5 ||bauarbeiter==6  ) DoDamage(40, GetActionTarget());  // mehr Schaden -> Baum fällt schneller um
+  if (!GetActTime()) return; // Erster Schlag kein Sound. Clonk holt noch aus.
+  if(Or(Equal(bauarbeiter, 1), Equal(bauarbeiter, 2))  ) DoDamage(15, GetActionTarget());
+  if(Or(Equal(bauarbeiter, 3), Equal(bauarbeiter, 4))  ) DoDamage(30, GetActionTarget());
+  if(Or(Equal(bauarbeiter, 5), Equal(bauarbeiter, 6))  ) DoDamage(40, GetActionTarget());  // mehr Schaden -> Baum fällt schneller um
   Sound("Chop*");
-  CastParticles("Dust",Random(3)+1,6,-8+16*GetDir(),1,10,12);
+  CastParticles("Dust",(Random(3) ?? 0)+1,6,-8+16*(GetDir() ?? 0),1,10,12);
   return(1);
 }
 
@@ -1633,14 +1649,14 @@ protected func Initialize()
   // Magieanzeige ist hier die Munitionsanzeige - nicht mehr
 //  SetPhysical("Magic",100000,2);
   //Energie fixen (kA wo das gechanged wird...) UH H4X
-  DoEnergy( -GetPhysical("Energy") / 1000 + 1); //Noch 1 Energie
+  DoEnergy( -(GetPhysical("Energy") ?? 0) / 1000 + 1); //Noch 1 Energie
   SetPhysical("Energy", 150000, 2); //Physical ändern
-  DoEnergy( GetPhysical("Energy") / 100 - 1); // Neu dazugeben
+  DoEnergy( (GetPhysical("Energy") ?? 0) / 100 - 1); // Neu dazugeben
   // Munitionsgürtel
   AmmoStoring();
   GetHUD(this());
   // Schadenseffekt
-  AddEffect("DmgCheck",this(),1,0);
+  AddEffect("DmgCheck",this(),1,nil);
 
   return(inherited());
 }
@@ -1655,19 +1671,20 @@ public func StdPortraitCount() { return(3); }
 protected func Recruitment(int iPlr)
 {
   // Zur Netzwerk-Sicherheit
+  iPlr ??= 0;
   var iRandomPortrait = Random(StdPortraitCount());
   // Mal schauen, was fuer ein Portrait wir haben
-  var portrait = GetPortrait(this(), 0, 1);
+  var portrait = GetPortrait(this(), nil, 1);
   var portrait_id = GetPortrait(this(), 1, 1);
   // Ist es ein eigenes Portrait? Dann lassen wir es.
-  if(portrait S= "custom") return(_inherited(iPlr) );
+  if(!!SEqual(portrait, "custom")) return(_inherited(iPlr) );
   // Ist eine ID angegeben?
-  if(portrait_id && portrait_id != NONE)
+  if(And(portrait_id, !Equal(portrait_id, NONE)))
   {
     // Kein Hazardportrait?
-    if(portrait_id != GetID() )
+    if(!Equal(portrait_id, GetID()) )
     {
-      SetPortrait(Format("%d", 1 + iRandomPortrait), this(), GetID(), true, false);
+      SetPortrait(Format("%d", 1 + (iRandomPortrait ?? 0)), this(), GetID(), true, nil);
       return(_inherited(iPlr) );
     }
   }
@@ -1675,7 +1692,7 @@ protected func Recruitment(int iPlr)
   if(!WildcardMatch(portrait, "?") )
   {
     // Nein, das war ein Ruestungsportrait oder sowas. Wir wollen aber lieber ein normales.
-    SetPortrait(Format("%d", 1 + iRandomPortrait), this(), GetID(), true, false);
+    SetPortrait(Format("%d", 1 + (iRandomPortrait ?? 0)), this(), GetID(), true, nil);
   }
   return(_inherited(iPlr) );
 }
@@ -1684,7 +1701,10 @@ protected func Recruitment(int iPlr)
 
 protected func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 {
-  if(Control2Grab("ControlUpdate", comdir, dig, throw)) return(0);
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
+  if(Control2Grab("ControlUpdate", comdir, dig, throw)) return(nil);
   if(Control2Contents("ControlUpdate", comdir, dig, throw)) return(1);
   if(ControlAim("ControlUpdate", comdir, dig, throw)) return(1);
   if(ControlLadder("ControlUpdate", comdir, dig, throw)) return(1);
@@ -1694,10 +1714,10 @@ protected func ControlUpdate(object clonk, int comdir, bool dig, bool throw)
 
 protected func ControlUp() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlUp");
+  SetAggroLevel(nil,nil,nil,nil,"ControlUp");
 
   if (ControlAim("ControlUp")) return(1);
-  if (Control2Grab("ControlUp")) return(0);
+  if (Control2Grab("ControlUp")) return(nil);
   if (Control2Contents("ControlUp") ) return(1);
   if (ControlLadder("ControlUp") ) return(1);
   if (ControlAgility("ControlUp") ) return(1);
@@ -1707,7 +1727,7 @@ protected func ControlUp() {
 protected func ControlUpDouble() {
 
   if (ControlAim("ControlUp")) return(1);
-  if (Control2Grab("ControlUpDouble")) return(0);
+  if (Control2Grab("ControlUpDouble")) return(nil);
   if (Control2Contents("ControlUpDouble") ) return(1);
   if (ControlJetpack("ControlUpDouble") ) return(1);
   if (ControlAgility("ControlUpDouble") ) return(1);
@@ -1716,13 +1736,13 @@ protected func ControlUpDouble() {
 
 protected func ControlDown() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlDown");
+  SetAggroLevel(nil,nil,nil,nil,"ControlDown");
 
   if (ControlAim("ControlDown")) return(1);
-  if (Control2Grab("ControlDown")) return(0);
+  if (Control2Grab("ControlDown")) return(nil);
   if (Control2Contents("ControlDown") ) return(1);
   if (ControlLadder("ControlDown") ) return(1);
-  if(Contents(0))
+  if(Contents(nil))
     if (GetPlrDownDouble(GetOwner()))
 		if(ReadyToSquatAim())
     {
@@ -1733,18 +1753,18 @@ protected func ControlDown() {
 }
 
 private func ReadyToSquatAim() {
-	return(	!GetEffect("SquatAimTimeout") 
-		&&	Contents(0)->~CanAim()
-		&& !IsAiming()
-		&& (GetAction() eq "WalkArmed" || GetAction() eq "Walk"));
+	return(	And(And(And(!GetEffect("SquatAimTimeout")
+		,	Contents(nil)->~CanAim())
+		, !IsAiming())
+		, (Or(!!SEqual(GetAction(), "WalkArmed"), !!SEqual(GetAction(), "Walk")))));
 }
 
 protected func ControlLeft() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlLeft");
+  SetAggroLevel(nil,nil,nil,nil,"ControlLeft");
 
   if (ControlAim("ControlLeft")) return(1);
-  if (Control2Grab("ControlLeft")) return(0);
+  if (Control2Grab("ControlLeft")) return(nil);
   if (Control2Contents("ControlLeft")) return(1);
   if (ControlLadder("ControlLeft") ) return(1);
   if (ControlJetpack("ControlLeft") ) return(1);
@@ -1755,10 +1775,10 @@ protected func ControlLeft() {
 
 protected func ControlRight() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlRight");
+  SetAggroLevel(nil,nil,nil,nil,"ControlRight");
 
   if (ControlAim("ControlRight")) return(1);
-  if (Control2Grab("ControlRight")) return(0);
+  if (Control2Grab("ControlRight")) return(nil);
   if (Control2Contents("ControlRight")) return(1);
   if (ControlLadder("ControlRight") ) return(1);
   if (ControlJetpack("ControlRight") ) return(1);
@@ -1774,7 +1794,7 @@ protected func ControlLeftDouble() {
 	  return(1);
   }
   if (ControlAim("ControlLeftDouble")) return(1);
-  if (Control2Grab("ControlLeftDouble")) return(0);
+  if (Control2Grab("ControlLeftDouble")) return(nil);
   if (Control2Contents("ControlLeftDouble")) return(1);
   if (ControlJetpack("ControlLeftDouble") ) return(1);
   if (ControlAgility("ControlLeftDouble") ) return(1);
@@ -1788,7 +1808,7 @@ protected func ControlRightDouble() {
 	  return(1);
   }
   if (ControlAim("ControlRightDouble")) return(1);
-  if (Control2Grab("ControlRightDouble")) return(0);
+  if (Control2Grab("ControlRightDouble")) return(nil);
   if (Control2Contents("ControlRightDouble")) return(1);
   if (ControlJetpack("ControlRightDouble") ) return(1);
   if (ControlAgility("ControlRightDouble") ) return(1);
@@ -1796,19 +1816,19 @@ protected func ControlRightDouble() {
 }
 
 protected func ControlDigDouble() {
-  if (GetAction() S= "Push" || IsRiding()) {
+  if (Or(!!SEqual(GetAction(), "Push"), IsRiding())) {
     GetActionTarget()->~ControlDigDouble(this());
     return(1);
   }
-  if (Control2Grab("ControlDigDouble")) return(0);
+  if (Control2Grab("ControlDigDouble")) return(nil);
   if (Control2Contents("ControlDigDouble")) return(1);
   return(_inherited());
 }
 
 protected func ControlDigSingle() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlDig");
-  if (Control2Grab("ControlDig")) return(0);
+  SetAggroLevel(nil,nil,nil,nil,"ControlDig");
+  if (Control2Grab("ControlDig")) return(nil);
   if (Control2Contents("ControlDig")) return(1);
   if (ControlLadder("ControlDig") ) return(1);
   return(_inherited());
@@ -1822,9 +1842,9 @@ if(pinguin) {  if (SEqual(GetAction(), "Swim"))
 if(pinguin) {  if (SEqual(GetAction(),"SwimArmed"))
     SetAction("WalkArmed");}
 
-if(!(pinguin)) {  if (GetAction() S= "Swim")
+if(!(pinguin)) {  if (!!SEqual(GetAction(), "Swim"))
     SetAction("Walk");}
-if(!(pinguin))  { if (GetAction() S= "SwimArmed")
+if(!(pinguin))  { if (!!SEqual(GetAction(), "SwimArmed"))
     SetAction("WalkArmed");}
   return(1);
 }
@@ -1839,7 +1859,7 @@ SetAction("Hangle");
 
 protected func ControlThrow() {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlThrow");
+  SetAggroLevel(nil,nil,nil,nil,"ControlThrow");
 
   // Bei vorherigem Doppel-Stop nur Ablegen  
   if ( GetPlrDownDouble(GetOwner()) )
@@ -1852,7 +1872,7 @@ protected func ControlThrow() {
     if(GetActionTarget()->~ControlThrow(this()))
       return(1); 
 
-  if (Control2Grab("ControlThrow")) return(0);
+  if (Control2Grab("ControlThrow")) return(nil);
   if (Control2Contents("ControlThrow") ) return(1);
   if (ControlLadder("ControlThrow") ) return(1);
 
@@ -1864,25 +1884,25 @@ protected func ControlThrow() {
 protected func ControlSpecial()
   {
   [$CtrlInventoryDesc$|Image=INVT]
-  if(!Contents()) return();
+  if(!Contents()) return;
   // Hardcode: BR-Bombe darf man nicht abwählen
-  if(Contents()->GetID() == GBRB)
-    return();
+  if(Equal(Contents()->GetID(), GBRB))
+    return;
   // wenn wir zielen, wollen wir nur Waffen haben
-  if(IsAiming() && Contents(0)->~IsWeapon())
+  if(And(IsAiming(), Contents(nil)->~IsWeapon()))
   {
   	// nächste Waffe suchen
-  	for(var i = 1; i < ContentsCount(); i++)
+        for(var i = 1; (i ?? 0) < (ContentsCount() ?? 0); S42MigrationStep(i, 1, true))
   		if(Contents(i)->~IsWeapon())
   		{
   			// zur Waffe wechseln
-  			ShiftContents(0,0,Contents(i)->GetID(),true);
+                        ShiftContents(nil,nil,Contents(i)->GetID(),true);
   			break;
   		}
   }
   else
 	  // Inventory verschieben
-  	ShiftContents(0,0,0,1);
+        ShiftContents(nil,nil,nil,1);
   UpdateCharge();
   }
 
@@ -1893,18 +1913,18 @@ protected func Ejection(object pObj)      // Wegwerfen
   // Munitionsanzeige updaten
   UpdateCharge();
   // Objekt benachrichtigen
-  if(Contents(0)) Contents(0)->~Selection();
+  if(Contents(nil)) Contents(nil)->~Selection();
 }
 
 protected func Collection2(object pObj)           // Einsammeln
 {
 //autocollect aktiv?
-if (AutoCollectIstAnlokal == 1) return(_inherited(pObj));
+if (Equal(AutoCollectIstAnlokal, 1)) return(_inherited(pObj));
   // das neue Item nach hinten verschieben (außer es ist Ammo)
-  if(!(pObj->~IsAmmoPacket()) || NoAmmo())
-    if (1 == ContentsCount(GetID(pObj)))
-      if(!(pObj->GetOCF() & OCF_Living)) {
-      ShiftContents(0,0,0,0);
+  if(Or(!(pObj->~IsAmmoPacket()), NoAmmo()))
+    if (Equal(1, ContentsCount(GetID(pObj))))
+      if(!((pObj->GetOCF() ?? 0) & (OCF_Living ?? 0))) {
+      ShiftContents(nil,nil,nil,nil);
       pObj ->~ OnDeselect();
     }
   UpdateCharge();
@@ -1914,7 +1934,7 @@ _inherited(pObj);
 public func AmmoTransfered(object pAP) {
 //  AddEffect("AmmoCollection",this(),100,10,this(),0,pAP->AmmoID(),pAP->AmmoCount());
 //auf neues AmmoRest system umgestellt:
-  AddEffect("AmmoCollection",this(),100,10,this(),0,pAP->AmmoID(),pAP->AmmoCountRest());
+  AddEffect("AmmoCollection",this(),100,10,this(),nil,pAP->AmmoID(),pAP->AmmoCountRest());
 }
 
 
@@ -1923,31 +1943,31 @@ protected func RejectCollect(id idObj, object pObj)
   // Für die KI
   var effect;
   if(effect = GetEffect("CollectionException", pObj))
-    if(EffectVar(0, pObj, effect) == this())
+    if(Equal(EffectVar(nil, pObj, effect), this()))
       return(1);
   // Spawnpunkt-Hack
-  if(idObj == SPNP) return();
+  if(Equal(idObj, SPNP)) return;
   // Munitionspaket?
   if(pObj ->~ IsAmmoPacket())
     // Davon kann man in jeden Fall _eines_ im Inventar haben
     if(!CustomContentsCount("IsAmmoPacket"))
-      return(0);
+      return(nil);
   //Waffe?
   if(pObj ->~ IsWeapon()) {
     //Sonderbehandlung?
     if(!(pObj ->~ OnCollection(this()))) {
       //nein. Standardprozedur:
       //schon so eine Waffe im Inventar? Oder bereits 3 andere Waffen?
-      if(ContentsCount(idObj) || CustomContentsCount("IsWeapon") >= 3)
+      if(Or(ContentsCount(idObj), (CustomContentsCount("IsWeapon") ?? 0) >= 3))
         return(1);  //Ja, nicht aufnehmen
       else
-        return(0);
+        return(nil);
     }
     else
-      return(0);
+      return(nil);
   }
   // Einsammellimit für Ausrüstung
-  if(pObj ->~ IsEquipment() && ContentsCount(idObj) > 0)
+  if(And(pObj ->~ IsEquipment(), (ContentsCount(idObj) ?? 0) > 0))
     return(1);
 
 //Einsammellimit für Munitionskisten bei Bauarbeitern, maximal 2.
@@ -1956,17 +1976,17 @@ protected func RejectCollect(id idObj, object pObj)
 //    return(1);}
 
   //Wieviel haben wir denn schon im inventar? Gilt für alle Objekte, die keine Waffen/ausrüstung sind
-  if(ContentsCount() - CustomContentsCount("IsWeapon") >= ObjectCollectionLimit())
+  if((ContentsCount() ?? 0) - (CustomContentsCount("IsWeapon") ?? 0) >= (ObjectCollectionLimit() ?? 0))
     return(1);
   
   // nicht angelegte Ausrüstung nochmal aufsammeln
   for(var gear in aGear)
     if(gear)
-      if(GetID(gear) == idObj)
+      if(Equal(GetID(gear), idObj))
         return(1);
   
   // Ok
-  return(0);
+  return(nil);
 }
 
 protected func Hangling() {
@@ -1986,8 +2006,8 @@ protected func Scaling()
 func FxScaleReloadingTimer()
 {
   if(!Contents())
-    return();
-  if(!WildcardMatch(GetAction(),"*Scale*") && !WildcardMatch(GetAction(), "*Hangle*"))
+    return;
+  if(And(!WildcardMatch(GetAction(),"*Scale*"), !WildcardMatch(GetAction(), "*Hangle*")))
   {
     ResumeReloading();
     return(-1);
@@ -2001,7 +2021,7 @@ public func PauseReloading() {
   // only if the weapon is an aim-weapon
   if(c)
     if(c->~IsWeapon())
-      if(c->GetFMData(FM_Aim) > 0)
+      if((c->GetFMData(FM_Aim) ?? 0) > 0)
         c->PauseReload();
 }
 
@@ -2010,16 +2030,16 @@ public func ResumeReloading() {
   // only if the weapon is an aim-weapon
   if(c)
     if(c->~IsWeapon())
-      if(c->GetFMData(FM_Aim) > 0)
+      if((c->GetFMData(FM_Aim) ?? 0) > 0)
         c->ResumeReload();
 }
 
 public func CustomContentsCount(string funcname)
 {
   // Alle Inventarobjekte durchlaufen und Waffen zählen
-  for(var i=0,j,obj ; obj = Contents(i) ; i++)
+  for(var i=nil,j,obj ; obj = Contents(i) ; S42MigrationStep(i, 1, true))
     if(ObjectCall(obj, funcname))
-      j++;
+      S42MigrationStep(j, 1, true);
   // Waffen gezählt
   return(j);
 }
@@ -2031,9 +2051,9 @@ public func WeaponCollectionLimit() { return(3); }
 
 // max. Objekte im Inventar. Ein Bauarbeiter kann mehr tragen.
 public func ObjectCollectionLimit() { 
-if(bauarbeiter==2 || bauarbeiter==3) return(3);
-if(bauarbeiter==4 || bauarbeiter==5) return(4);
-if(bauarbeiter==6) return(5);
+if(Or(Equal(bauarbeiter, 2), Equal(bauarbeiter, 3))) return(3);
+if(Or(Equal(bauarbeiter, 4), Equal(bauarbeiter, 5))) return(4);
+if(Equal(bauarbeiter, 6)) return(5);
 return(2);
  } 
 
@@ -2055,10 +2075,10 @@ protected func ContentsDestruction()      // Wenn Inhaltsobjekte verschwinden
 protected func ControlContents(idTarget)
 {
   // Zielobjekt will gar nicht, dass wir was machen
-  if(idTarget->~NoControlContents()) return();
+  if(idTarget->~NoControlContents()) return;
   // Hardcode: BR-Bombe darf man nicht abwählen
   if(Contents())
-    if(Contents()->GetID() == GBRB)
+    if(Equal(Contents()->GetID(), GBRB))
       return(1);
 
   // controlel Aim -> aufhören zu zielen außer die nächste Waffe kann es
@@ -2066,22 +2086,22 @@ protected func ControlContents(idTarget)
   if(ControlAim("ControlContents",idTarget)) return(1);
 
   // Hast du noch einen letzten Wunsch, Contents(0)??!
-  if(Contents(0)) Contents(0)->~Deselection(this());
+  if(Contents(nil)) Contents(nil)->~Deselection(this());
   // Rotieren
-  if (!ShiftContents(0, 0, idTarget)) return(1);
+  if (!ShiftContents(nil, nil, idTarget)) return(1);
   // Waffe ziehen/wegstecken
   CheckArmed();
   // Munitionsanzeige updaten
   UpdateCharge();
   // Objekt benachrichtigen
-  if(Contents(0)) Contents(0)->~Selection(this());
+  if(Contents(nil)) Contents(nil)->~Selection(this());
 }
 
 private func ChangeWeapon(object pTarget) {
     // Zielaktion anpassen
     if(pTarget->~IsWeapon())  {
       var phase = GetPhase();
-      if(pTarget->~GetFMData(FM_Aim) == 2 || pTarget->~GetFMData(FM_Aim) == -1)
+      if(Or(Equal(pTarget->~GetFMData(FM_Aim), 2), Equal(pTarget->~GetFMData(FM_Aim), -1)))
         SetAction("AimSquatLow");
       else
         SetAction("AimSquat");
@@ -2098,8 +2118,8 @@ private func ChangeWeapon(object pTarget) {
 private func Control2Contents (string command)
 {
   // Haben wir was angefasst?
-  if(GetAction() S= "Push")
-    return(0);
+  if(!!SEqual(GetAction(), "Push"))
+    return(nil);
   // Pause Reload: nicht wieder anfangen ey!!!
 //  if(command S= "ControlThrow") {
 //	if(WildcardMatch(GetAction(),"Scale*") || GetAction() S= "Hangle")
@@ -2109,7 +2129,7 @@ private func Control2Contents (string command)
   // Getragenes Objekt hat spezielle Steuerungsauswertung
   if(ObjectCall(Contents(), command, this(), Par(1), Par(2), Par(3), Par(4), Par(5), Par(6), Par(7)))
     return(1);
-  return(0);
+  return(nil);
 }
 
 /* Und mit angefassten Objekten auch noch */
@@ -2117,7 +2137,7 @@ private func Control2Contents (string command)
 private func Control2Grab ()
 {
   // Haben wir was angefasst?
-  if(GetAction() eq "Push")
+  if(!!SEqual(GetAction(), "Push"))
     return(1);
 
 }
@@ -2126,7 +2146,7 @@ private func Control2Grab ()
 
 public func ReleaseLadderUp() {
 	//nach oben abspringen
-	ReleaseLadder(-15*(GetDir()*2-1),-25);
+	ReleaseLadder(-15*((GetDir() ?? 0)*2-1),-25);
 }
 
 /* Maussteuerung */
@@ -2134,14 +2154,14 @@ public func ReleaseLadderUp() {
 protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data) 
 {
   ClearMacroCommands();
-  SetAggroLevel(0,0,0,0,"ControlCommand");
+  SetAggroLevel(nil,nil,nil,nil,"ControlCommand");
 
   // Context -> Keine Sonderbehandlung 
-  if(szCommand S= "Context") { return(0); }
+  if(!!SEqual(szCommand, "Context")) { return(nil); }
 
-  if (szCommand S= "MoveTo") { 
+  if (!!SEqual(szCommand, "MoveTo")) {
 
-    if (Control2Grab("ControlCommand")) return(0);
+    if (Control2Grab("ControlCommand")) return(nil);
   
 	if (ControlAim("ControlCommand",Par(1),Par(2),Par(3))) return(1);
     // Klettert an einer Leiter
@@ -2155,14 +2175,14 @@ protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data)
 
 protected func ContextHelpMessagesOn(object pCaller) {
   [$CtxHelpMessagesOn$|Image=CXIN|Condition=HelpMessagesOff]
-  SetPlrExtraData(GetOwner(), "Hazard_NoHelpMsg", false);
-  Sound("Click", 1, 0,0, GetOwner()+1);
+  SetPlrExtraData(GetOwner(), "Hazard_NoHelpMsg", nil);
+  Sound("Click", 1, nil,nil, (GetOwner() ?? 0)+1);
 }
 
 protected func ContextHelpMessagesOff(object pCaller) {
   [$CtxHelpMessagesOff$|Image=CXIN|Condition=HelpMessagesOn]
   SetPlrExtraData(GetOwner(), "Hazard_NoHelpMsg", true);
-  Sound("Click", 1, 0,0, GetOwner()+1);
+  Sound("Click", 1, nil,nil, (GetOwner() ?? 0)+1);
 }
 
 public func HelpMessagesOn() { return(!GetPlrExtraData(GetOwner(), "Hazard_NoHelpMsg")); }
@@ -2170,20 +2190,20 @@ public func HelpMessagesOff() { return(!HelpMessagesOn()); }
 
 protected func ContextGuard(object pCaller) {
   [$CtxGuard$|Image=FLA2|Condition=Outside]
-  CreateMenu(FLA2, pCaller, this(),0,0,0,1);
+  CreateMenu(FLA2, pCaller, this(),nil,nil,nil,1);
 //AddMenuItem("Nur schießen", "Attttack", FLA2, pCaller, 0, pCaller,"Schießt auf alle Feinde, ohne das vorherige Kommando abzubrechen");
 //AddMenuItem("Schießen und ein Stück verfolgen", "Fooollow", FLA2, pCaller, 0, pCaller,"Schißet auf alle Feinde und verfolgt sie ein Stück");
 //AddMenuItem("Position bewachen", "Beewachenradius", FLA2, pCaller, 0, pCaller,"Schießt und bewegt sich ein Stück, kehrt aber zu Ausgangspunkt zurück");
-AddMenuItem("Bewachungsradius 100", "Beewachen", FLA2, pCaller, 0, 100,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 200", "Beewachen", FLA2, pCaller, 0, 200,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 300", "Beewachen", FLA2, pCaller, 0, 300,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 400", "Beewachen", FLA2, pCaller, 0, 400,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 500", "Beewachen", FLA2, pCaller, 0, 500,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 600", "Beewachen", FLA2, pCaller, 0, 600,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 700", "Beewachen", FLA2, pCaller, 0, 700,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 800", "Beewachen", FLA2, pCaller, 0, 800,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 900", "Beewachen", FLA2, pCaller, 0, 900,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
-AddMenuItem("Bewachungsradius 1000", "Beewachen", FLA2, pCaller, 0, 1000,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 100", "Beewachen", FLA2, pCaller, nil, 100,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 200", "Beewachen", FLA2, pCaller, nil, 200,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 300", "Beewachen", FLA2, pCaller, nil, 300,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 400", "Beewachen", FLA2, pCaller, nil, 400,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 500", "Beewachen", FLA2, pCaller, nil, 500,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 600", "Beewachen", FLA2, pCaller, nil, 600,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 700", "Beewachen", FLA2, pCaller, nil, 700,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 800", "Beewachen", FLA2, pCaller, nil, 800,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 900", "Beewachen", FLA2, pCaller, nil, 900,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
+AddMenuItem("Bewachungsradius 1000", "Beewachen", FLA2, pCaller, nil, 1000,"Schießt auf alles innerhalb des Radius, beachte dabei den Schussradius deiner Waffe!");
 }
 
 /*
@@ -2258,20 +2278,23 @@ public func NoDeathAnnounce() // Hält 1 Frame lang, also Clonk schnell töten, da
 
 public func FxNoAnnounceStop(dummy, dummy2, int iReason)
 {
-	if(iReason == 4) return -1;
+	iReason ??= 0;
+	if(Equal(iReason, 4)) return -1;
 }
 
 private func DeathAnnounce(int plr, object clonk, int killplr) {
+  plr ??= 0;
+  killplr ??= 0;
   if(GetEffect("NoAnnounce", this)) return;
 
-  if(killplr == -1)
+  if(Equal(killplr, -1))
     return(inherited(plr, clonk, killplr));
   
   if(!clonk)
   	return(inherited(plr, clonk, killplr));
   
   //Selfkill?
-  if(plr == killplr)
+  if(Equal(plr, killplr))
     HHKS->SKMsg(plr);
   else
     HHKS->KTMsg(killplr, plr, clonk->~LastDamageType());
@@ -2289,7 +2312,7 @@ protected func Destruction() {
   if(GetAlive(this())) Kill();
   if(ammobag)
     RemoveObject(ammobag);
-  return();
+  return;
 }
 
 /* Waffe/Feuern */
@@ -2304,20 +2327,20 @@ public func ReadyToFire() {     // nur aus bestimmten Aktionen feuern
    // Reitet
    if(IsRiding()) return(GetActionTarget()->~ReadyToFire());
    // Schiebt
-   if(a S= "Push")
+   if(!!SEqual(a, "Push"))
    	if(GetActionTarget()->~IsWeapon())
    		return(true);
 
    // Nur beim Laufen, Schwimmen oder Springen
-   if(a eq "WalkArmed"
-   || a eq "SwimArmed"
-   || a eq "JumpArmed")
+   if(Or(Or(!!SEqual(a, "WalkArmed")
+   , !!SEqual(a, "SwimArmed"))
+   , !!SEqual(a, "JumpArmed")))
 		return(true);
 
    // wenn Waffe die nur im Zielen abgefeuert werden kann, ist die Aktion ohne "armed" und daher bisher unberücksichtigt
    if(Contents()->~IsWeapon())
-     if(Contents()->GetFMData(FM_Aim)>0)
-       if(a eq "Walk" || a eq "None")    // nicht wenn waffe zum zielen aber schwimmend oder springend
+     if((Contents()->GetFMData(FM_Aim) ?? 0)>0)
+       if(Or(!!SEqual(a, "Walk"), !!SEqual(a, "None")))    // nicht wenn waffe zum zielen aber schwimmend oder springend
        return(true);
    
    // JetpackFlight fehlt noch, sowie Aim*... das steht in den Funktionalitäten
@@ -2326,35 +2349,36 @@ public func ReadyToFire() {     // nur aus bestimmten Aktionen feuern
 
 private func CheckArmed() {     // Bewaffnung prÃ¼fen
 
-  if (GetAction() eq "Walk") if (IsArmed2()) return(SetAction("WalkArmed"));
-  if (GetAction() eq "Jump") if (IsArmed2()) return(SetAction("JumpArmed"));
-  if (GetAction() eq "Swim") if (IsArmed2()) return(SetAction("SwimArmed"));
-  if (GetAction() eq "WalkArmed") if (!IsArmed2()) return(SetAction("Walk"));
-  if (GetAction() eq "JumpArmed") if (!IsArmed2()) return(SetAction("Jump"));
-  if (GetAction() eq "SwimArmed") if (!IsArmed2()) return(SetAction("Swim"));
+  if (!!SEqual(GetAction(), "Walk")) if (IsArmed2()) return(SetAction("WalkArmed"));
+  if (!!SEqual(GetAction(), "Jump")) if (IsArmed2()) return(SetAction("JumpArmed"));
+  if (!!SEqual(GetAction(), "Swim")) if (IsArmed2()) return(SetAction("SwimArmed"));
+  if (!!SEqual(GetAction(), "WalkArmed")) if (!IsArmed2()) return(SetAction("Walk"));
+  if (!!SEqual(GetAction(), "JumpArmed")) if (!IsArmed2()) return(SetAction("Jump"));
+  if (!!SEqual(GetAction(), "SwimArmed")) if (!IsArmed2()) return(SetAction("Swim"));
 }
 
 // Der Clonk ist bewaffnet (auch mit einer Waffe die nicht angezeigt wird)
 // also Waffen mit denen man Zielen muss
 public func IsArmed() {
-  if(!Contents()) return(); 
+  if(!Contents()) return;
   if(Contents()->~IsWeapon())
     return(true);
-  return(false);
+  return(nil);
 }
 // Der Clonk hat einen Gegenstand in der Hand, der gezeichnet wird
 public func IsArmed2() {
-  if(!Contents()) return();
-  if(Contents()->~IsDrawable() ||
-    (IsArmed() && (Contents()->~GetFMData(FM_Aim) <= 0)))
+  if(!Contents()) return;
+  if(Or(Contents()->~IsDrawable(),
+    (And(IsArmed(), ((Contents()->~GetFMData(FM_Aim) ?? 0) <= 0)))))
     return(true);
-  return(false);
+  return(nil);
 
 }
 
 public func JumpStart(bool bBackflip)
 {
   // bewaffnet?
+  bBackflip ??= false;
   CheckArmed();
 
   _inherited(bBackflip);
@@ -2366,7 +2390,7 @@ protected func ComNone()
   }
 
 private func IsJumping() {
-  if(GetAction() S= "Dive")
+  if(!!SEqual(GetAction(), "Dive"))
     return(true);
   return(WildcardMatch(GetAction(),"Jump*"));
 }
@@ -2374,22 +2398,22 @@ private func IsJumping() {
 public func StartSquatAiming() {     // Anfangen in der Hocke zu zielen
   // Abbrechen
   if(Contained()) return(1);
-  if(GetAction() ne "WalkArmed" && GetAction() ne "Walk")
+  if(And(!SEqual(GetAction(), "WalkArmed"), !SEqual(GetAction(), "Walk")))
       return(1);
 
-  SetXDir(0);
-  if(Contents(0)->~GetFMData(FM_Aim) == 2 || Contents(0)->~GetFMData(FM_Aim) == -1)
+  SetXDir(nil);
+  if(Or(Equal(Contents(nil)->~GetFMData(FM_Aim), 2), Equal(Contents(nil)->~GetFMData(FM_Aim), -1)))
     SetAction("AimSquatLow");
   else
     SetAction("AimSquat");
   SetPhase(AimAngle2Phase(90));
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
 
   InitCrosshair();
   ScheduleCall(this(),"UpdateAiming",1);
 
   // Callback
-  if(Contents(0)) Contents(0)->~AimStart();
+  if(Contents(nil)) Contents(nil)->~AimStart();
 }
 
 public func IsSquatAiming () { return(WildcardMatch(GetAction(), "AimSquat*")); }
@@ -2403,14 +2427,17 @@ public func AimOverride () {
 public func GetTarget(int iAngle, int iMaxAngle, int iRange)
 {
   // Parameter zurechtstutzen
-  while(iAngle<0) iAngle+=360;
-  while(iAngle>360) iAngle-=360;
-  if(!iMaxAngle) iMaxAngle = 0;
+  iAngle ??= 0;
+  iMaxAngle ??= 0;
+  iRange ??= 0;
+  while((iAngle ?? 0)<0) S42MigrationAssign(iAngle, "+=", 360);
+  while((iAngle ?? 0)>360) S42MigrationAssign(iAngle, "-=", 360);
+  if(!iMaxAngle) iMaxAngle = nil;
   if(!iRange) iRange = 350;
 
   // Landschaft durchsuchen
   // es wird nur auf Lebewesen gezielt
-  var targets = FindTargets(this, iRange, iMaxAngle, iAngle, false);
+  var targets = FindTargets(this, iRange, iMaxAngle, iAngle, nil);
   var target;
   
   // nächstes Ziel finden...
@@ -2419,7 +2446,7 @@ public func GetTarget(int iAngle, int iMaxAngle, int iRange)
 			target = t;
 			continue;
 		}
-		if(ObjectDistance(t) < ObjectDistance(target)) {
+		if((ObjectDistance(t) ?? 0) < (ObjectDistance(target) ?? 0)) {
 			target = t;
 			break;
 		}
@@ -2438,9 +2465,9 @@ if(!Random(2))  //Sichtradius für Kriegsnebel, definiert im Clonkskript
 FogWar();
 
   // Nur wenn ich Cursor bin
-  if(GetCursor(GetOwner()) != this()) return();
+  if(!Equal(GetCursor(GetOwner()), this())) return;
 
-  if(GetOwner() < -1) return();
+  if((GetOwner() ?? 0) < -1) return;
 
   // in Gebäuden/Fahrzeugen
   if(Contained())
@@ -2454,7 +2481,7 @@ FogWar();
 
   // ggf. an angefasstes Objekt weiterleiten
   var Content = Contents();
-  if(GetAction() S= "Push")
+  if(!!SEqual(GetAction(), "Push"))
   	if(GetActionTarget()->~IsWeapon())
   		Content = GetActionTarget();
 
@@ -2477,9 +2504,9 @@ player= GetOwner(pTarget);
   for (var obj in FindObjects(Find_Distance(maximum_distance),Find_Hostile(player), Find_OCF(OCF_Alive)))
   {
     var damage = 100;
-    DoEnergy(-damage, obj, true);
-    AddEffect("Sparkleschadenz", obj, 1, 1,0,GetID());
-    if (!Random(20) && obj->~IsClonk()) Sound("Hurt*");
+    DoEnergy(-(damage ?? 0), obj, true);
+    AddEffect("Sparkleschadenz", obj, 1, 1,nil,GetID());
+    if (And(!Random(20), obj->~IsClonk())) Sound("Hurt*");
   }
 }
 
@@ -2487,14 +2514,14 @@ player= GetOwner(pTarget);
 private func FxSparklezTimer(pTarget, iEffectNumber, iTime)
 {
 
-  pTarget->CastParticles("MaterialSpark", 1, 50, 0, 0, 10, 30, RGB(200, 200, 200), RGB(100, 255, 100));
+  pTarget->CastParticles("MaterialSpark", 1, 50, nil, nil, 10, 30, RGB(200, 200, 200), RGB(100, 255, 100));
 }
 
 
 private func FxSparkleschadenzTimer(pTarget, iEffectNumber, iTime)
 {
  // if (iTime > 1 * 1) return -1;
-  pTarget->CastParticles("PxSpark", 1, 50, 0, 0, 10, 30, RGB(0, 0, 100), RGB(100, 100, 255)); 
+  pTarget->CastParticles("PxSpark", 1, 50, nil, nil, 10, 30, RGB(nil, nil, 100), RGB(100, 100, 255));
  RemoveEffect("Sparkleschadenz", pTarget);
 }
 
@@ -2513,7 +2540,7 @@ public func AmmoStoring()
 /* Heilung */
 
 public func StopHealing() {      // Heilen beenden
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetAction("Walk");
   CheckArmed();
   Sound("Grab");
@@ -2530,33 +2557,33 @@ public func IsHealing () { return(WildcardMatch(GetAction(), "Heal*")); }
 
 public func WeaponAt(&x, &y, &r) {
 
-  if(Contained()) return(0);
+  if(Contained()) return(nil);
 
   var a = GetAction();
   var p = GetPhase();
 
   // x < 0: Richtung hinter den Clonk
   // x > 0: Richtung vor den Clonk
-  x=0; y=0; r=0;
+  x=nil; y=nil; r=nil;
 
   // hält Waffe in der Hand
-  if(a eq "WalkArmed") {
-    x=0;
+  if(!!SEqual(a, "WalkArmed")) {
+    x=nil;
     y=1000;
     return(1);
   }
   
-  else if(a eq "JumpArmed") {
-    x=500-125*p;
+  else if(!!SEqual(a, "JumpArmed")) {
+    x=500-125*(p ?? 0);
     y=1000;
     return(1);
   }
-  else if(a eq "SwimArmed") {
+  else if(!!SEqual(a, "SwimArmed")) {
     x=4000;
     return(1);
   }
   //Jetpack
-  else if(a eq "JetpackFlight") {
+  else if(!!SEqual(a, "JetpackFlight")) {
   
     x=4000;
     r=35;
@@ -2568,20 +2595,20 @@ public func WeaponAt(&x, &y, &r) {
   else if(IsAiming()) {
     //if(p>4) r=(p-4)*11;
     //else    r=p*23-90;
-    r = (Abs(crosshair->GetAngle())-90);
-    x=-Sin(65+p*20,4000)-1500;
-    y=-Sin(55+p*10,5000);
-    if(a eq "AimLow")
-      y += 4000;
-    if(a eq "AimSquat")
+    r = ((Abs(crosshair->GetAngle()) ?? 0)-90);
+    x=-(Sin(65+(p ?? 0)*20,4000) ?? 0)-1500;
+    y=-(Sin(55+(p ?? 0)*10,5000) ?? 0);
+    if(!!SEqual(a, "AimLow"))
+      S42MigrationAssign(y, "+=", 4000);
+    if(!!SEqual(a, "AimSquat"))
     {
-      x += 5000;
-      y += 4500;
+      S42MigrationAssign(x, "+=", 5000);
+      S42MigrationAssign(y, "+=", 4500);
     }
-    if(a eq "AimSquatLow")
+    if(!!SEqual(a, "AimSquatLow"))
     {
-      x += 5000;
-      y += 6000;
+      S42MigrationAssign(x, "+=", 5000);
+      S42MigrationAssign(y, "+=", 6000);
     }
     return(1);
   }
@@ -2619,7 +2646,7 @@ public func WeaponAt(&x, &y, &r) {
       x=-1000;
       y=-4000;
     }
-    else */return(0);
+    else */return(nil);
 
 /*    return(1);
   }*/
@@ -2628,66 +2655,77 @@ public func WeaponAt(&x, &y, &r) {
 public func WeaponBegin(&x, &y) {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
-  x = EffectVar(2, this(), number)/1000;
-  y = EffectVar(3, this(), number)/1000;
+    return(nil);
+  x = (EffectVar(2, this(), number) ?? 0)/1000;
+  y = (EffectVar(3, this(), number) ?? 0)/1000;
 }
 
 public func WeaponEnd(&x, &y) {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
-  x = EffectVar(4, this(), number)/1000;
-  y = EffectVar(5, this(), number)/1000;
+    return(nil);
+  x = (EffectVar(4, this(), number) ?? 0)/1000;
+  y = (EffectVar(5, this(), number) ?? 0)/1000;
 }
 
 public func GetWeaponR() {
   var number = GetEffect("ShowWeapon",this());
   if(!number)
-    return(0);
+    return(nil);
   return(EffectVar(1, this(), number));
 }
 
 /* Munitionsaufsammelanzeige */
 
 func FxAmmoCollectionStart(object pTarget, int iEffectNumber, int iTemp, id idAmmo, int iAmmoCount) {
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
+  iAmmoCount ??= 0;
   if(iTemp)
     return(1);
-  EffectVar(0,pTarget,iEffectNumber) = 100;
+  EffectVar(nil,pTarget,iEffectNumber) = 100;
   EffectVar(1,pTarget,iEffectNumber) = idAmmo;
   EffectVar(2,pTarget,iEffectNumber) = iAmmoCount;
 }
 
 func FxAmmoCollectionEffect(string szNewEffectName, object pTarget, int iEffectNumber, int iNewEffectNumber, id idAmmo, int iAmmoCount) {
-  if(szNewEffectName S= "AmmoCollection")
+  iEffectNumber ??= 0;
+  iNewEffectNumber ??= 0;
+  iAmmoCount ??= 0;
+  if(!!SEqual(szNewEffectName, "AmmoCollection"))
     //return(-2);
     // wird nich addiert: alten löschen
-    RemoveEffect(0,pTarget,iEffectNumber);
-  return(0);
+    RemoveEffect(nil,pTarget,iEffectNumber);
+  return(nil);
 }
 
 func FxAmmoCollectionAdd(object pTarget, int iEffectNumber, string szNewEffectName, int iNewEffectTimer, id idAmmo, int iAmmoCount) {
+  iEffectNumber ??= 0;
+  iNewEffectTimer ??= 0;
+  iAmmoCount ??= 0;
   var x=1;
   while(EffectVar(x,pTarget,iEffectNumber)) {
-    if(EffectVar(x,pTarget,iEffectNumber) == idAmmo)
+    if(Equal(EffectVar(x,pTarget,iEffectNumber), idAmmo))
       break;
     else
-      x++;
+      S42MigrationStep(x, 1, true);
   }
-  EffectVar(x++,pTarget,iEffectNumber) = idAmmo;
-  EffectVar(x,pTarget,iEffectNumber) += iAmmoCount;
+  EffectVar(S42MigrationStep(x, 1, true),pTarget,iEffectNumber) = idAmmo;
+  S42MigrationAssign(EffectVar(x,pTarget,iEffectNumber), "+=", (iAmmoCount ?? 0));
 
-  EffectVar(0,pTarget,iEffectNumber) += 100;
+  S42MigrationAssign(EffectVar(nil,pTarget,iEffectNumber), "+=", 100);
   return(1);
 }
 
 func FxAmmoCollectionTimer(object pTarget, int iEffectNumber, int iEffectTime) {
+  iEffectNumber ??= 0;
+  iEffectTime ??= 0;
   var x=1, string = " ";
   while(EffectVar(x,pTarget,iEffectNumber))
-    string = Format("%s|{{%i}} %4d",string,EffectVar(x++,pTarget,iEffectNumber),EffectVar(x++,pTarget,iEffectNumber));
+    string = Format("%s|{{%i}} %4d",string,EffectVar(S42MigrationStep(x, 1, true),pTarget,iEffectNumber),EffectVar(S42MigrationStep(x, 1, true),pTarget,iEffectNumber));
   
   HelpMessage(GetOwner(pTarget),string,pTarget);
-  if(iEffectTime >= EffectVar(0,pTarget,iEffectNumber))
+  if((iEffectTime ?? 0) >= (EffectVar(nil,pTarget,iEffectNumber) ?? 0))
     return(-1);
 }
 
@@ -2696,37 +2734,40 @@ public func Incineration() {
   Extinguish();
 if(!brennt){ // damit bei Brandbomben nicht sofort tot
   Schedule("DoDmg(5,DMG_Fire,0,1)",1,20,this());
-  AddFireEffect(this(),30,FIRE_Red,1);brennt=1;ScheduleCall(0,"Feueristaus",20,0,0);}
+  AddFireEffect(this(),30,FIRE_Red,1);brennt=1;ScheduleCall(nil,"Feueristaus",20,nil,nil);}
 }
 
 func Feueristaus()
-{brennt=0;}
+{brennt=nil;}
 
 
 public func OnHit(int iDmg, int iType, object pFrom)
 {
+  iDmg ??= 0;
+  iType ??= 0;
   _inherited(iDmg, iType, pFrom);
   
-  if(!GetAlive()) return();
+  if(!GetAlive()) return;
   
   // Besondere Effekte
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     AddFireEffect(this(),10,RGB(20,255,30));
 	
   // hurt
-  if(iDmg > 12)
+  if((iDmg ?? 0) > 12)
 	  Hurt();
 	
   // Aggro-Check
   if(pFrom)
     if(LocalN("shooter", pFrom))
-      if(GetAggroLevel() > Aggro_Nothing)
+      if((GetAggroLevel() ?? 0) > (Aggro_Nothing ?? 0))
         if(!GetAggroTarget())
           if(CheckTarget(LocalN("shooter", pFrom)))
             SetAggroTarget(LocalN("shooter", pFrom));
 }
 
 public func LastDamageType(int type) {
+  type ??= 0;
   if(type)
     LastDmgType = type;
   
@@ -2753,27 +2794,31 @@ local aPath;
 public func SetMacroCommand(object pCallback, string szCommand, object pTarget, int iX, int iY, int iDelay, int iAggro)
 {
   // kein ordentlicher Befehl -> nichts tun
-  if(!szCommand) return();
-  if(szCommand ne "MoveTo" && szCommand ne "Follow" && szCommand ne "Wait" && szCommand ne "None")
+  iX ??= 0;
+  iY ??= 0;
+  iDelay ??= 0;
+  iAggro ??= 0;
+  if(!szCommand) return;
+  if(And(And(And(!SEqual(szCommand, "MoveTo"), !SEqual(szCommand, "Follow")), !SEqual(szCommand, "Wait")), !SEqual(szCommand, "None")))
   {
     ErrorLog("Unknown macro command: %s", szCommand);
-    return();
+    return;
   }
   // Parameter evtl. vorbearbeiten oder besondere Checks
-  if(szCommand eq "MoveTo")
+  if(!!SEqual(szCommand, "MoveTo"))
     if(pTarget)
     {
       iX = pTarget->GetX();
       iY = pTarget->GetY();
     }
-  if(szCommand eq "Follow")
+  if(!!SEqual(szCommand, "Follow"))
     if(!pTarget)
     {
       ErrorLog("Too few arguments for FOLLOW (no target object)");
-      return();
+      return;
     }
   // Aktuelle Beschäftigung beenden
-  var currCom = GetMacroCommand(0,0);
+  var currCom = GetMacroCommand(nil,nil);
   if(currCom)
   {
     ClearScheduleCall(this(), Format("MacroCom%s", currCom));
@@ -2784,9 +2829,9 @@ public func SetMacroCommand(object pCallback, string szCommand, object pTarget, 
   //Log("%s #%d: ClearMacroCom by SetMacroCom", GetName(), ObjectNumber());
   ClearMacroCommands();
   // Befehl eintragen
-  var iEffect = AddEffect("MacroCommand", this(), 300, 0, this());
+  var iEffect = AddEffect("MacroCommand", this(), 300, nil, this());
   aMacroCommandList[0] = iEffect;
-  EffectVar(0, this(), iEffect) = szCommand;
+  EffectVar(nil, this(), iEffect) = szCommand;
   EffectVar(1, this(), iEffect) = pTarget;
   EffectVar(2, this(), iEffect) = iX;
   EffectVar(3, this(), iEffect) = iY;
@@ -2798,12 +2843,12 @@ public func SetMacroCommand(object pCallback, string szCommand, object pTarget, 
   ClearScheduleCall(this(), "MacroCommandFollow");
   ClearScheduleCall(this(), "MacroCommandWait");
   //Log("%s #%d: SetMacroCom: '%s' %d/%d Target: %s #%d", GetName(), ObjectNumber(), szCommand, iX, iY, GetName(pTarget), ObjectNumber(pTarget));
-  if(szCommand != "None")
+  if(!Equal(szCommand, "None"))
     ScheduleCall(this(), Format("MacroCom%s", szCommand), 1);
   else
   {
     ClearMacroCommands();
-    if(iAggro != -1) SetAggroLevel(iAggro,0,0,0,"SetMacroCommand");
+    if(!Equal(iAggro, -1)) SetAggroLevel(iAggro,nil,nil,nil,"SetMacroCommand");
   }
   return(1);
 }
@@ -2812,9 +2857,13 @@ public func SetMacroCommand(object pCallback, string szCommand, object pTarget, 
 public func AddMacroCommand(object pCallback, string szCommand, object pTarget, int iX, int iY, int iDelay, int iAggro)
 {//Log("%s #%d: AddMacroCom", GetName(), ObjectNumber());
   // Befehlsliste zwischenspeichern
+  iX ??= 0;
+  iY ??= 0;
+  iDelay ??= 0;
+  iAggro ??= 0;
   var aComs = aMacroCommandList;
   // Und leeren
-  var currCom = GetMacroCommand(0,0);
+  var currCom = GetMacroCommand(nil,nil);
   if(currCom)
   {
     ClearScheduleCall(this(), Format("MacroCom%s", currCom));
@@ -2831,7 +2880,7 @@ public func AddMacroCommand(object pCallback, string szCommand, object pTarget, 
   {
     for(var iCom in aComs)
       if(iCom)
-        aMacroCommandList[GetLength(aMacroCommandList)] = iCom;
+        aMacroCommandList[(GetLength(aMacroCommandList) ?? 0)] = iCom;
   }
   else
     aMacroCommandList = aComs;
@@ -2845,29 +2894,33 @@ public func AddMacroCommand(object pCallback, string szCommand, object pTarget, 
 public func AppendMacroCommand(object pCallback, string szCommand, object pTarget, int iX, int iY, int iDelay, int iAggro)
 {
   // kein ordentlicher Befehl -> nichts tun
-  if(!szCommand) return();
-  if(szCommand ne "MoveTo" && szCommand ne "Follow" && szCommand ne "Wait" && szCommand ne "None")
+  iX ??= 0;
+  iY ??= 0;
+  iDelay ??= 0;
+  iAggro ??= 0;
+  if(!szCommand) return;
+  if(And(And(And(!SEqual(szCommand, "MoveTo"), !SEqual(szCommand, "Follow")), !SEqual(szCommand, "Wait")), !SEqual(szCommand, "None")))
   {
     ErrorLog("Unknown macro command: %s", szCommand);
-    return();
+    return;
   }
   // Parameter evtl. vorbearbeiten oder besondere Checks
-  if(szCommand eq "MoveTo")
+  if(!!SEqual(szCommand, "MoveTo"))
     if(pTarget)
     {
       iX = pTarget->GetX();
       iY = pTarget->GetY();
     }
-  if(szCommand eq "Follow")
+  if(!!SEqual(szCommand, "Follow"))
     if(!pTarget)
     {
       ErrorLog("Too few arguments for FOLLOW (no target object)");
-      return();
+      return;
     }
   // Befehl eintragen
-  var iEffect = AddEffect("MacroCommand", this(), 300, 0, this());
-  aMacroCommandList[GetLength(aMacroCommandList)] = iEffect;
-  EffectVar(0, this(), iEffect) = szCommand;
+  var iEffect = AddEffect("MacroCommand", this(), 300, nil, this());
+  aMacroCommandList[(GetLength(aMacroCommandList) ?? 0)] = iEffect;
+  EffectVar(nil, this(), iEffect) = szCommand;
   EffectVar(1, this(), iEffect) = pTarget;
   EffectVar(2, this(), iEffect) = iX;
   EffectVar(3, this(), iEffect) = iY;
@@ -2875,9 +2928,9 @@ public func AppendMacroCommand(object pCallback, string szCommand, object pTarge
   EffectVar(5, this(), iEffect) = pCallback;
   EffectVar(6, this(), iEffect) = iAggro;
   // Starten?
-  if(GetLength(aMacroCommandList) == 1)
+  if(Equal(GetLength(aMacroCommandList), 1))
   {
-    if(szCommand != "None")
+    if(!Equal(szCommand, "None"))
       Call(Format("MacroCom%s", szCommand));
     else
       ClearMacroCommands();
@@ -2889,16 +2942,21 @@ public func AppendMacroCommand(object pCallback, string szCommand, object pTarge
 public func GetMacroCommand(int iCommandNum, int iElement)
 {
   // An der Stelle gibt es nichts?
-  if(iCommandNum < 0 || GetLength(aMacroCommandList) <= iCommandNum) return();
+  iCommandNum ??= 0;
+  iElement ??= 0;
+  if(Or((iCommandNum ?? 0) < 0, (GetLength(aMacroCommandList) ?? 0) <= (iCommandNum ?? 0))) return;
   // Element zurückgeben
-  return(EffectVar(iElement, this(), aMacroCommandList[iCommandNum]));
+  return(EffectVar(iElement, this(), aMacroCommandList[(iCommandNum ?? 0)]));
 }
 
 // Beenden (wenn, dann nur extern gebraucht)
 public func FinishMacroCommand(bool fNoCallback, bool fNoSuccess, int iCommandNum)
 {
   // An der Stelle gibt es nichts?
-  if(iCommandNum < 0 || GetLength(aMacroCommandList) <= iCommandNum) return();
+  fNoCallback ??= false;
+  fNoSuccess ??= false;
+  iCommandNum ??= 0;
+  if(Or((iCommandNum ?? 0) < 0, (GetLength(aMacroCommandList) ?? 0) <= (iCommandNum ?? 0))) return;
   // mit Callback -> Callback machen
   if(!fNoCallback)
   {
@@ -2910,8 +2968,8 @@ public func FinishMacroCommand(bool fNoCallback, bool fNoSuccess, int iCommandNu
   // Ohne Callback -> kein Callback ;)
   RemoveMacroCommand(iCommandNum);
   // Nächstes Kommando starten
-  if(GetMacroCommand() && !iCommandNum)
-    if(GetMacroCommand() != "None")
+  if(And(GetMacroCommand(), !iCommandNum))
+    if(!Equal(GetMacroCommand(), "None"))
       Call(Format("MacroCom%s", GetMacroCommand()));
   return(1);
 }
@@ -2935,77 +2993,78 @@ public func ClearMacroCommands()
 protected func MacroComMoveTo()
 {
   // Erstes Kommando ist gar nicht MoveTo?
-  if(GetMacroCommand(0,0) ne "MoveTo") return();
+  if(!SEqual(GetMacroCommand(nil,nil), "MoveTo")) return;
   // Kein Ziel? (bewirkt, dass der Clonk nicht nach 0,0 laufen kann!)
-  if(!GetMacroCommand(0,2) && !GetMacroCommand(0,3))
-    if(!GetMacroCommand(0,4))
-      return(MacroComSuccessFailed(0, Macro_MoveToNoTarget));
+  if(And(!GetMacroCommand(nil,2), !GetMacroCommand(nil,3)))
+    if(!GetMacroCommand(nil,4))
+      return(MacroComSuccessFailed(nil, Macro_MoveToNoTarget));
   // Pfad suchen
   aPath = CreateArray();
   var start, end;
   start = FindWaypoint(GetX(), GetY());
-  end = FindWaypoint(GetMacroCommand(0,2), GetMacroCommand(0,3));
-  if(!start || !end) return(MacroComSuccessFailed(0, Macro_NoPath));
+  end = FindWaypoint(GetMacroCommand(nil,2), GetMacroCommand(nil,3));
+  if(Or(!start, !end)) return(MacroComSuccessFailed(nil, Macro_NoPath));
   aPath = FindPath(start, end, true);
   // Kein Pfad konnte gefunden werden?
-  if(!aPath) return(MacroComSuccessFailed(0, Macro_NoPath));
+  if(!aPath) return(MacroComSuccessFailed(nil, Macro_NoPath));
 
   // ist der Endpunkt ein Transportpunkt? (ein Wegpunkt mit nur einem Ausgang
   // und dieser Ausgang zeigt nicht zum Eingang)
-  if(end->GetPathCount() == 1) {
-    var before = 0;
+  if(Equal(end->GetPathCount(), 1)) {
+    var before = nil;
     var leng = GetLength(aPath);
-    if(start != end)
-      before = aPath[leng-2];
-    if(end->GetPathTarget(0) != before) {
+    if(!Equal(start, end))
+      before = aPath[(leng ?? 0)-2];
+    if(!Equal(end->GetPathTarget(nil), before)) {
       // Ziel ändern (Regel: Pfad darf nicht auf Transportpunkt enden)
-      aPath[leng] = end->GetPathTarget(0);
+      aPath[(leng ?? 0)] = end->GetPathTarget(nil);
       // Ziel ändern auf folgenden Wegpunkt, Position entsprechend.
-      EffectVar(1, this(), aMacroCommandList[0]) = end->GetPathTarget(0);
-      EffectVar(2, this(), aMacroCommandList[0]) = GetX(end->GetPathTarget(0));
-      EffectVar(3, this(), aMacroCommandList[0]) = GetY(end->GetPathTarget(0));
+      EffectVar(1, this(), aMacroCommandList[0]) = end->GetPathTarget(nil);
+      EffectVar(2, this(), aMacroCommandList[0]) = GetX(end->GetPathTarget(nil));
+      EffectVar(3, this(), aMacroCommandList[0]) = GetY(end->GetPathTarget(nil));
     }
   }
   // In Bewegung setzen (der erste Wegpunkt sollte durch MoveTo erreichbar sein, wenn nicht -> doof
   // Spezialhack: reitet!
   if(IsRiding()) SetAction("Walk");
   SetCommand(this(), "MoveTo", aPath[0]);
-  AppendCommand(this(), "Call", this(), 1,0,0,0, "MacroComMoveToStep");
+  AppendCommand(this(), "Call", this(), 1,nil,nil,nil, "MacroComMoveToStep");
   // Automatischer Abbruch
-  ScheduleCall(this(), "MacroComSuccessFailed", 500, 0, 0, Macro_PathImpossible);
+  ScheduleCall(this(), "MacroComSuccessFailed", 500, nil, nil, Macro_PathImpossible);
   // Falls Startwegpunkt = Jumppadpunkt
-  if(GetLength(aPath) > 1 && aPath[0]->GetPathCount() == 1)
-    ScheduleCall(this(), "JumppadCheck", 5, 0, aPath[1], 2);
+  if(And((GetLength(aPath) ?? 0) > 1, Equal(aPath[0]->GetPathCount(), 1)))
+    ScheduleCall(this(), "JumppadCheck", 5, nil, aPath[1], 2);
   // Aggrolevel
-  if(GetMacroCommand(0, 6) != -1)
-    SetAggroLevel(GetMacroCommand(0, 6),0,0,0,"MacroComMoveTo");
+  if(!Equal(GetMacroCommand(nil, 6), -1))
+    SetAggroLevel(GetMacroCommand(nil, 6),nil,nil,nil,"MacroComMoveTo");
   //Log("%s #%d: MacroComMoveTo", GetName(), ObjectNumber());
 }
 
 protected func MacroComMoveToStep(object dummy, int iStep) // MoveTo-Schritt
 {
   // Erstes Kommando ist gar nicht MoveTo?
-  if(GetMacroCommand(0,0) ne "MoveTo") return();
+  iStep ??= 0;
+  if(!SEqual(GetMacroCommand(nil,nil), "MoveTo")) return;
   // Wird haben das Ende des Pfades erreicht?
-  if(GetLength(aPath) == iStep)
+  if(Equal(GetLength(aPath), iStep))
   {//Log("%s #%d: MacroComMoveTo finished", GetName(), ObjectNumber());
     // Zum Ziel laufen und beenden
-    var x = GetMacroCommand(0,2), y = GetMacroCommand(0,3);
-    SetCommand(this(), "MoveTo", 0, x,y);
-    AppendCommand(this(), "Call", this(), 0,0,0,0, "MacroComSuccess");
+    var x = GetMacroCommand(nil,2), y = GetMacroCommand(nil,3);
+    SetCommand(this(), "MoveTo", nil, x,y);
+    AppendCommand(this(), "Call", this(), nil,nil,nil,nil, "MacroComSuccess");
     return(1);
   }
   // Aus irgendeinem Grund ist kein Wegpunkt da?
-  if(!aPath[iStep]) return(MacroComSuccessFailed(0, Macro_PathBroken));
-  if(!aPath[iStep-1]) return(MacroComSuccessFailed(0, Macro_PathBroken));
+  if(!aPath[(iStep ?? 0)]) return(MacroComSuccessFailed(nil, Macro_PathBroken));
+  if(!aPath[(iStep ?? 0)-1]) return(MacroComSuccessFailed(nil, Macro_PathBroken));
   // Nächsten Wegpunkt begehen
-  MoveAlongPath(aPath[iStep-1], aPath[iStep], iStep+1);
-  AppendCommand(this(), "Call", this(), iStep+1,0,0,0, "MacroComMoveToStep");
+  MoveAlongPath(aPath[(iStep ?? 0)-1], aPath[(iStep ?? 0)], (iStep ?? 0)+1);
+  AppendCommand(this(), "Call", this(), (iStep ?? 0)+1,nil,nil,nil, "MacroComMoveToStep");
   // Automatischer Abbruch
   ClearScheduleCall(this(), "MacroComSuccessFailed");
   // 200 Frames pro 100 Pixel Abstand sind angesetzt
-  var breaktime = Max(ObjectDistance(aPath[iStep-1], aPath[iStep]) / 100 * 200, 100);
-  ScheduleCall(this(), "MacroComSuccessFailed", breaktime, 0, 0, Macro_PathImpossible);
+  var breaktime = Max((ObjectDistance(aPath[(iStep ?? 0)-1], aPath[(iStep ?? 0)]) ?? 0) / 100 * 200, 100);
+  ScheduleCall(this(), "MacroComSuccessFailed", breaktime, nil, nil, Macro_PathImpossible);
   //Log("%s #%d: MacroComMoveToStep", GetName(), ObjectNumber());
   return(1);
 }
@@ -3013,9 +3072,9 @@ protected func MacroComMoveToStep(object dummy, int iStep) // MoveTo-Schritt
 protected func MacroComMoveToStepFailed() // MoveTo-Schritt fehlgeschlagen
 {//Log("%s #%d: MacroComMoveToStepFailed", GetName(), ObjectNumber());
   // Erstes Kommando ist gar nicht MoveTo?
-  if(GetMacroCommand(0,0) ne "MoveTo") return();
+  if(!SEqual(GetMacroCommand(nil,nil), "MoveTo")) return;
   // Fehlschlag auf ganzer Linie
-  MacroComSuccessFailed(0, Macro_PathImpossible);
+  MacroComSuccessFailed(nil, Macro_PathImpossible);
   return(1);
 }
 
@@ -3023,15 +3082,16 @@ protected func MacroComMoveToStepFailed() // MoveTo-Schritt fehlgeschlagen
 protected func MacroComFollow(bool fStarted)
 {
   // Sonderbehandlung: wurde schon gestartet
+  fStarted ??= false;
   if(fStarted)
   {
     DebugLog(Format("%s #%d: MacroComFollow timer", GetName(), ObjectNumber()), "MacroComFollow");
     // Prüfen, ob an der Stelle iPos in der Kette "Follow" steht
-    if(GetMacroCommand(1) ne "Follow" && GetMacroCommand(0) ne "Follow")
+    if(And(!SEqual(GetMacroCommand(1), "Follow"), !SEqual(GetMacroCommand(nil), "Follow")))
       // Steht nicht da, ergo muss sich ein anderes Kommando reingeschaltet haben -> nichts tun
-      return();
+      return;
     // Wir haben kein MoveTo mehr? Dann sind wir angekommen (wir starten einfach neu)
-    if(GetMacroCommand() ne "MoveTo") return(MacroComFollow());
+    if(!SEqual(GetMacroCommand(), "MoveTo")) return(MacroComFollow());
     // Unser Ziel ist irgendwie weg?
     if(!GetMacroCommand(1,1))
     {
@@ -3039,55 +3099,56 @@ protected func MacroComFollow(bool fStarted)
       // MoveTo löschen
       RemoveMacroCommand();
       // Fehlschlag ausgeben
-      return(MacroComSuccessFailed(0, Macro_FollowTargetLost));
+      return(MacroComSuccessFailed(nil, Macro_FollowTargetLost));
     }
     // Schauen, ob unser Bewegungsziel noch ok ist
     var x,y,target;
-    x = GetMacroCommand(0,2);
-    y = GetMacroCommand(0,3);
-    target = GetMacroCommand(0,1);
+    x = GetMacroCommand(nil,2);
+    y = GetMacroCommand(nil,3);
+    target = GetMacroCommand(nil,1);
     // Distanz > 30 Pixel?
-    if(Distance(AbsX(x), AbsY(y), AbsX(target->GetX()), AbsY(target->GetY())) > 30)
+    if((Distance(AbsX(x), AbsY(y), AbsX(target->GetX()), AbsY(target->GetY())) ?? 0) > 30)
     {
       DebugLog(Format("%s #%d: MacroComFollow new MoveTo", GetName(), ObjectNumber()), "MacroComFollow");
       // MoveTo löschen
-      if(GetMacroCommand() eq "MoveTo") RemoveMacroCommand();
+      if(!!SEqual(GetMacroCommand(), "MoveTo")) RemoveMacroCommand();
       // Neues Kommando setzen
-      AddMacroCommand(0, "MoveTo", GetMacroCommand(0,1), 0, 0, 0, GetMacroCommand(0,6));
+      AddMacroCommand(nil, "MoveTo", GetMacroCommand(nil,1), nil, nil, nil, GetMacroCommand(nil,6));
     }
     // Follow Weiterlaufen lassen
-    return(ScheduleCall(this(), "MacroComFollow", 30, 0, true));
+    return(ScheduleCall(this(), "MacroComFollow", 30, nil, true));
   }
   DebugLog(Format("%s #%d: MacroComFollow started", GetName(), ObjectNumber()), "MacroComFollow");
   // Erstes Kommando ist gar nicht Follow?
-  if(GetMacroCommand(0,0) ne "Follow") return();
+  if(!SEqual(GetMacroCommand(nil,nil), "Follow")) return;
   // Kein Ziel? -> Fehlschlag
-  if(!GetMacroCommand(0,1))
+  if(!GetMacroCommand(nil,1))
     return(MacroComSuccessFailed());
   // Wir sind dem Ziel noch nicht nahe genug?
-  if(ObjectDistance(GetMacroCommand(0,1)) > 30)
+  if((ObjectDistance(GetMacroCommand(nil,1)) ?? 0) > 30)
     // Follow bedeutet viele MoveTos -> loslaufen bitte
-    AddMacroCommand(0, "MoveTo", GetMacroCommand(0,1), 0, 0, 0, GetMacroCommand(0, 6));
+    AddMacroCommand(nil, "MoveTo", GetMacroCommand(nil,1), nil, nil, nil, GetMacroCommand(nil, 6));
   // Aggrolevel
   //if(GetMacroCommand(0, 6) != -1)
     //SetAggroLevel(GetMacroCommand(0, 6));
   // Alle 30 Frames aktualisieren wir
-  return(ScheduleCall(this(), "MacroComFollow", 30, 0, true));
+  return(ScheduleCall(this(), "MacroComFollow", 30, nil, true));
 }
 
 // Wait
 protected func MacroComWait(bool fEnd)
 {
   // Erstes Kommando ist gar nicht Wait?
-  if(GetMacroCommand(0,0) ne "Wait") return();
+  fEnd ??= false;
+  if(!SEqual(GetMacroCommand(nil,nil), "Wait")) return;
   // Beenden?
   if(fEnd)
-    return(MacroComSuccess(0));
+    return(MacroComSuccess(nil));
   // Aggrolevel
-  if(GetMacroCommand(0, 6) != -1)
-    SetAggroLevel(GetMacroCommand(0, 6),0,0,0,"MacroComWait");
+  if(!Equal(GetMacroCommand(nil, 6), -1))
+    SetAggroLevel(GetMacroCommand(nil, 6),nil,nil,nil,"MacroComWait");
   // Dann warten wir jetzt eine Runde
-  return(ScheduleCall(this(), "MacroComWait", GetMacroCommand(0,4), 0, true));
+  return(ScheduleCall(this(), "MacroComWait", GetMacroCommand(nil,4), nil, true));
 }
 
 /* Makro-Funktionen */
@@ -3096,9 +3157,10 @@ protected func MacroComWait(bool fEnd)
 protected func MacroComSuccess(iCommand, int iCmd2)
 {//Log("%s #%d: MacroComSuccess", GetName(), ObjectNumber());
   // Für Aufrufe aus SetCommand(... "Call");
-  if(GetType(iCommand) == C4V_C4Object) iCommand = iCmd2;
+  iCmd2 ??= 0;
+  if(Equal(GetType(iCommand), C4V_C4Object)) iCommand = iCmd2;
   // An der Stelle gibt es nichts?
-  if(iCommand < 0 || GetLength(aMacroCommandList) <= iCommand) return();
+  if(Or((iCommand ?? 0) < 0, (GetLength(aMacroCommandList) ?? 0) <= (iCommand ?? 0))) return;
   // Hat super geklappt! Callbackobjekt benachrichtigen, sofern vorhanden
   var callback = GetMacroCommand(iCommand, 5);
   if(callback) callback->~OnMacroCommandSuccess(this());
@@ -3113,7 +3175,7 @@ protected func MacroComSuccess(iCommand, int iCmd2)
 
 protected func MacroComTumble()
 {//Log("%s #%d: MacroComTumble", GetName(), ObjectNumber());
-  MacroComSuccessFailed(0, Macro_PathImpossible);
+  MacroComSuccessFailed(nil, Macro_PathImpossible);
   CheckStuck();
 }
 
@@ -3128,7 +3190,9 @@ static const Macro_MoveToNoTarget = 4; // MoveTo hat kein Ziel bekommen
 protected func MacroComSuccessFailed(int iCommand, int iReason)
 {//Log("%s #%d: MacroComSuccessFailed: %d", GetName(), ObjectNumber(), iCommand);
   // An der Stelle gibt es nichts?
-  if(iCommand < 0 || GetLength(aMacroCommandList) <= iCommand) return();
+  iCommand ??= 0;
+  iReason ??= 0;
+  if(Or((iCommand ?? 0) < 0, (GetLength(aMacroCommandList) ?? 0) <= (iCommand ?? 0))) return;
   // Hat gar nicht geklappt! Callbackobjekt benachrichtigen, sofern vorhanden
   var callback = GetMacroCommand(iCommand, 5);
   if(callback) callback->~OnMacroCommandFailed(this(), iReason);
@@ -3146,32 +3210,33 @@ protected func MacroComSuccessFailed(int iCommand, int iReason)
 private func RemoveMacroCommand(int iCommand)
 {//Log("%s #%d: RemoveMacroCommand: %d", GetName(), ObjectNumber(), iCommand);
   // An der Stelle gibt es nichts?
-  if(iCommand < 0 || GetLength(aMacroCommandList) <= iCommand) return();
+  iCommand ??= 0;
+  if(Or((iCommand ?? 0) < 0, (GetLength(aMacroCommandList) ?? 0) <= (iCommand ?? 0))) return;
   // Entfernen
-  for(var i = 0, iEff, checked ; i < GetEffectCount("MacroCommand", this()) ; i++)
+  for(var i = nil, iEff, checked ; (i ?? 0) < (GetEffectCount("MacroCommand", this()) ?? 0) ; S42MigrationStep(i, 1, true))
   {
     iEff = GetEffect("MacroCommand", this(), i);
-    if(iEff == aMacroCommandList[iCommand])
+    if(Equal(iEff, aMacroCommandList[(iCommand ?? 0)]))
     {
       RemoveEffect("MacroCommand", this(), i);
       continue;
     }
     if(GetEffect("MacroCommandLocked", this())) continue;
     for(var mac in aMacroCommandList)
-      if(mac == iEff)
+      if(Equal(mac, iEff))
         checked = true;
     if(!checked) RemoveEffect("MacroCommand", this(), i, true);
-    checked = false;
+    checked = nil;
   }
 /*  if(RemoveEffect(0, this(), aMacroCommandList[iCommand]))
     Log("Effect removed");*/
   var aNewMacroComList = CreateArray();
-  i = 0;
+  i = nil;
   for(var iCom in aMacroCommandList)
   {
-    if(i == iCommand) continue;
-    aNewMacroComList[GetLength(aNewMacroComList)] = iCom;
-    i++;
+    if(Equal(i, iCommand)) continue;
+    aNewMacroComList[(GetLength(aNewMacroComList) ?? 0)] = iCom;
+    S42MigrationStep(i, 1, true);
   }
   // Erfolgreich entfernt
   aMacroCommandList = aNewMacroComList;
@@ -3195,6 +3260,7 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
   // Richtung.
 
   // maximale Iterationen fuer Wegfindung (abhaengig von Anzahl Wegpunkte)
+  fJetpack ??= false;
   var iterationLimit = ObjectCount(WAYP);
   
   var ex = GetX(pEnd);
@@ -3204,15 +3270,15 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
 
   var aWaypoints = CreateArray();
   
-  var jetp = 0;
+  var jetp = nil;
   var ammoload = DefinitionCall(JTPK,"GetFMData",FM_AmmoLoad);
 
-  for(var j=0; j< iterationLimit; ++j) {
+  for(var j=nil; (j ?? 0)< (iterationLimit ?? 0); S42MigrationStep(j, 1)) {
 
-    aWaypoints[j] = pCurrent;
+    aWaypoints[(j ?? 0)] = pCurrent;
 
     // fertig!
-    if(pCurrent == pEnd)
+    if(Equal(pCurrent, pEnd))
       return(aWaypoints);
 
     // ansonsten...
@@ -3220,15 +3286,15 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
     var cy = GetY(pCurrent);
     var cangle = Angle(cx,cy,ex,ey);
 
-    var pNext = 0;
+    var pNext = nil;
     var pathcount = (pCurrent->WAYP::GetPathCount());
     var aBest = CreateArray();
-    var good = 0;
-    var neutral = 0;
-    var bad = 0;
+    var good = nil;
+    var neutral = nil;
+    var bad = nil;
 
     // alle Nachbarknoten...
-    for(var i=0; i<pathcount; ++i) {
+    for(var i=nil; (i ?? 0)<(pathcount ?? 0); S42MigrationStep(i, 1)) {
       pNext = (pCurrent->WAYP::GetPathTarget(i));
 
       if(!Check4Jetpack(pCurrent,i,fJetpack,jetp,ammoload))
@@ -3237,20 +3303,20 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
       // Fuer die richtige Richtung zaehlt nicht der Winkel des naechsten Knotens, sondern
       // wenn pNext nur einen Nachfolger hat, zaehlt die Richtung in die der Nachfolger geht
       // (was rekursiv fortsetzbar ist)
-      var jetpgedacht = 0;
-      while((pNext->WAYP::GetPathCount()) == 1) {
+      var jetpgedacht = nil;
+      while(Equal((pNext->WAYP::GetPathCount()), 1)) {
         // Endknoten? Wir brauchen nicht weiteriterieren
-        if(pNext == pEnd) break;
+        if(Equal(pNext, pEnd)) break;
         // für den gedachten Pfad muss noch gecheckt werden, ob da nicht Jetpack benötigt wird
-        var check = Check4Jetpack(pNext,0,fJetpack,jetp+jetpgedacht,ammoload);
+        var check = Check4Jetpack(pNext,nil,fJetpack,(jetp ?? 0)+(jetpgedacht ?? 0),ammoload);
         if(check)
-          pNext = (pNext->WAYP::GetPathTarget(0));
-        if(check == 2)
-          jetpgedacht += ammoload;
+          pNext = (pNext->WAYP::GetPathTarget(nil));
+        if(Equal(check, 2))
+          S42MigrationAssign(jetpgedacht, "+=", (ammoload ?? 0));
       }
 
       // Endknoten? Super, fertig!
-      if(pNext == pEnd) {
+      if(Equal(pNext, pEnd)) {
         aBest[0] = i;
         good = 1;
         break;
@@ -3262,65 +3328,65 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
       var nangle = Angle(cx,cy,nx,ny);
  
       // diffangle: Nimmt Werte von 0 (genau richtig) bis 180 (genau falsch) an
-      var diffangle = Abs(Normalize(nangle-cangle,-180));
+      var diffangle = Abs(Normalize((nangle ?? 0)-(cangle ?? 0),-180));
       // Schummeln: der WP von dem man grad gekommen ist, wird als "bad" eingestuft
-      if(j>0)
-        if(pNext == aWaypoints[j-1])
+      if((j ?? 0)>0)
+        if(Equal(pNext, aWaypoints[(j ?? 0)-1]))
           diffangle = 180;
       // möglichst ein Array aus Pfaden zusammenstellen, die etwa in die gewünschte Richtung
       // führen... (Differenz <= 55°)
-      if(diffangle <= 55) {
-        aBest[good] = i;
-        ++good;
+      if((diffangle ?? 0) <= 55) {
+        aBest[(good ?? 0)] = i;
+        S42MigrationStep(good, 1);
       }
       // dann vielleicht nicht ganz so zielführende...? (nur wenn kein Pfad in richtige Richtung führt)
-      if(diffangle <= 110 && diffangle > 55 && !good) {
-        aBest[neutral] = i;
-        ++neutral;
+      if(And(And((diffangle ?? 0) <= 110, (diffangle ?? 0) > 55), !good)) {
+        aBest[(neutral ?? 0)] = i;
+        S42MigrationStep(neutral, 1);
       }
       // ansonsten dann ein Array aus nicht-zielführenden...
-      if(diffangle > 110 && !neutral && !good) {
-        aBest[bad] = i;
-        ++bad;
+      if(And(And((diffangle ?? 0) > 110, !neutral), !good)) {
+        aBest[(bad ?? 0)] = i;
+        S42MigrationStep(bad, 1);
       }
     }
     // Debug
     if(Debug("waypoints")) {
-      var dbg = 0;
+      var dbg = nil;
       var str = " ";
-      var wayp = 0;
+      var wayp = nil;
       if(good) { str = "good"; dbg = good; }
       else if(neutral) { str = "neutral"; dbg = neutral; }
       else { str = "bad"; dbg = bad; }
-      if(dbg>1) {
+      if((dbg ?? 0)>1) {
         DebugLog("  Choosing path from %s...","waypoints",str);
-        for(var d = 0; d<dbg; ++d) {
-          wayp = (pCurrent->WAYP::GetPathTarget(aBest[d]));
-          DebugLog("  waypoint (%d), angle %d","waypoints",ObjectNumber(wayp),Abs(Normalize(Angle(GetX(pCurrent),GetY(pCurrent),GetX(wayp),GetY(wayp))-cangle,-180)));
+        for(var d = nil; (d ?? 0)<(dbg ?? 0); S42MigrationStep(d, 1)) {
+          wayp = (pCurrent->WAYP::GetPathTarget(aBest[(d ?? 0)]));
+          DebugLog("  waypoint (%d), angle %d","waypoints",ObjectNumber(wayp),Abs(Normalize((Angle(GetX(pCurrent),GetY(pCurrent),GetX(wayp),GetY(wayp)) ?? 0)-(cangle ?? 0),-180)));
         }
       }
     }
     
     // zufällig aus möglichen Pfaden auswählen
     var chosenone = -1;
-    if(good)			{ chosenone = aBest[Random(good)]; }
-    else if(neutral)	{ chosenone = aBest[Random(neutral)]; }
-    else if(bad)		{ chosenone = aBest[Random(bad)]; }
+    if(good)			{ chosenone = aBest[(Random(good) ?? 0)]; }
+    else if(neutral)	{ chosenone = aBest[(Random(neutral) ?? 0)]; }
+    else if(bad)		{ chosenone = aBest[(Random(bad) ?? 0)]; }
     else {
       DebugLog("Failure: Selected waypoint leads into a dead end.","waypoints");
-      return(false);
+      return(nil);
     }
     // ansonsten ok
     pNext = (pCurrent->WAYP::GetPathTarget(chosenone));
 
     // geschätzter Benzinverbrauch bei Jetpack hochzählen
     if(pCurrent->WAYP::GetPathJetpack(chosenone))
-      jetp += ammoload;
+      S42MigrationAssign(jetp, "+=", (ammoload ?? 0));
 
-    DebugLog("Next %s waypoint (%d), angle %d","waypoints",str,ObjectNumber(pNext),Abs(Normalize(Angle(GetX(pCurrent),GetY(pCurrent),GetX(pNext),GetY(pNext))-cangle,-180)));
+    DebugLog("Next %s waypoint (%d), angle %d","waypoints",str,ObjectNumber(pNext),Abs(Normalize((Angle(GetX(pCurrent),GetY(pCurrent),GetX(pNext),GetY(pNext)) ?? 0)-(cangle ?? 0),-180)));
 
     // Fertig
-    if(pNext == pEnd) {
+    if(Equal(pNext, pEnd)) {
       DebugLog("Success: Complete path consists of %d waypoints.","waypoints",GetLength(aWaypoints));
     }    
 
@@ -3328,25 +3394,31 @@ public func FindPath(object pStart, object pEnd, bool fJetpack)
     pCurrent = pNext;
   }
   DebugLog("Failure: No path found after %d iterations.","waypoints",iterationLimit);
-  return(false);
+  return(nil);
 }
 
 // nächsten Wegpunkt von einer Position aus suchen (geht nur, wenn PathFree!)
 private func FindWaypoint(int iX, int iY)
 {
+  iX ??= 0;
+  iY ??= 0;
   var wp;
-  while(wp = FindObject(WAYP, AbsX(iX), AbsY(iY), -1, -1, 0,0,0,0, wp)) {
-    if(PathFree(iX, iY, wp->GetX(), wp->GetY()) || GBackSolid(wp->GetX(), wp->GetY()))
+  while(wp = FindObject(WAYP, AbsX(iX), AbsY(iY), -1, -1, nil,nil,nil,nil, wp)) {
+    if(Or(PathFree(iX, iY, wp->GetX(), wp->GetY()), GBackSolid(wp->GetX(), wp->GetY())))
       return(wp);
   }
   // Nix gefunden
-  return();
+  return;
 }
 
 // Vorbedingung für Jetpack prüfen
 private func Check4Jetpack(object pCurrent, int path, bool fJetpack, int jetp, int ammoload)
 {
   // kein Jetpackpath... dann ist ja gut
+  path ??= 0;
+  fJetpack ??= false;
+  jetp ??= 0;
+  ammoload ??= 0;
   if(!(pCurrent->WAYP::GetPathJetpack(path)))
     return(1);
   // ansonsten Vorbedingungen checken
@@ -3354,67 +3426,68 @@ private func Check4Jetpack(object pCurrent, int path, bool fJetpack, int jetp, i
     if(HasJetpack())
       //if(ammoload <= GetAmmo(GSAM)-jetp)
         return(2);
-  return(0);
+  return(nil);
 }
 
 // Lässt den Clonk von einem Wegpunkt zum anderen laufen, wobei er die jeweilige Pfadeigenschaft beachten muss
 private func MoveAlongPath(object pCurrentWp, object pNextWp, int iNextStep)
 {
   // Rausfinden, welchen Weg wir gehen müssen
-  for(var i = 0, path = -1 ; i < pCurrentWp->GetPathCount() ; i++)
-    if(pCurrentWp->GetPathTarget(i) == pNextWp)
+  iNextStep ??= 0;
+  for(var i = nil, path = -1 ; (i ?? 0) < (pCurrentWp->GetPathCount() ?? 0) ; S42MigrationStep(i, 1, true))
+    if(Equal(pCurrentWp->GetPathTarget(i), pNextWp))
     {
       path = i;
       break;
     }
   // Kein Weg? -> Fehler
-  if(path < 0) return(MacroComSuccessFailed(0, Macro_PathBroken));
+  if((path ?? 0) < 0) return(MacroComSuccessFailed(nil, Macro_PathBroken));
   // Sonderbehandlung für Zielwegpunkte, die nur einen Pfad von sich wegführen haben (da könnten Jumppads o.ä. sein)
   ClearScheduleCall(this(), "JumppadCheck"); // Zur Sicherheit
-  if(GetLength(aPath) > iNextStep && pNextWp->GetPathCount() == 1)
-    ScheduleCall(this(), "JumppadCheck", 5, 0, pNextWp, iNextStep);
+  if(And((GetLength(aPath) ?? 0) > (iNextStep ?? 0), Equal(pNextWp->GetPathCount(), 1)))
+    ScheduleCall(this(), "JumppadCheck", 5, nil, pNextWp, iNextStep);
   // Jetpackfliegen
   if(pCurrentWp->GetPathJetpack(path))
-    ScheduleCall(this(), "StartJetpack", pCurrentWp->GetPathJetpack(path), 0, pCurrentWp->GetPathJetpackFlag(path));
+    ScheduleCall(this(), "StartJetpack", pCurrentWp->GetPathJetpack(path), nil, pCurrentWp->GetPathJetpackFlag(path));
   // Flag rausfinden und entsprechend agieren
   var flag = pCurrentWp->GetPathFlag(path);
-  if(flag == Path_MoveTo)
+  if(Equal(flag, Path_MoveTo))
   {
     // Hinlaufen
     SetCommand(this(), "MoveTo", pNextWp);
     return(AddSpecialCommands(pCurrentWp, path));
   }
-  if(flag == Path_Jump)
+  if(Equal(flag, Path_Jump))
   {
     // Springen und dann laufen
     var dir = pCurrentWp->GetPathDir(path);
-    if(dir < 0) dir = 0;
+    if((dir ?? 0) < 0) dir = nil;
     SetDir(dir);
     Jump();
     SetCommand(this(), "MoveTo", pNextWp);
     return(AddSpecialCommands(pCurrentWp, path));
   }
-  if(flag == Path_Backflip)
+  if(Equal(flag, Path_Backflip))
   {
     // Backflippen und dann laufen
     var dir = pCurrentWp->GetPathDir(path);
-    if(dir < 0) dir = 0;
+    if((dir ?? 0) < 0) dir = nil;
     SetDir(!dir);
     var iEff = AddEffect("ControlStack", this, 110, 5, this);
-		if(GetDir() == DIR_Left)
-		  EffectVar(0, this, iEff) = COMD_Right;
+		if(Equal(GetDir(), DIR_Left))
+		  EffectVar(nil, this, iEff) = COMD_Right;
 		else
-		  EffectVar(0, this, iEff) = COMD_Left;
+		  EffectVar(nil, this, iEff) = COMD_Left;
     Jump();
-    ScheduleCall(0, "JumpStart", 1, 1, true);
+    ScheduleCall(nil, "JumpStart", 1, 1, true);
 
     SetCommand(this(), "MoveTo", pNextWp);
     return(AddSpecialCommands(pCurrentWp, path));
   }
-  if(flag == Path_Lift)
+  if(Equal(flag, Path_Lift))
   {
     // Wir suchen den Lift und warten oder betreten ihn
-    LiftControl(0, ObjectNumber(pCurrentWp), ObjectNumber(pNextWp));
+    LiftControl(nil, ObjectNumber(pCurrentWp), ObjectNumber(pNextWp));
     return(AddSpecialCommands(pCurrentWp, path));
   }
   // Unbekanntes flag, MoveTo versuchen
@@ -3427,24 +3500,25 @@ private func MoveAlongPath(object pCurrentWp, object pNextWp, int iNextStep)
 protected func JumppadCheck(object pTargetWp, int iNextStep)
 {
   // Pfad hat sich irgendwie geändert
-  if(GetLength(aPath) <= iNextStep) return();
-  var pNextWp = aPath[iNextStep];
+  iNextStep ??= 0;
+  if((GetLength(aPath) ?? 0) <= (iNextStep ?? 0)) return;
+  var pNextWp = aPath[(iNextStep ?? 0)];
   // Feststellen, ob pTargetWp immernoch unser Bewegungsziel ist
-  if(aPath[iNextStep-1] != pTargetWp)
-    return();
+  if(!Equal(aPath[(iNextStep ?? 0)-1], pTargetWp))
+    return;
   // Schauen, ob wir näher an pNextWp dran sind
-  if(ObjectDistance(pTargetWp) > ObjectDistance(pNextWp))
+  if((ObjectDistance(pTargetWp) ?? 0) > (ObjectDistance(pNextWp) ?? 0))
     // Wegpunkt wird übersprungen
-    return(MacroComMoveToStep(0, iNextStep));
+    return(MacroComMoveToStep(nil, iNextStep));
   // Weiterlaufen
-  ScheduleCall(this(), "JumppadCheck", 5, 0, pTargetWp, iNextStep);
+  ScheduleCall(this(), "JumppadCheck", 5, nil, pTargetWp, iNextStep);
 }
 
 protected func ClimbLadder()
 {
-  if(!GetMacroCommand() && !GetCommand()) return();
+  if(And(!GetMacroCommand(), !GetCommand())) return;
   // Testen, ob wir noch klettern
-  if(GetAction() ne "ScaleLadder") return();
+  if(!SEqual(GetAction(), "ScaleLadder")) return;
   // Feststellen, ob nach oben oder unten
   var targetx = GetCommand(this(), 2);
   var targety = GetCommand(this(), 3);
@@ -3458,57 +3532,57 @@ protected func ClimbLadder()
   }
   */
   
-  if(targety < GetY()) SetComDir(COMD_Up);
-  if(targety > GetY()) SetComDir(COMD_Down);
+  if((targety ?? 0) < (GetY() ?? 0)) SetComDir(COMD_Up);
+  if((targety ?? 0) > (GetY() ?? 0)) SetComDir(COMD_Down);
   
   // 2do: Wir müssen irgendwie feststellen, ob die Leiter aus ist. :(
   
   
   // Wegpunkt oben? früher abspringen.
-  if(Inside(GetY()-targety,5,15) && Abs(GetX()-targetx) < 30)
+  if(And(Inside((GetY() ?? 0)-(targety ?? 0),5,15), (Abs((GetX() ?? 0)-(targetx ?? 0)) ?? 0) < 30))
   {
     var comd = GetComDir();
-    if(targetx < GetX())
+    if((targetx ?? 0) < (GetX() ?? 0))
     {
     	ControlLadder("ControlLeft");
-    	if(GetDir() == DIR_Left)
+        if(Equal(GetDir(), DIR_Left))
     	  SetComDir(comd);
    	}
-    if(targetx > GetX())
+    if((targetx ?? 0) > (GetX() ?? 0))
     {
     	ControlLadder("ControlRight");
-    	if(GetDir() == DIR_Right)
+        if(Equal(GetDir(), DIR_Right))
     	  SetComDir(comd);
    	}
   }
     
   // Sind wir ungefähr da?
-  if(Inside(GetY(), targety-5, targety+5) && PathFree(GetX(), GetY(), targetx, targety))
+  if(And(Inside(GetY(), (targety ?? 0)-5, (targety ?? 0)+5), PathFree(GetX(), GetY(), targetx, targety)))
   {
     // Wir versuchen mal, abzuspringen (das klappt spätestens beim 2. Mal(theoretisch))
     
     
     //wenn Ziel weiter oben: immer nach oben abspringen
-    if(GetY() > targety)
+    if((GetY() ?? 0) > (targety ?? 0))
       SetComDir(COMD_Up);
     //Ziel weiter unten? Nach unten abspringen.
-    else if(Abs(GetY()-targety) > 50)
+    else if((Abs((GetY() ?? 0)-(targety ?? 0)) ?? 0) > 50)
       SetComDir(COMD_Down);
     //Ziel weiter weg? Backflip! :D
-    else if(Abs(GetX()-targetx) > 80)
+    else if((Abs((GetX() ?? 0)-(targetx ?? 0)) ?? 0) > 80)
       SetComDir(COMD_Stop);
     
     var comd = GetComDir();
-    if(targetx < GetX())
+    if((targetx ?? 0) < (GetX() ?? 0))
     {
     	ControlLadder("ControlLeft");
-    	if(GetDir() == DIR_Left)
+        if(Equal(GetDir(), DIR_Left))
     	  SetComDir(comd);
    	}
-    if(targetx > GetX())
+    if((targetx ?? 0) > (GetX() ?? 0))
     {
     	ControlLadder("ControlRight");
-    	if(GetDir() == DIR_Right)
+        if(Equal(GetDir(), DIR_Right))
     	  SetComDir(comd);
    	}
   }
@@ -3519,25 +3593,26 @@ protected func ClimbLadder()
 protected func StartJetpack(int iDir)
 {
   // Kein Jetpack mehr? oO
+  iDir ??= 0;
   var jetpack = HasJetpack();
-  if(!jetpack) return();
+  if(!jetpack) return;
   // Richtung zünden
-  if(iDir == Jetpack_Left) // Links
+  if(Equal(iDir, Jetpack_Left)) // Links
   {
     SetDir(DIR_Left);
     jetpack->ControlLeftDouble(this());
   }
-  if(iDir == Jetpack_UpLeft) // Oben links
+  if(Equal(iDir, Jetpack_UpLeft)) // Oben links
   {
     SetDir(DIR_Left);
     jetpack->ControlUpDouble(this());
   }
-  if(iDir == Jetpack_UpRight) // Oben rechts
+  if(Equal(iDir, Jetpack_UpRight)) // Oben rechts
   {
     SetDir(DIR_Right);
     jetpack->ControlUpDouble(this());
   }
-  if(iDir == Jetpack_Right) // Rechts
+  if(Equal(iDir, Jetpack_Right)) // Rechts
   {
     SetDir(DIR_Right);
     jetpack->ControlRightDouble(this());
@@ -3547,51 +3622,54 @@ protected func StartJetpack(int iDir)
 protected func LiftControl(object dummy, int pCurrentWp, int pNextWp)
 {
   // Fässt den Lift schon an?
-  if(GetAction() eq "Push")
+  pCurrentWp ??= 0;
+  pNextWp ??= 0;
+  if(!!SEqual(GetAction(), "Push"))
   {
     var lift = GetActionTarget();
-    if(!lift) return();
+    if(!lift) return;
     // Nah genug am Ziel? Absteigen
-    if(ObjectDistance(Object(pNextWp)) <= 50)
+    if((ObjectDistance(Object(pNextWp)) ?? 0) <= 50)
       return(AddCommand(this(), "MoveTo", Object(pNextWp)));
     // Liftplatten befehligen
-    lift->~ControlCommand("MoveTo",0, Object(pNextWp)->GetX());
+    lift->~ControlCommand("MoveTo",nil, Object(pNextWp)->GetX());
     // Warten
-    AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, 0,0, "LiftControl");
-    AddCommand(this(), "Wait", 0,0,0,0,0, 15);
+    AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, nil,nil, "LiftControl");
+    AddCommand(this(), "Wait", nil,nil,nil,nil,nil, 15);
     return(1);
   }
   // Liftplatte suchen
   var x1 = Object(pCurrentWp)->GetX();
   var x2 = Object(pNextWp)->GetX();
-  if(x1 > x2) { x1 = x2; x2 = Object(pCurrentWp)->GetX(); }
-  var lift = FindObject2(Find_Func("IsLift"), Find_InRect(AbsX(x1), -25, x2-x1, 50));
+  if((x1 ?? 0) > (x2 ?? 0)) { x1 = x2; x2 = Object(pCurrentWp)->GetX(); }
+  var lift = FindObject2(Find_Func("IsLift"), Find_InRect(AbsX(x1), -25, (x2 ?? 0)-(x1 ?? 0), 50));
   // Kein Lift? -> Fehlschlag
-  if(!lift) return(MacroComSuccessFailed(0, Macro_PathBroken));
+  if(!lift) return(MacroComSuccessFailed(nil, Macro_PathBroken));
   // Lift nah genug? -> Einsteigen
-  if(ObjectDistance(lift) <= 50)
+  if((ObjectDistance(lift) ?? 0) <= 50)
   {
-    AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, 0,0, "LiftControl");
+    AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, nil,nil, "LiftControl");
     AddCommand(this(), "Grab", lift);
     return(1);
   }
   // Warten
-  AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, 0,0, "LiftControl");
+  AddCommand(this(), "Call", this(), pCurrentWp, pNextWp, nil,nil, "LiftControl");
   
-  AddCommand(this(), "Wait", 0,0,0,0,0, 15);
+  AddCommand(this(), "Wait", nil,nil,nil,nil,nil, 15);
   return(1);
 }
 
 // Alles was der Wegpunkt als ArriveCommand hat
 protected func AddSpecialCommands(object pCurrentWp, int path)
 {
+  path ??= 0;
   if(!(pCurrentWp->GetArriveCommandCount(path))) return;
-  for(var i= pCurrentWp->GetArriveCommandCount(path) - 1,command ; i > -1 ; i--)
+  for(var i= (pCurrentWp->GetArriveCommandCount(path) ?? 0) - 1,command ; (i ?? 0) > -1 ; S42MigrationStep(i, -1, true))
     AddCommand(this(), pCurrentWp->GetArriveCommand(path, i), 
                        pCurrentWp->GetArriveCommand(path, i, 1),
                        pCurrentWp->GetArriveCommand(path, i, 2),
                        pCurrentWp->GetArriveCommand(path, i, 3),
-                       pCurrentWp->GetArriveCommand(path, i, 4), 0,
+                       pCurrentWp->GetArriveCommand(path, i, 4), nil,
                        pCurrentWp->GetArriveCommand(path, i, 5));
 }
 
@@ -3612,14 +3690,18 @@ public func SetAggroLevel(int iLevel, int iDist, int iX, int iY, string text)
 {
 //  if(GetOwner() < -1) Message("@SetAggroLevel: %d: %s", this(), iLevel, text);
   // > 3
-  if(iLevel > 3) return();
+  iLevel ??= 0;
+  iDist ??= 0;
+  iX ??= 0;
+  iY ??= 0;
+  if((iLevel ?? 0) > 3) return;
   // Wir kommen von > 2
   var target;
-  if(GetAggroLevel() >= 2 && iLevel < 2)
+  if(And((GetAggroLevel() ?? 0) >= 2, (iLevel ?? 0) < 2))
     if(target = EffectVar(1, this(), GetEffect("Aggro", this())))
-      if(GetMacroCommand(1, 1) == target)
+      if(Equal(GetMacroCommand(1, 1), target))
       {
-        FinishMacroCommand(1,0,1);
+        FinishMacroCommand(1,nil,1);
         FinishMacroCommand(1);
       }
   // 0
@@ -3627,14 +3709,14 @@ public func SetAggroLevel(int iLevel, int iDist, int iX, int iY, string text)
   // 1, 2 und 3
   var effect = GetEffect("Aggro", this());
   if(!effect) effect = AddEffect("Aggro", this(), 50, 10, this());
-  EffectVar(0, this(), effect) = iLevel;
+  EffectVar(nil, this(), effect) = iLevel;
   // Parameter
   if(!iDist)
     {iDist = 500;}
   //Log(Format("distanz=%v",iDist));
   EffectVar(2, this(), effect) = iDist;
   // iX und iY, Default = GetX() & GetY()
-  if(!iX && !iY && iLevel == 3)
+  if(And(And(!iX, !iY), Equal(iLevel, 3)))
   {
     iX = GetX();
     iY = GetY();
@@ -3647,14 +3729,14 @@ public func SetAggroLevel(int iLevel, int iDist, int iX, int iY, string text)
 public func GetAggroLevel()
 {
   var effect = GetEffect("Aggro", this());
-  if(!effect) return();
-  return(EffectVar(0, this(), effect));
+  if(!effect) return;
+  return(EffectVar(nil, this(), effect));
 }
 
 // Setzt sofort das Angriffsziel
 public func SetAggroTarget(object pTarget)
 {
-  if(GetAggroLevel() == Aggro_Nothing) return();
+  if(Equal(GetAggroLevel(), Aggro_Nothing)) return;
   EffectVar(1, this(), GetEffect("Aggro", this())) = pTarget;
   return(1);
 }
@@ -3674,19 +3756,20 @@ public func FxAggroStart()
 public func FxAggroTimer(object pTarget, int no)
 {
  //Wenn geblendet, dann nichts machen
+ no ??= 0;
  if(geblendet) return;
   // keine Waffe geladen? Dann waffen durchchecken  
 // Waffenstatus durchgehen, vorher zählen
   var waffenanzahl = CustomContentsCount("IsWeapon");
-   var o = 0;
-   for(var u = 0; u < ContentsCount(); u++)
+   var o = nil;
+   for(var u = nil; (u ?? 0) < (ContentsCount() ?? 0); S42MigrationStep(u, 1, true))
        if(Contents(u)->~IsWeapon())
   		{
-       if(!Contents(u)->~GetCharge()) ++o;
+       if(!Contents(u)->~GetCharge()) S42MigrationStep(o, 1);
        if(Contents(u)->~GetCharge()) break;
   		}
   // wenn o nun gleich waffenanzahl, dann heißt das, dass alle Waffen leer sind, dann nachladen.
-   if(o == waffenanzahl)
+   if(Equal(o, waffenanzahl))
    return(CheckIdleWeapon());
 
   // Wir haben ein Ziel?
@@ -3696,13 +3779,13 @@ public func FxAggroTimer(object pTarget, int no)
 //  Message("@No target", this());
   // Ziel suchen
   var dist = EffectVar(2, this(), no);
-  var dir = GetDir()*2-1;
+  var dir = (GetDir() ?? 0)*2-1;
   // Vorne
-  var target = GetTarget(90*dir, 90,dist);
+  var target = GetTarget(90*(dir ?? 0), 90,dist);
   // Hinten
   if(!target)
-    if((!GetCommand() && !GetMacroCommand()) || EffectVar(0, this(), no) != 1)
-      target = GetTarget(-90*dir, 90,dist);
+    if(Or((And(!GetCommand(), !GetMacroCommand())), !Equal(EffectVar(nil, this(), no), 1)))
+      target = GetTarget(-90*(dir ?? 0), 90,dist);
   // Gefunden?
   if(!target)
   {
@@ -3720,7 +3803,7 @@ public func FxAggroTimer(object pTarget, int no)
     }
     // -> Waffen durchchecken
     CheckIdleWeapon();
-    return();
+    return;
   }
   // Super
   EffectVar(1, this(), no) = target;
@@ -3731,17 +3814,18 @@ public func FxAggroFire(object pTarget, int no)
 {
 
  //Wenn geblendet, dann nichts machen
+ no ??= 0;
  if(geblendet) return;
 
   // Zusatzhack: BR-Bombe!
-  if(GetID(Contents()) == GBRB)
+  if(Equal(GetID(Contents()), GBRB))
     // Nichts tun :C
-    return();
+    return;
   var y = EffectVar(4, this(), no);
   var x = EffectVar(3, this(), no);
   var dist = EffectVar(2, this(), no);
   var target = EffectVar(1, this(), no);
-  var level = EffectVar(0, this(), no);
+  var level = EffectVar(nil, this(), no);
   var pathfree = true;
   
   // Nichts tun, wenn gerade verhindert
@@ -3754,7 +3838,7 @@ public func FxAggroFire(object pTarget, int no)
     if(Contained()->~HandleAggro(this(), level, target, dist, x, y))
       return(1);
     else
-      return(AddCommand(this(), "Exit", 0,0,0,0,0,0,0, C4CMD_SilentSub));
+      return(AddCommand(this(), "Exit", nil,nil,nil,nil,nil,nil,nil, C4CMD_SilentSub));
   }
   if(IsRiding())
   {
@@ -3766,88 +3850,88 @@ public func FxAggroFire(object pTarget, int no)
  }
   
   // Zu weit von der Wachposition entfernt?
-  if(level == 3) {
-    if(Distance(GetX(), GetY(), x, y) > dist)
+  if(Equal(level, 3)) {
+    if((Distance(GetX(), GetY(), x, y) ?? 0) > (dist ?? 0))
     {
-      if(GetMacroCommand(1, 1) == target)
+      if(Equal(GetMacroCommand(1, 1), target))
       {
-        FinishMacroCommand(1,0,1);
+        FinishMacroCommand(1,nil,1);
         FinishMacroCommand(1);
       }
        // Log("zu weit von Wachposition entfernt");
-      AddMacroCommand(0, "MoveTo", 0, x,y, 0, level);
-      EffectVar(1, this(), no) = 0;
+      AddMacroCommand(nil, "MoveTo", nil, x,y, nil, level);
+      EffectVar(1, this(), no) = nil;
 	  //      Message("@Returning to guarded position", this());
-      return();
+      return;
     }
   }
   
   var maxdist = dist;
   if(!PathFree(GetX(), GetY(), target->GetX(), target->GetY()))
   {
-    if(level == 1) maxdist = 0;
-    if(level >= 2) maxdist = dist/2;
-    pathfree = false;
+    if(Equal(level, 1)) maxdist = nil;
+    if((level ?? 0) >= 2) maxdist = (dist ?? 0)/2;
+    pathfree = nil;
   }
   //Log("kurz vor ziel weg");
   // Ziel irgendwie weg?
   // (Pathfree wurde schon gecheckt)...  reicht nicht, da zielen und schießen nicht aufhört, wenn was zwischen gegner, aber noch in Radius, und daher wird auch nicht nachgeladen -.-
-  if(!CheckTarget(target,this,maxdist,0,0,true) || !PathFree(GetX(), GetY(), target->GetX(), target->GetY()))
+  if(Or(!CheckTarget(target,this,maxdist,nil,nil,true), !PathFree(GetX(), GetY(), target->GetX(), target->GetY())))
     {
-      EffectVar(1, this(), no) = 0;
-      if(EffectVar(0, this(), no) == 2)
+      EffectVar(1, this(), no) = nil;
+      if(Equal(EffectVar(nil, this(), no), 2))
         ClearMacroCommands();
-      if(!IsAiming()) if(Contents(0)) Contents(0)->~AimStop(); // damit auch das Autofeuer aufhört
+      if(!IsAiming()) if(Contents(nil)) Contents(nil)->~AimStop(); // damit auch das Autofeuer aufhört
       if(IsAiming())
         StopAiming();     
         //Log("Ziel iwie weg");
-      return();
+      return;
     }
   // Ich hab nix? °-°
-  if(!Contents()) return(); // Lauf, Forest, lauf!
+  if(!Contents()) return; // Lauf, Forest, lauf!
   //Log("nach ich hab nix");
   // Waffe in die Hand nehmen
-  if(!SelectWeapon(level, target, false))
+  if(!SelectWeapon(level, target, nil))
     // Evtl. Feuermodus wechseln (dann muss erst nachgeladen werden, aber besser als nichts)
     if(!SelectWeapon(level, target, true))
     {
       // Bei Aggro_Follow können wir von unserem Pfade weg. D.h. eine Waffe und/oder Munition muss her
-      if(GetAggroLevel() == Aggro_Follow)
+      if(Equal(GetAggroLevel(), Aggro_Follow))
       {
 //      Message("@Searching for weapons / ammo", this());
         // Waffen auffrischen?
-        if(CustomContentsCount("IsWeapon") <= 1)
+        if((CustomContentsCount("IsWeapon") ?? 0) <= 1)
           return(SearchWeapon(Aggro_Shoot));
         // Munition auffrischen
         return(SearchAmmo(Aggro_Shoot));
       }
       // ein Balrog, ein Feind gegen den ihr nichts ausrichten könnt...lauft!
         //Log("Balrog?");
-        return();
+        return;
     }
   // Stufe 1 - nur in die grobe Richtung ballern, lieber nicht anhalten oder sowas
 
-  if(!ReadyToFire()) return();
+  if(!ReadyToFire()) return;
 
   // Schaue ich in die richtige Richtung?
-  if(GetX() < target->GetX())
+  if((GetX() ?? 0) < (target->GetX() ?? 0))
   {
-    if(GetDir() != DIR_Right)
+    if(!Equal(GetDir(), DIR_Right))
       SetDir(DIR_Right);
   }
   else
   {
-    if(GetDir() != DIR_Left)
+    if(!Equal(GetDir(), DIR_Left))
       SetDir(DIR_Left);
   }
      //Log("kurz vor zielen muss auch mal sein");
   // Zielen, muss auch mal sein
- if((!GetCommand() && !GetMacroCommand()) || level != 1 || IsAiming())
+ if(Or(Or((And(!GetCommand(), !GetMacroCommand())), !Equal(level, 1)), IsAiming()))
  {
-  if(pathfree && Contents()->GetBotData(BOT_Range) > 30) // Weg frei und keine Nahkampfwaffe?
+  if(And(pathfree, (Contents()->GetBotData(BOT_Range) ?? 0) > 30)) // Weg frei und keine Nahkampfwaffe?
   {
     var angle = Angle(GetX(), GetY(), target->GetX(), target->GetY());
-    if(((!Inside(angle, 70, 120) && !Inside(angle, 250, 290)) || Contents()->GetFMData(FM_Aim)>0) 
+    if((Or((And(!Inside(angle, 70, 120), !Inside(angle, 250, 290))), (Contents()->GetFMData(FM_Aim) ?? 0)>0))
        //  && maxdist != 300 && ObjectDistance(target) < 300
 )
     {
@@ -3859,7 +3943,7 @@ public func FxAggroFire(object pTarget, int no)
 		var ty = target->GetY();
 		
         if(Contents()->GetBotData(BOT_Ballistic))
-          ty -= 15;
+          S42MigrationAssign(ty, "-=", 15);
 		
 		DoMouseAiming(tx, ty);
       }
@@ -3868,24 +3952,24 @@ public func FxAggroFire(object pTarget, int no)
       if(IsAiming())
         StopAiming();
   }
-	if(IsAiming() && !CheckAmmo(Contents()->GetFMData(FM_AmmoID), Contents()->GetFMData(FM_AmmoLoad), Contents(), this()))
+	if(And(IsAiming(), !CheckAmmo(Contents()->GetFMData(FM_AmmoID), Contents()->GetFMData(FM_AmmoLoad), Contents(), this())))
 	 	StopAiming();
  }
  
    // Gut. Feuern wir bereits?
-  if(Contents()->IsRecharging() || Contents()->IsShooting()) return();
+  if(Or(Contents()->IsRecharging(), Contents()->IsShooting())) return;
  
   // Feuer!
-  if(maxdist != 300 && pathfree) Control2Contents("ControlThrow");
+  if(And(!Equal(maxdist, 300), pathfree)) Control2Contents("ControlThrow");
 //  Message("@My target: %s @%d/%d with level %d", this(), target->GetName(), target->GetX(), target->GetY(), level);
   // Stufe 2 - verfolgen!
-  if(EffectVar(0, this(), no) >= 2)
-    if(GetMacroCommand(1) ne "Follow" || GetMacroCommand(1, 1) != target)
-      if(GetMacroCommand(0) ne "Follow" || GetMacroCommand(0,1) != target)
+  if((EffectVar(nil, this(), no) ?? 0) >= 2)
+    if(Or(!SEqual(GetMacroCommand(1), "Follow"), !Equal(GetMacroCommand(1, 1), target)))
+      if(Or(!SEqual(GetMacroCommand(nil), "Follow"), !Equal(GetMacroCommand(nil,1), target)))
       {
         DebugLog("FxAggroFire - Adding Follow command","aggro");
-        AddMacroCommand(0, "MoveTo", 0, GetX(),GetY(), 0, level);
-        AddMacroCommand(0, "Follow", target, 0, 0, 0, level);
+        AddMacroCommand(nil, "MoveTo", nil, GetX(),GetY(), nil, level);
+        AddMacroCommand(nil, "Follow", target, nil, nil, nil, level);
       }
   //Log("sollte gefeuert haben?");
 }
@@ -3895,26 +3979,28 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
 {
   //Log("Selectweapon wird geprüft");
   // Entfernung zum Ziel
+  iLevel ??= 0;
+  fFireModes ??= false;
   var dist = ObjectDistance(pTarget);
   // Keine Waffen in Inventar?
-  if(!CustomContentsCount("IsWeapon")) return();
+  if(!CustomContentsCount("IsWeapon")) return;
   // Bevorzugten Schadenstyp bestimmen
   var preftype = GetPrefDmgType(pTarget), type;
   // Alle durchgehen und passende prüfen
-  for(var i=0,obj,fav,mode,favmode ; obj = Contents(i) ; mode++)
+  for(var i=nil,obj,fav,mode,favmode ; obj = Contents(i) ; S42MigrationStep(mode, 1, true))
   {
     // Nix Waffe
-    if(!(obj->~IsWeapon())) { i++; mode = -1; continue; }
+    if(!(obj->~IsWeapon())) { S42MigrationStep(i, 1, true); mode = -1; continue; }
     // Feuermodus
-    if(mode && !fFireModes) { i++; mode = -1; continue; }
-    if(!(obj->GetFMData(FM_Name, mode))) { i++; mode = -1; continue; }
-    if(mode == obj->GetFireMode() && mode) continue;
+    if(And(mode, !fFireModes)) { S42MigrationStep(i, 1, true); mode = -1; continue; }
+    if(!(obj->GetFMData(FM_Name, mode))) { S42MigrationStep(i, 1, true); mode = -1; continue; }
+    if(And(Equal(mode, obj->GetFireMode()), mode)) continue;
     // Nix gut... Hier wird jetzt auch die Aim Action von Bazooka und Co erkannt, weil damit sonst nicht geschossen wird -.-
-    if(obj->GetFMData(FM_Aim, mode)>0)
-      if(iLevel == 1 || (!WildcardMatch(GetAction(), "*Walk*") && !WildcardMatch(GetAction(), "Aim*")))
+    if((obj->GetFMData(FM_Aim, mode) ?? 0)>0)
+      if(Or(Equal(iLevel, 1), (And(!WildcardMatch(GetAction(), "*Walk*"), !WildcardMatch(GetAction(), "Aim*")))))
         continue;
     // Keine Munition dafür?
-    if(!(obj->GetCharge()) && !GetAmmo(obj->GetFMData(FM_AmmoID, mode)))
+    if(And(!(obj->GetCharge()), !GetAmmo(obj->GetFMData(FM_AmmoID, mode))))
       continue;
     // EMP nur gegen Maschinen
     if(obj->GetBotData(BOT_EMP, mode))
@@ -3930,10 +4016,10 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
     else
     {
       // Favorit hat nicht genug Reichweite
-      if(fav->GetBotData(BOT_Range, favmode) < dist)
+      if((fav->GetBotData(BOT_Range, favmode) ?? 0) < (dist ?? 0))
       {
         // Neue Waffe hat mehr
-        if(obj->GetBotData(BOT_Range, mode) > dist)
+        if((obj->GetBotData(BOT_Range, mode) ?? 0) > (dist ?? 0))
         {
           fav = obj;
           type = obj->GetBotData(BOT_DmgType, mode);
@@ -3943,9 +4029,9 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
       else
       {
         // Favorit hat genug Reichweite -> nur wechseln, wenn Schadenstyp besser
-        if(pTarget->~OnDmg(obj->GetBotData(BOT_DmgType, mode)) < pTarget->~OnDmg(type) &&
+        if(And((pTarget->~OnDmg(obj->GetBotData(BOT_DmgType, mode)) ?? 0) < (pTarget->~OnDmg(type) ?? 0),
           // Allerdings darf die Waffe nicht zu schwach sein
-          fav->GetBotData(BOT_Power, favmode)-1 <= obj->GetBotData(BOT_Power, mode))
+          (fav->GetBotData(BOT_Power, favmode) ?? 0)-1 <= (obj->GetBotData(BOT_Power, mode) ?? 0)))
         {
           // Neuer Favorit
           fav = obj;
@@ -3955,11 +4041,11 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
         else
         {
           // Stärke der neuen Waffe ist größer oder Favorit ist ein Langlader
-          if(fav->GetBotData(BOT_Power, favmode) < obj->GetBotData(BOT_Power, mode) ||
-             (fav->GetBotData(BOT_Power, favmode) == BOT_Power_LongLoad && (fav->IsReloading() || !(fav->GetCharge()))))
+          if(Or((fav->GetBotData(BOT_Power, favmode) ?? 0) < (obj->GetBotData(BOT_Power, mode) ?? 0),
+             (And(Equal(fav->GetBotData(BOT_Power, favmode), BOT_Power_LongLoad), (Or(fav->IsReloading(), !(fav->GetCharge())))))))
           {
             // Waffe hat keine extralange Nachladezeit
-            if(obj->GetBotData(BOT_Power, mode) != BOT_Power_LongLoad)
+            if(!Equal(obj->GetBotData(BOT_Power, mode), BOT_Power_LongLoad))
             {
               // Neuer Favorit
               fav = obj;
@@ -3967,7 +4053,7 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
               favmode = mode;
             }
             // Waffe sollte nicht nachladen und nicht leer sein
-            else if(obj->GetCharge() != 0 && !(obj->IsReloading()))
+            else if(And(!Equal(obj->GetCharge(), nil), !(obj->IsReloading())))
               {
                 // Neuer Favorit
                 fav = obj;
@@ -3978,49 +4064,49 @@ public func SelectWeapon(int iLevel, object pTarget, bool fFireModes)
         } 
       }
       // Reichweite passt
-      if(fav->GetBotData(BOT_Range, favmode) >= dist)
+      if((fav->GetBotData(BOT_Range, favmode) ?? 0) >= (dist ?? 0))
         // Schadenstyp auch
-        if(preftype == type)
+        if(Equal(preftype, type))
           // Stärke auch
-            if(fav->GetBotData(BOT_Power, favmode) >= BOT_Power_3)
+            if((fav->GetBotData(BOT_Power, favmode) ?? 0) >= (BOT_Power_3 ?? 0))
               break;
     }
   }
   // Auswählen
-  if(!fav) return();
+  if(!fav) return;
   // Feuermodus wechseln?
   if(fFireModes)
-    if(favmode && favmode != fav->GetFireMode())
+    if(And(favmode, !Equal(favmode, fav->GetFireMode())))
       fav->SetFireMode(favmode);
-  if(ContentsCount() == 1) return(1);
-  return(ShiftContents(0,0,fav->GetID()));
+  if(Equal(ContentsCount(), 1)) return(1);
+  return(ShiftContents(nil,nil,fav->GetID()));
 }
 
 public func GetPrefDmgType(object pTarget)
 {
   var min = pTarget->~OnDmg(DMG_Projectile);
   var type = DMG_Projectile;
-  if(pTarget->~OnDmg(DMG_Melee) < min)
+  if((pTarget->~OnDmg(DMG_Melee) ?? 0) < (min ?? 0))
   {
     type = DMG_Melee;
     min = pTarget->~OnDmg(type);
   }
-  if(pTarget->~OnDmg(DMG_Fire) < min)
+  if((pTarget->~OnDmg(DMG_Fire) ?? 0) < (min ?? 0))
   {
     type = DMG_Fire;
     min = pTarget->~OnDmg(type);
   }
-  if(pTarget->~OnDmg(DMG_Explosion) < min)
+  if((pTarget->~OnDmg(DMG_Explosion) ?? 0) < (min ?? 0))
   {
     type = DMG_Explosion;
     min = pTarget->~OnDmg(type);
   }
-  if(pTarget->~OnDmg(DMG_Energy) < min)
+  if((pTarget->~OnDmg(DMG_Energy) ?? 0) < (min ?? 0))
   {
     type = DMG_Energy;
     min = pTarget->~OnDmg(type);
   }
-  if(pTarget->~OnDmg(DMG_Bio) < min)
+  if((pTarget->~OnDmg(DMG_Bio) ?? 0) < (min ?? 0))
     type = DMG_Bio;
     
   return(type);
@@ -4030,6 +4116,7 @@ public func GetPrefDmgType(object pTarget)
 public func SearchWeapon(int iAggro)
 {
   // Nächstbeste Spawnpunkte abklappern
+  iAggro ??= 0;
   for(var pSpawn in FindObjects(Find_ID(SPNP), Sort_Random()))
     // Da ist eine Waffe drin?
     if(pSpawn -> Contents() ->~ IsWeapon())
@@ -4038,20 +4125,21 @@ public func SearchWeapon(int iAggro)
       	// Einsammelbar?
     		if(pSpawn->CheckCollect(GetOwner(),this()))
         	// Hinlaufen
-        	return(SetMacroCommand(0, "MoveTo", pSpawn, 0,0,0, iAggro));
+                return(SetMacroCommand(nil, "MoveTo", pSpawn, nil,nil,nil, iAggro));
 }
 
 // Sucht nach Munition und läuft dorthin
 public func SearchAmmo(int iAggro)
 {
   // Nächstbeste Spawnpunkte abklappern
+  iAggro ??= 0;
   for(var pSpawn in FindObjects(Find_ID(SPNP), Sort_Random()))
     // Da ist Munition drin?
     if(pSpawn -> Contents() ->~ IsAmmo())
     	// Einsammelbar?
     	if(pSpawn->CheckCollect(GetOwner(),this()))
       	// Hinlaufen (wir sind gutgläubig und denken, dass wir die auch brauchen)
-      	return(SetMacroCommand(0, "MoveTo", pSpawn, 0,0,0, iAggro));
+        return(SetMacroCommand(nil, "MoveTo", pSpawn, nil,nil,nil, iAggro));
 }
 
 /* Waffenbehandlung wenn nicht im Kampf */
@@ -4060,58 +4148,58 @@ public func CheckIdleWeapon()
 {
   if(Contents())
     // Hack - mit BR-Bombe tut er gar nichts
-    if(Contents()->GetID() == GBRB) return;
+    if(Equal(Contents()->GetID(), GBRB)) return;
   // Keine Waffen im Inventar
-  if(!CustomContentsCount("IsWeapon")) return();
+  if(!CustomContentsCount("IsWeapon")) return;
   // nachladende Waffe in der Hand
   if(Contents()->~IsWeapon())
     if(Contents()->IsReloading())
-      return();
+      return;
      //Log("Inventar nach waffe zum laden durchsuchen");
   // Inventar nach Waffe durchsuchen, die man Nachladen könnte
-  for(var i=0, mode=1, obj, favmode ; obj = Contents(i) ; mode++)
+  for(var i=nil, mode=1, obj, favmode ; obj = Contents(i) ; S42MigrationStep(mode, 1, true))
   {
     // Keine Waffe
     if(!(obj->~IsWeapon()))
     {
      //Log("keine Waffe");
-      i++;
-      mode = 0;
+      S42MigrationStep(i, 1, true);
+      mode = nil;
       continue;
     }
     // Waffe hat gar nicht so viele Modi
     if(!(obj->GetFMData(FM_Name, mode)))
     {
       //Log("Waffe hat nicht genug modi");
-      i++;
-      mode = 0;
+      S42MigrationStep(i, 1, true);
+      mode = nil;
       continue;
     }
     // Waffe ist voll geladen, hier geändert dass nicht /2, sondern auf andrer Seite der gleichung *2, weil 1/2==0 wäre.
-    if(obj->GetAmmo(obj->GetFMData(FM_AmmoID, mode))*2 >= obj->GetFMData(FM_AmmoLoad, mode))
+    if((obj->GetAmmo(obj->GetFMData(FM_AmmoID, mode)) ?? 0)*2 >= (obj->GetFMData(FM_AmmoLoad, mode) ?? 0))
     {
       //Log("waffe ist geladen");
-      i++;
-      mode = 0;
+      S42MigrationStep(i, 1, true);
+      mode = nil;
       continue;
     }
     // EMP-Modi erstmal nicht laden
     if(obj->GetBotData(BOT_EMP, mode)) continue;
     // Waffe ist nachladbar
-    if(CheckAmmo(obj->GetFMData(FM_AmmoID, mode), obj->GetFMData(FM_AmmoLoad, mode) - obj->GetAmmo(obj->GetFMData(FM_AmmoID, mode))))
+    if(CheckAmmo(obj->GetFMData(FM_AmmoID, mode), (obj->GetFMData(FM_AmmoLoad, mode) ?? 0) - (obj->GetAmmo(obj->GetFMData(FM_AmmoID, mode)) ?? 0)))
     {
       mode = obj->GetFireMode();
       break;
     }
     // Nächsten Feuermodus prüfen
-    if(mode == obj->GetFireMode()) continue;
+    if(Equal(mode, obj->GetFireMode())) continue;
     if(CheckAmmo(obj->GetFMData(FM_AmmoID, mode), obj->GetFMData(FM_AmmoLoad, mode)))
       break;
   }
   // Nix gefunden
-  if(!Contents(i)) return();
+  if(!Contents(i)) return;
   // Aha! Waffe wechseln!
-  ShiftContents(this(), 0, obj->GetID());
+  ShiftContents(this(), nil, obj->GetID());
   // Feuermodus wechseln
   obj->SetFireMode(mode);
   // Und Muni reinhauen
@@ -4125,10 +4213,10 @@ public func CheckIdleWeapon()
 // Inventar behandeln
 public func CheckInventory()
 {
-  for(var i=0,obj ; obj = Contents(i) ; i++)
+  for(var i=nil,obj ; obj = Contents(i) ; S42MigrationStep(i, 1, true))
   {
       // BR-Hack
-    if(Contents()->GetID() == GBRB)
+    if(Equal(Contents()->GetID(), GBRB))
     {
       BombingRunBomb();
       break;
@@ -4183,28 +4271,28 @@ public func CheckInventory()
 // Objekt fallen lassen (verzögert, damit die Schleife nicht durcheinander kommt
 public func DropObject(object pObj)
 {
-  Schedule(Format("Exit(Object(%d), 0, 10);", ObjectNumber(pObj)), 1, 0, this());
+  Schedule(Format("Exit(Object(%d), 0, 10);", ObjectNumber(pObj)), 1, nil, this());
   // Nicht wieder einsammeln
   var effect = AddEffect("CollectionException", pObj, 1, 36);
-  EffectVar(0, pObj, effect) = this();
+  EffectVar(nil, pObj, effect) = this();
 }
 
 // Ausrüstung anlegen (verzögert, damit die Schleife nicht durcheinander kommt
 public func ActivateGear(object pObj)
 {
-  ScheduleCall(pObj, "Activate", 1, 0, this());
+  ScheduleCall(pObj, "Activate", 1, nil, this());
 }
 
 // Mine platzieren (verzögert, damit die Schleife nicht durcheinander kommt
 public func PlaceMine(object pObj)
 {
-  ScheduleCall(pObj, "Activate", 1, 0, this());
+  ScheduleCall(pObj, "Activate", 1, nil, this());
 }
 
 // Waffe suchen, die man upgraden kann
 public func GetUpgradeableWeapon(object pObj)
 {
-  for(var i=0,obj ; obj = Contents(i) ; i++)
+  for(var i=nil,obj ; obj = Contents(i) ; S42MigrationStep(i, 1, true))
     if(obj->~IsUpgradeable(pObj->GetID()))
       return(obj);
 }
@@ -4212,13 +4300,13 @@ public func GetUpgradeableWeapon(object pObj)
 // Waffe upgraden (verzögert, damit die Schleife nicht durcheinander kommt
 public func UpgradeWeapon(object pObj, object pWeapon)
 {
-  ScheduleCall(pObj, "UpgradeObject", 1, 0, pWeapon);
+  ScheduleCall(pObj, "UpgradeObject", 1, nil, pWeapon);
 }
 
 // Munition aufnehmen (verzögert, damit die Schleife nicht durcheinander kommt
 public func ActivateAmmo(object pObj)
 {
-  ScheduleCall(pObj, "Activate", 1, 0, this());
+  ScheduleCall(pObj, "Activate", 1, nil, this());
 }
 
 // Hardgecodete Objekte
@@ -4228,13 +4316,13 @@ public func ActivateAmmo(object pObj)
 private func GetRandomDroneWeapon()
 {
   var aWps = CreateArray();
-  for(var i=0,obj ; obj = Contents(i) ; i++)
+  for(var i=nil,obj ; obj = Contents(i) ; S42MigrationStep(i, 1, true))
     if(obj->~IsWeapon())
-      if(obj->GetFMData(FM_Aim)<=0)
-        aWps[GetLength(aWps)] = obj;
+      if((obj->GetFMData(FM_Aim) ?? 0)<=0)
+        aWps[(GetLength(aWps) ?? 0)] = obj;
   // Zufällig zurückgeben
-  if(!GetLength(aWps)) return();
-  return(aWps[Random(GetLength(aWps))]);
+  if(!GetLength(aWps)) return;
+  return(aWps[(Random(GetLength(aWps)) ?? 0)]);
 }
 
 // BR-Bombe
@@ -4244,15 +4332,15 @@ protected func BombingRunBomb()
   var nextding, distance = -1;
   for(var pGate in FindObjects(Find_ID(GBRG)))
   {
-    if(pGate->GetGoalTeam() == GetPlayerTeam(GetOwner())) continue;
-    if(distance == -1)
+    if(Equal(pGate->GetGoalTeam(), GetPlayerTeam(GetOwner()))) continue;
+    if(Equal(distance, -1))
     {
       nextding = pGate;
       distance = ObjectDistance(pGate);
     }
     else
     {
-      if(ObjectDistance(pGate) < distance)
+      if((ObjectDistance(pGate) ?? 0) < (distance ?? 0))
       {
         nextding = pGate;
         distance = ObjectDistance(pGate);
@@ -4260,24 +4348,24 @@ protected func BombingRunBomb()
     }
   }
   // Tor ist zu weit weg?
-  if(distance > 200)
+  if((distance ?? 0) > 200)
   {
     distance = -1;
-    nextding = false;
+    nextding = nil;
   }
   // Freunde suchen, wenn der Timer abläuft
-  if(!nextding && Contents()->GetBombTimer() <= 100)
+  if(And(!nextding, (Contents()->GetBombTimer() ?? 0) <= 100))
   {
     for(var pFriend in FindObjects(Find_OCF(OCF_CrewMember), Find_Allied(GetOwner()), Find_Exclude(this)))
     {
-      if(distance == -1)
+      if(Equal(distance, -1))
       {
         nextding = pFriend;
         distance = ObjectDistance(pFriend);
       }
       else
       {
-        if(ObjectDistance(pFriend) < distance)
+        if((ObjectDistance(pFriend) ?? 0) < (distance ?? 0))
         {
           nextding = pFriend;
           distance = ObjectDistance(pFriend);
@@ -4290,16 +4378,16 @@ protected func BombingRunBomb()
   {
 
     // Ziel ist in Reichweite?
-    if(distance <= 200 && PathFree(GetX(), GetY(), nextding->GetX(), nextding->GetY()))
+    if(And((distance ?? 0) <= 200, PathFree(GetX(), GetY(), nextding->GetX(), nextding->GetY())))
     {
       // Winkel bestimmen
       var angle = Angle(GetX(), GetY(), nextding->GetX(), nextding->GetY());
 
       // Winkel stimmt!
-      if(Inside(angle, 70, 110) || Inside(angle, 250, 290))
+      if(Or(Inside(angle, 70, 110), Inside(angle, 250, 290)))
       {
 		if(ReadyToFire()) {
-	        if(GetX() < nextding->GetX())
+	        if((GetX() ?? 0) < (nextding->GetX() ?? 0))
 	          SetDir(DIR_Right);
 	        else
 	          SetDir(DIR_Left);
@@ -4317,9 +4405,9 @@ protected func BombingRunBomb()
         else
         {
           // Feuer frei!
-          if(GetDir() == DIR_Left)
-            angle = 360-angle;
-          angle = BoundBy(angle-10, 0, AIM_Max);
+          if(Equal(GetDir(), DIR_Left))
+            angle = 360-(angle ?? 0);
+          angle = BoundBy((angle ?? 0)-10, nil, AIM_Max);
           crosshair->SetAngle(angle);
           UpdateAiming();
           Contents()->ControlThrow();
@@ -4337,59 +4425,59 @@ hatschutzanzug=1;
 
 func Schutzanzugaus()
 {
-hatschutzanzug=0;
+hatschutzanzug=nil;
 }
 
 func HatSchutzAnzugan()
 {
 if(hatschutzanzug) return(true);
-if(!(hatschutzanzug)) return(false);
+if(!(hatschutzanzug)) return(nil);
 }
 
 
 // pinguinanzug unter wasser arbeiten
 func CheckObjectAvailability (obj)
 {
-if(!(pinguin)) return(0);
+if(!(pinguin)) return(nil);
     // Object is near enough
-    if (!Inside (GetX () - GetX (obj), -500, +500)) return ();
-    if (!Inside (GetY () - GetY (obj), -250, +250)) return ();
+    if (!Inside ((GetX () ?? 0) - (GetX (obj) ?? 0), -500, +500)) return ;
+    if (!Inside ((GetY () ?? 0) - (GetY (obj) ?? 0), -250, +250)) return ;
     // Object is not connected to a pipe (for line construction kits)
-    if (FindObject (SPIP, 0, 0, 0, 0, 0, "Connect", obj)) return ();
-    if (FindObject (DPIP, 0, 0, 0, 0, 0, "Connect", obj)) return ();
+    if (FindObject (SPIP, nil, nil, nil, nil, nil, "Connect", obj)) return ;
+    if (FindObject (DPIP, nil, nil, nil, nil, nil, "Connect", obj)) return ;
     // Must be complete
-    if (~GetOCF (obj) & OCF_Fullcon) return ();
+    if (~(GetOCF (obj) ?? 0) & (OCF_Fullcon ?? 0)) return ;
     // Doesn't burn
-    if (OnFire (obj)) return ();
+    if (OnFire (obj)) return ;
     // Go!
     return (obj);
 }
 
 func GetAvailableObject (def, xobj)
 {
-if(!(pinguin)) return(0);
+if(!(pinguin)) return(nil);
   var obj;
   // Next closest normal available or in liquid
-  while (obj = FindObject (def, 0, 0, -1, -1, OCF_Available | OCF_InLiquid, 0, 0, 0, obj))
+  while (obj = FindObject (def, nil, nil, -1, -1, (OCF_Available ?? 0) | (OCF_InLiquid ?? 0), nil, nil, nil, obj))
   {
-    if (ObjectDistance (obj) > 559) { obj = 0; break; }
+    if ((ObjectDistance (obj) ?? 0) > 559) { obj = nil; break; }
     if (!CheckObjectAvailability (obj)) continue;
     // Not contained in xobj
-    if (!(Contained (obj) == xobj) || !xobj)
+    if (Or(!(Equal(Contained (obj), xobj)), !xobj))
       // We found one
       break;
   }
   if (obj) return (obj);
   // Next closest in container (because containers are sunk here, nothing in them is "available"...)
-  while (obj = FindObject (def, 0, 0, -1, -1, OCF_Fullcon, 0, 0, AnyContainer(), obj))
+  while (obj = FindObject (def, nil, nil, -1, -1, OCF_Fullcon, nil, nil, AnyContainer(), obj))
   //while (obj = FindObject (def, 0, 0, -1, -1, OCF_Fullcon(), 0, 0, 0, obj))
   {
-    if (ObjectDistance (obj) > 559) { obj = 0; break; }
+    if ((ObjectDistance (obj) ?? 0) > 559) { obj = nil; break; }
     if (!CheckObjectAvailability (obj)) continue;
     // Not contained in xobj
-    if (Contained (obj) == xobj) continue;
+    if (Equal(Contained (obj), xobj)) continue;
     // The Container must be accessible (Same as for OCF_Available)
-    if (GetDefCoreVal ("GrabPutGet", 0, GetID (Contained(obj))) & C4D_GrabGet || GetOCF (Contained(obj)) & OCF_Entrance)
+    if (Or((GetDefCoreVal ("GrabPutGet", nil, GetID (Contained(obj))) ?? 0) & (C4D_GrabGet ?? 0), (GetOCF (Contained(obj)) ?? 0) & (OCF_Entrance ?? 0)))
     // We found one
       break;
   }
@@ -4399,10 +4487,10 @@ if(!(pinguin)) return(0);
 
 public func ControlCommandAcquire(target, x, y, target2, def)
 {
-if(!(pinguin)) return(0);
+if(!(pinguin)) return(nil);
   //Falls das Teil rumliegt nur aufsammeln
   var obj = GetAvailableObject (def, target2);
-  if (obj) return (1, AddCommand (this(), "Get", obj,0,0,0,40));
+  if (obj) return (S42MigrationFirst(1, AddCommand (this(), "Get", obj,nil,nil,nil,40)));
   return (inherited (target,x,y,target2,def));
 }
 
@@ -4462,32 +4550,32 @@ pinguin=1;
 
 func Pinguinaus()
 {
-pinguin=0;
+pinguin=nil;
 }
 
 // Ammogürtel, bekommt die Zahl vom Gürtel geliefert
 func GetMoreAmmo(zzaahhll)
 {
-if(zzaahhll==1) mehrmunition1=1;
-if(zzaahhll==2) mehrmunition2=1;
-if(zzaahhll==3) mehrmunition3=1;
-if(zzaahhll==4) mehrmunition4=1;
-if(zzaahhll==5) mehrmunition5=1;
-if(zzaahhll==6) mehrmunition6=1;
-if(zzaahhll==7) mehrmunition7=1;
-if(zzaahhll==8) mehrmunition8=1;
-if(zzaahhll==9) mehrmunition9=1;
-if(zzaahhll==10) mehrmunition10=1;
-if(zzaahhll==11) mehrmunition11=1;
-if(zzaahhll==12) mehrmunition12=1;
-if(zzaahhll==13) mehrmunition13=1;
-if(zzaahhll==14) mehrmunition14=1;
-if(zzaahhll==15) mehrmunition15=1;
-if(zzaahhll==16) mehrmunition16=1;
-if(zzaahhll==17) mehrmunition17=1;
-if(zzaahhll==18) mehrmunition18=1;
-if(zzaahhll==19) mehrmunition19=1;
-if(zzaahhll==20) mehrmunition20=1;
+if(Equal(zzaahhll, 1)) mehrmunition1=1;
+if(Equal(zzaahhll, 2)) mehrmunition2=1;
+if(Equal(zzaahhll, 3)) mehrmunition3=1;
+if(Equal(zzaahhll, 4)) mehrmunition4=1;
+if(Equal(zzaahhll, 5)) mehrmunition5=1;
+if(Equal(zzaahhll, 6)) mehrmunition6=1;
+if(Equal(zzaahhll, 7)) mehrmunition7=1;
+if(Equal(zzaahhll, 8)) mehrmunition8=1;
+if(Equal(zzaahhll, 9)) mehrmunition9=1;
+if(Equal(zzaahhll, 10)) mehrmunition10=1;
+if(Equal(zzaahhll, 11)) mehrmunition11=1;
+if(Equal(zzaahhll, 12)) mehrmunition12=1;
+if(Equal(zzaahhll, 13)) mehrmunition13=1;
+if(Equal(zzaahhll, 14)) mehrmunition14=1;
+if(Equal(zzaahhll, 15)) mehrmunition15=1;
+if(Equal(zzaahhll, 16)) mehrmunition16=1;
+if(Equal(zzaahhll, 17)) mehrmunition17=1;
+if(Equal(zzaahhll, 18)) mehrmunition18=1;
+if(Equal(zzaahhll, 19)) mehrmunition19=1;
+if(Equal(zzaahhll, 20)) mehrmunition20=1;
 }
 
 
@@ -4495,26 +4583,26 @@ if(zzaahhll==20) mehrmunition20=1;
 
 func GetNormalAmmo()
 {
-mehrmunition1=0;
-mehrmunition2=0;
-mehrmunition3=0;
-mehrmunition4=0;
-mehrmunition5=0;
-mehrmunition6=0;
-mehrmunition7=0;
-mehrmunition8=0;
-mehrmunition9=0;
-mehrmunition10=0;
-mehrmunition11=0;
-mehrmunition12=0;
-mehrmunition13=0;
-mehrmunition14=0;
-mehrmunition15=0;
-mehrmunition16=0;
-mehrmunition17=0;
-mehrmunition18=0;
-mehrmunition19=0;
-mehrmunition20=0;
+mehrmunition1=nil;
+mehrmunition2=nil;
+mehrmunition3=nil;
+mehrmunition4=nil;
+mehrmunition5=nil;
+mehrmunition6=nil;
+mehrmunition7=nil;
+mehrmunition8=nil;
+mehrmunition9=nil;
+mehrmunition10=nil;
+mehrmunition11=nil;
+mehrmunition12=nil;
+mehrmunition13=nil;
+mehrmunition14=nil;
+mehrmunition15=nil;
+mehrmunition16=nil;
+mehrmunition17=nil;
+mehrmunition18=nil;
+mehrmunition19=nil;
+mehrmunition20=nil;
 // wenn aktuelle Munition mehr ist, als es ohne Gürtel möglich sein sollte:
 
 }
@@ -4522,160 +4610,160 @@ mehrmunition20=0;
 // Projektile klein groß
 func MoreAmmo1()
 {
-if(mehrmunition1==1) return(true);
-return(false);
+if(Equal(mehrmunition1, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo2()
 {
-if(mehrmunition2==1) return(true);
-return(false);
+if(Equal(mehrmunition2, 1)) return(true);
+return(nil);
 }
 
 // Energie
 func MoreAmmo3()
 {
-if(mehrmunition3==1) return(true);
-return(false);
+if(Equal(mehrmunition3, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo4()
 {
-if(mehrmunition4==1) return(true);
-return(false);
+if(Equal(mehrmunition4, 1)) return(true);
+return(nil);
 }
 
 //Grananten
 func MoreAmmo5()
 {
-if(mehrmunition5==1) return(true);
-return(false);
+if(Equal(mehrmunition5, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo6()
 {
-if(mehrmunition6==1) return(true);
-return(false);
+if(Equal(mehrmunition6, 1)) return(true);
+return(nil);
 }
 
 //Benzin
 func MoreAmmo7()
 {
-if(mehrmunition7==1) return(true);
-return(false);
+if(Equal(mehrmunition7, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo8()
 {
-if(mehrmunition8==1) return(true);
-return(false);
+if(Equal(mehrmunition8, 1)) return(true);
+return(nil);
 }
 
 //Raketen
 func MoreAmmo9()
 {
-if(mehrmunition9==1) return(true);
-return(false);
+if(Equal(mehrmunition9, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo10()
 {
-if(mehrmunition10==1) return(true);
-return(false);
+if(Equal(mehrmunition10, 1)) return(true);
+return(nil);
 }
 
 //BetterBullets
 func MoreAmmo11()
 {
-if(mehrmunition11==1) return(true);
-return(false);
+if(Equal(mehrmunition11, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo12()
 {
-if(mehrmunition12==1) return(true);
-return(false);
+if(Equal(mehrmunition12, 1)) return(true);
+return(nil);
 }
 
 // Schrotkugeln
 func MoreAmmo13()
 {
-if(mehrmunition13==1) return(true);
-return(false);
+if(Equal(mehrmunition13, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo14()
 {
-if(mehrmunition14==1) return(true);
-return(false);
+if(Equal(mehrmunition14, 1)) return(true);
+return(nil);
 }
 
 //SniperKugeln
 func MoreAmmo15()
 {
-if(mehrmunition15==1) return(true);
-return(false);
+if(Equal(mehrmunition15, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo16()
 {
-if(mehrmunition16==1) return(true);
-return(false);
+if(Equal(mehrmunition16, 1)) return(true);
+return(nil);
 }
 
 //Partikel
 func MoreAmmo17()
 {
-if(mehrmunition17==1) return(true);
-return(false);
+if(Equal(mehrmunition17, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmo18()
 {
-if(mehrmunition18==1) return(true);
-return(false);
+if(Equal(mehrmunition18, 1)) return(true);
+return(nil);
 }
 
 
 func MoreAmmoAllrounder1()
 {
-if(mehrmunition19==1) return(true);
-return(false);
+if(Equal(mehrmunition19, 1)) return(true);
+return(nil);
 }
 
 func MoreAmmoAllrounder2()
 {
-if(mehrmunition20==1) return(true);
-return(false);
+if(Equal(mehrmunition20, 1)) return(true);
+return(nil);
 }
 
 
 func Klimaschutz(klima)
 {
 //Kälte
-if(klima==1)
+if(Equal(klima, 1))
 {
 //wenn schutzkleidung, dann kein Schaden
-if(hatschutzanzug || pinguin || hatanorak) return(1);
+if(Or(Or(hatschutzanzug, pinguin), hatanorak)) return(1);
 // wenn etwas in der Nähe brennt, oder Fackel oder lagerfeuer, kein Schaden.
 var feuer;
 if(feuer = FindObject2(Find_Distance(80),Find_Or(Find_OCF(OCF_OnFire),Find_ID(LAGF),Find_ID(TORC))))
 {
 //nur wenn Feuer brennt
-if(GetID(feuer)==LAGF) if(!(GetAction(feuer) eq "Burn")) return(0);
- if(GetID(feuer)==TORC) if(!(GetAction(feuer) eq "Burning")) return(0);
+if(Equal(GetID(feuer), LAGF)) if(!(!!SEqual(GetAction(feuer), "Burn"))) return(nil);
+ if(Equal(GetID(feuer), TORC)) if(!(!!SEqual(GetAction(feuer), "Burning"))) return(nil);
   return(1);}
-return(0);
+return(nil);
 }
 
 //Hitze
-if(klima==2)
+if(Equal(klima, 2))
 {
 //wenn schutzkleidung, dann kein Schaden
 if(hatschutzanzug) return(1);
 //Wenn in Flüssigkeit, kein schaden.
-if(GetOCF() & OCF_InLiquid()) return(1);
-return(0);
+if((GetOCF() ?? 0) & (OCF_InLiquid ?? 0)) return(1);
+return(nil);
 }
 
 }
@@ -4688,9 +4776,9 @@ return(0);
 public func Serialize(array& extra)
 {
 	var x, ammo;
-	while(ammo = Contents(x++,ammobag)) {
+	while(ammo = Contents(S42MigrationStep(x, 1, true),ammobag)) {
 		if(!(ammo ->~IsAmmo())) continue;
-		extra[GetLength(extra)] = Format("DoAmmo(%i,%d)", GetID(ammo), GetAmmo(GetID(ammo)));
+		extra[(GetLength(extra) ?? 0)] = Format("DoAmmo(%i,%d)", GetID(ammo), GetAmmo(GetID(ammo)));
 	}
 }
 
@@ -4705,26 +4793,26 @@ func IsMutant() { return(1); }
 
 func ControlSpecial2()
 {
- if (GetProcedure() eq "WALK" && Contents())
+ if (And(!!SEqual(GetProcedure(), "WALK"), Contents()))
   if (Contents()->~IsGrenade())
    SetAction("ThrowGrenade");
- if (GetProcedure() eq "WALK") SetAction("Kick"); 
+ if (!!SEqual(GetProcedure(), "WALK")) SetAction("Kick");
  return(1);
 }
 
 func ThrowGrenade()
 {
- if (GetPhase() != 4) return(0);
+ if (!Equal(GetPhase(), 4)) return(nil);
  var Cont = Contents();
- if (!Cont) return(0);
+ if (!Cont) return(nil);
  Sound("ThrowGrenade");
- Exit(Cont,-5+GetDir()*10,0,0,-5+GetDir()*10,-3,Random(200));
+ Exit(Cont,-5+(GetDir() ?? 0)*10,nil,nil,-5+(GetDir() ?? 0)*10,-3,Random(200));
  return(1);
 }
 
 func Stab()
 {
- if (GetPhase() != 3) return(0);
+ if (!Equal(GetPhase(), 3)) return(nil);
  for (var prey in FindObjects(Find_Distance(10),Find_OCF(OCF_Alive),Find_Owner(NO_OWNER)))
   Punch(prey,RandomX(12,20));  
  return(1);
@@ -4732,10 +4820,10 @@ func Stab()
 
 func Kick()
 {
- if (GetPhase() != 3) return(0);
+ if (!Equal(GetPhase(), 3)) return(nil);
  for (var prey in FindObjects(Find_Distance(5),Find_Exclude(),Find_Or(Find_OCF(OCF_Rotate),Find_OCF(OCF_Living))))
-  if (GetAlive(prey)) Fling(prey,-2+GetDir()*4,-1);
-   else if (SetXDir(-8+GetDir()*16,prey)) SetYDir(-50,prey);
+  if (GetAlive(prey)) Fling(prey,-2+(GetDir() ?? 0)*4,-1);
+   else if (SetXDir(-8+(GetDir() ?? 0)*16,prey)) SetYDir(-50,prey);
  return(1);
 }
 
@@ -4744,7 +4832,7 @@ protected func Death()
 {
   GameCallEx("Zaehler16");
  SetAction("BigAttack");
- CastParticles("PSpark",Random(40),Random(80),0,0,0,Random(150),RGB(100,0,0));
+ CastParticles("PSpark",Random(40),Random(80),nil,nil,nil,Random(150),RGB(100,nil,nil));
  Incinerate();
  FadeOut();
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Schedule("Explode(50)",50);
@@ -4757,16 +4845,16 @@ func ContactRight() { ChangeDir(); }
 
 func Activity()
 {
- if (!GetAlive()) return(0);
+ if (!GetAlive()) return(nil);
  //if(!Random(3)) DoEnergy(+Random(1));
  if (Stuck()) DigFree(GetX(),GetY(),16);
- for (var obj in FindObjects(Find_NoContainer(),Find_Not(Find_Owner(-1)),Find_OCF(OCF_Alive|OCF_CrewMember),
+ for (var obj in FindObjects(Find_NoContainer(),Find_Not(Find_Owner(-1)),Find_OCF((OCF_Alive ?? 0)|(OCF_CrewMember ?? 0)),
 //Find_Func("IsAttackable"),
 Find_Distance(300)))
   if (SetCommand(this(),"MoveTo",obj))
-   SetDir(GetX()<GetX(obj));
- for (var clonk in FindObjects(Find_NoContainer(),Find_InRect(-200+GetDir()*200,-20,200,20),Find_Not(Find_Owner(-1)),Find_OCF(OCF_CrewMember|OCF_Alive)))
-   if (GetProcedure() ne "THROW") 
+   SetDir((GetX() ?? 0)<(GetX(obj) ?? 0));
+ for (var clonk in FindObjects(Find_NoContainer(),Find_InRect(-200+(GetDir() ?? 0)*200,-20,200,20),Find_Not(Find_Owner(-1)),Find_OCF((OCF_CrewMember ?? 0)|(OCF_Alive ?? 0))))
+   if (!SEqual(GetProcedure(), "THROW"))
     if (!Random(8))
      SetAction("Attack");
  if (!Random(16))
@@ -4777,9 +4865,9 @@ Find_Distance(300)))
 
 func CheckClonks()
 {
- for (var clonk in FindObjects(Find_NoContainer(),Find_Not(Find_Owner(-1)),Find_InRect(-80+GetDir()*80,-20,80,20),Find_OCF(OCF_Alive)))
+ for (var clonk in FindObjects(Find_NoContainer(),Find_Not(Find_Owner(-1)),Find_InRect(-80+(GetDir() ?? 0)*80,-20,80,20),Find_OCF(OCF_Alive)))
   if (Punch(clonk,Random(35)))
-   Fling(clonk,-7+GetDir()*14,-Random(5));
+   Fling(clonk,-7+(GetDir() ?? 0)*14,-(Random(5) ?? 0));
  Sound("MireokAttack");
  return(1);
 }
@@ -4789,13 +4877,13 @@ func MakeDestruction()
  for (var clonk in FindObjects(Find_Not(Find_Owner(-1)),Find_Distance(100),Find_Exclude(),Find_Or(Find_Category(C4D_Object),Find_Category(C4D_Living))))
  {
   if (Punch(clonk,Random(90)))
-   Fling(clonk,-20+GetDir()*40,-Random(5));
+   Fling(clonk,-20+(GetDir() ?? 0)*40,-(Random(5) ?? 0));
   DoDamage(Random(30),clonk);
   SetXDir(RandomX(-10,10),clonk);
   SetXDir(RandomX(-10,10),clonk);
   if (!Random(30)) Incinerate(clonk);
  }
- CreateParticle("Wave",0,0,RandomX(-10,10),RandomX(-10,10),3000,RGB(255,0,255));
+ CreateParticle("Wave",nil,nil,RandomX(-10,10),RandomX(-10,10),3000,RGB(255,nil,255));
  Sound("MireokAttack");
  return(1);
 }
@@ -4803,21 +4891,23 @@ func MakeDestruction()
 public func OnDmg(int iDamage, int iType)
 {
   // Explosionsschaden
-  if(iType == DMG_Explosion)    return(-20);  
+  iDamage ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Explosion))    return(-20);
   // Energieschaden
-  if(iType == DMG_Energy)     return(50);  
+  if(Equal(iType, DMG_Energy))     return(50);
   // Projektilschaden
-  if(iType == DMG_Projectile)    return(50);  
+  if(Equal(iType, DMG_Projectile))    return(50);
   // Feuerschaden
-  if(iType == DMG_Fire)    return(-80);  
+  if(Equal(iType, DMG_Fire))    return(-80);
   // Bioschaden
-  if(iType == DMG_Bio)    return(20);  
+  if(Equal(iType, DMG_Bio))    return(20);
   // Nahkampfschaden
-  if(iType == DMG_Melee)    return(60);  
+  if(Equal(iType, DMG_Melee))    return(60);
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)    return(30);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
+  if(Equal(iType, DMG_BetterProjectile))    return(30);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 
- return(0);
+ return(nil);
 }
 
 func ChangeDir()

@@ -1,6 +1,6 @@
 /*-- Haken --*/
 
-#strict
+#strict 3
 
 local Flaschenzug,Drehrad;
 local RangeTop,TargetPos;
@@ -19,26 +19,26 @@ public func Init(pBuilding,pWheel)
 
 private func TimerCall()
 {
-  if(!Flaschenzug) return(0,SetAction("Idle"));
+  if(!Flaschenzug) return(S42MigrationFirst(nil,SetAction("Idle")));
 }
 
 public func DoControlUp(pClonk)
 {
-  if(!Flaschenzug) return(0,SetAction("Idle"));
-  if(!KeyIsOccupied()) return(0);
+  if(!Flaschenzug) return(S42MigrationFirst(nil,SetAction("Idle")));
+  if(!KeyIsOccupied()) return(nil);
   Sound("Click");
-  if(Hostile(GetController(pClonk),GetOwner())) return(0);
-  SetComDir(COMD_Up());
+  if(Hostile(GetController(pClonk),GetOwner())) return(nil);
+  SetComDir(COMD_Up);
   SetAction("FloatUp");  
 }
 
 public func DoControlDown(pClonk)
 {
-  if(!Flaschenzug) return(0,SetAction("Idle"));
-  if(!KeyIsOccupied()) return(0);
+  if(!Flaschenzug) return(S42MigrationFirst(nil,SetAction("Idle")));
+  if(!KeyIsOccupied()) return(nil);
   Sound("Click");
-  if(Hostile(GetController(pClonk),GetOwner())) return(0);
-  SetComDir(COMD_Down());
+  if(Hostile(GetController(pClonk),GetOwner())) return(nil);
+  SetComDir(COMD_Down);
   SetAction("Float");
 }
 
@@ -50,16 +50,16 @@ public func DoControlDig(pClonk)
 
 public func Stop()
 {
-  if(!Flaschenzug) return(0,SetAction("Idle"));
+  if(!Flaschenzug) return(S42MigrationFirst(nil,SetAction("Idle")));
   ObjectSetAction(Drehrad,"Normal");
   SetAction("Wait");
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetYDir();
 }
 
 private func RangeTopCheck()
 {
-  if(GetY()<= RangeTop) return(Stop());
+  if((GetY() ?? 0)<= (RangeTop ?? 0)) return(Stop());
 }
 
 private func ContactBottom()
@@ -74,7 +74,7 @@ private func Waiting()
 private func FindContainer()
 {
   var obj;
-  while(obj=FindObject(0,-20,-20,40,40,0,0,0,NoContainer(),obj))
+  while(obj=FindObject(nil,-20,-20,40,40,nil,nil,nil,NoContainer(),obj))
    if(ObjectCall(obj,"IsContainer"))
     return(obj);
 }
@@ -82,7 +82,7 @@ private func FindContainer()
 private func FindAttachedContainer()
 {
   var obj;
-  while(obj=FindObject(0,-20,-20,40,40,0,0,this(),NoContainer(),obj))
+  while(obj=FindObject(nil,-20,-20,40,40,nil,nil,this(),NoContainer(),obj))
    if(ObjectCall(obj,"IsContainer"))
     return(obj);
 }
@@ -90,10 +90,10 @@ private func FindAttachedContainer()
 protected func Destruction()
 {
   var obj;
-  if(obj= FindObject(GHLP,0,0,0,0,0,"Attach",this()))
+  if(obj= FindObject(GHLP,nil,nil,nil,nil,nil,"Attach",this()))
     {
     var line;
-    if(line= FindObject(PWRL,0,0,0,0,0,"Connect",obj)) RemoveObject(line);
+    if(line= FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",obj)) RemoveObject(line);
     RemoveObject(obj);
     }
 }
@@ -117,7 +117,7 @@ public func GetYPos() { return(-10); }
 public func CallStop_Menu() { return(1); }
 
 // bool - Bedingung, damit im Drehrad ein Menüeintrag hinzugefügt wird
-public func Condition_MenuItem() { return(FindContainer() || FindAttachedContainer()); }
+public func Condition_MenuItem() { return(Or(FindContainer(), FindAttachedContainer())); }
 
 // string - Text für den Menüeintrag (von dem oben die Rede war)
 public func GetMenuCaptain()
@@ -136,15 +136,15 @@ public func UseTool(pObject)
   if(FindAttachedContainer())
     {
     ObjectSetAction(FindAttachedContainer(),"Idle");
-    SetVertexXY(2,0,4);
+    SetVertexXY(2,nil,4);
     }
   else
     {
     var container= FindContainer();
     if(pObject) container= pObject;
     ObjectSetAction(container,"Attach",this());
-    SetVertexXY(2,0,container->~ GetToolVertexY());
-    while(Stuck()) SetPosition(GetX(),GetY()-1);
+    SetVertexXY(2,nil,container->~ GetToolVertexY());
+    while(Stuck()) SetPosition(GetX(),(GetY() ?? 0)-1);
     }
 }
 

@@ -1,6 +1,6 @@
 /*-- EMP Granate --*/
 
-#strict
+#strict 3
 
 // Ist eine Granate
 #include GREN
@@ -14,9 +14,9 @@ func HitObject()
 func CreateEMPWave()
 {
     Sound("EMP");
-    CreateObject(SHCK, 0, 0, GetOwner())->SetMaxSize(iDamage);
+    CreateObject(SHCK, nil, nil, GetOwner())->SetMaxSize(iDamage);
 }
 
 func ExplodeDelay() { if(explodedelay) {return(explodedelay);}; return(50); }
 
-func IsExplosiv() {return(0);}
+func IsExplosiv() {return(nil);}

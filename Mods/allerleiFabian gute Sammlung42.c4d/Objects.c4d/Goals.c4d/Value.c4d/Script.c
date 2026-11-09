@@ -1,6 +1,6 @@
 /*-- Siedlungspunkte --*/
 
-#strict
+#strict 3
 #include GOAL
 
 // Punktzahl
@@ -12,7 +12,7 @@ protected func Initialize()
   var pGoal;
   if (pGoal = FindObject(GetID()))
   { 
-    LocalN("TargetScore", pGoal) += 100;
+    S42MigrationAssign(LocalN("TargetScore", pGoal), "+=", 100);
     return(RemoveObject()); 
   }
   // Punktzahl setzen
@@ -23,11 +23,11 @@ protected func Initialize()
 private func AllPlayersHaveValue(iValue)
 {
   var iPlayers,i;
-  for (iPlayers = GetPlayerCount(); iPlayers; i++)
+  for (iPlayers = GetPlayerCount(); iPlayers; S42MigrationStep(i, 1, true))
     if (GetPlayerName(i))
     {
-      iPlayers--;
-      if (GetPlrValueGain(i) < iValue) return(0);
+      S42MigrationStep(iPlayers, -1, true);
+      if ((GetPlrValueGain(i) ?? 0) < (iValue ?? 0)) return(nil);
     }
   return(1);
 }
@@ -40,7 +40,7 @@ public func IsFulfilled()
 
 public func IsFulfilledforPlr(iPlr) 
 {
-  return (GetPlrValueGain(iPlr) >= TargetScore);
+  return ((GetPlrValueGain(iPlr) ?? 0) >= (TargetScore ?? 0));
 }
 
 protected func Activate(iPlayer)

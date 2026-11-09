@@ -1,6 +1,6 @@
 /*-- Schutzanzug --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local derclonk;  // magical physics
@@ -29,7 +29,7 @@ func MakeGraphic(pClonk)
   var iPortraitCount = 2; 
   var strGraphics = "Schutzanzug";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, _Y4C, 0, 0);
+  SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, _Y4C, nil, nil);
 }
 
 public func GearEffectReset(object pClonk)
@@ -42,32 +42,32 @@ ResetPhysical(pClonk, "CorrosionResist");
 if(stuufe)
 {
 
-if(stuufe>=1 && stuufe<=9)
+if(And((stuufe ?? 0)>=1, (stuufe ?? 0)<=9))
 {SetGraphics("Normal",pClonk);  //Hazardclonk mit Clonkgrafik
   var iPortraitCount = 5; 
   var strGraphics = "";
-SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, CLNK, 0, 0);}
+SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, CLNK, nil, nil);}
 
-if(stuufe>=10 && stuufe<=14 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=14), !(pClonk->~IstBauarbeiter())))
 {SetPortrait("random", pClonk, S_XX); SetGraphics("SG1",pClonk);}  //Hazardclonk mit SG1 Grafik
 
 // Bisher nur eine Grafik für alle Stufen ab 10
-if(stuufe>=10 && stuufe<=20 && pClonk->~IstBauarbeiter())
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=20), pClonk->~IstBauarbeiter()))
 { SetPortrait("random", pClonk, X_12); 
 SetGraphics("Bauer",pClonk);}  //Hazardclonk mit Arbeiter Grafik
 
-if(stuufe>=15 && stuufe<=19 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=15, (stuufe ?? 0)<=19), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}  //Hazardclonk Grafik
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}  //Hazardclonk Grafik
 
-if(stuufe==20 && !(pClonk->~IstBauarbeiter()))
+if(And(Equal(stuufe, 20), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("Future",pClonk);
 SetPortrait("FutureP", pClonk, HZCK);} //Hazardclonk Future Grafik, Future Portrait
 }
 
   // reset graphics and portrait
  else{ SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}
   Sound("Connect");
 pClonk->Schutzanzugaus();
 }
@@ -76,27 +76,29 @@ pClonk->Schutzanzugaus();
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   //Melee
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(1);     // 
   //Projectile
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(1);     // 
   //Flame
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(1);   // 
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(1);     // 
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(1);    // 
   //Plazma
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(1);     // 
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
+  if(Equal(iType, DMG_BetterProjectile))
     return(1);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 }
 

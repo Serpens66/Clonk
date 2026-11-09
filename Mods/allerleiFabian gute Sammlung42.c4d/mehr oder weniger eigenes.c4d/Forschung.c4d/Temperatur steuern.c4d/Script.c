@@ -1,6 +1,6 @@
 /*-- Temp steuernn --*/
 
-#strict
+#strict 3
 
 // wird direkt in Luftreiniger skript gemacht
 

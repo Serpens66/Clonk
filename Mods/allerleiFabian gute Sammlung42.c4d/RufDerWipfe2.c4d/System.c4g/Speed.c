@@ -1,6 +1,6 @@
 /*-- ZeitMultiplikator --*/
 
-#strict
+#strict 3
 
 global func GetTimeMultiplicator()
 {

@@ -1,6 +1,6 @@
 /*-- Landepadpanel--*/
 
-#strict
+#strict 3
 
 //tolle Waffenliste!
 local aWare;
@@ -15,37 +15,37 @@ func Initialize() {
 
 
 public func SortWare() {
-  if(GetLength(aWare) != GetLength(aCount))
+  if(!Equal(GetLength(aWare), GetLength(aCount)))
     return(Log("Waffenautomat-PANICK. Den Devs melden!"));
   
   var length;
-  while(Par(length++));
+  while(Par(S42MigrationStep(length, 1, true)));
   
   var ware = CreateArray(), count = CreateArray();
   
   //Nach Kategorie sortieren
-  for(var y = 0; y < length; y++) {
-    ware[y] = CreateArray();
-    count[y] = CreateArray();
-    for(var x = 0; x < GetLength(aWare); x++) {
-      if(DefinitionCall(aWare[x],Par(y))) {
-        AddToArray(ware[y],aWare[x]);
-        AddToArray(count[y],aCount[x]);
+  for(var y = nil; (y ?? 0) < (length ?? 0); S42MigrationStep(y, 1, true)) {
+    ware[(y ?? 0)] = CreateArray();
+    count[(y ?? 0)] = CreateArray();
+    for(var x = nil; (x ?? 0) < (GetLength(aWare) ?? 0); S42MigrationStep(x, 1, true)) {
+      if(DefinitionCall(aWare[(x ?? 0)],Par(y))) {
+        AddToArray(ware[(y ?? 0)],aWare[(x ?? 0)]);
+        AddToArray(count[(y ?? 0)],aCount[(x ?? 0)]);
       }
     }
   }
   
   //Nach Preis sortieren
-  for(var y = 0; y < length; y++) {
-    for(var x = 0; x < GetLength(ware[y]); x++) {
-      for(var z = x+1; z < GetLength(ware[y]); z++) {
-        if(GetDefValue(ware[y][z]) < GetDefValue(ware[y][x])) {
-          var tmp = ware[y][x];
-          ware[y][x] = ware[y][z];
-          ware[y][z] = tmp;
-          tmp = count[y][x];
-          count[y][x] = count[y][z];
-          count[y][z] = tmp;
+  for(var y = nil; (y ?? 0) < (length ?? 0); S42MigrationStep(y, 1, true)) {
+    for(var x = nil; (x ?? 0) < (GetLength(ware[(y ?? 0)]) ?? 0); S42MigrationStep(x, 1, true)) {
+      for(var z = (x ?? 0)+1; (z ?? 0) < (GetLength(ware[(y ?? 0)]) ?? 0); S42MigrationStep(z, 1, true)) {
+        if((GetDefValue(ware[(y ?? 0)][(z ?? 0)]) ?? 0) < (GetDefValue(ware[(y ?? 0)][(x ?? 0)]) ?? 0)) {
+          var tmp = ware[(y ?? 0)][(x ?? 0)];
+          ware[(y ?? 0)][(x ?? 0)] = ware[(y ?? 0)][(z ?? 0)];
+          ware[(y ?? 0)][(z ?? 0)] = tmp;
+          tmp = count[(y ?? 0)][(x ?? 0)];
+          count[(y ?? 0)][(x ?? 0)] = count[(y ?? 0)][(z ?? 0)];
+          count[(y ?? 0)][(z ?? 0)] = tmp;
         }
       }
     }
@@ -54,18 +54,18 @@ public func SortWare() {
   //Wieder sortiert ins Array tun
   aWare = aCount = CreateArray();
   var cnt;
-  for(var y = 0; y < length; y++) {
-    for(var x = 0; x < GetLength(ware[y]); x++) {
-      aWare[cnt] = ware[y][x];
-      aCount[cnt] = count[y][x];
-      cnt++;
+  for(var y = nil; (y ?? 0) < (length ?? 0); S42MigrationStep(y, 1, true)) {
+    for(var x = nil; (x ?? 0) < (GetLength(ware[(y ?? 0)]) ?? 0); S42MigrationStep(x, 1, true)) {
+      aWare[(cnt ?? 0)] = ware[(y ?? 0)][(x ?? 0)];
+      aCount[(cnt ?? 0)] = count[(y ?? 0)][(x ?? 0)];
+      S42MigrationStep(cnt, 1, true);
     }
   }
   
 }
 
 private func AddToArray(&a, add) {
-  a[GetLength(a)] = add;
+  a[(GetLength(a) ?? 0)] = add;
 }
 
 
@@ -73,34 +73,35 @@ private func AddToArray(&a, add) {
 
 public func ControlDigDouble(object pByObj) {
   if(!GetLength(aWare))
-    return(0);
+    return(nil);
   CreateBuyMenu(pByObj);
 }
 
 protected func CreateBuyMenu(object pClonk) {
   if(!pClonk)
-    return(0);
-  CreateMenu(SDP_, pClonk, this(),0,0,0,0,1);
-  for(var x; x < GetLength(aWare); x++)
-    AddBuyMenuItem(aWare[x], pClonk, aCount[x]);
+    return(nil);
+  CreateMenu(SDP_, pClonk, this(),nil,nil,nil,nil,1);
+  for(var x; (x ?? 0) < (GetLength(aWare) ?? 0); S42MigrationStep(x, 1, true))
+    AddBuyMenuItem(aWare[(x ?? 0)], pClonk, aCount[(x ?? 0)]);
 }
 
 private func AddBuyMenuItem(id id, object pClonk, int iCount) {
   //bei NoAmmo-Regel Munition nicht anzeigen
-  if(DefinitionCall(id,"IsAmmoPacket") && NoAmmo())
-    return();
+  iCount ??= 0;
+  if(And(DefinitionCall(id,"IsAmmoPacket"), NoAmmo()))
+    return;
     
-  if(!id || !pClonk)
-    return();
+  if(Or(!id, !pClonk))
+    return;
   // noch mehr Variablen
-  var name = GetName(0,id),
+  var name = GetName(nil,id),
       obj = CreateObject(id),
       wealth = GetDefValue(id),
       iPlayer = GetOwner(pClonk),
-      bMoney = false;
+      bMoney = nil;
     
   //Kann sich der Spieler die Waffe leisten?
-  if(GetWealth(iPlayer) < wealth || iCount == 0) {
+  if(Or((GetWealth(iPlayer) ?? 0) < (wealth ?? 0), Equal(iCount, nil))) {
     name = Format("<c 646464>%s</c>",name);
     obj->SetClrModulation(RGB(100,100,100));
     bMoney = true;
@@ -111,13 +112,13 @@ private func AddBuyMenuItem(id id, object pClonk, int iCount) {
 
   //hinzufügen
   if(!iCount)
-    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,0,pClonk,GetDesc(0,id),4|C4MN_Add_ForceCount, obj);
+    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,nil,pClonk,GetDesc(nil,id),4|(C4MN_Add_ForceCount ?? 0), obj);
   else if(bMoney)
-    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,0,pClonk,GetDesc(0,id),4, obj);
-  else if(iCount < 0)
-    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,0,pClonk,GetDesc(0,id),4, obj);
+    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,nil,pClonk,GetDesc(nil,id),4, obj);
+  else if((iCount ?? 0) < 0)
+    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,nil,pClonk,GetDesc(nil,id),4, obj);
   else
-    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,iCount,pClonk,GetDesc(0,id),4, obj);
+    AddMenuItem(Format("%3d$: %s",wealth,name),"BuyItem",id,pClonk,iCount,pClonk,GetDesc(nil,id),4, obj);
   obj->Removal();//Löschen vorbereiten  
   RemoveObject(obj); //Hilfsobjekt löschen
 }
@@ -125,10 +126,11 @@ private func AddBuyMenuItem(id id, object pClonk, int iCount) {
 //Kaufbar?
 private func BuyAble(id Item, int Plr) {
   //genug Geld?
-  if(GetWealth(Plr) < GetDefValue(Item))
-    return(false);
-  if(GetWareCount(Item) == 0)
-    return(false);
+  Plr ??= 0;
+  if((GetWealth(Plr) ?? 0) < (GetDefValue(Item) ?? 0))
+    return(nil);
+  if(Equal(GetWareCount(Item), nil))
+    return(nil);
   return(true);
 }
 
@@ -136,16 +138,16 @@ private func BuyItem(id Item, object pClonk) {
   var iPlr = GetOwner(pClonk);
   //kaufbar?
   if(!BuyAble(Item,iPlr))
-    return(Sound("Error",0,0,0,iPlr));
+    return(Sound("Error",nil,nil,nil,iPlr));
   
   //Kaufen!
   else
-  if(!dock->Order(Item,GetDefValue(Item)/2,50))
-      return(Sound("Error",0,0,0,iPlr));
+  if(!dock->Order(Item,(GetDefValue(Item) ?? 0)/2,50))
+      return(Sound("Error",nil,nil,nil,iPlr));
   //Geld abziehen
-  DoWealth(iPlr,-GetDefValue(Item));
+  DoWealth(iPlr,-(GetDefValue(Item) ?? 0));
   //*Ca-Ching*
-  Sound("Cash",0,0,0,iPlr);
+  Sound("Cash",nil,nil,nil,iPlr);
 
   DoWare(Item, -1);
 
@@ -167,8 +169,9 @@ private func BuyItem(id Item, object pClonk) {
 //Warenbestand ändern
 public func DoWare(id ID, int iChange) {
   //Ware nicht im Angebot?
+  iChange ??= 0;
   if(!FindWare(ID))
-    return(false);
+    return(nil);
   if(!ID) {
     for(var ware in aWare)
       ChangeWare(ware,iChange);
@@ -181,30 +184,33 @@ public func DoWare(id ID, int iChange) {
 //Damit man den Check nicht immer schreiben muss
 private func ChangeWare(int iIndex, int iChange) {
   //Ware ist unendlich oft verfügbar?
-  if(aCount[iIndex] < 0)
-    return(); //nichts tun.
+  iIndex ??= 0;
+  iChange ??= 0;
+  if((aCount[(iIndex ?? 0)] ?? 0) < 0)
+    return; //nichts tun.
   
-  aCount[iIndex] += iChange;
+  S42MigrationAssign(aCount[(iIndex ?? 0)], "+=", (iChange ?? 0));
   //Anzahl < 0?
-  if(aCount[iIndex] < 0)
+  if((aCount[(iIndex ?? 0)] ?? 0) < 0)
     //Anzahl auf 0 setzen
     //sonst wäre die Ware ja auf einmal unendlich oft zu haben.
-    aCount[iIndex] = 0;
+    aCount[(iIndex ?? 0)] = nil;
 }
 
 //Ware hinzufügen
 public func AddWare(id ID, int iCount) {
   //keine ID angegeben?
+  iCount ??= 0;
   if(!ID)
     //nix tun
-    return(false);
+    return(nil);
   //Ware schon im Angebot?
   if(FindWare(ID))
     //nix tun
-    return(false);
+    return(nil);
 
   //Anzahl-Parameter checken
-  if(iCount < -1)
+  if((iCount ?? 0) < -1)
     iCount = -1;
 
   //Ware hinzufügen
@@ -214,9 +220,10 @@ public func AddWare(id ID, int iCount) {
 
 //Alle Waren eines Typs hinzufügen
 public func AddWares(string szCallback, int iCount) {
+  iCount ??= 0;
   var id, defz;
   //alle Definitionen durchgehn
-  while(id = GetDefinition(defz++)) {
+  while(id = GetDefinition(S42MigrationStep(defz, 1, true))) {
     //Objekt kann nicht gewählt werden?
     if(DefinitionCall(id,"NoWeaponChoice"))
       continue; //weiter
@@ -235,18 +242,18 @@ public func RemoveWare(id ID) {
   }
    
   if(!FindWare(ID))
-    return(false);
+    return(nil);
    
   var x = GetWare(ID);
-  aWare[x] = 0;
-  aCount[x] = 0;
+  aWare[(x ?? 0)] = nil;
+  aCount[(x ?? 0)] = nil;
   return(true);
 }
 
 //Warenindex abfragen
 private func GetWare(id ID) {
-  for(var x; x < GetLength(aWare); x++)
-    if(aWare[x] == ID)
+  for(var x; (x ?? 0) < (GetLength(aWare) ?? 0); S42MigrationStep(x, 1, true))
+    if(Equal(aWare[(x ?? 0)], ID))
       return(x);
   //haben wir nicht? -1 zurückgeben.
   return(-1);
@@ -254,9 +261,9 @@ private func GetWare(id ID) {
 
 //Anzahl einer Ware abfragen
 public func GetWareCount(id ID) {
-  for(var x; x < GetLength(aWare); x++)
-    if(aWare[x] == ID)
-      return(aCount[x]);
+  for(var x; (x ?? 0) < (GetLength(aWare) ?? 0); S42MigrationStep(x, 1, true))
+    if(Equal(aWare[(x ?? 0)], ID))
+      return(aCount[(x ?? 0)]);
 }
 
 //Warenliste abfragen
@@ -267,24 +274,25 @@ public func GetWareList() {
 
 //bestimmte Ware auf bestimmten Wert setzen. Oder alle.
 public func SetWare(id id, int iCount) {
-  for(var x; x < GetLength(aWare); x++)
-    if(!id || id == aWare[x])
-      aCount[x] = iCount;
+  iCount ??= 0;
+  for(var x; (x ?? 0) < (GetLength(aWare) ?? 0); S42MigrationStep(x, 1, true))
+    if(Or(!id, Equal(id, aWare[(x ?? 0)])))
+      aCount[(x ?? 0)] = iCount;
 }
 
 private func FindWare(id ID) {
   for(var x in aWare)
-    if(x == ID)
+    if(Equal(x, ID))
       return(true);
   
-  return(false);
+  return(nil);
 }
 
 //Bei Aufsammlung zur Warenliste hinzufügen
 func RejectCollect(id id, object pObj) {
   if(FindWare(id))
     return(RemoveObject(pObj));
-  AddWare(id, 0);
+  AddWare(id, nil);
 }
 
 
@@ -299,6 +307,7 @@ local initialized, spawntimer, objs, nextobj, timer;
 public func Production(array ids, int timer)
 {
   // Standardtimer = 2500 Frames
+  timer ??= 0;
   spawntimer = 2500;
   objs = CreateArray();
   AddVehicleList(ids);
@@ -318,7 +327,7 @@ public func AddVehicleList(array ids)
 
 public func AddVehicle(id idB)
 {
-  objs[GetLength(objs)] = idB;
+  objs[(GetLength(objs) ?? 0)] = idB;
 }
 
 /* Sonstiges */
@@ -328,14 +337,14 @@ public func AddVehicle(id idB)
 private func Timer()
 {
   // Timer runterzählen
-  timer -= 5;
-  if(timer <= 0)
+  S42MigrationAssign(timer, "-=", 5);
+  if((timer ?? 0) <= 0)
   {
     //Fahrzeug Auftrag geben
-    timer = 0;
+    timer = nil;
 	if(dock->Check())
 	{
-    dock->Order(nextobj,GetDefValue(nextobj)/2,50);
+    dock->Order(nextobj,(GetDefValue(nextobj) ?? 0)/2,50);
     timer = spawntimer;
 	GetRandomVehicle();
 	}
@@ -345,7 +354,7 @@ private func Timer()
 private func GetRandomVehicle()
 {
   // nextobj belegen
-  nextobj = objs[Random(GetLength(objs))];
+  nextobj = objs[(Random(GetLength(objs)) ?? 0)];
 }
 
 

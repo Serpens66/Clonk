@@ -1,28 +1,28 @@
 /*-- Bogen --*/
 
-#strict
+#strict 3
 
 /* Aktivieren (zum Zielen per Maussteuerung) */
 public func Activate(pClonk)
 {
   [$CtrlActivateDesc$|Condition=ShowInContextMenu]
   // Der Clonk kann dieses Objekt nicht verwenden
-  if (!pClonk->~CanUse(GetID())) return(0);
+  if (!pClonk->~CanUse(GetID())) return(nil);
   // Träger nicht bereit zum neuen Zielen
   if (!pClonk->~ReadyToFire())
   {
-    if(pClonk->GetProcedure() ne "SCALE") return(0);
+    if(!SEqual(pClonk->GetProcedure(), "SCALE")) return(nil);
     // Beim Klettern nur nach Doppelstop ablegen
     if(!GetPlrDownDouble(pClonk->GetOwner()))
       return(1);
     else
-      return(0);
+      return(nil);
   }
   // Träger: neue Zielaktion setzen
   if (!pClonk->~LoadBow(1))
   {
     if (!pClonk->~AimBow()) 
-      return();
+      return;
     SetPhase(7, pClonk);
   }
   // Erfolg
@@ -41,18 +41,19 @@ public func ControlThrow(pClonk)
 
 protected func ControlConf(int conf)
 {
+  conf ??= 0;
   var rVal;
   var pClonk = Contained();
-  if(!pClonk) return(0);
+  if(!pClonk) return(nil);
 
-  if(conf < 0)
+  if((conf ?? 0) < 0)
   {
     if(pClonk->~BowControlUp(this(), rVal))
       return(rVal);
     else if(IsAiming())
       return(pClonk->AimStdConf(conf));
     else
-      return(0);
+      return(nil);
   }
   else
   {
@@ -61,7 +62,7 @@ protected func ControlConf(int conf)
     else if(IsAiming())
       return(pClonk->AimStdConf(conf));
     else
-      return(0);
+      return(nil);
   }
 }
 
@@ -77,6 +78,7 @@ public func ControlDown(pClonk)
 
 public func ControlUpdate(pClonk, int comdir)
 {
+  comdir ??= 0;
   AimUpdate(pClonk, comdir, 5, "ControlConf");
 }
 
@@ -85,11 +87,11 @@ public func ControlLeft(pClonk)
   // Träger Zielaktion
   if (IsAiming())
   {
-    SetDir(DIR_Left(), pClonk);
+    SetDir(DIR_Left, pClonk);
     return(1);
   }
   // Keine Spezialsteuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlRight(pClonk)
@@ -97,11 +99,11 @@ public func ControlRight(pClonk)
   // Träger Zielaktion
   if (IsAiming())
   {
-    SetDir(DIR_Right(), pClonk);
+    SetDir(DIR_Right, pClonk);
     return(1);
   }
   // Keine Spezialsteuerung
-  return(0);               
+  return(nil);
 }
 
 public func ControlRightDouble(pClonk)
@@ -110,10 +112,10 @@ public func ControlRightDouble(pClonk)
   if (IsAiming())
   {
     pClonk->StopAiming();
-    SetComDir(COMD_Right(), pClonk);
+    SetComDir(COMD_Right, pClonk);
   }
   // Keine Spezialsteuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlLeftDouble(pClonk)
@@ -122,53 +124,53 @@ public func ControlLeftDouble(pClonk)
   if (IsAiming())
   {
     pClonk->StopAiming();
-    SetComDir(COMD_Left(), pClonk);
+    SetComDir(COMD_Left, pClonk);
   }
   // Keine Spezialsteuerung
-  return(0);
+  return(nil);
 }
 
 /* Wird gerade vom Träger gezielt? */
 public func IsAiming() 
 { 
-  if(!Contained()) return(false);
+  if(!Contained()) return(nil);
     return (Contained()->~IsAiming()); 
 }
 
 /* Hardgecodet, für alte Ritter */
 private func GetBowOutOld(pClonk, &iOutX, &iOutY, &iOutR, &iOutXDir, &iOutYDir, &iOutRDir)
 {
-  var iOutDir; if (GetDir(pClonk) == DIR_Left()) iOutDir=-1; else iOutDir=1;
+  var iOutDir; if (Equal(GetDir(pClonk), DIR_Left)) iOutDir=-1; else iOutDir=1;
   var iOutPhase = GetPhase(pClonk);
   // X-Austritt  
-  iOutX = iOutDir*iOutPhase*2;
+  iOutX = (iOutDir ?? 0)*(iOutPhase ?? 0)*2;
   // Y-Austritt
-  iOutY = iOutPhase+3; // + Random(9)-4;
+  iOutY = (iOutPhase ?? 0)+3; // + Random(9)-4;
   // R-Austritt
-  iOutR = iOutX * 13;
+  iOutR = (iOutX ?? 0) * 13;
   // XDir
-  iOutXDir = iOutDir*iOutPhase*3+2;
+  iOutXDir = (iOutDir ?? 0)*(iOutPhase ?? 0)*3+2;
   // YDir
-  if (iOutPhase == 5) iOutYDir=10; else iOutYDir = (iOutPhase-3)*3;
+  if (Equal(iOutPhase, 5)) iOutYDir=10; else iOutYDir = ((iOutPhase ?? 0)-3)*3;
   // Größerer Abstand
-  iOutX += iOutXDir*2;
-  iOutY += iOutYDir*2;
+  S42MigrationAssign(iOutX, "+=", (iOutXDir ?? 0)*2);
+  S42MigrationAssign(iOutY, "+=", (iOutYDir ?? 0)*2);
   // RDir
-  iOutRDir = iOutDir*3;
+  iOutRDir = (iOutDir ?? 0)*3;
 }
 public func GetBowOutAngle(pClonk, iAngle, fDeviate, &iOutX, &iOutY, &iOutR, &iOutXDir, &iOutYDir, &iOutRDir) 
 {
   // Zufallsabweichung
-  if(fDeviate) { iAngle += Random(11) - 5; }
+  if(fDeviate) { S42MigrationAssign(iAngle, "+=", (Random(11) ?? 0) - 5); }
   // Austrittsgeschwindigkeit ermitteln 
   iOutXDir = Sin(iAngle, 70); 
-  iOutYDir = -Cos(iAngle, 70); 
+  iOutYDir = -(Cos(iAngle, 70) ?? 0);
   // Austrittsposition... 
   iOutX = Sin(iAngle, 25); 
-  iOutY = -Cos(iAngle, 25); 
+  iOutY = -(Cos(iAngle, 25) ?? 0);
   // Pfeildrehung 
   iOutR = iAngle; 
-  if(iAngle > 0) iOutRDir = 3; else iOutRDir = -3;
+  if((iAngle ?? 0) > 0) iOutRDir = 3; else iOutRDir = -3;
   // Fertig 
   return(1);
 } 
@@ -178,18 +180,18 @@ public func Fire()
 {
   var pClonk = Contained();
   // Kein Träger?
-  if(!pClonk) return(0);
+  if(!pClonk) return(nil);
   // Im Gebäude?
-  if (pClonk->Contained()) { pClonk->~StopAiming(); return(0); }
+  if (pClonk->Contained()) { pClonk->~StopAiming(); return(nil); }
   // Unvollständig?
-  if (~GetOCF() & OCF_Fullcon()) return(0);
+  if (~(GetOCF() ?? 0) & (OCF_Fullcon ?? 0)) return(nil);
   // Noch beim Nachladen
-  if (GetAction() eq "Reload") return(0);
+  if (!!SEqual(GetAction(), "Reload")) return(nil);
   // Pfeil vom Träger holen
   var pArrow = pClonk->~GetArrow();
-  if (!pArrow) return(0);
+  if (!pArrow) return(nil);
   // Beim Träger ggf. Bogen wieder auswählen
-  ShiftContents(pClonk, 0, BOW1);
+  ShiftContents(pClonk, nil, BOW1);
   // Austrittsgeschwindigkeit ermitteln
   var iAngle = pClonk->~GetBowAimAngle();
   var iOutX, iOutY, iOutR, iOutXDir, iOutYDir, iOutRDir;
@@ -198,11 +200,11 @@ public func Fire()
   // Besitzer des Projektils setzen
   pArrow->SetOwner(Contained()->GetOwner());
     // Pfeil abfeuern
-  Exit(pArrow, iOutX,iOutY,iOutR, 0,0,iOutRDir );
+  Exit(pArrow, iOutX,iOutY,iOutR, nil,nil,iOutRDir );
   pArrow->SetXDir(iOutXDir); pArrow->SetYDir(iOutYDir);
   pArrow->~Launch();
   // Sicht verfolgen
-  if (GetPlrView(GetController(pClonk)) != 2)
+  if (!Equal(GetPlrView(GetController(pClonk)), 2))
     SetPlrView(GetController(pClonk), pArrow);
   // Sound
   Sound("Bow");
@@ -218,18 +220,18 @@ public func FireAngle(iAngle)
 {
   var pClonk = Contained();
   // Kein Träger?
-  if(!pClonk) return(0);
+  if(!pClonk) return(nil);
   // Im Gebäude?
-  if (pClonk->Contained()) { pClonk->~StopAiming(); return(0); }
+  if (pClonk->Contained()) { pClonk->~StopAiming(); return(nil); }
   // Unvollständig?
-  if (~GetOCF() & OCF_Fullcon()) return(0);
+  if (~(GetOCF() ?? 0) & (OCF_Fullcon ?? 0)) return(nil);
   // Noch beim Nachladen
-  if (GetAction() eq "Reload") return(0);
+  if (!!SEqual(GetAction(), "Reload")) return(nil);
   // Pfeil vom Träger holen
   var pArrow = Contained()->~GetArrow();
-  if (!pArrow) return();
+  if (!pArrow) return;
   // Beim Träger ggf. Bogen wieder auswählen
-  ShiftContents(Contained(), 0, BOW1);
+  ShiftContents(Contained(), nil, BOW1);
   // Austrittsgeschwindigkeit ermitteln
   var iOutX, iOutY, iOutR, iOutXDir, iOutYDir, iOutRDir;
   if (!pClonk->~GetBowOut(this(), iAngle, true, iOutX, iOutY, iOutR, iOutXDir, iOutYDir, iOutRDir))
@@ -237,7 +239,7 @@ public func FireAngle(iAngle)
   // Besitzer des Projektils setzen
   pArrow->SetOwner(Contained()->GetOwner());
     // Pfeil abfeuern
-  Exit(pArrow, iOutX,iOutY,iOutR, 0,0,iOutRDir );
+  Exit(pArrow, iOutX,iOutY,iOutR, nil,nil,iOutRDir );
   pArrow->SetXDir(iOutXDir); pArrow->SetYDir(iOutYDir);
   pArrow->~Launch();
     // Sound
@@ -262,7 +264,7 @@ protected func Incineration()
 /* "Bogen einsetzen" wird nicht im Kontextmenue angezeigt */
 private func ShowInContextMenu()
 {
- return(false);
+ return(nil);
 }
 
 // Ist ein Bogen

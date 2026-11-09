@@ -1,6 +1,6 @@
 /*--- Bohrkopf ---*/
 
-#strict
+#strict 3
 
 protected func DestructCheck()
 {
@@ -9,9 +9,9 @@ protected func DestructCheck()
 
 private func FindDerrick()
 {
-  var pDerrick = FindObject(DRCK,0,0,0,0,0,"Pump",this());
+  var pDerrick = FindObject(DRCK,nil,nil,nil,nil,nil,"Pump",this());
   if (pDerrick) return(pDerrick);
-  return (FindObject(DRCK,0,0,0,0,0,"Wait",this()));
+  return (FindObject(DRCK,nil,nil,nil,nil,nil,"Wait",this()));
 }
 
 private func FindLine()
@@ -26,12 +26,12 @@ private func Processing()
   // Materialtransfer
   Transfer();
   // An der Oberkante: anhalten
-  if (GetY() < GetY(FindDerrick()) + 36)
+  if ((GetY() ?? 0) < (GetY(FindDerrick()) ?? 0) + 36)
   {
-    SetPosition(GetX(), GetY(FindDerrick()) + 36);
+    SetPosition(GetX(), (GetY(FindDerrick()) ?? 0) + 36);
     SetAction("Stop");
-    SetComDir(COMD_Stop());
-    SetYDir(0);
+    SetComDir(COMD_Stop);
+    SetYDir(nil);
     Sound("Click");
   }
 }
@@ -39,26 +39,26 @@ private func Processing()
 protected func ContactBottom()
 {
   SetAction("Stop");
-  SetComDir(COMD_Stop());
-  SetYDir(0);
+  SetComDir(COMD_Stop);
+  SetYDir(nil);
   Sound("Click");
 }
 
 private func Transfer()
 {
   // Zielobjekt ermitteln
-  var pPumpTarget = GetActionTarget(0);
+  var pPumpTarget = GetActionTarget(nil);
   // Kein Zielobjekt  
-  if (!pPumpTarget) return(0);
+  if (!pPumpTarget) return(nil);
   // Zielobjekt erlaubt keinen Transfer
-  if (!pPumpTarget->~AcceptTransfer()) return(0);
+  if (!pPumpTarget->~AcceptTransfer()) return(nil);
   // Zielobjekt hat nicht genug Energie  
-  if ((!EnergyCheck(1000, pPumpTarget)) && ObjectCount(ENRG)) return(0);
+  if (And((!EnergyCheck(1000, pPumpTarget)), ObjectCount(ENRG))) return(nil);
   // Materialtransfer
-  for (var i = 0; i < 3; i++)  
-    ObjectInsertMaterial(ExtractLiquid(0, 0), pPumpTarget);
+  for (var i = nil; (i ?? 0) < 3; S42MigrationStep(i, 1, true))
+    ObjectInsertMaterial(ExtractLiquid(nil, nil), pPumpTarget);
   // Blubbern
-  if (!Random(5)) Bubble(0, 0);
+  if (!Random(5)) Bubble(nil, nil);
   // Fertig
   return(1);
 }
@@ -66,15 +66,15 @@ private func Transfer()
 private func Drilling()
 {
   // Material prüfen
-  var mat = GetMaterial(0,3);
+  var mat = GetMaterial(nil,3);
   // Nicht durch SolidMasks bohren
-  if (Material("Vehicle") == mat)
+  if (Equal(Material("Vehicle"), mat))
   {
     Sound("MetalHit3");
-    return(0);
+    return(nil);
   }
   // Schneller in freien Bereichen
-  if ((Material("Tunnel") == mat) || (Material("Sky") == mat))
+  if (Or((Equal(Material("Tunnel"), mat)), (Equal(Material("Sky"), mat))))
   {
     SetPhysical("Float", 150, 2);
     return(1);
@@ -85,11 +85,11 @@ private func Drilling()
     {
       var iSpeed = 25;
       // Etwas hardgecodete Erkennung
-      if (Material("Granite") == mat)
+      if (Equal(Material("Granite"), mat))
         iSpeed = 10;
       // Langsamere Geschwindigkeit
-      SetPhysical("Float", iSpeed + Random(2 * iSpeed), 2);
-      DigFree(GetX() - 1, GetY(), 3);               // -> nicht durch festes material grabbar
+      SetPhysical("Float", (iSpeed ?? 0) + (Random(2 * (iSpeed ?? 0)) ?? 0), 2);
+      DigFree((GetX() ?? 0) - 1, GetY(), 3);               // -> nicht durch festes material grabbar
       // FreeRect(GetX() - 1, GetY(), 3,4,C4M_Solid)
       return(1);
     }

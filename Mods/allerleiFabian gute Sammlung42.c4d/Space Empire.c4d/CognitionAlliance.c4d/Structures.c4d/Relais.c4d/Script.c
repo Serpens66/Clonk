@@ -1,6 +1,6 @@
 /*-- Energieempfänger --*/
 
-#strict
+#strict 3
 #include BOB2 // Gebäude-Hilfsobjekt
 #include XMTR // Transmitter
 
@@ -8,7 +8,7 @@ local basement, active, manager;
 
 protected func Construction()
 {
-  basement = CreateObject(BS06,0,8,GetOwner());  
+  basement = CreateObject(BS06,nil,8,GetOwner());
   return(1);
 }
 
@@ -28,9 +28,9 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
-  manager->InitLight(0,-10,40);
+  manager->InitLight(nil,-10,40);
   
   SetAction("wait");
   active=1;
@@ -45,7 +45,7 @@ protected func ControlUp()
 {
   [Statusabfrage]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),GetEnergy(),100,5,1);
   return(1);
 }
@@ -65,9 +65,9 @@ protected func ControlThrow(clonk)
   [Reichweite]
   if (Hostile(GetController(clonk),GetOwner())) return(1);
   var i, marker;
-  for (i = 0; i < 72; i++)
+  for (i = nil; (i ?? 0) < 72; S42MigrationStep(i, 1, true))
   {
-    marker = CreateObject(SMK1, Cos(i*5,TransmitterRange()), Sin(i*5,TransmitterRange()), GetOwner(clonk));
+    marker = CreateObject(SMK1, Cos((i ?? 0)*5,TransmitterRange()), Sin((i ?? 0)*5,TransmitterRange()), GetOwner(clonk));
     marker->SetTimer(15);
   }
   Message("Reichweite|wird angezeigt",this());
@@ -77,10 +77,10 @@ protected func ControlThrow(clonk)
 protected func Transmit()
 {
   // ausgeschaltet oder EMP-Einwirkung
-  if (!active || HasEMP())
+  if (Or(!active, HasEMP()))
     return(SetAction("wait"));
   // Update für Anzeige
-  ShowInfoBar(IBRE, this(), GetEnergy(), 100, 0, 1);
+  ShowInfoBar(IBRE, this(), GetEnergy(), 100, nil, 1);
   // keine Energie da?
   if (!EnoughEnergy())
     return(SetAction("wait"));
@@ -101,7 +101,7 @@ public func TransmitEnergy()
 
 public func IsActive()
 {
-  if (HasEMP() || (!active)) return(0);
+  if (Or(HasEMP(), (!active))) return(nil);
   return(1);
 }
 

@@ -1,6 +1,6 @@
 /*-- Granatenpack --*/
 
-#strict
+#strict 3
 
 
 protected func Initialize()
@@ -24,7 +24,7 @@ protected func Damage()
 protected func Activate()
 {
   var i;
-  for (i=0; i<6; i++) CreateContents(CWGR,Contained());
+  for (i=nil; (i ?? 0)<6; S42MigrationStep(i, 1, true)) CreateContents(CWGR,Contained());
   
   Sound("Connect");
   RemoveObject();

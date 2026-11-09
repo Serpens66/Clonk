@@ -1,6 +1,6 @@
 /*-- UAV-Kontrollstation --*/
 
-#strict
+#strict 3
 #include BAS3
 
 local target;
@@ -10,7 +10,7 @@ local condir;
 
 func Initialize()
 {
-  target = 0;
+  target = nil;
   SetAction("Spin");
   return(1);
 }
@@ -18,7 +18,7 @@ func Initialize()
 func ControlDigDouble(pCaller)
 {
   pUser = pCaller;
-  CreateMenu(TAUC, pUser, 0, 0, "UAV-Kontrolle", 0, 1);
+  CreateMenu(TAUC, pUser, nil, nil, "UAV-Kontrolle", nil, 1);
   if(!target)
   {
    AddMenuItem("UAV kaufen: 50c","UAVBuy",MEPU,pUser);
@@ -33,10 +33,10 @@ func ControlDigDouble(pCaller)
 
 func Damage()
 {
-  if(GetDamage() > 100)
+  if((GetDamage() ?? 0) > 100)
   {
  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))   Explode(30);
- else FakeExplode(30,0,0,30);
+ else FakeExplode(30,nil,nil,30);
   }
   return(1);
 }
@@ -51,9 +51,9 @@ func UAVDestroy()
 
 func UAVBuy()
 {
-  if(GetWealth(GetOwner(pUser)) < 50)
+  if((GetWealth(GetOwner(pUser)) ?? 0) < 50)
   {
-   Message("<c ff0000>Zu wenig geld!|Es fehlen:%v</c>",this(),50-GetWealth(GetOwner(pUser)));
+   Message("<c ff0000>Zu wenig geld!|Es fehlen:%v</c>",this(),50-(GetWealth(GetOwner(pUser)) ?? 0));
    Sound("Error");
    return(1);
   }
@@ -63,7 +63,7 @@ func UAVBuy()
    Sound("Error");
    return(1);
   }
-  SetWealth(GetOwner(pUser),GetWealth(GetOwner(pUser))-50);
+  SetWealth(GetOwner(pUser),(GetWealth(GetOwner(pUser)) ?? 0)-50);
   target = CreateObject(TAUV);
   LocalN("on",target) = 1;
   hold = 1;
@@ -77,9 +77,9 @@ func Check()
   {
    if(target)
    {
-    if(ObjectDistance(target) < 30)
+    if((ObjectDistance(target) ?? 0) < 30)
     {
-     if(LocalN("on",target) == 0)
+     if(Equal(LocalN("on",target), nil))
      {
       LocalN("dir",target) = 360;
       target->SetDirec(360);
@@ -97,7 +97,7 @@ func Check()
   {
    if(target)
    {
-    target->SetPosition(GetX()-5,GetY()-15);
+    target->SetPosition((GetX() ?? 0)-5,(GetY() ?? 0)-15);
     target->SetYDir();
     LocalN("dir",target) = 360;
     target->SetDirec(360);
@@ -108,11 +108,11 @@ func Check()
   {
    if(target)
    {
-    if(condir == -1)
+    if(Equal(condir, -1))
     {
      target->Left();
     }
-    if(condir == 1)
+    if(Equal(condir, 1))
     {
      target->Right();
     }
@@ -124,12 +124,12 @@ func Check()
 func ControlThrow(pCursor)
 {
   pUser = pCursor;
-  if(!target)  { return(); }
+  if(!target)  { return; }
   SetPlrView(GetOwner(pUser),target);
   if(hold)
   {
-   hold = 0;
-   LocalN("on",target) = 0;
+   hold = nil;
+   LocalN("on",target) = nil;
   }
   target->Launch();
   ControlUp(pCursor);
@@ -163,6 +163,6 @@ func ControlUp(pCursor)
   if(!target)  { return(1); }
   if(hold)  { return(1); }
   SetPlrView(GetOwner(pUser),target);
-  condir = 0;
+  condir = nil;
   return(1);
 }

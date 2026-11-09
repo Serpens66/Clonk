@@ -1,6 +1,6 @@
 /*-- Säurefass --*/
 
-#strict
+#strict 3
 
 #include BARL
 
@@ -11,6 +11,6 @@ public func BarrelMaterialName() { return("Acid"); }
 // Fassermittlungskette
 global func GetBarrelType(iMaterial)
 {
-  if (iMaterial == Material("Acid")) return(ABRL);
+  if (Equal(iMaterial, Material("Acid"))) return(ABRL);
   return(_inherited(iMaterial));
 }

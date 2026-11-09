@@ -1,6 +1,6 @@
 /*-- Batterie --*/
 
-#strict
+#strict 3
 
 /* Aufschlag */
 
@@ -23,7 +23,8 @@ public func IsChemicalProduct() { return(1); }
 public func CalcValue(object pInBase, int iForPlayer)
 {
   // Je nach Anzahl
-  return(GetValue(0, GetID())+(3*GetEnergy())/100); // normalen Value wenn leer, plus 3, wenn voll
+  iForPlayer ??= 0;
+  return((GetValue(nil, GetID()) ?? 0)+(3*(GetEnergy() ?? 0))/100); // normalen Value wenn leer, plus 3, wenn voll
 }
 
 func PrintEnergy()

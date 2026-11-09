@@ -1,6 +1,6 @@
 /* Schwarmmine */
 
-#strict
+#strict 3
 
 protected func Activate(object pByClonk) {
     [$Activate$]
@@ -10,7 +10,7 @@ protected func Activate(object pByClonk) {
 protected func Hit()
 {
 Sound("RockHit*");
-if(!Random(10)) {if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(Random(20)+15); else FakeExplode(Random(20)+15,0,0,Random(20)+15);}
+if(!Random(10)) {if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode((Random(20) ?? 0)+15); else FakeExplode((Random(20) ?? 0)+15,nil,nil,(Random(20) ?? 0)+15);}
 }
 
 
@@ -20,14 +20,14 @@ public func ControlDigDouble(object pByClonk) { // Clonk aktiviert Mine
     SetOwner(pByClonk->GetOwner());
     // in welche Richtung soll die Mine angeheftet werden?
 
-    if(szAct eq "Walk" || szAct eq "Fight") {
-      SetActive(0);
+    if(Or(!!SEqual(szAct, "Walk"), !!SEqual(szAct, "Fight"))) {
+      SetActive(nil);
     }
-    else if(szAct eq "Hangle") {
+    else if(!!SEqual(szAct, "Hangle")) {
       SetActive(180);
     }
-    else if(szAct eq "Scale" || szAct eq "ScaleDown") {
-      if(GetDir(pByClonk) == DIR_Left)
+    else if(Or(!!SEqual(szAct, "Scale"), !!SEqual(szAct, "ScaleDown"))) {
+      if(Equal(GetDir(pByClonk), DIR_Left))
         SetActive(90);
       else
         SetActive(270);
@@ -38,26 +38,28 @@ public func ControlDigDouble(object pByClonk) { // Clonk aktiviert Mine
 
 public func SetActive(int iAngle, int iMaxDist) {   // Mine wird aktiviert
 
+    iAngle ??= 0;
+    iMaxDist ??= 0;
     if(!iMaxDist) iMaxDist = 15;
     var x=GetX(),y=GetY();
-    var mx=-Sin(iAngle,iMaxDist), my=+Cos(iAngle,iMaxDist);
+    var mx=-(Sin(iAngle,iMaxDist) ?? 0), my=+(Cos(iAngle,iMaxDist) ?? 0);
 
     // nicht platzierbar: abbrechen
-    if(PathFree(x,y,x+mx,y+my))
-      return(false);
+    if(PathFree(x,y,(x ?? 0)+(mx ?? 0),(y ?? 0)+(my ?? 0)))
+      return(nil);
 
     // ansonsten platzieren
-    var i=0;
+    var i=nil;
     Exit();
     SetR(iAngle);
-    while(!Stuck() && iMaxDist>++i) {
-      SetPosition(x+mx*i/iMaxDist,y+my*i/iMaxDist);
+    while(And(!Stuck(), (iMaxDist ?? 0)>S42MigrationStep(i, 1))) {
+      SetPosition((x ?? 0)+(mx ?? 0)*(i ?? 0)/(iMaxDist ?? 0),(y ?? 0)+(my ?? 0)*(i ?? 0)/(iMaxDist ?? 0));
     }
-    if(iAngle == 0)
-      SetPosition(GetX(),GetY()-1);
+    if(Equal(iAngle, nil))
+      SetPosition(GetX(),(GetY() ?? 0)-1);
     else {
-      SetVertex(1,1,2,0,2);
-      SetVertex(2,1,2,0,2);
+      SetVertex(1,1,2,nil,2);
+      SetVertex(2,1,2,nil,2);
     }
     SetAction("Activate");
 
@@ -67,20 +69,20 @@ public func SetActive(int iAngle, int iMaxDist) {   // Mine wird aktiviert
 protected func Warning() {
 
     var a = 64;
-    if(GetAction() eq "Active")
-      a = 160-120*GetDamage()/MaxDamage();
+    if(!!SEqual(GetAction(), "Active"))
+      a = 160-120*(GetDamage() ?? 0)/(MaxDamage() ?? 0);
     else
       Sound("Bip");
-    CreateParticle("PSpark",Sin(GetR(),3),-Cos(GetR(),3),0,0,
-                   60,RGBa(0,64,255,a),this());
+    CreateParticle("PSpark",Sin(GetR(),3),-(Cos(GetR(),3) ?? 0),nil,nil,
+                   60,RGBa(nil,64,255,a),this());
 }
 
 protected func OnActive() {             // Mine ist nun aktiv
-    SetVertex(1,1,0,0,2);
-    SetVertex(2,1,0,0,2);
+    SetVertex(1,1,nil,nil,2);
+    SetVertex(2,1,nil,nil,2);
     var xdir, ydir,
     xdir = Sin(GetR(), 30);
-    ydir = -Cos(GetR(), 30);
+    ydir = -(Cos(GetR(), 30) ?? 0);
 
     SetAction("Fly");           // Hüpfen
     SetSpeed(xdir, ydir);
@@ -89,33 +91,34 @@ protected func OnActive() {             // Mine ist nun aktiv
 }
 
 protected func Swarm() {            // Ordnungsgemäß aktiviert, gesprungen; jetzt schwärmen
-    for(var i = 0,swarmy ; i < 10 ; i++)
+    for(var i = nil,swarmy ; (i ?? 0) < 10 ; S42MigrationStep(i, 1, true))
       {
-      swarmy = CreateObject(SWRM, 0, 0, GetOwner());
+      swarmy = CreateObject(SWRM, nil, nil, GetOwner());
       swarmy -> Activate();
       }
-    Sparks(10, RGB(255, 125, 0));           // Sound!!!
+    Sparks(10, RGB(255, 125, nil));           // Sound!!!
     RemoveObject();
 }
 
 protected func Damage(int iChange) {            // kriegt Schaden
-    if(GetAction() ne "Idle")
-      SetClrModulation(RGBa(255,255,255,200-200*GetDamage()/MaxDamage()));
-    if(GetDamage() >= MaxDamage())
+    iChange ??= 0;
+    if(!SEqual(GetAction(), "Idle"))
+      SetClrModulation(RGBa(255,255,255,200-200*(GetDamage() ?? 0)/(MaxDamage() ?? 0)));
+    if((GetDamage() ?? 0) >= (MaxDamage() ?? 0))
       Trigger();
 }
 
 public func Trigger() {                 // Auslösen!
-    ScheduleCall(0,"Triggered",ExploDelay());
+    ScheduleCall(nil,"Triggered",ExploDelay());
 }
 
 protected func Triggered() {                // ausgelöst (nach delay)
    if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(10);
-   else FakeExplode(10,0,0,10);
+   else FakeExplode(10,nil,nil,10);
 }
 
 protected func RejectEntrance() {
-    if(GetAction() ne "Idle") return(true);
+    if(!SEqual(GetAction(), "Idle")) return(true);
 }
 
 private func ExploDelay() { return(10); }

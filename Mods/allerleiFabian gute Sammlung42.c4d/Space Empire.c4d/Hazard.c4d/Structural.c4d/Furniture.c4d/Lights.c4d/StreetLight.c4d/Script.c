@@ -1,6 +1,6 @@
 /*-- Hintergrundlicht --*/
 
-#strict
+#strict 3
 #include BLGH
 
 func CreateLight()
@@ -11,5 +11,5 @@ func CreateLight()
 }
 
 protected func Glowing() {
-  CreateParticle("PSpark", RandomX(-2,2), 4, RandomX(-1,1), RandomX(1,3), 10+Random(15), RGB(50,50,25), this(), true);
+  CreateParticle("PSpark", RandomX(-2,2), 4, RandomX(-1,1), RandomX(1,3), 10+(Random(15) ?? 0), RGB(50,50,25), this(), true);
 }

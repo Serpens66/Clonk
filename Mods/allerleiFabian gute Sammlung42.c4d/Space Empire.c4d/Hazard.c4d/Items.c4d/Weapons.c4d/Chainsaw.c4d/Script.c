@@ -1,6 +1,6 @@
 /*-- Motorsäge --*/
 
-#strict
+#strict 3
 
 #include WEPN
 
@@ -16,16 +16,17 @@ public func BarrelYOffset(){return(2000);}
 
 public func FMData1(int data)
 {
-  if(data == FM_Name)      return("$Saw$");
-  if(data == FM_AmmoID)    return(GSAM);
-  if(data == FM_AmmoLoad)  return(20);
+  data ??= 0;
+  if(Equal(data, FM_Name))      return("$Saw$");
+  if(Equal(data, FM_AmmoID))    return(GSAM);
+  if(Equal(data, FM_AmmoLoad))  return(20);
 
-  if(data == FM_Reload)    return(120);
-  if(data == FM_Recharge)  return(4);
+  if(Equal(data, FM_Reload))    return(120);
+  if(Equal(data, FM_Recharge))  return(4);
 
-  if(data == FM_AmmoUsage) return(1);
-  if(data == FM_AmmoRate)  return(8);
-  if(data == FM_Auto)      return(true);
+  if(Equal(data, FM_AmmoUsage)) return(1);
+  if(Equal(data, FM_AmmoRate))  return(8);
+  if(Equal(data, FM_Auto))      return(true);
 
 
 
@@ -34,25 +35,27 @@ public func FMData1(int data)
 
 public func BotData1(int data)
 {
-  if(data == BOT_Range)    return(10);
-  if(data == BOT_DmgType)  return(DMG_Melee);
-  if(data == BOT_Power)    return(BOT_Power_2);
+  data ??= 0;
+  if(Equal(data, BOT_Range))    return(10);
+  if(Equal(data, BOT_DmgType))  return(DMG_Melee);
+  if(Equal(data, BOT_Power))    return(BOT_Power_2);
 
   return(Default(data));
 }
 
 public func FMData2(int data)
 {
-  if(data == FM_Name)      return("$SawStructure$");
-  if(data == FM_AmmoID)    return(GSAM);
-  if(data == FM_AmmoLoad)  return(20);
+  data ??= 0;
+  if(Equal(data, FM_Name))      return("$SawStructure$");
+  if(Equal(data, FM_AmmoID))    return(GSAM);
+  if(Equal(data, FM_AmmoLoad))  return(20);
 
-  if(data == FM_Reload)    return(120);
-  if(data == FM_Recharge)  return(4);
+  if(Equal(data, FM_Reload))    return(120);
+  if(Equal(data, FM_Recharge))  return(4);
 
-  if(data == FM_AmmoUsage) return(1);
-  if(data == FM_AmmoRate)  return(8);
-  if(data == FM_Auto)      return(true);
+  if(Equal(data, FM_AmmoUsage)) return(1);
+  if(Equal(data, FM_AmmoRate))  return(8);
+  if(Equal(data, FM_Auto))      return(true);
 
 
   return(Default(data));
@@ -60,16 +63,17 @@ public func FMData2(int data)
 
 public func FMData3(int data)
 {
-  if(data == FM_Name)      return("$SawTree$");
-  if(data == FM_AmmoID)    return(GSAM);
-  if(data == FM_AmmoLoad)  return(80);
+  data ??= 0;
+  if(Equal(data, FM_Name))      return("$SawTree$");
+  if(Equal(data, FM_AmmoID))    return(GSAM);
+  if(Equal(data, FM_AmmoLoad))  return(80);
 
-  if(data == FM_Reload)    return(120);
-  if(data == FM_Recharge)  return(4);
+  if(Equal(data, FM_Reload))    return(120);
+  if(Equal(data, FM_Recharge))  return(4);
 
-  if(data == FM_AmmoUsage) return(1);
-  if(data == FM_AmmoRate)  return(1);
-  if(data == FM_Auto)      return(true);
+  if(Equal(data, FM_AmmoUsage)) return(1);
+  if(Equal(data, FM_AmmoRate))  return(1);
+  if(Equal(data, FM_Auto))      return(true);
 
 
 
@@ -81,11 +85,11 @@ public func Fire1()    // Wrrrrr
   var user = GetUser();
   var x,y; user->WeaponEnd(x,y);
   
-  var treffer = false;
+  var treffer = nil;
   
 	for ( var i in FindObjects(
 								Find_NoContainer(),
-								Find_Or(Find_AtPoint(x,y), Find_AtPoint(x/2, y/2), Find_AtPoint(0,0)),
+								Find_Or(Find_AtPoint(x,y), Find_AtPoint((x ?? 0)/2, (y ?? 0)/2), Find_AtPoint(nil,nil)),
 								Find_Or(
 									Find_Func("IsBulletTarget",GetID(),this()),
 									Find_OCF(OCF_Alive)),
@@ -103,23 +107,23 @@ public func Fire1()    // Wrrrrr
 			
 			treffer = true;
 			
-			for ( var i = 3 ; i > 0; i--)
-				CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+			for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+				CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 		}
 		// TODO: Ratsch-Sound, Effekte
 	}
 	if(GBackSolid(x,y)) 
 	{
 		treffer = true;
-		for ( var i = 3 ; i > 0; i--)
-			CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+		for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+			CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 		// TODO: Sirr-Sound
 	}
 	// TODO: Ratter-Sound
 	//DoSound("chainsaw",3);
 	
 	if(treffer)
-		rot = Pulse(GetActTime()*35)/40-15;
+		rot = (Pulse((GetActTime() ?? 0)*35) ?? 0)/40-15;
 	else
 		rot = RandomX(2,7);
 }
@@ -136,11 +140,11 @@ public func Fire2()    // Wrrrrr an Gebäuden
   var user = GetUser();
   var x,y; user->WeaponEnd(x,y);
   
-  var treffer = false;
+  var treffer = nil;
   
 	for ( var i in FindObjects(
                                                                 Find_NoContainer(),
-								Find_Or(Find_AtPoint(x,y), Find_AtPoint(x/2, y/2), Find_AtPoint(0,0)),
+								Find_Or(Find_AtPoint(x,y), Find_AtPoint((x ?? 0)/2, (y ?? 0)/2), Find_AtPoint(nil,nil)),
                                                                 Find_Func("IsBulletExtraTarget",GetID(),this()),
 								Find_Func("CheckEnemy", user),
 								Find_Exclude(user)))
@@ -156,23 +160,23 @@ public func Fire2()    // Wrrrrr an Gebäuden
 			
 			treffer = true;
 			
-			for ( var i = 3 ; i > 0; i--)
-				CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+			for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+				CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 		}
 		// TODO: Ratsch-Sound, Effekte
 	}
 	if(GBackSolid(x,y)) 
 	{
 		treffer = true;
-		for ( var i = 3 ; i > 0; i--)
-			CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+		for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+			CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 		// TODO: Sirr-Sound
 	}
 	// TODO: Ratter-Sound
 	//DoSound("chainsaw",3);
 	
 	if(treffer)
-		rot = Pulse(GetActTime()*35)/40-15;
+		rot = (Pulse((GetActTime() ?? 0)*35) ?? 0)/40-15;
 	else
 		rot = RandomX(2,7);
 }
@@ -185,11 +189,11 @@ public func Fire3()    // Wrrrrr an Bäumen
   var user = GetUser();
   var x,y; user->WeaponEnd(x,y);
   
-  var treffer = false;
+  var treffer = nil;
   
 	for ( var i in FindObjects(
                                                                 Find_NoContainer(),
-								Find_Or(Find_AtPoint(x,y), Find_AtPoint(x/2, y/2), Find_AtPoint(0,0)),
+								Find_Or(Find_AtPoint(x,y), Find_AtPoint((x ?? 0)/2, (y ?? 0)/2), Find_AtPoint(nil,nil)),
                                                                 Find_OCF(OCF_Chop),
 								Find_Exclude(user)))
 	{
@@ -202,21 +206,21 @@ public func Fire3()    // Wrrrrr an Bäumen
 			
 			treffer = true;
 			
-			for ( var i = 3 ; i > 0; i--)
-				CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+			for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+				CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 	}
 	if(GBackSolid(x,y)) 
 	{
 		treffer = true;
-		for ( var i = 3 ; i > 0; i--)
-			CreateParticle("MSpark", x, y, -RandomX(0, 2*x), -RandomX(0, 2*y), Random(25)+10, RGB(255,100+Random(155),Random(220)));
+		for ( var i = 3 ; (i ?? 0) > 0; S42MigrationStep(i, -1, true))
+			CreateParticle("MSpark", x, y, -(RandomX(nil, 2*(x ?? 0)) ?? 0), -(RandomX(nil, 2*(y ?? 0)) ?? 0), (Random(25) ?? 0)+10, RGB(255,100+(Random(155) ?? 0),Random(220)));
 		// TODO: Sirr-Sound
 	}
 	// TODO: Ratter-Sound
 	//DoSound("chainsaw",3);
 	
 	if(treffer)
-		rot = Pulse(GetActTime()*35)/40-15;
+		rot = (Pulse((GetActTime() ?? 0)*35) ?? 0)/40-15;
 	else
 		rot = RandomX(2,7);
 }
@@ -226,7 +230,7 @@ public func Fire3()    // Wrrrrr an Bäumen
 public func OnAutoStart()
 {
 	imfiring = true;
-	Sound("chainsaw_start",0,this());
+	Sound("chainsaw_start",nil,this());
 	ScheduleCall(this(),"ChainsawSound", 19); 
 	//DoSound("chainsaw_start",10);
 	SetAction("Run");
@@ -235,24 +239,25 @@ public func OnAutoStart()
 public func ChainsawSound()
 {
   if(imfiring)
-	Sound("chainsaw",0,this(),0,0,+1);
+	Sound("chainsaw",nil,this(),nil,nil,+1);
 }
 
 public func OnAutoStop()
 {
-  imfiring = 0;
-  rot = 0;
-  Sound("chainsaw",0,this(),0,0,-1);
-  Sound("chainsaw_stop",0,this());
+  imfiring = nil;
+  rot = nil;
+  Sound("chainsaw",nil,this(),nil,nil,-1);
+  Sound("chainsaw_stop",nil,this());
   //DoSound("chainsaw_stop",10);
 }
 
 public func DoSound(string snd, int time)
 {
+	time ??= 0;
 	if(GetEffect("NoSound",this()))
-		return();
+		return;
 	
-	Sound(snd,0,this());
+	Sound(snd,nil,this());
 	AddEffect("NoSound",this(),1,time,this(),GetID());
 }
 
@@ -260,17 +265,17 @@ public func DoSound(string snd, int time)
 
 public func OnSelect()
 {
-	Sound("chainsaw_idle",0,this(),0,0,+1);
+	Sound("chainsaw_idle",nil,this(),nil,nil,+1);
 }
 
 public func OnDeselect()
 {
-	Sound("chainsaw_idle",0,this(),0,0,-1);
+	Sound("chainsaw_idle",nil,this(),nil,nil,-1);
 }
 
 protected func Departure() {
 	_inherited();
-	Sound("chainsaw_idle",0,this(),0,0,-1);
+	Sound("chainsaw_idle",nil,this(),nil,nil,-1);
 }
 
 public func OnReload()

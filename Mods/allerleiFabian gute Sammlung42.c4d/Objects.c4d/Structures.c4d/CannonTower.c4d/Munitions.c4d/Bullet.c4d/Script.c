@@ -1,6 +1,6 @@
 /* Kugel */
 
-#strict
+#strict 3
 
 protected func Hit()
 {

@@ -1,6 +1,6 @@
 /*-- Totes Monster --*/
 
-#strict
+#strict 3
 
 /* Verwesung */
 

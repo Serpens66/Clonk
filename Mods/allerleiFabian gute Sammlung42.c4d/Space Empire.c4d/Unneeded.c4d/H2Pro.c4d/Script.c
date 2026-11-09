@@ -1,6 +1,6 @@
 /*-- H2 Produktion --*/
 
-#strict
+#strict 3
 #include BOB2 // Gebäude-Hilfsobjekt
 
 
@@ -8,7 +8,7 @@ local basement, manager, fill, fill2;
 
 protected func Construction()
 {
-  basement = CreateObject(CB11,0,8,GetOwner());
+  basement = CreateObject(CB11,nil,8,GetOwner());
   return(1);
 }
 
@@ -27,16 +27,16 @@ public func PreDestruction()
 
 public func SpecialExplosion()
 {
-  CastPXS("Water",fill2/5,30);
-  CastObjects(CEH2,fill/50,20,5-Random(11),5-Random(11));
+  CastPXS("Water",(fill2 ?? 0)/5,30);
+  CastObjects(CEH2,(fill ?? 0)/50,20,5-(Random(11) ?? 0),5-(Random(11) ?? 0));
   return(1);
 }
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
-  manager->InitLight(0,-35);  
+  manager->InitLight(nil,-35);
   return(1);
 }
 
@@ -45,8 +45,8 @@ protected func Initialize()
 
 public func FillWithPipe()
 {
-  if (fill2 < GetMaxFill()) { fill2++;  return(1); }
-  return(0);
+  if ((fill2 ?? 0) < (GetMaxFill() ?? 0)) { S42MigrationStep(fill2, 1, true);  return(1); }
+  return(nil);
 }
 
 protected func CheckStatus()
@@ -54,13 +54,13 @@ protected func CheckStatus()
   if (!FindObject(ENRG)) DoEnergy(100);
   if (!CheckPWL()) return(1);
   
-  if ((GetEnergy() < 10) || HasEMP()) return(1);
+  if (Or(((GetEnergy() ?? 0) < 10), HasEMP())) return(1);
   
-  if (fill2 && (fill < GetH2MaxFill())) {
+  if (And(fill2, ((fill ?? 0) < (GetH2MaxFill() ?? 0)))) {
     if (ActIdle()) SetAction("StartWorking");
     DoEnergy(-7);
-    fill2--;
-    fill++;
+    S42MigrationStep(fill2, -1, true);
+    S42MigrationStep(fill, 1, true);
   }
   return(1);
 }
@@ -69,20 +69,20 @@ private func CheckPWL()
 {
   var line;
   if (!FindObject(ENRG)) return(1);
-  while (line = FindObject(PWRL,0,0,0,0, 0,"Connect",this(),0, line))
-    if (GetActionTarget(1,line) == this())
+  while (line = FindObject(PWRL,nil,nil,nil,nil, nil,"Connect",this(),nil, line))
+    if (Equal(GetActionTarget(1,line), this()))
       return(1);
-  return(0);  
+  return(nil);
 }
 
 protected func CheckStatus2()
 {
-  if (FindObject(ENRG) && (GetEnergy() < 10)) return(1);
+  if (And(FindObject(ENRG), ((GetEnergy() ?? 0) < 10))) return(1);
   if (!CheckPWL()) return(1); 
   
   if (HasEMP()) return(1);
   
-  if (fill2 && (fill < GetH2MaxFill())) SetAction("StartWorking");  
+  if (And(fill2, ((fill ?? 0) < (GetH2MaxFill() ?? 0)))) SetAction("StartWorking");
   return(1);
 }
 
@@ -92,7 +92,7 @@ protected func ControlUp()
 {
   [Statusabfrage]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
   ShowInfoBar(IBRE,this(),GetEnergy(),100,5,1);
   return(1);
 }
@@ -101,18 +101,18 @@ protected func ControlDig(caller)
 {
   [Tankoptionen]
   if (HasEMP()) return(Sound("Error"));
-  CreateMenu(CH2P,Par(0),0,0,"H2 Produktion",0,1);
+  CreateMenu(CH2P,Par(nil),nil,nil,"H2 Produktion",nil,1);
   AddMenuItem("Füllstand anzeigen","Infos",INFO,caller);
   
   // Gasflasche füllen
-  if (fill >= 1400) {
+  if ((fill ?? 0) >= 1400) {
     if (FindContents(CGBE))       AddMenuItem("Gasflasche füllen",       "FillGas",  CGBE, caller);
-    if (ContentsCount(CGBE) >= 2) AddMenuItem("alle Gasflaschen füllen", "FillGas",  CGBE, caller, 0, 1); 
+    if ((ContentsCount(CGBE) ?? 0) >= 2) AddMenuItem("alle Gasflaschen füllen", "FillGas",  CGBE, caller, nil, 1);
   }
   // Gasflasche leeren
-  if ((fill+1400) <= GetH2MaxFill()) {
+  if (((fill ?? 0)+1400) <= (GetH2MaxFill() ?? 0)) {
     if (FindContents(CGBF))       AddMenuItem("Gasflasche leeren",       "EmptyGas", CGBF, caller);
-    if (ContentsCount(CGBF) >= 2) AddMenuItem("alle Gasflaschen leeren", "EmptyGas", CGBF, caller, 0, 1);
+    if ((ContentsCount(CGBF) ?? 0) >= 2) AddMenuItem("alle Gasflaschen leeren", "EmptyGas", CGBF, caller, nil, 1);
   }
   return(1);
 }
@@ -120,18 +120,18 @@ protected func ControlDig(caller)
 protected func ControlThrow()
 {
   var fuel = FindContents(WBRL);
-  if (!fuel) return(0);
+  if (!fuel) return(nil);
   
-  if ((fill2+LocalN("iFillLevel",fuel)) > GetMaxFill()) return(Message("Wassertank ist voll"));
+  if (((fill2 ?? 0)+(LocalN("iFillLevel",fuel) ?? 0)) > (GetMaxFill() ?? 0)) return(Message("Wassertank ist voll"));
  
-  fill2 += LocalN("iFillLevel",fuel);  
+  S42MigrationAssign(fill2, "+=", (LocalN("iFillLevel",fuel) ?? 0));
   ChangeDef(BARL,fuel);  
   return(1);
 }
 
 private func Infos()
 {
-  Message("Wassertank: %d % voll | H2-Tank: %d % voll | mögliche H2-Füllungen: %d", this(), (100*fill2)/GetMaxFill(), (100*fill)/GetH2MaxFill(), fill/1400);
+  Message("Wassertank: %d % voll | H2-Tank: %d % voll | mögliche H2-Füllungen: %d", this(), (100*(fill2 ?? 0))/(GetMaxFill() ?? 0), (100*(fill ?? 0))/(GetH2MaxFill() ?? 0), (fill ?? 0)/1400);
   return(1);
 }
 
@@ -139,20 +139,20 @@ private func Infos()
 
 private func FillGas()
 {
-  var bottle = FindContents(Par(0));
+  var bottle = FindContents(Par(nil));
   if (!bottle) return(Sound("Error"));
   
   // eine Gasflasche?
   if (!Par(1)) {
-    if (fill < 1400) return(Sound("Error"));
-    fill-=1400;
+    if ((fill ?? 0) < 1400) return(Sound("Error"));
+    S42MigrationAssign(fill, "-=", 1400);
     bottle->Fill();
     return(1);
   }
   // oder alles, was geht?
-  while (FindContents(Par(0)) && (fill >= 1400)) { 
-    bottle = FindContents(Par(0));
-    fill-=1400; 
+  while (And(FindContents(Par(nil)), ((fill ?? 0) >= 1400))) {
+    bottle = FindContents(Par(nil));
+    S42MigrationAssign(fill, "-=", 1400);
     bottle->Fill();
   }   
   return(1);
@@ -160,26 +160,26 @@ private func FillGas()
 
 private func EmptyGas()
 {
-  var bottle = FindContents(Par(0));
+  var bottle = FindContents(Par(nil));
   if (!bottle) return(Sound("Error"));
   
   // eine Gasflasche?
   if (!Par(1)) {
-    if ((fill+1400) > GetH2MaxFill()) return(Message("Wasserstofftank ist voll",this()));
-    fill+=1400;
+    if (((fill ?? 0)+1400) > (GetH2MaxFill() ?? 0)) return(Message("Wasserstofftank ist voll",this()));
+    S42MigrationAssign(fill, "+=", 1400);
     bottle->Empty();
     return(1);
   }
   // oder alles, was geht?
-  while (FindContents(Par(0)) && ((fill+1400) <= GetH2MaxFill())) { 
-    bottle = FindContents(Par(0));
-    fill+=1400; 
+  while (And(FindContents(Par(nil)), (((fill ?? 0)+1400) <= (GetH2MaxFill() ?? 0)))) {
+    bottle = FindContents(Par(nil));
+    S42MigrationAssign(fill, "+=", 1400);
     bottle->Empty();
   }   
   return(1); 
 }
 
-public func EnoughEnergy() { return(GetEnergy() >= 10); }
+public func EnoughEnergy() { return((GetEnergy() ?? 0) >= 10); }
 
 public func EMP_Reaction() { SetAction("EndWorking"); return(1); }
 

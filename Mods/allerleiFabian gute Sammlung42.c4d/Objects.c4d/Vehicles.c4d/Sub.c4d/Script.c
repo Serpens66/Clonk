@@ -1,6 +1,6 @@
 /*-- U-Boot --*/
 
-#strict
+#strict 3
 
 local turn_end_dir;
 
@@ -9,7 +9,7 @@ local turn_end_dir;
 protected func Completion()
 {
   SetAction("Walk");
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   turn_end_dir = -1;
 }
 
@@ -17,7 +17,7 @@ protected func Completion()
 
 private func TurnEnd()
 {
-  if(turn_end_dir != -1)
+  if(!Equal(turn_end_dir, -1))
   {
     SetDirection(turn_end_dir);
     turn_end_dir = -1;
@@ -26,27 +26,28 @@ private func TurnEnd()
 
 public func SetDirection(int comdir)
 {
+  comdir ??= 0;
   ClearCommand();
 
-  if(GetAction() S= "Turn" || GetAction() S= "Grapple")
+  if(Or(!!SEqual(GetAction(), "Turn"), !!SEqual(GetAction(), "Grapple")))
   {
     // Set direction when Turn action has finished
     turn_end_dir = comdir;
-    return();
+    return;
   }
 
-  if(GetAction() ne "Swim") return();
+  if(!SEqual(GetAction(), "Swim")) return;
 
   SetComDir(comdir);
 
-  if(comdir == COMD_Left || comdir == COMD_Right)
-    SetYDir(0);
-  if(comdir == COMD_Up || comdir == COMD_Down)
-    SetXDir(0);
+  if(Or(Equal(comdir, COMD_Left), Equal(comdir, COMD_Right)))
+    SetYDir(nil);
+  if(Or(Equal(comdir, COMD_Up), Equal(comdir, COMD_Down)))
+    SetXDir(nil);
 
   if(ComDirLike(comdir, COMD_Right))
   {
-    if(GetDir() == DIR_Left)
+    if(Equal(GetDir(), DIR_Left))
     {
       SetAction("Turn");
       SetDir(DIR_Right);
@@ -55,7 +56,7 @@ public func SetDirection(int comdir)
 
   if(ComDirLike(comdir, COMD_Left))
   {
-    if(GetDir() == DIR_Right)
+    if(Equal(GetDir(), DIR_Right))
     {
       SetAction("Turn");
       SetDir(DIR_Left);
@@ -65,6 +66,9 @@ public func SetDirection(int comdir)
 
 protected func ContainedUpdate(object clonk, int comdir, bool dig, bool throw)
 {
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   SetDirection(comdir);
 }
 
@@ -121,7 +125,7 @@ protected func ContainedDig(object clonk)
 {
   [$TxtFire$|Image=SSY1:2]
   var i, obj;
-  for(var i = 0; obj = Contents(i); ++ i)
+  for(var i = nil; obj = Contents(i); S42MigrationStep( i, 1))
     if(obj->~IsTorpedo())
       break;
 
@@ -134,7 +138,9 @@ protected func ContainedDig(object clonk)
 protected func ControlCommand(string szCommand, object pTarget, int iX,int iY)
 {
   // Bewegungskommando
-  if (szCommand S= "MoveTo")
+  iX ??= 0;
+  iY ??= 0;
+  if (!!SEqual(szCommand, "MoveTo"))
   {
     // Reset manual movement
     return(SetCommand(this(),szCommand,pTarget,iX,iY));
@@ -146,17 +152,17 @@ protected func ControlCommand(string szCommand, object pTarget, int iX,int iY)
 protected func RejectCollect(id idObject, object pObject)
 {
   // Anderes Objekt nicht im Freien
-  if (Contained(pObject)) return(0);
+  if (Contained(pObject)) return(nil);
   // Torpedotreffer
   if (pObject->~IsTorpedo())
     return(TorpedoHit(pObject));
   // U-Boot sammelt an Land nichts ein
-  if (GetAction() ne "Swim") return(1);
+  if (!SEqual(GetAction(), "Swim")) return(1);
   // Objekt befindet sich nicht im Bereich des Greifers
-  if (!Inside(GetX(pObject) - GetX() + 30 - GetDir() * 60, -8, +8)) return(1);
-  if (!Inside(GetY(pObject) - GetY() - 14, -8, +8)) return(1);
+  if (!Inside((GetX(pObject) ?? 0) - (GetX() ?? 0) + 30 - (GetDir() ?? 0) * 60, -8, +8)) return(1);
+  if (!Inside((GetY(pObject) ?? 0) - (GetY() ?? 0) - 14, -8, +8)) return(1);
   // Einsammeln okay
-  return(0);
+  return(nil);
 }
 
 protected func Ejection(object obj)
@@ -167,6 +173,7 @@ protected func Ejection(object obj)
 
 protected func Collection(object pObject, bool fPut)
 {
+  fPut ??= false;
   if (fPut) return(1);
   SetAction("Grapple");
   Sound("Grapple");
@@ -181,7 +188,7 @@ protected func ActivateEntrance(object pByObject)
 
 protected func ContactLeft()
 {
-  if(GetAction() ne "Swim") return(0);
+  if(!SEqual(GetAction(), "Swim")) return(nil);
 
   if (ComDirLike(GetComDir(), COMD_Left))
     SetDirection(COMD_Stop);
@@ -189,7 +196,7 @@ protected func ContactLeft()
   
 protected func ContactRight()
 {
-  if(GetAction() ne "Swim") return(0);
+  if(!SEqual(GetAction(), "Swim")) return(nil);
 
   if (ComDirLike(GetComDir(), COMD_Right))
     SetDirection(COMD_Stop);
@@ -207,7 +214,7 @@ private func CheckCommandAction()
   // Wenden nach rechts
   if(GetCommand())
     if(ComDirLike(GetComDir(), COMD_Right))
-      if(GetDir()==DIR_Left)
+      if(Equal(GetDir(), DIR_Left))
       {
         SetAction("Turn");
         SetDir(DIR_Right);
@@ -216,7 +223,7 @@ private func CheckCommandAction()
   // Wenden nach links
   if (GetCommand())
     if (ComDirLike(GetComDir(), COMD_Left))
-      if (GetDir()==DIR_Right())
+      if (Equal(GetDir(), DIR_Right))
       {
         SetAction("Turn");
         SetDir(DIR_Left);
@@ -231,22 +238,22 @@ private func SwimProcess()
 
 private func Bubbling()
 {
-  Bubble(0, Random(4));
-  Bubble(0, -5);
-  Bubble(0, 5);
+  Bubble(nil, Random(4));
+  Bubble(nil, -5);
+  Bubble(nil, 5);
 }
 
 private func TorpedoHit(object pTorpedo)
 {
-  if(GetAction(pTorpedo) ne "Swim") return(1);
-  if(GetActTime(pTorpedo) < 25) return(1);
+  if(!SEqual(GetAction(pTorpedo), "Swim")) return(1);
+  if((GetActTime(pTorpedo) ?? 0) < 25) return(1);
   pTorpedo->~Hit();
   return(1);
 }
 
 private func OpenAirlock()
 {
-  if (GetEntrance()) return(0);
+  if (GetEntrance()) return(nil);
   SetEntrance(1);
   Sound("Airlock1");
   return(1);
@@ -254,20 +261,20 @@ private func OpenAirlock()
 
 private func CloseAirlock()
 {
-  if(!GetEntrance()) return(0);
-  SetEntrance(0);
+  if(!GetEntrance()) return(nil);
+  SetEntrance(nil);
   Sound("Airlock2");
   return(1);
 }
 
 private func Damage()
 {
-  var i=0;
-  if (GetDamage()<150) return(0);
+  var i=nil;
+  if ((GetDamage() ?? 0)<150) return(nil);
   ChangeDef(SUBB);
   SetAction("Wrecked");
   DoCon(-5);
-  while(i++<14) Bubble(Random(30),Random(20));
+  while(S42MigrationStep(i, 1, true)<14) Bubble(Random(30),Random(20));
 }
 
 /* Forschung */

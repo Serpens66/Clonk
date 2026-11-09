@@ -1,6 +1,6 @@
 /*-- Spielzielappend --*/
 
-#strict
+#strict 3
 #appendto GOAL
 
 private func CheckCooperative()

@@ -1,6 +1,6 @@
 /*-- Niedergang --*/
 
-#strict
+#strict 3
 
 local target, add_exit;
 
@@ -17,11 +17,11 @@ public func Activate(new_target, new_add_exit)
 
 protected func Collection2(pObj)
 {
-  if (!target) return(0);
+  if (!target) return(nil);
 
   Enter(target, pObj);
   if (add_exit) AddCommand(pObj, "Exit");
-  SetEntrance(0);
+  SetEntrance(nil);
 }
 
 // Loren nicht im Niedergang ausleeren

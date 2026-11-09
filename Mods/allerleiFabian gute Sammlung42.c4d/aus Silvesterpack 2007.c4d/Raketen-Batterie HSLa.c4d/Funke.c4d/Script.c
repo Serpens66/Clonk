@@ -1,13 +1,13 @@
 /*-- Funke --*/
 
-#strict
+#strict 3
 
 local R,G,B,a,i;
 
 protected func Initialize() {
-  R=0;
-  G=0;
-  B=0;
+  R=nil;
+  G=nil;
+  B=nil;
   return(1);
 }
 
@@ -24,10 +24,10 @@ private func Effect() {
 var zufall1,zufall2;
 zufall1=RandomX(40,60);
 zufall2=Random(50);
-  CreateParticle("EMSpark",0,0,0,0,zufall1,HSLa(R,G,B,zufall2));
-  CreateParticle("PSpark",0,0,0,0,RandomX(1000,1500),HSLa(R,G,B,180));
-  ++i;
-  if(i>=50){
+  CreateParticle("EMSpark",nil,nil,nil,nil,zufall1,HSLa(R,G,B,zufall2));
+  CreateParticle("PSpark",nil,nil,nil,nil,RandomX(1000,1500),HSLa(R,G,B,180));
+  S42MigrationStep(i, 1);
+  if((i ?? 0)>=50){
     return(Finshes());
     }
   return(1);

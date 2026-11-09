@@ -2,7 +2,7 @@
 
 //verwendet SROC Raketen 
 
-#strict
+#strict 3
 
 local target, aimphase, phase, cannon;
 local energyneed;
@@ -22,14 +22,14 @@ public func Init(building, mode, vx, vy, direction)
 {
   SetAction("Wait", building);
   if (mode) energyneed = 30;
-       else energyneed = 0;
-  SetVertex(0,0, GetVertex(0,0)+vx);
-  SetVertex(0,1, GetVertex(0,1)+vy);
+       else energyneed = nil;
+  SetVertex(nil,nil, (GetVertex(nil,nil) ?? 0)+(vx ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1) ?? 0)+(vy ?? 0));
   // Ausrichtung
-  if (direction == 0)
-    if (GetX() < LandscapeWidth()/2) direction = +1;
+  if (Equal(direction, nil))
+    if ((GetX() ?? 0) < (LandscapeWidth() ?? 0)/2) direction = +1;
                                 else direction = -1;
-  if (direction < 0) phase = 40;
+  if ((direction ?? 0) < 0) phase = 40;
                 else phase = 8;
   SetPhase(phase);
 }
@@ -57,8 +57,8 @@ private func EndReloading()
 private func CheckTurnLeft()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (--phase < 0) phase = 47;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, -1) < 0) phase = 47;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -68,8 +68,8 @@ private func CheckTurnLeft()
 private func CheckTurnRight()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (++phase > 47) phase = 0;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, 1) > 47) phase = nil;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -82,8 +82,8 @@ private func ResetAimPhase()
 {
   // Energieverbrauch
   var building = GetActionTarget();
-  if (GetEnergy(building) < energyneed)
-    return(0);
+  if ((GetEnergy(building) ?? 0) < (energyneed ?? 0))
+    return(nil);
   // Ziel suchen
   target = GetTargetVehicle(700);      // gegnerisches Fahrzeug
   if (!target) target = GetTargetCrew(700);    // gegnerisches Fahrzeug
@@ -91,10 +91,10 @@ private func ResetAimPhase()
   if (!target) target = GetOtherThreats(700); // feindliche Raumgleiter, gefährliche tiere und aliens
   if (!target) return(1);
   // Ausrichtungswinkel
-  var angle = Angle(GetX(),GetY(), GetX(target)+GetXDir(target), GetY(target)+GetYDir(target));
-  aimphase = ((angle*2 + 7) / 15) % 48;
+  var angle = Angle(GetX(),GetY(), (GetX(target) ?? 0)+(GetXDir(target) ?? 0), (GetY(target) ?? 0)+(GetYDir(target) ?? 0));
+  aimphase = (((angle ?? 0)*2 + 7) / 15) % 48;
   // passt die Ausrichtung schon?
-  if (phase == aimphase)
+  if (Equal(phase, aimphase))
   {
     // Drehung anhalten
     SetAction("Wait");
@@ -102,8 +102,8 @@ private func ResetAimPhase()
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(MIAP,0,0,0,0,0,0,0,building);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(MIAP,nil,nil,nil,nil,nil,nil,nil,building);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
  munitionspack->~RestAmmoreduzieren(Munitionsverbrauch()); // restmunition im Paket wird um 1 pro Salve reduziert 
       // abfeuern
@@ -111,12 +111,12 @@ if(munitionspack)
       var xofs = GetXoffset(phase,cannon);
       var yofs = GetYoffset(phase);
       Exit(rocket, xofs,yofs, angle);
-      SetPosition(GetX()+xofs, GetY()+yofs, rocket);
+      SetPosition((GetX() ?? 0)+(xofs ?? 0), (GetY() ?? 0)+(yofs ?? 0), rocket);
       rocket->Launch(this(),angle);
       // Sound
       Sound("Launch");
       // Energieverbrauch
-      DoEnergy(-energyneed, building);
+      DoEnergy(-(energyneed ?? 0), building);
       // nachladen
       SetAction("Reload");
       SetPhase(phase);
@@ -126,10 +126,10 @@ if(munitionspack)
     return(1);
   }
   // neu ausrichten
-  if ((phase < aimphase) ^ Inside(phase-aimphase, -24, +24))
+  if ((((phase ?? 0) < (aimphase ?? 0)) ?? 0) ^ (Inside((phase ?? 0)-(aimphase ?? 0), -24, +24) ?? 0))
   {
     SetAction("TurnLeft");
-    SetPhase((48-phase) % 48);
+    SetPhase((48-(phase ?? 0)) % 48);
     return(1);
   }
   SetAction("TurnRight");
@@ -144,10 +144,10 @@ if(munitionspack)
 private func InitLocals()
 {
   // X-Werte          // mehr X-Werte     // Y-Werte
-  Local(0)  = -4;     Local(24) = -4;     Local(48) = -11;
+  Local(nil)  = -4;     Local(24) = -4;     Local(48) = -11;
   Local(1)  = -3;     Local(25) = -5;     Local(49) = -11;
   Local(2)  = -1;     Local(26) = -6;     Local(50) = -11;
-  Local(3)  = 0;      Local(27) = -7;     Local(51) = -10;
+  Local(3)  = nil;      Local(27) = -7;     Local(51) = -10;
   Local(4)  = +1;     Local(28) = -8;     Local(52) = -10;
   Local(5)  = +3;     Local(29) = -9;     Local(53) = -9;
   Local(6)  = +5;     Local(30) = -10;    Local(54) = -8;
@@ -164,7 +164,7 @@ private func InitLocals()
   Local(17) = +5;     Local(41) = -11;    Local(65) = +8;
   Local(18) = +3;     Local(42) = -10;    Local(66) = +9;
   Local(19) = +1;     Local(43) = -9;     Local(67) = +9;
-  Local(20) = 0;      Local(44) = -8;     Local(68) = +10;
+  Local(20) = nil;      Local(44) = -8;     Local(68) = +10;
   Local(21) = -1;     Local(45) = -7;     Local(69) = +10;
   Local(22) = -2;     Local(46) = -6;     Local(70) = +10;
   Local(23) = -3;     Local(47) = -5;     Local(71) = +10;
@@ -176,8 +176,8 @@ private func GetXoffset(phase, cannon)
   // rechte Kanone
   if (cannon)
   { 
-    phase = (48-phase) % 48;
-    return(-Local(phase)-1);
+    phase = (48-(phase ?? 0)) % 48;
+    return(-(Local(phase) ?? 0)-1);
   }
   // linke Kanone
   return(Local(phase));
@@ -186,13 +186,14 @@ private func GetXoffset(phase, cannon)
 private func GetYoffset(phase)
 {
   // auf Phase zwischen 0 und 24 zurückrechnen
-  if (phase > 24)
-    phase = (48-phase) % 48;
-  return(Local(phase+48));
+  if ((phase ?? 0) > 24)
+    phase = (48-(phase ?? 0)) % 48;
+  return(Local((phase ?? 0)+48));
 }
 
 
 /* Energieverbrauch */
 
-public EnergyNeed: return(energyneed);
+public func EnergyNeed(...) { return(energyneed);
+}
 

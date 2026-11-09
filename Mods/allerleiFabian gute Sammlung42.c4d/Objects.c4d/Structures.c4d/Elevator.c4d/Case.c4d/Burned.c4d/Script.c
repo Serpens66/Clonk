@@ -1,12 +1,12 @@
 /*-- Verbrannter Fahrstuhlkorb --*/
 
-#strict
+#strict 3
 
 /* Status */
 
 private func Elevator()
 {
-  return (FindObject(0, 0, 0, 0, 0, 0, "LiftCase", this()));
+  return (FindObject(nil, nil, nil, nil, nil, nil, "LiftCase", this()));
 }
 
 /* Zerstörung: Reduzieren des Fahrstuhls für Wiederaufbau/Reparatur */

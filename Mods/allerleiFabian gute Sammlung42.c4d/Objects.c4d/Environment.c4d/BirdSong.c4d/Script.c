@@ -1,6 +1,6 @@
 /*-- Vogelgezwitscher --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -13,7 +13,7 @@ private func Singing()
 {
   // Bei Nacht schlafen die Vögelchen
   if (IsNight())
-    return(0);
+    return(nil);
   // Bei Tag singen sie
   if (!Random(8))
     Sound("BirdSong*",1);

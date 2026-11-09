@@ -1,6 +1,6 @@
 /*-- Verbrannter Fahrstuhl --*/
 
-#strict
+#strict 3
 
 #include ELBS
 

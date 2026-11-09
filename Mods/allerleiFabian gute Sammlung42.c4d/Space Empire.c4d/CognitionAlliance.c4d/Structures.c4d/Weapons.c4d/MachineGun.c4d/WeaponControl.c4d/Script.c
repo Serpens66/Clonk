@@ -1,13 +1,13 @@
 /*-- Waffenkontrolle --*/
 
 
-#strict
+#strict 3
 
 local controller, building;
 
 public func Init()
 {
- controller=Par(0);
+ controller=Par(nil);
  building=Par(1);
  InitLocals();
  return(1);
@@ -22,8 +22,8 @@ protected func Firing()
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(STAP,0,0,0,0,0,0,0,building);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(STAP,nil,nil,nil,nil,nil,nil,nil,building);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
 munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch()); 
  if(!Random(2)) Sound("AutoGun*");
@@ -31,7 +31,7 @@ munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch());
   var angle, xdir, ydir;
   var xofs, yofs;
   var phase=GetPhase(controller);
-  if (GetAction(controller) eq "TurnLeft") phase=47-phase;
+  if (!!SEqual(GetAction(controller), "TurnLeft")) phase=47-(phase ?? 0);
   // Feuern
   xofs = Local(phase);
   yofs = GetYoffset(phase);
@@ -44,8 +44,8 @@ munitionspack->~RestAmmoreduzieren(controller->~Munitionsverbrauch());
 private func InitLocals()
 {
   // X-Werte          // mehr X-Werte     // Y-Werte
-  Local(0)  = -1;    Local(24) = -2;     Local(48) = -12;
-  Local(1)  = 0;     Local(25) = -3;     Local(49) = -12;
+  Local(nil)  = -1;    Local(24) = -2;     Local(48) = -12;
+  Local(1)  = nil;     Local(25) = -3;     Local(49) = -12;
   Local(2)  = +2;    Local(26) = -4;     Local(50) = -12;
   Local(3)  = +3;    Local(27) = -6;     Local(51) = -12;
   Local(4)  = +5;    Local(28) = -8;     Local(52) = -12;
@@ -55,7 +55,7 @@ private func InitLocals()
   Local(8)  = +15;   Local(32) = -17;    Local(56) = -8;
   Local(9)  = +18;   Local(33) = -20;    Local(57) = -6;
   Local(10) = +21;   Local(34) = -23;    Local(58) = -3;
-  Local(11) = +23;   Local(35) = -26;    Local(59) = 0;
+  Local(11) = +23;   Local(35) = -26;    Local(59) = nil;
   Local(12) = +24;   Local(36) = -28;    Local(60) = +3;
   Local(13) = +23;   Local(37) = -26;    Local(61) = +6;
   Local(14) = +22;   Local(38) = -24;    Local(62) = +8;
@@ -67,7 +67,7 @@ private func InitLocals()
   Local(20) = +5;    Local(44) = -8;     Local(68) = +12;
   Local(21) = +4;    Local(45) = -7;     Local(69) = +12;
   Local(22) = +2;    Local(46) = -5;     Local(70) = +12;
-  Local(23) = 0;     Local(47) = -3;     Local(71) = +12;
+  Local(23) = nil;     Local(47) = -3;     Local(71) = +12;
 }
 
 // Wiedergabe des Offsets bezüglich des Animationsframes
@@ -75,9 +75,9 @@ private func InitLocals()
 private func GetYoffset(phase)
 {
   // auf Phase zwischen 0 und 24 zurückrechnen
-  if (phase > 24)
-    phase = (48-phase) % 48;
-  return(Local(phase+48));
+  if ((phase ?? 0) > 24)
+    phase = (48-(phase ?? 0)) % 48;
+  return(Local((phase ?? 0)+48));
 }
 
 

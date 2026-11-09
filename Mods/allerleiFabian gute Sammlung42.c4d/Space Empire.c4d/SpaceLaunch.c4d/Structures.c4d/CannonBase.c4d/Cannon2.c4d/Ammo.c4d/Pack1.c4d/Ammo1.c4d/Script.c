@@ -1,31 +1,35 @@
 /*-- Explosiv-Munition --*/
 
-#strict
+#strict 3
 #include SOAM
 
 
 /* Fliegt */
 
-protected Travel:
+protected func Travel(...) {
   // Treffer-Überprüfung
-  if (FindTarget() || FindVehicle())
+  if (Or(FindTarget(), FindVehicle()))
     return(Hit());
-  Smoke(0,0,5);
+  Smoke(nil,nil,5);
   SetDirection();
   return(1);
+}
 
 /* Aufprall */
 
-protected Hit:
-  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(15*combi);  //vorheriger Wert von 31*combi war viel zu stark
-  else FakeExplode(15*combi,0,0,15*combi);
+protected func Hit(...) {
+  if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID()))) Explode(15*(combi ?? 0));  //vorheriger Wert von 31*combi war viel zu stark
+  else FakeExplode(15*(combi ?? 0),nil,nil,15*(combi ?? 0));
   return(1);
+}
 
 /* Zerstörung */
 
-public Destroy:
+public func Destroy(...) {
   CastPXS("FlyAshes",25,25);
   return(Hit());
+}
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

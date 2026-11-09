@@ -1,21 +1,25 @@
 /*-- Feuerlichter --*/
 
-#strict
+#strict 3
 
 static const RDW_Firelight_Var=15;
 
 global func FxFireStart(object obj, int iNumber, int iTemp, int iCausedBy, bool fBlasted, object pIncineratingObject)
 {
+  iNumber ??= 0;
+  iTemp ??= 0;
+  iCausedBy ??= 0;
+  fBlasted ??= false;
   var ret=inherited(obj, iNumber, iTemp, iCausedBy, fBlasted, pIncineratingObject);
-  if(ret>-1)
+  if((ret ?? 0)>-1)
     if(!iTemp)
-      if(dayhelligkeit<30)
+      if((dayhelligkeit ?? 0)<30)
         //if(GetCategory(obj)&C4D_Structure||GetCategory(obj)&C4D_Vehicle||GetCategory(obj)&C4D_StaticBack||GetCategory(obj)&C4D_Object)
-if (obj->GetID()!= DFLM && obj->GetID()!= DFL2 && obj->GetID()!= FLAM && obj->GetID()!= MFLM && obj->GetID()!= GRA9 && obj->GetID()!= HZCK&& obj->GetID()!= _Y7D && obj->GetID()!= NSWA && obj->GetID()!= SWAV && obj->GetID()!= SFRX && obj->GetID()!= MTNT && GetID(obj)!=MONS)
-          if(!IsAntiLag() && !(ObjectCount(FI_R)))
+if (And(And(And(And(And(And(And(And(And(And(And(!Equal(obj->GetID(), DFLM), !Equal(obj->GetID(), DFL2)), !Equal(obj->GetID(), FLAM)), !Equal(obj->GetID(), MFLM)), !Equal(obj->GetID(), GRA9)), !Equal(obj->GetID(), HZCK)), !Equal(obj->GetID(), _Y7D)), !Equal(obj->GetID(), NSWA)), !Equal(obj->GetID(), SWAV)), !Equal(obj->GetID(), SFRX)), !Equal(obj->GetID(), MTNT)), !Equal(GetID(obj), MONS)))
+          if(And(!IsAntiLag(), !(ObjectCount(FI_R))))
           {
-            EffectVar(RDW_Firelight_Var,obj,iNumber)=CreateObject(LGFL,0,0,-1);
-            EffectVar(RDW_Firelight_Var,obj,iNumber)->Init(obj,0,0,GetDefWidth(GetID(obj))*(GetCon(obj)-10)*4/100,RGB(150,100,50),true);
+            EffectVar(RDW_Firelight_Var,obj,iNumber)=CreateObject(LGFL,nil,nil,-1);
+            EffectVar(RDW_Firelight_Var,obj,iNumber)->Init(obj,nil,nil,(GetDefWidth(GetID(obj)) ?? 0)*((GetCon(obj) ?? 0)-10)*4/100,RGB(150,100,50),true);
           }
   return(ret);
 }
@@ -23,7 +27,7 @@ if (obj->GetID()!= DFLM && obj->GetID()!= DFL2 && obj->GetID()!= FLAM && obj->Ge
 global func FxFireTimer(obj,iNumber,iTime)
 {
   if(EffectVar(RDW_Firelight_Var,obj,iNumber))
-    EffectVar(RDW_Firelight_Var,obj,iNumber)->Init(obj,0,0,(GetDefWidth(GetID(obj))*(GetCon(obj)-10)*4/100)+RandomX(-10,10),RGB(150,100,50),true);
+    EffectVar(RDW_Firelight_Var,obj,iNumber)->Init(obj,nil,nil,((GetDefWidth(GetID(obj)) ?? 0)*((GetCon(obj) ?? 0)-10)*4/100)+(RandomX(-10,10) ?? 0),RGB(150,100,50),true);
   return(inherited(Par(), Par(1), Par(2), Par(3), Par(4), Par(5), Par(6), Par(7), Par(8), Par(9)));
 }
 

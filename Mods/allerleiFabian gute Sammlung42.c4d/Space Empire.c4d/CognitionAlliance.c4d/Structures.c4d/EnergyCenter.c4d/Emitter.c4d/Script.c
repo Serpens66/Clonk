@@ -1,6 +1,6 @@
 /*-- Energieemitter --*/
 
-#strict
+#strict 3
 
 
 local plant, switched;
@@ -13,19 +13,19 @@ protected func Initialize()
 
 public func Init()
 {
-  plant=Par(0);
+  plant=Par(nil);
   SetAction("Rotating",plant);
-  return();
+  return;
 }
 
 public func Switch()
 {
-  switched=Par(0);
+  switched=Par(nil);
   return(1);
 }
 
 protected func Check()
 {
-  if ((GetEnergy(plant) >= 10) && switched) return(SetAction("Rotating",plant));
+  if (And(((GetEnergy(plant) ?? 0) >= 10), switched)) return(SetAction("Rotating",plant));
   return(SetAction("Waiting",plant));
 }

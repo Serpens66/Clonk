@@ -1,6 +1,6 @@
 /*-- Blitz --*/
 
-#strict
+#strict 3
 
 /* Locals */
 
@@ -30,23 +30,23 @@ public func Launch(iX, iY, iAngle)
   XDir = Cos(iAngle, 10, 10);
 //  if (iDir == DIR_Left()) XDir = -Cos(iAngle, 10, 10);
 //  else (XDir = +Cos(iAngle, 10, 10));
-  Activate(iX, iY, XDir, 0, -Sin(iAngle, 10, 10));
+  Activate(iX, iY, XDir, nil, -(Sin(iAngle, 10, 10) ?? 0));
   return(1);
 }
 
 private func Timer()
 {
-  var i=0;
+  var i=nil;
   var r;
   // Partikel-Effekt
-  while(i < GetVertexNum()-1)
+  while((i ?? 0) < (GetVertexNum() ?? 0)-1)
   {
-  	r = (90*i)/GetVertexNum();
-    DrawParticleLine ("LightningSpark", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(), 6, 60, RGB(255,255,128+Sin(r,255)));
-    DrawParticleLine ("LightningSpark", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(),  3, 25, RGB(255,255,250));
-    i++;
+        r = (90*(i ?? 0))/(GetVertexNum() ?? 0);
+    DrawParticleLine ("LightningSpark", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0), 6, 60, RGB(255,255,128+(Sin(r,255) ?? 0)));
+    DrawParticleLine ("LightningSpark", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0),  3, 25, RGB(255,255,250));
+    S42MigrationStep(i, 1, true);
   }
 }
 
@@ -55,48 +55,48 @@ private func Timer()
 private func Advance()
 {
   // Einschlag
-  var iVtx = GetVertexNum()-1, iVtxX = GetVertex(iVtx, 0), iVtxY = GetVertex(iVtx, 1);
-  if (GBackSolid(iVtxX-GetX(), iVtxY-GetY() ))
+  var iVtx = (GetVertexNum() ?? 0)-1, iVtxX = GetVertex(iVtx, nil), iVtxY = GetVertex(iVtx, 1);
+  if (GBackSolid((iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0) ))
     return(Remove());
 
   // Neuen Eckpunkt
-  if (!AddVertex( iVtxX+iAdvX+RandomX(-5,5), iVtxY+iAdvY+RandomX(-5,5)))
+  if (!AddVertex( (iVtxX ?? 0)+(iAdvX ?? 0)+(RandomX(-5,5) ?? 0), (iVtxY ?? 0)+(iAdvY ?? 0)+(RandomX(-5,5) ?? 0)))
     return(Remove());
 
   SetPosition(GetVertex(GetVertexNum()), GetVertex(GetVertexNum(), 1));
   
   // Im Wasser?
-  if (GBackLiquid(iVtxX-GetX(), iVtxY-GetY() ))
+  if (GBackLiquid((iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0) ))
   {
 	  var obj;
 	  // Alle Lebewesen in der Nähe bekommen was ab
-	  while (obj = FindObject( 0, iVtxX-GetX()-400, iVtxY-GetY()-400, 800, 800, OCF_Alive(), 0,0, NoContainer(),obj  ) )
+	  while (obj = FindObject( nil, (iVtxX ?? 0)-(GetX() ?? 0)-400, (iVtxY ?? 0)-(GetY() ?? 0)-400, 800, 800, OCF_Alive, nil,nil, NoContainer(),obj  ) )
     	  {
       	    if(!PathFree(iVtxX, iVtxY, GetX(obj), GetY(obj))) continue;
-	    if(!GBackLiquid(GetX(obj)-GetX(), GetY(obj)-GetY())) continue;
+	    if(!GBackLiquid((GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0))) continue;
   	    obj->~LightningStrike();
   	    DoDmg(12, DMG_Energy, obj);
-            DrawParticleLine ("LightningSpark2", iVtxX-GetX(), iVtxY-GetY(), 
-		    GetX(obj)-GetX(), GetY(obj)-GetY(), 6, 60, RGB(0,100,255));
-            DrawParticleLine ("LightningSpark2", iVtxX-GetX(), iVtxY-GetY(), 
-		    GetX(obj)-GetX(), GetY(obj)-GetY(),  3, 25, RGB(250,250,255));
+            DrawParticleLine ("LightningSpark2", (iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0),
+		    (GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0), 6, 60, RGB(nil,100,255));
+            DrawParticleLine ("LightningSpark2", (iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0),
+		    (GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0),  3, 25, RGB(250,250,255));
           }
 	  return(Remove());
   }
   
   // Objektanziehung
-  iVtx = GetVertexNum()-1; iVtxX = GetVertex(iVtx, 0); iVtxY = GetVertex(iVtx, 1);
+  iVtx = (GetVertexNum() ?? 0)-1; iVtxX = GetVertex(iVtx, nil); iVtxY = GetVertex(iVtx, 1);
   var obj;
-  if (iVtx>7)
+  if ((iVtx ?? 0)>7)
   {
-    while (obj = FindObject( 0, iVtxX-GetX()-25, iVtxY-GetY()-25, 50, 50, OCF_Alive(), 0,0, NoContainer(),obj  ) )
+    while (obj = FindObject( nil, (iVtxX ?? 0)-(GetX() ?? 0)-25, (iVtxY ?? 0)-(GetY() ?? 0)-25, 50, 50, OCF_Alive, nil,nil, NoContainer(),obj  ) )
     {
       if(!PathFree(iVtxX, iVtxY, GetX(obj), GetY(obj))) continue;
       Attraction(obj);
       break;
     }
   }
-  for(obj in FindObjects(Find_ID(GetID()), Find_Distance(35,iVtxX-GetX(), iVtxY-GetY()), Find_Exclude(this())))
+  for(obj in FindObjects(Find_ID(GetID()), Find_Distance(35,(iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0)), Find_Exclude(this())))
   {
     AttractionLightning(obj);
     break;
@@ -104,7 +104,7 @@ private func Advance()
   
 //  Timer();
   // Weiter	
-  return();
+  return;
 }
 
 /* Effekte */
@@ -112,8 +112,8 @@ private func Advance()
 private func Sparkle()
 {
 //  Timer();
-  var iVtx = GetVertexNum()-1, iVtxX = GetVertex(iVtx, 0), iVtxY = GetVertex(iVtx, 1);
-  CastObjects(SPRK,1,20,iVtxX-GetX(), iVtxY-GetY());
+  var iVtx = (GetVertexNum() ?? 0)-1, iVtxX = GetVertex(iVtx, nil), iVtxY = GetVertex(iVtx, 1);
+  CastObjects(SPRK,1,20,(iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0));
   return(1);
 }
 
@@ -122,8 +122,8 @@ private func Sparkle()
 private func Attraction(obj)
 {
   // Einschlag in Objekt
-  AddVertex( GetVertex(0,0,obj)+GetX(obj),
-             GetVertex(0,1,obj)+GetY(obj) );
+  AddVertex( (GetVertex(nil,nil,obj) ?? 0)+(GetX(obj) ?? 0),
+             (GetVertex(nil,1,obj) ?? 0)+(GetY(obj) ?? 0) );
   obj->~LightningStrike(this());
   SetAction("Connect");
   DoDmg(20, DMG_Energy, obj);
@@ -132,16 +132,16 @@ private func Attraction(obj)
 public func LightningStrike(obj)
 {
   // Einschlag in Objekt
-  AddVertex( GetVertex(GetVertexNum(obj)-1,0,obj),
-             GetVertex(GetVertexNum(obj)-1,1,obj) );
+  AddVertex( GetVertex((GetVertexNum(obj) ?? 0)-1,nil,obj),
+             GetVertex((GetVertexNum(obj) ?? 0)-1,1,obj) );
   SetAction("Connect");
 }
 
 private func AttractionLightning(obj)
 {
   // Einschlag in Objekt
-  AddVertex( GetVertex(GetVertexNum(obj)-1,0,obj),
-             GetVertex(GetVertexNum(obj)-1,1,obj) );
+  AddVertex( GetVertex((GetVertexNum(obj) ?? 0)-1,nil,obj),
+             GetVertex((GetVertexNum(obj) ?? 0)-1,1,obj) );
   obj->~LightningStrike(this());
   SetAction("Connect");
 }
@@ -150,22 +150,22 @@ private func AttractionLightning(obj)
 
 private func Remove()
 {
-  var i=0;
+  var i=nil;
   var r;
   // Leuchten
-  while(i<GetVertexNum()-1)
+  while((i ?? 0)<(GetVertexNum() ?? 0)-1)
   {
-   r = (180*i)/GetVertexNum();
-    DrawParticleLine ("LightningSpark", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(), 6, 60-r/6, RGBa(255,255,128+Sin(r,128),20));
-    DrawParticleLine ("LightningSpark", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(),  2, 25-r/10, RGB(255,255,250));
+   r = (180*(i ?? 0))/(GetVertexNum() ?? 0);
+    DrawParticleLine ("LightningSpark", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0), 6, 60-(r ?? 0)/6, RGBa(255,255,128+(Sin(r,128) ?? 0),20));
+    DrawParticleLine ("LightningSpark", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0),  2, 25-(r ?? 0)/10, RGB(255,255,250));
 		    
-    DrawParticleLine ("LightningSpark2", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(), 6, 60-r/6, RGBa(255,255,128+Sin(r,128),20));
-    DrawParticleLine ("LightningSpark2", GetVertex(i)-GetX(), GetVertex(i, 1)-GetY(), 
-		    GetVertex(i+1)-GetX(), GetVertex(i+1,1)-GetY(),  2, 25-r/10, RGB(255,255,250));
-    i++;
+    DrawParticleLine ("LightningSpark2", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0), 6, 60-(r ?? 0)/6, RGBa(255,255,128+(Sin(r,128) ?? 0),20));
+    DrawParticleLine ("LightningSpark2", (GetVertex(i) ?? 0)-(GetX() ?? 0), (GetVertex(i, 1) ?? 0)-(GetY() ?? 0),
+		    (GetVertex((i ?? 0)+1) ?? 0)-(GetX() ?? 0), (GetVertex((i ?? 0)+1,1) ?? 0)-(GetY() ?? 0),  2, 25-(r ?? 0)/10, RGB(255,255,250));
+    S42MigrationStep(i, 1, true);
   }
   
   RemoveObject();

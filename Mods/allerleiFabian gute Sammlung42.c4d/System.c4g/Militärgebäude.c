@@ -3,7 +3,7 @@
 // Militärgebäude werden ab und an von der KI angegriffen
 // alle anderen Gebäude werden verschont
 
-#strict
+#strict 3
 
 // Gebäde
 #appendto CDFT // Abwehrturm
@@ -19,7 +19,7 @@
 // Fahrzeuge die betreten werden
 // können mit IsHazardShip() gefunden werden, dürfen dann aber nicht Controller -1 haben, dann werden sie auch angegriffen
 
-func IsMilitaryBuilding() { if(GetOCF() & OCF_Fullcon) return(1); return(0);}
+func IsMilitaryBuilding() { if((GetOCF() ?? 0) & (OCF_Fullcon ?? 0)) return(1); return(nil);}
 
 
 

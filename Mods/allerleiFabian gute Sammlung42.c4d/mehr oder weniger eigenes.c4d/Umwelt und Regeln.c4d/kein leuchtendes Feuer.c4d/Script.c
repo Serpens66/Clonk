@@ -1,6 +1,6 @@
 /*-- kein leuchtendes Feuer --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

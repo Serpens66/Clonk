@@ -1,6 +1,6 @@
 /*-- Brücke --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -16,14 +16,14 @@ func Bezug(_vessel)
 
 func Besetzt()
 {
-  if(pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this())) return(1);
-  return(0);
+  if(pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this())) return(1);
+  return(nil);
 }
 
 
 func Explosion(sphere)
 {
-  pilot=FindObject(0, 0,0,-1,-1, OCF_CrewMember(),0,0,this()); 
+  pilot=FindObject(nil, nil,nil,-1,-1, OCF_CrewMember,nil,nil,this());
   Enter(sphere,pilot);
   RemoveObject();
   return(1);
@@ -33,7 +33,7 @@ func Explosion(sphere)
 //Nichts Aufnehmen
 protected func RejectCollect()
 {
-  return(0);
+  return(nil);
 }
 
 
@@ -51,16 +51,16 @@ func Ausstieg()
 func ContainedDig(pByObj) 
 {
   pilot=pByObj;
-  CreateMenu(A56B,Par(0),0,0,0,0);
-  AddMenuItem("%s","Schwebe",CB_2,Par(0));   //Schwebe	
-  AddMenuItem("%s","Damage",CB_3,Par(0));    //Schaden	
-  AddMenuItem("%s","Ausstieg",CB_1,Par(0));    //Ausstieg	
+  CreateMenu(A56B,Par(nil),nil,nil,nil,nil);
+  AddMenuItem("%s","Schwebe",CB_2,Par(nil));   //Schwebe
+  AddMenuItem("%s","Damage",CB_3,Par(nil));    //Schaden
+  AddMenuItem("%s","Ausstieg",CB_1,Par(nil));    //Ausstieg
   return(1);
 }
 
 func Damage()
 {
-  Message("Schaden: %d%.",this(),GetDamage(vessel)/5);
+  Message("Schaden: %d%.",this(),(GetDamage(vessel) ?? 0)/5);
   return(1);
 }
 
@@ -82,7 +82,7 @@ func ContainedThrow()
 func ContainedUp()
 {
   if(SEqual(GetAction(vessel),"Down")) return(1);
-  SetComDir(COMD_Up(),vessel);
+  SetComDir(COMD_Up,vessel);
   return(1);
 }
 
@@ -90,7 +90,7 @@ func ContainedUp()
 func ContainedDown()
 {
   if(SEqual(GetAction(vessel),"Down")) return(1);
-  SetComDir(COMD_Down(),vessel);
+  SetComDir(COMD_Down,vessel);
   return(1);
 }
 
@@ -98,7 +98,7 @@ func ContainedDown()
 func ContainedLeft()
 {
   if(SEqual(GetAction(vessel),"Down")) return(1);
-  SetComDir(COMD_Left(),vessel);
+  SetComDir(COMD_Left,vessel);
   return(1);
 }
 
@@ -106,7 +106,7 @@ func ContainedLeft()
 func ContainedRight()
 {
   if(SEqual(GetAction(vessel),"Down")) return(1);
-  SetComDir(COMD_Right(),vessel);
+  SetComDir(COMD_Right,vessel);
   return(1);
 }
 

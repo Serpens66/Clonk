@@ -1,6 +1,6 @@
 /*-- Geothermalkraftwerk --*/
 
-#strict
+#strict 3
 #include BOB1
 #include XMTR
 
@@ -12,16 +12,16 @@ local lavatank;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(-21,-11);
-  lavatank = CreateObject(SLVT,0,0,GetOwner());
+  lavatank = CreateObject(SLVT,nil,nil,GetOwner());
   lavatank->Init(this());
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS23,0,+8,GetOwner());
+  basement = CreateObject(BS23,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -44,31 +44,33 @@ public func Destroy()
 {
   // Inhalt rausschleudern
   if (lavatank)
-    CastPXS("DuroLava", lavatank->GetFill()/3, 50);
+    CastPXS("DuroLava", (lavatank->GetFill() ?? 0)/3, 50);
   inherited();
 }
 
 
 /* Steuerung von innen */
 
-protected ContainedUp:
+protected func ContainedUp(...) {
   [Füllstand|Image=SLVT]
   ShowInfoBar(IBRE, this(), lavatank->GetFill(), lavatank->GetMaxFill(), 5, 1);
   return(1);
+}
 
-protected ContainedDig:
+protected func ContainedDig(...) {
   [ein/ausschalten]
   lavatank->SwitchOnOff();
   return(1);
+}
 
 
 /* Auffüllen per Leitung */
 
 public func FillWithPipe(mat, value)
 {
-  if (mat == -1) return(0);
-  if ((mat != Material("DuroLava"))
-   && (mat != Material("Lava"))) return(0);
+  if (Equal(mat, -1)) return(nil);
+  if (And((!Equal(mat, Material("DuroLava")))
+   , (!Equal(mat, Material("Lava"))))) return(nil);
   // versuchen, aufzufüllen
   return(lavatank->DoFill(value));
 }
@@ -79,10 +81,10 @@ public func FillWithPipe(mat, value)
 public func EnergyProduction()
 {
   // Aufruf vom Tank
-  Smoke(-26, -22, Random(5)+3);
-  Smoke(-26, -17, Random(5)+3);
-  Smoke(2, -22, Random(5)+3);
-  Smoke(2, -17, Random(5)+3);
+  Smoke(-26, -22, (Random(5) ?? 0)+3);
+  Smoke(-26, -17, (Random(5) ?? 0)+3);
+  Smoke(2, -22, (Random(5) ?? 0)+3);
+  Smoke(2, -17, (Random(5) ?? 0)+3);
   DoEnergy(+20);
 }
 
@@ -100,15 +102,18 @@ public func EMP_Reaction()
 
 private func InfoBarText(barID, fill, maxf)
 {
-  if (barID == IBRE)
-    return(Format("@Füllmenge:  %d%", fill*100/maxf));
-  return(0);
+  if (Equal(barID, IBRE))
+    return(Format("@Füllmenge:  %d%", (fill ?? 0)*100/(maxf ?? 0)));
+  return(nil);
 }
 
 
 /* Eigenschaften */
 
-public InfoBarPos:  return(5);
-public InfoBarSize: return(4);
-public GetMaxDamage: return(110);
+public func InfoBarPos(...) {  return(5);
+}
+public func InfoBarSize(...) { return(4);
+}
+public func GetMaxDamage(...) { return(110);
+}
 

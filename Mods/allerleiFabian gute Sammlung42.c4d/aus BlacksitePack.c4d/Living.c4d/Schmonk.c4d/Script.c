@@ -1,6 +1,6 @@
 /*-- Schmonk --*/
 
-#strict
+#strict 3
 #include ANIM
 
 public func IsThreat() {return(true);}
@@ -16,22 +16,22 @@ protected func Initialize() { return(Birth()); }
 private func Activity()
 {
   // Auftauchen, wenn der Atem ausgeht
-  if(InLiquid() && GetBreath() <= 25 && GetComDir() != COMD_Up())
-    SetComDir(COMD_Up());
+  if(And(And(InLiquid(), (GetBreath() ?? 0) <= 25), !Equal(GetComDir(), COMD_Up)))
+    SetComDir(COMD_Up);
 
   // Nichts machen
-  if (Random(2) || (GetAction() ne "Walk" && GetAction() ne "Swim")) return(1);
+  if (Or(Random(2), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return(1);
 
   // Ein Ei legen
   if (!Random(ReproductionRate())) 
    Reproduction();	
   for (var obj in FindObjects(Find_OCF(OCF_CrewMember),Find_NoContainer(),Find_Not(Find_Owner(-1)),Find_OCF(OCF_Alive),Find_Distance(200)))
-   if (GetAction() ne "Attack") 
+   if (!SEqual(GetAction(), "Attack"))
     if (!GetCommand()) SetCommand(this(),"Follow",obj);
-     else if (ObjectDistance(this(),obj)<=10)
+     else if ((ObjectDistance(this(),obj) ?? 0)<=10)
      SetAction("Attack");
   // Umdrehen
-  if (!Random(10) && !GetActionTarget()) return(TurnRight());
+  if (And(!Random(10), !GetActionTarget())) return(TurnRight());
   return(1);
 }
 
@@ -52,19 +52,19 @@ protected func ContactRight()
 public func TurnRight()
 {
   if (!Random(6)) return(TurnLeft());
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() < 0) SetXDir(0);
-  SetDir(DIR_Right());
-  SetComDir(COMD_Right()); 
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) < 0) SetXDir(nil);
+  SetDir(DIR_Right);
+  SetComDir(COMD_Right);
   return(1);
 }
 
 public func TurnLeft()
 {
-  if (Stuck() || (GetAction() ne "Walk" && GetAction() ne "Swim")) return();
-  if (GetXDir() > 0) SetXDir(0);
-  SetDir(DIR_Left());
-  SetComDir(COMD_Left()); 
+  if (Or(Stuck(), (And(!SEqual(GetAction(), "Walk"), !SEqual(GetAction(), "Swim"))))) return;
+  if ((GetXDir() ?? 0) > 0) SetXDir(nil);
+  SetDir(DIR_Left);
+  SetComDir(COMD_Left);
   return(1);
 }
 
@@ -94,12 +94,12 @@ private func MaxAnimalCount()   { return(7); }    // Maximale Tieranzahl im Umkr
 private func CountMe()
 {
   var ReprodSize = ReproductionAreaSize();
-  var ReprodSizeHalb = ReprodSize  / -2;
-  return(ObjectCount(SHMK, ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive()) + ObjectCount(SEGG, ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , 0));
+  var ReprodSizeHalb = (ReprodSize ?? 0)  / -2;
+  return((ObjectCount(SHMK, ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , OCF_Alive) ?? 0) + (ObjectCount(SEGG, ReprodSizeHalb, ReprodSizeHalb, ReprodSize , ReprodSize , nil) ?? 0));
 }
 
 private func SpecialRepr()
 {
-  Exit(CreateContents(SEGG), 0, 10);
+  Exit(CreateContents(SEGG), nil, 10);
   return(1);
 }

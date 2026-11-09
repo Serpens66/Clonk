@@ -1,71 +1,78 @@
 /*-- Brückensegment --*/
 
-#strict
+#strict 3
 
 local cons;   // frei oder verankert?
 
 
 /* Initialisierung */
 
-protected Initialize:
+protected func Initialize(...) {
   // Im Freien erzeugte Brückensegmente sind verankert
   if (!Contained())
   {
-    SetSolidMask(0,0,72,3);
+    SetSolidMask(nil,nil,72,3);
     cons = 1;
   }
   return(1);
+}
 
-protected Entrance:
+protected func Entrance(...) {
   // Im Behälter: lösen
   SetSolidMask();
-  cons = 0;
+  cons = nil;
   return(1);
+}
 
-public ControlDigDouble:
+public func ControlDigDouble(...) {
   [Verankern/Lösen]
   // Lösen
   if (cons) return(Release());  
   // Verankern
-  if (!GBackSolid(0,+11))
-    SetPosition(GetX(),GetY()+11);
-  SetSolidMask(0,0,72,3);
+  if (!GBackSolid(nil,+11))
+    SetPosition(GetX(),(GetY() ?? 0)+11);
+  SetSolidMask(nil,nil,72,3);
   Sound("Connect");
   cons = 1;
   return(1);
+}
 
-private Release:
+private func Release(...) {
   SetSolidMask();
-  cons = 0;
+  cons = nil;
   Sound("Connect");
   // Aus der Erde lösen
   var i;
-  while (Stuck() && ++i < 12)
-    SetPosition(GetX(),GetY()-1);
+  while (And(Stuck(), S42MigrationStep(i, 1) < 12))
+    SetPosition(GetX(),(GetY() ?? 0)-1);
   return(1);
+}
 
 
 /* Schaden */
 
-protected Damage:
-  if (GetDamage() < GetMaxDamage()) return(1);
+protected func Damage(...) {
+  if ((GetDamage() ?? 0) < (GetMaxDamage() ?? 0)) return(1);
   return(Destroy());
+}
 
-public Destroy:
+public func Destroy(...) {
   // Fragmente
   var obj, i;
-  for (i = 0; i < 5; ++i)
+  for (i = nil; (i ?? 0) < 5; S42MigrationStep(i, 1))
   {
-    obj = CreateObject(SFRX, Random(GetObjWidth()) - GetObjWidth() / 2,
-                             Random(GetObjHeight()) - GetObjHeight() / 2, GetOwner());
+    obj = CreateObject(SFRX, (Random(GetObjWidth()) ?? 0) - (GetObjWidth() ?? 0) / 2,
+                             (Random(GetObjHeight()) ?? 0) - (GetObjHeight() ?? 0) / 2, GetOwner());
     ObjectCall(obj, "Settings", i, 15);
   }
   // Explosion
   Explode(20);
   return(1);
+}
 
 
 /* Eigenschaften */
 
-public GetMaxDamage: return(75);
+public func GetMaxDamage(...) { return(75);
+}
 

@@ -1,6 +1,6 @@
 /*-- Blitz --*/
 
-#strict
+#strict 3
 
 local alpha;
 
@@ -10,11 +10,11 @@ local alpha;
 protected func Initialize()
 {
   var z = Random(20);
-  if (z <= 9)
+  if ((z ?? 0) <= 9)
     SetGraphics(Format("0%d", z));
-  else if (z <= 18)
+  else if ((z ?? 0) <= 18)
     SetGraphics(Format("%d", z));
-  alpha = 0;
+  alpha = nil;
   return(1);
 }
 
@@ -23,12 +23,12 @@ protected func Initialize()
 
 private func Fading()
 {
-  alpha += 30;
-  if (alpha >= 255)
+  S42MigrationAssign(alpha, "+=", 30);
+  if ((alpha ?? 0) >= 255)
     return(RemoveObject());
   SetClrModulation(RGBa(255,255,255,alpha));
   // nicht herunterfallen
-  SetYDir(-GetGravity(),0,500);
+  SetYDir(-(GetGravity() ?? 0),nil,500);
   return(1);
 }
 

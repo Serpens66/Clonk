@@ -1,6 +1,6 @@
 /*-- Melee (Veraltet) --*/
 
-#strict
+#strict 3
 
 // Seit Einführung der Teams.txt werden "Teams" und "Melee" getrennt verwaltet
 // Das Spielziel "Teamwork-Melee" ist damit überflüssig und kann durch Melee
@@ -23,7 +23,7 @@ protected func UpdateTransferZone()
 
 public func UpdateDeprecated()
   {
-  SetCategory(C4D_Goal | C4D_StaticBack);
+  SetCategory((C4D_Goal ?? 0) | (C4D_StaticBack ?? 0));
   ChangeDef(MELE);
   return true;
   }

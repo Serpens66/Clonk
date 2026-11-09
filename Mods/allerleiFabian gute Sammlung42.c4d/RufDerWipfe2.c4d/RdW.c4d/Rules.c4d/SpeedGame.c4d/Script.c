@@ -1,6 +1,6 @@
 /*-- Schnelles Spiel --*/
 
-#strict
+#strict 3
 
 protected func Activate(iByPlayer)
 {
@@ -18,7 +18,7 @@ public func IsChoosen()
 
 public func IsNotChoosen()
 {
-  return SetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_SPDG",false);
+  return SetPlrExtraData(GetPlayerByIndex(),"RdW_Settings_SPDG",nil);
 }
 
 /* Beschleunigen */  
@@ -31,7 +31,7 @@ private func Accelerating()
     if (pClonk->~IsClonk())
     {
       // Gebäude aufstocken
-      pClonk->GetActionTarget()->SetCon(Min(pClonk->GetActionTarget()->GetCon() + 1, 100));
+      pClonk->GetActionTarget()->SetCon(Min((pClonk->GetActionTarget()->GetCon() ?? 0) + 1, 100));
       //Log("Accelerating: %s + %d", pClonk->GetActionTarget()->GetName(), Acceleration);
     }
 }

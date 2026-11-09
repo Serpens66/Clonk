@@ -1,6 +1,6 @@
 /*-- Fackeln herstellen --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -9,11 +9,12 @@ protected func Initialize()
 
 private func Splitting()
 {
-  Enter(Contained(),CreateObject(FK9Z,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(FK9Z,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(FK9Z,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(FK9Z,0,0,GetOwner()));
-  RemoveObject(0,1);
+  Enter(Contained(),CreateObject(FK9Z,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(FK9Z,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(FK9Z,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(FK9Z,nil,nil,GetOwner()));
+  RemoveObject(nil,1);
 }
 
-public IsAnvilProduct: return(1);
+public func IsAnvilProduct(...) { return(1);
+}

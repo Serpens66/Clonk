@@ -1,6 +1,6 @@
 /*--- Flammenwerfer ---*/
 
-#strict
+#strict 3
 
 #include CTW3
 

@@ -1,13 +1,13 @@
 /*-- Scriptziel --*/
 
-#strict
+#strict 3
 #include GOAL
 
 public func IsFulfilled()
 {
-if(ScriptCounter()>=999998)
+if((ScriptCounter() ?? 0)>=999998)
   return(1);
-return(0);
+return(nil);
 }
 
 protected func Activate(player)

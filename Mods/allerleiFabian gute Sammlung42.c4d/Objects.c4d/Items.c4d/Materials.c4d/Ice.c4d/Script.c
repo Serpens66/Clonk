@@ -1,10 +1,10 @@
 /*--- Eis ---*/
 
-#strict
+#strict 3
 
 protected func CheckTemp()
 {
-  if (GetTemperature() > 0) Melt();
+  if ((GetTemperature() ?? 0) > 0) Melt();
   return(1);
 }  
   
@@ -17,7 +17,7 @@ protected func Hit()
 private func Melt()
 {
   DoCon(-2);
-  CastPXS("Water", 4, 0);
+  CastPXS("Water", 4, nil);
   return(1);
 }
 

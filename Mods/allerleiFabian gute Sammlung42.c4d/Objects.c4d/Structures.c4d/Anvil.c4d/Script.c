@@ -1,6 +1,6 @@
 /*-- Amboss --*/
 
-#strict
+#strict 3
 #include BAS1
 
 local product;
@@ -17,7 +17,7 @@ public func ContextProduction(pCaller)
 }
 
 protected func IsBuilt() {
-  return(GetCon() >= 100);
+  return((GetCon() ?? 0) >= 100);
 }
   
 public func ControlDigDouble(pCaller)
@@ -41,23 +41,23 @@ public func ContainedLeft()
 /* Produktion */
 
 /* Produkteigenschaften (überladbar) */
-public func ProductType () { return(C4D_Vehicle()); }
-public func ProductCondition () { return(); }
+public func ProductType () { return(C4D_Vehicle); }
+public func ProductCondition () { return; }
 
 /* Produktion */
 
 public func IsProducerOf (caller, def) {
-  if (!GetPlrKnowledge (GetOwner (caller), def)) return (0);
-  if (!(GetCategory (0, def) & C4D_Object ())) return (0);
-  if (!def->~IsAnvilProduct()) return (0);
-  if (!IsBuilt ()) return (0);
-  if(!(InArray(gForschungsliste(0), def) || InArray(gForschungsliste(1), def) || InArray(gForschungsliste(2), def) || InArray(gForschungsliste(3), def) || InArray(gForschungsliste(4), def) || InArray(gForschungsliste(5), def) || InArray(gForschungsliste(6), def) || InArray(gForschungsliste(7), def) || InArray(gForschungsliste(8), def) || InArray(gForschungsliste(9), def))) return(0);
+  if (!GetPlrKnowledge (GetOwner (caller), def)) return (nil);
+  if (!((GetCategory (nil, def) ?? 0) & (C4D_Object  ?? 0))) return (nil);
+  if (!def->~IsAnvilProduct()) return (nil);
+  if (!IsBuilt ()) return (nil);
+  if(!(Or(Or(Or(Or(Or(Or(Or(Or(Or(InArray(gForschungsliste(nil), def), InArray(gForschungsliste(1), def)), InArray(gForschungsliste(2), def)), InArray(gForschungsliste(3), def)), InArray(gForschungsliste(4), def)), InArray(gForschungsliste(5), def)), InArray(gForschungsliste(6), def)), InArray(gForschungsliste(7), def)), InArray(gForschungsliste(8), def)), InArray(gForschungsliste(9), def)))) return(nil);
   return(1);
 }
 
 public func HowToProduce (clonk, def) {
   // Auf Fertigstellung warten
-  AddCommand (clonk, "Wait", 0, 0, 0, 0, 0, 168);
+  AddCommand (clonk, "Wait", nil, nil, nil, nil, nil, 168);
   // Und schmieden
   ProductionOrder (def, clonk);
   return(1);
@@ -65,25 +65,25 @@ public func HowToProduce (clonk, def) {
 
 public func ProductionMenu(pWorker) {
   // Nur wenn inaktiv
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // Menu erzeugen
   CreateMenu(CXCN, pWorker, this(), 1, "$TxtNoPlans$");
   // Menü mit Bauplänen füllen
-  var i = 0, def; SetVar(0,-1);
-  while (def = GetPlrKnowledge(GetOwner(pWorker), 0, i++, C4D_Object()))
+  var i = nil, def; SetVar(nil,-1);
+  while (def = GetPlrKnowledge(GetOwner(pWorker), nil, S42MigrationStep(i, 1, true), C4D_Object))
     if (def->~IsAnvilProduct())
       
     if(GetLength(hashSpielRegeln))
         {
-            var ProdCostAnzeige = 0;
-              ProdCostAnzeige = GetValue(0,def) * HashGet(hashSpielRegeln, "Produktionskosten")/200;
+            var ProdCostAnzeige = nil;
+              ProdCostAnzeige = (GetValue(nil,def) ?? 0) * (HashGet(hashSpielRegeln, "Produktionskosten") ?? 0)/200;
             if (HashGet(hashSpielRegeln, "Produktionskosten"))
-                AddMenuItem(Format("%d C. %s herstellen",ProdCostAnzeige,GetName(0,def)), "ProductionOrder", def,pWorker,0,pWorker);
+                AddMenuItem(Format("%d C. %s herstellen",ProdCostAnzeige,GetName(nil,def)), "ProductionOrder", def,pWorker,nil,pWorker);
             else
-                AddMenuItem("%s herstellen","ProductionOrder",def,pWorker,0,pWorker);
+                AddMenuItem("%s herstellen","ProductionOrder",def,pWorker,nil,pWorker);
         }
       else
-        AddMenuItem("%s herstellen","ProductionOrder",def,pWorker,0,pWorker);
+        AddMenuItem("%s herstellen","ProductionOrder",def,pWorker,nil,pWorker);
   
   // Fertig
   return(1);
@@ -91,22 +91,22 @@ public func ProductionMenu(pWorker) {
 
 public func ProductionOrder(idProduct, pWorker) {
   
-  ProdCost = 0;
+  ProdCost = nil;
   if(GetLength(hashSpielRegeln))
-      ProdCost = GetValue(0,idProduct) * HashGet(hashSpielRegeln, "Produktionskosten")/200;
+      ProdCost = (GetValue(nil,idProduct) ?? 0) * (HashGet(hashSpielRegeln, "Produktionskosten") ?? 0)/200;
   // geld pruefen und abziehen
   if(ProdCost)
   {
-      if(GetWealth(GetOwner(pWorker))< ProdCost)
-        return(Message("Nicht genug Geld",this()),Sound("Error"));
-      SetWealth(GetOwner(pWorker),GetWealth(GetOwner(pWorker))- ProdCost);
+      if((GetWealth(GetOwner(pWorker)) ?? 0)< (ProdCost ?? 0))
+        return(S42MigrationFirst(Message("Nicht genug Geld",this()),Sound("Error")));
+      SetWealth(GetOwner(pWorker),(GetWealth(GetOwner(pWorker)) ?? 0)- (ProdCost ?? 0));
       Sound("Cash");
   }
   
   // Arbeit beginnen
-  AddCommand(pWorker,"Call",this(),idProduct,0,0, 0, "ProductionStart", 0, 3);  
+  AddCommand(pWorker,"Call",this(),idProduct,nil,nil, nil, "ProductionStart", nil, 3);
   // Vorher: Position einnehmen
-  AddCommand(pWorker,"MoveTo",0,GetX(),GetY());
+  AddCommand(pWorker,"MoveTo",nil,GetX(),GetY());
   // Vorher: Material beschaffen
   ProductionAcquireMaterialFor(idProduct, pWorker);
   // Los geht's
@@ -115,10 +115,10 @@ public func ProductionOrder(idProduct, pWorker) {
 
 private func ProductionAcquireMaterialFor(idProduct, pWorker) {
   // Alle Komponenten des herzustellenden Objekts überprüfen
-  var i = 0, def;
-  while (def = GetComponent(0, i++, 0, idProduct))
+  var i = nil, def;
+  while (def = GetComponent(nil, S42MigrationStep(i, 1, true), nil, idProduct))
     // Material beschaffen
-    ProductionAcquireMaterial(def,GetComponent(def,0,0,idProduct),pWorker);
+    ProductionAcquireMaterial(def,GetComponent(def,nil,nil,idProduct),pWorker);
   // Ok
   return(1);
 }
@@ -127,12 +127,12 @@ private func ProductionAcquireMaterial(idMaterial, iAmount, pWorker) {
   // Benötigte Menge ermitteln
   if(FindObject(QWER))  // wenn Regel kein Produktionsmaterial aktiviert ist, dann nötige Ressource einfach erzeugen
      CreateContents(idMaterial,this(),iAmount);
-  var iNeeded = Max(iAmount - ContentsCount(idMaterial), 0);
+  var iNeeded = Max((iAmount ?? 0) - (ContentsCount(idMaterial) ?? 0), nil);
   // Der Arbeiter soll das Material beschaffen
-  while (iNeeded-- > 0)
+  while (S42MigrationStep(iNeeded, -1, true) > 0)
   {
-    AddCommand(pWorker,"Put",this(),0,0,0, 0, idMaterial);
-    AddCommand(pWorker,"Acquire",0,0,0,this(), 0, idMaterial, 5);
+    AddCommand(pWorker,"Put",this(),nil,nil,nil, nil, idMaterial);
+    AddCommand(pWorker,"Acquire",nil,nil,nil,this(), nil, idMaterial, 5);
   }
   return(1);
 }
@@ -145,16 +145,16 @@ public func ProductionStart(pWorker, idProduct)
   if (!ActIdle())
   {
    // Später nochmal probieren wenn Amboss bereits belegt
-   AddCommand(pWorker,"Call",this,idProduct,0,0, 0, "ProductionStart", 0, 3);  
-   AddCommand(pWorker, "Wait", 0, 0, 0, 0, 0, Max(168 - GetActTime(), 25));
+   AddCommand(pWorker,"Call",this,idProduct,nil,nil, nil, "ProductionStart", nil, 3);
+   AddCommand(pWorker, "Wait", nil, nil, nil, nil, nil, Max(168 - (GetActTime() ?? 0), 25));
    return 1;
  }
 
   // Alle Komponenten des Produkts überprüfen
-  while((mat = GetComponent(0,i++,0,idProduct)) )
+  while((mat = GetComponent(nil,S42MigrationStep(i, 1, true),nil,idProduct)) )
   {
     // Benötigte Komponente ist nicht ausreichend im Container vorhanden
-    if (GetComponent(mat,0,0,idProduct) > ContentsCount(mat, this()) )
+    if ((GetComponent(mat,nil,nil,idProduct) ?? 0) > (ContentsCount(mat, this()) ?? 0) )
     {
       // Fehler
       return(Sound("Error") );
@@ -182,24 +182,24 @@ public func ProductionStartFailed(pWorker, idProduct) {
 
 private func MessageBuildNeedsMaterial(pMessageTarget, idProduct, pMaterialContainer) {
   // Für das Produkt benötigtes Material überprüfen
-  var i = 0, j = 0, mat;
+  var i = nil, j = nil, mat;
   // Alle Komponenten des Produkts überprüfen
-  while ((mat = GetComponent(0,i++,0,idProduct)) )
+  while ((mat = GetComponent(nil,S42MigrationStep(i, 1, true),nil,idProduct)) )
   {
     // Benötigte Komponente ist nicht ausreichend im Container vorhanden
-    if (GetComponent(mat,0,0,idProduct) > ContentsCount(mat,pMaterialContainer))
+    if ((GetComponent(mat,nil,nil,idProduct) ?? 0) > (ContentsCount(mat,pMaterialContainer) ?? 0))
     {
        // Menge der benötigten Komponente speichern
-      Var(j*2) = GetComponent(mat,0,0,idProduct) - ContentsCount(mat,pMaterialContainer);
+      Var((j ?? 0)*2) = (GetComponent(mat,nil,nil,idProduct) ?? 0) - (ContentsCount(mat,pMaterialContainer) ?? 0);
      // ID der benötigten Komponente speichern
-      Var(j*2+1) = mat;
+      Var((j ?? 0)*2+1) = mat;
       // Anzahl der benötigten Materialtypen erhöhen
-      j++;
+      S42MigrationStep(j, 1, true);
     }
   }
-  var str = Format("$TxtNeedMaterial$",GetName(0, idProduct) );
-  for(i = 0; i < j; ++ i)
-    str = Format("%s|$TxtNeedMaterialComponent$", str, Var(i*2), GetName(0, Var(i*2+1)) );
+  var str = Format("$TxtNeedMaterial$",GetName(nil, idProduct) );
+  for(i = nil; (i ?? 0) < (j ?? 0); S42MigrationStep( i, 1))
+    str = Format("%s|$TxtNeedMaterialComponent$", str, Var((i ?? 0)*2), GetName(nil, Var((i ?? 0)*2+1)) );
     
   Message(str, pMessageTarget);
   
@@ -211,22 +211,22 @@ private func Forging() {
   // Noch nicht fertig
   var ProdFactor;
   if(GetLength(hashSpielRegeln)) ProdFactor = HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit"); else ProdFactor = 100;
-  var time = GetDefCoreVal("Mass","DefCore",product) * ProdFactor / 100;
+  var time = (GetDefCoreVal("Mass","DefCore",product) ?? 0) * (ProdFactor ?? 0) / 100;
   var i = -1;
   var j, obj;
-  while (obj = GetComponent(0,++i,0,product))
-    for (j = 0; j < GetComponent(obj,0,0,product); ++j)
+  while (obj = GetComponent(nil,S42MigrationStep(i, 1),nil,product))
+    for (j = nil; (j ?? 0) < (GetComponent(obj,nil,nil,product) ?? 0); S42MigrationStep(j, 1))
     {
-        time += GetDefCoreVal("Mass","DefCore",obj) * ProdFactor / 100; // die Masse der Komponenten für das Produkt wird aufsummiert
+        S42MigrationAssign(time, "+=", (GetDefCoreVal("Mass","DefCore",obj) ?? 0) * (ProdFactor ?? 0) / 100); // die Masse der Komponenten für das Produkt wird aufsummiert
     }
-  time = time * 10 * 15/10; // mit 10 multipliztieren, da time gegenüber acttime geprüft wird und diese in frames ist. ohne * 10 wäre es also zu schnell
+  time = (time ?? 0) * 10 * 15/10; // mit 10 multipliztieren, da time gegenüber acttime geprüft wird und diese in frames ist. ohne * 10 wäre es also zu schnell
   // und mit 1,5 multiplizieren, damit es 1.5 mal länger dauert, als die Produktion in Raffinerie
     
-  if (GetActTime() < time) return(0);
+  if ((GetActTime() ?? 0) < (time ?? 0)) return(nil);
   
   var pProduct = ComposeContents(product);
   // Objekt auswerfen
-  if(pProduct){if(!Random(20)) {CreateObject(MTWS,0,0,GetOwner());};
+  if(pProduct){if(!Random(20)) {CreateObject(MTWS,nil,nil,GetOwner());};
 var verbrannt;
 verbrannt= CreateObject(VBWS);
 verbrannt->Verbrannt(GetID(),IsWaste());
@@ -238,25 +238,25 @@ verbrannt->Verbrannt(GetID(),IsWaste());
 
 private func ProductionCancel() {
   // Arbeit abbrechen
-  if (GetAction() eq "Forge") SetAction("Idle");
+  if (!!SEqual(GetAction(), "Forge")) SetAction("Idle");
   // Clonk(s) auswerfen
   var clnk;
-  while (clnk = FindCrewContents()) Exit(clnk,0,10);
+  while (clnk = FindCrewContents()) Exit(clnk,nil,10);
   // Fertig
   return(1);
 }
 
 private func FindCrewContents() {
-  var i = 0, obj;
-  while (obj = Contents(i++))
-    if (GetOCF(obj) & OCF_CrewMember())
+  var i = nil, obj;
+  while (obj = Contents(S42MigrationStep(i, 1, true)))
+    if ((GetOCF(obj) ?? 0) & (OCF_CrewMember ?? 0))
       return(obj);
-  return(0);
+  return(nil);
 }
   
 private func Effects() {
   Sound("AnvilWork*");
-  CastParticles("PxSpark",3,10,0,0,15,30,RGB(255,223,127),RGB(255,223,127));
+  CastParticles("PxSpark",3,10,nil,nil,15,30,RGB(255,223,127),RGB(255,223,127));
   return(1);
 }
 
@@ -264,9 +264,9 @@ private func Effects() {
 
 public func CastleChange() {
   // Brennende Werkstatt im Hintergrund?
-  if(!FindObject(CPN3, 0, -1)) return(1);
+  if(!FindObject(CPN3, nil, -1)) return(1);
   // Ausleeren und entfernen!
-  return(RemoveObject(0,1));
+  return(RemoveObject(nil,1));
 }
 
 protected func CalcValue() { // Geringer Verkaufswert

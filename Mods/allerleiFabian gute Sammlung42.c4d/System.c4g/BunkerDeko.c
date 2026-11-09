@@ -2,7 +2,7 @@
 
 //Damit die Dekoobjekte nur im Bunker gebaut werden können
 
-#strict
+#strict 3
 
 // die Dekoobjekte
 #appendto VENT
@@ -47,24 +47,28 @@ public func CastleChange()
 public func FindCastlePart(int iX, int iY, object pObj)
 {
  //Log("FindCastle von Deko ausgeführt");
-  while (pObj = FindObject(0, iX,iY,0,0, OCF_Fullcon(),0,0, NoContainer(), pObj))
+  iX ??= 0;
+  iY ??= 0;
+  while (pObj = FindObject(nil, iX,iY,nil,nil, OCF_Fullcon,nil,nil, NoContainer(), pObj))
    {
 //Log("Folgendes Objekt gefunden: %v",pObj);
  if (pObj->~CastlePartWidth())
       return(pObj);
    }
   // Keins gefunden
-  return(0);
+  return(nil);
 }
 
 private func CheckPlacement(int x, int y)
 {
   // Nur vor Burgteile
-  var castle = FindCastlePart(x, y - 10);
+  x ??= 0;
+  y ??= 0;
+  var castle = FindCastlePart(x, (y ?? 0) - 10);
   if(!castle) return("Nur im Bunker baubar");
   
   // Nur vor Waende
-  if(GetID(castle) != BP5C && GetID(castle) != BW5C && GetID(castle) != B15C && GetID(castle) != BT5C && GetID(castle) != BE5C && GetID(castle) != HL0D && GetID(castle) != HR0D && GetID(castle) != BH5C && GetID(castle) != RR5C && GetID(castle) != HR6Y && GetID(castle) != BG5C && GetID(castle) != BL5C && GetID(castle) != BR5C && GetID(castle) != CH5C)
+  if(And(And(And(And(And(And(And(And(And(And(And(And(And(!Equal(GetID(castle), BP5C), !Equal(GetID(castle), BW5C)), !Equal(GetID(castle), B15C)), !Equal(GetID(castle), BT5C)), !Equal(GetID(castle), BE5C)), !Equal(GetID(castle), HL0D)), !Equal(GetID(castle), HR0D)), !Equal(GetID(castle), BH5C)), !Equal(GetID(castle), RR5C)), !Equal(GetID(castle), HR6Y)), !Equal(GetID(castle), BG5C)), !Equal(GetID(castle), BL5C)), !Equal(GetID(castle), BR5C)), !Equal(GetID(castle), CH5C)))
     return("Muss vor einer schmalen/mittelbreiten Bunkerwand gebaut werden");
 }
 
@@ -72,15 +76,17 @@ private func CheckPlacement(int x, int y)
 
 public func RejectConstruction(int x, int y, object clonk)
 {
-  var err = CheckPlacement(GetX(clonk) + x, GetY(clonk) + y);
-  if(GetType(err) == C4V_String() )
+  x ??= 0;
+  y ??= 0;
+  var err = CheckPlacement((GetX(clonk) ?? 0) + (x ?? 0), (GetY(clonk) ?? 0) + (y ?? 0));
+  if(Equal(GetType(err), C4V_String) )
   {
     Message(err, clonk);
-    Sound("Error", 0, clonk);
+    Sound("Error", nil, clonk);
     return(1);
   }
   else
   {
-    return(0);
+    return(nil);
   }
 }

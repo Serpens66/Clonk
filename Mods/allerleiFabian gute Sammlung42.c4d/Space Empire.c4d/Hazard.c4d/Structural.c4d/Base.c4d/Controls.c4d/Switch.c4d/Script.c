@@ -1,6 +1,6 @@
 /*-- Schalter --*/
 
-#strict
+#strict 3
 
 // Zielobjekte
 local target;
@@ -9,6 +9,7 @@ local locked;
 public func Lock(bool unlock)
 {
   // Negativlogik. :D
+  unlock ??= false;
   locked = !unlock;
 }
 
@@ -26,12 +27,12 @@ protected func Initialize()
 protected func ControlThrow(object byObj)
 {
   if(IsLocked())
-    return(Sound("CommandFailure1",0,0,80,GetController(byObj)));
+    return(Sound("CommandFailure1",nil,nil,80,GetController(byObj)));
     
-	SetPhase((GetPhase()+1)%2);
+	SetPhase(((GetPhase() ?? 0)+1)%2);
   if(target) target->~Access();
   
-  Sound("Lever1",0,0,80);
+  Sound("Lever1",nil,nil,80);
   
   return(1);
 }
@@ -41,9 +42,9 @@ protected func ControlThrow(object byObj)
 public func Serialize(array& extra)
 {
 	if (target)
-		extra[GetLength(extra)] = ["Set(Object(%d))", target];
+		extra[(GetLength(extra) ?? 0)] = ["Set(Object(%d))", target];
 	if (locked)
-		extra[GetLength(extra)] = "Lock()";
+		extra[(GetLength(extra) ?? 0)] = "Lock()";
 }
 
 

@@ -2,7 +2,7 @@
 
 local target_y;
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -15,14 +15,14 @@ public func ControlUp(object controller)
 {
   [$TxtRise$]
   ClearCommand();
-  if(GetAction()S="WaterLand") SetAction("WaterLaunch");
+  if(!!SEqual(GetAction(), "WaterLand")) SetAction("WaterLaunch");
 
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
     var comdir = GetComDir();
-    if(GBackSolid(0, GetObjHeight()/2+2)) comdir = COMD_Stop;
+    if(GBackSolid(nil, (GetObjHeight() ?? 0)/2+2)) comdir = COMD_Stop;
 
-    if(comdir == COMD_Down)
+    if(Equal(comdir, COMD_Down))
       SetDirection(COMD_Stop);
     else
       SetDirection(COMD_Up);
@@ -36,7 +36,7 @@ public func ControlDownSingle(object controller)
 
   if(!GetPlrCoreJumpAndRunControl(controller->GetController()))
   {
-    if(GetComDir() == COMD_Up)
+    if(Equal(GetComDir(), COMD_Up))
       SetDirection(COMD_Stop);
     else
       SetDirection(COMD_Down);
@@ -52,21 +52,23 @@ private func ClearDir()
 {
   if(GetYDir())
   {
-    if(GetYDir() > 0) SetYDir(GetYDir() - 1);
-    else SetYDir(GetYDir() + 1);
+    if((GetYDir() ?? 0) > 0) SetYDir((GetYDir() ?? 0) - 1);
+    else SetYDir((GetYDir() ?? 0) + 1);
   }
 }
 
 public func ControlUpdate(object controller, int comdir)
 {
+  comdir ??= 0;
   SetDirection(comdir);
 }
 
 public func SetDirection(int comdir)
 {
-  if(comdir == COMD_Up || comdir == COMD_UpLeft || comdir == COMD_UpRight)
+  comdir ??= 0;
+  if(Or(Or(Equal(comdir, COMD_Up), Equal(comdir, COMD_UpLeft)), Equal(comdir, COMD_UpRight)))
     SetComDir(COMD_Up);
-  else if(comdir == COMD_Down || comdir == COMD_DownLeft || comdir == COMD_DownRight)
+  else if(Or(Or(Equal(comdir, COMD_Down), Equal(comdir, COMD_DownLeft)), Equal(comdir, COMD_DownRight)))
     SetComDir(COMD_Down);
   else
   {
@@ -80,10 +82,12 @@ public func SetDirection(int comdir)
 protected func ControlCommand(string szCommand, object pTarget, int iX, int iY)
 {
   // Pilot läßt los
-  if(szCommand eq "UnGrab")
-    return(0,ClearCommand());
+  iX ??= 0;
+  iY ??= 0;
+  if(!!SEqual(szCommand, "UnGrab"))
+    return(S42MigrationFirst(nil,ClearCommand()));
   // Bewegungskommando vom Piloten
-  if(szCommand eq "MoveTo")
+  if(!!SEqual(szCommand, "MoveTo"))
   {
     target_y = iY;
     return(true);
@@ -98,24 +102,24 @@ protected func Initialize()
 {
   target_y = -1;
   SetAction("Float");
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
 }
 
 /* Aktivität */
 
-protected func Wind2Flag() { SetDir(BoundBy(GetWind()/10+4,0,8)); }
+protected func Wind2Flag() { SetDir(BoundBy((GetWind() ?? 0)/10+4,nil,8)); }
 
 private func Wind2Float()
 {
-  if(!GetContact(0, -1, 8)) SetXDir( BoundBy(GetWind()/4,-10,+10));
-  if (!FindObject(0,0,0,0,0,0,"Push",this())) 
-    SetComDir(COMD_Down());
-  else if(target_y != -1)
+  if(!GetContact(nil, -1, 8)) SetXDir( BoundBy((GetWind() ?? 0)/4,-10,+10));
+  if (!FindObject(nil,nil,nil,nil,nil,nil,"Push",this()))
+    SetComDir(COMD_Down);
+  else if(!Equal(target_y, -1))
   {
-    SetYDir(BoundBy((target_y - GetY())/4, -10, 10) );
+    SetYDir(BoundBy(((target_y ?? 0) - (GetY() ?? 0))/4, -10, 10) );
     SetComDir(COMD_None);
 
-    if(Inside(GetY(), target_y - 5, target_y + 5))
+    if(Inside(GetY(), (target_y ?? 0) - 5, (target_y ?? 0) + 5))
       target_y = -1;
   }
 
@@ -126,7 +130,7 @@ private func Wind2Float()
 private func CheckWindY()
 {
   // Ohne Kommanda ein bisschen rauf- und runter geweht werden
-  if(GetComDir() == COMD_Stop && target_y == -1 && !GBackSolid(0, GetObjHeight()/2 + 2))
+  if(And(And(Equal(GetComDir(), COMD_Stop), Equal(target_y, -1)), !GBackSolid(nil, (GetObjHeight() ?? 0)/2 + 2)))
   {
     if(!GetEffect("IntWindYDir", this()))
       AddEffect("IntWindYDir", this(), 1, 10, this());
@@ -138,14 +142,16 @@ private func CheckWindY()
 
     // Wenn der Ballon am Boden ist ComDir auf COMD_Down setzen,
     // sonst hebt der Ballon zu schnell wieder ab
-    if(GetComDir() == COMD_Stop && target_y == -1)
+    if(And(Equal(GetComDir(), COMD_Stop), Equal(target_y, -1)))
       SetComDir(COMD_Down);
   }
 }
 
 protected func FxIntWindYDirTimer(object target, int number, int time)
 {
-  SetYDir(BoundBy(GetYDir() + RandomX(-GetYDir()) - 1 + Random(3), Max(GetYDir() - 1, -3), Min(GetYDir() + 1, 3)));
+  number ??= 0;
+  time ??= 0;
+  SetYDir(BoundBy((GetYDir() ?? 0) + (RandomX(-(GetYDir() ?? 0)) ?? 0) - 1 + (Random(3) ?? 0), Max((GetYDir() ?? 0) - 1, -3), Min((GetYDir() ?? 0) + 1, 3)));
 }
 
 /* Trefferkontrolle */
@@ -155,7 +161,7 @@ protected func RejectCollect(id idObject, object pObj)
   // Pfeile vertragen sich nicht mit einem Ballon
   if (DefinitionCall(idObject,"IsArrow"))
    // Nur, wenn der Pfeil sich auch bewegt
-   if(GetXDir(pObj) || GetYDir(pObj))
+   if(Or(GetXDir(pObj), GetYDir(pObj)))
   {
     // bei brennendem Pfeil anzünden
     if(OnFire(pObj)) Incinerate();

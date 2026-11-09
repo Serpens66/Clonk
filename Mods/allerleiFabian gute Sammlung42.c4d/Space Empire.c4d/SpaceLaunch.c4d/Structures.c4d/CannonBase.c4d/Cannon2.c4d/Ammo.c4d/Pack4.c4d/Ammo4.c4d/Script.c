@@ -1,34 +1,38 @@
 /*-- Derad-Munition --*/
 
-#strict
+#strict 3
 #include SOAM
 
 local timer;
 
 /* Wird abgefeuert */
 
-public Launch:  
+public func Launch(...) {
   SetAction("Travel");
   SetPlrView(GetOwner(),this());
-  combi = Par(0);
-  timer = combi*650;
+  combi = Par(nil);
+  timer = (combi ?? 0)*650;
   return(1);
+}
 
 /* Fliegt */
 
-protected Travel:
+protected func Travel(...) {
   // Gas ausströmen lassen
   if (Random(2)) CreateObject(SDER);
   SetDirection();
   // Timer runterzählen
-  if (--timer) return(1);
+  if (S42MigrationStep(timer, -1)) return(1);
   Explode(1);
   return(1);
+}
 
 /* Zerstörung */
 
-public Destroy:
+public func Destroy(...) {
   return(timer = 1);
+}
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}
 

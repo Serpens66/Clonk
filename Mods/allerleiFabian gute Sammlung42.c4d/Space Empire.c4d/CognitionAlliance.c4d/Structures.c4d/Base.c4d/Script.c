@@ -1,6 +1,6 @@
 /*-- Basis --*/
 
-#strict
+#strict 3
 #include BOB1
 #include XFER
 
@@ -9,7 +9,7 @@ local basement, manager;
 
 protected func Construction()
 {
-  basement = CreateObject(BS16,0,8,GetOwner());
+  basement = CreateObject(BS16,nil,8,GetOwner());
   return(1);
 }
 
@@ -28,7 +28,7 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
   manager->InitLight(-24,-24);
   return(1);
@@ -40,9 +40,9 @@ protected func ContainedUp()
 {
   [Kauf|Image=UPLI|Condition=GetUplink]
   var uplink = GetUplink();
-  if (!uplink)  return(0);
+  if (!uplink)  return(nil);
   if (HasEMP()) return(Sound("Error"));
-  uplink->KeyUp(Par(0));
+  uplink->KeyUp(Par(nil));
   return(1);
 }
 
@@ -50,17 +50,17 @@ protected func ContainedDig()
 {
   [Verkauf|Image=UPLI|Condition=GetUplink]
   var uplink = GetUplink();
-  if (!uplink)  return(0);
+  if (!uplink)  return(nil);
   if (HasEMP()) return(Sound("Error"));
-  uplink->KeyDig(Par(0));
+  uplink->KeyDig(Par(nil));
   return(1);
 }
 
 private func GetUplink() 
 { 
-  var uplink = FindObject(UPLB,0,0,0,0,0,"Turn",this());
+  var uplink = FindObject(UPLB,nil,nil,nil,nil,nil,"Turn",this());
   if (!uplink)
-      uplink = FindObject(UPLT,0,0,0,0,0,"Turn",this());
+      uplink = FindObject(UPLT,nil,nil,nil,nil,nil,"Turn",this());
   return(uplink);
 }
 
@@ -70,7 +70,7 @@ private func DoorClosed()
 {
   var num = -1;
   var obj;
-  while (obj = Contents(++num))
+  while (obj = Contents(S42MigrationStep(num, 1)))
     if (obj->~IsLorry())
       GrabContents(obj);
   return(1);

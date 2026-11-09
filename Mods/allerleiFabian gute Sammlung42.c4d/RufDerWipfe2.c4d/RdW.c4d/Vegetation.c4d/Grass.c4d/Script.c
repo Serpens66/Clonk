@@ -1,5 +1,5 @@
 /*-- Grass --*/
-#strict
+#strict 3
 #include GRAS
 
 private func ReproductionAreaSize() { return(800); } // Größe des Bereichs, in dem neue Bäume dieser Art entstehen können
@@ -11,9 +11,9 @@ protected func Initialize()
 {
   // Zufällige Größe
  if (Random(5))
-    DoCon(-Random(20) - 40);
+    DoCon(-(Random(20) ?? 0) - 40);
   else
-    DoCon(-Random(60) - 20);
+    DoCon(-(Random(60) ?? 0) - 20);
   // Zufällige Form
   SetAction("Grass");
   SetPhase(Random(2));
@@ -22,13 +22,13 @@ protected func Initialize()
   // Zufällige Richtung
  if (Random(2)) SetDir(DIR_Right);
   // Drehung nach Erdoberfläche
-  var x_off = 18 * GetCon() / 100;
-  var y_off = 15 * GetCon() / 100;
-  var slope = GetSolidOffset(-x_off, y_off) - GetSolidOffset(x_off, y_off);
+  var x_off = 18 * (GetCon() ?? 0) / 100;
+  var y_off = 15 * (GetCon() ?? 0) / 100;
+  var slope = (GetSolidOffset(-(x_off ?? 0), y_off) ?? 0) - (GetSolidOffset(x_off, y_off) ?? 0);
   SetR(slope);
   // Höhe anpassen
-  while (!GBackSolid(0, 5))
-    SetPosition(GetX(), GetY() + 1);
+  while (!GBackSolid(nil, 5))
+    SetPosition(GetX(), (GetY() ?? 0) + 1);
   // Gras bleibt hinter Bäumen
  MoveBehindTrees();
  Inited();
@@ -37,7 +37,7 @@ protected func Initialize()
 func Inited() // nicht sicher wann construction aufgerufen wird, daher auch hier der material check nach init
 {
     /* Wüste? */
-  if(GetMaterial(0,3) != Material("Earth"))  //nur auf Erde wachsen
+  if(!Equal(GetMaterial(nil,3), Material("Earth")))  //nur auf Erde wachsen
     {
       RemoveObject();
     	return(1);
@@ -61,7 +61,7 @@ func Incineration()
 
 func Construction()
 {
-  ScheduleCall(0,"Constructed",1);
+  ScheduleCall(nil,"Constructed",1);
   return(1);
 }
 
@@ -69,7 +69,7 @@ func Constructed()
 {
  var pReproduct;
   /* Wüste? */
-  if(GetMaterial(0,3) != Material("Earth"))  //nur auf Erde wachsen
+  if(!Equal(GetMaterial(nil,3), Material("Earth")))  //nur auf Erde wachsen
     {
       RemoveObject();
     	return(1);
@@ -81,7 +81,7 @@ func Constructed()
     	// return(1);
   // }
   // Waldbildung
-  if(FrameCounter()<5)
+  if((FrameCounter() ?? 0)<5)
     if(Random(ForestChance()))
       if(pReproduct=Reproduction())
 	     pReproduct->~SetCon(BoundBy(RandomX(10,150),10,100));
@@ -93,15 +93,15 @@ func Constructed()
 
 public func Seed()
 {
- if(GetMaterial(0,3) != Material("Earth"))  //nur auf Erde wachsen, zb wenn erde mittlerweile weggegraben, soll gras nicht in der luft hängen
+ if(!Equal(GetMaterial(nil,3), Material("Earth")))  //nur auf Erde wachsen, zb wenn erde mittlerweile weggegraben, soll gras nicht in der luft hängen
     {
       RemoveObject();
     	return(1);
     }
  var pReproduct;
-  if(GetCon()<80)
+  if((GetCon() ?? 0)<80)
    return(1);
- if(GetTemperature()<0)
+ if((GetTemperature() ?? 0)<0)
    return(1);
   // Je nach Fortpflanzungsrate mehr oder weniger oft...
 //  if(!Random(ReproductionRate()))
@@ -113,15 +113,15 @@ public func Reproduction()
 {
  // Ist noch Platz für einen Baum?
   var iSize = ReproductionAreaSize();
-  var iOffset = iSize / -2;
+  var iOffset = (iSize ?? 0) / -2;
 //  if (ObjectCount(0, iOffset, iOffset, iSize, iSize, 0,"Grass")<MaxTreeCount())
-if(ObjectCount2(Find_Distance(iSize),Find_ID(GetID(this())))<MaxTreeCount())
+if((ObjectCount2(Find_Distance(iSize),Find_ID(GetID(this()))) ?? 0)<(MaxTreeCount() ?? 0))
     // OK, hin damit
 { 
 // Log("Grasgeplanzt");  
 return(PlaceVegetation(GetID(this()), iOffset, iOffset, iSize, iSize, 10000) );};
   // Kein Platz ;'(
- return(0);
+ return(nil);
 }
 
 public func ForceGraphChange(){return true;} // Erzwingt Grafikwandlung

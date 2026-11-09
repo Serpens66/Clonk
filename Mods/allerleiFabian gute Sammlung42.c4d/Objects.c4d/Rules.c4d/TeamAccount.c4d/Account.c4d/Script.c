@@ -1,6 +1,6 @@
 /*-- Konto --*/
 
-#strict
+#strict 3
 
 local value; // Geld auf dem Konto
 local tick;  // Zähler
@@ -15,8 +15,8 @@ protected func Destruction()
 {
   // Befreundete Accounts benachrichtigen
   var i,acc;
-  while (i<=lastA)
-    if (acc=Local(i++))
+  while ((i ?? 0)<=(lastA ?? 0))
+    if (acc=Local(S42MigrationStep(i, 1, true)))
       acc->AllianceDie(this() );
 }
 
@@ -37,20 +37,20 @@ protected func Initialize()
 private func Execute()
 {
   // Gehört niemandem (Spieler eliminiert?) - löschen
-  if (GetOwner() < 0) return(RemoveObject() );
+  if ((GetOwner() ?? 0) < 0) return(RemoveObject() );
 
   // Geldwertänderung?
-  if (GetWealth(GetOwner()) != value)
+  if (!Equal(GetWealth(GetOwner()), value))
   {
     // Änderung berechnen und anrechenen
-    var d=GetWealth(GetOwner())-value;
-    value+=d;
+    var d=(GetWealth(GetOwner()) ?? 0)-(value ?? 0);
+    S42MigrationAssign(value, "+=", (d ?? 0));
     // Änderung auf verbündete Konten anrechnen
     var i,acc;
-    while (i<=lastA) if (acc=Local(i++)) acc->UpdateValue(d);
+    while ((i ?? 0)<=(lastA ?? 0)) if (acc=Local(S42MigrationStep(i, 1, true))) acc->UpdateValue(d);
   }
   // Alle 35 Aufrufe CheckAlliances durchführen
-  if (!--tick) AllChk();
+  if (!S42MigrationStep(tick, -1)) AllChk();
 }
 
 /* Kontobestand ändern */
@@ -59,8 +59,8 @@ public func UpdateValue(iByAmount)
 {
   // Änderung auf value und Wealth getrennt anrechnen, da beide verschieden sein können,
   // wenn zwei Konten im gleichen Frame geändert wurden
-  value+=iByAmount;
-  SetWealth(GetOwner(), GetWealth(GetOwner()) + iByAmount);
+  S42MigrationAssign(value, "+=", (iByAmount ?? 0));
+  SetWealth(GetOwner(), (GetWealth(GetOwner()) ?? 0) + (iByAmount ?? 0));
 }
 
 /* Allianzänderungen prüfen und Konten entsprechend umkonfigurieren */
@@ -72,19 +72,19 @@ private func AllChk()
   // Prüfen, ob Allianzen gebrochen wurden
   var i,o = GetOwner();
   // Alle Konten der Teammitglieder durchgehen
-  for (;i<=lastA;i++)
+  for (;(i ?? 0)<=(lastA ?? 0);S42MigrationStep(i, 1, true))
     // Konto vorhanden und verfeindet?
-    if(Local(i) && Hostile(o,i))
+    if(And(Local(i), Hostile(o,i)))
       // Konto löschen
       BreakAlliance(i);
 
   // Prüfen, ob neue Allianzen geschlossen wurden
-  for(i = 0; i < GetPlayerCount(); ++ i)
+  for(i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep( i, 1))
   {
     // Spieler ermitteln
     var plr = GetPlayerByIndex(i);
     // Nicht verfeindet und noch kein Konto reserviert?
-    if(!Hostile(o,plr) && !Local(plr))
+    if(And(!Hostile(o,plr), !Local(plr)))
       // Neues Konto erstellen
       CreateAlliance(plr);
   }
@@ -95,22 +95,22 @@ private func AllChk()
 private func BreakAlliance(iPlr)
 {
   // Alle Allianzen brechen, dabei Geld aufteilen
-  var v1=value/(cnt+1);
-  UpdateValue(v1-value);
+  var v1=(value ?? 0)/((cnt ?? 0)+1);
+  UpdateValue((v1 ?? 0)-(value ?? 0));
   var o = GetOwner();
 
   // Alle Konten durchgehen
-  for (var i = 0;i<=lastA;i++) if (Local(i))
+  for (var i = nil;(i ?? 0)<=(lastA ?? 0);S42MigrationStep(i, 1, true)) if (Local(i))
   {
     // Auch hier Geld anpassen
-    Local(i)->UpdateValue(-v1);
+    Local(i)->UpdateValue(-(v1 ?? 0));
     // Und diesen Spieler aus der Allianz löschen
     Local(i)->RemoveAlliance(o);
     // Uns selbst natürlich auch löschen :)
     RemoveAlliance(i);
   }
 
-  cnt=0;
+  cnt=nil;
   lastA=-1;
 }
 
@@ -120,13 +120,13 @@ private func CreateAlliance(iWithPlr)
 {
   // Verbündete Spieler überprüfen: Alle müssen verbündet sein
   var acc=FindObjectOwner(ACNT,iWithPlr);
-  if(!acc) return(0);
-  if (!CheckAlliances(acc)) return(0);
+  if(!acc) return(nil);
+  if (!CheckAlliances(acc)) return(nil);
   // Neuen letzten Verbündeten berechnen
   lastA=Max(lastA, iWithPlr);
   // Allianz hinzufügen; Locals setzen
   var v2 = ObjectCall(acc,"AddAlliances",this(),value); //acc->AddAlliances(this(), value);
-  AddAlliances(acc, v2-value);
+  AddAlliances(acc, (v2 ?? 0)-(value ?? 0));
 
   return(1);
 }
@@ -136,8 +136,8 @@ private func CreateAlliance(iWithPlr)
 private func CheckAlliances(pWith)
 {
   // Allianzen für alle verbündeten Konten prüfen...
-  for (var i = 0;i<=lastA;i++) if (Local(i))
-    if (!CheckAlliance(Local(i), pWith)) return(0);
+  for (var i = nil;(i ?? 0)<=(lastA ?? 0);S42MigrationStep(i, 1, true)) if (Local(i))
+    if (!CheckAlliance(Local(i), pWith)) return(nil);
   // ...und für sich selbst
   return(CheckAlliance(this(), pWith));
 }
@@ -149,7 +149,7 @@ public func CheckAlliance(pAcc, pWith)
   // Besitzer von pAcc ermitteln 
   var o = GetOwner(pAcc);
   // Jeden Spieler durchgehn
-  for(var i = 0; i < GetPlayerCount(); ++ i)
+  for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep( i, 1))
   {
     // Spielernummer ermitteln
     var plr = GetPlayerByIndex(i);
@@ -158,7 +158,7 @@ public func CheckAlliance(pAcc, pWith)
       // Verfeindet?
       if(Hostile(o, plr) )
         // Dann war's wohl nix.
-        return(0);
+        return(nil);
   }
   // Zuletzt noch prüfen, ob der Spieler mit pWith selbst verbündet ist.
   return(!Hostile(o, GetOwner(pWith)) );
@@ -167,7 +167,7 @@ public func CheckAlliance(pAcc, pWith)
 public func AddAlliances(pGroup, iAddValue)
 {
   // Bei Verbündeten hinzufügen...
-  for (var i = 0;i<=lastA;i++)
+  for (var i = nil;(i ?? 0)<=(lastA ?? 0);S42MigrationStep(i, 1, true))
     // Verbündet?
     if (Local(i))
       // Jo, also hinzufügen
@@ -182,7 +182,7 @@ public func AddAlliance(pGroup, iAddValue)
   // Locals setzen
   var o = GetOwner(pGroup);
   // Jeden SPieler durchgehn
-  for(var i = 0; i < GetPlayerCount(); ++ i)
+  for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep( i, 1))
   {
     // Spielernummer ermitteln
     var plr = GetPlayerByIndex(i);
@@ -190,13 +190,13 @@ public func AddAlliance(pGroup, iAddValue)
     if(Local(plr, pGroup) )
     {
       // Sind wie das selbst?
-      if(Local(plr) || plr == GetOwner() ) continue;
+      if(Or(Local(plr), Equal(plr, GetOwner())) ) continue;
       // Konto hinzufügen
       Local(plr) = Local(plr, pGroup);
       // Neue höchste Spielernummer in diesem Team ermitteln
       lastA = Max(lastA, plr);
       // Diese Allianz hat ein Mitglied mehr
-      ++cnt;
+      S42MigrationStep(cnt, 1);
     }
   }
   
@@ -204,7 +204,7 @@ public func AddAlliance(pGroup, iAddValue)
   Local(o)=pGroup;
   // Und neue höchste Spielernummer setzen
   lastA=Max(lastA, o);
-  ++cnt;
+  S42MigrationStep(cnt, 1);
   // Geldwert anpassen
   UpdateValue(iAddValue);
 }
@@ -213,16 +213,16 @@ public func AddAlliance(pGroup, iAddValue)
 
 public func AllianceDie()
 {
-  return(--cnt);
+  return(S42MigrationStep(cnt, -1));
 }
 
 public func RemoveAlliance(iAlliance)
 {
   // Allianz entfernen; Zähler verringern
-  if (!Local(iAlliance)) return(0);
-  Local(iAlliance) = 0;
-  --cnt;
-  while (!Local(lastA) && lastA) --lastA;
+  if (!Local(iAlliance)) return(nil);
+  Local(iAlliance) = nil;
+  S42MigrationStep(cnt, -1);
+  while (And(!Local(lastA), lastA)) S42MigrationStep(lastA, -1);
   return(1);
 }
 
@@ -232,18 +232,18 @@ public func RemoveAlliance(iAlliance)
 public func GetTeam()
 {
   // Kein Team? :'(
-  if (!cnt) return();
+  if (!cnt) return;
   // Alle Allianzmitglieder speichern
   var j,k;
-  for (var i = 0; i <= lastA; i++)
+  for (var i = nil; (i ?? 0) <= (lastA ?? 0); S42MigrationStep(i, 1, true))
     if (Local(i))
-      Var(j++) = GetPlayerName(i);
+      Var(S42MigrationStep(j, 1, true)) = GetPlayerName(i);
 
   // Erstes Mitglied holen
-  var rs = Var(0);
+  var rs = Var(nil);
 
   // Und alle weiteren mit Komma getrennt dranhängen
-  while (++k < j)
+  while (S42MigrationStep(k, 1) < (j ?? 0))
     if (Var(k))
       rs = Format("%s, %s", rs, Var(k));
       

@@ -1,6 +1,6 @@
 /*-- Zap --*/
 
-#strict
+#strict 3
 
 local target;
 
@@ -10,11 +10,11 @@ private func Flying() { // wird alle 3 Frames aufgerufen
   // nichts tun
   if(Random(4)) return(1);
   // Geschwindigkeit zufällig bestimmen
-  xdir=Random(13)-6;
-  ydir=Random(9)-4;
+  xdir=(Random(13) ?? 0)-6;
+  ydir=(Random(9) ?? 0)-4;
   // Verfolgt der Zap jemanden? Geschwindigkeit abstimmen
-  xdir+=BoundBy((GetX(target)-GetX()),-11,11);
-  ydir+=BoundBy((GetY(target)-GetY())/3,-7,7);
+  S42MigrationAssign(xdir, "+=", (BoundBy(((GetX(target) ?? 0)-(GetX() ?? 0)),-11,11) ?? 0));
+  S42MigrationAssign(ydir, "+=", (BoundBy(((GetY(target) ?? 0)-(GetY() ?? 0))/3,-7,7) ?? 0));
   if(GBackLiquid(xdir,ydir)) return(SetSpeed());
   SetSpeed(xdir,ydir);
 }
@@ -32,22 +32,22 @@ protected func Check() { // wird alle 18Frames aufgerufen
   // Vom aktuellen Ziel ablassen und jemand anders verfolgen (falls jemand da ist)
   if(!Random(10)) target=FindTarget(200);
   // Einfach nur so vom Ziel ablassen
-  if(!Random(30)) target=0; 
+  if(!Random(30)) target=nil;
   // Das Ziel hat sich in ein Gebäude gerettet
-  if(Contained(target)) target=0; 
+  if(Contained(target)) target=nil;
   // Vom Ziel ablassen wenn er sich im Wasser versteckt
-  if(GBackSemiSolid(GetX(target)-GetX(),GetY(target)-GetY())) target=0;
+  if(GBackSemiSolid((GetX(target) ?? 0)-(GetX() ?? 0),(GetY(target) ?? 0)-(GetY() ?? 0))) target=nil;
   // Vom Ziel ablassen weil er nicht direkt erreichbar ist
-  if(!Random(5)) if(!PathFree(GetX(),GetY(),GetX(target),GetY(target))) target=0; 
+  if(!Random(5)) if(!PathFree(GetX(),GetY(),GetX(target),GetY(target))) target=nil;
 
   // stechen
   if(!Random(2))
-    if(obj=FindObject(0,1,0,0,0,OCF_Prey(),0,0,NoContainer()))
+    if(obj=FindObject(nil,1,nil,nil,nil,OCF_Prey,nil,nil,NoContainer()))
       Sting(obj);
 }
   
 private func Sting(obj) {
-  Punch(obj,3+Random(2));
+  Punch(obj,3+(Random(2) ?? 0));
   Sound("Sting");
   if(!Random(3)) Death();
 }
@@ -55,9 +55,9 @@ private func Sting(obj) {
 public func FindTarget(maxdist) {  // maximale Distanz zum "Opfer"
   var obj;
   // neues Ziel bestimmen falls es nicht zu weit entfernt ist
-  if(obj=FindObject(0,0,0,-1,-1,OCF_Prey(),0,0,NoContainer()))
-    if(ObjectDistance(obj)<maxdist)
-      if(!GBackSemiSolid(GetX(obj)-GetX(),GetY(obj)-GetY()))
+  if(obj=FindObject(nil,nil,nil,-1,-1,OCF_Prey,nil,nil,NoContainer()))
+    if((ObjectDistance(obj) ?? 0)<(maxdist ?? 0))
+      if(!GBackSemiSolid((GetX(obj) ?? 0)-(GetX() ?? 0),(GetY(obj) ?? 0)-(GetY() ?? 0)))
         return(obj);
 }
 

@@ -1,6 +1,6 @@
 /*-- Piranha --*/
 
-#strict
+#strict 3
 #include FISH
 
 /* Initialisierung */
@@ -13,9 +13,9 @@ public func IsThreat() {return(true);}
 private func Activity()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
   
-  if (GetAction() eq "Walk") WalkDir();
+  if (!!SEqual(GetAction(), "Walk")) WalkDir();
 
   // Fortpflanzung (sollte eigentlich laichen...)
   if (!Random(ReproductionRate())) 
@@ -26,16 +26,16 @@ private func Activity()
 
   // Beute
   var pPrey;
-  if(pPrey = FindObject(0, 0,0,-1,-1, OCF_Prey()))
-    if(ObjectDistance(pPrey)<150)
-      if(GetOCF(pPrey) & OCF_InLiquid())
+  if(pPrey = FindObject(nil, nil,nil,-1,-1, OCF_Prey))
+    if((ObjectDistance(pPrey) ?? 0)<150)
+      if((GetOCF(pPrey) ?? 0) & (OCF_InLiquid ?? 0))
         return(SetCommand(this(),"Follow",pPrey));
   
   // Schwimmverhalten
-  if (!GBackLiquid(0, -8) && GetAction() ne "Walk") return(SetComDir(COMD_Down()));
+  if (And(!GBackLiquid(nil, -8), !SEqual(GetAction(), "Walk"))) return(SetComDir(COMD_Down));
   if (Random(2)) return(1);
-  if (GetAction() ne "Swim") return(1);
-  if (!Random(5)) SetComDir(COMD_Up());
+  if (!SEqual(GetAction(), "Swim")) return(1);
+  if (!Random(5)) SetComDir(COMD_Up);
 
   // Umdrehen
   if (Random(2)) return(TurnRight());
@@ -47,12 +47,12 @@ private func Activity()
 private func CheckAttack()
 {
   // Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-  if (GetEffect("PossessionSpell", this())) return();
+  if (GetEffect("PossessionSpell", this())) return;
 
   var pPrey;
-  if(GetAction() ne "Swim") return();
+  if(!SEqual(GetAction(), "Swim")) return;
   if(!Contained())
-    if(pPrey = FindObject(0,+1,+1,0,0,OCF_Prey(),0,0,NoContainer()))
+    if(pPrey = FindObject(nil,+1,+1,nil,nil,OCF_Prey,nil,nil,NoContainer()))
       Attack(pPrey);
 }
 
@@ -61,9 +61,9 @@ private func Attack(object pPrey)
   SetAction("Knabber");
   Sound("Munch*");
   DoEnergy(-4,pPrey);
-  if(GetOCF(pPrey)&OCF_CrewMember())
-    Sound("Hurt*",0,pPrey);
-  if(!Random(3)) SetComDir(COMD_Stop(),pPrey);
+  if((GetOCF(pPrey) ?? 0)&(OCF_CrewMember ?? 0))
+    Sound("Hurt*",nil,pPrey);
+  if(!Random(3)) SetComDir(COMD_Stop,pPrey);
   return(1);
 }
 
@@ -78,7 +78,7 @@ public func Cook()
 
 protected func Death() 
 {
-  SetDir(0);
+  SetDir(nil);
   ChangeDef(DPIR);
   SetAction("Dead");
 }
@@ -88,8 +88,8 @@ protected func Death()
 public func Birth()
 {
   SetAction("Swim");
-  SetComDir(COMD_Left());
-  if(Random(2)) SetComDir(COMD_Right());
+  SetComDir(COMD_Left);
+  if(Random(2)) SetComDir(COMD_Right);
 }
 
 /* Steuerung durch Besessenheit */
@@ -100,9 +100,9 @@ protected func ContainedDig()
 {
  [$TxtAttack$]
   var pPrey;
-  if(GetAction() ne "Swim") return();
+  if(!SEqual(GetAction(), "Swim")) return;
   if(!Contained())
-    if(pPrey = FindObject(0,+1,+1,0,0,OCF_Prey(),0,0,NoContainer()))
+    if(pPrey = FindObject(nil,+1,+1,nil,nil,OCF_Prey,nil,nil,NoContainer()))
       Attack(pPrey);
  return(1);
 }

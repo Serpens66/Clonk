@@ -1,6 +1,6 @@
 /*-- Toter Vogel --*/
 
-#strict
+#strict 3
 
 protected func Activate(clonk)
 {

@@ -34,7 +34,7 @@
 // -Physicals
 // -Zauberenergie-Regeneration
 
-#strict 2
+#strict 3
 
 #appendto CLNK // Alle Clonks
 //#appendto WL69 // Wolf
@@ -43,7 +43,7 @@ global func Frozen(object pObject)
 {   
   // Passendes Objekt ermitteln
   if(!pObject) pObject = this();
-  if(!pObject) return(0);
+  if(!pObject) return(nil);
   
   // Hat das Objekte einen passenden Effekt?
   if(GetEffect("Freeze", pObject)) return(1);
@@ -96,7 +96,7 @@ local waffe1,waffe2,waffe3,waffe4,waffe5,waffe6,waffe7,waffe8;  // Waffen der KI
 // AI kann durch Blendgranate geblendet werden und agiert dann für kurze Zeit nicht mehr
 func Nichtmehrgeblendet()
 {
-geblendet=0;
+geblendet=nil;
 }
 
 func Istnungeblendet()
@@ -121,22 +121,24 @@ func IsNunAgentAI() {agentai=1;}
 func IsAgentAI() {return(agentai);}
 
 
-func IsAI() {if (ai_iRange) return(1); return(0);}
+func IsAI() {if (ai_iRange) return(1); return(nil);}
 
 public func SetAI(object pATarget, int iARange, int iHide)
   {
+  iARange ??= 0;
+  iHide ??= 0;
   var iScriptPlr, dwOldClr;
-  if (pATarget) return(pATarget->SetAI(0, iARange,iHide));
-  if (GetCategory() & C4D_StaticBack) return; // Keine Speedclonks
+  if (pATarget) return(pATarget->SetAI(nil, iARange,iHide));
+  if ((GetCategory() ?? 0) & (C4D_StaticBack ?? 0)) return; // Keine Speedclonks
   if (!GetAlive()) return; // Keine totgestellten Clonks
   if (ai_iRange) return; // Hat schon?
   if (!iARange) iARange = EA69_EnemySearchRange;
   if (!GetAlive()) return;
   // Gehört der Clonk keinem Spieler? Dann besser an einen Scriptspieler übergeben
-  if (GetOwner() == NO_OWNER)
+  if (S42MigrationEqual(GetOwner(), NO_OWNER))
     {
-    iScriptPlr = GetPlayerByIndex(0, C4PT_Script);
-    if (iScriptPlr == NO_OWNER)
+    iScriptPlr = GetPlayerByIndex(nil, C4PT_Script);
+    if (S42MigrationEqual(iScriptPlr, NO_OWNER))
       {
       return FatalError(Format("Error setting AI for object %v: No script player defined!", this));
       }
@@ -147,8 +149,8 @@ public func SetAI(object pATarget, int iARange, int iHide)
     }
 
 //wenn EA69_HostileAll==1 und Skriptspieler noch nicht zu allen feindlich, dann zu allen feindlich machen (auch andere Skriptspieler):
-if(EA69_HostileAll==1)
- for(var i = 0; i < GetPlayerCount(); i++)
+if(S42MigrationEqual(EA69_HostileAll, 1))
+ for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
  {
  if(!Hostile(i, iScriptPlr))  // wenn der Spieler nicht mit Skriptspieler verfeindet ist
    {SetHostility(i,iScriptPlr,1);SetHostility(iScriptPlr,i,1);} // dann in beide richtungen feindlich machen
@@ -161,7 +163,7 @@ if(EA69_HostileAll==1)
   ai_iHomeX = GetX(); ai_iHomeY = GetY(); ai_iHomeDir = GetDir();  
   if (IsMagiclonk()) { ai_iMagicRegen = 10; ai_iCastChance = 100; }
   else if (IsPaladin()) { ai_iMagicRegen = 1; ai_iCastChance = 200; }
-  ai_aSpells = 0; // Alle Zauber erlaubt
+  ai_aSpells = nil; // Alle Zauber erlaubt
   // Timer erstellen
   if (GetEffect("AI", this)) return;
   return(AddEffect("AI", this, 1, 3, this));
@@ -171,10 +173,10 @@ public func AI_AddSpell(id idSpell)
   {
   // Zauber zur Liste erlaubter Zauber hinzufügen, wenn noch nicht drin
   if (!idSpell) return;
-  if (!GetName(0, idSpell)) { Log("Spell doesn't exist!"); return; }
-  if (GetIndexOf(idSpell, ai_aSpells) >= 0) return;
+  if (!GetName(nil, idSpell)) { Log("Spell doesn't exist!"); return; }
+  if ((GetIndexOf(idSpell, ai_aSpells) ?? 0) >= 0) return;
   if (!ai_aSpells) ai_aSpells = CreateArray();
-  ai_aSpells[GetLength(ai_aSpells)] = idSpell;
+  ai_aSpells[(GetLength(ai_aSpells) ?? 0)] = idSpell;
   return true;
   }
 
@@ -196,12 +198,13 @@ global func AI_InitSystem()
   }
 
 // Temporäres Deaktivieren der KI  
-public func AI_Disable() { ai_iRange = 0; }
-public func AI_Enable(int iARange) { if (!(ai_iRange = iARange)) ai_iRange = EA69_EnemySearchRange; }
+public func AI_Disable() { ai_iRange = nil; }
+public func AI_Enable(int iARange) { iARange ??= 0;
+    if (!(ai_iRange = iARange)) ai_iRange = EA69_EnemySearchRange; }
 
 // Referenzgezähltes, temporäres Deaktivieren
-public func AI_RefDisable() { if (!ai_iRefOffCount++) { ai_iRefOffRange = ai_iRange; ai_iRange=0; } }
-public func AI_RefEnable() { if (!(ai_iRefOffCount=Max(ai_iRefOffCount-1))) if (ai_iRefOffRange) ai_iRange = ai_iRefOffRange; }
+public func AI_RefDisable() { if (!S42MigrationStep(ai_iRefOffCount, 1, true)) { ai_iRefOffRange = ai_iRange; ai_iRange=nil; } }
+public func AI_RefEnable() { if (!(ai_iRefOffCount=Max((ai_iRefOffCount ?? 0)-1))) if (ai_iRefOffRange) ai_iRange = ai_iRefOffRange; }
 
 public func AI_SetFirstEncounterCB(id idToCB)
   {
@@ -213,7 +216,8 @@ public func AI_SetFirstEncounterCB(id idToCB)
 protected func Recruitment(int iPlr)
   {
   // KI aktiviert: Alle Clonks im Besitz des Scriptspielers steuern
-  if (ObjectCount(EA69_RuleID) && GetPlayerType(iPlr) == C4PT_Script && !ai_iRange)
+  iPlr ??= 0;
+  if (ObjectCount(EA69_RuleID) && S42MigrationEqual(GetPlayerType(iPlr), C4PT_Script) && !ai_iRange)
     ScheduleCall(this, "SetAI", 50, 1);
   return(_inherited(iPlr,...));
   }
@@ -225,6 +229,8 @@ protected func Recruitment(int iPlr)
 protected func FxAIStart(object pTarget, int iEffectNumber, int iTemp)
   {
   // Anfangsausrüstung
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
   if (!iTemp)
     if (!Contents())
       if (!GetPlayerCount()) // Nur während der Entwicklungszeit
@@ -242,13 +248,13 @@ protected func FxAITimer()
 if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einfach
 
   // nichts machen und aktion abbrechen, wenn geblendet
-  if(geblendet==1)
-  {SetCommand(0, "None"); SetComDir(COMD_Stop);return;}
+  if(S42MigrationEqual(geblendet, 1))
+  {SetCommand(nil, "None"); SetComDir(COMD_Stop);return;}
 
   // Während bestimmter Aktionen absolut gar nichts tun, damit sie nicht abgebrochen werden!
   if (ai_iDisableTime)
     {
-    --ai_iDisableTime;
+    S42MigrationStep(ai_iDisableTime, -1);
     //Log("%v", ai_iDisableTime);
     return;
     }
@@ -260,20 +266,20 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
   else if (Contained(ai_pTarget))
     // Tiere folgen nicht in Gebäude
     //if (IsAnimal()) keiner folgt in Gebäude
-   ai_pTarget = 0;
+   ai_pTarget = nil;
 
   // Cheatzeug:
   // Magiclonks kriegen ständig Mana
-  if (!Random(10)) if (EA69_CheatMagicEnergy) DoMagicEnergy(ai_iMagicRegen * (1+g_EA69_iDifficulty));
+  if (!Random(10)) if (EA69_CheatMagicEnergy) DoMagicEnergy((ai_iMagicRegen ?? 0) * (1+(g_EA69_iDifficulty ?? 0)));
   // Ritter mit Bogen kriegen Pfeile
   if (!Random(700)) if (EA69_CheatAmmo)
     {
     if (IsKnight() && FindContents(BOW1))
       if (!this->GetArrowCount())
-        CreateContents([ARWP, FARP][Random(3)]); // normale und Feuerpfeile. Sprengpfeile sind doof.
+        CreateContents([ARWP, FARP][(Random(3) ?? 0)]); // normale und Feuerpfeile. Sprengpfeile sind doof.
     if (IsPaladin() && FindContents(MUSK))
       if (!this->GetBulletCount())
-        CreateContents([BLTP, PBLP, SBLP][Random(3)]);
+        CreateContents([BLTP, PBLP, SBLP][(Random(3) ?? 0)]);
     }
 
   // Projektile im Umkreis suchen
@@ -283,20 +289,20 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
   var pContainer;
   if (pContainer = Contained())
     {
-    if (pContainer != ai_pHome || ai_pTarget)
+    if (!S42MigrationEqual(pContainer, ai_pHome) || ai_pTarget)
       {
       // Aus Stein und Flasche auslösen
       if (!Random(50))
         {
-        if (GetID(pContainer) == MRCK)  if (!Contained(pContainer)) return(pContainer->ContainedDigDouble(this));
-        if (GetID(Contained()) == CITB)
+        if (S42MigrationEqual(GetID(pContainer), MRCK))  if (!Contained(pContainer)) return(pContainer->ContainedDigDouble(this));
+        if (S42MigrationEqual(GetID(Contained()), CITB))
           {
           ProtectedCall(pContainer, "Break"); // Falls sie den Funktionsnamen mal korrigieren
           return(ProtectedCall(pContainer, "Brake"));
           }
         }
       // Mit Gegner im Haus: OK für Clonks; nicht für Tiere!
-      if (!IsAnimal()) if (ai_pTarget) if (pContainer == Contained(ai_pTarget)) return true;
+      if (!IsAnimal()) if (ai_pTarget) if (S42MigrationEqual(pContainer, Contained(ai_pTarget))) return true;
       // Nicht, wenn noch Projektile draußen rumfliegen
       if (GetLength(aProjectiles)) return true;
       // Sonst raus
@@ -309,22 +315,22 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
   else for (obj in aProjectiles)
     {
     // Luftklaue, aber geschützt?
-    if (GetID(obj) == AFTF) if (GetEffect("NoABLA" , this)) continue;
+    if (S42MigrationEqual(GetID(obj), AFTF)) if (GetEffect("NoABLA" , this)) continue;
     // Berechnen, ob das Projektil treffen würde
-    dx = GetX(obj)-GetX(); dy = GetY(obj)-GetY();
-    vx = GetXDir(obj); vy = GetYDir(obj); dir = vx/Abs(vx);
-    if (!dir) dir = Random(2)*2-1;
+    dx = (GetX(obj) ?? 0)-(GetX() ?? 0); dy = (GetY(obj) ?? 0)-(GetY() ?? 0);
+    vx = GetXDir(obj); vy = GetYDir(obj); dir = (vx ?? 0)/(Abs(vx) ?? 0);
+    if (!dir) dir = (Random(2) ?? 0)*2-1;
     // VecAbstand * VecGeschwindigkeit < -Cos(Toleranz)*|VecAbstand|*|VecGeschwindigkeit|)
-    if (dx*vx+dy*vy < 70*Sqrt(dx*dx+dy*dy)*Sqrt(vx*vx+vy*vy)/-100)
+    if ((dx ?? 0)*(vx ?? 0)+(dy ?? 0)*(vy ?? 0) < 70*(Sqrt((dx ?? 0)*(dx ?? 0)+(dy ?? 0)*(dy ?? 0)) ?? 0)*(Sqrt((vx ?? 0)*(vx ?? 0)+(vy ?? 0)*(vy ?? 0)) ?? 0)/-100)
       {
       // Feuerbälle löschen
-      if (GetID(obj) == FIRB) if (AI_DoMagic(EXTG)) return true;
+      if (S42MigrationEqual(GetID(obj), FIRB)) if (AI_DoMagic(EXTG)) return true;
       // Vor einem Eingang? Prima! Rein da!
       if (pContainer = FindObject2(Find_AtPoint(), Find_OCF(OCF_Entrance), Find_Not(Find_Func("IsHorse"))))
         return(AI_SetCommand("Enter", pContainer));
       // Sonst ausweichen
       if (!AI_Evade(dir, obj))
-        if (!AI_Evade(-dir, obj))
+        if (!AI_Evade(-(dir ?? 0), obj))
           // Nowhere to go :o
           return(AI_Panic());
       return true;
@@ -346,8 +352,8 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
       return(ProtectedCall(obj, "Activate", this));
     // Schon auf dem Weg ins Wasser?
     i = AI_GetStackedCommand("MoveTo");
-    if (i >= 0)
-      if(GetMaterialVal("Extinguisher", "Material", GetMaterial(GetCommand(0, 2, i)-GetX(),GetCommand(0, 3, i)-GetY())))
+    if ((i ?? 0) >= 0)
+      if(GetMaterialVal("Extinguisher", "Material", GetMaterial((GetCommand(nil, 2, i) ?? 0)-(GetX() ?? 0),(GetCommand(nil, 3, i) ?? 0)-(GetY() ?? 0))))
         return true; // Weiter so
     // Irgendwer muss doch helfen können?
     for (pClonk in FindObjects(Find_InRect(-150,-150,300,300), Find_OCF(OCF_Living), Find_NoContainer(), Find_Exclude(this)))
@@ -358,14 +364,14 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
             return(AI_Thank(pClonk));
     // Wasser in der Nähe?
     i = 20;
-    while (i--)
+    while (S42MigrationStep(i, -1, true))
       {
-      dx = Random(401) - 200;
-      dy = Random(401) - 200;
+      dx = (Random(401) ?? 0) - 200;
+      dy = (Random(401) ?? 0) - 200;
       if(GetMaterialVal("Extinguisher", "Material", GetMaterial(dx,dy)))
-        if (dist = GetPathLength(GetX(), GetY(), GetX()+dx, GetY()+dy))
-          if (dist < 800)
-            return(AI_SetCommand("MoveTo", 0, GetX()+dx, GetY()+dy));
+        if (dist = GetPathLength(GetX(), GetY(), (GetX() ?? 0)+(dx ?? 0), (GetY() ?? 0)+(dy ?? 0)))
+          if ((dist ?? 0) < 800)
+            return(AI_SetCommand("MoveTo", nil, (GetX() ?? 0)+(dx ?? 0), (GetY() ?? 0)+(dy ?? 0)));
       }
     // Keine Löschmöglichkeit: Zum nächsten Gegner laufen
     obj = AI_FindNearestEnemy(); if (!obj) obj = ai_pTarget;
@@ -395,21 +401,21 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
   if (IsKnight()) if (AI_ExecKnight()) return true;
 
   // Nahkampfangriff
-  if (!AI_IsRanged() || (ai_dwFlags & EA69_ForceMelee))
+  if (!AI_IsRanged() || ((ai_dwFlags ?? 0) & (EA69_ForceMelee ?? 0)))
     {
     // Zum Gegner laufen
-    if (!GetCommand() || (GetCommand() == "MoveTo" && !Random(8)))
+    if (!GetCommand() || (S42MigrationEqual(GetCommand(), "MoveTo") && !Random(8)))
       return(AI_SetCommand("Attack", ai_pTarget));
     }
   else if (!GetCommand())
     {
     // Fernkämpfer aus blöden Situationen
-    if (GetProcedure() == "SWIM" || GetProcedure() == "SWIMARMED")
+    if (S42MigrationEqual(GetProcedure(), "SWIM") || S42MigrationEqual(GetProcedure(), "SWIMARMED"))
       return(AI_Home());
-    if (GetProcedure() == "SCALE")
+    if (S42MigrationEqual(GetProcedure(), "SCALE"))
       if (GetDir()) return(SetComDir(COMD_Left)); else return(SetComDir(COMD_Right));
-    if (GetProcedure() == "HANGLE")
-      return(AI_SetCommand("MoveTo", 0, GetX(), GetY()+20));
+    if (S42MigrationEqual(GetProcedure(), "HANGLE"))
+      return(AI_SetCommand("MoveTo", nil, GetX(), (GetY() ?? 0)+20));
     // Fernkämpfer hat nichts zu tun
     //Log("nada");
     }
@@ -428,23 +434,23 @@ if(!g_EA69_aNoThrow) AI_SetDifficulty(EA69_Diff_Easy); // d.h standard ist: einf
 
 private func AI_Home()
   {
-  if(Stuck(this)) ai_iHomeY = GetY()-60; // wenn feststeckt, dann Y etwas nach oben setzen, damit magier sich rausportet
+  if(Stuck(this)) ai_iHomeY = (GetY() ?? 0)-60; // wenn feststeckt, dann Y etwas nach oben setzen, damit magier sich rausportet
   // X-Richtung reicht fürs Home
-  if (Abs(GetX() - ai_iHomeX) > 5) if (!ai_pHome && ai_iHomeX)
+  if ((Abs((GetX() ?? 0) - (ai_iHomeX ?? 0)) ?? 0) > 5) if (!ai_pHome && ai_iHomeX)
     {
     // Magier kann sich auch warpen, wenn entfernung groesser 60
-    if(!Random(20)) if (Abs(GetX() - ai_iHomeX) > 60) if (AI_DoMagic(EH69)) { AI_SetCommand("None"); return true; }
-    AI_SetCommand("MoveTo", 0, ai_iHomeX, ai_iHomeY);
+    if(!Random(20)) if ((Abs((GetX() ?? 0) - (ai_iHomeX ?? 0)) ?? 0) > 60) if (AI_DoMagic(EH69)) { AI_SetCommand("None"); return true; }
+    AI_SetCommand("MoveTo", nil, ai_iHomeX, ai_iHomeY);
     return(AI_ExecMovement());
     }
   // Container
-  if (Contained() != ai_pHome)
+  if (!S42MigrationEqual(Contained(), ai_pHome))
     {
     if (ai_pHome)
       {
-      if (!(GetOCF(ai_pHome) & OCF_Entrance)) { ai_pHome=0; return true; 
+      if (!((GetOCF(ai_pHome) ?? 0) & (OCF_Entrance ?? 0))) { ai_pHome=nil; return true;
 /* Pferd tot */ } 
-      if (!WildcardMatch(GetAction(), "Ride*") || GetActionTarget() != ai_pHome)
+      if (!WildcardMatch(GetAction(), "Ride*") || !S42MigrationEqual(GetActionTarget(), ai_pHome))
         {
         AI_SetCommand("Enter", ai_pHome);
         return(AI_ExecMovement());
@@ -457,17 +463,17 @@ private func AI_Home()
       }
     }
   // @ Home
-  if (GetProcedure() == "WALK" || GetProcedure() == "HOLDWALK" || GetProcedure() == "WALKARMED") SetDir(ai_iHomeDir);
+  if (S42MigrationEqual(GetProcedure(), "WALK") || S42MigrationEqual(GetProcedure(), "HOLDWALK") || S42MigrationEqual(GetProcedure(), "WALKARMED")) SetDir(ai_iHomeDir);
   // Wenig Energie: Heilung
-  if (GetEnergy() < 30) if (AI_Heal()) return true;
+  if ((GetEnergy() ?? 0) < 30) if (AI_Heal()) return true;
   // KI-Clonks regenerieren auch so (laaangsam)
   if (!Random(50)) DoEnergy(1);
 // wenn unter wasser, dann auftauchen:
-    if (GBackLiquid(0,-2))
-      {SetCommand(0, "Nono");SetComDir(COMD_Up);}
+    if (GBackLiquid(nil,-2))
+      {SetCommand(nil, "Nono");SetComDir(COMD_Up);}
   // Erstmal alles stoppen, wenn nicht unter wasser
   else
-  {SetCommand(0, "None"); SetComDir(COMD_Stop);}
+  {SetCommand(nil, "None"); SetComDir(COMD_Stop);}
   // Clonkspezifische Aktion
   if (OnAIIdle()) return true;
   // Tjo. Nix zu tun, dann verstecken, wenn erlaubt
@@ -477,7 +483,7 @@ private func AI_Home()
     // ab und an mal den homepoint verschieben:
     if(!Random(200)) // mit chance 1 zu 200 die homepostion verändern
     {
-    ai_iHomeX = GetX()+RandomX(-200,200);
+    ai_iHomeX = (GetX() ?? 0)+(RandomX(-200,200) ?? 0);
     ai_iHomeY = GetY(); // Y ist eig nur fuer warp von zauberern noetig
     ai_iHomeDir = Random(2);
     }
@@ -493,6 +499,7 @@ private func AI_Home()
 
 private func AI_Evade(int iDir, object pProjectile) // iDir in {-1,+1}
   {
+  iDir ??= 0;
   var iOldDir, iYDiff, pShooter;
   //Log("AI_Evade %d %v", iDir, pProjectile);
   // Magier-Ausweichen
@@ -500,21 +507,21 @@ private func AI_Evade(int iDir, object pProjectile) // iDir in {-1,+1}
   if (!Random(5))
     if (AI_DoMagic(CMFG, ARRW, 50)) return true; // Tarnung
   if (!Random(5)) if (ai_pTarget) if (ObjectCount(NTMG))
-    if (AI_DoMagic(MPXC, 0,0, ai_pTarget)) return true; // Positionswechsel (M&M)
+    if (AI_DoMagic(MPXC, nil,nil, ai_pTarget)) return true; // Positionswechsel (M&M)
   if (!Random(5))
-    if (AI_DoMagic(MCIB, 0,0, this)) return true; // Clonk in Flasche (M&M)
-  if (pProjectile) if (GetMagicEnergy()>=9) if (AI_CanCast())
+    if (AI_DoMagic(MCIB, nil,nil, this)) return true; // Clonk in Flasche (M&M)
+  if (pProjectile) if ((GetMagicEnergy() ?? 0)>=9) if (AI_CanCast())
     {
     if (!Random(5)) if (pProjectile->~IsArrow())
       {
       iOldDir = GetDir();
-      SetDir((1-iDir)/2);
+      SetDir((1-(iDir ?? 0))/2);
       // Bogenschützen von unten mit Kraftfeldbrücke abwehren
       pShooter = GetCursor(GetController(pProjectile));
       if (pShooter) if (WildcardMatch(GetAction(pShooter), "*Aim*") || WildcardMatch(GetAction(pShooter), "Magic*"))
         {
-        iYDiff = GetY(pShooter) - GetY();
-        if (iYDiff > 20) if (iYDiff > Abs(GetX() - GetX(pShooter)))
+        iYDiff = (GetY(pShooter) ?? 0) - (GetY() ?? 0);
+        if ((iYDiff ?? 0) > 20) if ((iYDiff ?? 0) > (Abs((GetX() ?? 0) - (GetX(pShooter) ?? 0)) ?? 0))
           if (AI_DoMagic(MBRG, METL, 1)) return true;
         }
       // Ansonsten hilft zur Abwehr die Kraftfeldwand
@@ -525,7 +532,7 @@ private func AI_Evade(int iDir, object pProjectile) // iDir in {-1,+1}
     if (!Random(4))
       {
       iOldDir = GetDir();
-      SetDir((1-iDir)/2);
+      SetDir((1-(iDir ?? 0))/2);
       if (AI_DoMagic(ABLA, SPHR, 70, pProjectile)) return true;
       SetDir(iOldDir);
       }
@@ -536,22 +543,22 @@ private func AI_Evade(int iDir, object pProjectile) // iDir in {-1,+1}
     // M&M: Zurückwerfen
     if (!Random(2))
       if (!GetEffect("DeflectionPSpell", this))
-        if (AI_DoMagic(MDFL, 0,0, this)) return true;
+        if (AI_DoMagic(MDFL, nil,nil, this)) return true;
     // M&M: Steinschild
     if (!GetEffect("StoneShieldPSpell", this))
       if (AI_DoMagic(MSSH, ROCK, 50, this)) return true;
     }
   // Sprung frei?
-  if (PathFree(GetX(), GetY(), GetX()+25*iDir, GetY()-20))
+  if (PathFree(GetX(), GetY(), (GetX() ?? 0)+25*(iDir ?? 0), (GetY() ?? 0)-20))
     {
-    AddCommand(0, "Jump", 0, iDir);
-    SetComDir(5-2*iDir);
+    AddCommand(nil, "Jump", nil, iDir);
+    SetComDir(5-2*(iDir ?? 0));
     return AI_ExecMovement();
     }
   // Weg frei?
-  if (PathFree(GetX(), GetY(), GetX()+30*iDir, GetY()))
+  if (PathFree(GetX(), GetY(), (GetX() ?? 0)+30*(iDir ?? 0), GetY()))
     {
-    AddCommand(0, "MoveTo", 0, GetX()+30*iDir,GetY());
+    AddCommand(nil, "MoveTo", nil, (GetX() ?? 0)+30*(iDir ?? 0),GetY());
     return AI_ExecMovement();
     }
   // Nix frei :(
@@ -565,8 +572,8 @@ private func AI_Panic()
   // Warp - deaktiviert fürs Szenario
   //if (!Random(2)) if (AI_DoMagic(MGWP)) return true;
   // Aaah!11
-  if (GetProcedure() != "WALK" && GetProcedure() != "HOLDWALK" && GetProcedure() != "WALKARMED") return true;
-  Jump(); SetXDir(0); SetYDir(GetYDir()/2);
+  if (!S42MigrationEqual(GetProcedure(), "WALK") && !S42MigrationEqual(GetProcedure(), "HOLDWALK") && !S42MigrationEqual(GetProcedure(), "WALKARMED")) return true;
+  Jump(); SetXDir(nil); SetYDir((GetYDir() ?? 0)/2);
   if(IsArmed()) SetAction("JumpArmed");
   if(!IsArmed()) SetAction("Jump");
   Sound("Scream");
@@ -578,26 +585,26 @@ private func AI_ExecMovement()
   //Log("ExecMovement: %s %s", GetProcedure(), GetCommand());
   var obj;
   var szCommand = GetCommand();
-  var pTarget = GetCommand(0, 1), iTargetX, iTargetY;
-  var iTargetX = GetCommand(0, 2), iTargetY = GetCommand(0, 3);
+  var pTarget = GetCommand(nil, 1), iTargetX, iTargetY;
+  var iTargetX = GetCommand(nil, 2), iTargetY = GetCommand(nil, 3);
   var fShouldJump, fAnySolid, cx, dx, dy, iJumpOutDir;
   var pAnimal;
   // Sprünge während der normalen Bewegung
-  if (GetProcedure() == "WALK" || GetProcedure() == "HOLDWALK" || GetProcedure() == "WALKARMED")
+  if (S42MigrationEqual(GetProcedure(), "WALK") || S42MigrationEqual(GetProcedure(), "HOLDWALK") || S42MigrationEqual(GetProcedure(), "WALKARMED"))
     {
-    if (szCommand == "MoveTo" || szCommand == "Attack" || szCommand == "Follow" || (szCommand == "Throw" && iTargetX))
+    if (S42MigrationEqual(szCommand, "MoveTo") || S42MigrationEqual(szCommand, "Attack") || S42MigrationEqual(szCommand, "Follow") || (S42MigrationEqual(szCommand, "Throw") && iTargetX))
       {
-      if (!iTargetX) iTargetX = GetX(GetCommand(0, 1));
-      if (!iTargetY) iTargetY = GetY(GetCommand(0, 1));
+      if (!iTargetX) iTargetX = GetX(GetCommand(nil, 1));
+      if (!iTargetY) iTargetY = GetY(GetCommand(nil, 1));
       //Log("ExecMovement: %d %d", iTargetX, iTargetY);
       // Über Brennendes springen
       if(!OnFire())
-        if(obj=FindObject2(Find_InRect(-40*!GetDir(),-40,40,80), Find_Exclude(this), Find_OCF(OCF_OnFire), Find_NoContainer()))
+        if(obj=FindObject2(Find_InRect(-40*(!GetDir() ?? 0),-40,40,80), Find_Exclude(this), Find_OCF(OCF_OnFire), Find_NoContainer()))
           fShouldJump = true;
       // Über Lava/Säurebecken/Tiefe Löcher springen
-      cx=40*GetDir()-20;
-      if(GetAction() != "Jump" && GetAction() != "JUMPARMED" && GetAction() != "HOLDJUMP" && !InLiquid())
-        for(var j=1; j<50; j+=5)
+      cx=40*(GetDir() ?? 0)-20;
+      if(!S42MigrationEqual(GetAction(), "Jump") && !S42MigrationEqual(GetAction(), "JUMPARMED") && !S42MigrationEqual(GetAction(), "HOLDJUMP") && !InLiquid())
+        for(var j=1; (j ?? 0)<50; S42MigrationAssign(j, "+=", 5))
           if(GetMaterialVal("Incindiary", "Material", GetMaterial(cx,j)))
             fShouldJump = true;
           else if (GBackSolid(cx, j))
@@ -606,14 +613,14 @@ private func AI_ExecMovement()
             break;
             }
       // Sprung zum Gegner, bzw. Sprung einfach so
-      if (GetY() - iTargetY > 16)
+      if ((GetY() ?? 0) - (iTargetY ?? 0) > 16)
         if (!Random(8)) fShouldJump = true;
       // Sprung ausführen
-      if (fShouldJump || (!fAnySolid && (iTargetY - GetY() < 20)))
+      if (fShouldJump || (!fAnySolid && ((iTargetY ?? 0) - (GetY() ?? 0) < 20)))
         // Will/kann die KI überhaupt über dieses Loch?
-        if (Abs(GetX() - iTargetX) > 40 && AI_SimJumpCheck(cx/20))
+        if ((Abs((GetX() ?? 0) - (iTargetX ?? 0)) ?? 0) > 40 && AI_SimJumpCheck((cx ?? 0)/20))
           // Dann springen
-          return(AddCommand(0, "Jump"));
+          return(AddCommand(nil, "Jump"));
         else
           {
           // Ansonsten stehen bleiben
@@ -623,36 +630,36 @@ private func AI_ExecMovement()
       }
     }
   // Im Wasser: Forcieren, dass geschwommen wird, Hazards können auch unten im Wasser stehen.
-  else if (GetProcedure() == "SWIM" || GetProcedure() == "SWIMARMED" || GetProcedure() == "WALKARMED" || GetProcedure() == "WALK")
+  else if (S42MigrationEqual(GetProcedure(), "SWIM") || S42MigrationEqual(GetProcedure(), "SWIMARMED") || S42MigrationEqual(GetProcedure(), "WALKARMED") || S42MigrationEqual(GetProcedure(), "WALK"))
     {
     // Auf Flüssigkeiten laufen ist auch immer nett
     if (!Random(10)) if (!GetEffect("WalkOnLiquidSpell", this))
       if (AI_DoMagic(WOLI)) return true;
-    dx = iTargetX-GetX(); dy = iTargetY-GetY();
+    dx = (iTargetX ?? 0)-(GetX() ?? 0); dy = (iTargetY ?? 0)-(GetY() ?? 0);
     //Log ("Swimming %d  %d", dx, dy);
-    if (dy<0 && GBackLiquid(0,-2))
+    if ((dy ?? 0)<0 && GBackLiquid(nil,-2))
       SetComDir(COMD_Up);
     else
       {
-      if (dx>0)
+      if ((dx ?? 0)>0)
         {
         SetComDir(COMD_Right);
-        if (GetContact(0, -1, CNAT_Right)) iJumpOutDir=1;
+        if (GetContact(nil, -1, CNAT_Right)) iJumpOutDir=1;
         }
       else
         {
         SetComDir(COMD_Left);
-        if (GetContact(0, -1, CNAT_Left)) iJumpOutDir=-1;
+        if (GetContact(nil, -1, CNAT_Left)) iJumpOutDir=-1;
         }
       // Längere Schwimmzeit, wenn das Ziel weit oberhalb liegt, damit die KI nicht ewig im Wasser hin und herschwimmt
-      if (-dy-10 > Abs(dx))
-        AddCommand(0, "Wait", 0, 0,0, 0, 0,20);
+      if (-(dy ?? 0)-10 > (Abs(dx) ?? 0))
+        AddCommand(nil, "Wait", nil, nil,nil, nil, nil,20);
       // Hängt an der Seite im Wasser? Rausspringen.
       if (iJumpOutDir)
         {
-        AddCommand(0, "Call", this, iJumpOutDir,0, 0, 0, "AI_WaterJumpOut");
-        AddCommand(0, "MoveTo", 0, GetX()-iJumpOutDir*10,GetY());
-        ai_iDisableTime += 15;
+        AddCommand(nil, "Call", this, iJumpOutDir,nil, nil, nil, "AI_WaterJumpOut");
+        AddCommand(nil, "MoveTo", nil, (GetX() ?? 0)-(iJumpOutDir ?? 0)*10,GetY());
+        S42MigrationAssign(ai_iDisableTime, "+=", 15);
         }
       }
     return true;
@@ -662,7 +669,7 @@ private func AI_ExecMovement()
     {
     if (pAnimal = GetActionTarget())
       {
-      if (szCommand == "MoveTo") 
+      if (S42MigrationEqual(szCommand, "MoveTo"))
         {
         SetCommand(pAnimal, "MoveTo", pTarget, iTargetX, iTargetY);
         }
@@ -670,35 +677,35 @@ private func AI_ExecMovement()
         {
         SetCommand(pAnimal, "None");
         SetComDir(COMD_Stop, pAnimal);
-        if (szCommand == "Enter")
+        if (S42MigrationEqual(szCommand, "Enter"))
           {
           // Enter-Command: Geht nicht. Verwerfen.
-          SetCommand(0, "None");
+          SetCommand(nil, "None");
           }
-        else if (szCommand == "Throw")
+        else if (S42MigrationEqual(szCommand, "Throw"))
           {
           // Werfen umsetzen
           ControlThrow();
-          SetCommand(0, "None");
+          SetCommand(nil, "None");
           }
         }
       }
     }
   // Hangelnd und will nach unten? Dann mal runter
-  else if (GetProcedure() == "HANGLE")
+  else if (S42MigrationEqual(GetProcedure(), "HANGLE"))
     {
     if(IsArmed()) SetAction("JumpArmed");
     if(!IsArmed()) SetAction("Jump");
-    return(AddCommand(0, "MoveTo", 0, GetX(), GetY()+20));
+    return(AddCommand(nil, "MoveTo", nil, GetX(), (GetY() ?? 0)+20));
     }
   // Kein Kommando mehr: Erst einmal anhalten
   if (!GetCommand()) SetComDir(COMD_Stop);
   // Nahkampf:
   // Schon am Kämpfen?
-  if (GetProcedure() == "FIGHT") return(AI_ExecFight());
+  if (S42MigrationEqual(GetProcedure(), "FIGHT")) return(AI_ExecFight());
   // Gegner in Reichweite für Nahkampf?
-  if (ai_pTarget) if (ObjectDistance(ai_pTarget) <= 15) if (!Random(3))
-    if (Contained() == Contained(ai_pTarget))
+  if (ai_pTarget) if ((ObjectDistance(ai_pTarget) ?? 0) <= 15) if (!Random(3))
+    if (S42MigrationEqual(Contained(), Contained(ai_pTarget)))
       if (IsAnimal())
         // Tiere beißen zu
         return(Attack(ai_pTarget));
@@ -707,29 +714,30 @@ private func AI_ExecMovement()
           // Clonks kämpfen
           return(FightWith(ai_pTarget)); // (eigentlich redundant; die Engine sollte den Kampf schon gestartet haben)
   // Im Sprung normalerweise keine weiteren Aktionen, damit der Sprung nicht abgebrochen wird
-  if (GetProcedure() == "FLIGHT" || GetCommand() == "Jump")
+  if (S42MigrationEqual(GetProcedure(), "FLIGHT") || S42MigrationEqual(GetCommand(), "Jump"))
     {
     // Außer magischer Brücke zum Auffangen des Sprunges für Magier
-    if (!Random(20)) if (GetYDir()>5 && Abs(GetXDir()) > 5)
+    if (!Random(20)) if ((GetYDir() ?? 0)>5 && (Abs(GetXDir()) ?? 0) > 5)
       if (AI_DoMagic(MBRG, METL, 10)) return true;
     return true;
     }
   // Normales Gehen: Zum Gegner lieber laufen, wenn es geht
   var iPhase;
-  if (ai_pTarget) if (GetAction() == "Walk")
+  if (ai_pTarget) if (S42MigrationEqual(GetAction(), "Walk"))
     {
     iPhase = GetPhase();
     if (SetAction("Run")) SetPhase(iPhase);
     }
   // Keine Spezialbehandlung
-return(0);
+return(nil);
   }
   
 protected func AI_WaterJumpOut(object pThis, int iJumpDir)
   {
   //Log("AI_WaterJumpOut %v %v", pThis, iJumpDir);
-  if (GetProcedure() != "SWIM" && GetProcedure() != "SWIMARMED") return;
-  if (iJumpDir>0)
+  iJumpDir ??= 0;
+  if (!S42MigrationEqual(GetProcedure(), "SWIM") && !S42MigrationEqual(GetProcedure(), "SWIMARMED")) return;
+  if ((iJumpDir ?? 0)>0)
     {
     SetComDir(COMD_Right);
     SetDir(DIR_Right);
@@ -739,24 +747,25 @@ protected func AI_WaterJumpOut(object pThis, int iJumpDir)
     SetComDir(COMD_Left);
     SetDir(DIR_Left);
     }
-  SetXDir(BoundBy(GetPhysical("Swim")/2500,24,38) * iJumpDir);
+  SetXDir((BoundBy((GetPhysical("Swim") ?? 0)/2500,24,38) ?? 0) * (iJumpDir ?? 0));
   return(Call("ControlUpDouble"));
   }
   
 private func AI_SimJumpCheck(int iDir) // iDir =-1 oder +1
   {
   // Sprungparameter ermitteln
+  iDir ??= 0;
   var x=GetX(), y=GetY();
-  var vx = GetPhysical("Walk")*iDir*7/250, vy = -GetPhysical("Jump")/10;
+  var vx = (GetPhysical("Walk") ?? 0)*(iDir ?? 0)*7/250, vy = -(GetPhysical("Jump") ?? 0)/10;
   var vyo = vy;
   //Log("SimFlight %d %d   %d %d",x,y,vx,vy);
-  if (!SimFlight(x, y, vx, vy, 25, 1000, -1, 1000)) return(false); // Bodenlos: Kein Sprung
+  if (!SimFlight(x, y, vx, vy, 25, 1000, -1, 1000)) return(nil); // Bodenlos: Kein Sprung
   //Log("->SimFlight %d %d   %d %d",x,y,vx,vy);
   // Nicht zu tief nach unten, oder gegen Wand/Decke
-  if (!Inside(vy, 0, vyo*-2)) return(false);
+  if (!Inside(vy, nil, (vyo ?? 0)*-2)) return(nil);
   // Nicht in Lava oder Säure
   var iTargetMat = GetMaterial(x,y);
-  if(GetMaterialVal("Incindiary", "Material", iTargetMat) || GetMaterialVal("Corrosive", "Material", iTargetMat)) return(false);
+  if(GetMaterialVal("Incindiary", "Material", iTargetMat) || GetMaterialVal("Corrosive", "Material", iTargetMat)) return(nil);
   // Ansonsten OK
   return true;
   }
@@ -767,7 +776,7 @@ private func AI_SimJumpCheck(int iDir) // iDir =-1 oder +1
 private func AI_ExecThrow()
   {
   // Kann jetzt werfen?  ... wenn hazard waffe hat, ist es walkarmed.
-  if (GetProcedure() != "WALK" && GetProcedure() != "HOLDWALK" && !IsAiming()) return;
+  if (!S42MigrationEqual(GetProcedure(), "WALK") && !S42MigrationEqual(GetProcedure(), "HOLDWALK") && !IsAiming()) return;
   // Sofort werfen wenn Gegner in Schussbahn
   // Irgendwas zum Werfen dabei?
   var iThrowWdt = 55;
@@ -787,18 +796,18 @@ private func AI_ExecThrow()
           // Kein Projektil gefunden
           return;
           }
-        if (GetIndexOf(GetID(pProjectile), g_EA69_aNoThrow) < 0) break;
-        ++i;
+        if ((GetIndexOf(GetID(pProjectile), g_EA69_aNoThrow) ?? 0) < 0) break;
+        S42MigrationStep(i, 1);
         }
       }
     }
   // Nächste Gegnerposition ermitteln
   var pEnemy = AI_FindNearestEnemy();
-  var dx = GetX(pEnemy) - GetX(), dy = GetY(pEnemy) - GetY(), fThrow;
+  var dx = (GetX(pEnemy) ?? 0) - (GetX() ?? 0), dy = (GetY(pEnemy) ?? 0) - (GetY() ?? 0), fThrow;
   if (!dx) return; // Fängt auch pEnemy=0 ab
-  var dir = dx/Abs(dx); dx = Abs(dx);
+  var dir = (dx ?? 0)/(Abs(dx) ?? 0); dx = Abs(dx);
   // Beim Zweihänder ist die Wurfbahn alles direkt nebenan
-  if ((GetID(pProjectile) == TSWD) && IsPaladin())
+  if ((S42MigrationEqual(GetID(pProjectile), TSWD)) && IsPaladin())
     {
     if (Inside(dy, -20, 20)) fThrow = Inside(dx, -40, 40);
     }
@@ -807,31 +816,31 @@ private func AI_ExecThrow()
     // "In etwa" in der Wurfbahn?
     if (Inside(dy, -30, 30))
       {
-      if (!(fThrow=Inside(Angle(0,0,Abs(dx),dy), 20, 60)))
+      if (!(fThrow=Inside(Angle(nil,nil,Abs(dx),dy), 20, 60)))
         {
         if (!Random(2))
-          if (GetMass(pProjectile)<17 && GetID(pProjectile) != EFLN)
+          if ((GetMass(pProjectile) ?? 0)<17 && !S42MigrationEqual(GetID(pProjectile), EFLN))
             {
-            ShiftContents(this, false, GetID(pProjectile));
+            ShiftContents(this, nil, GetID(pProjectile));
             if (AI_DoMagic(FGOB)) return true; // M&M: FlingObject
             }
         return;
         }
       }
     else
-      fThrow = Inside(dx, iThrowWdt - 10, iThrowWdt + 10);
+      fThrow = Inside(dx, (iThrowWdt ?? 0) - 10, (iThrowWdt ?? 0) + 10);
     }
   if (!fThrow) return;
   // Zu werfendes Objekt vorher anzünden?
   if (!Random(3))
-    if (GetOCF(pProjectile) & OCF_Inflammable)
+    if ((GetOCF(pProjectile) ?? 0) & (OCF_Inflammable ?? 0))
       if (!OnFire(pProjectile))
         {
-        ShiftContents(this, false, GetID(pProjectile));
+        ShiftContents(this, nil, GetID(pProjectile));
         if (AI_DoMagic(MINC)) return true;
         }
   // Gegner anschauen
-  SetDir((dir+1)/2);
+  SetDir(((dir ?? 0)+1)/2);
   // k, Wurf! Mit Spezialbehandlung beim Speer und Zweihänder
   if (pProjectile->~ControlThrow(this)) return true;
   // Normalerweise ungezielt werfen; ab und zu mal einen Wurf mit Zielposition für Bewegung
@@ -839,7 +848,7 @@ private func AI_ExecThrow()
   // Beim Reiten muss direkt geworfen werden, weil die engineinterne Steuerung es nicht packt
   if (WildcardMatch(GetAction(), "Ride*"))
     {
-    ShiftContents(this, false, GetID(pProjectile));
+    ShiftContents(this, nil, GetID(pProjectile));
     return(ControlThrow());
     }
   return(AI_SetCommand("Throw", pProjectile));
@@ -852,10 +861,10 @@ private func AI_ExecThrow()
 private func AI_ExecFight()
   {
   // Wenig Energie: Heilung wenn möglich
-  if (GetEnergy() < 15) if (AI_Heal()) return true;
+  if ((GetEnergy() ?? 0) < 15) if (AI_Heal()) return true;
   // Im Kampf? Supportzauber wären nett
   var pClonk, pOpp;
-  if (GetProcedure() == "FIGHT")
+  if (S42MigrationEqual(GetProcedure(), "FIGHT"))
     for (pClonk in FindObjects(Find_InRect(-150,-150,300,300), Find_OCF(OCF_Living), Find_NoContainer(), Find_Exclude(this)))
       if (pClonk->~IsAI())
         if (pClonk->~IsMagiclonk())
@@ -868,8 +877,8 @@ private func AI_ExecFight()
     pOpp = GetActionTarget();
     if(IsArmed()) SetAction("WalkArmed");
     if(!IsArmed()) SetAction("Walk");
-    if (GetX() < GetX(pOpp)) SetComDir(COMD_Left); else SetComDir(COMD_Right);
-    AI_SetCommand("MoveTo", 0, GetX()+(GetX() >= GetX(pOpp))*50-25, GetY());
+    if ((GetX() ?? 0) < (GetX(pOpp) ?? 0)) SetComDir(COMD_Left); else SetComDir(COMD_Right);
+    AI_SetCommand("MoveTo", nil, (GetX() ?? 0)+(((GetX() ?? 0) >= (GetX(pOpp) ?? 0)) ?? 0)*50-25, GetY());
     return(AI_ExecMovement());
     }
   return true;
@@ -884,7 +893,7 @@ private func AI_ExecKnight()
   // Bogen dabei?
   if (IsBowEquipped()) if (ExecuteAttackBow(ai_pTarget)) return true;
   // Wenig Energie: Heilung wenn möglich
-  if (GetEnergy() < 15) if (AI_Heal()) return true;
+  if ((GetEnergy() ?? 0) < 15) if (AI_Heal()) return true;
   // 2do
   }
 
@@ -900,14 +909,14 @@ private func AI_ExecPaladin()
   if (AI_CanConjure()) if (!Random(3))
     {
     // Viel Zauberenergie, wenig Leben; Schutz
-    if (GetMagicEnergy() > GetEnergy()) if (!Random(10)) if (!GetEffect("ProtectionPSpell", this)) if (AI_DoConjure(MPRT)) return true;
+    if ((GetMagicEnergy() ?? 0) > (GetEnergy() ?? 0)) if (!Random(10)) if (!GetEffect("ProtectionPSpell", this)) if (AI_DoConjure(MPRT)) return true;
     // Gegner in Sichtweite: Einige Fernattacken
     if (!Random(6)) if (PathFree(GetX(), GetY(), GetX(ai_pTarget), GetY(ai_pTarget)))
       {
       // EnergyAttack
       if (!Random(3)) if (AI_DoConjure(MGPH)) return true;
       // Horizontaler Angriff: LifeDepletion
-      if (Abs(GetY() - GetY(ai_pTarget)) < 20) if (AI_DoConjure(MLDL)) return true;
+      if ((Abs((GetY() ?? 0) - (GetY(ai_pTarget) ?? 0)) ?? 0) < 20) if (AI_DoConjure(MLDL)) return true;
       }
     // Tote Verbündete wiederbeleben
     if (!Random(10))
@@ -916,7 +925,7 @@ private func AI_ExecPaladin()
         {
         if(GetEffect("SummonSkelletons",clnk) || GetEffect("Revival",clnk)) continue;
         length=GetPathLength(GetX(),GetY(),GetX(clnk),GetY(clnk));
-        if(!length || length > 200 || (!PathFree(GetX(),GetY(),GetX(clnk),GetY(clnk)) && length > 100)) continue;
+        if(!length || (length ?? 0) > 200 || (!PathFree(GetX(),GetY(),GetX(clnk),GetY(clnk)) && (length ?? 0) > 100)) continue;
         break;
         }
       if (clnk)
@@ -947,12 +956,12 @@ func UnHide() { return _inherited(...); }
 private func AI_ExecHazard()
 {
 // wenn noch nicht im Bewachmodus, dann bewachen
-if(GetAggroLevel() != Aggro_Guard)
+if(!S42MigrationEqual(GetAggroLevel(), Aggro_Guard))
 SetAggroLevel(Aggro_Guard,ai_iRange);
 //Log("AI bewacht jetzt");
 // evlt nachladen? (weil sonst oft nur nachlädt, wenn kein Ziel)
 if(!Random(50)) {CheckIdleWeapon();}
-return false;  // damit noch "aus blöden stiuation befreien" durchgeführt wird
+return nil;  // damit noch "aus blöden stiuation befreien" durchgeführt wird
 }
 
 
@@ -962,38 +971,38 @@ private func AI_ExecMagician()
   {
   //Log("AI_ExecMagician");
   // Wenig Zauberenergie: Meditation
-  if (GetMagicEnergy() < 15)
+  if ((GetMagicEnergy() ?? 0) < 15)
     {
     if (AI_DoMagic(MMED)) return true;
     // Keine Zauber ohne Zauberenergie
-    return false;
+    return nil;
     }
   // Wenig Energie: Heilung
-  if (GetEnergy() < 15)
+  if ((GetEnergy() ?? 0) < 15)
     {
     if (AI_Heal()) return true;
     }
   // Gefroren: Wärmen
-if(GetName(0,FREZ))
+if(GetName(nil,FREZ))
   if (Frozen(this)) if (AI_DoMagic(MWTH)) return true;
 
   // Gegner fasst etwas an (Zelt, Luftschiff, Ballon, etc.): Blitz
   var pPushTarget;
-  if (GetProcedure(ai_pTarget) == "PUSH")
+  if (S42MigrationEqual(GetProcedure(ai_pTarget), "PUSH"))
     if (pPushTarget = ai_pTarget->GetActionTarget())
       if (!Random(ai_iCastChance))
         if (AI_DoMagic(MLGT)) return true;
 
   // Gegner an Flammenposition: Ewige Flammen
-  var dx = Abs(GetX(ai_pTarget)-GetX());
-  var dy = GetY(ai_pTarget)-GetY();
+  var dx = Abs((GetX(ai_pTarget) ?? 0)-(GetX() ?? 0));
+  var dy = (GetY(ai_pTarget) ?? 0)-(GetY() ?? 0);
   if (!Random(ai_iCastChance))
-    if(Inside(dx, 50, 70) && dy > 0)
+    if(Inside(dx, 50, 70) && (dy ?? 0) > 0)
       if (AI_DoMagic(ETFL)) return true;
 
   // Gegner direkt nebenan: Feuerfaust
   if (!Random(ai_iCastChance))
-    if(Inside(dx, 15, 50) && dy > -5)
+    if(Inside(dx, 15, 50) && (dy ?? 0) > -5)
       if (InLiquid())
         {
         if (AI_DoMagic(FRFS, METL)) return true;
@@ -1008,7 +1017,7 @@ if(GetName(0,FREZ))
 
   // Gegner nahe und "müde": Schlaf
   if (!Random(ai_iCastChance))
-    if(Distance(dx,dy) < 80 && GetEnergy(ai_pTarget) < GetPhysical("Energy",1,ai_pTarget)/2000)
+    if((Distance(dx,dy) ?? 0) < 80 && (GetEnergy(ai_pTarget) ?? 0) < (GetPhysical("Energy",1,ai_pTarget) ?? 0)/2000)
       if (AI_DoMagic(MBOT, ROCK, 50)) return true;
 
   // Gegner in Reichweite: Feuerball/Eisschlag/Magischer Bogen
@@ -1017,24 +1026,24 @@ if(GetName(0,FREZ))
     if(PathFree(GetX(), GetY(), GetX(ai_pTarget), GetY(ai_pTarget)))
       {
       if (!Random(3)) if (AI_DoMagic(MICS)) return true;
-      if (!Random(2)) if (Distance(dx,dy) < 300) if (AI_DoMagic(MGBW)) return true;
-      idFlint = [EFLN, SFLN, FLNT][Random(3)];
+      if (!Random(2)) if ((Distance(dx,dy) ?? 0) < 300) if (AI_DoMagic(MGBW)) return true;
+      idFlint = [EFLN, SFLN, FLNT][(Random(3) ?? 0)];
       if (AI_DoMagic(MFRB, idFlint, 50)) return true;
       }
 
   // Gegner in Reichweite und wenig Energie: Blutsauger
-  if (!Random(ai_iCastChance)) if (GetEnergy() < 50)
+  if (!Random(ai_iCastChance)) if ((GetEnergy() ?? 0) < 50)
     if(PathFree(GetX(), GetY(), GetX(ai_pTarget), GetY(ai_pTarget)))
       if (AI_DoMagic(MBLS)) return true;
 
   // Gegner steht voraus: Feueratem
   if (!Random(ai_iCastChance))
-    if(Inside(dx, 10, 40) && Abs(dy) < 15)
+    if(Inside(dx, 10, 40) && (Abs(dy) ?? 0) < 15)
       if (AI_DoMagic(MDBT)) return true;
       
   // Gegner unterhalb: Feuerklumpen
   if (!Random(ai_iCastChance))
-    if (dy > 30 && Inside(dx, 30, 200))
+    if ((dy ?? 0) > 30 && Inside(dx, 30, 200))
       if (AI_DoMagic(MFBL, FLNT, 50)) return true;
  
   // Gegner auf einer Höhe in Gefahrenzone: Feuerwand
@@ -1046,19 +1055,19 @@ if(GetName(0,FREZ))
   var pClonk;
   if (!Random(ai_iCastChance))
     for (pClonk in FindObjects(Find_InRect(-100,-100,200,200), Find_OCF(OCF_CrewMember), Find_NoContainer(), Find_Allied(GetOwner()), Find_Exclude(this)))
-      if (GetEnergy(pClonk) < GetPhysical("Energy",0,pClonk)/1500)
+      if ((GetEnergy(pClonk) ?? 0) < (GetPhysical("Energy",nil,pClonk) ?? 0)/1500)
         {
         if (AI_HelpAlly(pClonk)) return true;
         }
             
   // Der Gegner ist nahe: Zaps
   if (!Random(ai_iCastChance))
-    if (Distance(dx,dy) < 45)
-      if (AI_DoMagic(GZ9Z, 0,0, this)) return true;
+    if ((Distance(dx,dy) ?? 0) < 45)
+      if (AI_DoMagic(GZ9Z, nil,nil, this)) return true;
       
   // Der Gegner ist nahe: Verblendung
-  if (!Random(ai_iCastChance*20))
-    if (Distance(dx,dy) < 60)
+  if (!Random((ai_iCastChance ?? 0)*20))
+    if ((Distance(dx,dy) ?? 0) < 60)
       if (AI_DoMagic(LGCN)) return true;
 
   // Leichen da: Totenbelebung
@@ -1073,23 +1082,23 @@ if(GetName(0,FREZ))
   if (!Random(ai_iCastChance) || GetEffect("*Curse*", this))
     if (!GetEffect("*Curse*", ai_pTarget))
       {
-      if (!Random(4)) if (AI_DoMagic(CAHE, 0,0, ai_pTarget)) return true;
-      if (!Random(3)) if (AI_DoMagic(CPAN, 0,0, ai_pTarget)) return true;
-      if (!Random(2)) if (AI_DoMagic(CFAL, 0,0, ai_pTarget)) return true;
-      if (AI_DoMagic(CCNF, 0,0, ai_pTarget)) return true;
+      if (!Random(4)) if (AI_DoMagic(CAHE, nil,nil, ai_pTarget)) return true;
+      if (!Random(3)) if (AI_DoMagic(CPAN, nil,nil, ai_pTarget)) return true;
+      if (!Random(2)) if (AI_DoMagic(CFAL, nil,nil, ai_pTarget)) return true;
+      if (AI_DoMagic(CCNF, nil,nil, ai_pTarget)) return true;
       }
   
   // Clonk steht unterhalb: Feuerschlangen
-  if (!Random(ai_iCastChance)) if (dy > dx)
+  if (!Random(ai_iCastChance)) if ((dy ?? 0) > (dx ?? 0))
     if (AI_DoMagic(MFSK)) return true;
 
   // Endboss: Magische Kopien, wenn sonst keine Kopien im Umkreis
   if (ai_isEndboss) if (!Random(2))
-    if (!ObjectCount(MAGE, -60,-60,120,120, OCF_Alive, 0,0, 0, GetOwner()))
+    if (!ObjectCount(MAGE, -60,-60,120,120, OCF_Alive, nil,nil, nil, GetOwner()))
       if (AI_DoMagic(MGRP, WIPF)) return true;
 
   // "Nah"kampfzauber
-  if (Distance(dx,dy) < 85)
+  if ((Distance(dx,dy) ?? 0) < 85)
     {
     // Frostwelle
     if (!Random(ai_iCastChance))
@@ -1102,7 +1111,7 @@ if(GetName(0,FREZ))
     // Metall+Magie-Zauber
     // Blitz
     if (!Random(ai_iCastChance))
-      if(Abs(dy) < 10)
+      if((Abs(dy) ?? 0) < 10)
         if (AI_DoMagic(MCLT)) return true;
     // Terashock
     if (!Random(ai_iCastChance))
@@ -1159,7 +1168,7 @@ if(GetName(0,FREZ))
 
   // Schwimmend: LiquidConvert, um schneller raus zu kommen
   if (!Random(ai_iCastChance))
-    if (GetProcedure() == "SWIM" || GetProcedure() == "SWIMARMED")
+    if (S42MigrationEqual(GetProcedure(), "SWIM") || S42MigrationEqual(GetProcedure(), "SWIMARMED"))
       if (AI_DoMagic(MCLD)) return true;
 
   // Zufallszauber?
@@ -1170,31 +1179,31 @@ if(GetName(0,FREZ))
 private func AI_CanCast(id idSpell)
   {
   // Nur Zauberer
-  if (!IsMagiclonk()) return false;
+  if (!IsMagiclonk()) return nil;
   // Zauber angegeben: Zauberenergie checken
   var idStaff, fHasSpell;
   if (idSpell)
     {
-    if (!GetName(0, idSpell)) return false; // Zauber nicht geladen
-    if (!CheckMana(idSpell)) return false;
-    if (ObjectCount(ALCO)) if(!CheckAlchem(idSpell, this)) return false;
+    if (!GetName(nil, idSpell)) return nil; // Zauber nicht geladen
+    if (!CheckMana(idSpell)) return nil;
+    if (ObjectCount(ALCO)) if(!CheckAlchem(idSpell, this)) return nil;
     // Stabzauber?
     if (EA69_RespectStaff)
       if (idStaff = idSpell->~GetSpellClass(this))
         if (idStaff->~IsStaff())
-          if (this->~HasStaff() != idStaff)
+          if (!S42MigrationEqual(this->~HasStaff(), idStaff))
             {
             // Stabzauber werden auch bei uneingeschränkten Zaubern gesperrt
             // Es ist allerdings möglich, dass der Stabzauber trotz nicht-Besitz des Stabes über die Zauberliste verfügbar ist
-            if (!ai_aSpells) return false;
+            if (!ai_aSpells) return nil;
             }
           else
             fHasSpell = true;
     // Zauber eingeschränkt? Außer, es ist ein Stabzauber und der Magus hat den Stab!
-    if (ai_aSpells) if (!fHasSpell) if (GetIndexOf(idSpell, ai_aSpells) < 0) return false;
+    if (ai_aSpells) if (!fHasSpell) if ((GetIndexOf(idSpell, ai_aSpells) ?? 0) < 0) return nil;
     }
   // Nicht zu schnell nacheinander
-  if (WildcardMatch(GetAction(), "Magic*")) return false;
+  if (WildcardMatch(GetAction(), "Magic*")) return nil;
   // Bereit? (Definitionsabhängiger Actioncheck)
   return (Call("ReadyToMagic"));
   }
@@ -1206,24 +1215,25 @@ private func AI_CanConjure(id idWonder)
   // Zauber angegeben: Zauberenergie checken
   if (idWonder)
     {
-    if (!GetName(0, idWonder)) return; // Wunder nicht geladen
+    if (!GetName(nil, idWonder)) return; // Wunder nicht geladen
     if(!CheckMana(idWonder)) return;
     if(ObjectCount(ALCO)) if(!CheckAlchem(idWonder, this)) return;
-    if (ai_aSpells) if (GetIndexOf(idWonder, ai_aSpells) < 0) return;
+    if (ai_aSpells) if ((GetIndexOf(idWonder, ai_aSpells) ?? 0) < 0) return;
     }
   // Der Paladin könnte laut ReadyToConjure immer Wunder wirken
   // KI-Paladine sind hier etwas eingeschränkt, damit sie nicht zu stark sind
-  return (GetProcedure() == "WALK" || GetProcedure() == "ATTACH");
+  return (S42MigrationEqual(GetProcedure(), "WALK") || S42MigrationEqual(GetProcedure(), "ATTACH"));
   }
 
 private func AI_DoMagic(id idSpell, id idComboObj, int iComboChance, object pSpellTarget)
   {
+  iComboChance ??= 0;
   if (!AI_CanCast(idSpell)) return;
   // Das Ziel anschauen, für alle gerichteten Zauber
   if (ai_pSpellTarget = pSpellTarget)
-    SetDir(GetX(ai_pSpellTarget) > GetX());
+    SetDir((GetX(ai_pSpellTarget) ?? 0) > (GetX() ?? 0));
   else if (ai_pTarget)
-    SetDir(GetX(ai_pTarget) > GetX());
+    SetDir((GetX(ai_pTarget) ?? 0) > (GetX() ?? 0));
   // Keine Befehle, damit Magieaktion nicht abgebrochen wird
   AI_SetCommand("None");
   SetComDir(COMD_Stop);
@@ -1232,13 +1242,13 @@ private func AI_DoMagic(id idSpell, id idComboObj, int iComboChance, object pSpe
   // - bleibt möglicherweise im Magier, wenn der Zauber durch Treffer oder ähnliches abgebrochen wird
   //   egal; ist halt ein Zauberer :)
   if (idComboObj) if (!FindContents(idComboObj)) if (EA69_CheatCombo)
-    if (!iComboChance || Random(100) <= iComboChance)
+    if (!iComboChance || (Random(100) ?? 0) <= (iComboChance ?? 0))
       CreateContents(idComboObj);
   Call("DoMagic", idSpell);
   // Irgendwelche Nachrichten von Zaubern löschen
   Message(" ", this);
   // Erstmal nichts weiter tun, damit der Zauber nicht abgebrochen wird
-  ai_iDisableTime += 5;
+  S42MigrationAssign(ai_iDisableTime, "+=", 5);
   //Message("AI_DoMagic %s (%i)", this, GetName(0, idSpell), idSpell);
   //Log("AI_DoMagic %s (%i)", GetName(0, idSpell), idSpell);
   // Erstmal Mana auf 0, damit nicht dauerhaft gezaubert wird
@@ -1251,7 +1261,7 @@ private func AI_DoConjure(id idWonder)
   {
   if (!AI_CanConjure(idWonder)) return;
   // Das Ziel anschauen, für alle gerichteten Zauber
-  if (ai_pTarget) SetDir(GetX(ai_pTarget) > GetX());
+  if (ai_pTarget) SetDir((GetX(ai_pTarget) ?? 0) > (GetX() ?? 0));
   // Keine Befehle, damit Magieaktion nicht abgebrochen wird
   AI_SetCommand("None");
   SetComDir(COMD_Stop);
@@ -1269,17 +1279,17 @@ public func AI_HelpAlly(object pClonk)
   // Nur Zauber helfen hier
   if (!AI_CanCast()) return;
   var fBurning = OnFire(pClonk);
-  if (Random(2) || ObjectDistance(pClonk) > 80 || fBurning)
+  if (Random(2) || (ObjectDistance(pClonk) ?? 0) > 80 || fBurning)
     {
     // Heilung auf verbündete Clonks
-    if (AI_DoMagic(ELX2, 0,0, pClonk)) return true;
+    if (AI_DoMagic(ELX2, nil,nil, pClonk)) return true;
     if (!fBurning)
       {
-      if (AI_DoMagic(ELX1, 0,0, pClonk)) return true;
-      if (AI_DoMagic(MCIB, 0,0, pClonk)) return true;
+      if (AI_DoMagic(ELX1, nil,nil, pClonk)) return true;
+      if (AI_DoMagic(MCIB, nil,nil, pClonk)) return true;
       }
     // Brennend: Löschen hat Priorität
-    if (fBurning) if (ObjectDistance(pClonk) <= 60) if (AI_DoMagic(EXTG)) return true;
+    if (fBurning) if ((ObjectDistance(pClonk) ?? 0) <= 60) if (AI_DoMagic(EXTG)) return true;
     }
   // Oder einfach Gruppenheilung
   if (!Random(2)) if (AI_DoMagic(MHGA)) return true;
@@ -1294,11 +1304,11 @@ public func AI_SupportAllyFight(object pClonk)
   if (!AI_CanCast()) return;
   //Log("..cancast!");
   // Auf Zielclonk zaubern
-  if (!Random(12)) if (AI_DoMagic(GZ9Z, 0,0, pClonk)) return true;
-  if (!Random(11)) if (!GetEffect("DeflectionPSpell", pClonk)) if (AI_DoMagic(MDFL, 0,0, pClonk)) return true;
-  if (!Random(10)) if (!GetEffect("StoneShieldPSpell", pClonk)) if (AI_DoMagic(MSSH, 0,0, pClonk)) return true;
-  if (!Random(9)) if (!GetEffect("HotBloodPSpell", pClonk)) if (AI_DoMagic(MHTB, 0,0, pClonk)) return true;
-  if (!Random(8)) if (!GetEffect("FlameFistPSpell", pClonk)) if (AI_DoMagic(FLFT, 0,0, pClonk)) return true; // M&M: Flammenfaust
+  if (!Random(12)) if (AI_DoMagic(GZ9Z, nil,nil, pClonk)) return true;
+  if (!Random(11)) if (!GetEffect("DeflectionPSpell", pClonk)) if (AI_DoMagic(MDFL, nil,nil, pClonk)) return true;
+  if (!Random(10)) if (!GetEffect("StoneShieldPSpell", pClonk)) if (AI_DoMagic(MSSH, nil,nil, pClonk)) return true;
+  if (!Random(9)) if (!GetEffect("HotBloodPSpell", pClonk)) if (AI_DoMagic(MHTB, nil,nil, pClonk)) return true;
+  if (!Random(8)) if (!GetEffect("FlameFistPSpell", pClonk)) if (AI_DoMagic(FLFT, nil,nil, pClonk)) return true; // M&M: Flammenfaust
   // Kein Zauber ging/keiner ergab sich zufällig
   //Log("..nothing");
   }
@@ -1319,10 +1329,10 @@ private func AI_Heal()
   if (pFood = FindObject2(Find_Container(this), Find_OCF(OCF_Edible)))
     {
     // Clonk kämpft? Brotzeit!
-    if (GetProcedure() == "FIGHT")
+    if (S42MigrationEqual(GetProcedure(), "FIGHT"))
      if(!IsArmed()) SetAction("Walk");
      if(IsArmed()) SetAction("WalkArmed");
-    else if (GetProcedure() != "WALK" && GetProcedure() != "HOLDWALK")
+    else if (!S42MigrationEqual(GetProcedure(), "WALK") && !S42MigrationEqual(GetProcedure(), "HOLDWALK"))
       // Ansonsten essen, wenn Zeit dazu ist
       return true;
     if (ProtectedCall(pFood, "Activate", this))
@@ -1348,11 +1358,11 @@ private func AI_Heal()
           // Puh, danke!
           return AI_Thank(pClonk);
   // Heilgegenstand in der Nähe suchen
-  if (!(ai_dwFlags & EA69_NoItemGet))
+  if (!((ai_dwFlags ?? 0) & (EA69_NoItemGet ?? 0)))
     for (pFood in FindObjects(Find_InRect(-150,-20,300,70), Find_OCF(OCF_Edible)))
-      if (!Contained(pFood) || !GetAlive(Contained(pFood))) if (GetOCF(pFood) & OCF_Fullcon)
+      if (!Contained(pFood) || !GetAlive(Contained(pFood))) if ((GetOCF(pFood) ?? 0) & (OCF_Fullcon ?? 0))
         {
-        ai_iDisableTime += 15;
+        S42MigrationAssign(ai_iDisableTime, "+=", 15);
         return AI_SetCommand("Get", pFood);
         }
   // Kein Erfolg: Nicht heilen
@@ -1369,15 +1379,15 @@ private func AI_FindNearestEnemy()
   // Objekte prüfen:
   // Muss leben und im Freien sein, wenn die KI auch im Freien ist...
   for (var obj in FindObjects(Find_Distance(ai_iRange), cont, Find_OCF(OCF_Alive), Sort_Distance(),Find_Func("IsNotFeign"),Find_Not(Find_Func("IsHidden")) ))
-    if ((GetOwner()<0 && GetOwner(obj)>=0) || Hostile(GetOwner(obj), GetOwner())) // ...verfeindet...
+    if (((GetOwner() ?? 0)<0 && (GetOwner(obj) ?? 0)>=0) || Hostile(GetOwner(obj), GetOwner())) // ...verfeindet...
       if (!GetVisibility(obj)) // ...sichtbar... (2do: Richtiger Check)
-        if (GetOCF(obj) & OCF_CrewMember)          // ...gegnerischer CrewMember...
+        if ((GetOCF(obj) ?? 0) & (OCF_CrewMember ?? 0))          // ...gegnerischer CrewMember...
           {
           if (!PathFree(GetX(), GetY(), GetX(obj), GetY(obj))) // ...in Sicht...
-            if (!PathFree(GetX()+(GetX(obj)>GetX())*40-20, GetY()-20, GetX(obj), GetY(obj))) // ...oder in "Sprung/Wurfsicht"....
+            if (!PathFree((GetX() ?? 0)+(((GetX(obj) ?? 0)>(GetX() ?? 0)) ?? 0)*40-20, (GetY() ?? 0)-20, GetX(obj), GetY(obj))) // ...oder in "Sprung/Wurfsicht"....
               continue;
           // Durch Verblendung verdeckt?
-          if (FindObject2(Find_ID(LGCN), Find_InRect(GetX(obj)-GetX()-120, GetY(obj)-GetY()-120, 240,240))) continue;
+          if (FindObject2(Find_ID(LGCN), Find_InRect((GetX(obj) ?? 0)-(GetX() ?? 0)-120, (GetY(obj) ?? 0)-(GetY() ?? 0)-120, 240,240))) continue;
           // Kontakt ans Szenscript melden
           if (ai_idFirstEncounterCB) AI_DoEncounter(obj);
           return obj; // OK, den nehmen!
@@ -1409,15 +1419,15 @@ if(!ispezial)
     }
   // Waffen für alle
   var idWeps = [SPER, ROCK, FLNT, SFLN, EFLN, STFN, FBMP, SPER];
-  var idWep = idWeps[Random(GetLength(idWeps))];
+  var idWep = idWeps[(Random(GetLength(idWeps)) ?? 0)];
   waffe6=CreateContents(idWep,this);
-  var idWep = idWeps[Random(GetLength(idWeps))];
+  var idWep = idWeps[(Random(GetLength(idWeps)) ?? 0)];
   waffe7=CreateContents(idWep,this);
 
 // jetzt noch ein paar neue Waffen aus meinem Pack
 // Wurfaxt, Bumerang,
 var idnewWeps = [AXE7,_BMR];
-  var idnewWep = idnewWeps[Random(GetLength(idnewWeps))];
+  var idnewWep = idnewWeps[(Random(GetLength(idnewWeps)) ?? 0)];
   waffe7=CreateContents(idnewWep,this);
 
 // jetzt noch ein paar neue fortschrittliche Waffen aus meinem Pack
@@ -1425,14 +1435,14 @@ if (IsHazardCl())
     {
     // Guter Bumerang, 
     var idnew2Weps = [WRBO];
-      var idnew2Wep = idnew2Weps[Random(GetLength(idnew2Weps))];
+      var idnew2Wep = idnew2Weps[(Random(GetLength(idnew2Weps)) ?? 0)];
       waffe7=CreateContents(idnew2Wep,this);
     }
  }
 
 // jetzt die mit ispezial
 
-if(ispezial==1)  // für den assassin
+if(S42MigrationEqual(ispezial, 1))  // für den assassin
 {
 // erstmal die Munition:
 //soviel wie 20 kisten.
@@ -1444,7 +1454,7 @@ waffe1=CreateContents(SCOT,this); waffe2=CreateContents(SOCO,this);
 // Die Reichweite kann hier durch Änderung von ai_range geändert werden.
 }
 
-if(ispezial==2)  // verbesserter assassin (2schuss scout)
+if(S42MigrationEqual(ispezial, 2))  // verbesserter assassin (2schuss scout)
 {
 DoAmmo(STAM,1000,this);
 DoAmmo(SSTM,1000,this);
@@ -1453,38 +1463,38 @@ waffe1=CreateContents(SCOT,this);waffe2=CreateContents(SOC2,this);
 waffe1->~Upgrade(KRFL); // mit Waffenupgrade aufrüsten
 }
 
-if(ispezial==3) // für Bunkerbrecher mit Bazooka
+if(S42MigrationEqual(ispezial, 3)) // für Bunkerbrecher mit Bazooka
 {
 DoAmmo(MIAM,100,this);
 waffe1=CreateContents(BZWP,this);
 }
 
-if(ispezial==4) // Cleaner mit Flammenwerfer und Brandbombe
+if(S42MigrationEqual(ispezial, 4)) // Cleaner mit Flammenwerfer und Brandbombe
 {
 DoAmmo(GSAP,1000,this);
 waffe1=CreateContents(FTWP,this);waffe2=CreateContents(FBMP,this);
 }
 
-if(ispezial==5) //Kettensägenmassaker
+if(S42MigrationEqual(ispezial, 5)) //Kettensägenmassaker
 {
 DoAmmo(GSAP,1000,this);
 waffe1=CreateContents(MEZL,this);
 }
 
-if(ispezial==6) // Standard Hazardkrieger
+if(S42MigrationEqual(ispezial, 6)) // Standard Hazardkrieger
 {
 var zufall=Random(6);
-if(zufall==0)  {waffe1=CreateContents(ASHG,this); ai_iRange=200;} 
+if(S42MigrationEqual(zufall, nil))  {waffe1=CreateContents(ASHG,this); ai_iRange=200;}
 //abgesägte Schrotflinte
-if(zufall==1)  {waffe1=CreateContents(P90_,this); ai_iRange=500;}  
+if(S42MigrationEqual(zufall, 1))  {waffe1=CreateContents(P90_,this); ai_iRange=500;}
 //P90
-if(zufall==2)  {waffe1=CreateContents(ENWP,this); ai_iRange=400;} 
+if(S42MigrationEqual(zufall, 2))  {waffe1=CreateContents(ENWP,this); ai_iRange=400;}
 //Energiegewehr
-if(zufall==3)  {waffe1=CreateContents(FTWP,this); ai_iRange=150;} 
+if(S42MigrationEqual(zufall, 3))  {waffe1=CreateContents(FTWP,this); ai_iRange=150;}
 //Flammenwerfer
-if(zufall==4)  {waffe1=CreateContents(BZWP,this); ai_iRange=600;} 
+if(S42MigrationEqual(zufall, 4))  {waffe1=CreateContents(BZWP,this); ai_iRange=600;}
 //Bazooka
-if(zufall==5)  {waffe1=CreateContents(MIWP,this); ai_iRange=500;} 
+if(S42MigrationEqual(zufall, 5))  {waffe1=CreateContents(MIWP,this); ai_iRange=500;}
 //Minigun
 
 // Jede Munitionsart, soviel wie 20 kisten.
@@ -1512,14 +1522,18 @@ private func AI_SetCommand(string szCom, object pTarget, int tx, int ty, object 
   {
   // Zielaktion stoppen
   // nur wenn Ritter, denn es sorgt für Probleme bei Hazard, weil dort die funktionen auch so heißen -.-
+  tx ??= 0;
+  ty ??= 0;
+  iData ??= 0;
+  iRetries ??= 0;
   if(IsKnight())
   this->~StopAiming();
   //Log("Setting %s %v %d %d %v %d %d", szCom, pTarget, tx, ty, pTarget2, iData, iRetries);
   // Mit Call-Command versehen, damit Fehlschlag kein Hmmm verursacht
-  SetCommand(0, "Call", this, 0,0, 0, "AI_Command");
-  var res = AddCommand(0, szCom, pTarget, tx, ty, pTarget2, iData, iRetries, C4CMD_SilentBase);
+  SetCommand(nil, "Call", this, nil,nil, nil, "AI_Command");
+  var res = AddCommand(nil, szCom, pTarget, tx, ty, pTarget2, iData, iRetries, C4CMD_SilentBase);
   // Bei Bewegungskommandos gleich die Bewegung checken
-  if (szCom == "MoveTo" || szCom == "Follow" || szCom == "Attack" || (szCom == "Throw" && tx)) AI_ExecMovement();
+  if (S42MigrationEqual(szCom, "MoveTo") || S42MigrationEqual(szCom, "Follow") || S42MigrationEqual(szCom, "Attack") || (S42MigrationEqual(szCom, "Throw") && tx)) AI_ExecMovement();
   return res;
   }
 
@@ -1530,8 +1544,8 @@ private func AI_GetStackedCommand(string szCom)
   {
   // Alle Commands durchcheken
   var i=-1, szCommand;
-  while (szCommand = GetCommand(0, 0, ++i))
-    if (!szCom || szCommand == szCom)
+  while (szCommand = GetCommand(nil, nil, S42MigrationStep(i, 1)))
+    if (!szCom || S42MigrationEqual(szCommand, szCom))
       return i;
   // Nichts gefunden
   return -1;
@@ -1544,24 +1558,26 @@ public func AI_DoEncounter(object pEnemy)
   {
   // Erster Gegnerkontakt!
   var idEncounterCB = ai_idFirstEncounterCB;
-  ai_idFirstEncounterCB = 0;
+  ai_idFirstEncounterCB = nil;
   GameCall(Format("AI_Encounter%i", idEncounterCB), this, pEnemy);
   // Clonks aufzuwecken?
-  if (ai_pBoss == this)
+  if (S42MigrationEqual(ai_pBoss, this))
     {
-    ai_pBoss = 0;
+    ai_pBoss = nil;
     for (var obj2 in FindObjects(Find_OCF(OCF_Alive)))
-      if (obj2->~AI_GetBoss() == this)
+      if (S42MigrationEqual(obj2->~AI_GetBoss(), this))
         {
         obj2->AI_RefEnable();
-        obj2->AI_SetBoss(0);
+        obj2->AI_SetBoss(nil);
         }
     }
   }
 
 protected func Damage(int iChange, int iCausedBy, a,b,c,d,e)
   {
-  if (iChange > 0)
+  iChange ??= 0;
+  iCausedBy ??= 0;
+  if ((iChange ?? 0) > 0)
     {
     // Schaden: Gilt als Encounter
     if (ai_idFirstEncounterCB) AI_DoEncounter();
@@ -1574,12 +1590,12 @@ protected func Damage(int iChange, int iCausedBy, a,b,c,d,e)
 
 public func IsMagiclonk()
   {
-  return (GetID() == MCLK || GetID() == SCLK || GetID() == MAGE || GetID() == KING);
+  return (S42MigrationEqual(GetID(), MCLK) || S42MigrationEqual(GetID(), SCLK) || S42MigrationEqual(GetID(), MAGE) || S42MigrationEqual(GetID(), KING));
   }
   
 public func IsPaladin()
   {
-  return (GetID() == PLDN);
+  return (S42MigrationEqual(GetID(), PLDN));
   }
 
 public func IsAnimal() { return _inherited(...); }
@@ -1614,7 +1630,7 @@ public func GetBulletCount() { return _inherited(...); }
 // Fernkämpfer?
 public func AI_IsRanged()
   {
-  if (ai_dwFlags & EA69_ForceRanged) return true;
+  if ((ai_dwFlags ?? 0) & (EA69_ForceRanged ?? 0)) return true;
   if (IsMusketeEquipped() || IsBowEquipped()) return true;
   if (IsMagiclonk()) if (!IsPaladin()) return true;
 // bewaffneter Hazardclonk, noch einfügen, dass wenn keine Munition mehr, kein Range mehr.
@@ -1625,8 +1641,8 @@ public func AI_IsRanged()
 // KI-Magier können auch im Kämpfen und Klettern zaubern
 public func ReadyToMagic(a,b,c,d)
   {
-  if (ai_iRange && GetID() == MAGE)
-    if (GetProcedure() == "FIGHT" || GetProcedure() == "SCALE" || GetProcedure() == "HANGLE") return true;
+  if (ai_iRange && S42MigrationEqual(GetID(), MAGE))
+    if (S42MigrationEqual(GetProcedure(), "FIGHT") || S42MigrationEqual(GetProcedure(), "SCALE") || S42MigrationEqual(GetProcedure(), "HANGLE")) return true;
   return(_inherited(a,b,c,d));
   }
   
@@ -1641,6 +1657,7 @@ public func AI_SetBoss(object pToBoss) { ai_pBoss=pToBoss; return true; }
 // Schwierigkeitsgrad setzen
 global func AI_SetDifficulty(int iNewDifficulty)
   {
+  iNewDifficulty ??= 0;
   g_EA69_iDifficulty = iNewDifficulty;
   // Alle Physicals aktualisieren
   for (var obj in FindObjects(Find_OCF(OCF_Alive), Find_Func("IsAI")))
@@ -1658,7 +1675,7 @@ public func AI_SetPhysicals()
   // g_EA69_iDifficulty: Statische Variable 1=Normal, 2=Schwer
   if (!ai_iRange) return;
   if (!ai_iStrength) ai_iStrength = 100;
-  var iStrength = ai_iStrength * (Max(g_EA69_iDifficulty, 1)+1) / 2;
+  var iStrength = (ai_iStrength ?? 0) * ((Max(g_EA69_iDifficulty, 1) ?? 0)+1) / 2;
   AI_SetPhysical("Fight", iStrength);
   AI_SetPhysical("Energy", iStrength);
   if (IsMagiclonk()) AI_SetPhysical("Magic", iStrength);
@@ -1668,11 +1685,12 @@ public func AI_SetPhysicals()
 // Temporäre Phsical auf relativen Wert des Definitionswertes setzen
 public func AI_SetPhysical(string szPhysical, int iPercent)
   {
-  return(SetPhysical(szPhysical, GetPhysical(szPhysical, 0, 0, GetID())*iPercent/100, PHYS_Temporary));
+  iPercent ??= 0;
+  return(SetPhysical(szPhysical, (GetPhysical(szPhysical, nil, nil, GetID()) ?? 0)*(iPercent ?? 0)/100, PHYS_Temporary));
   }
   
 // Wolfüberladung: Schlafen deaktiviert KI
-protected func Sleeping() { AI_RefDisable(); SetCommand(0, "None"); /*Log("Sleeping");*/}
+protected func Sleeping() { AI_RefDisable(); SetCommand(nil, "None"); /*Log("Sleeping");*/}
 protected func EndSleeping() { AI_RefEnable(); /*Log("EndSleeping");*/}
 
 
@@ -1681,10 +1699,10 @@ protected func EndSleeping() { AI_RefEnable(); /*Log("EndSleeping");*/}
 protected func ContactLeft()
   {
   // Rudimentäres Überwinden von Wänden
-  if (IsAnimal()) if (GetCommand() == "MoveTo") if (GetCommand(0, 2)) if (GetCommand(0, 2) < GetX())
+  if (IsAnimal()) if (S42MigrationEqual(GetCommand(), "MoveTo")) if (GetCommand(nil, 2)) if ((GetCommand(nil, 2) ?? 0) < (GetX() ?? 0))
     {
-    AddCommand(this, "Jump", 0, GetX() - 20, GetY() - 20);
-    AddCommand(this, "MoveTo", 0, GetX() + 50, GetY());
+    AddCommand(this, "Jump", nil, (GetX() ?? 0) - 20, (GetY() ?? 0) - 20);
+    AddCommand(this, "MoveTo", nil, (GetX() ?? 0) + 50, GetY());
     }
   return(_inherited());
   }
@@ -1692,10 +1710,10 @@ protected func ContactLeft()
 protected func ContactRight()
   {
   // Rudimentäres Überwinden von Wänden
-  if (IsAnimal()) if (GetCommand() == "MoveTo") if (GetCommand(0, 2)) if (GetCommand(0, 2) > GetX())
+  if (IsAnimal()) if (S42MigrationEqual(GetCommand(), "MoveTo")) if (GetCommand(nil, 2)) if ((GetCommand(nil, 2) ?? 0) > (GetX() ?? 0))
     {
-    AddCommand(this, "Jump", 0, GetX() + 20, GetY() - 20);
-    AddCommand(this, "MoveTo", 0, GetX() - 50, GetY());
+    AddCommand(this, "Jump", nil, (GetX() ?? 0) + 20, (GetY() ?? 0) - 20);
+    AddCommand(this, "MoveTo", nil, (GetX() ?? 0) - 50, GetY());
     }
   return(_inherited());
   }
@@ -1707,7 +1725,7 @@ public func AI_FeignDeath()
   // Kein Mehrfachaufruf; kein Totstellen in Gebäuden (sieht ja eh keiner)
   if (Contained()) return;
   // Leiche an der Stelle erzeugen, und in die Leiche versetzen
-  var pCorpse = CreateObject(GetID(), 0, GetDefBottom()-GetY(), GetOwner());
+  var pCorpse = CreateObject(GetID(), nil, (GetDefBottom() ?? 0)-(GetY() ?? 0), GetOwner());
   SetDir(GetDir(), pCorpse);
   Kill(pCorpse);
   SetName(GetName(), pCorpse);

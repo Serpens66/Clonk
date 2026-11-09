@@ -1,6 +1,6 @@
 /*-- Schildgenerator --*/
 
-#strict
+#strict 3
 #include GEAR
 #include KLAS
 
@@ -10,12 +10,12 @@ protected func Activate(object pByObj) {
   var upgrade = GetUpgradeable();
   if(GetLength(upgrade)) {
 	  // create menu
-	  CreateMenu(GetID(),pByObj,this(),4,"$NothingUpgradeable$",0,0,0);
+	  CreateMenu(GetID(),pByObj,this(),4,"$NothingUpgradeable$",nil,nil,nil);
 
 	  for(var pObj in upgrade) {
 	    var szName = Format("$Upgrade$",GetName(pObj));
 	    // fill the menu with menuitems
-	    AddMenuItem(szName,"UpgradeObj",GetID(pObj),pByObj,0,pObj,pObj->IsUpgradeable(GetID()));
+	    AddMenuItem(szName,"UpgradeObj",GetID(pObj),pByObj,nil,pObj,pObj->IsUpgradeable(GetID()));
 	  }
 	  return(1);
   }
@@ -23,11 +23,11 @@ protected func Activate(object pByObj) {
   var pClonk = pByObj;
   
   // Can the clonk use this?
-  if (!(pClonk->~CanUse(GetID()))) return(0);
+  if (!(pClonk->~CanUse(GetID()))) return(nil);
   // Clonk doesn't already use gear of that type 
   if (pClonk->~HasGear(this()->GetGearType())) {
     PlayerMessage(GetOwner(pClonk),"$AlreadyWears$",pClonk,GetName(pClonk));
-    return(0);
+    return(nil);
   }
   // Buckle
   if(pClonk->~EquipGear(this()))
@@ -46,7 +46,7 @@ public func IsEquipment()	{ return(true); }
 
 public func GearEffect(object pClonk)
 {
-  AddEffect("HazardShield", pClonk, 99, 3, 0, HSHD,200);
+  AddEffect("HazardShield", pClonk, 99, 3, nil, HSHD,200);
   Sound("Connect");
 }
 
@@ -58,41 +58,50 @@ public func GearEffectReset(object pClonk)
 }
 
 public func FxHazardShieldStart(object pTarget, int iNo, int iTemp, var1) {
+	iNo ??= 0;
+	iTemp ??= 0;
 	EffectVar(1,pTarget,iNo) = var1;
 }
 
 public func FxHazardShieldTimer(object pTarget, int iNo, int iTime)
 {
-  var boom = EffectVar(0,pTarget,iNo)==2;
+  iNo ??= 0;
+  iTime ??= 0;
+  var boom = Equal(EffectVar(nil,pTarget,iNo), 2);
   var alpha = 115;
   if(boom) alpha = 15;
   var angle = Random(360);
-  CreateParticle("FxShield", AbsX(GetX(pTarget)), AbsY(GetY(pTarget)), Sin(angle,250), -Cos(angle,250), EffectVar(1,pTarget,iNo)+(boom*30), RGBa(255,255,255, alpha), pTarget);
+  CreateParticle("FxShield", AbsX(GetX(pTarget)), AbsY(GetY(pTarget)), Sin(angle,250), -(Cos(angle,250) ?? 0), (EffectVar(1,pTarget,iNo) ?? 0)+((boom ?? 0)*30), RGBa(255,255,255, alpha), pTarget);
 
-  if(EffectVar(0,pTarget,iNo)>0)
-    EffectVar(0,pTarget,iNo)--;
+  if((EffectVar(nil,pTarget,iNo) ?? 0)>0)
+    S42MigrationStep(EffectVar(nil,pTarget,iNo), -1, true);
 }
 
 public func FxHazardShieldBulletHit(object pTarget, int iNo)
 {
-  if(EffectVar(0,pTarget,iNo)==0)
-  EffectVar(0,pTarget,iNo) = 2;
+  iNo ??= 0;
+  if(Equal(EffectVar(nil,pTarget,iNo), nil))
+  EffectVar(nil,pTarget,iNo) = 2;
   Sound("Shield");
 }
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
   //Energy
-  if(iType == DMG_Energy)
+  iDamage ??= 0;
+  iType ??= 0;
+  if(Equal(iType, DMG_Energy))
     return(60);    // 60% Energie
 }
 
 public func OnClonkHit(int iDmg, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDmg ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
 
   // nur Energie
-  if(iType != DMG_Energy) return(0);
+  if(!Equal(iType, DMG_Energy)) return(nil);
 
   // # keine Energie abziehen, kann wie Rüstung getragen werden bis man tot ist
   // -> betatest für balancing

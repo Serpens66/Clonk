@@ -1,6 +1,6 @@
 /* --- Gras gemäht --- */
 
-#strict 2
+#strict 3
 
 
 public func Initialize()

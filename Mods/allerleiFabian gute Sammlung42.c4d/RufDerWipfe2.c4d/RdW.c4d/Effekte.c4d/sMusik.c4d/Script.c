@@ -1,11 +1,11 @@
-#strict
+#strict 3
 
 static nomusic;
 local krieg;
 
 protected func Initialize()
 {
-  krieg=0;
+  krieg=nil;
   SetAction("Initialize");
   return(1);
 }
@@ -30,11 +30,11 @@ protected func UpdateTransferZone()
 
 public func CheckPlayList()
 {
-  if(nomusic)return 0;
+  if(nomusic)return nil;
 	
   var trackA,trackB,obj;
   /* Jahreszeit */
-  if(GetTemperature()<=0) 	trackA="Winter*";
+  if((GetTemperature() ?? 0)<=0) 	trackA="Winter*";
   else 				trackA="Sommer*";
 
   /* Tageszeit */
@@ -43,12 +43,12 @@ public func CheckPlayList()
   
   if(Krieg()){trackA="Krieg*"; trackB="";}
   
-  if(GetPlayerCount()==1)
+  if(Equal(GetPlayerCount(), 1))
    if(obj=FindObject(_GLZ))
     if(obj->~PbIstGolden(GetPlayerByIndex()))
      trackA="Golden*";
 
-  if(SetPlayList(Format("*%s%s*",trackA,trackB))+IsNetwork())
+  if((SetPlayList(Format("*%s%s*",trackA,trackB)) ?? 0)+(IsNetwork() ?? 0))
     return 1;
   else
   {
@@ -63,27 +63,27 @@ public func CheckPlayList()
 
 global func Krieg()
 {
-  var spieler=0;
-  for(var i=0; spieler<GetPlayerCount(); i++)
+  var spieler=nil;
+  for(var i=nil; (spieler ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
   {
-  	if(GetPlayerName(i)) spieler++;
-  	for(var j=0; j<i; j++)
+        if(GetPlayerName(i)) S42MigrationStep(spieler, 1, true);
+        for(var j=nil; (j ?? 0)<(i ?? 0); S42MigrationStep(j, 1, true))
   	{
   		if(Hostile(i,j))
   			return(1);
   	}
   }
-  return(0);
+  return(nil);
 }
 
 global func DeactivateAutoMusic()
 {
   nomusic=1;
-  SetPlayList(0);
+  SetPlayList(nil);
 }
 
 global func ActivateAutoMusic()
 {
-  nomusic=0;
+  nomusic=nil;
   if(FindObject(SMUS))FindObject(SMUS)->CheckPlayList();
 }

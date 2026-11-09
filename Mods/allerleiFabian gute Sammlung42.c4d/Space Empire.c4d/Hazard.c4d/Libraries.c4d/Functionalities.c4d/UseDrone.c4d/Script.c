@@ -1,6 +1,6 @@
 /* Context Use drone functionality */
 
-#strict
+#strict 3
 
 // Enables object to use drones (with context menu/double dig)
 

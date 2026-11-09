@@ -1,6 +1,6 @@
 /*-- Metall --*/
 
-#strict
+#strict 3
 #include LOAM
 
 protected func Initialize()
@@ -20,32 +20,32 @@ protected func Hit() {
 private func RuleNoStructure(clonk) {
   if (FindObject(NMTT)) {
     var obj;
-    while (obj = FindObject(0, 0, 1, 0, 0, 0, 0, 0, NoContainer(), obj))
-      if (GetCategory(obj) & C4D_Structure())
+    while (obj = FindObject(nil, nil, 1, nil, nil, nil, nil, nil, NoContainer(), obj))
+      if ((GetCategory(obj) ?? 0) & (C4D_Structure ?? 0))
         if (Hostile(GetOwner(obj), GetOwner(clonk))) {
           Message("$TxtNobridgeallowedhere$", this());
           Sound("Error");
           return(1);
         }
   }
-  return(0);
+  return(nil);
 }
 
 private func OnBridge() {
   // Eventuelle Bewegung anhalten
-  SetXDir(0, Contained());
-  SetComDir(COMD_Stop(), Contained());
+  SetXDir(nil, Contained());
+  SetComDir(COMD_Stop, Contained());
 }
 
 public func Activate(caller) {
   [$TxtBuildmetalbridge$]
-  if (RuleNoStructure(caller)) return(0);
+  if (RuleNoStructure(caller)) return(nil);
   return(_inherited(caller));
 }
 
 // Wir leiten von LOAM ab, sind aber kein Alchemie-Container
-public func IsAlchemContainer() { return(false); }
+public func IsAlchemContainer() { return(nil); }
 
 // Und auch kein Indianerzeug
-public func IsIndianResearch() { return(false); }
-public func IsIndianHandcraft() { return(false); }
+public func IsIndianResearch() { return(nil); }
+public func IsIndianHandcraft() { return(nil); }

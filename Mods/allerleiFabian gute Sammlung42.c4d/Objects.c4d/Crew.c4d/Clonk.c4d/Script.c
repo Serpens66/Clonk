@@ -1,6 +1,6 @@
 /*-- Der Clonk --*/
 
-#strict
+#strict 3
 
 // Zauberei - benötigt, wenn der Clonk Zielzauber z.B. aus dem Zauberturm zaubert
 // Auch benötigt für den König
@@ -16,49 +16,49 @@ local bauarbeiter,ausbildungstimer,pinguin;
 local zielSichtweite,zahler, SetSichtweite;
 
 
-private func GetObject2Drop(pCollectObj) { return((Contents(0))); }  // in enemyAI Core wird dies verwendet und _inherited() aufgerufen. das command ablegen funktioniert nicht mehr, wenn ich diese funktion hier nicht auch zufüge, die sagt, was automatisch abgelegt werden soll, wenn inventar voll.
+private func GetObject2Drop(pCollectObj) { return((Contents(nil))); }  // in enemyAI Core wird dies verwendet und _inherited() aufgerufen. das command ablegen funktioniert nicht mehr, wenn ich diese funktion hier nicht auch zufüge, die sagt, was automatisch abgelegt werden soll, wenn inventar voll.
 
 // je nach Einstellung in den variablen Regeln gibt es unterschiedliches Sichtradienverhalten der Clonks
 protected func FogWar() 
 {
-    if(AntiFussel) AntiFusselFree(0,0,0,0);
+    if(AntiFussel) AntiFusselFree(nil,nil,nil,nil);
     
     if(FindObject(SWIO)) // Wenn regel des automatischen auftauchens aktiv, dann clonk auftauchen lassen, wenn unter wasser und nicht kontrolliert
     {
-        if(InLiquid() && GetBreath() <= 45 && GetComDir() != COMD_Up())
+        if(And(And(InLiquid(), (GetBreath() ?? 0) <= 45), !Equal(GetComDir(), COMD_Up)))
         {
-            var pCrew, i=0, aktiv=0;
-            while (pCrew=GetCursor(GetOwner(),i++))
-                if(pCrew==this()) // wenn clonk angewählt, alles okay, ist wohl gewollt, nichts machen
+            var pCrew, i=nil, aktiv=nil;
+            while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true)))
+                if(Equal(pCrew, this())) // wenn clonk angewählt, alles okay, ist wohl gewollt, nichts machen
                     aktiv=1;
             if(!aktiv)
-                SetComDir(COMD_Up());
+                SetComDir(COMD_Up);
         }    
     }
         
     
     if(GetLength(hashSpielRegeln))
     zahler=HashGet(hashSpielRegeln, "SichtradiusVerhalten");
-    else {zahler=0;}
+    else {zahler=nil;}
 
-    if(zahler==0) {
+    if(Equal(zahler, nil)) {
     // if (FrameCounter()<5000) {  // unabhängig von Framecounter
     if(!Random(100))  // zu anfang ab und zu wieder Kriegsnebel deaktivieren
-    for(var i1=0; i1<GetPlayerCount(); i1++) {
-      SetFoW(0,i1);} //}
-    return(0);}
+    for(var i1=nil; (i1 ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i1, 1, true)) {
+      SetFoW(nil,i1);} //}
+    return(nil);}
 
     if(!Random(200))  // ab und zu wieder Kriegsnebel erstellen, falls er weggeht
-    for(var i1=0; i1<GetPlayerCount(); i1++) {
+    for(var i1=nil; (i1 ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i1, 1, true)) {
       SetFoW(1,i1);}
        
-    if(zahler==1)
+    if(Equal(zahler, 1))
     FogWar1();
 
-    if(zahler==2)
+    if(Equal(zahler, 2))
     FogWar2();
 
-    if(zahler==3)
+    if(Equal(zahler, 3))
     if(!Random(100))  // muss nicht sooft gecheckt werden
     FogWar3();
 }
@@ -69,7 +69,7 @@ func AntiFusselFree(X,Y,Breite,Hohe) // wird durch TimerCall aufgerufen, wenn gl
     if(!Y) Y = -4;
     if(!Breite) Breite = 4;
     if(!Hohe) Hohe = 10;
-    FreeRect(GetX(this())+X,GetY(this())+Y,Breite,Hohe,50); // die 50 ist die dichte allen nicht fluessigen materials
+    FreeRect((GetX(this()) ?? 0)+(X ?? 0),(GetY(this()) ?? 0)+(Y ?? 0),Breite,Hohe,50); // die 50 ist die dichte allen nicht fluessigen materials
 }
 
 // Blendfunktion für Blendgranate
@@ -77,26 +77,26 @@ func Blend()
 {
   // gibt die x und y Koordinaten von Clonk und Granate aus, zu testzwecken.
   //Log(Format("clonk:%v,%v. Granate:%v,%v.",GetX(this()),GetY(this()),Par(0),Par(1)));
- if(Contained()) return(); // Wenn in einem Gebäude/Fahrzeug oderso, dann nicht blenden.
- if(PathFree(GetX(this())-10,GetY(this()),Par(0)-3,Par(1)-5)||PathFree(GetX(this())-10,GetY(this()),Par(0)+3,Par(1)-5)||PathFree(GetX(this())-10,GetY(this()),Par(0),Par(1)-5))  // wenn direkte Verbindung zwischen Clonk und Explosion
+ if(Contained()) return; // Wenn in einem Gebäude/Fahrzeug oderso, dann nicht blenden.
+ if(Or(Or(PathFree((GetX(this()) ?? 0)-10,GetY(this()),(Par(nil) ?? 0)-3,(Par(1) ?? 0)-5), PathFree((GetX(this()) ?? 0)-10,GetY(this()),(Par(nil) ?? 0)+3,(Par(1) ?? 0)-5)), PathFree((GetX(this()) ?? 0)-10,GetY(this()),Par(nil),(Par(1) ?? 0)-5)))  // wenn direkte Verbindung zwischen Clonk und Explosion
   {
-   if((Distance(GetX(this()),GetY(this()),Par(2),Par(1))>1200) || (Par(0)==GetX(this()) && Par(1)==GetY(this())) ) return();  //wenn Distanz größer als 1200, oder Granate dabei (selbe position) dann keine Blendwirkung
+   if(Or(((Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>1200), (And(Equal(Par(nil), GetX(this())), Equal(Par(1), GetY(this()))))) ) return;  //wenn Distanz größer als 1200, oder Granate dabei (selbe position) dann keine Blendwirkung
   
    // clonk hat reingeschaut und ist näher als 600 dran
-   if(Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Left()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this())); ProtectedCall(Var(),"Initialize",0,this());return();} 
-   if(Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Right())  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",0,this());return();}
+   if(And(And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this())); ProtectedCall(Var(),"Initialize",nil,this());return;}
+   if(And(And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",nil,this());return;}
 
    // clonk hat reingeschaut, aber zwischen 600 und 1200 weit weg, dann geht blendung schneller weg
-   if(Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Left()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this())); ProtectedCall(Var(),"Initialize",1,this());return();} 
-   if(Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Right()) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200 )  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}
+   if(And(And(And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this())); ProtectedCall(Var(),"Initialize",1,this());return;}
+   if(And(And(And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right)), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200) )  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
 
    // Clonk hat weggeschaut ist aber näher als 600, dann verschwindets schneller wieder.
-   if(((Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Right()))  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600))  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}  
-   if(((Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Left()))  && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=600))  {Var()=CreateObject(FL_H,0,0,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return();}
+   if((And((And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600)))  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
+   if((And((And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=600)))  {Var()=CreateObject(FL_H,nil,nil,GetOwner(this()));ProtectedCall(Var(),"Initialize",1,this());return;}
 
    // Clonk hat weggeschaut und ist weiter als 600 weg, dann keine Auswirkung
-   if(((Par(0)<=GetX(this()) && Equal(GetDir(),DIR_Right())) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200))  return();
-   if(((Par(0)>=GetX(this()) && Equal(GetDir(),DIR_Left())) && Distance(GetX(this()),GetY(this()),Par(2),Par(1))>600 && Distance(GetX(this()),GetY(this()),Par(2),Par(1))<=1200))  return();
+   if((And(And((And((Par(nil) ?? 0)<=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Right))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200)))  return;
+   if((And(And((And((Par(nil) ?? 0)>=(GetX(this()) ?? 0), Equal(GetDir(),DIR_Left))), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)>600), (Distance(GetX(this()),GetY(this()),Par(2),Par(1)) ?? 0)<=1200)))  return;
   }
  return(1);
 }
@@ -104,34 +104,34 @@ func Blend()
 
 func CheckzielSichtweite(verhalten) // die zahl ist das kriegsnebelverhalten. Zum bestimmen der Position des Clonks bzgl der sicht. Speichert Ergebnis in lokaler Variable zielSichtweite, sodass diese auch von außerhalb abgefragt werden kann, ohne die ganzen checks nochmal zu machen
 {
-    if(verhalten==1)
+    if(Equal(verhalten, 1))
     {
         if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
         if(IsNight()) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtHimmel"); else{zielSichtweite = 200;} }// Nacht? Dann eine Sichtweite von 50 anstreben
 
-        var z2=0;
-        while(!GBackSky(AbsX(GetX(0)),AbsY(GetY(0))-z2)) ++z2; // so sollte es jetzt ricihtig sein
-        var himmely = GetY(0)-z2; // y koordiante über Clonk, wo das erste mal himmer ist
+        var z2=nil;
+        while(!GBackSky(AbsX(GetX(nil)),(AbsY(GetY(nil)) ?? 0)-(z2 ?? 0))) S42MigrationStep(z2, 1); // so sollte es jetzt ricihtig sein
+        var himmely = (GetY(nil) ?? 0)-(z2 ?? 0); // y koordiante über Clonk, wo das erste mal himmer ist
         // Log(Format("himmely: %v , z:%v",himmely,z2));
 
           if(
-        (GetMaterial() == Material("Tunnel"))
-         && (!PathFree(GetX(0),GetY(0),GetX(0),himmely))  
+        And((Equal(GetMaterial(), Material("Tunnel")))
+         , (!PathFree(GetX(nil),GetY(nil),GetX(nil),himmely)))
         ) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagTunnel");  else{zielSichtweite = 150;} } // Tunnel und keine direkte Verbindung zum Himmel? Dann eine Sichtweite von 25 anstreben
 
           if(
-        (GetMaterial() == Material("Tunnel")) && IsNight()
-         && (!PathFree(GetX(0),GetY(0),GetX(0),himmely))
+        And(And((Equal(GetMaterial(), Material("Tunnel"))), IsNight())
+         , (!PathFree(GetX(nil),GetY(nil),GetX(nil),himmely)))
          ) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtTunnel"); else{zielSichtweite = 100;} } // Tunnel+ fehlende Verbindung zum  Himmel? UND Nacht?! Dann eine Sichtweite von 15 anstreben
     }
     
-    if(verhalten==2)
+    if(Equal(verhalten, 2))
     {
         if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
         if(IsNight()) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtHimmel"); else{zielSichtweite = 200;} }// Nacht? Dann eine Sichtweite von 50 anstreben
     }
     
-    if(verhalten==3)
+    if(Equal(verhalten, 3))
     {
         if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
     }
@@ -165,17 +165,17 @@ func FogWar1()
  // ) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtTunnel"); else{zielSichtweite = 100;} } // Tunnel+ fehlende Verbindung zum  Himmel? UND Nacht?! Dann eine Sichtweite von 15 anstreben
   zielSichtweite = CheckzielSichtweite(1);
   
-  if(SetSichtweite==zielSichtweite) return(1); // wenn schon gleich ist, dann nichts machen
+  if(Equal(SetSichtweite, zielSichtweite)) return(1); // wenn schon gleich ist, dann nichts machen
   
-  if(Abs(SetSichtweite-zielSichtweite)<2) SetSichtweite=zielSichtweite; // wenn Differenz zu klein, dann gleichsetzen.
+  if((Abs((SetSichtweite ?? 0)-(zielSichtweite ?? 0)) ?? 0)<2) SetSichtweite=zielSichtweite; // wenn Differenz zu klein, dann gleichsetzen.
   else
   {
-    if(SetSichtweite > zielSichtweite) SetSichtweite -= 2;
-    if(SetSichtweite < zielSichtweite) SetSichtweite += 2;
+    if((SetSichtweite ?? 0) > (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "-=", 2);
+    if((SetSichtweite ?? 0) < (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "+=", 2);
   }
 // Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-  SetPlrViewRange(SetSichtweite,0,1); 
+  SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
@@ -185,17 +185,17 @@ func FogWar2()
  // if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
   // if(IsNight()) {if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusNachtHimmel"); else{zielSichtweite = 200;} }// Nacht? Dann eine Sichtweite von 50 anstreben
   zielSichtweite = CheckzielSichtweite(2);
-  if(SetSichtweite==zielSichtweite) return(1); // wenn schon gleich ist, dann nichts machen
+  if(Equal(SetSichtweite, zielSichtweite)) return(1); // wenn schon gleich ist, dann nichts machen
   
-  if(Abs(SetSichtweite-zielSichtweite)<2) SetSichtweite=zielSichtweite; // wenn Differenz zu klein, dann gleichsetzen.
+  if((Abs((SetSichtweite ?? 0)-(zielSichtweite ?? 0)) ?? 0)<2) SetSichtweite=zielSichtweite; // wenn Differenz zu klein, dann gleichsetzen.
   else
   {
-    if(SetSichtweite > zielSichtweite) SetSichtweite -= 2;
-    if(SetSichtweite < zielSichtweite) SetSichtweite += 2;
+    if((SetSichtweite ?? 0) > (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "-=", 2);
+    if((SetSichtweite ?? 0) < (zielSichtweite ?? 0)) S42MigrationAssign(SetSichtweite, "+=", 2);
   }
 //Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-  SetPlrViewRange(SetSichtweite,0,1); 
+  SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
@@ -204,19 +204,19 @@ func FogWar3()
 {
  // if(GetLength(hashSpielRegeln)) zielSichtweite = HashGet(hashSpielRegeln, "SichtradiusTagHimmel"); else{zielSichtweite = 400;}  // Standard und am Tag: 100
  zielSichtweite = CheckzielSichtweite(3);
- if(SetSichtweite==zielSichtweite) return(1);
+ if(Equal(SetSichtweite, zielSichtweite)) return(1);
  SetSichtweite = zielSichtweite;
 
 
 //Message("%d %d",this(),SetSichtweite,zielSichtweite); 
 
-  SetPlrViewRange(SetSichtweite,0,1); 
+  SetPlrViewRange(SetSichtweite,nil,1);
 }
 
 
 func TimerAusbildung()
 {
-++ausbildungstimer;
+S42MigrationStep(ausbildungstimer, 1);
 }
 
 func StandTimerAusbildung()
@@ -226,18 +226,18 @@ return(ausbildungstimer);
 
 func TimerAusbildungNull()
 {
-ausbildungstimer=0;
+ausbildungstimer=nil;
 }
 
 
 //wenn im ausbildungscamp ausgebildet, erhält der Clonk eine neue Stufe. Diese ist wichtig dafür, wann neue fähigkeiten erlernt werden bzw. die Grafik sich ändert.
 func Stufenanstieg(zahl)
 {
-if(zahl==1) {stufe=5; return(0);} // für den Aufstieg von Clonk zu Hazardclonk die Stufen übernehmen
-if(zahl==10) {stufe=10; return(0);} 
-if(zahl==15) {stufe=15; return(0);} 
-if(zahl==20) {stufe=20; return(0);} 
-++stufe;
+if(Equal(zahl, 1)) {stufe=5; return(nil);} // für den Aufstieg von Clonk zu Hazardclonk die Stufen übernehmen
+if(Equal(zahl, 10)) {stufe=10; return(nil);}
+if(Equal(zahl, 15)) {stufe=15; return(nil);}
+if(Equal(zahl, 20)) {stufe=20; return(nil);}
+S42MigrationStep(stufe, 1);
 }
 
 func AktuelleStufe()
@@ -247,9 +247,9 @@ return(stufe);
 
 func NunBauarbeiter(zahl)
 {
-if(zahl==6) {bauarbeiter=6;return();}
-++bauarbeiter;
-if(zahl==10) bauarbeiter=0;
+if(Equal(zahl, 6)) {bauarbeiter=6;return;}
+S42MigrationStep(bauarbeiter, 1);
+if(Equal(zahl, 10)) bauarbeiter=nil;
 }
 
 func IstBauarbeiter()
@@ -262,35 +262,35 @@ return(bauarbeiter);
 func Klimaschutz(klima) // im hazardskript wird noch auf spezielle kleidung geprueft
 {
 //Kälte
-if(klima==1)
+if(Equal(klima, 1))
 {
 // wenn etwas in der Nähe brennt, oder Fackel oder lagerfeuer, kein Schaden.
 var feuer;
 if(feuer = FindObject2(Find_Distance(80),Find_Or(Find_OCF(OCF_OnFire),Find_ID(LAGF),Find_ID(TORC),Find_ID(TOR3))))
   {
 //nur wenn Feuer brennt
-if(GetID(feuer)==LAGF) if(!(GetAction(feuer) eq "Burn")) return(0);
- if(GetID(feuer)==TORC || GetID(feuer)==TOR3) if(!(GetAction(feuer) eq "Burning")) return(0);
+if(Equal(GetID(feuer), LAGF)) if(!(!!SEqual(GetAction(feuer), "Burn"))) return(nil);
+ if(Or(Equal(GetID(feuer), TORC), Equal(GetID(feuer), TOR3))) if(!(!!SEqual(GetAction(feuer), "Burning"))) return(nil);
   return(1);
   }
-if(feuer = FindObject2(Find_Distance(100),Find_ID(TONN))) {if(!(GetAction(feuer) eq "Burn")) return(0); return(1);} // wenn feuertonne in nähe
+if(feuer = FindObject2(Find_Distance(100),Find_ID(TONN))) {if(!(!!SEqual(GetAction(feuer), "Burn"))) return(nil); return(1);} // wenn feuertonne in nähe
 if(FindObject2(Find_Distance(250),Find_ID(MVNT))) return(1); // wenn kleiner lüfter im bunker verbaut sind
 if(FindObject2(Find_Distance(500),Find_ID(VENT))) return(1); // wenn großer lüfter im bunker verbaut sind
 
-return(0);
+return(nil);
 }
 
 //Hitze
-if(klima==2)
+if(Equal(klima, 2))
 {
 // wenn in Flüssigkeit, kein schaden
-if(GetOCF() & OCF_InLiquid()) return(1);
+if((GetOCF() ?? 0) & (OCF_InLiquid ?? 0)) return(1);
 if(FindObject2(Find_Distance(80),Find_NoContainer(),Find_Or(Find_ID(ICE1),Find_ID(WBRL),Find_ID(WDWB),Find_ID(WTON)))) return(1); // wenn eisklumpen oder Wasserfass in der nähe und nicht in gebäude
 
 if(FindObject2(Find_Distance(250),Find_ID(MVNT))) return(1); // wenn kleiner lüfter im bunker verbaut sind
 if(FindObject2(Find_Distance(500),Find_ID(VENT))) return(1); // wenn großer lüfter im bunker verbaut sind
 
-return(0);
+return(nil);
 }
 
 }
@@ -298,7 +298,7 @@ return(0);
 func RundenErfahrung()
 {
 // gibt die in dieser Runde bereits erhaltene Erfahrung zum Zeitpunkt der Abfrage aus
-return(GetObjectInfoCoreVal("Experience", 0, 0)-starterfahrung);
+return((GetObjectInfoCoreVal("Experience", nil, nil) ?? 0)-(starterfahrung ?? 0));
 }
 
 
@@ -319,9 +319,9 @@ if(!FindObject(CHO6)) CreateObject(CHO6,1,1,-1);
 // einfach nur startsichtweite bei spielstart
 SetSichtweite=400;
   // Clonks mit Magiephysikal aus fehlerhaften Szenarien korrigieren
-  if (GetID () == CLNK)
+  if (Equal(GetID (), CLNK))
     if (GetPhysical ("Magic", 1))
-      SetPhysical ("Magic", 0, 1);
+      SetPhysical ("Magic", nil, 1);
   SetAction("Walk");
   SetDir(Random(2));
   // Broadcast für Spielregeln
@@ -330,7 +330,7 @@ SetSichtweite=400;
 Physicsanpassen();
 
 //bei Spieleintritt kurz den aktuellen Erfahrungswert speichern, um später rauszufinden, wieiviel Erfahrung in der Runde gesammelt wurde.
-ScheduleCall(0, "Erfahrungerfassen", 50);  
+ScheduleCall(nil, "Erfahrungerfassen", 50);
 
   return(1);
 }
@@ -338,7 +338,7 @@ ScheduleCall(0, "Erfahrungerfassen", 50);
 //in extrafkt weil es beim kauf von clonks sonst zu fehlern kommen kann
 func Erfahrungerfassen()
 {
-if(!starterfahrung) starterfahrung = GetObjectInfoCoreVal("Experience", 0, 0);
+if(!starterfahrung) starterfahrung = GetObjectInfoCoreVal("Experience", nil, nil);
 }
 
 
@@ -346,11 +346,11 @@ if(!starterfahrung) starterfahrung = GetObjectInfoCoreVal("Experience", 0, 0);
 func Physicsanpassen()
 {
 // vorher noch kurz einen Effekt erstellen. Denn beim Tod von Clonks werden die Items entfernt, dies lässt sich nicht mit der Deathfunktion unterbinden, weil es schon davor passiert. Vor death werden die Effekte gekillt, das kann man nutzen um schon dann die Items in eine Leiche zu verschieben
- if(!GetEffect("LeichenDeath",this(),0,0,1))
-    AddEffect("LeichenDeath", this(), 1, 0, this); // stopp zu finden über der death funktion
+ if(!GetEffect("LeichenDeath",this(),nil,nil,1))
+    AddEffect("LeichenDeath", this(), 1, nil, this); // stopp zu finden über der death funktion
 
 //wenn diese Regel aktiviert ist, hat jeder neue Clonk (nur mit ID cLNK), weniger Physics
-if(GetID()==CLNK)
+if(Equal(GetID(), CLNK))
     if(FindObject2(Find_ID(PPP2)))
     {
     SetPhysical("Energy", 20000, PHYS_StackTemporary, this());
@@ -372,20 +372,21 @@ if(GetID()==CLNK)
 
 protected func Recruitment(int iPlr) {
   // Alchemieregel: Jeder Clonk kriegt einen angelegten Beutel spendiert
-  if(ObjectCount(ALCO)) CreateObject(ALC_,0,0,-1)->~BelongTo(this());
+  iPlr ??= 0;
+  if(ObjectCount(ALCO)) CreateObject(ALC_,nil,nil,-1)->~BelongTo(this());
   // Broadcast für Crew
   GameCallEx("OnClonkRecruitment", this(), iPlr);
 }
 
 /* Kontext */
 
-public func HasConstructMenu() { return HasKnowledge() && GetPhysical("CanConstruct"); }
-public func HasKnowledge() { return(GetPlrKnowledge(GetOwner(),0,0,C4D_Structure())); }
-public func HasBase()      { return(FindBase(GetOwner()) && GetBase(Contained()) != GetOwner()); }
+public func HasConstructMenu() { return And(HasKnowledge(), GetPhysical("CanConstruct")); }
+public func HasKnowledge() { return(GetPlrKnowledge(GetOwner(),nil,nil,C4D_Structure)); }
+public func HasBase()      { return(And(FindBase(GetOwner()), !Equal(GetBase(Contained()), GetOwner()))); }
 public func ReleaseAllowed() { return(ObjectCount(REAC)); }
-public func AtConstructionSite() { return(!Contained() && FindConstructionSite() && ObjectCount(CNMT)); }
-public func AtEnergySite() { return(!Contained() && FindEnergySite()); }
-public func AtTreeToChop() { return(!Contained() && FindTree() && GetPhysical("CanChop")); }
+public func AtConstructionSite() { return(And(And(!Contained(), FindConstructionSite()), ObjectCount(CNMT))); }
+public func AtEnergySite() { return(And(!Contained(), FindEnergySite())); }
+public func AtTreeToChop() { return(And(And(!Contained(), FindTree()), GetPhysical("CanChop"))); }
 
 public func FindConstructionSite()
 {
@@ -412,7 +413,7 @@ public func ControlLeft()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlLeft(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlLeftDouble()
@@ -432,7 +433,7 @@ protected func ControlLeftReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlLeftReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlRight()
@@ -443,7 +444,7 @@ public func ControlRight()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlRight(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlRightReleased()
@@ -451,7 +452,7 @@ protected func ControlRightReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlRightReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUp()
@@ -464,15 +465,15 @@ protected func ControlUp()
   // Bei JnR Delfinsprung
   if(GetPlrCoreJumpAndRunControl(GetController()))
   {
-    var pCrew,i=0; // i bei 0 starten, weil der befehl auch fuer den hauptclonk ausgefuehrt werden soll
-    if(this()==GetCursor(GetOwner())) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damits befehl nur einmal ausgeführt wird)
-    while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+    var pCrew,i=nil; // i bei 0 starten, weil der befehl auch fuer den hauptclonk ausgefuehrt werden soll
+    if(Equal(this(), GetCursor(GetOwner()))) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damits befehl nur einmal ausgeführt wird)
+    while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
     {
         pCrew->~DolphinJump();
     }
   }
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpReleased()
@@ -480,7 +481,7 @@ protected func ControlUpReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlUpReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpDouble() 
@@ -488,9 +489,9 @@ protected func ControlUpDouble()
   // Steuerung an Effekt weitergeben 
   if (Control2Effect("ControlUpDouble")) return(1);
   
-  var pCrew,i=0; // i bei 0 starten, weil der befehl auch fuer den hauptclonk ausgefuehrt werden soll
-  if(this()==GetCursor(GetOwner())) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damits befehl nur einmal ausgeführt wird)
-  while (pCrew=GetCursor(GetOwner(),i++)) // gib den Befehl an alle anderen angewählten Clonks weiter
+  var pCrew,i=nil; // i bei 0 starten, weil der befehl auch fuer den hauptclonk ausgefuehrt werden soll
+  if(Equal(this(), GetCursor(GetOwner()))) // wenn dies der Hauptclonk ausführt, dann den Befehl an alle angewählten nicht-hauptclonks weitergeben. (damits befehl nur einmal ausgeführt wird)
+  while (pCrew=GetCursor(GetOwner(),S42MigrationStep(i, 1, true))) // gib den Befehl an alle anderen angewählten Clonks weiter
   {
     pCrew->~DolphinJump();
   }
@@ -500,18 +501,18 @@ protected func ControlUpDouble()
 private func DolphinJump()
 {
   // nur wenn an Meeresoberfläche
-  if(!InLiquid()) return(0);
-  if(GBackSemiSolid(0,-1)) return(0);
+  if(!InLiquid()) return(nil);
+  if(GBackSemiSolid(nil,-1)) return(nil);
   // Nicht wenn deaktiviert (z.B. Ohnmacht)
-  if (GetActMapVal("ObjectDisabled", GetAction(), GetID())) return false;
+  if (GetActMapVal("ObjectDisabled", GetAction(), GetID())) return nil;
   // herausspringen
-  SetPosition(GetX(),GetY()-1);
+  SetPosition(GetX(),(GetY() ?? 0)-1);
   SetAction("Jump");
-  SetSpeed(GetXDir(),-BoundBy(GetPhysical("Swim")/2500,24,38));
+  SetSpeed(GetXDir(),-(BoundBy((GetPhysical("Swim") ?? 0)/2500,24,38) ?? 0));
   var iX=GetX(),iY=GetY(),iXDir=GetXDir(),iYDir=GetYDir();
   // Wenn Sprung im Wasser endet und das Wasser tief genug ist, Kopfsprung machen
   if(SimFlight(iX,iY,iXDir,iYDir,25,50))
-    if(GBackLiquid(iX-GetX(),iY-GetY()) && GBackLiquid(iX-GetX(),iY+9-GetY()))
+    if(And(GBackLiquid((iX ?? 0)-(GetX() ?? 0),(iY ?? 0)-(GetY() ?? 0)), GBackLiquid((iX ?? 0)-(GetX() ?? 0),(iY ?? 0)+9-(GetY() ?? 0))))
       SetAction("Dive");
 }
 
@@ -523,7 +524,7 @@ protected func ControlDown()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDown(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownReleased()
@@ -531,7 +532,7 @@ protected func ControlDownReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlDownReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownSingle()
@@ -542,7 +543,7 @@ protected func ControlDownSingle()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDownSingle(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDownDouble()
@@ -552,7 +553,7 @@ protected func ControlDownDouble()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDownDouble(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDig()
@@ -563,7 +564,7 @@ protected func ControlDig()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDig(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigReleased()
@@ -571,7 +572,7 @@ protected func ControlDigReleased()
   // Steuerung an Pferd weiterleiten
   if (IsRiding()) return(GetActionTarget()->~ControlDigReleased(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigSingle()
@@ -579,7 +580,7 @@ protected func ControlDigSingle()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDigSingle(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlDigDouble()
@@ -589,33 +590,36 @@ protected func ControlDigDouble()
   // Steuerung an Pferd weiterleiten
   if (IsRiding())  return(GetActionTarget()->~ControlDigDouble(this()));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 public func ControlThrow() {
 
   UnHide();
   // Bei vorherigem Doppel-Stop nur Ablegen
-  if (GetPlrDownDouble(GetOwner())) return(0);
+  if (GetPlrDownDouble(GetOwner())) return(nil);
   // Steuerung an Effekt weitergeben 
   if (Control2Effect("ControlThrow")) return(1);
   // Reiten und Werfen
   if (IsRiding())
-    if (Contents(0))
+    if (Contents(nil))
     {
       SetAction("RideThrow");
       return(1);
     }
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 protected func ControlUpdate(object self, int comdir, bool dig, bool throw)
 {
   // Steuerung an Pferd weiterleiten
+  comdir ??= 0;
+  dig ??= false;
+  throw ??= false;
   if(IsRiding()) return(GetActionTarget()->~ControlUpdate(self, comdir, dig, throw));
   // Keine überladene Steuerung
-  return(0);
+  return(nil);
 }
 
 
@@ -623,27 +627,27 @@ protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data)
 {
   UnHide();
   // Kommando MoveTo an Pferd weiterleiten
-  if (szCommand eq "MoveTo")
+  if (!!SEqual(szCommand, "MoveTo"))
     if (IsRiding())
       return(GetActionTarget()->~ControlCommand(szCommand, pTarget, iTx, iTy));
   // Anderes Kommando beim Reiten: absteigen (Ausnahme: Context)
-  if (IsRiding() && szCommand ne "Context")
+  if (And(IsRiding(), !SEqual(szCommand, "Context")))
   {
-    SetComDir(COMD_Stop(),GetActionTarget());
+    SetComDir(COMD_Stop,GetActionTarget());
     GetActionTarget()->~ControlDownDouble(this());
   }
   // RejectConstruction Callback beim Bauen durch Drag'n'Drop aus einem Gebaeude-Menu
-  if(szCommand S= "Construct")
+  if(!!SEqual(szCommand, "Construct"))
   {
     // Data ist eigentlich keine ID, sondern ein C4Value* - Damit ein DirectCall
     // möglich ist, muss sie aber zu einer C4ID gecastet werden.
-    if(CastC4ID(Data)->~RejectConstruction(iTx - GetX(), iTy - GetY(), this()) )
+    if(CastC4ID(Data)->~RejectConstruction((iTx ?? 0) - (GetX() ?? 0), (iTy ?? 0) - (GetY() ?? 0), this()) )
     {
       return(1);
     }
   }
   // Kein überladenes Kommando
-  return(0);
+  return(nil);
 }
 
 /* Verwandlung */
@@ -651,11 +655,11 @@ protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data)
 private func RedefinePhysical(szPhys, idTo)
 {
   // Physical-Werte ermitteln
-  var physDefFrom = GetPhysical(szPhys, 0, 0, GetID()),
-      physDefTo   = GetPhysical(szPhys, 0, 0, idTo),
+  var physDefFrom = GetPhysical(szPhys, nil, nil, GetID()),
+      physDefTo   = GetPhysical(szPhys, nil, nil, idTo),
       physCurr    = GetPhysical(szPhys);
   // Neuen Wert berechnen
-  var physNew; if (physDefTo) physNew=BoundBy(physDefTo-physDefFrom+physCurr, 0, 100000);
+  var physNew; if (physDefTo) physNew=BoundBy((physDefTo ?? 0)-(physDefFrom ?? 0)+(physCurr ?? 0), nil, 100000);
   // Neuen Wert für den Reset immer temporär setzen, selbst wenn keine Änderung besteht, damit der Reset richtig funktioniert
   SetPhysical(szPhys, physNew, PHYS_StackTemporary);
   // Fertig
@@ -665,11 +669,13 @@ private func RedefinePhysical(szPhys, idTo)
 protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
   {
   // Ziel-ID in Effektvariable
+  num ??= 0;
+  tmp ??= 0;
   if (tmp)
-    idTo = EffectVar(0, trg, num);
+    idTo = EffectVar(nil, trg, num);
   else
     {
-    EffectVar(0, trg, num) = idTo;
+    EffectVar(nil, trg, num) = idTo;
     EffectVar(1, trg, num) = GetID();
     }
   // Physicals anpassen
@@ -695,7 +701,7 @@ protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
   RedefinePhysical("CorrosionResist", idTo);
   RedefinePhysical("BreatheWater", idTo);
   // Damit Aufwertungen zu nicht-Magiern keine Zauberenergie übrig lassen
-  if (GetPhysical("Magic")/1000 < GetMagicEnergy()) DoMagicEnergy(GetPhysical("Magic")/1000-GetMagicEnergy());
+  if ((GetPhysical("Magic") ?? 0)/1000 < (GetMagicEnergy() ?? 0)) DoMagicEnergy((GetPhysical("Magic") ?? 0)/1000-(GetMagicEnergy() ?? 0));
   // Echtes Redefine nur bei echten Aufrufen (hat zu viele Nebenwirkungen)
   if (tmp) return(FX_OK);
   Redefine(idTo);
@@ -706,39 +712,42 @@ protected func FxIntRedefineStart(object trg, int num, int tmp, id idTo)
 protected func FxIntRedefineStop(object trg, int num, int iReason, bool tmp)
   {
   // Physicals wiederherstellen
-  ResetPhysical(0, "BreatheWater");
-  ResetPhysical(0, "CorrosionResist");
-  ResetPhysical(0, "CanSwimDig");
-  ResetPhysical(0, "CanChop");
-  ResetPhysical(0, "CanConstruct");
-  ResetPhysical(0, "CanDig");
-  ResetPhysical(0, "Float");
-  ResetPhysical(0, "Magic");
-  ResetPhysical(0, "Fight");
-  ResetPhysical(0, "Push");
-  ResetPhysical(0, "Throw");
-  ResetPhysical(0, "Swim");
-  ResetPhysical(0, "Dig");
-  ResetPhysical(0, "Hangle");
-  ResetPhysical(0, "Scale");
-  ResetPhysical(0, "Jump");
-  ResetPhysical(0, "Walk");
-  ResetPhysical(0, "Breath");
-  ResetPhysical(0, "Energy");
+  num ??= 0;
+  iReason ??= 0;
+  tmp ??= false;
+  ResetPhysical(nil, "BreatheWater");
+  ResetPhysical(nil, "CorrosionResist");
+  ResetPhysical(nil, "CanSwimDig");
+  ResetPhysical(nil, "CanChop");
+  ResetPhysical(nil, "CanConstruct");
+  ResetPhysical(nil, "CanDig");
+  ResetPhysical(nil, "Float");
+  ResetPhysical(nil, "Magic");
+  ResetPhysical(nil, "Fight");
+  ResetPhysical(nil, "Push");
+  ResetPhysical(nil, "Throw");
+  ResetPhysical(nil, "Swim");
+  ResetPhysical(nil, "Dig");
+  ResetPhysical(nil, "Hangle");
+  ResetPhysical(nil, "Scale");
+  ResetPhysical(nil, "Jump");
+  ResetPhysical(nil, "Walk");
+  ResetPhysical(nil, "Breath");
+  ResetPhysical(nil, "Energy");
   // Keine Rückänderung bei temporären Aufrufen oder beim Tod/Löschen
-  if (tmp || iReason) return();
+  if (Or(tmp, iReason)) return;
   // Damit Aufwertungen von nicht-Magiern keine Zauberenergie übrig lassen
-  if (GetPhysical("Magic")/1000 < GetMagicEnergy()) DoMagicEnergy(GetPhysical("Magic")/1000-GetMagicEnergy());
+  if ((GetPhysical("Magic") ?? 0)/1000 < (GetMagicEnergy() ?? 0)) DoMagicEnergy((GetPhysical("Magic") ?? 0)/1000-(GetMagicEnergy() ?? 0));
   // OK; alte Definition wiederherstellen
   Redefine(EffectVar(1, trg, num));
   }
 
 public func Redefine2(idTo)
 {
-  if (GetID() == idTo) return(true);
+  if (Equal(GetID(), idTo)) return(true);
   RemoveEffect("IntRedefine", this());
-  if (GetID() == idTo) return(true);
-  return(!!AddEffect("IntRedefine", this(), 10, 0, this(), 0, idTo));
+  if (Equal(GetID(), idTo)) return(true);
+  return(!!AddEffect("IntRedefine", this(), 10, nil, this(), nil, idTo));
 }
 
 public func Redefine(idTo)
@@ -772,7 +781,7 @@ private func Riding()
     if(!(pinguin))
       {
         SetAction("Swim");
-        return(0);
+        return(nil);
       }
     }
   // Richtung an die des Pferdes anpassen
@@ -780,12 +789,12 @@ private func Riding()
   // Pferd steht still: Clonk soll auch still sitzen
   if (GetActionTarget()->~IsStill())
   {
-    if (GetAction() ne "RideStill")
+    if (!SEqual(GetAction(), "RideStill"))
       SetAction("RideStill");
   }
   // Pferd steht nicht still: Clonk soll auch nicht still sitzen
   else
-    if (GetAction() ne "Ride")
+    if (!SEqual(GetAction(), "Ride"))
       SetAction("Ride");
   return(1);
 }
@@ -806,43 +815,43 @@ private func Throwing(pObj)
   // Ggf. zu werfendes Objekt suchen 
   if (!pObj) 
   { 
-    pObj = Contents(0); 
-    if (!Contents()) return(0); 
+    pObj = Contents(nil);
+    if (!Contents()) return(nil);
   } 
   // Wurfparameter berechnen 
   var iX, iY, iR, iXDir, iYDir, iRDir; 
-  if(GetID(pObj) != SPER && !pObj->~IsSpear()) 
+  if(And(!Equal(GetID(pObj), SPER), !pObj->~IsSpear()))
   { 
     // Standardwurf   
-    iX = 0; if (!GetDir()) iX = -iX; 
+    iX = nil; if (!GetDir()) iX = -(iX ?? 0);
     iY = -10; 
     iR = Random(360); 
-    iXDir = GetPhysical("Throw") / 25000; if(!GetDir()) iXDir = -iXDir; 
-    iYDir = -GetPhysical("Throw") / 25000; 
-    iRDir = Random(40) - 20; 
+    iXDir = (GetPhysical("Throw") ?? 0) / 25000; if(!GetDir()) iXDir = -(iXDir ?? 0);
+    iYDir = -(GetPhysical("Throw") ?? 0) / 25000;
+    iRDir = (Random(40) ?? 0) - 20;
   } 
   else 
   { 
     // Speerwurf 
-    iX = 10; if (!GetDir()) iX = -iX; 
+    iX = 10; if (!GetDir()) iX = -(iX ?? 0);
     iY = -6; 
-    iR = 150; if(!GetDir()) iR = 180 - iR; 
-    iXDir = 5; if(!GetDir()) iXDir = -iXDir; 
+    iR = 150; if(!GetDir()) iR = 180 - (iR ?? 0);
+    iXDir = 5; if(!GetDir()) iXDir = -(iXDir ?? 0);
     iYDir = -2; 
-    iRDir = 4; if(!GetDir()) iRDir = -iRDir; 
+    iRDir = 4; if(!GetDir()) iRDir = -(iRDir ?? 0);
   } 
   // Reitet? Eigengeschwindigkeit addieren 
   if (GetActionTarget()) if (IsRiding()) 
   {
-    iXDir += GetXDir(GetActionTarget()) / 10;
+    S42MigrationAssign(iXDir, "+=", (GetXDir(GetActionTarget()) ?? 0) / 10);
     // Steigungen beim Gehen werden leider nicht in die Y-Dir eingerechnet. Bei Steigungen
     // kann es daher vorkommen, dass der Wurf den Reiter vom Pferd haut. Was dagegen tun..?
-    iYDir += GetYDir(GetActionTarget()) / 10; 
+    S42MigrationAssign(iYDir, "+=", (GetYDir(GetActionTarget()) ?? 0) / 10);
   } 
   // Werfen! 
-  Exit(pObj, iX, iY, iR, 0, 0, iRDir); 
-  pObj->SetXDir(GetXDir()+iXDir*10);
-  pObj->SetYDir(GetYDir()+iYDir*10);
+  Exit(pObj, iX, iY, iR, nil, nil, iRDir);
+  pObj->SetXDir((GetXDir() ?? 0)+(iXDir ?? 0)*10);
+  pObj->SetYDir((GetYDir() ?? 0)+(iYDir ?? 0)*10);
   return(1);   
 }
 
@@ -868,9 +877,9 @@ private func Punching()
   
 public func Chopping()
 {
-  if (!GetActTime()) return(); // Erster Schlag kein Sound. Clonk holt noch aus.
+  if (!GetActTime()) return; // Erster Schlag kein Sound. Clonk holt noch aus.
   Sound("Chop*");
-  CastParticles("Dust",Random(3)+1,6,-8+16*GetDir(),1,10,12);
+  CastParticles("Dust",(Random(3) ?? 0)+1,6,-8+16*(GetDir() ?? 0),1,10,12);
   return(1);
 }
 
@@ -883,18 +892,18 @@ private func Building()
         // if ((num = GetComponent(id) - GetComponent(id, 0, 0, GetID())) > 0)
             // allesda = 0;  
         
-   var target = GetActionTarget(0,this());
-  if(GetOCF(target) & OCF_Construct())  // nur wenn Ziel eine Baustelle ist 
+   var target = GetActionTarget(nil,this());
+  if((GetOCF(target) ?? 0) & (OCF_Construct ?? 0))  // nur wenn Ziel eine Baustelle ist
   {
       // immer wenn Bauarbeiter, schneller bauen
       if(!InArray(globArrayBaustellenBauarbeiter,target))   // nur einmal pro Gebäude den Boost geben
       {
-          if(bauarbeiter==1) DoCon(5,target);  
-          if(bauarbeiter==2) DoCon(10,target);  
-          if(bauarbeiter==3) DoCon(15,target); 
-          if(bauarbeiter==4) DoCon(20,target);
-          if(bauarbeiter==5) DoCon(25,target);
-          if(bauarbeiter==6) DoCon(30,target);
+          if(Equal(bauarbeiter, 1)) DoCon(5,target);
+          if(Equal(bauarbeiter, 2)) DoCon(10,target);
+          if(Equal(bauarbeiter, 3)) DoCon(15,target);
+          if(Equal(bauarbeiter, 4)) DoCon(20,target);
+          if(Equal(bauarbeiter, 5)) DoCon(25,target);
+          if(Equal(bauarbeiter, 6)) DoCon(30,target);
           ArrayAdd(globArrayBaustellenBauarbeiter, target); // zum arrray zufuegen
       }
       
@@ -931,8 +940,8 @@ private func Digging()
 protected func Scaling()
 {
   var szDesiredAction;
-  if (GetYDir()>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
-  if (GetAction() ne szDesiredAction) SetAction(szDesiredAction);
+  if ((GetYDir() ?? 0)>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale";
+  if (!SEqual(GetAction(), szDesiredAction)) SetAction(szDesiredAction);
   return(1);   
 }
 
@@ -941,14 +950,14 @@ protected func Scaling()
 protected func QueryCatchBlow(object projectile)
 {
   // Objekt will den Clonk nicht treffen?
-  if (projectile && projectile->~QueryClonkHit(this))
+  if (And(projectile, projectile->~QueryClonkHit(this)))
     return true;;
   // Treffer OK
 }
   
 protected func CatchBlow()
 {
-  if (GetAction() eq "Dead") return(0);
+  if (!!SEqual(GetAction(), "Dead")) return(nil);
   if (!Random(5)) Hurt();
   return(1);
 }
@@ -961,6 +970,7 @@ protected func Hurt()
   
 protected func Grab(object pTarget, bool fGrab)
 {
+  fGrab ??= false;
   Sound("Grab");
   return(1);
 }
@@ -979,9 +989,11 @@ protected func Put()
 
 // wird beim Tod vor Death aufgerufen, sodass die Items noch von der Leiche gegrabt werden können
 protected func FxLeichenDeathStop(object pTarget, int iNr, int iReason) {
-  if(iReason == 4) {
+  iNr ??= 0;
+  iReason ??= 0;
+  if(Equal(iReason, 4)) {
     // Leiche erstellen, welche der Umwelt schädigt.
-   var pCorpse=CreateObject(CORP,0,GetDefBottom()-GetY(),GetOwner());
+   var pCorpse=CreateObject(CORP,nil,(GetDefBottom() ?? 0)-(GetY() ?? 0),GetOwner());
   pCorpse->SetLeiche(this());
   }
 }
@@ -990,10 +1002,11 @@ protected func FxLeichenDeathStop(object pTarget, int iNr, int iReason) {
 protected func Death(int iKilledBy)
 {
   
-  if(IsPinguin()==2) // wenn er als Taucher gestorben is
+  iKilledBy ??= 0;
+  if(Equal(IsPinguin(), 2)) // wenn er als Taucher gestorben is
   {
       SetColorDw(GetPlrColorDw(GetOwner()));
-      var suit= CreateObject(TAAZ,0,0,GetOwner());
+      var suit= CreateObject(TAAZ,nil,nil,GetOwner());
       if(Contained()) Enter(Contained(),suit);
   }
   
@@ -1002,7 +1015,7 @@ protected func Death(int iKilledBy)
   GameCallEx("OnClonkDeath", this(), iKilledBy);
   
   // Der Broadcast könnte seltsame Dinge gemacht haben: Clonk ist noch tot?
-  if (GetAlive()) return();
+  if (GetAlive()) return;
   
   // den Beutel fallenlassen
   if(GetAlchemBag()) GetAlchemBag()->~Loose();
@@ -1013,8 +1026,8 @@ protected func Death(int iKilledBy)
   // Letztes Mannschaftsmitglied tot: Script benachrichtigen
   if (!GetCrew(GetOwner()))
     GameCallEx("RelaunchPlayer",GetOwner(),iKilledBy);
-    SetGraphics(0, 0, 0, 1);
-    SetGraphics(0, 0, 0, 2);
+    SetGraphics(nil, nil, nil, 1);
+    SetGraphics(nil, nil, nil, 2);
 
   RemoveObject();
   return(1);
@@ -1027,8 +1040,8 @@ protected func Destruction()
   if (GetAlive())
     GameCallEx("OnClonkDeath", this(), GetKiller());
   // Dies ist das letztes Mannschaftsmitglied: Script benachrichtigen
-  if (GetCrew(GetOwner()) == this())
-    if (GetCrewCount(GetOwner()) == 1)
+  if (Equal(GetCrew(GetOwner()), this()))
+    if (Equal(GetCrewCount(GetOwner()), 1))
       //Nur wenn der Spieler noch lebt und nicht gerade eleminiert wird
       if (GetPlayerName(GetOwner()))
         {
@@ -1046,9 +1059,9 @@ protected func DeepBreath()
 protected func CheckStuck()
 {                   
   // Verhindert Festhängen am Mittelvertex
-  if(!GetXDir()) if(Abs(GetYDir()) < 5)
-    if(GBackSolid(0, 3))
-      SetPosition(GetX(), GetY() + 1);
+  if(!GetXDir()) if((Abs(GetYDir()) ?? 0) < 5)
+    if(GBackSolid(nil, 3))
+      SetPosition(GetX(), (GetY() ?? 0) + 1);
 }
 
 /* Status */
@@ -1089,9 +1102,9 @@ public func ContextFeighDeath(pCaller)
 func FeighDeathnow()
 {
   UnHide();
-  portraitt=GetPortrait(0,0,0);
-  portraittID=GetPortrait(0,1,0);
-  SetPortrait("1",0, CG8Z, 0, 0);
+  portraitt=GetPortrait(nil,nil,nil);
+  portraittID=GetPortrait(nil,1,nil);
+  SetPortrait("1",nil, CG8Z, nil, nil);
   Sound("Die");
   DeathAnnounce();
   SetAction("StartFeign");
@@ -1108,7 +1121,7 @@ public func ContextHide(pCaller)
 }
 
 protected func StartHide() {
-  if(GetActTime() > 100) {
+  if((GetActTime() ?? 0) > 100) {
     Hide();
     SetAction("Walk");
   }
@@ -1119,7 +1132,7 @@ protected func Hide() {
   isHidden = true;
   SetClrModulation(RGBa(205,205,205,170));
   //if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump" || GetAction() eq "WalkArmed" || GetAction() eq "SwimArmed" || GetAction() eq "JumpArmed") 
- if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump")
+ if(Or(!!SEqual(GetAction(), "HoldWalk"), !!SEqual(GetAction(), "HoldJump")))
   {
     SetClrModulation(RGBa(205,205,205,170),this,1);
     SetClrModulation(RGBa(205,205,205,170),this,2);
@@ -1127,18 +1140,18 @@ protected func Hide() {
 }
 
 public func UnHide() {
-  isHidden = false;
-  SetClrModulation(RGBa(255,255,255,0));
+  isHidden = nil;
+  SetClrModulation(RGBa(255,255,255,nil));
     //if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump" || GetAction() eq "WalkArmed" || GetAction() eq "SwimArmed" || GetAction() eq "JumpArmed") 
-   if(GetAction() eq "HoldWalk" || GetAction() eq "HoldJump")
+   if(Or(!!SEqual(GetAction(), "HoldWalk"), !!SEqual(GetAction(), "HoldJump")))
   {
-    SetClrModulation(RGBa(255,255,255,0), this,1);
-    SetClrModulation(RGBa(255,255,255,0), this,2);
+    SetClrModulation(RGBa(255,255,255,nil), this,1);
+    SetClrModulation(RGBa(255,255,255,nil), this,2);
   }
 }
 
 public func IsHidable() {
-  if ((GetAction() eq "Walk" || GetAction() eq "HoldWalk") && !IsHidden() && (FindObject2(Find_AtPoint (0,0), Find_Category(C4D_Structure | C4D_StaticBack)) || GetMaterial() == 18)) return(true);
+  if (And(And((Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "HoldWalk"))), !IsHidden()), (Or(FindObject2(Find_AtPoint (nil,nil), Find_Category((C4D_Structure ?? 0) | (C4D_StaticBack ?? 0))), Equal(GetMaterial(), 18))))) return(true);
 }
 
 public func IsHidden() {
@@ -1155,16 +1168,16 @@ public func ContextRiseFeighDeath(pCaller)
 
 func RisefromFeighDeath()
 {
-  SetPortrait(Format("%s",portraitt),0 , portraittID); // da lokaler aufruf reicht 0
+  SetPortrait(Format("%s",portraitt),nil , portraittID); // da lokaler aufruf reicht 0
   SetAction("KneelUp");
 }
 
 protected func IsNotFeign() {
-  if(GetAction() ne "Feign" && GetAction() ne "Faint" && GetAction() ne "StartFeign" && GetAction() ne "StartFaint") return(true);
+  if(And(And(And(!SEqual(GetAction(), "Feign"), !SEqual(GetAction(), "Faint")), !SEqual(GetAction(), "StartFeign")), !SEqual(GetAction(), "StartFaint"))) return(true);
 }
 
 protected func IsFeign() {
-  if(GetAction() eq "Feign") return(true);
+  if(!!SEqual(GetAction(), "Feign")) return(true);
 }
 
 // die pinguin funktionen. wird fuer pinguinanzug hazard, aber auch fuer taucheranzug clonk verwendet
@@ -1242,12 +1255,12 @@ pinguin=izahl;  // fuer den taucheranzug wird es gleich 2. wichtig fuer das anzu
 
 func Pinguinaus()
 {
-pinguin=0;
+pinguin=nil;
 }
 
 protected func ContactBottom()
 {
-  if(GetAction() eq "Swim") if(IsPinguin()==2) SetAction("Walk");
+  if(!!SEqual(GetAction(), "Swim")) if(Equal(IsPinguin(), 2)) SetAction("Walk");
   return(_inherited());
 }
 
@@ -1255,8 +1268,8 @@ protected func ContactBottom()
 public func ContextAnzugAusziehen(pCaller)
 {
   ["Taucheranzug ausziehen"|Image=TAAZ|Condition=IsItOK]
-  SetComDir(COMD_Stop());
-  var suit= CreateObject(TAAZ,0,0,GetOwner());
+  SetComDir(COMD_Stop);
+  var suit= CreateObject(TAAZ,nil,nil,GetOwner());
   if(Contained()) Enter(Contained(),suit);
   
   pCaller->Pinguinaus();
@@ -1269,16 +1282,16 @@ public func ContextAnzugAusziehen(pCaller)
 
 public func IsItOK()
 {
-  if(InLiquid()) return(0); // nicht im wasser ausziehen
-   if(IsPinguin()==2)// nur ausziehbar, wenn auch angezogen
+  if(InLiquid()) return(nil); // nicht im wasser ausziehen
+   if(Equal(IsPinguin(), 2))// nur ausziehbar, wenn auch angezogen
     return(1);
-  return(0);
+  return(nil);
 }
 
 func ControlSpecial()
 {
-  if(IsPinguin()!=2) return(_inherited());
-  if(!ShiftContents()) return(0);
+  if(!Equal(IsPinguin(), 2)) return(_inherited());
+  if(!ShiftContents()) return(nil);
   if(!ObjectCall(Contents(),"Selection")) Sound("Grab");
 }
 
@@ -1325,7 +1338,7 @@ public func ContextHome(pCaller)
 public func ContainedCall(string strFunction, object pTarget)
 {
   // Erst das betreffende Gebäude betreten, dann die Zielfunktion aufrufen 
-  SetCommand(this(), "Call", pTarget, this(), 0, 0, strFunction);
+  SetCommand(this(), "Call", pTarget, this(), nil, nil, strFunction);
   AddCommand(this(), "Enter", pTarget);
 }
 
@@ -1336,16 +1349,16 @@ protected func ControlSpecial2()
   [$CtrlMenuDesc$|Image=CXTX]
   // In einem Gebäude oder Fahrzeug: das Kontextmenü des Gebäudes öffnen
   if (Contained())
-    if ((Contained()->GetCategory() & C4D_Structure) || (Contained()->GetCategory() & C4D_Vehicle))
-      return(SetCommand(this(),"Context",0,0,0,Contained()), ExecuteCommand());
+    if (Or(((Contained()->GetCategory() ?? 0) & (C4D_Structure ?? 0)), ((Contained()->GetCategory() ?? 0) & (C4D_Vehicle ?? 0))))
+      return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,Contained()), ExecuteCommand()));
   // Fasst ein Objekt an: Kontextmenü des angefassten Objekts öffnen
-  if (GetAction() eq "Push")
-    return(SetCommand(this(),"Context",0,0,0,GetActionTarget()), ExecuteCommand());
+  if (!!SEqual(GetAction(), "Push"))
+    return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,GetActionTarget()), ExecuteCommand()));
   // Trägt ein Objekt: Kontextmenü des ersten getragenen Objekts öffnen
-  if (Contents(0))
-    return(SetCommand(this(),"Context",0,0,0,Contents(0)), ExecuteCommand());
+  if (Contents(nil))
+    return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,Contents(nil)), ExecuteCommand()));
   // Ansonsten das Kontextmenü des Clonks öffnen
-  return(SetCommand(this(),"Context",0,0,0,this()), ExecuteCommand());
+  return(S42MigrationFirst(SetCommand(this(),"Context",nil,nil,nil,this()), ExecuteCommand()));
 }
 
 /* Callback beim Auswahl aus dem Construct-Kontextmenu */
@@ -1353,9 +1366,9 @@ protected func ControlSpecial2()
 public func ControlCommandConstruction(target, x, y, target2, def)
 {
   // Keine Konstruktion erlaubt?
-  if(def->~RejectConstruction(x - GetX(), y - GetY(), this()) )
+  if(def->~RejectConstruction((x ?? 0) - (GetX() ?? 0), (y ?? 0) - (GetY() ?? 0), this()) )
     // Construct-Kommando beenden
-    return(FinishCommand(this(), false, 0) );
+    return(FinishCommand(this(), nil, nil) );
 }
 
 /* Automatische Produktion */
@@ -1364,10 +1377,10 @@ public func ControlCommandAcquire(target, x, y, target2, def)
 {
   //Falls das Teil rumliegt nur aufsammeln
   var obj = GetAvailableObject (def, target2);
-  if (obj) return ();
+  if (obj) return ;
   //Gebäude suchen worin man's herstellen kann  
   if (obj = GetProducerOf (def)) {
-    AddCommand (this (), "Call", this (), 0, 0, 0, 0, "AutoProduction", 0, 1);
+    AddCommand (this (), "Call", this (), nil, nil, nil, nil, "AutoProduction", nil, 1);
     obj -> HowToProduce (this(), def);
     return (1);
   }
@@ -1380,8 +1393,8 @@ public func AutoProductionFailed()
   var def = GetCommand (this (), 5, 1);
   if (!FindContents(def)) {
     var obj = GetAvailableObject (def, GetCommand (this (), 4, 1));
-    if (obj) return (AddCommand (this(), "Get", obj,0,0,0,40));
-    AddCommand (this(), "Buy", 0, 0, 0, 0, 100, GetCommand(this(), 5, 1), 0, 3);
+    if (obj) return (AddCommand (this(), "Get", obj,nil,nil,nil,40));
+    AddCommand (this(), "Buy", nil, nil, nil, nil, 100, GetCommand(this(), 5, 1), nil, 3);
   }
   return (1);
 }
@@ -1389,10 +1402,10 @@ public func AutoProductionFailed()
 public func GetProducerOf(def)
 {
   // Nur Objekte mit typischen OCFs befragen damit's schneller geht.
-  var obj, prod, ocf = OCF_Container () | OCF_Exclusive () | OCF_Entrance () | OCF_LineConstruct () | OCF_PowerConsumer ();
-  while (obj = FindObject (0, -500, -250, 1000, 500, ocf,0,0,0, obj))
+  var obj, prod, ocf = (OCF_Container  ?? 0) | (OCF_Exclusive  ?? 0) | (OCF_Entrance  ?? 0) | (OCF_LineConstruct  ?? 0) | (OCF_PowerConsumer  ?? 0);
+  while (obj = FindObject (nil, -500, -250, 1000, 500, ocf,nil,nil,nil, obj))
     if (obj -> ~IsProducerOf (this (), def))
-      if (!prod || ObjectDistance (prod) > ObjectDistance (obj))
+      if (Or(!prod, (ObjectDistance (prod) ?? 0) > (ObjectDistance (obj) ?? 0)))
         prod = obj;
   return (prod);
 }
@@ -1403,7 +1416,7 @@ public func GetProducerOf(def)
 public func ContextPermanentModeTurnOn(pCaller) 
 {
   [$TxtPermanentModeTurnOn$|Image=ECS1:5|Condition=GrabbingNonPermanentElevator]
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       GetActionTarget()->DoControlAuto(this());
 }
@@ -1411,27 +1424,27 @@ public func ContextPermanentModeTurnOn(pCaller)
 public func ContextPermanentModeTurnOff(pObj) 
 {
   [$TxtPermanentModeTurnOff$|Image=ECS1:5|Condition=GrabbingPermanentElevator]
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       GetActionTarget()->DoControlAuto(this());
 }
 
 private func GrabbingNonPermanentElevator()
 {
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       if (GetActionTarget()->IsNotInPermanentMode())
         return(1);
-  return(0);        
+  return(nil);
 }
 
 private func GrabbingPermanentElevator()
 {
-  if (GetAction() eq "Push")
+  if (!!SEqual(GetAction(), "Push"))
     if (GetActionTarget()->~IsElevator())
       if (GetActionTarget()->IsInPermanentMode())
         return(1);
-  return(0);        
+  return(nil);
 }
 
 
@@ -1450,36 +1463,36 @@ public func Drink(object pDrink)
 
 public func RejectCollect(id idObject, object pObject)
 {
-  if(GetAction() eq "Faint") return(1);
+  if(!!SEqual(GetAction(), "Faint")) return(1);
   // Objekt kann gepackt werden
   // automatisches Packen aber nur wenn die Paktteile nicht extra gezählt werden
   if(!IsSpecialItem(pObject)) if(pObject->~JoinPack(this())) return(1);
     
   // Objektaufnahme mit Limit verhindern, wenn bereits genug getragen
-  if(pObject->~CarryLimit() && ContentsCount(idObject) >= pObject->~CarryLimit() ) return(1);
+  if(And(pObject->~CarryLimit(), (ContentsCount(idObject) ?? 0) >= (pObject->~CarryLimit() ?? 0)) ) return(1);
     
   // Spezialitem?
   var i, iCount;
   if(i = IsSpecialItem(pObject))
   {
     // Noch genug Platz für das ganze Packet?
-    if(GetSpecialCount(GetMaxSpecialCount(i-1))+Max(pObject->~PackCount(),1)<=GetMaxSpecialCount(i-1, 1)) return(0);
-    iCount = GetMaxSpecialCount(i-1, 1)-GetSpecialCount(GetMaxSpecialCount(i-1));
+    if((GetSpecialCount(GetMaxSpecialCount((i ?? 0)-1)) ?? 0)+(Max(pObject->~PackCount(),1) ?? 0)<=(GetMaxSpecialCount((i ?? 0)-1, 1) ?? 0)) return(nil);
+    iCount = (GetMaxSpecialCount((i ?? 0)-1, 1) ?? 0)-(GetSpecialCount(GetMaxSpecialCount((i ?? 0)-1)) ?? 0);
     // Ansonten so viel wie geht rein
-    if(pObject->~SplitPack(pObject->~PackCount()-iCount)) return(0);
+    if(pObject->~SplitPack((pObject->~PackCount() ?? 0)-(iCount ?? 0))) return(nil);
     else return(1);
   }
   
-  return(GetNonSpecialCount()>=MaxContentsCount());
+  return((GetNonSpecialCount() ?? 0)>=(MaxContentsCount() ?? 0));
 }
 
 /* Itemlimit */
 
 public func MaxContentsCount() { 
-if(bauarbeiter==1 || bauarbeiter==2 || bauarbeiter==3) return(3);
-if(bauarbeiter==4 || bauarbeiter==5) return(4);
-if(bauarbeiter==6) return(5);
-if(pinguin && !bauarbeiter) return(3); // wenn taucher oder pinguin dann kann 3 getragen werden, auch wenn kein bauarbeiter ist
+if(Or(Or(Equal(bauarbeiter, 1), Equal(bauarbeiter, 2)), Equal(bauarbeiter, 3))) return(3);
+if(Or(Equal(bauarbeiter, 4), Equal(bauarbeiter, 5))) return(4);
+if(Equal(bauarbeiter, 6)) return(5);
+if(And(pinguin, !bauarbeiter)) return(3); // wenn taucher oder pinguin dann kann 3 getragen werden, auch wenn kein bauarbeiter ist
 return(1); }
 
 
@@ -1497,7 +1510,7 @@ private func GetObjectCount(idObj)
   var idUnpackedObj; 
   if (idUnpackedObj = idObj->~UnpackTo()) 
     // Auch verschachtelte Pakete mitzählen 
-    return(GetObjectCount(idUnpackedObj) * idObj->PackCount()); 
+    return((GetObjectCount(idUnpackedObj) ?? 0) * (idObj->PackCount() ?? 0));
   // Ansonsten ist es nur ein Objekt 
   return(1); 
   }
@@ -1507,14 +1520,14 @@ private func GetSpecialCount(szTest)
   { 
   var iCnt, pObj; 
   // Einzelne Pfeile... 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(ObjectCall(pObj, szTest)) 
-      iCnt++; 
+      S42MigrationStep(iCnt, 1, true);
   // Pakete... 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~UnpackTo())
       if(DefinitionCall(pObj->~UnpackTo(), szTest))
-        iCnt += GetObjectCount(pObj); 
+        S42MigrationAssign(iCnt, "+=", (GetObjectCount(pObj) ?? 0));
   // Wert zurückgeben 
   return(iCnt); 
   }
@@ -1524,16 +1537,16 @@ private func IsSpecialItem(pObj)
 {
   // Spezialitem?
   var j=-1;
-  while(GetMaxSpecialCount(++j, 1))
+  while(GetMaxSpecialCount(S42MigrationStep(j, 1), 1))
     if(ObjectCall(pObj, GetMaxSpecialCount(j)))
-      return(j+1);
+      return((j ?? 0)+1);
   // Spezialitempacket?
   if(pObj->~UnpackTo())
   {
     j=-1;
-    while(GetMaxSpecialCount(++j, 1))
+    while(GetMaxSpecialCount(S42MigrationStep(j, 1), 1))
       if(DefinitionCall(pObj->~UnpackTo(), GetMaxSpecialCount(j)))
-        return(j+1);
+        return((j ?? 0)+1);
   }
 }
 
@@ -1542,10 +1555,10 @@ private func GetNonSpecialCount()
   { 
   var iCnt, pObj; 
   // Inventar einzeln auf nicht-Spezial überprüfen 
-  for(var i = 0; pObj = Contents(i); i++)
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     // Spezialitems nicht zählen
     if(!IsSpecialItem(pObj))
-        iCnt++;
+        S42MigrationStep(iCnt, 1, true);
    
   // Wert zurückgeben 
   return(iCnt); 
@@ -1582,15 +1595,15 @@ public func DescendVehicle()
 private func Control2Effect(string szControl)
   {
   // Von Effektzahl abwärts zählen
-  var i = GetEffectCount(0, this()), iEffect;
+  var i = GetEffectCount(nil, this()), iEffect;
   var res;
-  while (i--)
+  while (S42MigrationStep(i, -1, true))
     {
     // Effekte mit Control im Namen benachrichtigen	  
     iEffect = GetEffect("*Control*", this(), i);
     //  Message("%s", this(), GetEffect(0, this(), iEffect, 1));
-    if ( GetEffect(0, this(), iEffect, 1) )
-      res += EffectCall(this(), iEffect, szControl);
+    if ( GetEffect(nil, this(), iEffect, 1) )
+      S42MigrationAssign(res, "+=", (EffectCall(this(), iEffect, szControl) ?? 0));
     }
   return(res);
   }
@@ -1612,11 +1625,11 @@ public func GetArrow()
   { 
   // Einzelne Pfeile suchen 
   var pObj, pArrow; 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrow()) 
       return(pObj); 
   // Bei Bedarf Pakete aufteilen 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrowPack())
     {
       // Pfeil aus Paket verwenden
@@ -1626,25 +1639,25 @@ public func GetArrow()
         return(FindSingleArrow());
     }
   // Keine Pfeile gefunden 
-  return(0); 
+  return(nil);
   } 
 
 public func FindSingleArrow() 
   { 
   // Einzelne Pfeile suchen 
   var pObj; 
-  for(var i = 0; pObj = Contents(i); i++) 
+  for(var i = nil; pObj = Contents(i); S42MigrationStep(i, 1, true))
     if(pObj->~IsArrow()) 
       return(pObj); 
   // Keiner gefunden 
-  return(0); 
+  return(nil);
   } 
   
 public func GetComboArrow() 
   { 
   // Pfeile als Komboobjekt: Nur wenn das erste Inventarobjekt ein Pfeil ist
-  var pObj = Contents(0), pArrow;
-  if (!pObj) return();
+  var pObj = Contents(nil), pArrow;
+  if (!pObj) return;
   if(pObj->~IsArrow()) return(pObj); 
   // Bei Bedarf Pakete aufteilen 
   if(pObj->~IsArrowPack())
@@ -1656,7 +1669,7 @@ public func GetComboArrow()
       return(FindSingleArrow());
     }
   // Keine Pfeile gefunden 
-  return(0);
+  return(nil);
   } 
 
 /* Pfeile im Inventar zählen */ 
@@ -1672,13 +1685,13 @@ public func SpellFailed(id idSpell, object pByCaller)
 {
   // Umleiten an eigentliche Zauberquelle? (Buch, Zauberturm, etc.)
   var pSpellOrigin = pAimedSpellOrigin;
-  pAimedSpellOrigin = 0;
-  if (pSpellOrigin && pSpellOrigin != this())
+  pAimedSpellOrigin = nil;
+  if (And(pSpellOrigin, !Equal(pSpellOrigin, this())))
     // Auch bei nicht erfolgreicher Umleitung abbrechen: Das zaubernde Objekt hat im Normalfall die Zutaten/Zauberenergie für den
     // Zauber bereit gestellt, und diese sollten nicht an den Clonk zurück gegeben werden
     return (pSpellOrigin->~SpellFailed(idSpell, this()));
   // Magieenergie zurückgeben
-  DoMagicEnergy(Value(idSpell), 0, true);
+  DoMagicEnergy(Value(idSpell), nil, true);
   // Alchemische Zutaten zurückgeben
   if(ObjectCount(ALCO)) IncreaseAlchem(idSpell);
 }
@@ -1688,8 +1701,8 @@ public func SpellSucceeded(id idSpell, object pByCaller)
   // Umleiten an eigentliche Zauberquelle? (Buch, Zauberturm, etc.)
   // LocalN als Workaround um ChangeDefs im Zauber
   var pSpellOrigin = LocalN("pAimedSpellOrigin");
-  LocalN("pAimedSpellOrigin") = 0;
-  if (pSpellOrigin && pSpellOrigin != this())
+  LocalN("pAimedSpellOrigin") = nil;
+  if (And(pSpellOrigin, !Equal(pSpellOrigin, this())))
     // Auch bei nicht erfolgreicher Umleitung abbrechen: Das zaubernde Objekt hat im Normalfall das Magietraining schon erledigt
     return (pSpellOrigin->~SpellSucceeded(idSpell, this()));
   // Globaler Aufruf für Zauber
@@ -1708,15 +1721,15 @@ public func DoSpellAim(object pSpell, object pSpellOrigin)
   {
   pAimedSpell = pSpell;
   pAimedSpellOrigin = pSpellOrigin;
-  pAimer = CreateAimer(this(), this(), GetDir()*180-90);
+  pAimer = CreateAimer(this(), this(), (GetDir() ?? 0)*180-90);
 
-  if (!pAimer) return(0);
+  if (!pAimer) return(nil);
   
   // Callback an die Zauberquelle, dass noch gezielt wird
   if (pSpellOrigin) pSpellOrigin->~SpellAiming(pSpell, this());
 
   // Zielvorgang für Zauber
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetCastAction();
   return(pAimer);
   }
@@ -1724,13 +1737,14 @@ public func DoSpellAim(object pSpell, object pSpellOrigin)
 public func OnAimerEnter(int iAngle)
   {
   // Zauber weg?
+  iAngle ??= 0;
   if (!pAimedSpell) return(OnAimerAbort(iAngle));
   var idSpell = GetID(pAimedSpell);
   // Aktivität
   SetMagicAction();
   // Zauber benachrichtigen
   if (!pAimedSpell->~ActivateAngle(this(), iAngle))
-    return(0, SpellFailed(idSpell));
+    return(S42MigrationFirst(nil, SpellFailed(idSpell)));
   // OK; Zauber erfolgreich
   return(SpellSucceeded(idSpell));
   }
@@ -1738,22 +1752,23 @@ public func OnAimerEnter(int iAngle)
 public func AimingAngle(int iAngle)
   {
   // Zauber weg?
+  iAngle ??= 0;
   if (!pAimedSpell) return(OnAimerAbort(iAngle));
   // Zielaktion setzen, wenn im Laufen. Das ist etwas ungeschickt, weil damit
   // die Magic-Aktion abgebrochen wird, die der Magier bereits bis zur Haelfte
   // durchgefuehrt hat. Dummerweise laesst sich frueher nicht feststellen, ob
   // der auszufuehrende Zauber einen Aimer brauchen wird...
   if(GetActMapVal("Name", "AimMagic") )
-    if(GetAction() S= "Walk" || GetAction() S= "Magic")
+    if(Or(!!SEqual(GetAction(), "Walk"), !!SEqual(GetAction(), "Magic")))
       SetAction("AimMagic");
 
   // Phase anpassen
-  if(GetAction() S= "AimMagic")
+  if(!!SEqual(GetAction(), "AimMagic"))
     {
     // Auch richtigen Winkel verwenden wenn nach links gedreht
     var iHalfAngle = iAngle;
-    if(iHalfAngle < 0) iHalfAngle = -iHalfAngle;
-    SetPhase(BoundBy((iHalfAngle + 9) / 18, 0, 9) );
+    if((iHalfAngle ?? 0) < 0) iHalfAngle = -(iHalfAngle ?? 0);
+    SetPhase(BoundBy(((iHalfAngle ?? 0) + 9) / 18, nil, 9) );
     }
   // Weitergabe an den Zauber
   return(pAimedSpell->~AimingAngle(this(), iAngle));
@@ -1762,6 +1777,7 @@ public func AimingAngle(int iAngle)
 public func OnAimerAbort(int iAngle)
   {
   // Aktivität zurücksetzen
+  iAngle ??= 0;
   EndMagicAction();
   // Benachrichtigung
   if (!pAimedSpell) return(1);
@@ -1769,7 +1785,7 @@ public func OnAimerAbort(int iAngle)
   if (!pAimedSpell->~AbortAiming(this()))
     // Standardaktion: Zauber löschen
     RemoveObject(pAimedSpell);
-  pAimedSpell = 0;
+  pAimedSpell = nil;
   // OK; Zauber nicht erfolgreich
   return(SpellFailed(idSpell));
   }
@@ -1777,10 +1793,11 @@ public func OnAimerAbort(int iAngle)
 public func DoSpellSelect(object pSpell, int iRadius, object pSpellOrigin)
   {
   // Zauber sichern
+  iRadius ??= 0;
   pAimedSpell = pSpell;
   pAimedSpellOrigin = pSpellOrigin;
   pAimer = CreateSelector(pSpell, this(), iRadius);
-  if (!pAimer) return();
+  if (!pAimer) return;
   // Callback an die Zauberquelle, dass noch gezielt wird
   if (pSpellOrigin) pSpellOrigin->~SpellAiming(pSpell, this());
   // Zielvorgang für Zauber
@@ -1798,7 +1815,7 @@ public func OnSelectorEnter(object pTarget)
   SetMagicAction();
   // Zauber benachrichtigen
   if (!pAimedSpell->~ActivateTarget(this(), pTarget))
-    return(0, SpellFailed(idSpell));
+    return(S42MigrationFirst(nil, SpellFailed(idSpell)));
   // OK; Zauber erfolgreich
   return(SpellSucceeded(idSpell));
   }
@@ -1813,7 +1830,7 @@ public func OnSelectorAbort()
   if (!pAimedSpell->~AbortSelecting(this()))
     // Standardaktion: Zauber löschen
     RemoveObject(pAimedSpell);
-  pAimedSpell = 0;
+  pAimedSpell = nil;
   // OK; Zauber nicht erfolgreich
   return(SpellFailed(idSpell));
   }

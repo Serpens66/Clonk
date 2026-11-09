@@ -1,6 +1,6 @@
 /*-- Revolverschuss --*/
 
-#strict
+#strict 3
 
 local speed, ypos, alpha;
 
@@ -12,11 +12,11 @@ public func Launch(direction, bigshot)
   if (bigshot) SetAction("BigShot");
           else SetAction("SmallShot");
   SetPhase(Random(7));
-  alpha = 0;
+  alpha = nil;
   ypos = GetY();
   // Richtung setzen
   SetDir(direction);
-  if (direction == DIR_Left()) speed = -120;
+  if (Equal(direction, DIR_Left)) speed = -120;
                           else speed = +120;
 }
 
@@ -27,19 +27,19 @@ private func Travel()
 {
   // Treffer-Überprüfung
   var target;
-  if (target = FindObject(0,-5,-5,11,11, OCF_Alive(),0,0,NoContainer()))
+  if (target = FindObject(nil,-5,-5,11,11, OCF_Alive,nil,nil,NoContainer()))
     return(HitObject(target));
-  if (target = FindObject(0,1,0,0,0, OCF_Alive(),0,0,NoContainer()))
+  if (target = FindObject(nil,1,nil,nil,nil, OCF_Alive,nil,nil,NoContainer()))
     return(HitObject(target));
   // Bewegung
   SetXDir(speed);
-  SetYDir(0);
+  SetYDir(nil);
   SetPosition(GetX(),ypos);
   // ausblenden
-  if (GetActTime() > 20)
+  if ((GetActTime() ?? 0) > 20)
   {
-    alpha += 15;
-    if (alpha >= 255)
+    S42MigrationAssign(alpha, "+=", 15);
+    if ((alpha ?? 0) >= 255)
       return(RemoveObject());
     SetClrModulation(RGBa(255,255,255,alpha));
   }
@@ -51,18 +51,18 @@ private func Travel()
 protected func HitObject(target)
 {
   Sound("ProjectileHit*");
-  var dmg = 3 + Random(3);
-  if (GetAction() eq "BigShot")
-    dmg = 10 + Random(6);
-  DoEnergy(-dmg, target);
-  DoDamage(+dmg, target);
-  SetXDir(GetXDir(target) + speed/4, target);
+  var dmg = 3 + (Random(3) ?? 0);
+  if (!!SEqual(GetAction(), "BigShot"))
+    dmg = 10 + (Random(6) ?? 0);
+  DoEnergy(-(dmg ?? 0), target);
+  DoDamage(+(dmg ?? 0), target);
+  SetXDir((GetXDir(target) ?? 0) + (speed ?? 0)/4, target);
   RemoveObject();
 }
 
 protected func Hit()
 {
-  if (GetAction() eq "BigShot") Explode(5);
+  if (!!SEqual(GetAction(), "BigShot")) Explode(5);
                            else RemoveObject();
 }
 

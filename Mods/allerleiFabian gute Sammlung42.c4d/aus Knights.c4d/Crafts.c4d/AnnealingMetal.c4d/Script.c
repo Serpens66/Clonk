@@ -1,6 +1,6 @@
 /*-- Glühendes Metall --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -12,11 +12,11 @@ private func GlowingProcess()
   // Effekte
   if (!Contained()) 
   {
-    Smoke(0, 0, 1);
-    CastParticles("PxSpark", 3, 10, 0, 0, 15, 30, RGB(255,223,127), RGB(255,223,127));
+    Smoke(nil, nil, 1);
+    CastParticles("PxSpark", 3, 10, nil, nil, 15, 30, RGB(255,223,127), RGB(255,223,127));
   }
   // Abkühlung
-  if (GetActTime() > 2500) 
+  if ((GetActTime() ?? 0) > 2500)
     CoolConvert();
 }
 

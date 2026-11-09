@@ -1,6 +1,6 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 
 local hatch;
 
@@ -15,8 +15,8 @@ private func HatchID() { return(BSO1); }
 
 protected func Damage(iChange, iByPlayer)
 {
-  if(GetID() != BasementID() ) return(_inherited(iChange, iByPlayer) );
-  if(GetDamage() < BasementDamage() ) return(_inherited(iChange, iByPlayer) );
+  if(!Equal(GetID(), BasementID()) ) return(_inherited(iChange, iByPlayer) );
+  if((GetDamage() ?? 0) < (BasementDamage() ?? 0) ) return(_inherited(iChange, iByPlayer) );
 
 //  CastObjects(ROCK,4,15,0,-5);   //Unzerstörbar
 //  RemoveObject();
@@ -29,7 +29,7 @@ protected func Damage(iChange, iByPlayer)
 public func ChangeToHatch(object pHatch)
 {
   // Kein entsprechendes Bodenklappe-Fundament? Geht hier nicht.
-  if(!HatchID() ) return(0);
+  if(!HatchID() ) return(nil);
   // Bodenklappe speichern
   hatch = pHatch;
   // Umwandeln

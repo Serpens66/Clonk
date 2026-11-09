@@ -1,5 +1,5 @@
 /* Vulkan */
-#strict
+#strict 3
 
 local iWidth,iMat, iXDir;
 local iStrength, iLiveTime;
@@ -8,7 +8,7 @@ local OldX, OldY;
 /* Ausbruch */ 
 
 func Advance() {
-  var obj, advancex=Random(11)-5+iXDir, advancey=Random(8)-12;
+  var obj, advancex=(Random(11) ?? 0)-5+(iXDir ?? 0), advancey=(Random(8) ?? 0)-12;
 	var xdir, ydir;
 	// Verzweigungen
 	if(!Random(30)) Branch();
@@ -17,32 +17,32 @@ func Advance() {
 		SetAction("Discharge");
 		/*for(var i=0; i<Max(3,iWidth/3); i++) 
 		  CreateParticle("LavaGlow",GetX()-iWidth/2+Random(iWidth),GetY()+5-Random(20),0,0,100+Random(50+2*iWidth),RGBa(255,255,255,50));*/
-			xdir=30-Random(60);
-			ydir=-20-Random(50)-iWidth/2;
+			xdir=30-(Random(60) ?? 0);
+			ydir=-20-(Random(50) ?? 0)-(iWidth ?? 0)/2;
 	} else {
-		xdir=(GetX()-OldX)*10;
-		ydir=(GetY()-OldY)*10;
+		xdir=((GetX() ?? 0)-(OldX ?? 0))*10;
+		ydir=((GetY() ?? 0)-(OldY ?? 0))*10;
 	}
 	// Objekte mitschleudern
-	while(obj=FindObject(0,Max(OldX,GetX())-Min(OldX,GetX())-iWidth/2,0,iWidth+Abs(OldX-GetX()),OldY-GetY(),OCF_Collectible(),0,0,0,obj)) {
+	while(obj=FindObject(nil,(Max(OldX,GetX()) ?? 0)-(Min(OldX,GetX()) ?? 0)-(iWidth ?? 0)/2,nil,(iWidth ?? 0)+(Abs((OldX ?? 0)-(GetX() ?? 0)) ?? 0),(OldY ?? 0)-(GetY() ?? 0),OCF_Collectible,nil,nil,nil,obj)) {
 		SetYDir(ydir, obj);
 	  SetXDir(xdir, obj);
 	}
 	
   OldX=GetX();
   OldY=GetY();
-  SetPosition(GetX()+advancex,GetY()+advancey);
-	if(iWidth>5) 
+  SetPosition((GetX() ?? 0)+(advancex ?? 0),(GetY() ?? 0)+(advancey ?? 0));
+	if((iWidth ?? 0)>5)
 		if(!Random(3)) Sound("Lava*");
 	
-	if(iWidth>10) {
+	if((iWidth ?? 0)>10) {
 		//CreateParticle("LavaGlow",-iWidth/2+Random(iWidth),+5-Random(20),0,0,100+Random(50+2*iWidth),RGBa(255,255,255,50));
-		if(!Random(10)) ShakeViewPort(10+Random(iWidth),this());
+		if(!Random(10)) ShakeViewPort(10+(Random(iWidth) ?? 0),this());
 	}
   DrawLine(OldX,OldY,GetX(),GetY());
   DrawMaterialQuad(Format("%s-Flat",MaterialName(iMat)),
-    GetX()-iWidth/2, GetY(),GetX()+iWidth/2, GetY(),
-    OldX+iWidth/2,OldY,OldX-iWidth/2,OldY,1);
+    (GetX() ?? 0)-(iWidth ?? 0)/2, GetY(),(GetX() ?? 0)+(iWidth ?? 0)/2, GetY(),
+    (OldX ?? 0)+(iWidth ?? 0)/2,OldY,(OldX ?? 0)-(iWidth ?? 0)/2,OldY,1);
 	
   if(!InBounds()) return(Remove());
   DecreaseSize();
@@ -54,38 +54,38 @@ func DrawLine(x1, y1, x2, y2) {
   var colr, coll,x,y, i,dist=Distance(x1,y1,x2,y2);
 	var wdt, max=90; // max. Ankokelung
   i=dist;
-  while(i>=0) {
-    x=x2+((x1-x2)*i)/dist-GetX();
-    y=y2+((y1-y2)*i)/dist-GetY();
-    if(GBackSolid(x+iWidth/2+2,y)) {
-			wdt=Min(1+iWidth,3+Random(4));
-			colr=GetMaterialColorX(GetMaterial(x+iWidth/2+2,y),0);
-			DrawXGradient(x+iWidth/2,y,colr,wdt,max,1);
+  while((i ?? 0)>=0) {
+    x=(x2 ?? 0)+(((x1 ?? 0)-(x2 ?? 0))*(i ?? 0))/(dist ?? 0)-(GetX() ?? 0);
+    y=(y2 ?? 0)+(((y1 ?? 0)-(y2 ?? 0))*(i ?? 0))/(dist ?? 0)-(GetY() ?? 0);
+    if(GBackSolid((x ?? 0)+(iWidth ?? 0)/2+2,y)) {
+			wdt=Min(1+(iWidth ?? 0),3+(Random(4) ?? 0));
+			colr=GetMaterialColorX(GetMaterial((x ?? 0)+(iWidth ?? 0)/2+2,y),nil);
+			DrawXGradient((x ?? 0)+(iWidth ?? 0)/2,y,colr,wdt,max,1);
     }
-    if(GBackSolid(x-iWidth/2-2,y)) {
-			wdt=Min(1+iWidth,3+Random(4));
-			coll=GetMaterialColorX(GetMaterial(x-iWidth/2-2,y),0);
-			DrawXGradient(x-iWidth/2,y,coll,wdt,max,0);
+    if(GBackSolid((x ?? 0)-(iWidth ?? 0)/2-2,y)) {
+			wdt=Min(1+(iWidth ?? 0),3+(Random(4) ?? 0));
+			coll=GetMaterialColorX(GetMaterial((x ?? 0)-(iWidth ?? 0)/2-2,y),nil);
+			DrawXGradient((x ?? 0)-(iWidth ?? 0)/2,y,coll,wdt,max,nil);
     }
-    i--;
+    S42MigrationStep(i, -1, true);
   }
 }
 
 func DrawXGradient(x, y, col, wdt, max, dir) {
-	dir=-1+2*dir;
-	var fact=max/wdt;
-	for(var i=1; i<=wdt; i++) SetLandscapePixel(x+i*dir,y,DarkenRGB(max-i*fact,col));
+	dir=-1+2*(dir ?? 0);
+	var fact=(max ?? 0)/(wdt ?? 0);
+	for(var i=1; (i ?? 0)<=(wdt ?? 0); S42MigrationStep(i, 1, true)) SetLandscapePixel((x ?? 0)+(i ?? 0)*(dir ?? 0),y,DarkenRGB((max ?? 0)-(i ?? 0)*(fact ?? 0),col));
 }
 
 func DarkenRGB(amm,val) {
-  return(LightenRGB(-amm,val));
+  return(LightenRGB(-(amm ?? 0),val));
 }
 
 func LightenRGB(amm, val) {
   var red=GetRGBValue(val, 1), green=GetRGBValue(val,2),blue=GetRGBValue(val,3);
-  val=SetRGBaValue(val,BoundBy(red+(amm*red)/100,0,255),1);
-  val=SetRGBaValue(val,BoundBy(green+(amm*green)/100,0,255),2);
-  val=SetRGBaValue(val,BoundBy(blue+(amm*blue)/100,0,255),3);
+  val=SetRGBaValue(val,BoundBy((red ?? 0)+((amm ?? 0)*(red ?? 0))/100,nil,255),1);
+  val=SetRGBaValue(val,BoundBy((green ?? 0)+((amm ?? 0)*(green ?? 0))/100,nil,255),2);
+  val=SetRGBaValue(val,BoundBy((blue ?? 0)+((amm ?? 0)*(blue ?? 0))/100,nil,255),3);
   return(val);
 }
 
@@ -94,37 +94,37 @@ func LightenRGB(amm, val) {
 func CastLava() {
   // Hoehle die sich mit Lava vollfuellt?
   if(InGround()) {
-    iLiveTime-=GetActTime();
+    S42MigrationAssign(iLiveTime, "-=", (GetActTime() ?? 0));
     return(SetAction("Advance"));
   }
   // Vulkane lassen alle Fl¸ssigkeiten verdampfen
-  if(GBackLiquid(0,-2) && GetMaterial(0,-2)!=Material("Lava") && GetMaterial(0,-2)!=Material("DuroLava")) 
-   for(var i; i<5; i++) ExtractLiquid(0,-2);
+  if(And(And(GBackLiquid(nil,-2), !Equal(GetMaterial(nil,-2), Material("Lava"))), !Equal(GetMaterial(nil,-2), Material("DuroLava"))))
+   for(var i; (i ?? 0)<5; S42MigrationStep(i, 1, true)) ExtractLiquid(nil,-2);
   // dicke Rauchschwaden
-  for(var i=1+Random(3); i>=0; i--) {
-		Smoke(-iWidth / 2 + Random(iWidth), +15, 10 + Random(iWidth / 2), HSL2RGB(RGB(38, 200, 100))); 
+  for(var i=1+(Random(3) ?? 0); (i ?? 0)>=0; S42MigrationStep(i, -1, true)) {
+		Smoke(-(iWidth ?? 0) / 2 + (Random(iWidth) ?? 0), +15, 10 + (Random((iWidth ?? 0) / 2) ?? 0), HSL2RGB(RGB(38, 200, 100)));
 		//if(!Random(3)) Smoke(-iWidth/2+Random(iWidth), +15, 3+Random(4),HSL2RGB(RGB(38,200+Random(55),100))); 
 	}
   // ggf. hoeher casten
-  while(GBackSolid(0,0) && GetY()) SetPosition(GetX(),GetY()-1);
+  while(And(GBackSolid(nil,nil), GetY())) SetPosition(GetX(),(GetY() ?? 0)-1);
   // rausrinnen
-  for(var i=3+Random(5); i>0; i--) InsertMaterial(iMat,0,0);
+  for(var i=3+(Random(5) ?? 0); (i ?? 0)>0; S42MigrationStep(i, -1, true)) InsertMaterial(iMat,nil,nil);
   // rumspritzen
   if (!Random(2))
   {
   	var y_diff;
-  	while(GetMaterial(0,y_diff)==iMat) y_diff--;
-  	CastPXSX(MaterialName(iMat), Max(iWidth/2,5), Max(50, iWidth) + Random(50), -iWidth/2 + Random(iWidth), y_diff - 1, 270 + 10 - Random(21), 20 + Random(30));
+        while(Equal(GetMaterial(nil,y_diff), iMat)) S42MigrationStep(y_diff, -1, true);
+        CastPXSX(MaterialName(iMat), Max((iWidth ?? 0)/2,5), (Max(50, iWidth) ?? 0) + (Random(50) ?? 0), -(iWidth ?? 0)/2 + (Random(iWidth) ?? 0), (y_diff ?? 0) - 1, 270 + 10 - (Random(21) ?? 0), 20 + (Random(30) ?? 0));
   }  
   // mit Lavaklumpen um sich werfen
-  if(MaterialName(iMat)S="Lava" || MaterialName(iMat)S="DuroLava")
-    if(iWidth>10)
+  if(Or(!!SEqual(MaterialName(iMat), "Lava"), !!SEqual(MaterialName(iMat), "DuroLava")))
+    if((iWidth ?? 0)>10)
       if(!Random(5)) {
-        CastObjectsX(LAVA,1,Max(40,iWidth)+Random(30),-iWidth/2+Random(iWidth),0,270,50,"LavaCast");
+        CastObjectsX(LAVA,1,(Max(40,iWidth) ?? 0)+(Random(30) ?? 0),-(iWidth ?? 0)/2+(Random(iWidth) ?? 0),nil,270,50,"LavaCast");
 				Sound("Discharge");
-				if(!Random(5))	ShakeViewPort(10+Random(20)+Random(iWidth),this());
+				if(!Random(5))	ShakeViewPort(10+(Random(20) ?? 0)+(Random(iWidth) ?? 0),this());
       }
-  if(GetActTime()>iLiveTime) {
+  if((GetActTime() ?? 0)>(iLiveTime ?? 0)) {
     //Log("my time is running out aarrgh...........*plop*");
     Remove(); 
   }
@@ -133,7 +133,7 @@ func CastLava() {
 /* Callback of CastObjectsX */
 func LavaCast(obj) {
   LocalN("mat",obj)=MaterialName(iMat);
-  DoCon(-50+Random(5*iWidth)+iWidth/2,obj);
+  DoCon(-50+(Random(5*(iWidth ?? 0)) ?? 0)+(iWidth ?? 0)/2,obj);
 }
 
 /* Aktivierung des Vulkans */
@@ -144,16 +144,16 @@ func Activate(iX,iY,iStr,iM,iXD,iTime) {
   iXDir=iXD;
 	SetPosition(iX,iY);
   if(iTime) iLiveTime=iTime;
-  else iLiveTime=200+2*iWidth;
+  else iLiveTime=200+2*(iWidth ?? 0);
   if(!InGround()) return(Remove());
   SetAction("Advance");
   if(!Random(5)) Sound(Format("%s*",MaterialName(iMat)));
   // unteres Ende abrunden
   DrawMaterialQuad(Format("%s-Flat",MaterialName(iMat)),
-    iX-iWidth/2,iY,
-    iX+iWidth/2,iY,
-    iX+Random(iWidth/2),iY+iWidth/4+Random(iWidth/4),
-    iX-Random(iWidth/2),iY+iWidth/4+Random(iWidth/4),
+    (iX ?? 0)-(iWidth ?? 0)/2,iY,
+    (iX ?? 0)+(iWidth ?? 0)/2,iY,
+    (iX ?? 0)+(Random((iWidth ?? 0)/2) ?? 0),(iY ?? 0)+(iWidth ?? 0)/4+(Random((iWidth ?? 0)/4) ?? 0),
+    (iX ?? 0)-(Random((iWidth ?? 0)/2) ?? 0),(iY ?? 0)+(iWidth ?? 0)/4+(Random((iWidth ?? 0)/4) ?? 0),
     1);
   return(1);
 }
@@ -161,20 +161,20 @@ func Activate(iX,iY,iStr,iM,iXD,iTime) {
 /* Vulkanader abspalten */
 
 private func Branch() {
-  var pVolcano=CreateObject(FXV1,0,0,-1);
+  var pVolcano=CreateObject(FXV1,nil,nil,-1);
   var iStr=Random(iWidth);
-  var iXDir=2+Random(4);
-  iXDir=(1-2*Random(2))*iXDir;
-  pVolcano->FXV1::Activate(-iWidth/2+GetX()+iStr/2,GetY(),iStr,iMat,iXDir);
+  var iXDir=2+(Random(4) ?? 0);
+  iXDir=(1-2*(Random(2) ?? 0))*(iXDir ?? 0);
+  pVolcano->FXV1::Activate(-(iWidth ?? 0)/2+(GetX() ?? 0)+(iStr ?? 0)/2,GetY(),iStr,iMat,iXDir);
   //SetVertex(iLastVertex,0,GetVertex(iLastVertex,0)+iStr/2);
-  iWidth-=iStr;
+  S42MigrationAssign(iWidth, "-=", (iStr ?? 0));
 }
 
 /* Vulkanader verkleinern */
 
 private func DecreaseSize() {
-  if(Random(5)) return();
-  if(--iWidth<=0) Remove();
+  if(Random(5)) return;
+  if(S42MigrationStep(iWidth, -1)<=0) Remove();
 }
 
 
@@ -182,18 +182,18 @@ private func DecreaseSize() {
 
 private func InGround() {
   // letzter Vertex in festem Material -> im Untergrund
-  if (GBackSolid(0,-8)) return(1);
+  if (GBackSolid(nil,-8)) return(1);
   // letzter Vertex im Material was gecastet wird -> im Untergrund
-  if (GetMaterial(0,-8) == iMat || (iMat==Material("Lava") && GetMaterial(0,-8)==Material("DuroLava"))) return(1);
+  if (Or(Equal(GetMaterial(nil,-8), iMat), (And(Equal(iMat, Material("Lava")), Equal(GetMaterial(nil,-8), Material("DuroLava")))))) return(1);
   // ansonsten nicht im Untergrund
-  return(0);
+  return(nil);
 }
 
 private func InBounds() {
   // auﬂerhalb der Landschaft
-  if(GetX()+iWidth/2<0) return(0);
-  if(GetX()-iWidth/2>LandscapeWidth()) return(0);
-  if (!Inside(GetY(),0,LandscapeHeight())) return(0);
+  if((GetX() ?? 0)+(iWidth ?? 0)/2<0) return(nil);
+  if((GetX() ?? 0)-(iWidth ?? 0)/2>(LandscapeWidth() ?? 0)) return(nil);
+  if (!Inside(GetY(),nil,LandscapeHeight())) return(nil);
   // nicht auﬂerhalb der Landschaft
   return(1);
 }

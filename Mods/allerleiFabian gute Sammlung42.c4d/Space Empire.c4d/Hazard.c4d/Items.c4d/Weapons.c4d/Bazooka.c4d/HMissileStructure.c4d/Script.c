@@ -1,6 +1,6 @@
 /* Rakete */
 
-#strict
+#strict 3
 #include MIS_
 
 local pTarget;
@@ -18,7 +18,7 @@ public func MaxHomingAngle() { return(60); }
 private func Traveling()
 {
   // kommt nich weiter
-  if(GetActTime() >= MaxTime()) return(Hit());
+  if((GetActTime() ?? 0) >= (MaxTime() ?? 0)) return(Hit());
 
   // Effekte
   Smoking();
@@ -27,7 +27,7 @@ private func Traveling()
   Accelerate();
 
   // nur lenken wenn schon etwas fliegend
-  if(GetActTime() < HomingBegin()) return();
+  if((GetActTime() ?? 0) < (HomingBegin() ?? 0)) return;
 
   // lenken
   if(pTarget) FollowTarget();
@@ -43,8 +43,8 @@ private func FindTarget() {
   for(target in FindObjects( Find_NoContainer(),Find_Func("IsMilitaryBuilding") )) 
   {
 	// Verfeindet
-	if(!(GetOwner(this())==-1) && (!Hostile(GetOwner(this()),GetOwner(target)) && !(GetOwner(target)==-1))) continue;
-	if(GetOwner(this())==-1 && GetOwner(target)==-1) continue;
+	if(And(!(Equal(GetOwner(this()), -1)), (And(!Hostile(GetOwner(this()),GetOwner(target)), !(Equal(GetOwner(target), -1)))))) continue;
+	if(And(Equal(GetOwner(this()), -1), Equal(GetOwner(target), -1))) continue;
         return(target);
   }
 }
@@ -55,10 +55,10 @@ private func FollowTarget() {
     var iDAngle = Angle(GetX(),GetY(),GetX(pTarget),GetY(pTarget));
     var iAngle = GetR();
     
-    var iDiff = Normalize(iDAngle - iAngle,-180);
+    var iDiff = Normalize((iDAngle ?? 0) - (iAngle ?? 0),-180);
     var iTurn = Min(Abs(iDiff),6);
 
-    SetR(iAngle+iTurn*((iDiff > 0)*2-1));
+    SetR((iAngle ?? 0)+(iTurn ?? 0)*((((iDiff ?? 0) > 0) ?? 0)*2-1));
 }
 
 public func NoDecoDamage() { return(true); }

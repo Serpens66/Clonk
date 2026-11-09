@@ -1,15 +1,16 @@
 /*-- Apparatur --*/
 
-#strict
+#strict 3
 
 protected func Initialize() {
 	// Ein zufällig Aussehen
-	Set(Random(GetActions())+1);
+	Set((Random(GetActions()) ?? 0)+1);
 	return(1);
 }
 
 public func Set(int i)
 {
+	i ??= 0;
 	i = BoundBy(i,1,GetActions());
 	Call(Format("Gadget%d", i));
 }
@@ -21,45 +22,45 @@ private func GetActions() { return(3); }
 
 protected func Gadget1() {
   SetAction("1");
-  SetVertexXY(0, -4, 7);
+  SetVertexXY(nil, -4, 7);
   SetVertexXY(1,  4, 7);
 }
 
 protected func Gadget2() {
   SetAction("2");
-  SetVertexXY(0, -9, 9);
+  SetVertexXY(nil, -9, 9);
   SetVertexXY(1,  9, 9);
 }
 
 protected func Gadget3() {
   SetAction("3");
-  SetVertexXY(0, -9, 8);
+  SetVertexXY(nil, -9, 8);
   SetVertexXY(1,  9, 8);
 }
 
 /* Treffer! */
 
 public func IsBulletTarget(id def) {
-  if(def->~NoDecoDamage()) return();
+  if(def->~NoDecoDamage()) return;
   return(1);
 }
 
 protected func Damage() {
   // Viel Glas!
-  CastParticles("SplinterGlass", 5+Random(5), 50, 0,0, 20,25, RGBa(255,255,255), RGBa(255,255,255));
+  CastParticles("SplinterGlass", 5+(Random(5) ?? 0), 50, nil,nil, 20,25, RGBa(255,255,255), RGBa(255,255,255));
   // Flüssigkeiten
-  if(GetAction() ne "3")
+  if(!SEqual(GetAction(), "3"))
   {
-    if(Random(2)) CastPXS("Acid", 5+Random(10), 50);
-    if(Random(2)) CastPXS("DuroLava", 5+Random(10), 50);
+    if(Random(2)) CastPXS("Acid", 5+(Random(10) ?? 0), 50);
+    if(Random(2)) CastPXS("DuroLava", 5+(Random(10) ?? 0), 50);
   }
   // Rauch
-  CreateSmokeTrail(RandomX(15,20), Random(360), 0,0, this());
-  CreateSmokeTrail(RandomX(15,20), Random(360), 0,0, this());
+  CreateSmokeTrail(RandomX(15,20), Random(360), nil,nil, this());
+  CreateSmokeTrail(RandomX(15,20), Random(360), nil,nil, this());
   // Sound
   Sound("Glass");
   // Explosion oder Verschwinden
-  if(Random(2)) Explode(5+Random(5));
+  if(Random(2)) Explode(5+(Random(5) ?? 0));
   else RemoveObject();
 }
 
@@ -67,5 +68,5 @@ protected func Damage() {
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("Set(%s)", GetAction());
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%s)", GetAction());
 }

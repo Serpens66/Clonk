@@ -1,6 +1,6 @@
 /*-- Auswahlobjekt --*/
 
-#strict
+#strict 3
 
 local alpha;
 
@@ -8,7 +8,7 @@ local alpha;
 protected func Initialize()
 {
   // nur für den Besitzer zu sehen
-  SetVisibility(VIS_Owner());
+  SetVisibility(VIS_Owner);
   alpha = 255;
 }
 
@@ -16,25 +16,25 @@ public func Init(side, selection)
 {
   // einfaden lassen
   SetAction("Appear", selection);
-  if (side == 1)
-    SetVertex(0,0, -80);
+  if (Equal(side, 1))
+    SetVertex(nil,nil, -80);
   else
   {
     SetGraphics("2");
-    SetVertex(0,0, +80);
+    SetVertex(nil,nil, +80);
   }
   // alle anderen Objekte dieser Sorte ausfaden lassen
   var obj;
-  while (obj = FindObject(SEL2,0,0,0,0,0,0,selection))
+  while (obj = FindObject(SEL2,nil,nil,nil,nil,nil,nil,selection))
     ObjectSetAction(obj, "Disappear");
 }
 
 private func Appear()
 {
-  alpha -= 30;
-  if (alpha <= 0)
+  S42MigrationAssign(alpha, "-=", 30);
+  if ((alpha ?? 0) <= 0)
   {
-    alpha = 0;
+    alpha = nil;
     SetAction("Show");
   }
   SetClrModulation(RGBa(255,255,255,alpha));
@@ -42,8 +42,8 @@ private func Appear()
 
 private func Disappear()
 {
-  alpha += 30;
-  if (alpha >= 255)
+  S42MigrationAssign(alpha, "+=", 30);
+  if ((alpha ?? 0) >= 255)
     return(RemoveObject());
   SetClrModulation(RGBa(255,255,255,alpha));
 }

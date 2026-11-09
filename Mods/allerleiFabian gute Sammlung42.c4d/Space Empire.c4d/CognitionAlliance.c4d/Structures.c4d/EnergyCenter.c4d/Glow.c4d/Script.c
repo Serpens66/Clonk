@@ -1,6 +1,6 @@
 /*-- Batterieglühen --*/
 
-#strict
+#strict 3
 
 
 local center;
@@ -12,7 +12,7 @@ protected func Initialize()
 
 public func Init()
 {
-  center = Par(0);  
+  center = Par(nil);
   SetAction("Glowing",center);
   return(1);
 }
@@ -21,20 +21,20 @@ protected func CheckStatus()
 {
   // heller werdend
   var phase = GetPhase();
-  if (phase < GetFillPhase()+8) return(1);
+  if ((phase ?? 0) < (GetFillPhase() ?? 0)+8) return(1);
   // wechseln
   SetAction("RevGlowing",center);
-  SetPhase(28-phase);
+  SetPhase(28-(phase ?? 0));
   return(1);
 }
 
 protected func CheckRevStatus()
 {
   var actual = GetPhase();
-  if (actual < (26-GetFillPhase())) return(1);
+  if ((actual ?? 0) < (26-(GetFillPhase() ?? 0))) return(1);
   
   SetAction("Glowing",center);
-  SetPhase(26-actual);
+  SetPhase(26-(actual ?? 0));
   return(1);
 }
 
@@ -43,5 +43,5 @@ private func GetFillPhase()
   // zwischen 0 und 18
   var fill = center->GetFillStatus();
   var maxf = center->MaxFillEnergy();
-  return((fill*18) / maxf);
+  return(((fill ?? 0)*18) / (maxf ?? 0));
 }

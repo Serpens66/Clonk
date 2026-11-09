@@ -1,6 +1,6 @@
 /*-- EMP --*/
 
-#strict
+#strict 3
 
 local timer;
 
@@ -10,7 +10,7 @@ local timer;
 global func HasEMP(target)
 {
   if (!target) target = this();
-  return(FindObject(SEMP,0,0,0,0,0,"Active",target));
+  return(FindObject(SEMP,nil,nil,nil,nil,nil,"Active",target));
 }
 
 
@@ -22,7 +22,7 @@ public func SetTarget(target, par_timer)
   if (!target) return(RemoveObject());
   // schon ein EMP da?
   var obj;
-  if (obj = FindObject(GetID(), 0,0,0,0, 0,0,target))
+  if (obj = FindObject(GetID(), nil,nil,nil,nil, nil,nil,target))
   {
     obj->Add2Timer(par_timer);
     return(RemoveObject());
@@ -31,12 +31,12 @@ public func SetTarget(target, par_timer)
   if (!target->~EMP_Reaction(par_timer))
     return(RemoveObject());
   // Ziel auch komplett?
-  if (GetCon(target) < 100)
+  if ((GetCon(target) ?? 0) < 100)
     return(RemoveObject());
   // Initialisieren
   SetPosition(GetX(target), GetY(target));
-  SetVertex(0,0, GetVertex(0,0,target));
-  SetVertex(0,1, GetVertex(0,1,target));
+  SetVertex(nil,nil, GetVertex(nil,nil,target));
+  SetVertex(nil,1, GetVertex(nil,1,target));
   SetAction("Inactive", target);
   Add2Timer(par_timer);
 }
@@ -44,8 +44,8 @@ public func SetTarget(target, par_timer)
 public func Add2Timer(value)
 {
   // EMP-Stärke erhöhen
-  timer += value;
-  if ((timer > 100) && (GetAction() eq "Inactive"))
+  S42MigrationAssign(timer, "+=", (value ?? 0));
+  if (And(((timer ?? 0) > 100), (!!SEqual(GetAction(), "Inactive"))))
     SetAction("Active");
   GetActionTarget()->~EMP_Reaction(timer);
 }
@@ -56,15 +56,16 @@ public func Add2Timer(value)
 protected func Countdown()
 {
   // Timer herunterzählen
-  --timer;
-  if (timer <= 0) RemoveObject();
-  if ((timer <= 100) && (GetAction() eq "Active"))
+  S42MigrationStep(timer, -1);
+  if ((timer ?? 0) <= 0) RemoveObject();
+  if (And(((timer ?? 0) <= 100), (!!SEqual(GetAction(), "Active"))))
     SetAction("Inactive");
 }
 
 
 /* Ziel zerstört */
 
-protected AttachTargetLost:
+protected func AttachTargetLost(...) {
   return(RemoveObject());
+}
 

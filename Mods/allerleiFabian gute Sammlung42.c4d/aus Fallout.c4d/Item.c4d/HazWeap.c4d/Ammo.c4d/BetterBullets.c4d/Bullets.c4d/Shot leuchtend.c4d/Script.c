@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 /* Schuss */
 
@@ -7,9 +7,11 @@
 
 // Extern für Überladung
 private func CreateTrail(int iSize, int iTrail) {
-  pTrail = CreateObject(TRA2,0,0,GetOwner());
+  iSize ??= 0;
+  iTrail ??= 0;
+  pTrail = CreateObject(TRA2,nil,nil,GetOwner());
   if(pTrail) {
-    pTrail->Set(iSize-2,iTrail,this());
+    pTrail->Set((iSize ?? 0)-2,iTrail,this());
     SetObjectBlitMode(GetObjectBlitMode(),pTrail);
   }
 }

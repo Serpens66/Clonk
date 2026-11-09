@@ -1,6 +1,6 @@
 /*-- Gangverschluss --*/
 
-#strict
+#strict 3
 #appendto G15Y
 #appendto G25Y
 
@@ -16,11 +16,11 @@ return(_inherited(a,b,c,d,e,f,g));
 
 public func GetTriggerName(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 		return("LEFT");
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 		return("RIGHT");
 	}
@@ -29,11 +29,11 @@ public func GetTriggerName(a)
 
 public func Trigger(a)
 {
-	if(a==1)
+	if(Equal(a, 1))
 	{
 			ControlLeft();
 	}
-	if(a==2)
+	if(Equal(a, 2))
 	{
 			ControlRight();
 	}

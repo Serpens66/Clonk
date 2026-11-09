@@ -1,6 +1,6 @@
 /*--- Flüssigkeitsgeschütz ---*/
 
-#strict
+#strict 3
 
 protected func ConnectID() { return(LICA); }
 protected func GetAlternativeType() { return(ConnectID()); }

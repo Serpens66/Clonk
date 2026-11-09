@@ -1,6 +1,6 @@
 /*-- Mond --*/
 
-#strict
+#strict 3
 
 local phase,glow;
 
@@ -13,18 +13,18 @@ protected func Initialize()
   phase = Random(12);
   SetPhase(phase);
   // Parallaxität: 90%
-  Local(0) = 10;
+  Local(nil) = 10;
   Local(1) = 10;
   // Glühen
-  glow=CreateObject(LGFL,0,0,-1);
-  glow->Init(this,0,0,100,RGB(70,70,70));
+  glow=CreateObject(LGFL,nil,nil,-1);
+  glow->Init(this,nil,nil,100,RGB(70,70,70));
   SetCategory(19922945,glow);
 
   // Neue Position ausrechnen
   var iX,iY,iAngle;
-  iAngle=daytime*360/TimeResolution();
-  iX=400-Sin(iAngle,(LandscapeWidth()/30+400));
-  iY=300+Cos(iAngle,300)-75;
+  iAngle=(daytime ?? 0)*360/(TimeResolution() ?? 0);
+  iX=400-(Sin(iAngle,((LandscapeWidth() ?? 0)/30+400)) ?? 0);
+  iY=300+(Cos(iAngle,300) ?? 0)-75;
   SetPosition(iX,iY);
   
   return(1);
@@ -39,26 +39,26 @@ private func ResetPhase()
 public func CheckLight()
 {
   // Transparenz neu setzen
-  SetClrModulation(RGBa(255,255,255,dayhelligkeit*4));
+  SetClrModulation(RGBa(255,255,255,(dayhelligkeit ?? 0)*4));
   // Neue Position ausrechnen
   var iX,iY,iAngle;
-  iAngle=daytime*360/TimeResolution();
-  iX=512-Sin(iAngle,BoundBy(LandscapeWidth()/30+300,300,512));
-  iY=300+Cos(iAngle,300)+75;
+  iAngle=(daytime ?? 0)*360/(TimeResolution() ?? 0);
+  iX=512-(Sin(iAngle,BoundBy((LandscapeWidth() ?? 0)/30+300,300,512)) ?? 0);
+  iY=300+(Cos(iAngle,300) ?? 0)+75;
   //DebugLog("Moon iX=%d iY=%d iTX=%d iTY=%d",GetX(),GetY(),iX,iY);
   // So bewegen das die Position in 35 Frames erreicht wird
-  SetXDir(-(GetX()-iX),this,200);
-  SetYDir(-(GetY()-iY),this,200);
+  SetXDir(-((GetX() ?? 0)-(iX ?? 0)),this,200);
+  SetYDir(-((GetY() ?? 0)-(iY ?? 0)),this,200);
   return(1);
 }
 
 public func SunRise()
 {
   // eine Mondphase weiter
-  ++phase;
-  if (phase >= 12) phase = 0;
-  var light=Abs(phase-6)*12;
-  glow->Init(this,0,0,light*4,RGB(light,light,light));
+  S42MigrationStep(phase, 1);
+  if ((phase ?? 0) >= 12) phase = nil;
+  var light=(Abs((phase ?? 0)-6) ?? 0)*12;
+  glow->Init(this,nil,nil,(light ?? 0)*4,RGB(light,light,light));
   return(ResetPhase());
 }
 
@@ -78,6 +78,6 @@ global func GetMoonLighting()
   {
     var pMoon;
     if(pMoon=FindObject(SMON))
-      return Abs(pMoon->GetMoonPhase()-6)*6;
+      return (Abs((pMoon->GetMoonPhase() ?? 0)-6) ?? 0)*6;
   }
 }

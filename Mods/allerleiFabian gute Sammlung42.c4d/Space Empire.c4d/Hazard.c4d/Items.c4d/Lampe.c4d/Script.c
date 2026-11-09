@@ -1,6 +1,6 @@
 /*-- Neonlamp --*/
 
-#strict
+#strict 3
 
 local mlight;
 
@@ -19,13 +19,13 @@ public func Entrance()
 
 public func Departure()
 {
-  if (!mlight && LightNeeded)  TurnLightOn();
+  if (And(!mlight, LightNeeded))  TurnLightOn();
 }
 
 private func CheckNight()
 {
-  if (!mlight && LightNeeded)  TurnLightOn();
-  if (mlight && !LightNeeded)  TurnLightOff();
+  if (And(!mlight, LightNeeded))  TurnLightOn();
+  if (And(mlight, !LightNeeded))  TurnLightOff();
 }
 
 private func TurnLightOn()

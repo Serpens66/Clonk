@@ -1,6 +1,6 @@
 /*-- Schild --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -16,6 +16,6 @@ func Explosion()
 
 func Rotate()
 {
-  if (GetR()==-2) SetR(0);
+  if (Equal(GetR(), -2)) SetR(nil);
   return(1);
 }

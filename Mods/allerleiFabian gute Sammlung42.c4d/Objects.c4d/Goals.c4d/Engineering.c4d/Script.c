@@ -1,29 +1,29 @@
 /*-- Siedlung --*/
 
-#strict
+#strict 3
 #include GOAL
 
 public func IsFulfilled () {
   var cnt = GetPlayerCount(), plr;
-  if (!cnt) return(false); // Kein Spieler
+  if (!cnt) return(nil); // Kein Spieler
   // Baupläne aller Spieler auf Vorhandensein prüfen
-  for (var j=0; j<cnt; ++j) if (GetPlayerName(plr = GetPlayerByIndex(j)))
+  for (var j=nil; (j ?? 0)<(cnt ?? 0); S42MigrationStep(j, 1)) if (GetPlayerName(plr = GetPlayerByIndex(j)))
     {
-    var def, i = 0;
+    var def, i = nil;
     //Alle Baupläne durchgehen
-    while (def = GetPlrKnowledge (plr, 0, i++, C4D_All))
+    while (def = GetPlrKnowledge (plr, nil, S42MigrationStep(i, 1, true), C4D_All))
       {
       // Schon gecheckt?
       var k;
-      for (k=0; k<j; ++k) if (GetPlrKnowledge(GetPlayerByIndex(k), def)) break;
-      if (k < j) continue;
+      for (k=nil; (k ?? 0)<(j ?? 0); S42MigrationStep(k, 1)) if (GetPlrKnowledge(GetPlayerByIndex(k), def)) break;
+      if ((k ?? 0) < (j ?? 0)) continue;
       // Objekt ist gebaut - egal von welchem Spieler
-      if(FindObject(def, 0,0,0,0, OCF_Fullcon)) continue;
+      if(FindObject(def, nil,nil,nil,nil, OCF_Fullcon)) continue;
       // oder Stellvertreterobjekt ist gebaut (z.B. bei Geschütztürmen)
       if(def->~GetAlternativeType())
-        if(FindObject(def->~GetAlternativeType(), 0,0,0,0, OCF_Fullcon)) continue;
+        if(FindObject(def->~GetAlternativeType(), nil,nil,nil,nil, OCF_Fullcon)) continue;
       //Wenn es kein passendes Objekt gibt, ist das Spielziel nicht erfüllt
-      return false;
+      return nil;
       }
     }
   // Kein Bauplan nicht umgesetzt -> erfüllt
@@ -33,15 +33,15 @@ public func IsFulfilled () {
 public func IsFulfilledforPlr (plr) {
   var def, i;
   //Alle Baupläne durchgehen
-  while (def = GetPlrKnowledge (plr, 0, i++, C4D_All))
+  while (def = GetPlrKnowledge (plr, nil, S42MigrationStep(i, 1, true), C4D_All))
   {
     // Objekt ist gebaut
-    if(FindObjectOwner(def, plr, 0, 0, 0, 0, OCF_Fullcon)) continue;
+    if(FindObjectOwner(def, plr, nil, nil, nil, nil, OCF_Fullcon)) continue;
     // oder Stellvertreterobjekt ist gebaut (z.B. bei Geschütztürmen)
     if(def->~GetAlternativeType())
-      if(FindObjectOwner(def->~GetAlternativeType(), plr, 0, 0, 0, 0, OCF_Fullcon)) continue;
+      if(FindObjectOwner(def->~GetAlternativeType(), plr, nil, nil, nil, nil, OCF_Fullcon)) continue;
     //Wenn es kein passendes Objekt gibt, ist das Spielziel nicht erfüllt
-    return(false);
+    return(nil);
   }
   return (true);
 }
@@ -54,44 +54,44 @@ public func Activate(act_plr)
   if (show_all_player_plans) done = IsFulfilled(); else done = IsFulfilledforPlr(act_plr);
   if (done) return MessageWindow("$done$", act_plr);
   var obj = GetCursor(act_plr), name = GetName();
-  CreateMenu(GetID(), obj, this(), 0, name);
+  CreateMenu(GetID(), obj, this(), nil, name);
   // Im Wettkampfmodus nur nicht umgesetzte Baupläne des eigenen Spielers anzeigen; ansonsten alle Spielerbaupläne prüfen
   if (show_all_player_plans)
     {
     var cnt = GetPlayerCount();
     // Alle nicht umgesetzten Baupläne anzeigen
-    for (var j=0; j<cnt; ++j) if (GetPlayerName(plr = GetPlayerByIndex(j)))
+    for (var j=nil; (j ?? 0)<(cnt ?? 0); S42MigrationStep(j, 1)) if (GetPlayerName(plr = GetPlayerByIndex(j)))
       {    
-      i = 0;
+      i = nil;
       //Alle Baupläne durchgehen
-      while (def = GetPlrKnowledge (plr, 0, i++, C4D_All))
+      while (def = GetPlrKnowledge (plr, nil, S42MigrationStep(i, 1, true), C4D_All))
         {
         // Schon gecheckt?
         var k;
-        for (k=0; k<j; ++k) if (GetPlrKnowledge(GetPlayerByIndex(k), def)) break;
-        if (k < j) continue;
+        for (k=nil; (k ?? 0)<(j ?? 0); S42MigrationStep(k, 1)) if (GetPlrKnowledge(GetPlayerByIndex(k), def)) break;
+        if ((k ?? 0) < (j ?? 0)) continue;
         // Objekt ist gebaut - egal von welchem Spieler
-        if(FindObject(def, 0,0,0,0, OCF_Fullcon)) continue;
+        if(FindObject(def, nil,nil,nil,nil, OCF_Fullcon)) continue;
         // oder Stellvertreterobjekt ist gebaut (z.B. bei Geschütztürmen)
         if(def->~GetAlternativeType())
-          if(FindObject(def->~GetAlternativeType(), 0,0,0,0, OCF_Fullcon)) continue;
+          if(FindObject(def->~GetAlternativeType(), nil,nil,nil,nil, OCF_Fullcon)) continue;
         // Ansonsten dieses ins Menü
-        AddMenuItem(name, "And()", def, obj, 1, 0, Format("$MsgGoalTodo$", GetName(0, def)));
+        AddMenuItem(name, "And()", def, obj, 1, nil, Format("$MsgGoalTodo$", GetName(nil, def)));
         }
       }
     }
   else
     {
     // Wettkampfmodus
-    i = 0;
-    while (def = GetPlrKnowledge(act_plr, 0, i++, C4D_All))
+    i = nil;
+    while (def = GetPlrKnowledge(act_plr, nil, S42MigrationStep(i, 1, true), C4D_All))
       {
       //...und ins Menü tun, wenn sie noch fehlen
-      if(FindObjectOwner(def, act_plr, 0, 0, 0, 0, OCF_Fullcon)) continue;
+      if(FindObjectOwner(def, act_plr, nil, nil, nil, nil, OCF_Fullcon)) continue;
       if(def->~GetAlternativeType())
-        if(FindObjectOwner(def->~GetAlternativeType(), act_plr, 0, 0, 0, 0, OCF_Fullcon)) continue;
+        if(FindObjectOwner(def->~GetAlternativeType(), act_plr, nil, nil, nil, nil, OCF_Fullcon)) continue;
     
-      AddMenuItem(GetName(), "And()", def, obj, 1, 0, Format("$MsgGoalTodo$", GetName(0, def)));
+      AddMenuItem(GetName(), "And()", def, obj, 1, nil, Format("$MsgGoalTodo$", GetName(nil, def)));
       }
     }
   return true;

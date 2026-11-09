@@ -1,6 +1,6 @@
 /*-- Anti Lag --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

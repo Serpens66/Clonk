@@ -1,6 +1,6 @@
 /*-- Plutonium1 --*/
 
-#strict 2
+#strict 3
 
 local mlight;
 
@@ -10,7 +10,7 @@ public func RadioActiv()
 if(!Random(10))
 {
   var obj = CreateObject(SWAV);
-  ObjectCall(obj, "SetSize", 0,GetX(),GetY(), Random(40)+30);
+  ObjectCall(obj, "SetSize", nil,GetX(),GetY(), (Random(40) ?? 0)+30);
 }
 }
 
@@ -29,10 +29,10 @@ func FxRadiateTimer(pTarget, iEffectNumber, iTime)
   for (var obj in FindObjects(Find_Distance(maximum_distance), Find_OCF(OCF_Alive),Find_Not(Find_Func("HatSchutzAnzugan"))))
   {
     var distance = Distance(GetX(), GetY(), obj->GetX(), obj->GetY());
-    var distance_factor = 100 - (100 * distance / maximum_distance); // in Prozent!
-    var damage = distance_factor * 8;
-    DoEnergy(-damage, obj, true);
-    AddEffect("Sparkle", obj, 1, 1, 0, GetID());
+    var distance_factor = 100 - (100 * (distance ?? 0) / (maximum_distance ?? 0)); // in Prozent!
+    var damage = (distance_factor ?? 0) * 8;
+    DoEnergy(-(damage ?? 0), obj, true);
+    AddEffect("Sparkle", obj, 1, 1, nil, GetID());
     if (!Random(4) && obj->~IsClonk()) Sound("Hurt*");
   }
 }
@@ -46,15 +46,15 @@ public func Hit()
 
 func FxSparkleTimer(pTarget, iEffectNumber, iTime)
 {
-  if (iTime > 1 * 1) return -1;
-  pTarget->CastParticles("PxSpark", 30, 50, 0, 0, 10, 50, RGB(0, 100, 0), RGB(100, 255, 100));
+  if ((iTime ?? 0) > 1 * 1) return -1;
+  pTarget->CastParticles("PxSpark", 30, 50, nil, nil, 10, 50, RGB(nil, 100, nil), RGB(100, 255, 100));
 }
 
 func Incineration()
 {
   // Explosion mit Verstrahlung
   var obj = CreateObject(SWAV);
-  ObjectCall(obj, "SetSize", 0,GetX(),GetY(), Random(150)+80);
+  ObjectCall(obj, "SetSize", nil,GetX(),GetY(), (Random(150) ?? 0)+80);
   Explode(15);
   return(1);
 }

@@ -1,6 +1,6 @@
 /*-- Treibholz --*/
 
-#strict
+#strict 3
 
 // Maximale Treibholzmenge
 local MaxAmount;
@@ -22,7 +22,7 @@ private func Initialized()
 {
   // Maximale Treibholzmenge richtet sich nach der
   // Anzahl der platzierten Treibholzobjekte x 10 + 10
-  MaxAmount = ObjectCount(GetID(this())) * 10 + 10;
+  MaxAmount = (ObjectCount(GetID(this())) ?? 0) * 10 + 10;
   // Alle übrigen Steuerungsobjekte dieser Art entfernen
   var pOther;
   while (pOther = FindObject(GetID(this())))
@@ -36,18 +36,18 @@ private func Initialized()
 private func PlaceDriftwood()
 {
   // Zufallssteuerung
-  if (Random(30)) return(0);
+  if (Random(30)) return(nil);
   // Nicht zu viel Treibholz gleichzeitig in der Landschaft (im Freien)
-  if (ObjectCount(WOOD) > MaxAmount) return(0);
+  if ((ObjectCount(WOOD) ?? 0) > (MaxAmount ?? 0)) return(nil);
   // Position ermitteln
   var x,y;
   // X-Position
   x = Random(LandscapeWidth());
   // Überprüfen, ob an dieser Position Flüssigkeit ist
-  while ((y < LandscapeHeight()) && !GBackSemiSolid(x, y))
-    y += 20;
+  while (And(((y ?? 0) < (LandscapeHeight() ?? 0)), !GBackSemiSolid(x, y)))
+    S42MigrationAssign(y, "+=", 20);
   // Keine Flüssigkeit
-  if (!GBackLiquid(x, y)) return(0);
+  if (!GBackLiquid(x, y)) return(nil);
   // Treibholz erzeugen
   SetR(Random(360), CreateObject(WOOD, x, y, -1));
 }

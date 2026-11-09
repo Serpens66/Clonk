@@ -1,6 +1,6 @@
 /*--- blitzableiter ---*/
 
-#strict
+#strict 3
 
 local iHitAmount;
 
@@ -10,9 +10,9 @@ public func Incineration() {
 
 public func LightningStrike() 
 {
-  iHitAmount++;
-  if(iHitAmount > 100) if(!Random(3)) Destroy();
-  if(GetDamage()) DoDamage(-GetDamage(),this()); // bei Blitzeinschlägen reparieren, damits Blitze ihn nicht zerstören.
+  S42MigrationStep(iHitAmount, 1, true);
+  if((iHitAmount ?? 0) > 100) if(!Random(3)) Destroy();
+  if(GetDamage()) DoDamage(-(GetDamage() ?? 0),this()); // bei Blitzeinschlägen reparieren, damits Blitze ihn nicht zerstören.
   return(1);
 }
 

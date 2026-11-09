@@ -1,10 +1,10 @@
-#strict
+#strict 3
 local maxindex;		
 
 /* Aufruf von Aussen */
 public func SpeicherOst() 
 {
-	SpeicherObjekt(0);
+	SpeicherObjekt(nil);
 }
 
 public func SpeicherWest()
@@ -15,14 +15,14 @@ public func SpeicherWest()
 /* Speichert alle Winddaten einer Richtung in diesem Objekt */
 private func SpeicherObjekt(bwest)
 {
-	maxindex=0;
+	maxindex=nil;
 	var thisindex;
 	/* Alle anderen Objekte "aufsaugen" */
 	var windobj;
-	while(windobj=FindObject(WIND,0,0,0,0,0,0,0,0,windobj))
+	while(windobj=FindObject(WIND,nil,nil,nil,nil,nil,nil,nil,nil,windobj))
 	{
 		thisindex =Index(GetX(windobj),GetY(windobj));
-		if(thisindex>maxindex) maxindex=thisindex;
+		if((thisindex ?? 0)>(maxindex ?? 0)) maxindex=thisindex;
 		Local(thisindex)=windobj->WIND::GetStrength(bwest);
 	}
 	return(1);
@@ -39,15 +39,15 @@ public func GibLokalWind(staerke,x,y)
 public func GetStrength(x,y)
 {
 	var index=Index(x,y);
-	if(index>maxindex) return(5); // da es dieses Windobjekt nicht gibt (entfernte sich wegen NixHimmel) -> 5%;
+	if((index ?? 0)>(maxindex ?? 0)) return(5); // da es dieses Windobjekt nicht gibt (entfernte sich wegen NixHimmel) -> 5%;
 	return(Max(5,Local(index)));
 }
 
 /* Errechnet den Index des Windspeicherobjektes für x/y */
 private func Index(x,y)
 {
-	var index =x/WINDAUFLOESUNG; // X-Koordinate
-	    index+=y/WINDAUFLOESUNG * LandscapeWidth()/WINDAUFLOESUNG; // Y-Koordinate
+	var index =(x ?? 0)/(WINDAUFLOESUNG ?? 0); // X-Koordinate
+	    S42MigrationAssign(index, "+=", (y ?? 0)/(WINDAUFLOESUNG ?? 0) * (LandscapeWidth() ?? 0)/(WINDAUFLOESUNG ?? 0)); // Y-Koordinate
 	return(index);
 }
 
@@ -78,8 +78,8 @@ global func LogWind()
 global func VisualWind(alpha,fReal)
 {
   var x,y,str,str2;
-  for(x=0; x<LandscapeWidth(); x+=50)
-    for(y=0; y<LandscapeHeight(); y+=50)
+  for(x=nil; (x ?? 0)<(LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", 50))
+    for(y=nil; (y ?? 0)<(LandscapeHeight() ?? 0); S42MigrationAssign(y, "+=", 50))
     {
       if(!fReal)
       {
@@ -94,9 +94,9 @@ global func VisualWind(alpha,fReal)
         //SetWind(-100);
         //str2=GetWind(x,y);
       }
-      if(str<0) str=!str;
-      if(str2<0) str2=!str2;
-      CreateParticle("WindSpark",x,y,0,0,1000,RGBa(BoundBy(1+str*3/2,1,255),0,BoundBy(1+str2*3/2,1,255),alpha));
+      if((str ?? 0)<0) str=!str;
+      if((str2 ?? 0)<0) str2=!str2;
+      CreateParticle("WindSpark",x,y,nil,nil,1000,RGBa(BoundBy(1+(str ?? 0)*3/2,1,255),nil,BoundBy(1+(str2 ?? 0)*3/2,1,255),alpha));
     }
 }
 
@@ -104,7 +104,7 @@ public func MyLogWind(szName)
 {
   Log("global func DoWhatIW%sant(){",szName);
   Log("  var o = CreateObject(WSPE, 0, 0, -1);");
-  for(var i = 1; i <= maxindex; i++)
+  for(var i = 1; (i ?? 0) <= (maxindex ?? 0); S42MigrationStep(i, 1, true))
     Log("  SetLocal(%d, %d, o);",i,Local(i));
   Log("  o->SetMaxIndex(%d);",i,maxindex);
   Log("  return o;");

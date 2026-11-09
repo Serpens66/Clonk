@@ -1,6 +1,6 @@
 /*-- Projector --*/
 
-#strict
+#strict 3
 
 local Active;
 local light;
@@ -18,7 +18,7 @@ protected func ControlThrow(clonk,a,b,c,d,f)
 {
         if(Active)
         {
-          Active = 0;
+          Active = nil;
           SetAction("TurnOff");
         }
         else
@@ -38,7 +38,7 @@ public func ActionOn()
 
 public func ActionOff()
 {
-  Active = 0;
+  Active = nil;
   if(light)
     light->TurnOff();
 }
@@ -51,5 +51,5 @@ public func EMPShock() { return(ActionOff()); }
 public func Serialize(array& extra)
 {
 	if (!Active)
-		extra[GetLength(extra)] = "ActionOff()";
+		extra[(GetLength(extra) ?? 0)] = "ActionOff()";
 }

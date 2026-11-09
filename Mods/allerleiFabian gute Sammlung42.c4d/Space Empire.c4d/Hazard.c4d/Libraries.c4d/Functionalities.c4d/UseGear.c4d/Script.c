@@ -21,7 +21,7 @@
 
 */
 
-#strict
+#strict 3
 
 
 local aGear;
@@ -44,6 +44,8 @@ protected func Death()
 
 // Ermöglicht die Modifikation des Schadens für das Objekt durch die Ausrüstung
 public func OnDmg(int iDamage, int iType) {
+  iDamage ??= 0;
+  iType ??= 0;
   var before = _inherited(iDamage,iType);
   
   var add = before;
@@ -51,7 +53,7 @@ public func OnDmg(int iDamage, int iType) {
   for(gear in aGear) {
     // not null...
     if(gear) {
-      add += (gear->~OnClonkDmg(iDamage, iType, this()));
+      S42MigrationAssign(add, "+=", ((gear->~OnClonkDmg(iDamage, iType, this())) ?? 0));
     } 
   }
   return(add);
@@ -60,6 +62,8 @@ public func OnDmg(int iDamage, int iType) {
 // Effekte o.Ä. anzeigen
 public func OnHit(int iDmg, int iType, object pFrom)
 {
+  iDmg ??= 0;
+  iType ??= 0;
   _inherited(iDmg, iType, pFrom);
   
   // Ausrüstung will vielleicht mitreden...
@@ -74,17 +78,17 @@ public func OnHit(int iDmg, int iType, object pFrom)
 // Ausrüstung benutzen
 protected func ContextUseEquipment(object pCaller) {
   [$CtxUseEquipmentDesc$|Image=HARM|Condition=HasUsableGear]
-  if(!HasUsableGear()) return();
-  CreateMenu(HARM,0,0,0,0,0,1);
+  if(!HasUsableGear()) return;
+  CreateMenu(HARM,nil,nil,nil,nil,nil,1);
   // nutzbare Ausrüstung anzeigen
-  for(var i=0; i<GetLength(aGear); ++i) {
-    var gear = aGear[i];
+  for(var i=nil; (i ?? 0)<(GetLength(aGear) ?? 0); S42MigrationStep(i, 1)) {
+    var gear = aGear[(i ?? 0)];
     if(gear) 
 {
      if(gear->~ConUseable())
-        AddMenuItem(gear->ConDesc(), "UseEquipment", GetID(gear), 0, 0, i);
+        AddMenuItem(gear->ConDesc(), "UseEquipment", GetID(gear), nil, nil, i);
 if(gear->~ConDesc2())
-        {AddMenuItem(gear->ConDesc2(), "UseEquipment2", GetID(gear), 0, 0, i);}
+        {AddMenuItem(gear->ConDesc2(), "UseEquipment2", GetID(gear), nil, nil, i);}
 } 
  }
 
@@ -95,11 +99,11 @@ if(gear->~ConDesc2())
 protected func ContextUnbuckle(object pCaller)
 {
   [$CtxUnbuckleDesc$|Image=HARM|Condition=FunnyBug]
-  if(!HasGear()) return();
-  CreateMenu(HARM,0,0,0,0,0,1);
+  if(!HasGear()) return;
+  CreateMenu(HARM,nil,nil,nil,nil,nil,1);
   // alle Ausrüstung anzeigen
-  for(var i; i<GetLength(aGear); ++i) {
-    var gear = aGear[i];
+  for(var i; (i ?? 0)<(GetLength(aGear) ?? 0); S42MigrationStep(i, 1)) {
+    var gear = aGear[(i ?? 0)];
     if(gear)
       AddMenuItem("$CtxUnbuckleItem$", Format("TakeOffGear(0,%d)",i), GetID(gear));
   }
@@ -129,20 +133,21 @@ protected func HasUsableGear()
 public func HasGear(int iGearType, id idGear)
 {
   // nach bestimmter ID suchen
+  iGearType ??= 0;
   var gear;
   if(idGear) {
     for(gear in aGear)
 	  if(gear)
-	    if(GetID(gear) == idGear)
+	    if(Equal(GetID(gear), idGear))
 	      return(gear);
-    return(false);
+    return(nil);
   }
 
   // nach bestimmtem Typ suchen
   if(iGearType) {
-    if(aGear[iGearType])
+    if(aGear[(iGearType ?? 0)])
       return(true);
-    return(false);
+    return(nil);
   }
   
   // keine Parameter: allgemein ob Ausrüstung da ist
@@ -150,7 +155,7 @@ public func HasGear(int iGearType, id idGear)
     if(gear)
       return(true);
   
-  return(false);
+  return(nil);
 }
 
 // Objekt hat eine Ausrüstung des Typs iGearType angelegt
@@ -159,23 +164,24 @@ public func HasGear(int iGearType, id idGear)
 public func GetTheGear(int iGearType, id idGear)
 {
   // nach bestimmter ID suchen
+  iGearType ??= 0;
   var gear;
   if(idGear) {
     for(gear in aGear)
 	  if(gear)
-	    if(GetID(gear) == idGear)
+	    if(Equal(GetID(gear), idGear))
 	      return(gear);
-    return(false);
+    return(nil);
   }
 
   // nach bestimmtem Typ suchen
   if(iGearType) {
-    if(aGear[iGearType])
-      return(aGear[iGearType]);   // returned die gear, anstatt nur true 
-    return(false);
+    if(aGear[(iGearType ?? 0)])
+      return(aGear[(iGearType ?? 0)]);   // returned die gear, anstatt nur true
+    return(nil);
   }
 
-  return(false);
+  return(nil);
 }
 
 // Kann Ausrüstung benutzen
@@ -194,21 +200,24 @@ public func CanUse(id idObj)
 protected func UseEquipment(id bla, int i)
 {
 //Log("UseEqu. ausgeführt");
-  if(aGear[i])
-    {aGear[i]->ConUse(this());};
+  i ??= 0;
+  if(aGear[(i ?? 0)])
+    {aGear[(i ?? 0)]->ConUse(this());};
 }
 
 protected func UseEquipment2(id bla, int i)
 {
 //Log("UseEqu.2 ausgeführt");
-  if(aGear[i])
-    {aGear[i]->ConUse2(this());};
+  i ??= 0;
+  if(aGear[(i ?? 0)])
+    {aGear[(i ?? 0)]->ConUse2(this());};
 }
 
 
 // Ausrüstung ablegen
 public func TakeOffGear(object pGear, int iGearType)
 {
+  iGearType ??= 0;
   var geartype = iGearType;
 
   // man kann auch statt iGearType das konkrete Objekt angeben
@@ -217,45 +226,45 @@ public func TakeOffGear(object pGear, int iGearType)
     // ohne Parameter = alles runter
     if(!pGear) {
       var i;
-      for(var i=0; i<GetLength(aGear); ++i)
-        if(aGear[i])
-          TakeOffGear(0,i);
+      for(var i=nil; (i ?? 0)<(GetLength(aGear) ?? 0); S42MigrationStep(i, 1))
+        if(aGear[(i ?? 0)])
+          TakeOffGear(nil,i);
       return(1);
     }
 
     geartype = pGear->GetGearType();
     // das Objekt ist nicht angelegt
-    if(aGear[geartype] != pGear) return(0);
+    if(!Equal(aGear[(geartype ?? 0)], pGear)) return(nil);
   }
   else {
     // angegebener geartype garnicht angelegt 
-    if(!HasGear(geartype)) return(0);
+    if(!HasGear(geartype)) return(nil);
   }
   
   // er ist angelegt: ok, ablegen
-  aGear[geartype]->GearUnbuckle(this());
+  aGear[(geartype ?? 0)]->GearUnbuckle(this());
 
   // aufsammeln wenn möglich
-  if(aGear[geartype])
-    Collect(aGear[geartype]);
+  if(aGear[(geartype ?? 0)])
+    Collect(aGear[(geartype ?? 0)]);
 
   // und löschen
-  aGear[geartype] = 0;
+  aGear[(geartype ?? 0)] = nil;
 }
 
 // Ausrüstung anlegen
 public func EquipGear(object pGear)
 {
   // überhaupt benutzbar
-  if(!pGear) return(0);
-  if(!(pGear->~IsHazardGear())) return(0);
+  if(!pGear) return(nil);
+  if(!(pGear->~IsHazardGear())) return(nil);
   // schon eine Ausrüstung dieses Typs am Clonk
   var geartype = pGear->GetGearType();
-  if(HasGear(geartype)) return(0);
+  if(HasGear(geartype)) return(nil);
 
   // ok:
   // speichern
-  aGear[geartype] = pGear;
+  aGear[(geartype ?? 0)] = pGear;
   // Auslösen
   return(1);
 }

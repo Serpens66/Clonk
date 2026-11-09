@@ -1,6 +1,6 @@
 /*-- Fahrstuhl --*/
 
-#strict
+#strict 3
 
 // verwendet Teile vom original fahrstuhl
 
@@ -20,7 +20,7 @@ protected func Initialize()
 public func RemoveCase()
 {
   // Komplett, aber kein Fahrstuhlkorb: reduzieren für Wiederaufbau/Reparatur
-  if (GetCon() == 100) { SetAction("Idle"); DoCon(-1); }
+  if (Equal(GetCon(), 100)) { SetAction("Idle"); DoCon(-1); }
   return(1);
 }
 
@@ -32,10 +32,10 @@ public func CreateShaft(iLength)
   if (pCase = GetActionTarget())
   {
     iCaseY = GetY(pCase);
-    SetPosition(GetX(pCase), GetY() - 20, pCase);
+    SetPosition(GetX(pCase), (GetY() ?? 0) - 20, pCase);
   }
   // Schacht freigraben
-  DigFreeRect(GetX()-12, GetY()+25, 24, iLength);
+  DigFreeRect((GetX() ?? 0)-12, (GetY() ?? 0)+25, 24, iLength);
   // ELE_ zurückschieben
   if(pCase) SetPosition(GetX(pCase), iCaseY, pCase);
   return(1);
@@ -55,13 +55,13 @@ public func ContextPermanentModeTurnOff(pObj)
  
 public func IsInPermanentMode()
 {
-  if (!pCase) return(0);
+  if (!pCase) return(nil);
   return (pCase->IsInPermanentMode());
 }
   
 public func IsNotInPermanentMode()
 {
-  if (!pCase) return(0);
+  if (!pCase) return(nil);
   return (pCase->IsNotInPermanentMode());
 }
   

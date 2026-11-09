@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 static TunnelRules_iBOShakeFree; //todo 11
 static TunnelRules_iBOSearchSize; //4

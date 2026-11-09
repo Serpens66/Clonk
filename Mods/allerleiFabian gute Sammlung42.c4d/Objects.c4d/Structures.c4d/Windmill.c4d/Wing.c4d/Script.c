@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 func Completion()
 {
@@ -7,8 +7,8 @@ func Completion()
 
 func Wind2Turn()
 {
-  DoEnergy(Abs(GetRDir() * 5), GetActionTarget() );
-  SetRDir(GetWind() / 4);
+  DoEnergy(Abs((GetRDir() ?? 0) * 5), GetActionTarget() );
+  SetRDir((GetWind() ?? 0) / 4);
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy(GetActionTarget())),this());
 }

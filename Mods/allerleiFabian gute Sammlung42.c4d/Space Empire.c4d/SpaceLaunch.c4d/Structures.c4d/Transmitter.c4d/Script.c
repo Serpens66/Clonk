@@ -1,6 +1,6 @@
 /*-- Energietransmitter --*/
 
-#strict
+#strict 3
 #include BOB2
 #include XMTR
 
@@ -12,7 +12,7 @@ local iSwitch;
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(1,1);
   // einschalten
@@ -22,8 +22,8 @@ protected func Initialize()
 
 protected func Construction()
 {
-  iSwitch = 0;
-  basement = CreateObject(BS05,0,+8,GetOwner());
+  iSwitch = nil;
+  basement = CreateObject(BS05,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -66,9 +66,9 @@ protected func ControlThrow(clonk)
   [Reichweite]
   if (Hostile(GetController(clonk),GetOwner())) return(1);
   var i, marker;
-  for (i = 0; i < 72; i++)
+  for (i = nil; (i ?? 0) < 72; S42MigrationStep(i, 1, true))
   {
-    marker = CreateObject(SMK1, Cos(i*5,TransmitterRange()), Sin(i*5,TransmitterRange()), GetOwner(clonk));
+    marker = CreateObject(SMK1, Cos((i ?? 0)*5,TransmitterRange()), Sin((i ?? 0)*5,TransmitterRange()), GetOwner(clonk));
     marker->SetTimer(15);
   }
   Message("Reichweite|wird angezeigt",this());
@@ -81,10 +81,10 @@ protected func ControlThrow(clonk)
 protected func Transmit()
 {
   // ausgeschaltet oder EMP-Einwirkung
-  if (!iSwitch || HasEMP())
+  if (Or(!iSwitch, HasEMP()))
     return(SetAction("Idle"));
   // Update für Anzeige
-  ShowInfoBar(IBRE, this(), GetEnergy(), 100, 0, 1);
+  ShowInfoBar(IBRE, this(), GetEnergy(), 100, nil, 1);
   // keine Energie da?
   if (!GetEnergy())
     return(SetAction("Wait"));
@@ -94,28 +94,35 @@ protected func Transmit()
 
 protected func CheckEnergy()
 {
-  if (!iSwitch || HasEMP()) return(1);
+  if (Or(!iSwitch, HasEMP())) return(1);
   if (GetEnergy())
     SetAction("Transmitting");
   return(1);
 }
 
-public GetSwitch: return(iSwitch);
-public EnoughEnergy: return(GetEnergy() || !iSwitch);
+public func GetSwitch(...) { return(iSwitch);
+}
+public func EnoughEnergy(...) { return(Or(GetEnergy(), !iSwitch));
+}
 
-public IsEnergyConsumer: return(1);
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* EMP-Reaktion */
 
-public EMP_Reaction:
+public func EMP_Reaction(...) {
   DoEnergy(-100);
   return(1);
+}
 
 
 /* Eigenschaften */
 
-public TransmitterRange: return(600);
-public InfoBarSize: return(1);
-public GetMaxDamage: return(80);
+public func TransmitterRange(...) { return(600);
+}
+public func InfoBarSize(...) { return(1);
+}
+public func GetMaxDamage(...) { return(80);
+}
 

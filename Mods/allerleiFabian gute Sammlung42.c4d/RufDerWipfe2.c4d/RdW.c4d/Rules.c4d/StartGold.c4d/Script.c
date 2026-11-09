@@ -1,6 +1,6 @@
 /*-- StartGold --*/
 
-#strict
+#strict 3
 
 local iGold;
 
@@ -25,23 +25,23 @@ public func IsChooserConfig(){return true;}
 
 public func ConfigSettings(iIndex,iSymb)
 {
-  if(!iIndex--){ if(!iSymb) return Format("Startgold:%d",100+iGold); if(iSymb==2) return 5; return XSYX;}
-  if(!iIndex--){ if(!iSymb) return "+100"; if(iSymb==2) return 3; return XSYX;}
-  if(!iIndex--){ if(!iSymb) return "+10 "; if(iSymb==2) return 1; return XSYX;}
-  if(!iIndex--){ if(!iSymb) return "-10 "; if(iSymb==2) return 2; return XSYX;}
-  if(!iIndex--){ if(!iSymb) return "-100"; if(iSymb==2) return 4; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return Format("Startgold:%d",100+(iGold ?? 0)); if(Equal(iSymb, 2)) return 5; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return "+100"; if(Equal(iSymb, 2)) return 3; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return "+10 "; if(Equal(iSymb, 2)) return 1; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return "-10 "; if(Equal(iSymb, 2)) return 2; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return "-100"; if(Equal(iSymb, 2)) return 4; return XSYX;}
 }
 
 public func ConfigSettingsCall(iIndex)
 {
-  if(!iIndex--)
-   return 0;
-  if(!iIndex--)
-   return iGold=BoundBy(iGold+100,-80,900);
-  if(!iIndex--)
-   return iGold=BoundBy(iGold+10 ,-80,900);
-  if(!iIndex--)
-   return iGold=BoundBy(iGold-10 ,-80,900);
-  if(!iIndex--)
-   return iGold=BoundBy(iGold-100,-80,900);
+  if(!S42MigrationStep(iIndex, -1, true))
+   return nil;
+  if(!S42MigrationStep(iIndex, -1, true))
+   return iGold=BoundBy((iGold ?? 0)+100,-80,900);
+  if(!S42MigrationStep(iIndex, -1, true))
+   return iGold=BoundBy((iGold ?? 0)+10 ,-80,900);
+  if(!S42MigrationStep(iIndex, -1, true))
+   return iGold=BoundBy((iGold ?? 0)-10 ,-80,900);
+  if(!S42MigrationStep(iIndex, -1, true))
+   return iGold=BoundBy((iGold ?? 0)-100,-80,900);
 }

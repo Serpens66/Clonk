@@ -1,6 +1,6 @@
 /*-- Hangar-Tor --*/
 
-#strict
+#strict 3
 
 local phase;
 local opened;
@@ -15,8 +15,8 @@ func CheckSolidMask()
 {
   phase = GetPhase();
   if (opened)
-    SetSolidMask(phase*6,0,6,118,0,0,this());
-  else SetSolidMask((phase-13)*6,0,6,118,0,0,this());
+    SetSolidMask((phase ?? 0)*6,nil,6,118,nil,nil,this());
+  else SetSolidMask(((phase ?? 0)-13)*6,nil,6,118,nil,nil,this());
   return(1);
 }
 
@@ -34,6 +34,6 @@ func Open()
 
 func Close()
 {
-  opened=false;
+  opened=nil;
   return(1);
 }

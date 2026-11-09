@@ -1,6 +1,6 @@
 /*-- Magnetsphäre --*/
 
-#strict
+#strict 3
 
 local yrichtung, xrichtung, leitx, leity, gleis, symbol, blockiert, treibstoff,
       insasse, tor, haltezeit, urhaltezeit, ladbar, flugsound, bwert,tank,lasthalt,bluba,nexthalt;
@@ -11,14 +11,14 @@ func Initialize()
 {
   //Schweben einleiten
   SetAction("Halt");
-  leitx = 0;
-  leity = 0;
+  leitx = nil;
+  leity = nil;
   //Anfangsstrecke=1
-  symbol = CreateObject(SY_1,0,0,GetOwner());
+  symbol = CreateObject(SY_1,nil,nil,GetOwner());
   ObjectSetAction(symbol,"Attaching",this());
   gleis = 1;
   bwert = 35; 
-  if(FindObject(NOME))tank=0;
+  if(FindObject(NOME))tank=nil;
   else tank=1;
   return(1);
 }
@@ -31,26 +31,26 @@ nexthalt=obj;
 //DRINNEN ODER DRAUßEN?
 func FullCheck() 
 {
- var tproz = treibstoff*100 / 800;
+ var tproz = (treibstoff ?? 0)*100 / 800;
  //Drinnen?
  //if(GetAction() S= "Schweben")ControlDig();
- if(Contained(this()) != 0)
+ if(!Equal(Contained(this()), nil))
    { 
-    treibstoff = 0;
+    treibstoff = nil;
     if(symbol) return(RemoveObject(symbol));
     return(1);
    }
  //Keine Aktion?
- if(GetAction(this()) eq "Idle") SetAction("Halt");
+ if(!!SEqual(GetAction(this()), "Idle")) SetAction("Halt");
  //Tankanzeige
- if(!FindObject(NOME))if (tank == 1) ControlDig();
+ if(!FindObject(NOME))if (Equal(tank, 1)) ControlDig();
  //Symbol überm Kopp?
  if(symbol) return(1);
  //Sonst Neues erstellen
- if(gleis == 1) symbol = CreateObject(SY_1,0,0,GetOwner());
- if(gleis == 2) symbol = CreateObject(SY_2,0,0,GetOwner());
- if(gleis == 3) symbol = CreateObject(SY_3,0,0,GetOwner());
- if(gleis == 4) symbol = CreateObject(SY12,0,0,GetOwner());
+ if(Equal(gleis, 1)) symbol = CreateObject(SY_1,nil,nil,GetOwner());
+ if(Equal(gleis, 2)) symbol = CreateObject(SY_2,nil,nil,GetOwner());
+ if(Equal(gleis, 3)) symbol = CreateObject(SY_3,nil,nil,GetOwner());
+ if(Equal(gleis, 4)) symbol = CreateObject(SY12,nil,nil,GetOwner());
  ObjectSetAction(symbol,"Attaching",this());
  
   return(1);
@@ -80,7 +80,7 @@ func ControlDigDouble(PController)
   PController;
   if(Hostile(GetOwner(this()),GetOwner(PController))) return(Message("Feind an der Sphäre!",this()));
    
-  treibstoff = 0;
+  treibstoff = nil;
   SetAction("Halt");
   blockiert = 120;
   return(1);
@@ -95,22 +95,22 @@ func ContainedDig(PController)
    if(Hostile(GetOwner(this()),GetOwner(PController))) return(Message("Feind in der Sphäre!",this()));
   
   //Streckenmenü öffnen
-  CreateMenu(ST_1, PController, this(), 0, "Strecken konfigurieren", 0, 0, 0);
-    AddMenuItem("Notbremse ziehen", "Notstop", SYCC, PController, 0, 0, " ");
-    AddMenuItem("Sofort losfahren", "Los", SY_5, PController, 0, 0, " ");
-    AddMenuItem("Strecke 1 wählen", "SetStrecke", SY_1, PController, 0, 1, " ");
-    AddMenuItem("Strecke 2 wählen", "SetStrecke", SY_2, PController, 0, 2, " ");
-    AddMenuItem("Strecke 3 wählen", "SetStrecke", SY_3, PController, 0, 3, " ");
-    AddMenuItem("Strecke 4 wählen", "SetStrecke", SY12, PController, 0, 4, " ");
-    if(!FindObject(NOME))AddMenuItem("Tankanzeige an/aus", "Atank", SY_4, PController, 0, 3, " ");
+  CreateMenu(ST_1, PController, this(), nil, "Strecken konfigurieren", nil, nil, nil);
+    AddMenuItem("Notbremse ziehen", "Notstop", SYCC, PController, nil, nil, " ");
+    AddMenuItem("Sofort losfahren", "Los", SY_5, PController, nil, nil, " ");
+    AddMenuItem("Strecke 1 wählen", "SetStrecke", SY_1, PController, nil, 1, " ");
+    AddMenuItem("Strecke 2 wählen", "SetStrecke", SY_2, PController, nil, 2, " ");
+    AddMenuItem("Strecke 3 wählen", "SetStrecke", SY_3, PController, nil, 3, " ");
+    AddMenuItem("Strecke 4 wählen", "SetStrecke", SY12, PController, nil, 4, " ");
+    if(!FindObject(NOME))AddMenuItem("Tankanzeige an/aus", "Atank", SY_4, PController, nil, 3, " ");
   return(1);
 }
 
 ////Tank
 func Atank()
 {
-  if (tank == 1) return(tank = 0);
-  if (tank == 0) return(tank = 1);
+  if (Equal(tank, 1)) return(tank = nil);
+  if (Equal(tank, nil)) return(tank = 1);
   return(1);
 }
 
@@ -119,13 +119,13 @@ func Notstop()
 {
   blockiert = 120;
   SetAction("Halt");
-  treibstoff = 0;
+  treibstoff = nil;
   return(1);
 }
 ////Direkt fahren
 func Los()
 {
-  haltezeit = 0;
+  haltezeit = nil;
   return(1);
 }
 
@@ -134,28 +134,28 @@ func ActivateEntrance(peinsteiger)
 {
   var max = GetMaxDamage();
    if(!FindObject(NOME))ShowInfoBar(IBRE, this(), treibstoff, 800, 2);
-  ShowInfoBar(IBRS, this(), max-GetDamage(),max, 2);
+  ShowInfoBar(IBRS, this(), (max ?? 0)-(GetDamage() ?? 0),max, 2);
   
   //Verfeindet?
   if(Hostile(GetOwner(this()),GetOwner(peinsteiger))) return(Message("Eingang versperrt!",this()));
   
   //schon besetzt?
-  if (insasse != 0) 
+  if (!Equal(insasse, nil))
     {
-     if (GetOCF(peinsteiger) & OCF_CrewMember())
+     if ((GetOCF(peinsteiger) ?? 0) & (OCF_CrewMember ?? 0))
        {
-        if (peinsteiger != insasse) return(Message("Magnetsphäre besetzt!",this()));
+        if (!Equal(peinsteiger, insasse)) return(Message("Magnetsphäre besetzt!",this()));
        }
     }
     
   //Aussteigen erlaubt?
-  if (tor == 0) 
+  if (Equal(tor, nil))
     {  
      Sound("mts_tor"); 
      //Aussteigen am Bahnhof
-     if (treibstoff > 0) SetAction("Auf");
+     if ((treibstoff ?? 0) > 0) SetAction("Auf");
      //Aussteigen bei Notausstieg
-     if (treibstoff <= 0) SetAction("NotAuf");
+     if ((treibstoff ?? 0) <= 0) SetAction("NotAuf");
      tor = 1;
      insasse = peinsteiger;
     }
@@ -169,9 +169,9 @@ func ActivateEntrance(peinsteiger)
 func Ejection()
   {
    //Passagiere verabschieden
-   if (GetOCF(insasse) & OCF_CrewMember())
+   if ((GetOCF(insasse) ?? 0) & (OCF_CrewMember ?? 0))
      Message("Auf Wiedersehn.",this());
-   insasse = 0;
+   insasse = nil;
    tor = 1;
    return(1);
   }
@@ -180,7 +180,7 @@ func Ejection()
 func Torauf()
 {
   //Passagiere Begrüßen
-  if (GetOCF(insasse) & OCF_CrewMember())
+  if ((GetOCF(insasse) ?? 0) & (OCF_CrewMember ?? 0))
     Message("Wilkommen an Bord!",this());
   SetEntrance(1);
   return(1);
@@ -188,7 +188,7 @@ func Torauf()
 ////Türzu
 func Torzu()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
   return(1);
 }
 ////Türzu, daher nicht be/entladen
@@ -202,31 +202,31 @@ func NichtLaden(x)
 func SetStrecke(nutzlos,pnummer) 
 { 
   RemoveObject(symbol);
-  if (pnummer == 1)
+  if (Equal(pnummer, 1))
   {
-  symbol = CreateObject(SY_1,0,0,GetOwner());
+  symbol = CreateObject(SY_1,nil,nil,GetOwner());
   ObjectSetAction(symbol,"Attaching",this());
   //falls im Bahnhof, neue Werte abfragen
   SetAction("Schweben");
   gleis = pnummer;
   }
-  if (pnummer == 2)
+  if (Equal(pnummer, 2))
   {
-  symbol = CreateObject(SY_2,0,0,GetOwner());
+  symbol = CreateObject(SY_2,nil,nil,GetOwner());
   ObjectSetAction(symbol,"Attaching",this());
   SetAction("Schweben");
   gleis = pnummer;
   } 
-  if (pnummer == 3)
+  if (Equal(pnummer, 3))
   {
-  symbol = CreateObject(SY_3,0,0,GetOwner());
+  symbol = CreateObject(SY_3,nil,nil,GetOwner());
   ObjectSetAction(symbol,"Attaching",this());
   SetAction("Schweben");
   gleis = pnummer;
   }  
-  if (pnummer == 4)
+  if (Equal(pnummer, 4))
   {
-  symbol = CreateObject(SY12,0,0,GetOwner());
+  symbol = CreateObject(SY12,nil,nil,GetOwner());
   ObjectSetAction(symbol,"Attaching",this());
   SetAction("Schweben");
   gleis = pnummer;
@@ -239,14 +239,14 @@ func SetStrecke(nutzlos,pnummer)
 ////FLUGFUNKTIONEN
 func Flug() 
 { 
-  if(nexthalt==lasthalt)nexthalt=0;
+  if(Equal(nexthalt, lasthalt))nexthalt=nil;
   //nur zum testen da Message("%d",this(),blockiert);
-  if(treibstoff < 0)
+  if((treibstoff ?? 0) < 0)
   return(SetAction("Halt"));
   
   //Sound
-  if (flugsound == 0) flugsound = GetTime ();
-  if ((flugsound + 122) <= GetTime()) 
+  if (Equal(flugsound, nil)) flugsound = GetTime ();
+  if (((flugsound ?? 0) + 122) <= (GetTime() ?? 0))
     {
      Sound("mts_flug");
     } 
@@ -255,7 +255,7 @@ func Flug()
   {
   //leitx = Sin(Angle(0,0,GetX(nexthalt),GetY(nexthalt)),3);
   //leity = -Cos(Angle(0,0,GetX(nexthalt),GetY(nexthalt)),3);
-  Kurs(Sin(Angle(GetX(),GetY(),GetX(nexthalt),GetY(nexthalt)),3),-Cos(Angle(GetX(),GetY(),GetX(nexthalt),GetY(nexthalt)),3));
+  Kurs(Sin(Angle(GetX(),GetY(),GetX(nexthalt),GetY(nexthalt)),3),-(Cos(Angle(GetX(),GetY(),GetX(nexthalt),GetY(nexthalt)),3) ?? 0));
   }
   
   //Richtwerte einlesen
@@ -265,48 +265,48 @@ func Flug()
 
   //bewegen
   //if(bluba%2){
-  SetYDir(yrichtung*10,0,10);
-  SetXDir(xrichtung*10,0,10);
+  SetYDir((yrichtung ?? 0)*10,nil,10);
+  SetXDir((xrichtung ?? 0)*10,nil,10);
   //Log("%d,%d",GetXDir(),GetYDir());
   //}
-  if(!FindObject(NOME))treibstoff--;
-  if(GetY()<0)treibstoff-=20;
+  if(!FindObject(NOME))S42MigrationStep(treibstoff, -1, true);
+  if((GetY() ?? 0)<0)S42MigrationAssign(treibstoff, "-=", 20);
   //bluba=(bluba+1)%2;
-  blockiert--;
+  S42MigrationStep(blockiert, -1, true);
   
   //Station Suchen
   //drinnen?
   var buka;
-  if(Contained(this()) != 0) return(0);
+  if(!Equal(Contained(this()), nil)) return(nil);
   if(buka=FindObject(ST_1,-20,-20,40,40))
     {
-     if(buka==lasthalt)return(0);
+     if(Equal(buka, lasthalt))return(nil);
      //Noch zu nah?
-     if(blockiert > 0) return(--blockiert);
+     if((blockiert ?? 0) > 0) return(S42MigrationStep(blockiert, -1));
      //Vergleichswert für Bahnhofsblockade setzen
      bwert = 20;
      ObjectCall(buka,"Andocken",this(),gleis);
-     DrawLightningx(0,0,GetX(buka)-GetX(),GetY(buka)-GetY());
+     DrawLightningx(nil,nil,(GetX(buka) ?? 0)-(GetX() ?? 0),(GetY(buka) ?? 0)-(GetY() ?? 0));
      lasthalt=buka;
     }
      
     //BAHNHOF SUCHEN
   //drinnen?
-  if(Contained(this()) != 0) return(0);
+  if(!Equal(Contained(this()), nil)) return(nil);
   if(buka=FindObject(ST_5,-20,-20,40,40))
     {
-         if(buka==lasthalt)return(0);
+         if(Equal(buka, lasthalt))return(nil);
      //Noch zu nah?
-     if(blockiert > bwert) return(--blockiert);
-     flugsound = 0;
+     if((blockiert ?? 0) > (bwert ?? 0)) return(S42MigrationStep(blockiert, -1));
+     flugsound = nil;
      Sound("mts_leer");
-     blockiert = 0;
+     blockiert = nil;
      //Sphäre darf be/entladen werden
      ladbar = 1;
      //Vergleichswert für Bahnhofsblockade setzen
-     bwert = 0;
+     bwert = nil;
      ObjectCall(FindObject(ST_5,-20,-20,40,40),"Andocken",this(),gleis);
-          DrawLightningx(0,0,GetX(buka)-GetX(),GetY(buka)-GetY());
+          DrawLightningx(nil,nil,(GetX(buka) ?? 0)-(GetX() ?? 0),(GetY(buka) ?? 0)-(GetY() ?? 0));
      lasthalt=buka;
     }
   return(1);
@@ -315,7 +315,7 @@ func Flug()
 //SPHÄRE FÜLLEN
 func Giver(obj,caller)
   {
-   if(obj == 0) return(0);
+   if(Equal(obj, nil)) return(nil);
    Exit(obj);
    Enter(this(),obj);
    return(1);
@@ -325,7 +325,7 @@ func Giver(obj,caller)
 func SetHaltezeit(x) 
   {
   //Einmal eingestellt, dann Ruhe
-  if (x == urhaltezeit) return(1);
+  if (Equal(x, urhaltezeit)) return(1);
    urhaltezeit = x;
    haltezeit = x;
    SetAction("Bahnhof");
@@ -351,12 +351,12 @@ func Kurs(x,y)
 ////Im Bahnhof
 func Fahrplan() 
 {
-  if (haltezeit == 3030) return(tor = 0);
-  while (haltezeit > 0) return(haltezeit --, tor = 0);
-  urhaltezeit = 0;
+  if (Equal(haltezeit, 3030)) return(tor = nil);
+  while ((haltezeit ?? 0) > 0) return(S42MigrationFirst(S42MigrationStep(haltezeit , -1, true), tor = nil));
+  urhaltezeit = nil;
   tor = 1;
   blockiert = 15;
-  bwert = 0;
+  bwert = nil;
   treibstoff = 800;
   SetAction("Schweben");
   return(1);
@@ -367,27 +367,27 @@ func Fahrplan()
 func Tanken()
 { 
   //aussteigbar
-  tor = 0;
+  tor = nil;
   
   //Noch zu nah?
-  if(blockiert > 0)
-     return(blockiert -= 1);
+  if((blockiert ?? 0) > 0)
+     return(S42MigrationAssign(blockiert, "-=", 1));
      
   //Station Suchen
   //drinnen?
-  if(Contained(this()) != 0) return(0);
+  if(!Equal(Contained(this()), nil)) return(nil);
   if(FindObject(ST_1,-20,-20,40,40))
     {
      ObjectCall(FindObject(ST_1,-20,-20,40,40),"Andocken",this(),gleis);
     }
     //BAHNHOF SUCHEN
   //drinnen?
-  if(Contained(this()) != 0) return(0);
+  if(!Equal(Contained(this()), nil)) return(nil);
   if(FindObject(ST_5,-20,-20,40,40))
     {
      //Sphäre darf NICHT be/entladen werden
-     ladbar = 0;
-     flugsound = 0;
+     ladbar = nil;
+     flugsound = nil;
      Sound("mts_leer");
      ObjectCall(FindObject(ST_5,-20,-20,40,40),"Andocken",this(),gleis);
     }
@@ -397,38 +397,43 @@ func Tanken()
 
 /* Schaden */
 
-protected Damage:
+protected func Damage(...) {
   // zu viel Schaden?
-  if (GetDamage() >= GetMaxDamage())
+  if ((GetDamage() ?? 0) >= (GetMaxDamage() ?? 0))
     return(Destroy());
   // Anzeige
   ControlDig();
   return(1);
+}
 
-public Destroy:
+public func Destroy(...) {
   // Inhalt rausschleudern
   var obj;
   RemoveObject(symbol);
   while (obj = Contents())
-    Exit(obj,0,0,Random(360), Random(9)-4, -Random(5), Random(51)-25);
+    Exit(obj,nil,nil,Random(360), (Random(9) ?? 0)-4, -(Random(5) ?? 0), (Random(51) ?? 0)-25);
   // Zerstörung durch Explosion
-  var i = GetMaxDamage() / 8;
+  var i = (GetMaxDamage() ?? 0) / 8;
   while (i)
   {
-    obj = CreateObject(SFRX, Random(GetObjWidth() * 2/3) - GetObjWidth() / 3,
-                             Random(GetObjHeight() * 2/3) - GetObjHeight() / 3, GetOwner());
-    ObjectCall(obj, "Settings", i*3/2, 20, 1);
-    --i;
+    obj = CreateObject(SFRX, (Random((GetObjWidth() ?? 0) * 2/3) ?? 0) - (GetObjWidth() ?? 0) / 3,
+                             (Random((GetObjHeight() ?? 0) * 2/3) ?? 0) - (GetObjHeight() ?? 0) / 3, GetOwner());
+    ObjectCall(obj, "Settings", (i ?? 0)*3/2, 20, 1);
+    S42MigrationStep(i, -1);
   }
   // Explosion
-  obj = CreateObject(SFRX, 0,0,GetOwner());
-  ObjectCall(obj, "Settings", GetMaxDamage()/10, 50);
+  obj = CreateObject(SFRX, nil,nil,GetOwner());
+  ObjectCall(obj, "Settings", (GetMaxDamage() ?? 0)/10, 50);
   if(HashGet(hashExplosivErdschaden,Format("Erdschaden %v",GetID())))  Explode(20);
-  else FakeExplode(20,0,0,20);
+  else FakeExplode(20,nil,nil,20);
   return(1);
+}
   
-public GetMaxDamage: return(40);
-public StatusBarPos: return(2);
-public InfoBarSize:  return(1);
+public func GetMaxDamage(...) { return(40);
+}
+public func StatusBarPos(...) { return(2);
+}
+public func InfoBarSize(...) {  return(1);
+}
 
 

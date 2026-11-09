@@ -1,11 +1,12 @@
 /* Pumpenappendto */
 
-#strict 2
+#strict 3
 #appendto PUMP
 #appendto DRCK
 
 protected func CheckCapacity(pTarget, int iAmount, iMaterial)
 {
+	iAmount ??= 0;
 	if (pTarget->~IsLiquidContainer())
 		if (pTarget->~CheckOwnCapacity(iMaterial, iAmount))
 			return 1;

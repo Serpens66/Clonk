@@ -1,6 +1,6 @@
 /*-- Maschinengewehr --*/
 
-#strict
+#strict 3
 
 local packID, value, restshots;
 
@@ -10,9 +10,9 @@ local packID, value, restshots;
 public func Fire()
 {
   // noch beim Nachladen
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // keine Munition
-  if (!Contents() && !packID)
+  if (And(!Contents(), !packID))
     return(Sound("NoAmmo2"));
   // Munition aus dem geladenen Pack entfernen
   var ammopack = FindContents(packID);
@@ -30,15 +30,15 @@ public func Fire()
   }
   // Schussmodus je nach Munitionstyp wählen
   restshots = 7;
-  if (packID==SPC1 || packID==SPC2)
+  if (Or(Equal(packID, SPC1), Equal(packID, SPC2)))
   {
     Sound("AutoGun*");
     SetAction("ShootAmmo");
     return(1);
   }
   Sound("AutoOnce");
-  if (packID==SPC3) return(SpecialShot(SMG2));
-  if (packID==SPC4) return(SpecialShot(SMG3));
+  if (Equal(packID, SPC3)) return(SpecialShot(SMG2));
+  if (Equal(packID, SPC4)) return(SpecialShot(SMG3));
   return(1);
 }
 
@@ -46,17 +46,17 @@ private func FireAmmo()
 {
   // Richtung des Trägers abfragen
   var dir = +1;
-  if (GetDir(Contained())==DIR_Left()) dir = -1;
+  if (Equal(GetDir(Contained()), DIR_Left)) dir = -1;
   // MG-Kugel abfeuern
   var ammo = CreateContents(SMG1);
-  Exit(ammo, dir*15,Random(5)-2,0, 0,0,0);
-  if (packID==SPC1)  ammo->Launch(GetDir(Contained()));
-  if (packID==SPC2)  ammo->Launch(GetDir(Contained()),Random(31)-15);
+  Exit(ammo, (dir ?? 0)*15,(Random(5) ?? 0)-2,nil, nil,nil,nil);
+  if (Equal(packID, SPC1))  ammo->Launch(GetDir(Contained()));
+  if (Equal(packID, SPC2))  ammo->Launch(GetDir(Contained()),(Random(31) ?? 0)-15);
   // Mündungsfeuer
   if (!GBackLiquid())
-    CreateObject(SMGF)->Config(Contained(), dir*8,-1, dir*90);
+    CreateObject(SMGF)->Config(Contained(), (dir ?? 0)*8,-1, (dir ?? 0)*90);
   // Ammo verbrauchen
-  --restshots;
+  S42MigrationStep(restshots, -1);
   // Ammo-Anzeige des Clonks
   Contained()->~RefreshAmmoInfo();
   // genug verschossen?
@@ -69,14 +69,14 @@ private func SpecialShot()
 {
   // Richtung des Trägers abfragen
   var dir = +1;
-  if (GetDir(Contained())==DIR_Left()) dir = -1;
+  if (Equal(GetDir(Contained()), DIR_Left)) dir = -1;
   // MG-Kugel abfeuern
-  var ammo = CreateContents(Par(0));
-  Exit(ammo, dir*15,Random(3)-1,0, 0,0,0);
+  var ammo = CreateContents(Par(nil));
+  Exit(ammo, (dir ?? 0)*15,(Random(3) ?? 0)-1,nil, nil,nil,nil);
   ammo->Launch(GetDir(Contained()));
   // Mündungsfeuer
   if (!GBackLiquid())
-    CreateObject(SMGF)->Config(Contained(), dir*8,-1, dir*90);
+    CreateObject(SMGF)->Config(Contained(), (dir ?? 0)*8,-1, (dir ?? 0)*90);
   // Nachladen
   SetAction("Reload2");
   return(1);
@@ -88,9 +88,9 @@ private func SpecialShot()
 public func Activate()
 {
   // noch beim Nachladen
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // Menü erzeugen und füllen
-  CreateMenu(SMGN,Contained(),this(),0,"");
+  CreateMenu(SMGN,Contained(),this(),nil,"");
   Add2Menu(SPC1); Add2Menu(SPC2);
   Add2Menu(SPC3); Add2Menu(SPC4);
   AddMenuItem("Keine Munition", "SelectAmmo", SYCC,Contained());
@@ -101,9 +101,9 @@ private func Add2Menu(packID)
 {
   // alle getragenen Munitionstypen hinzufügen
   var num = ContentsCount(GetAmmoID(packID), FindContents(packID));
-  var obj = 0;
-  while (obj = FindObject(packID,0,0,0,0,0,"",0,Contained(),obj))
-    num += ContentsCount(GetAmmoID(packID),obj);
+  var obj = nil;
+  while (obj = FindObject(packID,nil,nil,nil,nil,nil,"",nil,Contained(),obj))
+    S42MigrationAssign(num, "+=", (ContentsCount(GetAmmoID(packID),obj) ?? 0));
   if (num) AddMenuItem("%s", "SelectAmmo", packID,Contained());
 }
 
@@ -112,13 +112,13 @@ public func SelectAmmo(ID)
   // Alte Munition raus...
   Enter(Contained(),Contents());
   // AmmoPackID = SYCC heisst: alles raus, nix rein
-  if (ID == SYCC) return(packID = 0);
+  if (Equal(ID, SYCC)) return(packID = nil);
   // ...und die neue rein
   Enter(this(),FindContents(ID,Contained()));
   // PackID anpassen
   packID = ID;
   // MG wieder auswählen
-  ShiftContents(Contained(),0,GetID());
+  ShiftContents(Contained(),nil,GetID());
   // Ammo-Anzeige updaten
   Contained()->~CheckArmed();
 }
@@ -128,18 +128,18 @@ public func SelectAmmo(ID)
 
 private func GetAmmoID(packID)
 {
-  if (packID == SPC1) return(SAM1);
-  if (packID == SPC2) return(SAM2);
-  if (packID == SPC3) return(SAM3);
-  if (packID == SPC4) return(SAM4);
-  return(0);
+  if (Equal(packID, SPC1)) return(SAM1);
+  if (Equal(packID, SPC2)) return(SAM2);
+  if (Equal(packID, SPC3)) return(SAM3);
+  if (Equal(packID, SPC4)) return(SAM4);
+  return(nil);
 }
 
 private func AmmoContentsCount()
 {
-  if (!packID) return(0);
+  if (!packID) return(nil);
   var ammopack = FindContents(packID);
-  if (!ammopack) return(0);
+  if (!ammopack) return(nil);
   return(ContentsCount(GetAmmoID(packID), ammopack));
 }
 
@@ -154,11 +154,14 @@ public func Selection()
   
 /* Zusatzinfos */
 
-public GetAmmoPercent: return(AmmoContentsCount()*10 + restshots*10/7);
+public func GetAmmoPercent(...) { return((AmmoContentsCount() ?? 0)*10 + (restshots ?? 0)*10/7);
+}
 
 
 /* Eigenschaften */
 
-public IsWeapon: return(1);
-public IsWeaponProduct: return(1);
+public func IsWeapon(...) { return(1);
+}
+public func IsWeaponProduct(...) { return(1);
+}
 

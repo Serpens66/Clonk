@@ -1,6 +1,6 @@
 /*-- keine abgase --*/
 
-#strict
+#strict 3
 
 local loslegen;
 
@@ -25,12 +25,12 @@ public func ChooserFinished()
 
 protected func ChangeClonk()
 {
-    if(FrameCounter()>2000) loslegen=1; // fuer den Fall, dass Regel während spiel aktiviert wird, denn chooserfinished wird dann nicht mehr aufgerufen.
-    if(!loslegen) return();
+    if((FrameCounter() ?? 0)>2000) loslegen=1; // fuer den Fall, dass Regel während spiel aktiviert wird, denn chooserfinished wird dann nicht mehr aufgerufen.
+    if(!loslegen) return;
     for (var derclonk in FindObjects(Find_ID(CLNK)))
     {
-        if(GetActTime(derclonk)<20) continue; // den clonk erstmal initializieren lassen
-        var inhalt=Contents(0,derclonk);
+        if((GetActTime(derclonk) ?? 0)<20) continue; // den clonk erstmal initializieren lassen
+        var inhalt=Contents(nil,derclonk);
         if(inhalt) {Exit(inhalt,GetX(derclonk),GetX(derclonk));} //kurz vorher Item aus der Hand nehmen, damit "Item in der hand" keine Probleme macht
         ChangeDef(HZCK,derclonk);
         derclonk->~Initialize();
@@ -40,7 +40,7 @@ protected func ChangeClonk()
         derclonk->~Stufenanstieg(1); // wird sofort Stufe 5  
         derclonk->~NunBauarbeiter(); // wird ein arbeiterclonk, da kaempfer nicht gebraucht werden, da es in der regel eh keine hazardwaffen gibt.
         SetGraphics("Normal",derclonk);  //Hazardclonk mit Clonkgrafik
-        SetPortrait("random", derclonk, CLNK, 0, 0);
+        SetPortrait("random", derclonk, CLNK, nil, nil);
 
          SetPhysical("Energy",100000 , PHYS_StackTemporary, derclonk);
          SetPhysical("Breath",50000 , PHYS_StackTemporary, derclonk);
@@ -54,10 +54,10 @@ protected func ChangeClonk()
          SetPhysical("Push",40000 , PHYS_StackTemporary, derclonk);
          SetPhysical("Fight",50000 , PHYS_StackTemporary, derclonk);
 
-        if (GetEnergy(derclonk) < GetPhysical("Energy",0,derclonk)/1000)
+        if ((GetEnergy(derclonk) ?? 0) < (GetPhysical("Energy",nil,derclonk) ?? 0)/1000)
           {
-            var lebenspunkteheilen = ((GetPhysical("Energy",0,derclonk)/1000)-GetEnergy(derclonk));
-            DoEnergy(+lebenspunkteheilen,derclonk);
+            var lebenspunkteheilen = (((GetPhysical("Energy",nil,derclonk) ?? 0)/1000)-(GetEnergy(derclonk) ?? 0));
+            DoEnergy(+(lebenspunkteheilen ?? 0),derclonk);
           }
     }
 }

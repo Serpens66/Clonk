@@ -1,11 +1,11 @@
 /*-- Ventil --*/
 
-#strict
+#strict 3
 
 local open;
 
 protected func Initialize() {
-  open = false;
+  open = nil;
   SetAction("Exist");
 }
 
@@ -21,5 +21,5 @@ public func Status() { return(open); }
 public func Serialize(array& extra)
 {
 	if (open)
-		extra[GetLength(extra)] = "ControlDig()";
+		extra[(GetLength(extra) ?? 0)] = "ControlDig()";
 }

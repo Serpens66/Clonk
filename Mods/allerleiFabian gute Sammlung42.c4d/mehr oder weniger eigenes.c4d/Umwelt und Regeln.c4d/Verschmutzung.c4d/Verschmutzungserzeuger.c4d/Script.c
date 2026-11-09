@@ -1,6 +1,6 @@
 /*-- Verschmutzung erzeugen --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -12,6 +12,6 @@ SetPosition();
 /* Eventuell Nebel erzeugen */
 private func DoNebel()
 {
-  if(ObjectCount2(Find_ID(VM9Z))>=5) return(1);
+  if((ObjectCount2(Find_ID(VM9Z)) ?? 0)>=5) return(1);
 else CreateObject(VM9Z);return(1);
 }

@@ -1,16 +1,18 @@
 /*-- RepairPack --*/
 
-#strict
+#strict 3
 
-protected Hit:
+protected func Hit(...) {
   Sound("RockHit*");
   return(1);
+}
 
-public Activate:
+public func Activate(...) {
   [Aktivieren]
   var num = 11;
-  while(--num) CreateObject(SBOT,Random(11)-5,Random(11)-5,-1);
+  while(S42MigrationStep(num, -1)) CreateObject(SBOT,(Random(11) ?? 0)-5,(Random(11) ?? 0)-5,-1);
   RemoveObject();
   return(1);
+}
 
 public func IsRefineryProduct() { return(1); }

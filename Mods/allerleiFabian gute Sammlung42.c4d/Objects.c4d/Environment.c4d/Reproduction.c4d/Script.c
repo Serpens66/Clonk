@@ -1,6 +1,6 @@
 /*-- Nachwuchs --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -15,8 +15,8 @@ public func StoreAnimals()
 {
   // Tierbestand speichern
   var pAnimal;
-  while (pAnimal = FindObject(0, 0, 0, 0, 0, OCF_Living(), 0, 0, 0, pAnimal))
-    if (~GetOCF(pAnimal) | OCF_CrewMember())
+  while (pAnimal = FindObject(nil, nil, nil, nil, nil, OCF_Living, nil, nil, nil, pAnimal))
+    if (~(GetOCF(pAnimal) ?? 0) | (OCF_CrewMember ?? 0))
       if (GetAlive(pAnimal))
         Add(GetID(pAnimal));  
   return(1);
@@ -27,8 +27,8 @@ protected func ReproductionControl()
   // Bestand kontrollieren
   var i = -1;
   var idAnimal;
-  while (idAnimal = Get(0, ++i))
-    if (ObjectCount(idAnimal) < Get(idAnimal) )
+  while (idAnimal = Get(nil, S42MigrationStep(i, 1)))
+    if ((ObjectCount(idAnimal) ?? 0) < (Get(idAnimal) ?? 0) )
       if(!Random( 23 )) 
         Reproduce(idAnimal);
 }
@@ -37,10 +37,10 @@ private func Reproduce(idAnimal)
 {
   SetPosition(Random(LandscapeWidth()), Random(LandscapeHeight()));
   var pAnimal;
-  while (pAnimal = FindObject(idAnimal, 0, 0, -1, -1, 0, 0, 0, 0, pAnimal))
-    if (ObjectCall(pAnimal, "Reproduction", 1) || ObjectCount(idAnimal) >= Get(idAnimal)) 
+  while (pAnimal = FindObject(idAnimal, nil, nil, -1, -1, nil, nil, nil, nil, pAnimal))
+    if (Or(ObjectCall(pAnimal, "Reproduction", 1), (ObjectCount(idAnimal) ?? 0) >= (Get(idAnimal) ?? 0)))
       return(1);
-  return(0);
+  return(nil);
 }
 
 /* ID-Listenverwaltung (Components) */       
@@ -57,10 +57,10 @@ public func Get(idc, iIndex)
   
 public func Add(idc, iCount)
 {
-  return(Set(idc, Get(idc) + Max(iCount, 1)));
+  return(Set(idc, (Get(idc) ?? 0) + (Max(iCount, 1) ?? 0)));
 }
   
 public func Sub(idc, iCount)
 {
-  return(Set(idc, Get(idc) - Max(iCount, 1)));
+  return(Set(idc, (Get(idc) ?? 0) - (Max(iCount, 1) ?? 0)));
 }

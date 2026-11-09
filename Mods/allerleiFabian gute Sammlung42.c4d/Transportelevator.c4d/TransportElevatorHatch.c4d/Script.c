@@ -1,47 +1,47 @@
 /*-- Neues Objekt --*/
 
-#strict
+#strict 3
 
 local seg1,seg2;
 
 func Initialize() {
   SetAction("Closed");
-  SetPosition(GetX(), GetY()+6);
-  DigFreeRect(GetX()-66, GetY()-26, 132, 18);
+  SetPosition(GetX(), (GetY() ?? 0)+6);
+  DigFreeRect((GetX() ?? 0)-66, (GetY() ?? 0)-26, 132, 18);
 //seg1=CreateObject(BAS1, -53, 0);
 //seg2=CreateObject(BAS1, 53, 0);
   return(1);
 }
 
 func BeginMaskr()	{
-	SetSolidMask(0,0,132,8);
+	SetSolidMask(nil,nil,132,8);
 }
 
 func EndMaskr()	{
-	SetSolidMask(0,0,0,0);
+	SetSolidMask(nil,nil,nil,nil);
 }
 
 private func UpdateSolidMaskr()
 {
-  if (GetAction() eq "Open")
-    SetSolidMask(GetPhase() * 132, 0, 132, 8, 0, 0);
-  if (GetAction() eq "Close")
-    SetSolidMask(GetDefCoreVal("Width", "DefCore", GetID()) - GetPhase() * 132, 0, 132, 8, 0, 0);
+  if (!!SEqual(GetAction(), "Open"))
+    SetSolidMask((GetPhase() ?? 0) * 132, nil, 132, 8, nil, nil);
+  if (!!SEqual(GetAction(), "Close"))
+    SetSolidMask((GetDefCoreVal("Width", "DefCore", GetID()) ?? 0) - (GetPhase() ?? 0) * 132, nil, 132, 8, nil, nil);
 }  
 
 func Timerr()	{
-	if(GetAction() eq "Opened")
+	if(!!SEqual(GetAction(), "Opened"))
 		{
 		EndMaskr();
 		}
-	if(GetAction() eq "Closed")
+	if(!!SEqual(GetAction(), "Closed"))
 		{
 		BeginMaskr();
 		}
 
-	if(FindObject(BELC, -40, -45, 80, 85) || FindObject(SLP1, -40, -45, 80, 85) || FindObject(CHLP, -40, -45, 80, 85))
+	if(Or(Or(FindObject(BELC, -40, -45, 80, 85), FindObject(SLP1, -40, -45, 80, 85)), FindObject(CHLP, -40, -45, 80, 85)))
 		{
-		if(GetAction() eq "Closed")
+		if(!!SEqual(GetAction(), "Closed"))
 			{
 			SetAction("Open");
 			Sound("SteelGate2");
@@ -49,7 +49,7 @@ func Timerr()	{
 		}
 	else
 		{
-		if(GetAction() eq "Opened")
+		if(!!SEqual(GetAction(), "Opened"))
 			{
 			SetAction("Close");
 			Sound("SteelGate2");

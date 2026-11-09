@@ -1,6 +1,6 @@
 /*-- Feuerlöscher --*/
 
-#strict
+#strict 3
 
 local iFill,iAmount;
 
@@ -13,14 +13,14 @@ public func Initialize()
 
 public func CheckRefill()
 {
-  if(iFill>=RdW_Y3B_MaxFill)
-    return 0;
-  iAmount+=ExtractMaterialAmount(0,0,Material("Water"),25);
-  if(iAmount>=25)
+  if((iFill ?? 0)>=(RdW_Y3B_MaxFill ?? 0))
+    return nil;
+  S42MigrationAssign(iAmount, "+=", (ExtractMaterialAmount(nil,nil,Material("Water"),25) ?? 0));
+  if((iAmount ?? 0)>=25)
   {
-    iFill++;
-    iAmount-=25;
-    SetGraphics(Format("%d",RdW_Y3B_MaxFill-iFill));
+    S42MigrationStep(iFill, 1, true);
+    S42MigrationAssign(iAmount, "-=", 25);
+    SetGraphics(Format("%d",(RdW_Y3B_MaxFill ?? 0)-(iFill ?? 0)));
   }
 }
 
@@ -29,11 +29,11 @@ public func CheckRefill()
 public func Activate()
 {
   // noch beim Nachladen
-  if(GetAction() ne "Idle") return(0);
+  if(!SEqual(GetAction(), "Idle")) return(nil);
   // benötigt einen Container
-  if(!Contained()) return(0);
+  if(!Contained()) return(nil);
   // leer?
-  if(iFill<=0)  return Message("Leer...",this);
+  if((iFill ?? 0)<=0)  return Message("Leer...",this);
   Extinguish(Contained());
   SetAction("Firing");
   // Sound
@@ -45,37 +45,37 @@ public func Activate()
 
 func FxIntDraw_Y3BStart(pTarget)
 {
-  SetGraphics("",pTarget,_Y3B,4,GFXOV_MODE_Object,0,0,this);
-  SetLayerTransform(4,0,(GetDir()*2-1)*100,100,0,0,pTarget);
+  SetGraphics("",pTarget,_Y3B,4,GFXOV_MODE_Object,nil,nil,this);
+  SetLayerTransform(4,nil,((GetDir() ?? 0)*2-1)*100,100,nil,nil,pTarget);
   SetPhysical("Walk",1000,PHYS_StackTemporary,pTarget);
 }
 
 func FxIntDraw_Y3BTimer(pTarget)
 {
-  SetLayerTransform(4,0,(GetDir()*2-1)*100,100,0,0,pTarget);
-  if(!Contained()||GetAction() ne "Firing")
+  SetLayerTransform(4,nil,((GetDir() ?? 0)*2-1)*100,100,nil,nil,pTarget);
+  if(Or(!Contained(), !SEqual(GetAction(), "Firing")))
     return -1;
 }
 
 func FxIntDraw_Y3BStop(pTarget)
 {
-  SetGraphics(0,pTarget,0,4);
+  SetGraphics(nil,pTarget,nil,4);
   ResetPhysical(pTarget, "Walk");
 }
 
 private func Firing()
 {
   // Wasser abfeuern
-  var dir = (GetDir(Contained())*2-1);
+  var dir = ((GetDir(Contained()) ?? 0)*2-1);
   var ammo = CreateContents(SFES);
-  Exit(ammo, dir*10, Random(2), Random(360), GetXDir()/8+dir*Random(6)+dir*2, Random(6)-2, Random(100)-50);
-  InsertMaterial(Material("Water"), dir*10, Random(2), GetXDir()+dir*Random(60)+dir*20, Random(60)-20);
+  Exit(ammo, (dir ?? 0)*10, Random(2), Random(360), (GetXDir() ?? 0)/8+(dir ?? 0)*(Random(6) ?? 0)+(dir ?? 0)*2, (Random(6) ?? 0)-2, (Random(100) ?? 0)-50);
+  InsertMaterial(Material("Water"), (dir ?? 0)*10, Random(2), (GetXDir() ?? 0)+(dir ?? 0)*(Random(60) ?? 0)+(dir ?? 0)*20, (Random(60) ?? 0)-20);
   // Nachladen nicht vergessen
-  if(!Contained()||GetActTime() >= 25)
+  if(Or(!Contained(), (GetActTime() ?? 0) >= 25))
   {
     SetAction("Reload");
-    iFill--;
-    SetGraphics(Format("%d",RdW_Y3B_MaxFill-iFill));
+    S42MigrationStep(iFill, -1, true);
+    SetGraphics(Format("%d",(RdW_Y3B_MaxFill ?? 0)-(iFill ?? 0)));
   }
   return(1);
 }

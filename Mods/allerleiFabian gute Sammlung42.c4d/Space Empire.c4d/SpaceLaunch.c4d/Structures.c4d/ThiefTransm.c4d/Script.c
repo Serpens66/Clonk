@@ -1,66 +1,72 @@
 /*-- Dieb-Transmitter --*/
 
-#strict
+#strict 3
 #include STRM
 
 
 /* Action-Call: Energieübertragung */
 
-protected Transmit:
+protected func Transmit(...) {
   // ausgeschaltet oder EMP-Einwirkung
-  if (!iSwitch || HasEMP())
+  if (Or(!iSwitch, HasEMP()))
     return(SetAction("Idle"));
   // Energie abzapfen & weiterleiten
   StealEnergy();
   SendEnergy();
   // Update für Energieanzeige
-  ShowInfoBar(IBRE, this(), GetEnergy(), 100, 0, 1);
+  ShowInfoBar(IBRE, this(), GetEnergy(), 100, nil, 1);
   // keine Energie da?
   if (!GetEnergy()) return(SetAction("Wait"));
   return(1);
+}
 
-private StealEnergy:
+private func StealEnergy(...) {
   // Energie zwischen den Transmittern übertragen
   var obj;
   var nrg_value;
-  while ((obj = FindObject(STRM,-450,-450,900,900, 0,0,0,0,obj)) && (GetEnergy() < 100))
+  while (And((obj = FindObject(STRM,-450,-450,900,900, nil,nil,nil,nil,obj)), ((GetEnergy() ?? 0) < 100)))
     if (Hostile(GetOwner(obj), GetOwner()))
-      if (ObjectDistance(obj) <= 450)
+      if ((ObjectDistance(obj) ?? 0) <= 450)
         if (obj->GetSwitch())
         {
           nrg_value = GetEnergy(obj);
-          if (GetEnergy() + nrg_value > 100)
-            nrg_value = 100 - GetEnergy();
+          if ((GetEnergy() ?? 0) + (nrg_value ?? 0) > 100)
+            nrg_value = 100 - (GetEnergy() ?? 0);
           DoEnergy(nrg_value);
-          DoEnergy(-nrg_value, obj);
+          DoEnergy(-(nrg_value ?? 0), obj);
         }
   return(1);
+}
 
-private SendEnergy:
+private func SendEnergy(...) {
   // Energie zwischen den Transmittern übertragen
   var obj;
   var nrg_value;
-  while ((obj = FindObject(STRM,-450,-450,900,900, 0,0,0,0,obj)) && GetEnergy())
-    if (GetOwner(obj) == GetOwner())
-      if (ObjectDistance(obj) <= 450)
+  while (And((obj = FindObject(STRM,-450,-450,900,900, nil,nil,nil,nil,obj)), GetEnergy()))
+    if (Equal(GetOwner(obj), GetOwner()))
+      if ((ObjectDistance(obj) ?? 0) <= 450)
         if (obj->GetSwitch())
         {
           nrg_value = GetEnergy();
-          if (GetEnergy(obj) + nrg_value > 100)
-            nrg_value = 100 - GetEnergy(obj);
-          DoEnergy(-nrg_value);
+          if ((GetEnergy(obj) ?? 0) + (nrg_value ?? 0) > 100)
+            nrg_value = 100 - (GetEnergy(obj) ?? 0);
+          DoEnergy(-(nrg_value ?? 0));
           DoEnergy(nrg_value, obj);
         }
   return(1);
+}
 
-protected CheckEnergy:
+protected func CheckEnergy(...) {
   StealEnergy();
   if (GetEnergy()) SetAction("Transmitting");
   return(1);
+}
 
 
 /* Eigenschaften */
 
-public EnergyRange: return(450);
-public GetMaxDamage: return(80);
+public func EnergyRange(...) { return(450);
+}
+public func GetMaxDamage(...) { return(80);
+}
 

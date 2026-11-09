@@ -1,6 +1,6 @@
 /* Kraftfeldbrücke */
 
-#strict 2
+#strict 3
 
 protected func GetSegmentID() { return FBRS; }
 
@@ -8,9 +8,9 @@ protected func Initialize()
 {
   var pLast, pNext;
   
-  for (var i = 0; i < 4; i++)
+  for (var i = nil; (i ?? 0) < 4; S42MigrationStep(i, 1, true))
   {
-    var pNext = CreateObject(GetSegmentID(), GetDefCoreVal("Offset", "DefCore") + i*GetDefCoreVal("Width", "DefCore", GetSegmentID()), 0, NO_OWNER);
+    var pNext = CreateObject(GetSegmentID(), (GetDefCoreVal("Offset", "DefCore") ?? 0) + (i ?? 0)*(GetDefCoreVal("Width", "DefCore", GetSegmentID()) ?? 0), nil, NO_OWNER);
     pNext->SetAction("Field");
     if (pLast)
     {

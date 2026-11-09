@@ -1,6 +1,6 @@
 /*-- Taucherhelm --*/
 
-#strict
+#strict 3
 
 protected func Hit() { Sound("ClonkHit*"); }
 
@@ -9,11 +9,11 @@ protected func Activate(pClonk)
   [$PutOn$|Image=THLM]
   // if(GetID(pClonk)== HZCK)
   // return(PlayerMessage(GetOwner(pClonk),"Nur von unspezialisierten Clonks verwendbar",pClonk));
-  if(FindObject(GetID(),0,0,0,0,0,"Wear",pClonk))
+  if(FindObject(GetID(),nil,nil,nil,nil,nil,"Wear",pClonk))
    return(PlayerMessage(GetOwner(pClonk),"$AlreadyHasHelmet$",pClonk,GetName(pClonk)));
 if(pClonk->~HasGear(GEAR_Armor))
    return(PlayerMessage(GetOwner(pClonk),"Trägt bereits eine Rüstung",pClonk)); // auch nicht mit anderen rüstungen kombinieren
-  SetComDir(COMD_Stop(),pClonk);
+  SetComDir(COMD_Stop,pClonk);
   SetAction("Wear",pClonk);
   // SetPhysical("Walk",35000,2,pClonk);
   // SetPhysical("Jump",15000,2,pClonk);
@@ -38,7 +38,7 @@ if(pClonk->~HasGear(GEAR_Armor))
 
 private func Extract(pClonk)
 {
-  SetComDir(COMD_Stop(),pClonk);
+  SetComDir(COMD_Stop,pClonk);
   SetAction("Idle");
   if(Contained(pClonk))
     {
@@ -65,19 +65,19 @@ private func Check()
   var clonk= GetActionTarget();
   if(!GetAlive(clonk)) return(Extract(clonk));
   SetDir(GetDir(clonk));
-  if(GetAction(clonk) eq "Swim")
+  if(!!SEqual(GetAction(clonk), "Swim"))
     {
     // if(GetYDir(clonk)> 0) SetPhysical("Swim",60000,3,clonk);
 		     // else SetPhysical("Swim",30000,3,clonk);
-    if(GetDir(clonk)== DIR_Left()) SetPosition(GetX()-3,GetY()+1);
-			      else SetPosition(GetX()+3,GetY()+1);
+    if(Equal(GetDir(clonk), DIR_Left)) SetPosition((GetX() ?? 0)-3,(GetY() ?? 0)+1);
+			      else SetPosition((GetX() ?? 0)+3,(GetY() ?? 0)+1);
     }
-  var pump= GetActionTarget(1,FindObject(PWRL,0,0,0,0,0,"Connect",this()));
-  if(!pump) return(0);
-  if(GetAction(pump) ne "Working") return(0);
+  var pump= GetActionTarget(1,FindObject(PWRL,nil,nil,nil,nil,nil,"Connect",this()));
+  if(!pump) return(nil);
+  if(!SEqual(GetAction(pump), "Working")) return(nil);
   DoBreath(+1,clonk); 
 }
 
-protected func RejectEntrance() { if(GetAction() eq "Wear") return(1); }
+protected func RejectEntrance() { if(!!SEqual(GetAction(), "Wear")) return(1); }
 
 protected func IsAnvilProduct() { return(1); }

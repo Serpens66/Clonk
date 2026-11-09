@@ -1,6 +1,6 @@
 /*-- Tageszeiten --*/
 
-#strict
+#strict 3
 
 // Kann mittels des neuen Spielzielauswählers
 public func IsVariabelChooseable2() { return(1); }
@@ -19,9 +19,9 @@ protected func Initialize()
   var pTime;
   if(pTime=FindObject(TIME))// Ist schon eins da?
   {
-   dayspeed++;// Geschwindigkeit erhöhen
+   S42MigrationStep(dayspeed, 1, true);// Geschwindigkeit erhöhen
    RemoveObject();
-   return 0;
+   return nil;
   }
   // Sonst Grundobjekt
   dayspeed=2;
@@ -49,21 +49,21 @@ protected func Initialize()
 public func SetTimeTIME(iTime,ianpassen) // int iTime 0-100=Mittag-Mittag
 {
   // Zeit setzen
-  daytime=Par(0)*TimeResolution()/100;
+  daytime=(Par(nil) ?? 0)*(TimeResolution() ?? 0)/100;
   // Helligkeit anpassen
 //if(FindObject(KOHE))
 //{dayhelligkeit=BoundBy( Cos((daytime*360)/TimeResolution(),250)+60 ,startdayhelligkeit,startdayhelligkeit);}  // bleibt immer beim Wert von starthelligkeit... 
 //else {
-dayhelligkeit=BoundBy( Cos((daytime*360)/TimeResolution(),250)+60 ,0,startdayhelligkeit);
+dayhelligkeit=BoundBy( (Cos(((daytime ?? 0)*360)/(TimeResolution() ?? 0),250) ?? 0)+60 ,nil,startdayhelligkeit);
 //}  // minimal 5 und maximal starthelligkeit
 //pseudodayhelligkeit=BoundBy( Cos((daytime*360)/TimeResolution(),250)+60 ,0,startdayhelligkeit);  // im Fall von konstanter Helligkeit, damit Tag/Nacht trzd. funktioniert
-  RestoreColors(BoundBy(dayhelligkeit+minhelligkeit,minhelligkeit,startdayhelligkeit),ianpassen);
+  RestoreColors(BoundBy((dayhelligkeit ?? 0)+(minhelligkeit ?? 0),minhelligkeit,startdayhelligkeit),ianpassen);
   return(1);
 }
 
 global func Flash(blitz)
 {
-  return(flash+=blitz);
+  return(S42MigrationAssign(flash, "+=", (blitz ?? 0)));
 }
  
 global func TimeResolution(){ return 10000;}
@@ -73,19 +73,19 @@ global func TimeResolution(){ return 10000;}
 private func Timing()
 {
   // Zeitfortschritt
-  daytime=(daytime+dayspeed/2)%TimeResolution();
+  daytime=((daytime ?? 0)+(dayspeed ?? 0)/2)%(TimeResolution() ?? 0);
   // Helligkeit nach Tageszeit berechnen
   var gamma;
 //if(FindObject(KOHE))
 // gamma=BoundBy( Cos((daytime*360)/TimeResolution(),250)+60 ,startdayhelligkeit,startdayhelligkeit);  // bleibt immer beim Wert von starthelligkeit... 
 //else
-  gamma=BoundBy( Cos((daytime*360)/TimeResolution(),250)+60 ,0,startdayhelligkeit);
-  if(flash>0)
-   flash=BoundBy(flash-15,0,200);
+  gamma=BoundBy( (Cos(((daytime ?? 0)*360)/(TimeResolution() ?? 0),250) ?? 0)+60 ,nil,startdayhelligkeit);
+  if((flash ?? 0)>0)
+   flash=BoundBy((flash ?? 0)-15,nil,200);
   // Helligkeit und Himmelsfarbe anpassen
-  if (gamma>dayhelligkeit) ++dayhelligkeit;
-  if (gamma<dayhelligkeit) --dayhelligkeit;
-  if (gamma!=dayhelligkeit||flash||Random(10)>9) RestoreColors(BoundBy(dayhelligkeit+minhelligkeit,minhelligkeit,startdayhelligkeit)+flash);
+  if ((gamma ?? 0)>(dayhelligkeit ?? 0)) S42MigrationStep(dayhelligkeit, 1);
+  if ((gamma ?? 0)<(dayhelligkeit ?? 0)) S42MigrationStep(dayhelligkeit, -1);
+  if (Or(Or(!Equal(gamma, dayhelligkeit), flash), (Random(10) ?? 0)>9)) RestoreColors((BoundBy((dayhelligkeit ?? 0)+(minhelligkeit ?? 0),minhelligkeit,startdayhelligkeit) ?? 0)+(flash ?? 0));
   // Fertig
   return(1);
 }
@@ -93,8 +93,8 @@ private func Timing()
 protected func UpdateTransferZone()
 {
   // Kleiner Trick, damit der Himmel nach dem Laden aktualisiert wird
-  if (GetAction() S= "Time") RestoreColors(BoundBy(dayhelligkeit+minhelligkeit,minhelligkeit,startdayhelligkeit));
-  return(0);  
+  if (!!SEqual(GetAction(), "Time")) RestoreColors(BoundBy((dayhelligkeit ?? 0)+(minhelligkeit ?? 0),minhelligkeit,startdayhelligkeit));
+  return(nil);
 }
   
 /* Status */
@@ -107,8 +107,8 @@ global func IsDay()
 
 //  if(!FindObject(KOHE))
   if(ObjectCount2(Find_ID(TIME),Find_Action("Time")))
-    return dayhelligkeit>5;
-return 0;
+    return (dayhelligkeit ?? 0)>5;
+return nil;
 }
 
 global func IsNight()
@@ -126,36 +126,36 @@ global func IsVeryDay()
 
 //  if(!FindObject(KOHE))
   if(ObjectCount2(Find_ID(TIME),Find_Action("Time")))
-    return dayhelligkeit>25;
+    return (dayhelligkeit ?? 0)>25;
 }
 
 /* Farbfunktionen */
 public func RestoreColors(gamma, ianpassen)
 {
- var blue=50-gamma/2;
+ var blue=50-(gamma ?? 0)/2;
   var pMoon,iMoon;
   if(pMoon=FindObject(SMON))
   {
-    iMoon=Abs(pMoon->GetMoonPhase()-6)*6;
-    gamma+=BoundBy((iMoon-gamma/3),0,50);
+    iMoon=(Abs((pMoon->GetMoonPhase() ?? 0)-6) ?? 0)*6;
+    S42MigrationAssign(gamma, "+=", (BoundBy(((iMoon ?? 0)-(gamma ?? 0)/3),nil,50) ?? 0));
   }
 
-  RestoreSkyColors(gamma,0,0,blue);
-  RestoreMatColors(gamma,0,0,blue,ianpassen);
+  RestoreSkyColors(gamma,nil,nil,blue);
+  RestoreMatColors(gamma,nil,nil,blue,ianpassen);
   // Umwelt druff
-  var green=ProzentVon(globalnature,globalpollution)/3;
+  var green=(ProzentVon(globalnature,globalpollution) ?? 0)/3;
   var red  =CalcDayRed();
-  gamma = (gamma-50)*2;
+  gamma = ((gamma ?? 0)-50)*2;
 
 // setgamma weglassen aber check light für sonnenbewegung machen, wenn KOHE. ianpassen ist 1, wenn regel mitten im Spiel aktiv wird, damit mithilfe von setTime dann mittags gemacht wird und die Lichtverhältnisse gemacht werden
-if(FindObject(KOHE) && !ianpassen)
+if(And(FindObject(KOHE), !ianpassen))
 {
 for(var obj in FindObjects(Find_Func("IsLight")))
     obj->~CheckLight();
 return(1);
 }
 
-  SetGamma(RGB(BoundBy(0+ red/2,0,255),BoundBy(0+ green,0,255),0),RGB(BoundBy(128+gamma+red,0,255),BoundBy(128+green+gamma,0,255),BoundBy(128+gamma,0,255)),RGB(BoundBy(245+gamma/4+red/4,0,255),BoundBy(245+gamma/4,0,255),BoundBy(245+gamma/4,0,255)),1);
+  SetGamma(RGB(BoundBy(0+ (red ?? 0)/2,nil,255),BoundBy(0+ (green ?? 0),nil,255),nil),RGB(BoundBy(128+(gamma ?? 0)+(red ?? 0),nil,255),BoundBy(128+(green ?? 0)+(gamma ?? 0),nil,255),BoundBy(128+(gamma ?? 0),nil,255)),RGB(BoundBy(245+(gamma ?? 0)/4+(red ?? 0)/4,nil,255),BoundBy(245+(gamma ?? 0)/4,nil,255),BoundBy(245+(gamma ?? 0)/4,nil,255)),1);
 for(var obj in FindObjects(Find_Func("IsLight")))
     obj->~CheckLight();
   return(1);
@@ -169,52 +169,52 @@ public func RestoreSkyColors(ipercent,exred,exgreen,exblue)
 
   /* Helligkeit */
   var red,green,blue;
-if (IsVeryDay()) {red=green=blue=255*(ipercent-20)/100;};
- if (IsNight()) {red=green=blue=255*(ipercent-40)/100;};
-if(IsDay()) {  red=green=blue=255*ipercent/100;};
+if (IsVeryDay()) {red=green=blue=255*((ipercent ?? 0)-20)/100;};
+ if (IsNight()) {red=green=blue=255*((ipercent ?? 0)-40)/100;};
+if(IsDay()) {  red=green=blue=255*(ipercent ?? 0)/100;};
   /* Extrafärbung drauf */
-  red+=exred;
-  green+=exgreen;
-  blue+=exblue;
+  S42MigrationAssign(red, "+=", (exred ?? 0));
+  S42MigrationAssign(green, "+=", (exgreen ?? 0));
+  S42MigrationAssign(blue, "+=", (exblue ?? 0));
   /* Limits */
-  if(red>255) red=255;  if(green>255) green=255;  if(blue>255) blue=255;
-  if(red<000) red=000;  if(green<000) green=000;  if(blue<000) blue=000;
+  if((red ?? 0)>255) red=255;  if((green ?? 0)>255) green=255;  if((blue ?? 0)>255) blue=255;
+  if((red ?? 0)<(000 ?? 0)) red=000;  if((green ?? 0)<(000 ?? 0)) green=000;  if((blue ?? 0)<(000 ?? 0)) blue=000;
   /* Umfärben */
 // if (IsNight()){  SetSkyAdjust(RGB((red+55)/2,(green+55)/2,(blue+55)/2));}    // himmel soll nicht pechschwarz sein
 // else {
-SetSkyAdjust(RGB((red+255)/2,(green+255)/2,(blue+255)/2));
+SetSkyAdjust(RGB(((red ?? 0)+255)/2,((green ?? 0)+255)/2,((blue ?? 0)+255)/2));
 // };
   return(1);
 }  
 
 public func RestoreMatColors(ipercent,exred,exgreen,exblue,ianpassen)
 {
-  exred+=GetTemperature()*2;
-  exblue-=GetTemperature()*2;
+  S42MigrationAssign(exred, "+=", (GetTemperature() ?? 0)*2);
+  S42MigrationAssign(exblue, "-=", (GetTemperature() ?? 0)*2);
   var red,green,blue;
-  var gamma=100-(100-ipercent)*5/6;
-  red=green=blue=255*gamma/100;
+  var gamma=100-(100-(ipercent ?? 0))*5/6;
+  red=green=blue=255*(gamma ?? 0)/100;
   /* Extrafärbung drauf */
-  red+=exred;
-  green+=exgreen;
-  blue+=exblue;
+  S42MigrationAssign(red, "+=", (exred ?? 0));
+  S42MigrationAssign(green, "+=", (exgreen ?? 0));
+  S42MigrationAssign(blue, "+=", (exblue ?? 0));
   /* Limits */
-  if(red>255) red=255;  if(green>255) green=255;  if(blue>255) blue=255;
-  if(red<000) red=000;  if(green<000) green=000;  if(blue<000) blue=000;
+  if((red ?? 0)>255) red=255;  if((green ?? 0)>255) green=255;  if((blue ?? 0)>255) blue=255;
+  if((red ?? 0)<(000 ?? 0)) red=000;  if((green ?? 0)<(000 ?? 0)) green=000;  if((blue ?? 0)<(000 ?? 0)) blue=000;
   /* Umfärben */
-if(FindObject(KOHE) && !ianpassen) // wenn KOHE aktiviert und der normale tagesverlauf stattfindet, dann soll die folgende Änderung nicht gemacht werde. Aber wenn KOHE aktiviert wird, muss SetTime mittags mit ianpassen gesetzt werden, damit die farben so sind, wie sich tagsüber ohne helligkeitsänderungen wären.
+if(And(FindObject(KOHE), !ianpassen)) // wenn KOHE aktiviert und der normale tagesverlauf stattfindet, dann soll die folgende Änderung nicht gemacht werde. Aber wenn KOHE aktiviert wird, muss SetTime mittags mit ianpassen gesetzt werden, damit die farben so sind, wie sich tagsüber ohne helligkeitsänderungen wären.
 return(1);
-  SetMatAdjust(RGB((red+255+255)/3,(green+255+255)/3,(blue+255+255)/3));
+  SetMatAdjust(RGB(((red ?? 0)+255+255)/3,((green ?? 0)+255+255)/3,((blue ?? 0)+255+255)/3));
   return(1);  
 }
 
 private func CalcDayRed()
 {
-  var perc = (dayhelligkeit*2-10)*2;
+  var perc = ((dayhelligkeit ?? 0)*2-10)*2;
   if(!Inside(perc,1,199))
-    return 0;
-  if(perc>100)
-    return Prozent(40,200-perc);
+    return nil;
+  if((perc ?? 0)>100)
+    return Prozent(40,200-(perc ?? 0));
   return Prozent(40,perc);
 }
 
@@ -227,12 +227,12 @@ private func TimingTwo()
     var grad;
     if(GetLength(hashSpielRegeln))
         grad=HashGet(hashSpielRegeln, "Dunkelheitsgrad"); // kann 100 oder 50 annehmen. Wenn 100, alles normal. Wenn 50, dann dieses dunkelheitsobjekt nicht verdunkeln
-    if(!FindObject(KOHE) && grad==100) // wenn die entsprechendenn Regeln gesetzt sind
-        for(var i = 0; i < GetPlayerCount(); i++)  
+    if(And(!FindObject(KOHE), Equal(grad, 100))) // wenn die entsprechendenn Regeln gesetzt sind
+        for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
         {
             if(!FindObject2(Find_ID(DUUU),Find_Owner(GetPlayerByIndex(i)))) // nur erstellen, wenn es fuer den spieler noch keinees gibt 
-                CreateObject(DUUU,0,0,GetPlayerByIndex(i));  // das verhalten wird im DUUU objekt selbst gemacht
-            if(ObjectCount2(Find_ID(DUUU),Find_Owner(GetPlayerByIndex(i)))>=2) // wenn 2 oder mehr gefunden werden, dann eines entfernen
+                CreateObject(DUUU,nil,nil,GetPlayerByIndex(i));  // das verhalten wird im DUUU objekt selbst gemacht
+            if((ObjectCount2(Find_ID(DUUU),Find_Owner(GetPlayerByIndex(i))) ?? 0)>=2) // wenn 2 oder mehr gefunden werden, dann eines entfernen
                 RemoveObject(FindObject2(Find_ID(DUUU),Find_Owner(GetPlayerByIndex(i))));
         }
     else // wenn Regeln keine DUUU objekte erlauben, dann alle entfernen
@@ -250,7 +250,7 @@ private func TimingTwo()
 if(IsNight()) LightNeeded=1;  
 if(IsVeryDay())
   {
-    if(!fDay) {SunRise();LightNeeded=0;}
+    if(!fDay) {SunRise();LightNeeded=nil;}
     if(FindObject2(Find_Action("Fensterln"))) RemoveWindows();
   }
   else
@@ -265,11 +265,11 @@ if(!FindObject2(Find_ID(SES_)))  //Regel für keine Jahreszeiten
 {
   // Schneegrafiken
   var object,graphics="";
-  if(GetTemperature()<0) graphics="Schnee";
-  for(object in FindObjects(Find_Exclude(),Find_Not(Find_OCF(OCF_OnFire)),Find_Or(Find_Category(C4D_Structure|C4D_Vehicle),Find_Func("ForceGraphChange")),Find_Not(Find_Func("RejectGraphChange",graphics))))
+  if((GetTemperature() ?? 0)<0) graphics="Schnee";
+  for(object in FindObjects(Find_Exclude(),Find_Not(Find_OCF(OCF_OnFire)),Find_Or(Find_Category((C4D_Structure ?? 0)|(C4D_Vehicle ?? 0)),Find_Func("ForceGraphChange")),Find_Not(Find_Func("RejectGraphChange",graphics))))
   {
     // Am Anfang Grafiken sofort aktualisieren
-    if(FrameCounter()<51)
+    if((FrameCounter() ?? 0)<51)
     {        
       if(!object->~ChangeGraphic(graphics))
         SetGraphics(graphics,object);
@@ -290,7 +290,7 @@ private func SunRise()
 {
   // Tag/Nacht umschalten
   fDay=1;
-  iDay++;
+  S42MigrationStep(iDay, 1, true);
 //  Sound("Bell",1);
 //  EventMessage("NewDay",Format("%d. Tag",iDay),0,0);
   var object;
@@ -303,7 +303,7 @@ private func Dawn()
 {
   // Tag/Nacht umschalten
 //  EventMessage("Night","",0,0);
-  fDay=0;
+  fDay=nil;
   for(var object in FindObjects(Find_Not(Find_ID(GetID(this())))))
 	 object->~Dawn(Random(3));// Callback an die Objekte senden
   return(1);
@@ -321,14 +321,14 @@ public func IsChooserConfig(){return true;}
 
 public func ConfigSettings(iIndex,iSymb)
 {
-  if(!iIndex--){ if(!iSymb) return Format("Tagesgeschwindigkeit erhöhen...  (%d/10)",dayspeed); if(iSymb==2) return 1; return XSYX;}
-  if(!iIndex--){ if(!iSymb) return Format("Tagesgeschwindigkeit veringern...  (%d/10)",dayspeed); if(iSymb==2) return 2; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return Format("Tagesgeschwindigkeit erhöhen...  (%d/10)",dayspeed); if(Equal(iSymb, 2)) return 1; return XSYX;}
+  if(!S42MigrationStep(iIndex, -1, true)){ if(!iSymb) return Format("Tagesgeschwindigkeit veringern...  (%d/10)",dayspeed); if(Equal(iSymb, 2)) return 2; return XSYX;}
 }
 
 public func ConfigSettingsCall(iIndex)
 {
-  if(!iIndex--)
-    dayspeed=BoundBy(dayspeed+1,1,10);
-  if(!iIndex--)
-    dayspeed=BoundBy(dayspeed-1,1,10);
+  if(!S42MigrationStep(iIndex, -1, true))
+    dayspeed=BoundBy((dayspeed ?? 0)+1,1,10);
+  if(!S42MigrationStep(iIndex, -1, true))
+    dayspeed=BoundBy((dayspeed ?? 0)-1,1,10);
 }

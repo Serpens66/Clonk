@@ -1,6 +1,6 @@
 /*--- Asche ---*/
 
-#strict
+#strict 3
 
 func Hit() {
 	CastPXS("Ashes",100,20);

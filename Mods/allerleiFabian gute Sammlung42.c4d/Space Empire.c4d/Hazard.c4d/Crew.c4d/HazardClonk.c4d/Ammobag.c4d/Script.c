@@ -1,6 +1,6 @@
 /*-- Munitionsgürtel --*/
 
-#strict
+#strict 3
 
 func Initialize()
 {
@@ -13,4 +13,4 @@ func IsAmmoStorage() { return(1); }
 
 /* Serialisierung */
 
-public func NoSerialize() { return !false; }
+public func NoSerialize() { return !nil; }

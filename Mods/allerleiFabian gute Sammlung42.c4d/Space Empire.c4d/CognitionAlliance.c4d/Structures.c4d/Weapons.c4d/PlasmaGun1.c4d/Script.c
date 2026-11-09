@@ -1,6 +1,6 @@
 /*-- Plasmakanone --*/
 
-#strict
+#strict 3
 
 local target, aimphase, phase;
 local energymode;
@@ -15,13 +15,13 @@ public func Init(building, mode, vx, vy, direction)
 {
   SetAction("Wait", building);
   energymode = mode;
-  SetVertex(0,0, GetVertex(0,0)+vx);
-  SetVertex(0,1, GetVertex(0,1)+vy);
+  SetVertex(nil,nil, (GetVertex(nil,nil) ?? 0)+(vx ?? 0));
+  SetVertex(nil,1, (GetVertex(nil,1) ?? 0)+(vy ?? 0));
   // Ausrichtung
-  if (direction == 0)
-    if (GetX() < LandscapeWidth()/2) direction = +1;
+  if (Equal(direction, nil))
+    if ((GetX() ?? 0) < (LandscapeWidth() ?? 0)/2) direction = +1;
                                 else direction = -1;
-  if (direction < 0) phase = 31;
+  if ((direction ?? 0) < 0) phase = 31;
                 else phase = 5;
   SetPhase(phase);
 }
@@ -49,8 +49,8 @@ private func EndReloading()
 private func CheckTurnLeft()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (--phase < 0) phase = 35;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, -1) < 0) phase = 35;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -60,8 +60,8 @@ private func CheckTurnLeft()
 private func CheckTurnRight()
 {
   // solange weiterdrehen, bis richtige Ausrichtung erreicht
-  if (++phase > 35) phase = 0;
-  if (phase != aimphase) return(1);
+  if (S42MigrationStep(phase, 1) > 35) phase = nil;
+  if (!Equal(phase, aimphase)) return(1);
   // Ausrichtung passt genau
   SetAction("Wait");
   SetPhase(phase);
@@ -74,8 +74,8 @@ private func ResetAimPhase()
 {
   // Energieverbrauch
   var building = GetActionTarget();
-  if (energymode && (GetEnergy(building) < 30))
-    return(0);
+  if (And(energymode, ((GetEnergy(building) ?? 0) < 30)))
+    return(nil);
   // Ziel suchen
   target = GetTargetCrew(650,AbsX(GetX()),AbsY(GetY()));                 // gegnerischer Clonk
   if (!target) target = GetTargetVehicle(650,AbsX(GetX()),AbsY(GetY())); // gegnerisches Fahrzeug
@@ -83,16 +83,16 @@ private func ResetAimPhase()
   if (!target) target = GetOtherThreats(650,AbsX(GetX()),AbsY(GetY())); // feindliche Raumgleiter, gefährliche tiere und aliens
   if (!target) return(1);
   // Ausrichtungswinkel
-  var angle = Angle(GetX(),GetY(), GetX(target)+GetXDir(target), GetY(target)+GetYDir(target));
-  aimphase = ((angle + 7) / 10) % 36;
+  var angle = Angle(GetX(),GetY(), (GetX(target) ?? 0)+(GetXDir(target) ?? 0), (GetY(target) ?? 0)+(GetYDir(target) ?? 0));
+  aimphase = (((angle ?? 0) + 7) / 10) % 36;
   // passt die Ausrichtung schon?
-  if (phase == aimphase)
+  if (Equal(phase, aimphase))
   {
 
 // Munitionskontrolle
 var munitionspack;
-    munitionspack = FindObject(PTAP,0,0,0,0,0,0,0,building);
-if(!munitionspack && !FindObject(NOAM)) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
+    munitionspack = FindObject(PTAP,nil,nil,nil,nil,nil,nil,nil,building);
+if(And(!munitionspack, !FindObject(NOAM))) {return(PlayerMessage(GetOwner(),"keine Munition",this()));}
 if(munitionspack) 
  munitionspack->~RestAmmoreduzieren(Munitionsverbrauch()); // restmunition im Paket wird um 1 pro Salve reduziert
 
@@ -100,8 +100,8 @@ if(munitionspack)
     SetAction("Wait");
     SetPhase(phase);
     // Munition suchen
-    var shot=CreateObject(CPS1,0,0,GetOwner(building));
-    shot->Launch(GetX(),GetY(),Sin(angle,100), -Cos(angle,100)); 
+    var shot=CreateObject(CPS1,nil,nil,GetOwner(building));
+    shot->Launch(GetX(),GetY(),Sin(angle,100), -(Cos(angle,100) ?? 0));
     
     // Sound
     Sound("Plasmashot");
@@ -114,10 +114,10 @@ if(munitionspack)
     return(1);
   }
   // neu ausrichten
-  if ((phase < aimphase) ^ Inside(phase-aimphase, -18, +18))
+  if ((((phase ?? 0) < (aimphase ?? 0)) ?? 0) ^ (Inside((phase ?? 0)-(aimphase ?? 0), -18, +18) ?? 0))
   {
     SetAction("TurnLeft");
-    SetPhase((36-phase) % 36);
+    SetPhase((36-(phase ?? 0)) % 36);
     return(1);
   }
   SetAction("TurnRight");

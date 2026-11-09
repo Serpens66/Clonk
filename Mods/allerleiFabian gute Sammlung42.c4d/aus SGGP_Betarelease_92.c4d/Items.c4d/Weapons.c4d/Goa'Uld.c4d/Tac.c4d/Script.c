@@ -1,5 +1,5 @@
 /*-- Tac --*/
-#strict
+#strict 3
 
 local on;
 local target;
@@ -60,38 +60,38 @@ public func ControlThrow(pCursor)
 
 public func Check()
 {
-  if(shots == 100)
+  if(Equal(shots, 100))
   {
    Explode(3);
   }
-  if(time > 0)
+  if((time ?? 0) > 0)
   {
-   time --;
+   S42MigrationStep(time , -1, true);
   }
   
   if(!on)
   {
-   return();
+   return;
   }
   SetPosition(pX,pY);
   SetXDir();
   SetYDir();
 
-  if(time == 0)
+  if(Equal(time, nil))
   {
    time = 5;
 
-  if(FindObject2(Find_Or(Find_OCF(OCF_Alive()),Find_Category(C4D_Vehicle())),Find_Distance(400),Find_Not(Find_Action("Lie")),Find_Not(Find_Action("Zatfall")),Find_NoContainer(),Find_PathFree(),Find_Hostile(GetOwner())))
+  if(FindObject2(Find_Or(Find_OCF(OCF_Alive),Find_Category(C4D_Vehicle)),Find_Distance(400),Find_Not(Find_Action("Lie")),Find_Not(Find_Action("Zatfall")),Find_NoContainer(),Find_PathFree(),Find_Hostile(GetOwner())))
   {
-   target = FindObject2(Find_Or(Find_OCF(OCF_Alive()),Find_Category(C4D_Vehicle())),Find_Distance(400),Find_Not(Find_Action("Lie")),Find_Not(Find_Action("Zatfall")),Find_NoContainer(),Find_PathFree(),Find_Hostile(GetOwner()));
+   target = FindObject2(Find_Or(Find_OCF(OCF_Alive),Find_Category(C4D_Vehicle)),Find_Distance(400),Find_Not(Find_Action("Lie")),Find_Not(Find_Action("Zatfall")),Find_NoContainer(),Find_PathFree(),Find_Hostile(GetOwner()));
    var angle;
    var ammo;
    angle = Angle(Abs(GetX()),Abs(GetY()),Abs(GetX(target)),Abs(GetY(target)));
    SetR(angle);
-   var ammo = CreateObject(TACS,0,-3,GetOwner(this()));
-   ammo->Launch(RandomX(angle-3,angle+3),250,500,2,30,2);
+   var ammo = CreateObject(TACS,nil,-3,GetOwner(this()));
+   ammo->Launch(RandomX((angle ?? 0)-3,(angle ?? 0)+3),250,500,2,30,2);
    Sound("tac");
-   shots++;
+   S42MigrationStep(shots, 1, true);
    return(1);
   }
   
@@ -102,10 +102,10 @@ public func Check()
    var ammo;
    angle = Angle(Abs(GetX()),Abs(GetY()),Abs(GetX(target)),Abs(GetY(target)));
    SetR(angle);
-   var ammo = CreateObject(TACS,0,-3,GetOwner(this()));
-   ammo->Launch(RandomX(angle-3,angle+3),250,500,2,30,2);
+   var ammo = CreateObject(TACS,nil,-3,GetOwner(this()));
+   ammo->Launch(RandomX((angle ?? 0)-3,(angle ?? 0)+3),250,500,2,30,2);
    Sound("tac");
-   shots++;
+   S42MigrationStep(shots, 1, true);
    return(1);
   }
   

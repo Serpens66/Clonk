@@ -1,6 +1,6 @@
 /*-- Erweiterter Meeresspiegel --*/
 
-#strict
+#strict 3
 
 // Kann mittels des neuen Spielzielauswählers
 public func IsChooseable2() { return(1); }

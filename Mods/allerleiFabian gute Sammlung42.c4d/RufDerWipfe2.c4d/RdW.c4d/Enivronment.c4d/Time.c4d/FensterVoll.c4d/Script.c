@@ -1,6 +1,6 @@
 /*-- Fenster --*/
 
-#strict
+#strict 3
 
 public func Start(pTarget)
 {
@@ -15,16 +15,16 @@ public func Start(pTarget)
 protected func FxLightPulseStart(pTarget, iEffectNumber, iTemp, iLayer)
 {
   EffectVar(1,pTarget,iEffectNumber)=70;
-  EffectVar(2,pTarget,iEffectNumber)=0;
+  EffectVar(2,pTarget,iEffectNumber)=nil;
 }
 
 protected func FxLightPulseTimer(pTarget, iEffectNumber, iEffectTime)
 {
   var Layer=EffectVar(3,pTarget,iEffectNumber);
-  var Dir=BoundBy(EffectVar(2,pTarget,iEffectNumber)+RandomX(-1,1),-7,7);
-  var Alpha=BoundBy(EffectVar(1,pTarget,iEffectNumber)+RandomX(-5,5)+RandomX(Dir),20,160);
-  if(Alpha>150) Dir-=Random(2);
-  if(Alpha<30) Dir+=Random(2);
+  var Dir=BoundBy((EffectVar(2,pTarget,iEffectNumber) ?? 0)+(RandomX(-1,1) ?? 0),-7,7);
+  var Alpha=BoundBy((EffectVar(1,pTarget,iEffectNumber) ?? 0)+(RandomX(-5,5) ?? 0)+(RandomX(Dir) ?? 0),20,160);
+  if((Alpha ?? 0)>150) S42MigrationAssign(Dir, "-=", (Random(2) ?? 0));
+  if((Alpha ?? 0)<30) S42MigrationAssign(Dir, "+=", (Random(2) ?? 0));
   SetClrModulation(RGBa(255,255,255,Alpha),pTarget,Layer);
   EffectVar(1,pTarget,iEffectNumber)=Alpha;
   EffectVar(2,pTarget,iEffectNumber)=Dir;

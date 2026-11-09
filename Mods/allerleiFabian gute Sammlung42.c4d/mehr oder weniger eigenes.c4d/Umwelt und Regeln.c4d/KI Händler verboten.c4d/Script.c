@@ -1,6 +1,6 @@
 /*-- KI Händler verboten --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

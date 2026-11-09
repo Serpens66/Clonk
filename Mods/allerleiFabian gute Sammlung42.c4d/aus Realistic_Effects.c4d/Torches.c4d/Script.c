@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 
 // Kann mittels des neuen Spielzielauswählers variabel eingestellt werden
@@ -10,11 +10,11 @@ protected func Initialize() {
 
 func Destruction()
 {
-var i = 0;
-for (var plrnum = GetPlayerCount (); plrnum; i++)
+var i = nil;
+for (var plrnum = GetPlayerCount (); plrnum; S42MigrationStep(i, 1, true))
   if (GetPlayerName (i)) {
-    plrnum--;
-    SetFoW (0, i);
+    S42MigrationStep(plrnum, -1, true);
+    SetFoW (nil, i);
   }
 }
 

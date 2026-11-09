@@ -1,52 +1,54 @@
 /*-- Neues Script --*/
 
-#strict
+#strict 3
 
 //Explode mit Effekt und tollen Extraparametern für performance-/effektmäßiges Zeug
 global func FakeExplode(int iLevel, object pObj, bool bNoShots, iblast) {
+  iLevel ??= 0;
+  bNoShots ??= false;
   if(!pObj)
     if(!(pObj=this()))
-      return();
+      return;
 
-  var x = GetX(pObj)-GetX();
-  var y = GetY(pObj)-GetY();
+  var x = (GetX(pObj) ?? 0)-(GetX() ?? 0);
+  var y = (GetY(pObj) ?? 0)-(GetY() ?? 0);
 
   // Sound
-  var grade = BoundBy((iLevel/10)-1,1,3);
-  Sound(Format("Blast%d",grade),0,pObj,100);
+  var grade = BoundBy(((iLevel ?? 0)/10)-1,1,3);
+  Sound(Format("Blast%d",grade),nil,pObj,100);
 
   
   // Effects
-  ShakeViewPort(iLevel*8, pObj);
+  ShakeViewPort((iLevel ?? 0)*8, pObj);
 //////////
-  var i=0, count = 3+iLevel/8, angle = Random(360);
-  while(count > 0 && ++i < count*10) {
-    angle += RandomX(40,80);
+  var i=nil, count = 3+(iLevel ?? 0)/8, angle = Random(360);
+  while(And((count ?? 0) > 0, S42MigrationStep(i, 1) < (count ?? 0)*10)) {
+    S42MigrationAssign(angle, "+=", (RandomX(40,80) ?? 0));
   
     if(!bNoShots)
-      if(GetName(0,SHT1)) { //Gibt es das Objekt? (HAX)
+      if(GetName(nil,SHT1)) { //Gibt es das Objekt? (HAX)
         var ammo = CreateObject(SHT1,x,y,GetController(pObj));
-        ammo->Launch(angle,100+iLevel*3,0,4);
+        ammo->Launch(angle,100+(iLevel ?? 0)*3,nil,4);
       }
     //Rauch
-    var smokex = +Sin(angle,RandomX(iLevel/4,iLevel/2));
-    var smokey = -Cos(angle,RandomX(iLevel/4,iLevel/2));
-    if(GBackSolid(x+smokex,y+smokey))
+    var smokex = +(Sin(angle,RandomX((iLevel ?? 0)/4,(iLevel ?? 0)/2)) ?? 0);
+    var smokey = -(Cos(angle,RandomX((iLevel ?? 0)/4,(iLevel ?? 0)/2)) ?? 0);
+    if(GBackSolid((x ?? 0)+(smokex ?? 0),(y ?? 0)+(smokey ?? 0)))
       continue;
-     var level = iLevel + Random(iLevel/5);
+     var level = (iLevel ?? 0) + (Random((iLevel ?? 0)/5) ?? 0);
     CreateSmokeTrail(level,angle,smokex,smokey,pObj);
-    count--;
+    S42MigrationStep(count, -1, true);
   }
 
-  CreateParticle("Blast",x,y,0,0,iLevel*10,RGBa(255,200,100,50));
+  CreateParticle("Blast",x,y,nil,nil,(iLevel ?? 0)*10,RGBa(255,200,100,50));
 //  CastParticles("FSpark",iLevel/5+1,iLevel,x,y,10*iLevel/2,10*iLevel,RGBa(239,0,0,0),RGBa(255,16,16,255));
 
-  CreateParticle("Smoke3", x, y, 0, 0, iLevel*10, RGBa(75,65,55,20));
-  CreateBurnMark(x,y,iLevel,20+iLevel/2);
+  CreateParticle("Smoke3", x, y, nil, nil, (iLevel ?? 0)*10, RGBa(75,65,55,20));
+  CreateBurnMark(x,y,iLevel,20+(iLevel ?? 0)/2);
   /////////////
-CreateParticle("Blast", x,y, 0,0, iLevel*10);
+CreateParticle("Blast", x,y, nil,nil, (iLevel ?? 0)*10);
       
-       CastParticles("FSpark", iLevel/5+1, iLevel, x,y, iLevel*5+10,iLevel*10+10, 0x00ef0000,0xffff1010);
+       CastParticles("FSpark", (iLevel ?? 0)/5+1, iLevel, x,y, (iLevel ?? 0)*5+10,(iLevel ?? 0)*10+10, 0x00ef0000,0xffff1010);
   // wenn iblast, dann tatsächlich explosionsschaden machen, der aber keine erde zerstört
 var ix,iy,owner;
 owner= GetOwner(pObj);
@@ -56,5 +58,5 @@ iy=GetY(pObj);
   RemoveObject(pObj);
 // jetzt an der stelle wo es war alles außer Erde in die Luft jagen (erst wenn objekt weg ist, da es sich sonst auch nochmal selbst trifft)
 if(iblast)
-BlastObjects(ix,iy,iblast,0,owner+1);
+BlastObjects(ix,iy,iblast,nil,(owner ?? 0)+1);
 }

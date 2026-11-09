@@ -1,6 +1,6 @@
 /*-- Keycard-Terminal --*/
 
-#strict
+#strict 3
 #include SENS
 
 local cardid;
@@ -21,7 +21,7 @@ protected func ControlThrow(object pClonk)
 
   pUser = pClonk;
 
-  var kc = Contents(0,pClonk);
+  var kc = Contents(nil,pClonk);
   // Sonst Nullpointer -_-
   if(!kc) {
     Sound("CommandFailure1");
@@ -37,7 +37,7 @@ protected func ControlThrow(object pClonk)
     kc->Exit();
     kc->Enter(this());
     cardloaded(kc);
-    ScheduleCall(0,"CheckCard",40);
+    ScheduleCall(nil,"CheckCard",40);
     Sound("load_card");
   }
   return(1);
@@ -45,39 +45,39 @@ protected func ControlThrow(object pClonk)
 
 func cardloaded(kc)//Grafischer Effekt
 {
-  SetGraphics ("CARD",this(),GetID(this()),3,GFXOV_MODE_Base,0); 
+  SetGraphics ("CARD",this(),GetID(this()),3,GFXOV_MODE_Base,nil);
   SetClrModulation (GetClrModulation(kc),this(),3);
 }
 
 func nocard()
 {
-  SetGraphics(0,0,0,3);//Overlay löschen
+  SetGraphics(nil,nil,nil,3);//Overlay löschen
 }
 
 public func CheckCard() {
-  if(!Contents()) return();
+  if(!Contents()) return;
 
-  if(Contents()->GetKeyNumber() == cardid) {
+  if(Equal(Contents()->GetKeyNumber(), cardid)) {
     // es ist die richtige!
-    SetState(state,0,1);//ok
+    SetState(state,nil,1);//ok
 
     // Effekt
     Sound("Bip");
-    CreateParticle("PSpark", -5, 1, 0, 0, 50, RGBa(0, 255, 0));
+    CreateParticle("PSpark", -5, 1, nil, nil, 50, RGBa(nil, 255, nil));
   }
   else {
     // die falsche... :(
     Sound("Error");
-    CreateParticle("PSpark", -5, 1, 0, 0, 50, RGBa(255, 0, 0));
+    CreateParticle("PSpark", -5, 1, nil, nil, 50, RGBa(255, nil, nil));
 
-    SetState(state,0,0);//no
+    SetState(state,nil,nil);//no
   }
-  if(Contents())   ScheduleCall(0,"eject",10,0,Contents());
+  if(Contents())   ScheduleCall(nil,"eject",10,nil,Contents());
   TriggerActions();
 }
 
 public func CreateKeyCard() {
-  var kc = CreateObject(KCRD,0,0,GetOwner());
+  var kc = CreateObject(KCRD,nil,nil,GetOwner());
   kc -> SetKeyNumber(cardid);
   eject(kc);
   return(kc);
@@ -85,11 +85,12 @@ public func CreateKeyCard() {
 
 public func Set(int iNumber)
 {
+  iNumber ??= 0;
   cardid = iNumber;
-  SetGraphics ("ID",this(),GetID(this()),1,GFXOV_MODE_Base,0);
-  SetGraphics ("ID",this(),GetID(this()),2,GFXOV_MODE_Picture,0);
-  SetClrModulation (HSL (BoundBy(cardid,0,255),255,127),this(),1);
-  SetClrModulation (HSL (BoundBy(cardid,0,255),255,127),this(),2);
+  SetGraphics ("ID",this(),GetID(this()),1,GFXOV_MODE_Base,nil);
+  SetGraphics ("ID",this(),GetID(this()),2,GFXOV_MODE_Picture,nil);
+  SetClrModulation (HSL (BoundBy(cardid,nil,255),255,127),this(),1);
+  SetClrModulation (HSL (BoundBy(cardid,nil,255),255,127),this(),2);
 }
 
 public func GetAdditionalInfo()
@@ -100,24 +101,24 @@ public func GetAdditionalInfo()
 func ExtraSetup()
 {
   if(test_overwrite())
-    AddMenuItem ("$OVERWRITE$","overwrite",GetID(),pUser,0,0,"$OVERWRITE_DESC$");
+    AddMenuItem ("$OVERWRITE$","overwrite",GetID(),pUser,nil,nil,"$OVERWRITE_DESC$");
 
   if(test_setcode())
-    AddMenuItem ("$SETCODE$","setcode",GetID(),pUser,0,0,"$SETCODE_DESC$");
+    AddMenuItem ("$SETCODE$","setcode",GetID(),pUser,nil,nil,"$SETCODE_DESC$");
   return(1);
 }
 
 func test_overwrite()
 {
-  var kc = Contents(0,pUser);
+  var kc = Contents(nil,pUser);
 
   if(!kc)
-    return(0);
+    return(nil);
 
   if(!(kc->~IsKeycard()))
-    return(0);
+    return(nil);
 
-  if(kc->~GetKeyNumber() != cardid)
+  if(!Equal(kc->~GetKeyNumber(), cardid))
     return(1);
 }
 
@@ -128,64 +129,64 @@ func test_setcode()
 
 func setcode()
 {
-  var kc = Contents(0,pUser);
+  var kc = Contents(nil,pUser);
   // Sonst Nullpointer -_-
   if(!kc) {
     Sound("CommandFailure1");
-    return(0);
+    return(nil);
   }
 
   if(!(kc->~IsKeycard())) {
     Sound("CommandFailure1");
-    return(0);
+    return(nil);
   }
   else {
     // erstmal annehmen
     kc->Exit();
     kc->Enter(this());
     cardloaded(kc);
-    ScheduleCall(0,"setcode2",40,0,kc);
+    ScheduleCall(nil,"setcode2",40,nil,kc);
     Sound("load_card");
   }
 }
 
 func setcode2(pKeycard)
 {
-  if(!pKeycard) return(0);
+  if(!pKeycard) return(nil);
   Sound("Bip");
   cardid = pKeycard->GetKeyNumber();
-  ScheduleCall(0,"eject",10,0,pKeycard);
+  ScheduleCall(nil,"eject",10,nil,pKeycard);
 }
 
 func overwrite()
 {
-  var kc = Contents(0,pUser);
+  var kc = Contents(nil,pUser);
   // Sonst Nullpointer -_-
   if(!kc) {
     Sound("CommandFailure1");
-    return(0);
+    return(nil);
   }
 
   if(!(kc->~IsKeycard())) {
     Sound("CommandFailure1");
-    return(0);
+    return(nil);
   }
   else {
     // erstmal annehmen
     kc->Exit();
     kc->Enter(this());
     cardloaded(kc);
-    ScheduleCall(0,"overwrite2",40,0,kc);
+    ScheduleCall(nil,"overwrite2",40,nil,kc);
     Sound("load_card");
   }
 }
 
 func overwrite2(pKeycard)
 {
-  if(!pKeycard) return(0);
+  if(!pKeycard) return(nil);
   Sound("Bip");
   pKeycard->SetKeyNumber(cardid);
-  ScheduleCall(0,"eject",10,0,pKeycard);
+  ScheduleCall(nil,"eject",10,nil,pKeycard);
 }
 
 func eject(pKeycard)

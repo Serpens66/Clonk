@@ -1,33 +1,37 @@
 /*-- Gangverschluss (hilfsobjekt) --*/
 
-#strict
+#strict 3
 
 local main;
 
-Initialize:
+func Initialize(...) {
   SetAction("NoBridge");
 return(1);
+}
 
-ControlRight:
+func ControlRight(...) {
   SetAction("NoBridge");
 main->~ControlRight();
 return(1);
+}
 
-ControlLeft:
+func ControlLeft(...) {
   SetAction("Bridge");
 main->~ControlLeft();
 return(1);
+}
 
-ControlDigDouble:
+func ControlDigDouble(...) {
 main->~ControlDigDouble();
 return(1);
+}
 
 
 
 //checkt, ob main brennt
 func Timer()
 {
-if(AbsX(GetX(main))!=AbsX(GetX(this())) || AbsY(GetY(main))!=AbsY(GetY(this())) )
+if(Or(!Equal(AbsX(GetX(main)), AbsX(GetX(this()))), !Equal(AbsY(GetY(main)), AbsY(GetY(this())))) )
 SetPosition(AbsX(GetX(main)),AbsY(GetY(main)),this());
 if(OnFire(main))
 {RemoveObject();}

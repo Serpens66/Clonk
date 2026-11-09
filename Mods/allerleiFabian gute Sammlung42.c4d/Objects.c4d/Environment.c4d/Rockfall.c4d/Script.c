@@ -1,6 +1,6 @@
 /*-- Steinschlag --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -13,9 +13,9 @@ protected func Initialize()
 private func DoRocks()
 {
   if (Random(150)) return(1);
-  var pRock = CreateObject(RCK2, Random(LandscapeWidth()), 0, -1);
-  SetXDir(25 - Random(51), pRock);
-  SetYDir(20 - Random(16), pRock);
+  var pRock = CreateObject(RCK2, Random(LandscapeWidth()), nil, -1);
+  SetXDir(25 - (Random(51) ?? 0), pRock);
+  SetYDir(20 - (Random(16) ?? 0), pRock);
   return(1);
 }
 

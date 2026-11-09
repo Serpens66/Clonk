@@ -1,6 +1,6 @@
 /*-- Effektsystem --*/
 
-#strict 2
+#strict 3
 
 static EFSM_CurrentData;
 static EFSM_Init;
@@ -23,33 +23,37 @@ static const EFSM_Deco = 9;		//0/1
 
 global func EFSM_SetEffects(int iLevel)
 {
+  iLevel ??= 0;
   if(!iLevel) iLevel = 3;
   EFSM_Init = true;
   EFSM_CurrentData = [];
-  SetEffectData(iLevel>1, EFSM_Blood);
-  SetEffectData(iLevel>2, EFSM_BulletCasing);
-  SetEffectData(iLevel-1, EFSM_BulletEffects);
-  SetEffectData(iLevel>1, EFSM_Fog);
-  SetEffectData(iLevel-1, EFSM_ExplosionEffects);
-  SetEffectData(iLevel>1, EFSM_Enlight);
-  SetEffectData(iLevel>2, EFSM_Darkness);
-  SetEffectData(iLevel>1, EFSM_Waratmosphere);
-  SetEffectData(iLevel>1, EFSM_Deco);
+  SetEffectData((iLevel ?? 0)>1, EFSM_Blood);
+  SetEffectData((iLevel ?? 0)>2, EFSM_BulletCasing);
+  SetEffectData((iLevel ?? 0)-1, EFSM_BulletEffects);
+  SetEffectData((iLevel ?? 0)>1, EFSM_Fog);
+  SetEffectData((iLevel ?? 0)-1, EFSM_ExplosionEffects);
+  SetEffectData((iLevel ?? 0)>1, EFSM_Enlight);
+  SetEffectData((iLevel ?? 0)>2, EFSM_Darkness);
+  SetEffectData((iLevel ?? 0)>1, EFSM_Waratmosphere);
+  SetEffectData((iLevel ?? 0)>1, EFSM_Deco);
   EFSM_Level = iLevel;
   return true;
 }
 
 global func GetEffectData(int iEffect)
 {
+  iEffect ??= 0;
   if(!EFSM_Init) EFSM_SetEffects();
-  return EFSM_CurrentData[iEffect];
+  return EFSM_CurrentData[(iEffect ?? 0)];
 }
 
 global func SetEffectData(int iData, int iEffect)
 {
+  iData ??= 0;
+  iEffect ??= 0;
   if(!EFSM_Init) EFSM_SetEffects();
-  EFSM_Level = 0;
-  EFSM_CurrentData[iEffect] = iData;
+  EFSM_Level = nil;
+  EFSM_CurrentData[(iEffect ?? 0)] = iData;
   OnUpdateEffects(iEffect);
   return true;
 }
@@ -57,15 +61,16 @@ global func SetEffectData(int iData, int iEffect)
 global func OnUpdateEffects(int iEffect)
 {
   //Dunkelheit aktualisieren
-  if(iEffect == EFSM_Darkness && !GetEffectData(EFSM_Darkness))
+  iEffect ??= 0;
+  if(S42MigrationEqual(iEffect, EFSM_Darkness) && !GetEffectData(EFSM_Darkness))
     {RemoveAll(DARK);}
   
   //Dekorationen entfernen/einfügen
-  if(iEffect == EFSM_Deco && !GetEffectData(EFSM_Deco))
+  if(S42MigrationEqual(iEffect, EFSM_Deco) && !GetEffectData(EFSM_Deco))
   {
     for(var back in FindObjects(Find_Func("IsDeco")))
       RemoveObject(back);
   }
-  if(iEffect == EFSM_Deco && GetEffectData(EFSM_Deco) && !FindObject2(Find_Func("IsDeco")))
+  if(S42MigrationEqual(iEffect, EFSM_Deco) && GetEffectData(EFSM_Deco) && !FindObject2(Find_Func("IsDeco")))
     GameCall("CreateDecoration");
 }

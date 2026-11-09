@@ -1,40 +1,40 @@
 /*-- Heal --*/
 
-#strict
+#strict 3
 
 public func IsBonus() { return(true); }
 
-public func Color() { return(RGB(255,0,0)); }
+public func Color() { return(RGB(255,nil,nil)); }
 
 public func Activate(object obj) {
-  Sound("Heal", 1, 0,0, GetOwner(obj)+1);
+  Sound("Heal", 1, nil,nil, (GetOwner(obj) ?? 0)+1);
   obj->DoEnergy(100);
   //ein Partikelkreuz! :D
   var j,size=35, p = "NoGravSpark";
   var x=obj->GetX(),y=obj->GetY();
-  for(j=1; j <= 4; j++) {
-    CreateParticle(p,x+5*j,y+5,0,0,size,RGB(255,0,0),obj,0);
-    CreateParticle(p,x+5*j,y-5,0,0,size,RGB(255,0,0),obj,0);
+  for(j=1; (j ?? 0) <= 4; S42MigrationStep(j, 1, true)) {
+    CreateParticle(p,(x ?? 0)+5*(j ?? 0),(y ?? 0)+5,nil,nil,size,RGB(255,nil,nil),obj,nil);
+    CreateParticle(p,(x ?? 0)+5*(j ?? 0),(y ?? 0)-5,nil,nil,size,RGB(255,nil,nil),obj,nil);
   }
-  CreateParticle(p,x+20,y,0,0,size,RGB(255,0,0),obj,0);
+  CreateParticle(p,(x ?? 0)+20,y,nil,nil,size,RGB(255,nil,nil),obj,nil);
   
-  for(j=1; j <= 4; j++) {
-    CreateParticle(p,x-5*j,y+5,0,0,size,RGB(255,0,0),obj,0);
-    CreateParticle(p,x-5*j,y-5,0,0,size,RGB(255,0,0),obj,0);
+  for(j=1; (j ?? 0) <= 4; S42MigrationStep(j, 1, true)) {
+    CreateParticle(p,(x ?? 0)-5*(j ?? 0),(y ?? 0)+5,nil,nil,size,RGB(255,nil,nil),obj,nil);
+    CreateParticle(p,(x ?? 0)-5*(j ?? 0),(y ?? 0)-5,nil,nil,size,RGB(255,nil,nil),obj,nil);
   }
-  CreateParticle(p,x-20,y,0,0,size,RGB(255,0,0),obj,0);
+  CreateParticle(p,(x ?? 0)-20,y,nil,nil,size,RGB(255,nil,nil),obj,nil);
   
-  for(j=1; j <= 4; j++) {
-    CreateParticle(p,x+5,y+5*j,0,0,size,RGB(255,0,0),obj,0);
-    CreateParticle(p,x-5,y+5*j,0,0,size,RGB(255,0,0),obj,0);
+  for(j=1; (j ?? 0) <= 4; S42MigrationStep(j, 1, true)) {
+    CreateParticle(p,(x ?? 0)+5,(y ?? 0)+5*(j ?? 0),nil,nil,size,RGB(255,nil,nil),obj,nil);
+    CreateParticle(p,(x ?? 0)-5,(y ?? 0)+5*(j ?? 0),nil,nil,size,RGB(255,nil,nil),obj,nil);
   }
-  CreateParticle(p,x,y+20,0,0,size,RGB(255,0,0),obj,0);
+  CreateParticle(p,x,(y ?? 0)+20,nil,nil,size,RGB(255,nil,nil),obj,nil);
   
-  for(j=1; j <= 4; j++) {
-    CreateParticle(p,x+5,y-5*j,0,0,size,RGB(255,0,0),obj,0);
-    CreateParticle(p,x-5,y-5*j,0,0,size,RGB(255,0,0),obj,0);
+  for(j=1; (j ?? 0) <= 4; S42MigrationStep(j, 1, true)) {
+    CreateParticle(p,(x ?? 0)+5,(y ?? 0)-5*(j ?? 0),nil,nil,size,RGB(255,nil,nil),obj,nil);
+    CreateParticle(p,(x ?? 0)-5,(y ?? 0)-5*(j ?? 0),nil,nil,size,RGB(255,nil,nil),obj,nil);
   }
-  CreateParticle(p,x,y-20,0,0,size,RGB(255,0,0),obj,0);
+  CreateParticle(p,x,(y ?? 0)-20,nil,nil,size,RGB(255,nil,nil),obj,nil);
   
   return(true);
 }

@@ -1,6 +1,6 @@
 /*-- Spielzielauswahl --*/
 
-#strict
+#strict 3
 
 local sel, caller;
 
@@ -29,10 +29,10 @@ private func CountGoals()
 {
   // Zahl der gewählten Spielziele
   var goal, count;
-  while (goal = FindObject(0, 0,0,0,0, 0,0,0,0, goal))
-    if (GetCategory(goal) & C4D_Goal())
-      if (GetID(goal) != GetID())
-        ++count;
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil,nil,nil,nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
+      if (!Equal(GetID(goal), GetID()))
+        S42MigrationStep(count, 1);
   return(count);
 }
 
@@ -54,17 +54,17 @@ protected func Activate(player)
 private func Select_Next()
 {
   // Menü öffnen
-  CreateMenu(GetID(),caller,0,0,"Spielzielauswahl",0,1);
-  if (GetPlayerCount() > 1)
-    AddMenuItem("Melee",      "Select_Melee",  MELE, caller, 0,0, "Ein Kampf auf Leben und Tod, wahlweise auch in Teams.");
-  AddMenuItem("Punktejagd",   "Select_Points", GVAL, caller, 0,0, "Wer zuerst die festgelegte Anzahl Punkte erreicht, hat gewonnen.");
-  AddMenuItem("Rohstoffabbau","Select_Mine",   GGMI, caller, 0,0, "Abbau von Gold, Öl, Erzen, usw.");
-  AddMenuItem("Kooperativ",   "Select_Coop",   GHNT, caller, 0,0, "Monster- und Alienjagd oder kooperatives Siedeln.");
-  AddMenuItem("Endlosspiel",  "Select_Endless",GENL, caller, 0,0, "Einfach mal so drauflosspielen.");
+  CreateMenu(GetID(),caller,nil,nil,"Spielzielauswahl",nil,1);
+  if ((GetPlayerCount() ?? 0) > 1)
+    AddMenuItem("Melee",      "Select_Melee",  MELE, caller, nil,nil, "Ein Kampf auf Leben und Tod, wahlweise auch in Teams.");
+  AddMenuItem("Punktejagd",   "Select_Points", GVAL, caller, nil,nil, "Wer zuerst die festgelegte Anzahl Punkte erreicht, hat gewonnen.");
+  AddMenuItem("Rohstoffabbau","Select_Mine",   GGMI, caller, nil,nil, "Abbau von Gold, Öl, Erzen, usw.");
+  AddMenuItem("Kooperativ",   "Select_Coop",   GHNT, caller, nil,nil, "Monster- und Alienjagd oder kooperatives Siedeln.");
+  AddMenuItem("Endlosspiel",  "Select_Endless",GENL, caller, nil,nil, "Einfach mal so drauflosspielen.");
   if (CountGoals())
   {
-    AddMenuItem("Ziel löschen","Select_Delete",SYDL, caller, 0,0, "Zum Löschen unliebsamer Spielziele.");
-    AddMenuItem("Bestätigen",  "Select_Done",  SYAC, caller, 0,0, "Ziele akzeptieren und Zielauswahl beenden.");
+    AddMenuItem("Ziel löschen","Select_Delete",SYDL, caller, nil,nil, "Zum Löschen unliebsamer Spielziele.");
+    AddMenuItem("Bestätigen",  "Select_Done",  SYAC, caller, nil,nil, "Ziele akzeptieren und Zielauswahl beenden.");
   }
 }
 
@@ -73,38 +73,38 @@ private func Select_Next()
 
 private func Select_Melee()
 {
-  CreateMenu(MELE,caller,0,0,"Melee",0,1);
-  AddMenuItem("Kill them all",   "Select_Melee2",MELE, caller, 0,0, "Das Ziel ist, alle gegnerischen Clonks umzubringen.");
-  AddMenuItem("Capture the Flag","Select_Melee2",CTFL, caller, 0,0, "Es reicht, die Flaggen eines Gegners zu verkaufen.");
-  AddMenuItem("Zurück",          "Select_Next",  SYCC, caller, 0,0, "Zurück zum Hauptmenü.");
+  CreateMenu(MELE,caller,nil,nil,"Melee",nil,1);
+  AddMenuItem("Kill them all",   "Select_Melee2",MELE, caller, nil,nil, "Das Ziel ist, alle gegnerischen Clonks umzubringen.");
+  AddMenuItem("Capture the Flag","Select_Melee2",CTFL, caller, nil,nil, "Es reicht, die Flaggen eines Gegners zu verkaufen.");
+  AddMenuItem("Zurück",          "Select_Next",  SYCC, caller, nil,nil, "Zurück zum Hauptmenü.");
 }
 
 private func Select_Melee2(goal)
 {
   // Ergebnis der vorherigen Auswahl festhalten
-  if (goal == MELE) sel = 1;
-  if (goal == CTFL) sel = 2;
+  if (Equal(goal, MELE)) sel = 1;
+  if (Equal(goal, CTFL)) sel = 2;
   // wenn nur zwei Spieler, gleich weiter
-  if (GetPlayerCount() < 3)
+  if ((GetPlayerCount() ?? 0) < 3)
     return(Select_Melee3(MELE));
   // Menü erstellen
-  CreateMenu(MELE,caller,0,0,"Melee",0,1);
-  AddMenuItem("Jeder gegen jeden","Select_Melee3",MELE, caller, 0,0, "Alle Gegner müssen besiegt werden.");
-  AddMenuItem("Team-Melee",       "Select_Melee3",MEL2, caller, 0,0, "Zwei Spieler können die Runde überleben.");
-  AddMenuItem("Zurück",           "Select_Melee", SYCC, caller, 0,0, "Zum vorherigen Menü.");
+  CreateMenu(MELE,caller,nil,nil,"Melee",nil,1);
+  AddMenuItem("Jeder gegen jeden","Select_Melee3",MELE, caller, nil,nil, "Alle Gegner müssen besiegt werden.");
+  AddMenuItem("Team-Melee",       "Select_Melee3",MEL2, caller, nil,nil, "Zwei Spieler können die Runde überleben.");
+  AddMenuItem("Zurück",           "Select_Melee", SYCC, caller, nil,nil, "Zum vorherigen Menü.");
 }
 
 private func Select_Melee3(goal)
 {
   // Welche Art von Melee?
-  CreateObject(goal,0,0,-1);
-  if (sel == 2)
+  CreateObject(goal,nil,nil,-1);
+  if (Equal(sel, 2))
   {
-    CreateObject(CTFL,0,0,-1);
-    Log("Neues Spielziel: %s CTF", GetName(0,goal));
+    CreateObject(CTFL,nil,nil,-1);
+    Log("Neues Spielziel: %s CTF", GetName(nil,goal));
     return(Select_Next());
   }
-  Log("Neues Spielziel: %s", GetName(0,goal));
+  Log("Neues Spielziel: %s", GetName(nil,goal));
   return(Select_Next());
 }
 
@@ -113,10 +113,10 @@ private func Select_Melee3(goal)
 
 private func Select_Points()
 {
-  CreateMenu(GVAL,caller,0,0,"Punktejagd",0,1);
-  AddMenuItem("Siedlungspunkte","Select_Value",GVAL, caller, 0,0, "Hier ist Expansion bis zum Umfallen gefragt.");
-  AddMenuItem("Geldpunkte",     "Select_Money",GMNY, caller, 0,0, "Verdiene soviel Geld wie möglich.");
-  AddMenuItem("Zurück",         "Select_Next", SYCC, caller, 0,0, "Zum Hauptmenü.");
+  CreateMenu(GVAL,caller,nil,nil,"Punktejagd",nil,1);
+  AddMenuItem("Siedlungspunkte","Select_Value",GVAL, caller, nil,nil, "Hier ist Expansion bis zum Umfallen gefragt.");
+  AddMenuItem("Geldpunkte",     "Select_Money",GMNY, caller, nil,nil, "Verdiene soviel Geld wie möglich.");
+  AddMenuItem("Zurück",         "Select_Next", SYCC, caller, nil,nil, "Zum Hauptmenü.");
   return(1);
 }
 
@@ -148,9 +148,9 @@ private func Select_Money()
 private func Select_Points2(goal, count)
 {
   var i;
-  for (i = 1; i <= count; ++i)
-    CreateObject(goal,0,0,-1);
-  Log("Neues Spielziel: %s", GetName(0,goal));
+  for (i = 1; (i ?? 0) <= (count ?? 0); S42MigrationStep(i, 1))
+    CreateObject(goal,nil,nil,-1);
+  Log("Neues Spielziel: %s", GetName(nil,goal));
   return(Select_Next());
 }
 
@@ -159,16 +159,16 @@ private func Select_Points2(goal, count)
 
 private func Select_Mine()
 {
-  CreateMenu(GHNT,caller,0,0,"Rohstoffabbau",0,1);
+  CreateMenu(GHNT,caller,nil,nil,"Rohstoffabbau",nil,1);
   // Materialzählung noch nicht fertig
-  if (GetMaterialCount(Material("Gold")) == -1)        AddMenuItem("Hinweis","Select_Hint", INFO, caller, 0,0, "Kleiner Hinweis.");
+  if (Equal(GetMaterialCount(Material("Gold")), -1))        AddMenuItem("Hinweis","Select_Hint", INFO, caller, nil,nil, "Kleiner Hinweis.");
   // Rohstoffabbau
-  if (GetMaterialCount(Material("Gold")) > 500)        AddMenuItem("Gold abbauen",    "Select_Mine2", GGMI, caller, 0,0, "Einen bestimmten Prozentsatz der Goldvorkommen abbauen.");
-  if (GetMaterialCount(Material("Crystal")) > 500)     AddMenuItem("Kristall abbauen","Select_Mine2", GCMI, caller, 0,0, "Der angegebene Anteil des Kristalls muss abgebaut werden.");
-  if (GetMaterialCount(Material("Ore")) > 500)         AddMenuItem("Erz abbauen",     "Select_Mine2", GOMI, caller, 0,0, "Baue einen bestimmten Anteil der Erzvorkommen ab.");
-  if (GetMaterialCount(Material("Uranore")) > 500)     AddMenuItem("Uranerz abbauen", "Select_Mine2", GUMI, caller, 0,0, "Vom Uranerz die festgelegte Menge abernten.");
-  if (GetMaterialCount(Material("TitaniumOre")) > 500) AddMenuItem("Titanerz abbauen","Select_Mine2", GTMI, caller, 0,0, "Eine bestimmte Menge Titanerz muss abgebaut werden.");
-  AddMenuItem("Zurück","Select_Next", SYCC, caller, 0,0, "Zum Hauptmenü.");
+  if ((GetMaterialCount(Material("Gold")) ?? 0) > 500)        AddMenuItem("Gold abbauen",    "Select_Mine2", GGMI, caller, nil,nil, "Einen bestimmten Prozentsatz der Goldvorkommen abbauen.");
+  if ((GetMaterialCount(Material("Crystal")) ?? 0) > 500)     AddMenuItem("Kristall abbauen","Select_Mine2", GCMI, caller, nil,nil, "Der angegebene Anteil des Kristalls muss abgebaut werden.");
+  if ((GetMaterialCount(Material("Ore")) ?? 0) > 500)         AddMenuItem("Erz abbauen",     "Select_Mine2", GOMI, caller, nil,nil, "Baue einen bestimmten Anteil der Erzvorkommen ab.");
+  if ((GetMaterialCount(Material("Uranore")) ?? 0) > 500)     AddMenuItem("Uranerz abbauen", "Select_Mine2", GUMI, caller, nil,nil, "Vom Uranerz die festgelegte Menge abernten.");
+  if ((GetMaterialCount(Material("TitaniumOre")) ?? 0) > 500) AddMenuItem("Titanerz abbauen","Select_Mine2", GTMI, caller, nil,nil, "Eine bestimmte Menge Titanerz muss abgebaut werden.");
+  AddMenuItem("Zurück","Select_Next", SYCC, caller, nil,nil, "Zum Hauptmenü.");
 }
 
 private func Select_Mine2(goal)
@@ -194,11 +194,11 @@ private func Select_Hint()
 
 private func Select_Coop()
 {
-  CreateMenu(GHNT,caller,0,0,"Kooperativ",0,1);
-  if (GetPlayerCount() > 1)
-    AddMenuItem("Siedlung kooperativ","Select_ValueGain", GSET,caller, 0,0, "Hier ist Zusammenarbeit aller Spieler gefragt.");
-  AddMenuItem("Alien/Monsterjagd",    "Select_Hunt",      GHNT,caller, 0,0, "Alle Monster, Aliens und gefährliches Getier müssen beseitigt werden.");
-  AddMenuItem("Zurück","Select_Next", SYCC, caller, 0,0, "Zum Hauptmenü.");
+  CreateMenu(GHNT,caller,nil,nil,"Kooperativ",nil,1);
+  if ((GetPlayerCount() ?? 0) > 1)
+    AddMenuItem("Siedlung kooperativ","Select_ValueGain", GSET,caller, nil,nil, "Hier ist Zusammenarbeit aller Spieler gefragt.");
+  AddMenuItem("Alien/Monsterjagd",    "Select_Hunt",      GHNT,caller, nil,nil, "Alle Monster, Aliens und gefährliches Getier müssen beseitigt werden.");
+  AddMenuItem("Zurück","Select_Next", SYCC, caller, nil,nil, "Zum Hauptmenü.");
 }
 
 private func Select_ValueGain()
@@ -217,7 +217,7 @@ private func Select_ValueGain()
 
 private func Select_Hunt()
 {
-  CreateObject(GHNT,0,0,-1);
+  CreateObject(GHNT,nil,nil,-1);
   Log("Neues Spielziel: Monsterjagd");
   return(Select_Next());
 }
@@ -227,7 +227,7 @@ private func Select_Hunt()
 
 private func Select_Endless(goal)
 {
-  CreateObject(goal,0,0,-1);
+  CreateObject(goal,nil,nil,-1);
   Log("Keine Spielziele mehr");
 }
 
@@ -239,10 +239,10 @@ private func Select_Delete()
   // neues Menü
   CreateMenu(SYDL,caller);
   var goal;
-  while (goal = FindObject(0, 0,0,0,0, 0,0,0,0, goal))
-    if (GetCategory(goal) & C4D_Goal())
-      if (GetID(goal) != GetID())
-        AddMenuItem(Format("%s löschen",GetName(goal)), "Select_Delete2",GetID(goal),caller,0,goal);
+  while (goal = FindObject(nil, nil,nil,nil,nil, nil,nil,nil,nil, goal))
+    if ((GetCategory(goal) ?? 0) & (C4D_Goal ?? 0))
+      if (!Equal(GetID(goal), GetID()))
+        AddMenuItem(Format("%s löschen",GetName(goal)), "Select_Delete2",GetID(goal),caller,nil,goal);
   AddMenuItem("Zurück","Select_Next",SYCC,caller);
   return(1);
 }
@@ -262,30 +262,30 @@ private func Select_Delete2(par0, goal)
 private func Select_Done()
 {
   var goals = Min(CountGoals(),9);
-  if (goals < 1)  return(0);
-  if (goals == 1) return(Select_Done2());
+  if ((goals ?? 0) < 1)  return(nil);
+  if (Equal(goals, 1)) return(Select_Done2());
   // neues Menü
   CreateMenu(GetID(),caller);
   var i;
-  while (++i < goals)
-    AddMenuItem(Format("%d von %d Zielen zu erfüllen",i,goals), "Select_Done3",SYNU,caller, 0,i, 0,2,i);
-  AddMenuItem("Alle Ziele zu erfüllen", "Select_Done3",SYNU,caller, 0,goals, 0,2,goals);
-  AddMenuItem("Zurück", "Select_Next", SYCC,caller, 0,0, "Zum Hauptmenü.");
+  while (S42MigrationStep(i, 1) < (goals ?? 0))
+    AddMenuItem(Format("%d von %d Zielen zu erfüllen",i,goals), "Select_Done3",SYNU,caller, nil,i, nil,2,i);
+  AddMenuItem("Alle Ziele zu erfüllen", "Select_Done3",SYNU,caller, nil,goals, nil,2,goals);
+  AddMenuItem("Zurück", "Select_Next", SYCC,caller, nil,nil, "Zum Hauptmenü.");
 }
 
 private func Select_Done2()
 {
   // Ja/Nein-Menü
   CreateMenu(GetID(),caller);
-  AddMenuItem("Bestätigen","Select_Done4",SYAC,caller, 0,0, "Spielzielauswahl abschließen.");
-  AddMenuItem("Zurück",    "Select_Next", SYCC,caller, 0,0, "Zum Hauptmenü.");
+  AddMenuItem("Bestätigen","Select_Done4",SYAC,caller, nil,nil, "Spielzielauswahl abschließen.");
+  AddMenuItem("Zurück",    "Select_Next", SYCC,caller, nil,nil, "Zum Hauptmenü.");
 }
 
 private func Select_Done3(par0, count)
 {
   // Bestätigung mehrerer Ziele
-  FindObject(GOAL)->SetGoal_Unfinished(CountGoals()-count);
-  if (count == 1) Log("%d Spielziele bestätigt, eins davon muss erfüllt werden", CountGoals());
+  FindObject(GOAL)->SetGoal_Unfinished((CountGoals() ?? 0)-(count ?? 0));
+  if (Equal(count, 1)) Log("%d Spielziele bestätigt, eins davon muss erfüllt werden", CountGoals());
              else Log("%d Spielziele bestätigt, %d davon müssen erfüllt werden", CountGoals(),count);
   return(RemoveObject());
 }
@@ -293,7 +293,7 @@ private func Select_Done3(par0, count)
 private func Select_Done4()
 {
   // Bestätigung eines Spielziels
-  FindObject(GOAL)->SetGoal_Unfinished(0);
+  FindObject(GOAL)->SetGoal_Unfinished(nil);
   Log("Spielziel bestätigt");
   return(RemoveObject());
 }

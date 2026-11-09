@@ -1,35 +1,35 @@
 /* Heilung */
 
-#strict
+#strict 3
 
 func Activate(pCaster,pRealcaster)
 {
   if(GetActMapVal("Name","Magic",GetID(pCaster)))
     if (!DoesMagic(pCaster))
-      if (GetAction(pCaster) eq "Ready") // Für den Zauberturm: Dieser setzt Magic ansonsten erst verspätet
+      if (!!SEqual(GetAction(pCaster), "Ready")) // Für den Zauberturm: Dieser setzt Magic ansonsten erst verspätet
         ObjectSetAction(pCaster, "Magic");
       else
-        return(0,RemoveObject());
+        return(S42MigrationFirst(nil,RemoveObject()));
   var pClonk=pRealcaster;
   if(!pClonk) pClonk=pCaster;
   // schon voll geheilt
-  if(GetEnergy(pClonk)==GetPhysical("Energy",0,pClonk)/1000) return(0,RemoveObject());
-  AddEffect("HealPSpell",pCaster,250,2,0,GetID(),pClonk);
-  return(1,RemoveObject());
+  if(Equal(GetEnergy(pClonk), (GetPhysical("Energy",nil,pClonk) ?? 0)/1000)) return(S42MigrationFirst(nil,RemoveObject()));
+  AddEffect("HealPSpell",pCaster,250,2,nil,GetID(),pClonk);
+  return(S42MigrationFirst(1,RemoveObject()));
 }
 
 func FxHealPSpellStart(pCaster, iEffectNumber, iTemp, pClonk)
 {
   // Zielobjekt speichern: Das Zielobjekt des Zaubers ist nicht immer der
   // Zauberer selbst, Beispiel Zauberturm
-  EffectVar(0,pCaster,iEffectNumber)=pClonk;
+  EffectVar(nil,pCaster,iEffectNumber)=pClonk;
 }
 
 func FxHealPSpellTimer(pCaster, iEffectNumber, iEffectTime)
 {
-  var pClonk=EffectVar(0,pCaster,iEffectNumber);
+  var pClonk=EffectVar(nil,pCaster,iEffectNumber);
   var iMLength=GetActMapVal("Length",GetAction(pCaster),GetID(pCaster));
-  if(iEffectTime >= 200) return(-1);
+  if((iEffectTime ?? 0) >= 200) return(-1);
   
   // magische Aktion vorhanden
   if(GetActMapVal("Name","Magic",GetID(pCaster)))
@@ -38,7 +38,7 @@ func FxHealPSpellTimer(pCaster, iEffectNumber, iEffectTime)
     if(!DoesMagic(pCaster)) return(-1);
     // Zauberaktion für das zaubernde Objekt: Es wird angenommen, dass diese
     // in einem Raum von etwa 2/6 bis 5/6 der Zauberaktion spielt
-    if(GetPhase(pCaster) >= iMLength*5/6) SetPhase(iMLength*2/6,pCaster);
+    if((GetPhase(pCaster) ?? 0) >= (iMLength ?? 0)*5/6) SetPhase((iMLength ?? 0)*2/6,pCaster);
   }
 
   // Clonk heilen
@@ -48,16 +48,16 @@ func FxHealPSpellTimer(pCaster, iEffectNumber, iEffectTime)
     DoEnergy(+2,pClonk);
     var after_energy = GetEnergy(pClonk);
     // Antiheilfluch: Todesheilung bei 1HP abbrechen
-    if (after_energy < prev_energy && after_energy <= 2) return(FX_Execute_Kill);
+    if (And((after_energy ?? 0) < (prev_energy ?? 0), (after_energy ?? 0) <= 2)) return(FX_Execute_Kill);
     }
 
   // Abbruch wenn voll geheilt
-  if(GetEnergy(pClonk)==GetPhysical("Energy",0,pClonk)/1000) return(FX_Execute_Kill);
+  if(Equal(GetEnergy(pClonk), (GetPhysical("Energy",nil,pClonk) ?? 0)/1000)) return(FX_Execute_Kill);
 
   
   // Partikeleffekte für den betroffenen
-  CreateParticle("MSpark",GetX(pClonk)+RandomX(-8, 8),GetY(pClonk)+RandomX(-10, 10),0,-20,RandomX(18,38),RGB(210,20,20));
-  CreateParticle("PSpark",GetX(pClonk),GetY(pClonk),0,0,180,RGB(16,8,0),pCaster);
+  CreateParticle("MSpark",(GetX(pClonk) ?? 0)+(RandomX(-8, 8) ?? 0),(GetY(pClonk) ?? 0)+(RandomX(-10, 10) ?? 0),nil,-20,RandomX(18,38),RGB(210,20,20));
+  CreateParticle("PSpark",GetX(pClonk),GetY(pClonk),nil,nil,180,RGB(16,8,nil),pCaster);
 
   return(1);
 }

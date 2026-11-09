@@ -1,6 +1,6 @@
 /*-- Steeldoor --*/
 
-#strict
+#strict 3
 
 #include GBDR
 
@@ -20,20 +20,22 @@ public func Initialize()
 public func OnDmg(int iDmg, int iType) {
 
 	// diese Tür ist nicht besonders dick
-	if(iType == DMG_Projectile)	return(50);
-	if(iType == DMG_Melee)	return(20);
-	if(iType == DMG_Energy)	return(40);
-	if(iType == DMG_Explosion)	return(0);
+	iDmg ??= 0;
+	iType ??= 0;
+	if(Equal(iType, DMG_Projectile))	return(50);
+	if(Equal(iType, DMG_Melee))	return(20);
+	if(Equal(iType, DMG_Energy))	return(40);
+	if(Equal(iType, DMG_Explosion))	return(nil);
 
 	return(100);
 }
 
 public func OnOpen()
 {
-	if( GetAction() eq "Open" || Status) return(0);
+	if( Or(!!SEqual(GetAction(), "Open"), Status)) return(nil);
 
 	SetAction("Open");
-	SetSolidMask(0);
+	SetSolidMask(nil);
 	Status = true;
 	//Sound
 	Sound("SteeldoorOpen");
@@ -41,10 +43,10 @@ public func OnOpen()
 
 public func OnClose()
 {
-	if( GetAction() eq "Close"|| !Status) return(0);  
+	if( Or(!!SEqual(GetAction(), "Close"), !Status)) return(nil);
 	SetAction("Close");
-	Status = false;
-	SetSolidMask(12, 0, 10, 30, 12, 0);
+	Status = nil;
+	SetSolidMask(12, nil, 10, 30, 12, nil);
 	Sound("SteeldoorClose");
 }
 
@@ -58,5 +60,5 @@ public func OnDestroyed(iType)
 public func Serialize(array& extra)
 {
 	if (destroyed)
-		extra[GetLength(extra)] = "SetAction(\"Destroyed\")";
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Destroyed\")";
 }

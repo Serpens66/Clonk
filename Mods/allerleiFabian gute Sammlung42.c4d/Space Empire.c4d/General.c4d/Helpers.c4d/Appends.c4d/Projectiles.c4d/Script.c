@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #appendto FLNT
 #appendto SFLN
 #appendto EFLN
@@ -13,4 +13,5 @@ public func Destroy()
   ProtectedCall(this(),"Hit");
 }
 
-public IsProjectile: return(1);
+public func IsProjectile(...) { return(1);
+}

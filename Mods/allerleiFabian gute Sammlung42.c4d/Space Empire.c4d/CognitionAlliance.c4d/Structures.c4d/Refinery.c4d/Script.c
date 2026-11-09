@@ -1,6 +1,6 @@
 /*-- Raffinerie --*/
 
-#strict
+#strict 3
 #include BOB1  // Gebäude-Hilfsobjekt
 
 
@@ -10,7 +10,7 @@ public func IsWaste(){ return(10);}
 
 protected func Construction()
 {
-  basement = CreateObject(BS24,0,8,GetOwner()); 
+  basement = CreateObject(BS24,nil,8,GetOwner());
   return(1);
 }
 
@@ -35,11 +35,11 @@ public func PreDestruction()
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
   manager->InitLight(-59,35);
   
-  producer = CreateObject(C_F2,0,0,GetOwner()); 
+  producer = CreateObject(C_F2,nil,nil,GetOwner());
   producer->Init(this());
   return(1);
 }

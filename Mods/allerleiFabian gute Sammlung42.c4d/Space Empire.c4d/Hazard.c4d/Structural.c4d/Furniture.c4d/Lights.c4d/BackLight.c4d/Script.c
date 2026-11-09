@@ -1,6 +1,6 @@
 /*-- Hintergrundlicht --*/
 
-#strict
+#strict 3
 
 local pLight, bOn;
 
@@ -32,13 +32,13 @@ public func TurnOn() {
 public func TurnOff() {
 	if(!SetAction("Off"))
 		SetAction("Idle");
-	bOn = false;
+	bOn = nil;
 	if(Light())
 		Light()->TurnOff();
 }
 
 public func Switch() {
-	if(GetAction() S= "On")
+	if(!!SEqual(GetAction(), "On"))
 		TurnOff();
 	else
 		TurnOn();
@@ -50,7 +50,7 @@ public func IsMachine() { return(true); }
 public func EMPShock()
 {
 	TurnOff();
-	EMPShockEffect(800+Random(200));
+	EMPShockEffect(800+(Random(200) ?? 0));
 }
 
 public func EMPShockEnd() {
@@ -64,6 +64,6 @@ public func EMPShockEnd() {
 
 public func Serialize(array& extra)
 {
-	if (GetAction() ne "On")
-		extra[GetLength(extra)] = "TurnOff()";
+	if (!SEqual(GetAction(), "On"))
+		extra[(GetLength(extra) ?? 0)] = "TurnOff()";
 }

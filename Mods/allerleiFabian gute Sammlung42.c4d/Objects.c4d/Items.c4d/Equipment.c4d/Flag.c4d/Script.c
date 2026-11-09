@@ -1,11 +1,11 @@
 /*-- Flagge --*/
 
-#strict
+#strict 3
 local pseudoflag;
 
 func Initialize()
 {
-    SetPlrViewRange(FogViewRange(),0,1);
+    SetPlrViewRange(FogViewRange(),nil,1);
     return(_inherited());
 }
 
@@ -16,10 +16,10 @@ func FogViewRange() // wird vom Teamview objekt aufgerufen, um anderen nicht-fei
 
 private func Flying()
 {
-  SetDir(BoundBy(GetWind()/10+4,0,8));
+  SetDir(BoundBy((GetWind() ?? 0)/10+4,nil,8));
   if (!GetActTime())
   {
-    SetCategory(31 & GetCategory(GetActionTarget()));
+    SetCategory(31 & (GetCategory(GetActionTarget()) ?? 0));
     SetObjectOrder (GetActionTarget());
   }
   return(1);
@@ -41,7 +41,9 @@ func ResetCategory()
 func OnOwnerChanged(int new_owner, int old_owner)
 {
   // Flagge hat den Besitzer verloren? Dann runterfallen!
-  if (new_owner == NO_OWNER) SetAction("Idle");
+  new_owner ??= 0;
+  old_owner ??= 0;
+  if (Equal(new_owner, NO_OWNER)) SetAction("Idle");
 }
 
 /* Produkteigenschaften */

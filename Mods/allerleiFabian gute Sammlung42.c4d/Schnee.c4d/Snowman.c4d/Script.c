@@ -1,16 +1,16 @@
 /*-- Schneemann --*/
 
-#strict
+#strict 3
 
 
 protected func Initialize() {
-  SetCategory(C4D_Vehicle());
+  SetCategory(C4D_Vehicle);
   return(1);
 }
 
 func CheckTemperatur()
 {
-if(GetTemperature()>0)
+if((GetTemperature() ?? 0)>0)
 {  DoCon(-10);}
 }
 

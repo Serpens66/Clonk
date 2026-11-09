@@ -1,6 +1,6 @@
 /*-- MG-Schuss --*/
 
-#strict
+#strict 3
 
 local xpos, ypos;
 local xdir, ydir;
@@ -12,8 +12,8 @@ local schaden;
 public func Launch(px,py, dx,dy, angle,damage)
 { 
   schaden=damage;
-  xpos = px*10;  xdir = dx;
-  ypos = py*10;  ydir = dy;
+  xpos = (px ?? 0)*10;  xdir = dx;
+  ypos = (py ?? 0)*10;  ydir = dy;
   SetAction("Travel");
   SetR(angle);
 }
@@ -25,28 +25,28 @@ private func Travel()
 {
   // Treffer-Überprüfung
   var obj;
-  if (obj = FindObject(0,1,0,0,0, OCF_Alive(),0,0,NoContainer()))       // Lebewesen
-    if (Hostile(GetOwner(obj), GetOwner()) || (GetOwner(obj)==-1))
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Alive,nil,nil,NoContainer()))       // Lebewesen
+    if (Or(Hostile(GetOwner(obj), GetOwner()), (Equal(GetOwner(obj), -1))))
       return(HitObject(obj));
-  if (obj = FindObject(0,1,0,0,0, OCF_Entrance(),0,0,NoContainer()))    // Fahrzeuge
-    if (GetCategory(obj) & C4D_Vehicle())
+  if (obj = FindObject(nil,1,nil,nil,nil, OCF_Entrance,nil,nil,NoContainer()))    // Fahrzeuge
+    if ((GetCategory(obj) ?? 0) & (C4D_Vehicle ?? 0))
       if (Hostile(GetOwner(obj), GetOwner()))
         return(HitObject(obj));
   if(obj = FindObject2(Find_AtPoint(),Find_NoContainer(),Find_Func("IsBulletTarget"))) // alle bullettargets
-     {if(!(GetOCF(obj) & OCF_Living && !(GetOCF(obj) & OCF_Alive))) {if(!FindObject(NOFF))  return(HitObject(obj)); if(FindObject(NOFF)) if(Hostile(GetOwner(obj), GetOwner())) return(HitObject(obj)); }}
+     {if(!(And((GetOCF(obj) ?? 0) & (OCF_Living ?? 0), !((GetOCF(obj) ?? 0) & (OCF_Alive ?? 0))))) {if(!FindObject(NOFF))  return(HitObject(obj)); if(FindObject(NOFF)) if(Hostile(GetOwner(obj), GetOwner())) return(HitObject(obj)); }}
   // Bewegung
-  xpos += xdir;
-  ypos += ydir;
-  SetPosition((xpos+5)/10, (ypos+5)/10);
+  S42MigrationAssign(xpos, "+=", (xdir ?? 0));
+  S42MigrationAssign(ypos, "+=", (ydir ?? 0));
+  SetPosition(((xpos ?? 0)+5)/10, ((ypos ?? 0)+5)/10);
   // Aufprall auf Landschaft
   if (GBackSolid())
   {
-    CastParticles("BulletSpark", 2,40, 0,0, 10,10, RGB(255,0,0), RGB(255,192,128));
+    CastParticles("BulletSpark", 2,40, nil,nil, 10,10, RGB(255,nil,nil), RGB(255,192,128));
     return(RemoveObject());
   }
   // zufälliges Verschwinden
-  if (GetActTime() < 30) return(1);
-  if (!Random(50-GetActTime()))
+  if ((GetActTime() ?? 0) < 30) return(1);
+  if (!Random(50-(GetActTime() ?? 0)))
     return(RemoveObject());
   return(1);
 }
@@ -61,8 +61,8 @@ private func HitObject(target)
   DoDmg(1,DMG_Projectile,target);
   //DoEnergy(-1-schaden+Random(5)/4, target);     // Schaden an Lebewesen:  0.8 HP
   //DoDamage(Random(2)+schaden, target);          // Schaden an Fahrzeugen: 0.5 HP
-  SetXDir(GetXDir(target) + xdir/GetMass(target), target);
-  SetYDir(GetYDir(target) + ydir/GetMass(target), target);
+  SetXDir((GetXDir(target) ?? 0) + (xdir ?? 0)/(GetMass(target) ?? 0), target);
+  SetYDir((GetYDir(target) ?? 0) + (ydir ?? 0)/(GetMass(target) ?? 0), target);
   return(RemoveObject());
 }
 

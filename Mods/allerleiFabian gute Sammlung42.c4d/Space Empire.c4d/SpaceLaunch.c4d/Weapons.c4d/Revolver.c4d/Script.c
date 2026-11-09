@@ -1,6 +1,6 @@
 /*-- Revolver --*/
 
-#strict
+#strict 3
 
 local mode;
 
@@ -10,13 +10,13 @@ local mode;
 public func Fire()
 {
   // noch beim Nachladen
-  if (!ActIdle()) return(0);
+  if (!ActIdle()) return(nil);
   // Ammo erzeugen
   var ammo = CreateContents(SRES);
   // Richtung des Trägers abfragen
   var direction = GetDir(Contained());
   // Ammo abfeuern
-  Exit(ammo, direction*(24+mode*10) - (12+mode*5));
+  Exit(ammo, (direction ?? 0)*(24+(mode ?? 0)*10) - (12+(mode ?? 0)*5));
   ammo->Launch(direction,mode);
   // Sound & Nachladen
   if (mode)
@@ -53,6 +53,8 @@ public func Selection()
 
 /* Eigenschaften */
 
-public IsWeapon: return(1);
-public IsWeaponProduct: return(1);
+public func IsWeapon(...) { return(1);
+}
+public func IsWeaponProduct(...) { return(1);
+}
 

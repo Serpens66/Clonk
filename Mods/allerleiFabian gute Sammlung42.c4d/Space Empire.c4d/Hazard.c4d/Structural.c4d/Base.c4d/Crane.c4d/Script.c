@@ -1,6 +1,6 @@
 /*-- Kran --*/
 
-#strict
+#strict 3
 
 local length, size,
       slide;
@@ -18,19 +18,20 @@ public func CreateCrane() {
   // Schon ein Kran da?
   if(slide) return(slide);
   // Erstellen
-  slide = CreateObject(SLDE, 0, 5, GetOwner());
+  slide = CreateObject(SLDE, nil, 5, GetOwner());
   // Ransetzen
   slide->Set(this());
 }
 
 public func Set(int iNewLength) {
   // 0 geht nicht
-  if(!iNewLength) return();
+  iNewLength ??= 0;
+  if(!iNewLength) return;
   // Länger machen?
-  if(iNewLength > length)
+  if((iNewLength ?? 0) > (length ?? 0))
     AddParts(iNewLength);
   // Kürzer machen
-  if(iNewLength < length)
+  if((iNewLength ?? 0) < (length ?? 0))
     RemoveParts(iNewLength);
 }
 
@@ -38,22 +39,24 @@ public func Set(int iNewLength) {
 
 private func AddParts(int iNewLength) {
   // Solang hinzufügen, bis richtig
-  while(length != iNewLength)
+  iNewLength ??= 0;
+  while(!Equal(length, iNewLength))
     AddPart();
 }
 
 private func RemoveParts(int iNewLength) {
   // Ein Teil ist Minimum
+  iNewLength ??= 0;
   if(!iNewLength) iNewLength = 1;
   // Solang wegnehmen, bis richtig
-  while(length != iNewLength)
+  while(!Equal(length, iNewLength))
     RemovePart();
 }
 
 public func AddPart() {
   // Position
   var iX = GetX(),iY = GetY();
-  length++;
+  S42MigrationStep(length, 1, true);
   // Ein Teil dransetzen
   SetGraphics("Part",this(),GetID(),length, GFXOV_MODE_Base);
   // Position
@@ -64,12 +67,12 @@ public func AddPart() {
 
 public func RemovePart() {
   // Nicht ganz weg
-  if(length == 1) return();
+  if(Equal(length, 1)) return;
   // Position
   var iX = GetX(),iY = GetY();
   // Ein Teil wegnehmen
-  SetGraphics(0,this(),0,length);
-  length--;
+  SetGraphics(nil,this(),nil,length);
+  S42MigrationStep(length, -1, true);
   // Position
   SetPosition(iX, iY);
   // Anpassen
@@ -78,39 +81,42 @@ public func RemovePart() {
 
 public func AdjustSize() {
   // Objektgröße anpassen
-  var Wdt = size*length;
-  SetShape(-Wdt/2, -4, Wdt, 8);
+  var Wdt = (size ?? 0)*(length ?? 0);
+  SetShape(-(Wdt ?? 0)/2, -4, Wdt, 8);
 
   // Grafik anpassen
-  for(var i = 1, j=-length+1; i <= length; i++) {
-    SetObjDrawTransform(1000, 0, size*500*j, 0, 1000, 0, this(), i);
-    j += 2;
+  for(var i = 1, j=-(length ?? 0)+1; (i ?? 0) <= (length ?? 0); S42MigrationStep(i, 1, true)) {
+    SetObjDrawTransform(1000, nil, (size ?? 0)*500*(j ?? 0), nil, 1000, nil, this(), i);
+    S42MigrationAssign(j, "+=", 2);
     }
 }
 
 /* Callbacks */
 
 public func LeftX() {
-  if(length%2)
-    return(GetX()-(length/2*size)-size/2);
+  if((length ?? 0)%2)
+    return((GetX() ?? 0)-((length ?? 0)/2*(size ?? 0))-(size ?? 0)/2);
 
-  return(GetX()-(length/2*size));
+  return((GetX() ?? 0)-((length ?? 0)/2*(size ?? 0)));
 }
 
 public func RightX() {
-  if(length%2)
-    return(GetX()+(length/2*size)+size/2);
+  if((length ?? 0)%2)
+    return((GetX() ?? 0)+((length ?? 0)/2*(size ?? 0))+(size ?? 0)/2);
 
-  return(GetX()+(length/2*size));
+  return((GetX() ?? 0)+((length ?? 0)/2*(size ?? 0)));
 }
 
 public func ConsoleControl(int i)
 {
+  i ??= 0;
   if(slide) return(slide->ConsoleControl(i));
 }
 
 public func ConsoleControlled(int i, int Clonk)
 {
+  i ??= 0;
+  Clonk ??= 0;
   if(slide) return(slide->ConsoleControlled(i, Clonk));
 }
 
@@ -118,11 +124,11 @@ public func ConsoleControlled(int i, int Clonk)
 
 public func Serialize(array& extra)
 {
-	extra[GetLength(extra)] = Format("Set(%d)", length);
+	extra[(GetLength(extra) ?? 0)] = Format("Set(%d)", length);
 	var clamp = slide->LocalN("clamp");
-	if (clamp && clamp->LocalN("load")) {
-		extra[GetLength(extra)] = Format("Reconfigure(%d,%d,Object(%%d))", GetX(slide)-GetX(), GetY(clamp)-(GetY(slide)+25), clamp->LocalN("clamp"));
+	if (And(clamp, clamp->LocalN("load"))) {
+		extra[(GetLength(extra) ?? 0)] = Format("Reconfigure(%d,%d,Object(%%d))", (GetX(slide) ?? 0)-(GetX() ?? 0), (GetY(clamp) ?? 0)-((GetY(slide) ?? 0)+25), clamp->LocalN("clamp"));
 	} else {
-		extra[GetLength(extra)] = Format("Reconfigure(%d,%d)", GetX(slide)-GetX(), GetY(clamp)-(GetY(slide)+25));
+		extra[(GetLength(extra) ?? 0)] = Format("Reconfigure(%d,%d)", (GetX(slide) ?? 0)-(GetX() ?? 0), (GetY(clamp) ?? 0)-((GetY(slide) ?? 0)+25));
 	}
 }

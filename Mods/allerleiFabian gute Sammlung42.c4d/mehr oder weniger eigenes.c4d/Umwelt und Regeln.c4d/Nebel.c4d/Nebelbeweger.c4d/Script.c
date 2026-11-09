@@ -1,6 +1,6 @@
 /*-- Nebelbeweger --*/
 
-#strict
+#strict 3
 
 local windvorherr,beschleunigeen;
 local vel;  // überflüssiges überbleibsel
@@ -25,7 +25,7 @@ private func BewegNebel()
 {
   if(!Random(100))
 if(!GetEffect("IntNebelPush",this()))
-{AddEffect ("IntNebelPush", this(), 50, 1, this(), GetID(), 35*(3+Random(10)));}
+{AddEffect ("IntNebelPush", this(), 50, 1, this(), GetID(), 35*(3+(Random(10) ?? 0)));}
 }
 
 
@@ -43,35 +43,42 @@ func Activate()
 
 public func FxIntNebelPushStart(object pTarget, int iEffectNumber, int iTemp, duration)
 {
-  EffectVar(0,pTarget,iEffectNumber) = duration;
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
+  EffectVar(nil,pTarget,iEffectNumber) = duration;
 }
 
 public func FxIntNebelPushTimer(object pTarget, int iEffectNumber, int iEffectTime)
 {
-  var duration = EffectVar(0,pTarget,iEffectNumber);
+  iEffectNumber ??= 0;
+  iEffectTime ??= 0;
+  var duration = EffectVar(nil,pTarget,iEffectNumber);
 
-  if(iEffectTime >= duration) return -1;
+  if((iEffectTime ?? 0) >= (duration ?? 0)) return -1;
 
-   beschleunigeen = ((GetWind(0,0,1)/10)-windvorherr);
+   beschleunigeen = (((GetWind(nil,nil,1) ?? 0)/10)-(windvorherr ?? 0));
 
-  if(iEffectTime < duration/3)
+  if((iEffectTime ?? 0) < (duration ?? 0)/3)
   {
-    vel+=2;
-      PushParticles("Nebel",+beschleunigeen);
-      PushParticles("Nebel2",+beschleunigeen);
+    S42MigrationAssign(vel, "+=", 2);
+      PushParticles("Nebel",+(beschleunigeen ?? 0));
+      PushParticles("Nebel2",+(beschleunigeen ?? 0));
   }
   else
   {
-    vel--;
-    PushParticles("Nebel",+beschleunigeen);
-    PushParticles("Nebel2",+beschleunigeen);
+    S42MigrationStep(vel, -1, true);
+    PushParticles("Nebel",+(beschleunigeen ?? 0));
+    PushParticles("Nebel2",+(beschleunigeen ?? 0));
   }
-  windvorherr = GetWind(0,0,1)/10;
+  windvorherr = (GetWind(nil,nil,1) ?? 0)/10;
  //if(!Random(100)) Log(Format("beschleunigen: %v",beschleunigeen));
 }
 
 public func FxIntNebelPushStop(object pTarget, int iEffectNumber, int iReason, bool fTemp)
 {
+  iEffectNumber ??= 0;
+  iReason ??= 0;
+  fTemp ??= false;
   vel = 30;
 }
 

@@ -1,30 +1,34 @@
 /*-- Munitionspack --*/
 
-#strict
+#strict 3
 
 local value;
 
 
 /* Initialisierung */
 
-protected Initialize:
+protected func Initialize(...) {
   var num = 11;
-  while (--num)
+  while (S42MigrationStep(num, -1))
     CreateContents(SAM2);
   value = 30;
   return(1);
+}
 
 /* Wert & Verkauf */
 
-protected CalcValue:
+protected func CalcValue(...) {
   var lastvalue = value;
-  value = ContentsCount(SAM2)*3;
+  value = (ContentsCount(SAM2) ?? 0)*3;
   return(lastvalue);
+}
 
-public HasAdditionalDesc: return(1);
+public func HasAdditionalDesc(...) { return(1);
+}
 
-public GiveAdditionalDesc:
+public func GiveAdditionalDesc(...) {
   return(Format("Inhalt: %d Schuss",ContentsCount(SAM2)));
+}
 
 /* Eigenschaften */
 

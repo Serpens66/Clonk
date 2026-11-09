@@ -1,6 +1,6 @@
 /*-- Eingangssteuerung --*/
 
-#strict
+#strict 3
 
 /* Dieses Objekt stellt die Grundfunktionalität für Gebäude
    mit Tür zur Verfügung. Die Aktionen OpenDoor, DoorOpen
@@ -20,7 +20,7 @@ private func OpenEntrance()
 
 private func CloseEntrance()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
 }
 
 private func SoundOpenDoor()
@@ -40,16 +40,16 @@ private func DoorClosed()
 
 protected func Completion()
 {
-  SetEntrance(0);
+  SetEntrance(nil);
   return(_inherited());
 }
 
 func Ejection(obj) {
-  if (GetAction () eq "DoorOpen") SetAction ("DoorOpen");
+  if (!!SEqual(GetAction (), "DoorOpen")) SetAction ("DoorOpen");
   return( _inherited (obj) );
 }
 
 func Collection2(obj) {
-  if (GetAction () eq "DoorOpen") SetAction ("DoorOpen");
+  if (!!SEqual(GetAction (), "DoorOpen")) SetAction ("DoorOpen");
  return( _inherited (obj) );
 }

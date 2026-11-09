@@ -1,6 +1,6 @@
 /*-- Batterie --*/
 
-#strict
+#strict 3
 #include BOB2
 #include XMTR
 
@@ -12,18 +12,18 @@ local glow, FillEnergy;    // Glühen, Füllstand
 
 protected func Initialize()
 {
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(), 1);
   manager->InitLight(-3,-20);
   // Glühen
-  glow = CreateObject(SBTG,0,0,GetOwner());
+  glow = CreateObject(SBTG,nil,nil,GetOwner());
   glow->Init(this());
-  FillEnergy = 0;
+  FillEnergy = nil;
 }
 
 protected func Construction()
 {
-  basement = CreateObject(BS08,0,+8,GetOwner());
+  basement = CreateObject(BS08,nil,+8,GetOwner());
 }
   
 protected func Destruction()
@@ -58,11 +58,11 @@ protected func ControlDig(clonk)
   // Menü öffnen
   CreateMenu(GetID(),clonk);
   if (accu)
-    AddMenuItem("Akku abnehmen", "RemoveAccu", SACU,clonk, 0,clonk, "Den an der Batterie angebrachten Akku wieder abnehmen.");
-  if (!accu && FindContents(SACE,clonk))
-    AddMenuItem("Akku aufladen",   "LoadAccu", SACE,clonk, 0,clonk, "Einen leeren Akku auffüllen.");
-  if (!accu && FindContents(SACU,clonk))
-    AddMenuItem("Akku anschließen","TakeAccu", SACU,clonk, 0,clonk, "Einen Akku als Zusatzspeicher für die Batterie verwenden.");
+    AddMenuItem("Akku abnehmen", "RemoveAccu", SACU,clonk, nil,clonk, "Den an der Batterie angebrachten Akku wieder abnehmen.");
+  if (And(!accu, FindContents(SACE,clonk)))
+    AddMenuItem("Akku aufladen",   "LoadAccu", SACE,clonk, nil,clonk, "Einen leeren Akku auffüllen.");
+  if (And(!accu, FindContents(SACU,clonk)))
+    AddMenuItem("Akku anschließen","TakeAccu", SACU,clonk, nil,clonk, "Einen Akku als Zusatzspeicher für die Batterie verwenden.");
   AddMenuItem("Abbrechen", "Nothing", SYCC,clonk);
   return(1);
 }
@@ -70,9 +70,11 @@ protected func ControlDig(clonk)
 
 /* Akku-Funktionen */
 
-private AccuAttached: return(FindObject(SACA, 0,0,0,0, 0,0,this()));
+private func AccuAttached(...) { return(FindObject(SACA, nil,nil,nil,nil, nil,nil,this()));
+}
 
-private Nothing: return(0);
+private func Nothing(...) { return(nil);
+}
 
 private func RemoveAccu(par0, clonk)
 {
@@ -89,15 +91,15 @@ private func LoadAccu(par0, clonk)
 {
   // leeren Akku finden
   var accu = FindContents(SACE,clonk);
-  if (!accu || HasEMP())
+  if (Or(!accu, HasEMP()))
     return(Sound("Error"));
   // aufladen, wenn möglich
-  if (FillEnergy < 800)
+  if ((FillEnergy ?? 0) < 800)
   {
     Message("zuwenig Energie", this());
     return(Sound("Error"));
   }
-  FillEnergy -= 800;
+  S42MigrationAssign(FillEnergy, "-=", 800);
   ChangeDef(SACU,accu);
   // zurück zum Menü
   ControlUp(clonk);
@@ -107,11 +109,11 @@ private func TakeAccu(par0, clonk)
 {
   // Akku anschließen
   var accu = FindContents(SACU,clonk);
-  if (!accu || HasEMP())
+  if (Or(!accu, HasEMP()))
     return(Sound("Error"));
   // neuen Akku draus machen
   RemoveObject(accu);
-  accu = CreateObject(SACA,0,0,GetOwner());
+  accu = CreateObject(SACA,nil,nil,GetOwner());
   ObjectSetAction(accu, "HighNRG", this());
   // zurück zum Menü
   ControlUp(clonk);
@@ -123,20 +125,20 @@ private func TakeAccu(par0, clonk)
 protected func CheckEnergy()
 {
   // internen Energiewert auf das Maximum 100 bringen
-  var nrg = Min(100-GetEnergy(), FillEnergy);
-  DoEnergy(+nrg);
-  FillEnergy -= nrg;
+  var nrg = Min(100-(GetEnergy() ?? 0), FillEnergy);
+  DoEnergy(+(nrg ?? 0));
+  S42MigrationAssign(FillEnergy, "-=", (nrg ?? 0));
   // Energie versenden
   TransmitEnergy();
   // Regelniveau: GetEnergy() = 50
-  nrg = BoundBy(50-GetEnergy(), FillEnergy-MaxFillEnergy(),   // nicht mehr abgeben, als da ist
+  nrg = BoundBy(50-(GetEnergy() ?? 0), (FillEnergy ?? 0)-(MaxFillEnergy() ?? 0),   // nicht mehr abgeben, als da ist
                                 FillEnergy);                  // und Batterie nicht überfüllen
-  DoEnergy(+nrg);
-  FillEnergy -= nrg;
+  DoEnergy(+(nrg ?? 0));
+  S42MigrationAssign(FillEnergy, "-=", (nrg ?? 0));
   // Update für Anzeige
-  ShowInfoBar(IBRE, this(), FillEnergy, MaxFillEnergy(), 0, 1);
+  ShowInfoBar(IBRE, this(), FillEnergy, MaxFillEnergy(), nil, 1);
   // kleiner Effekt
-  if ((Random(5000) < FillEnergy) && ActIdle())
+  if (And(((Random(5000) ?? 0) < (FillEnergy ?? 0)), ActIdle()))
     if (!Random(25))
     {
       Sound("Electric");
@@ -144,15 +146,18 @@ protected func CheckEnergy()
     }
 }
 
-public DoFill:  return(FillEnergy += Par(0));
-public GetFill: return(FillEnergy);
+public func DoFill(...) {  return(S42MigrationAssign(FillEnergy, "+=", (Par(nil) ?? 0)));
+}
+public func GetFill(...) { return(FillEnergy);
+}
 
 public func EnoughEnergy()
 {
-  return(GetEnergy()+FillEnergy);
+  return((GetEnergy() ?? 0)+(FillEnergy ?? 0));
 }
 
-public IsEnergyConsumer: return(1);
+public func IsEnergyConsumer(...) { return(1);
+}
 
 
 /* Blitzeinschlag */
@@ -160,9 +165,9 @@ public IsEnergyConsumer: return(1);
 public func LightningStrike()
 {
   // nur wenn fertig gebaut
-  if (GetCon() < 100) return(0);
+  if ((GetCon() ?? 0) < 100) return(nil);
   DoEnergy(+100);
-  FillEnergy = Min(FillEnergy+1000, MaxFillEnergy());
+  FillEnergy = Min((FillEnergy ?? 0)+1000, MaxFillEnergy());
   // Sound & Effekt
   Sound("Electric");
   SetAction("Lightning");
@@ -174,15 +179,18 @@ public func LightningStrike()
 
 private func InfoBarText(barID, fill, maxf)
 {
-  if (barID == IBRE)
-    return(Format("@Füllmenge:  %d%", fill*100/maxf));
-  return(0);
+  if (Equal(barID, IBRE))
+    return(Format("@Füllmenge:  %d%", (fill ?? 0)*100/(maxf ?? 0)));
+  return(nil);
 }
 
 
 /* Eigenschaften */
 
-public MaxFillEnergy: return(3000);
-public InfoBarSize:   return(1);
-public GetMaxDamage:  return(80);
+public func MaxFillEnergy(...) { return(3000);
+}
+public func InfoBarSize(...) {   return(1);
+}
+public func GetMaxDamage(...) {  return(80);
+}
 

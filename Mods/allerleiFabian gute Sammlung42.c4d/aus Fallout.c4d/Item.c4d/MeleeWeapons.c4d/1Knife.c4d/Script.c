@@ -1,6 +1,6 @@
 /*-- Messer --*/
 
-#strict
+#strict 3
 local Reload;
 local ReloadTime;
 
@@ -13,25 +13,25 @@ public func Initialize()
 
 public func Activate(pClonk)
 {
-  if (Reload>=100)
+  if ((Reload ?? 0)>=100)
   {
   var obj,x;
-  var obj1 = GetPhysical("Fight",0,pClonk)/10000;  //standardwert wäre dann 8
+  var obj1 = (GetPhysical("Fight",nil,pClonk) ?? 0)/10000;  //standardwert wäre dann 8
   var obj2 = 
-(GetPhysical("Walk",0,pClonk)+GetPhysical("Jump",0,pClonk)+GetPhysical("Scale",0,pClonk)+GetPhysical("Hangle",0,pClonk)+GetPhysical("Dig",0,pClonk)+GetPhysical("Swim",0,pClonk)+GetPhysical("Throw",0,pClonk))/55000;
-  ReloadTime=25+obj2;	
-  if(GetDir(pClonk)== DIR_Left()) x= -20;
+((GetPhysical("Walk",nil,pClonk) ?? 0)+(GetPhysical("Jump",nil,pClonk) ?? 0)+(GetPhysical("Scale",nil,pClonk) ?? 0)+(GetPhysical("Hangle",nil,pClonk) ?? 0)+(GetPhysical("Dig",nil,pClonk) ?? 0)+(GetPhysical("Swim",nil,pClonk) ?? 0)+(GetPhysical("Throw",nil,pClonk) ?? 0))/55000;
+  ReloadTime=25+(obj2 ?? 0);
+  if(Equal(GetDir(pClonk), DIR_Left)) x= -20;
 			     else x= + 4;
-  if(GetAction(pClonk) eq "Walk")
+  if(!!SEqual(GetAction(pClonk), "Walk"))
    if(GetActMapVal("Name","Knife",GetID(pClonk)))
     ObjectSetAction(pClonk,"Knife");
    else
     ObjectSetAction(pClonk,"Fight");   
-  if(obj= FindObject(0,x,-20/2,16,20,OCF_Alive(),0,0,NoContainer()))
+  if(obj= FindObject(nil,x,-20/2,16,20,OCF_Alive,nil,nil,NoContainer()))
     {
-    Sound("BladeHit",0,0,40);
-    Punch(obj,5+obj1);
-    Reload=0;
+    Sound("BladeHit",nil,nil,40);
+    Punch(obj,5+(obj1 ?? 0));
+    Reload=nil;
     return(1);
     }
   Sound("Knife");
@@ -41,7 +41,7 @@ public func Activate(pClonk)
 
 protected func Ticking()
 	{
-	if (Reload<100) Reload=Reload+ReloadTime;
+	if ((Reload ?? 0)<100) Reload=(Reload ?? 0)+(ReloadTime ?? 0);
 	}
 
 //protected func Activate(pClonk) { ControlThrow(pClonk); }

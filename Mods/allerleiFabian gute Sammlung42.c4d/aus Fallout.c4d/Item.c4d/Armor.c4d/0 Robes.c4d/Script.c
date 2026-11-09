@@ -1,6 +1,6 @@
 /*-- Rüstung --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local lkjsdfnldnlvsndlksdf,derclonk;  // magical physics
@@ -26,7 +26,7 @@ func MakeGraphic(pClonk)
   var iPortraitCount = 3; 
   var strGraphics = "Assassin";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, S_RB, 0, 0);
+  SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, S_RB, nil, nil);
 }
 
 
@@ -37,37 +37,37 @@ public func GearEffectReset(object pClonk)
 if(stuufe)
 {
 
-if(stuufe>=1 && stuufe<=9)
+if(And((stuufe ?? 0)>=1, (stuufe ?? 0)<=9))
 {SetGraphics("Normal",pClonk);  //Hazardclonk mit Clonkgrafik
   var iPortraitCount = 5; 
   var strGraphics = "";
-SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, CLNK, 0, 0);}
+SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, CLNK, nil, nil);}
 
-if(stuufe>=10 && stuufe<=14 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=14), !(pClonk->~IstBauarbeiter())))
 {SetPortrait("random", pClonk, S_XX); SetGraphics("SG1",pClonk);}  //Hazardclonk mit SG1 Grafik
 
 // Bisher nur eine Grafik für alle Stufen ab 10
-if(stuufe>=10 && stuufe<=20 && pClonk->~IstBauarbeiter())
+if(And(And((stuufe ?? 0)>=10, (stuufe ?? 0)<=20), pClonk->~IstBauarbeiter()))
 { SetPortrait("random", pClonk, X_12); 
 SetGraphics("Bauer",pClonk);}  //Hazardclonk mit Arbeiter Grafik
 
-if(stuufe>=15 && stuufe<=19 && !(pClonk->~IstBauarbeiter()))
+if(And(And((stuufe ?? 0)>=15, (stuufe ?? 0)<=19), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}  //Hazardclonk Grafik
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}  //Hazardclonk Grafik
 
-if(stuufe==20 && !(pClonk->~IstBauarbeiter()))
+if(And(Equal(stuufe, 20), !(pClonk->~IstBauarbeiter())))
 {SetGraphics("Future",pClonk);
   SetPortrait("FutureP", pClonk, HZCK);} //Hazardclonk Future Grafik, Future Portrait
 }
 
 else
 {  SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);}
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);}
 
 // falls fähigkeit an, deaktivieren
-if(lkjsdfnldnlvsndlksdf!=0) ConUse(pClonk);
+if(!Equal(lkjsdfnldnlvsndlksdf, nil)) ConUse(pClonk);
   Sound("Connect");
-return();
+return;
 }
 
 
@@ -75,27 +75,29 @@ return();
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   //Melee
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(1);     // 
   //Projectile
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(1);     // 
   //Flame
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(-40);   // 
   //Explosion
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(-10);     // 
   //Energy
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(20);    // 
   //Plazma
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(70);     // 
   //Stahlmantelkugeln
-  if(iType == DMG_BetterProjectile)
+  if(Equal(iType, DMG_BetterProjectile))
     return(1);     // Stahlmantelkugeln durchschlagen Rüstungen einfach
 }
 
@@ -114,27 +116,27 @@ public func ConUse(object pHazard) {
 
   // turn on
 
-  if(lkjsdfnldnlvsndlksdf==0) {
+  if(Equal(lkjsdfnldnlvsndlksdf, nil)) {
 
 
 lkjsdfnldnlvsndlksdf=1;
-  SetPhysical("Fight", GetPhysical("Fight", PHYS_Current, pHazard) -50000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Throw", GetPhysical("Throw", PHYS_Current, pHazard) +60000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Jump", GetPhysical("Jump", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Walk", GetPhysical("Walk", PHYS_Current, pHazard) +40000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Scale", GetPhysical("Scale", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Hangle", GetPhysical("Hangle", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Swim", GetPhysical("Swim", PHYS_Current, pHazard) +20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Breath", GetPhysical("Breath", PHYS_Current, pHazard) -20000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Dig", GetPhysical("Dig", PHYS_Current, pHazard) +10000, PHYS_StackTemporary, pHazard);
-  SetPhysical("Energy", GetPhysical("Energy", PHYS_Current, pHazard) +0, PHYS_StackTemporary, pHazard);
+  SetPhysical("Fight", (GetPhysical("Fight", PHYS_Current, pHazard) ?? 0) -50000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Throw", (GetPhysical("Throw", PHYS_Current, pHazard) ?? 0) +60000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Jump", (GetPhysical("Jump", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Walk", (GetPhysical("Walk", PHYS_Current, pHazard) ?? 0) +40000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Scale", (GetPhysical("Scale", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Hangle", (GetPhysical("Hangle", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Swim", (GetPhysical("Swim", PHYS_Current, pHazard) ?? 0) +20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Breath", (GetPhysical("Breath", PHYS_Current, pHazard) ?? 0) -20000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Dig", (GetPhysical("Dig", PHYS_Current, pHazard) ?? 0) +10000, PHYS_StackTemporary, pHazard);
+  SetPhysical("Energy", (GetPhysical("Energy", PHYS_Current, pHazard) ?? 0) +0, PHYS_StackTemporary, pHazard);
 
  }
 
   // turn off
   else {
 Log("manuell deaktiviert");
-lkjsdfnldnlvsndlksdf=0;
+lkjsdfnldnlvsndlksdf=nil;
   ResetPhysical(pHazard, "Fight");
   ResetPhysical(pHazard, "Throw");
   ResetPhysical(pHazard, "Walk");
@@ -150,12 +152,12 @@ lkjsdfnldnlvsndlksdf=0;
   // ..
   // .....!
   Sound("Click"); // Ba-bum.
-return();
+return;
 }
 
 func Schaden()
 {
-if(lkjsdfnldnlvsndlksdf==1)
+if(Equal(lkjsdfnldnlvsndlksdf, 1))
 {   DoEnergy(-60,derclonk,1);};}
 
 

@@ -1,6 +1,6 @@
 /*-- Spielzielauswahl, basierend auf RdW--*/
 
-#strict
+#strict 3
 // dieses Skript ruft in szenario und allen regel/ziel skripten ChooserFinished() auf, wenn settings das erste mal abgeschlossen wurden
 // evlt besser durch eine globale variable ersetzen, damit auch objekte die danach erst hinzukommen, bescheid wissen, dass settings bereits fertig sind.
 
@@ -44,8 +44,8 @@ global func GetDifficulty()   {if(!GetDifficultyObj()) return(  3);  return GetD
 /* Nur eine Mitteilung fnr Neugierige */
 func Activate(iPlr)
 {
-  if(Death&&FrameCounter()>1000) return   (MessageWindow(GetDesc(),iPlr));
-  if(iPlr==GetPlayerByIndex(0,C4PT_User)) return(OpenMenu());
+  if(And(Death, (FrameCounter() ?? 0)>1000)) return   (MessageWindow(GetDesc(),iPlr));
+  if(Equal(iPlr, GetPlayerByIndex(nil,C4PT_User))) return(OpenMenu());
   MessageWindow(GetDesc(),iPlr);
 }
 
@@ -58,8 +58,8 @@ global func GetDifficultyObj()
 // Timercall
 func Timer()
 {
-if (Inside(ScriptCounter(),2,10) && !Death)
-ScriptGo(0);
+if (And(Inside(ScriptCounter(),2,10), !Death))
+ScriptGo(nil);
 }
 
 func Initialize()
@@ -93,19 +93,19 @@ func Initialized()
 
 // Umweltschutzobjekt erstellen
   if(!FindObject(_Z2A))
-    CreateObject(_Z2A,0,0,-1);
+    CreateObject(_Z2A,nil,nil,-1);
 }
 
 func SetExplosivStandard()
 {
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i) ; S42MigrationStep(i, 1, true))
   {
    if(DefinitionCall(idR, "IsExplosiv") )
    {
     if(!GetLength(hashExplosivErdschaden)) Log("ExplosivHash noch nicht erstellt!");
     else{
-    HashPut(hashExplosivErdschaden, Format("Erdschaden %v",idR), 0);
-    if(idR!=SSPR && idR!=SP02 && idR!=SB52 && idR!=JB4K && idR!=ST_3 && idR!=AMIN && idR!=P__2 && idR!=PTBL && idR!=CEH2 && idR!=CENM && idR!=CVLA && idR!=SBST && idR!=CAN_ && idR!=CCD_ && idR!=CGC_ && idR!=MAM_ && idR!=PRE_ && idR!=SCR_ && idR!=TSP_ && idR!=TCN_ && idR!=ALN4 && idR!=MINE && idR!=LMIN && idR!=SMI1 && idR!=SWRM && idR!=ABMB && idR!=DRSU && idR!=MISS && idR!=MIS_ && idR!=IIII && idR!=CGRN && idR!=CGFR && idR!=GREN && idR!=TBUL && idR!=SAM1 && idR!=SAM2 && idR!=SAML && idR!=SAM3 && idR!=STR0 && idR!=MROK && idR!=SHRF && idR!=GRN2 && idR!=TAUC && idR!=TAUV && idR!=EFL6 && idR!=SFLF && idR!=SFLI && idR!=C_S7 && idR!=CMM_ && idR!=HMI_ && idR!=HMIS && idR!=NGRN && idR!=CBB_) 
+    HashPut(hashExplosivErdschaden, Format("Erdschaden %v",idR), nil);
+    if(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(And(!Equal(idR, SSPR), !Equal(idR, SP02)), !Equal(idR, SB52)), !Equal(idR, JB4K)), !Equal(idR, ST_3)), !Equal(idR, AMIN)), !Equal(idR, P__2)), !Equal(idR, PTBL)), !Equal(idR, CEH2)), !Equal(idR, CENM)), !Equal(idR, CVLA)), !Equal(idR, SBST)), !Equal(idR, CAN_)), !Equal(idR, CCD_)), !Equal(idR, CGC_)), !Equal(idR, MAM_)), !Equal(idR, PRE_)), !Equal(idR, SCR_)), !Equal(idR, TSP_)), !Equal(idR, TCN_)), !Equal(idR, ALN4)), !Equal(idR, MINE)), !Equal(idR, LMIN)), !Equal(idR, SMI1)), !Equal(idR, SWRM)), !Equal(idR, ABMB)), !Equal(idR, DRSU)), !Equal(idR, MISS)), !Equal(idR, MIS_)), !Equal(idR, IIII)), !Equal(idR, CGRN)), !Equal(idR, CGFR)), !Equal(idR, GREN)), !Equal(idR, TBUL)), !Equal(idR, SAM1)), !Equal(idR, SAM2)), !Equal(idR, SAML)), !Equal(idR, SAM3)), !Equal(idR, STR0)), !Equal(idR, MROK)), !Equal(idR, SHRF)), !Equal(idR, GRN2)), !Equal(idR, TAUC)), !Equal(idR, TAUV)), !Equal(idR, EFL6)), !Equal(idR, SFLF)), !Equal(idR, SFLI)), !Equal(idR, C_S7)), !Equal(idR, CMM_)), !Equal(idR, HMI_)), !Equal(idR, HMIS)), !Equal(idR, NGRN)), !Equal(idR, CBB_)))
     HashPut(hashExplosivErdschaden, Format("Erdschaden %v",idR), 1);} // all die gelisteten ids sind von beginn an erdzerstörend
    }
   }
@@ -120,19 +120,19 @@ func SetStandardEinstellungen(dummy,iSelection) // ein teil wird auch weiter unt
     
    SetExplosivStandard();
 // Standardwerte für die statischen Dinge. Auch vor Spielstart eingestelle Regeln, werden aufgelistet und markiert. Zusätzlich werden bei Finish alle Regeln entfernt, die vorhanden aber nicht markiert sind.
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; S42MigrationStep(i, 1, true))
   {
-   if((DefinitionCall(idR, "IsDefaultRule") && (!InArray(SzenarioNoDefaultListe, idR))) || FindObject2(Find_ID(idR),Find_Exclude(this())) ) // IsDefaultRule wird in einer system datei den regeln zugeordnet.
-    aRules[i]=true;
+   if(Or((And(DefinitionCall(idR, "IsDefaultRule"), (!InArray(SzenarioNoDefaultListe, idR)))), FindObject2(Find_ID(idR),Find_Exclude(this()))) ) // IsDefaultRule wird in einer system datei den regeln zugeordnet.
+    aRules[(i ?? 0)]=true;
    else
-    aRules[i]=false;
+    aRules[(i ?? 0)]=nil;
   }
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; S42MigrationStep(i, 1, true))
   {
-   if((DefinitionCall(idR, "IsDefaultEnvironment") && (!InArray(SzenarioNoDefaultListe, idR))) || FindObject2(Find_ID(idR),Find_Exclude(this())) )
-    aEnvironment[i]=true;
+   if(Or((And(DefinitionCall(idR, "IsDefaultEnvironment"), (!InArray(SzenarioNoDefaultListe, idR)))), FindObject2(Find_ID(idR),Find_Exclude(this()))) )
+    aEnvironment[(i ?? 0)]=true;
    else
-    aEnvironment[i]=false;
+    aEnvironment[(i ?? 0)]=nil;
   }
 
 // Standardwerte für die variablen Dinge
@@ -140,20 +140,20 @@ func SetStandardEinstellungen(dummy,iSelection) // ein teil wird auch weiter unt
 var SzenarioStandard = GameCall("ScenarioStandardEinstellungen"); // eine liste der Form [["Bausatz",100],["Baustoffe",0],["Ausbildungserfahrung",1],["Ausbildungskosten",1],["StartZeitalter",22]]
 if (!SzenarioStandard) SzenarioStandard=[];
 
-var Standardhier = [["Bausatz",50],["Baustoffe",0],["Ausbildungserfahrung",200],["Ausbildungskosten",100],["Ausbildungszeit",10],["Forschungskosten",50],["Forschungszeit",50],["SichtradiusTagHimmel",400],["SichtradiusNachtHimmel",200,
-"SichtradiusNachtTunnel",100],["SichtradiusTagTunnel",140],["SichtradiusVerhalten",1],["Verdunstennormal",0],["Verdunstenwarm",0],["Verdunstenheiß",0],["Umweltbelastbarkeit",1500],["StartZeitalter",0],["Produktionsgeschwindigkeit",100],
-["Baustellenboost",0],["Grundwasser",10],["Produktionskosten",0],["Baustellenkosten",0],["Baustellenkostenerstattung",0],["Dunkelheitsgrad",100],["EnergieverbrauchNeue",100],["BlitzeModifier",100],["Barriere",0],
-["AbbauEreignisse",[["Ashes","Acid","Alumina","Coal","Crystal","Earth","Gold","Lava","Oil","Ore","Rock","Sand","Snow","Sulphur","TitaniumOre","Uranore","Water"],[ASHS,ABRL,CALO,COAL,CRYS,ERTH,GOLD,DBRL,OBRL,ORE1,ROCK,SAND,SNWB,SPHR,CTIO,SURO,WBRL],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],0]]  
+var Standardhier = [["Bausatz",50],["Baustoffe",nil],["Ausbildungserfahrung",200],["Ausbildungskosten",100],["Ausbildungszeit",10],["Forschungskosten",50],["Forschungszeit",50],["SichtradiusTagHimmel",400],["SichtradiusNachtHimmel",200,
+"SichtradiusNachtTunnel",100],["SichtradiusTagTunnel",140],["SichtradiusVerhalten",1],["Verdunstennormal",nil],["Verdunstenwarm",nil],["Verdunstenheiß",nil],["Umweltbelastbarkeit",1500],["StartZeitalter",nil],["Produktionsgeschwindigkeit",100],
+["Baustellenboost",nil],["Grundwasser",10],["Produktionskosten",nil],["Baustellenkosten",nil],["Baustellenkostenerstattung",nil],["Dunkelheitsgrad",100],["EnergieverbrauchNeue",100],["BlitzeModifier",100],["Barriere",nil],
+["AbbauEreignisse",[["Ashes","Acid","Alumina","Coal","Crystal","Earth","Gold","Lava","Oil","Ore","Rock","Sand","Snow","Sulphur","TitaniumOre","Uranore","Water"],[ASHS,ABRL,CALO,COAL,CRYS,ERTH,GOLD,DBRL,OBRL,ORE1,ROCK,SAND,SNWB,SPHR,CTIO,SURO,WBRL],[nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil],nil]]
 ];
 
 var Standardlist = [];
-var enthalten = 0;
+var enthalten = nil;
 for(var teilhier in Standardhier)
 {
-    enthalten = 0;
+    enthalten = nil;
     for(teilszen in SzenarioStandard)
     {
-        if(teilhier[0]==teilszen[0])
+        if(Equal(teilhier[0], teilszen[0]))
             enthalten = teilszen ;
     }
     if(enthalten) // wenn es in szenariolist enthalten ist, dann das vom szenario nehmen
@@ -174,16 +174,16 @@ var SzenarioStandardForschung = GameCall("ScenarioForschungsEinstellungen"); // 
 if (!SzenarioStandardForschung) SzenarioStandardForschung=[["Verboten",["leer"]],["Freiwillig",["leer"]],["Erforscht",["leer"]]]; // nicht existent, standard nehmen
 
 // freiwilligenliste ergänzen
-if (!SzenarioStandardForschung[1][1][0]=="leer")
+if (Equal(!SzenarioStandardForschung[1][1][0], "leer"))
     gSzenarioStandardForschungFreiwilligVariable = SzenarioStandardForschung[1][1]; // wird im forschungsskript zusammen mit den standardfreiwilligen forschungen returnd
 else
     gSzenarioStandardForschungFreiwilligVariable = [];
 
-if (SzenarioStandardForschung[0][1][0]=="leer")
+if (Equal(SzenarioStandardForschung[0][1][0], "leer"))
     gForschungverbotenlisteVariable = [];
 else
     gForschungverbotenlisteVariable = SzenarioStandardForschung[0][1];
-if (SzenarioStandardForschung[2][1][0]=="leer")
+if (Equal(SzenarioStandardForschung[2][1][0], "leer"))
     gForschungerforschtlisteVariable = [];
 else
     gForschungerforschtlisteVariable = SzenarioStandardForschung[2][1]; // wird nur verwendet, wenn regel fuer szenario forschungsbaum aktiv ist, sonst wird normale start zeitalter verwendet.
@@ -201,9 +201,9 @@ func RemoveGoals()
       // Spielziele entfernen
       for(var goal in FindObjects(Find_Category(C4D_Goal)))
         goal->RemoveObject();
-      for(var i=0, idR, def, j, check ; idR = GetDefinition(i, C4D_Goal) ; i++)
+      for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, C4D_Goal) ; S42MigrationStep(i, 1, true))
         if(DefinitionCall(idR, "IsChooseableGoal"))
-          aGoals[GetLength(aGoals)] = idR;
+          aGoals[(GetLength(aGoals) ?? 0)] = idR;
   }
   
   OpenMenu();
@@ -214,24 +214,26 @@ func RemoveGoals()
 
 func InitializePlayer(int iPlr)
 {
-  ScheduleCall(this(), "AfterInitializedNowPlayer", 8,0,iPlr); // 5 frames warten, damit stadnards auch schon gesetzt sind
+  iPlr ??= 0;
+  ScheduleCall(this(), "AfterInitializedNowPlayer", 8,nil,iPlr); // 5 frames warten, damit stadnards auch schon gesetzt sind
 }
 
 func AfterInitializedNowPlayer(int iPlr)
 {
     // Log("AfterInit");
     // folgende Dinge immer fuer jeden Spieler machen, der Beitritt, auch Laufzeitbeitritt
+    iPlr ??= 0;
     var aSzenarioAdditionalBuys = GameCall("ScenarioHomeBase"); // szenariospezifische zusätzliche Kaufobjekte, wenn nicht in szenario.txt eingestellt werden soll
     if (!aSzenarioAdditionalBuys) aSzenarioAdditionalBuys=[];
     for(var entry in aSzenarioAdditionalBuys)
     {
-        MakeWare(entry[0],entry[1],1,iPlr+1); // iPlr + 1 ,damit es immer wahr ist und erkannt wird, wann es fuer alle und wann nur fuer einen gemacht werden soll
+        MakeWare(entry[0],entry[1],1,(iPlr ?? 0)+1); // iPlr + 1 ,damit es immer wahr ist und erkannt wird, wann es fuer alle und wann nur fuer einen gemacht werden soll
     }
     var aSzenarioAdditionalBuysProd = GameCall("ScenarioHomeBaseProduction"); // szenariospezifische zusätzliche Kaufobjekte, wenn nicht in szenario.txt eingestellt werden soll
     if (!aSzenarioAdditionalBuysProd) aSzenarioAdditionalBuysProd=[];
     for(var entry in aSzenarioAdditionalBuysProd)
     {
-        MakeWareProduction(entry[0],entry[1],1,iPlr+1);
+        MakeWareProduction(entry[0],entry[1],1,(iPlr ?? 0)+1);
     }
     
     // Die forschungen verteilen
@@ -249,11 +251,11 @@ func AfterInitializedNowPlayer(int iPlr)
   if(Death)
   {
     // das Startzeitalter wird im setting finisher eh einmal gesetzt, da es in den einstellungen ja noch verändert werden kann. Daher muss das nur gemacht werden, wenn laufzeitbeitritt
-    if (!FindObject(SZRE) && !FindObject(TKNW)) // das startzeitalter kann aber noch verändert werden, daher muss es zusätzlich auch im finisher der regeln einmal gemacht werden
+    if (And(!FindObject(SZRE), !FindObject(TKNW))) // das startzeitalter kann aber noch verändert werden, daher muss es zusätzlich auch im finisher der regeln einmal gemacht werden
     {  // auch bei Teamknowledge Regel bei laufzeitbeitritt nichts verändern!
         var num, id;
-          num = 0;
-          while (id = GetDefinition(num++)) SetPlrKnowledge(iPlr, id,1); // das gesamte wissen entfernen und danach neu verteilen
+          num = nil;
+          while (id = GetDefinition(S42MigrationStep(num, 1, true))) SetPlrKnowledge(iPlr, id,1); // das gesamte wissen entfernen und danach neu verteilen
         GlobalStartingEra(HashGet(hashSpielRegeln, "StartZeitalter")); // die Funktionen für das StartZeitalter aufrufen, welche sich in den forschungsbaum skripten befinden
     }
     // auch diese Regel kann noch aktiviert werden
@@ -269,17 +271,17 @@ func AfterInitializedNowPlayer(int iPlr)
   if(!Death) // nur beim ersten mal machen
   {
       // Alle Clonks des Spielers verstauen
-      for(var i=0, pCrew, tmp ; pCrew = GetCrew(iPlr, i) ; i++)
+      for(var i=nil, pCrew, tmp ; pCrew = GetCrew(iPlr, i) ; S42MigrationStep(i, 1, true))
         {
         tmp = CreateObject(TIM1, GetX(pCrew), GetY(pCrew), -1);
-        SetCategory(GetCategory(tmp) | C4D_Foreground,tmp);
-        SetGraphics(0, tmp, GetID(pCrew), 1, 5, 0, 1, pCrew);
+        SetCategory((GetCategory(tmp) ?? 0) | (C4D_Foreground ?? 0),tmp);
+        SetGraphics(nil, tmp, GetID(pCrew), 1, 5, nil, 1, pCrew);
         Enter(tmp, pCrew);
         Eastern(tmp);
         }
 
       // Spieler 1? Dann Menn öffnen
-      if(GetPlayerByIndex(0,C4PT_User)==iPlr)
+      if(Equal(GetPlayerByIndex(nil,C4PT_User), iPlr))
       {
         Log("$ChoosingPlayer$", GetPlayerName(iPlr));
         return(OpenMenu());
@@ -292,7 +294,7 @@ func AfterInitializedNowPlayer(int iPlr)
 func OpenMenu()
 {
   wissenvorher = HashGet(hashSpielRegeln, "StartZeitalter"); 
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   if(!pClonk) return(ScheduleCall(this(), "OpenMenu", 1));
   //if(GetLength(aGoals)) return(OpenGoalChooseMenu());
   if(CampaignMode()) return OpenDifficultyMenu();
@@ -300,23 +302,23 @@ func OpenMenu()
   if(GetMenu(pClonk))
     CloseMenu(pClonk);
 
-  CreateMenu(GetID(), pClonk, 0, 0, 0, 0, 1);
+  CreateMenu(GetID(), pClonk, nil, nil, nil, nil, 1);
   // Infos
-  AddMenuItem("Infos", "Informationen", CHO6, pClonk,0,0,"Infos");
+  AddMenuItem("Infos", "Informationen", CHO6, pClonk,nil,nil,"Infos");
   // Spielregeln
-  AddMenuItem("$CreateRules$", "Wahlmenu", RUSC, pClonk, 0,0, "$RuleInfo$");
+  AddMenuItem("$CreateRules$", "Wahlmenu", RUSC, pClonk, nil,nil, "$RuleInfo$");
   // Umgebungsobjekte
-  AddMenuItem("$CreateEnvironment$", "Wahlmenu", EVSC, pClonk, 0,0, "$EnvironmentInfo$");
+  AddMenuItem("$CreateEnvironment$", "Wahlmenu", EVSC, pClonk, nil,nil, "$EnvironmentInfo$");
   // Spielziele
-  if(!FindObject(SZGO))   AddMenuItem("$GoalChose$", "OpenGoalChooseMenu", GOSC, pClonk,0,0,"$GoalChose$"); // ziele nur veränderbar, wenn diese regel nicht da,regel sorgt dafuer, dass szenario ziele verwendet werden.
+  if(!FindObject(SZGO))   AddMenuItem("$GoalChose$", "OpenGoalChooseMenu", GOSC, pClonk,nil,nil,"$GoalChose$"); // ziele nur veränderbar, wenn diese regel nicht da,regel sorgt dafuer, dass szenario ziele verwendet werden.
   // Effekte reduzieren
-  AddMenuItem("Effekte reduzieren", "SetEffekte", ANL_, pClonk,0,0,"Hier können die grafischen Effekte reduziert werden, damit das Spiel eventuell flüssiger läuft");
+  AddMenuItem("Effekte reduzieren", "SetEffekte", ANL_, pClonk,nil,nil,"Hier können die grafischen Effekte reduziert werden, damit das Spiel eventuell flüssiger läuft");
   // Kaufbare Dinge manipulieren
-  AddMenuItem("Kaufbare Dinge einstellen", "BuyableMenu", CNMT, pClonk,0,0,"Stelle ein was kaufbar sein soll und wieviel");
+  AddMenuItem("Kaufbare Dinge einstellen", "BuyableMenu", CNMT, pClonk,nil,nil,"Stelle ein was kaufbar sein soll und wieviel");
   // Standard
-  AddMenuItem("Alles zurück auf Standard", "SetStandardEinstellungen", CHO6, pClonk,0,1,"Setzt alle Einstellungen wieder zurück auf die Standardwerte");
+  AddMenuItem("Alles zurück auf Standard", "SetStandardEinstellungen", CHO6, pClonk,nil,1,"Setzt alle Einstellungen wieder zurück auf die Standardwerte");
   // Fertig
-  AddMenuItem("$Finished$", "ConfigurationFinished", CNCL, pClonk,0,0,"$Finished$");
+  AddMenuItem("$Finished$", "ConfigurationFinished", CNCL, pClonk,nil,nil,"$Finished$");
 }
 
 func Informationen(dummy, iSelection)
@@ -327,19 +329,19 @@ return(OpenMenu());
 
 func SetEffekte(dummy, iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
   CreateMenu(GetID(), pClonk);
   // Regeln einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i,Chooser_Cat_Rule) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i,Chooser_Cat_Rule) ; S42MigrationStep(i, 1, true))
     if(DefinitionCall(idR, "IsAntiLagChooseable"))
       {
-      def = TransformObject(idR,aEffekte[i]);
-      AddMenuItem("%s", "ChangeEffekteConf", idR, pClonk, 0, i, 0, 4, def);
-      if(i == iSelection)
+      def = TransformObject(idR,aEffekte[(i ?? 0)]);
+      AddMenuItem("%s", "ChangeEffekteConf", idR, pClonk, nil, i, nil, 4, def);
+      if(Equal(i, iSelection))
         check = true;
       if(!check)
-        j++;
+        S42MigrationStep(j, 1, true);
       RemoveObject(def);
       }
   // Fertig
@@ -351,69 +353,70 @@ func SetEffekte(dummy, iSelection)
 func ChangeEffekteConf(id idEffekte, int i)
 {
   // Regel wurde ausgewShlt
-  if(!aEffekte[i])
+  i ??= 0;
+  if(!aEffekte[(i ?? 0)])
   {
-    aEffekte[i] = true;
-    if(idEffekte->~CreateOnChoose() || Death)
-      CreateObject(idEffekte,0,0,-1);
+    aEffekte[(i ?? 0)] = true;
+    if(Or(idEffekte->~CreateOnChoose(), Death))
+      CreateObject(idEffekte,nil,nil,-1);
   }
   // Regel wurde abgewShlt
   else
   {
-    aEffekte[i] = false;
-    if(idEffekte->~CreateOnChoose() || Death)
+    aEffekte[(i ?? 0)] = nil;
+    if(Or(idEffekte->~CreateOnChoose(), Death))
       if(FindObject(idEffekte))
         RemoveObject(FindObject(idEffekte));
   }
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Regelmenn wieder aufmachen
-  SetEffekte(0, i);
+  SetEffekte(nil, i);
 }
 
 func BuyableMenu(dummy,iSelection)
 {
-var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
-  CreateMenu(GetID(), pClonk, 0, 0, 0, 0, 1);
-AddMenuItem("Kaufbare Objektmengen verändern","SetBuyable",CNMT, pClonk,0,0,"Stelle ein was kaufbar sein soll und wieviel. Betrifft nur Spieler die aktuell im Spiel sind!");
-AddMenuItem("Nachlieferungen aus Heimatbasis verändern","SetProduction",CNMT, pClonk,0,0,"Stelle ein wovon wie stark nachgeliefert werden soll. Betrifft nur Spieler die aktuell im Spiel sind!");
+  CreateMenu(GetID(), pClonk, nil, nil, nil, nil, 1);
+AddMenuItem("Kaufbare Objektmengen verändern","SetBuyable",CNMT, pClonk,nil,nil,"Stelle ein was kaufbar sein soll und wieviel. Betrifft nur Spieler die aktuell im Spiel sind!");
+AddMenuItem("Nachlieferungen aus Heimatbasis verändern","SetProduction",CNMT, pClonk,nil,nil,"Stelle ein wovon wie stark nachgeliefert werden soll. Betrifft nur Spieler die aktuell im Spiel sind!");
 AddMenuItem("$Finished$", "OpenMenu", CNCL, pClonk);
 }
 
 private func SetProduction(idItem,izahl)
 {
- var pClonk=GetCursor(GetPlayerByIndex(0,C4PT_User));
-  CreateMenu(GetID(),pClonk,0,0,"nichts einstellbar");
+ var pClonk=GetCursor(GetPlayerByIndex(nil,C4PT_User));
+  CreateMenu(GetID(),pClonk,nil,nil,"nichts einstellbar");
   var Typ,i,iSMI= (-1);
-while(Typ= GetDefinition(i++,C4D_SelectHomebase()))
+while(Typ= GetDefinition(S42MigrationStep(i, 1, true),C4D_SelectHomebase()))
     {
-    iSMI++;
+    S42MigrationStep(iSMI, 1, true);
       {
-      iSMI++;
+      S42MigrationStep(iSMI, 1, true);
       AddMenuItem("%s vermindern","MakeWareProduction",Typ,pClonk,GetHomebaseProduction(GetOwner(pClonk),Typ),-1);
       AddMenuItem("%s vermehren","MakeWareProduction",Typ,pClonk,GetHomebaseProduction(GetOwner(pClonk),Typ),1);
       }
-    if(idItem== Typ && izahl==-1) SelectMenuItem(iSMI-1,pClonk);
-    if(idItem== Typ && izahl==1) SelectMenuItem(iSMI,pClonk);
+    if(And(Equal(idItem, Typ), Equal(izahl, -1))) SelectMenuItem((iSMI ?? 0)-1,pClonk);
+    if(And(Equal(idItem, Typ), Equal(izahl, 1))) SelectMenuItem(iSMI,pClonk);
     }
   // Fertig
-  AddMenuItem("$Finished$", "BuyableMenu", CNCL, pClonk,0,1);
+  AddMenuItem("$Finished$", "BuyableMenu", CNCL, pClonk,nil,1);
 }
 
 func MakeWareProduction(ID,izahl,fMenu,iPlrplus1)
 {
 if(iPlrplus1) // nur fuer einen bestimmten player, wird in afterinitialzie genutzt, zb laufzeitbeitritt. plus1 damit es wenn es null ist fuer alle gemacht wird.
 {
-    DoHomebaseProduction(iPlrplus1-1, ID, izahl);
-     if(GetHomebaseProduction(iPlrplus1-1,ID)==-1) DoHomebaseProduction(iPlrplus1-1, ID, 1); // nicht negativ
+    DoHomebaseProduction((iPlrplus1 ?? 0)-1, ID, izahl);
+     if(Equal(GetHomebaseProduction((iPlrplus1 ?? 0)-1,ID), -1)) DoHomebaseProduction((iPlrplus1 ?? 0)-1, ID, 1); // nicht negativ
 }
 else
 {
-    for(var i=0; i<GetPlayerCount(); i++)
+    for(var i=nil; (i ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
      {
      DoHomebaseProduction(GetPlayerByIndex(i), ID, izahl);
-     if(GetHomebaseProduction(GetPlayerByIndex(i),ID)==-1) DoHomebaseProduction(GetPlayerByIndex(i), ID, 1); // nicht negativ
+     if(Equal(GetHomebaseProduction(GetPlayerByIndex(i),ID), -1)) DoHomebaseProduction(GetPlayerByIndex(i), ID, 1); // nicht negativ
      }
 }
 
@@ -423,19 +426,19 @@ else
 
 private func SetBuyable(idItem,izahl)
 {
- var pClonk=GetCursor(GetPlayerByIndex(0,C4PT_User));
-  CreateMenu(GetID(),pClonk,0,0,"nichts einstellbar");
+ var pClonk=GetCursor(GetPlayerByIndex(nil,C4PT_User));
+  CreateMenu(GetID(),pClonk,nil,nil,"nichts einstellbar");
   var Typ,i,iSMI= (-1);
-while(Typ= GetDefinition(i++,C4D_SelectHomebase()))
+while(Typ= GetDefinition(S42MigrationStep(i, 1, true),C4D_SelectHomebase()))
     {
-    iSMI++;
+    S42MigrationStep(iSMI, 1, true);
       {
-      iSMI++;
+      S42MigrationStep(iSMI, 1, true);
       AddMenuItem("%s vermindern","MakeWare",Typ,pClonk,GetHomebaseMaterial(GetOwner(pClonk),Typ),-1);
       AddMenuItem("%s vermehren","MakeWare",Typ,pClonk,GetHomebaseMaterial(GetOwner(pClonk),Typ),1);
       }
-    if(idItem== Typ && izahl==-1) SelectMenuItem(iSMI-1,pClonk);
-    if(idItem== Typ && izahl==1) SelectMenuItem(iSMI,pClonk);
+    if(And(Equal(idItem, Typ), Equal(izahl, -1))) SelectMenuItem((iSMI ?? 0)-1,pClonk);
+    if(And(Equal(idItem, Typ), Equal(izahl, 1))) SelectMenuItem(iSMI,pClonk);
     }
   // Fertig
   AddMenuItem("$Finished$", "OpenMenu", CNCL, pClonk);
@@ -445,15 +448,15 @@ func MakeWare(ID,izahl,fMenu,iPlrplus1)
 {
 if(iPlrplus1) // nur fuer einen bestimmten player, wird in afterinitialzie genutzt, zb laufzeitbeitritt
 {
-    DoHomebaseMaterial(iPlrplus1-1, ID, izahl);
-     if(GetHomebaseMaterial(iPlrplus1,ID)==-1) DoHomebaseMaterial(iPlrplus1-1, ID, 1); // nicht negativ
+    DoHomebaseMaterial((iPlrplus1 ?? 0)-1, ID, izahl);
+     if(Equal(GetHomebaseMaterial(iPlrplus1,ID), -1)) DoHomebaseMaterial((iPlrplus1 ?? 0)-1, ID, 1); // nicht negativ
 }
 else
 {
-    for(var i=0; i<GetPlayerCount(); i++)
+    for(var i=nil; (i ?? 0)<(GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
      {
      DoHomebaseMaterial(GetPlayerByIndex(i), ID, izahl);
-     if(GetHomebaseMaterial(GetPlayerByIndex(i),ID)==-1) DoHomebaseMaterial(GetPlayerByIndex(i), ID, 1); // nicht negativ
+     if(Equal(GetHomebaseMaterial(GetPlayerByIndex(i),ID), -1)) DoHomebaseMaterial(GetPlayerByIndex(i), ID, 1); // nicht negativ
      }
 }
 
@@ -463,19 +466,20 @@ else
 
 func Wahlmenu(id dummy, int iSelection)
 {
-var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
-  CreateMenu(GetID(), pClonk, 0, 0, 0, 0, 1);
-if(dummy==EVSC)
+iSelection ??= 0;
+var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
+  CreateMenu(GetID(), pClonk, nil, nil, nil, nil, 1);
+if(Equal(dummy, EVSC))
  {
   // Spielumgebung
-  AddMenuItem("Statische Umgebungsobjekte", "OpenEnvironmentMenu", BRDS, pClonk, 0,0, "Ein- und Ausschaltbare Objekte");
-  AddMenuItem("Variable Umgebungsobjekte", "VariabelEnvironmentMenu", BRDS, pClonk, 0,0, "Variabel einstellbare Objekte");
+  AddMenuItem("Statische Umgebungsobjekte", "OpenEnvironmentMenu", BRDS, pClonk, nil,nil, "Ein- und Ausschaltbare Objekte");
+  AddMenuItem("Variable Umgebungsobjekte", "VariabelEnvironmentMenu", BRDS, pClonk, nil,nil, "Variabel einstellbare Objekte");
  }
-if(dummy==RUSC)
+if(Equal(dummy, RUSC))
  {
   // Spielregeln
-  AddMenuItem("Statische Regeln", "OpenRuleMenu", CTFL, pClonk, 0,0, "Ein- und Ausschaltbare Regeln");
-  AddMenuItem("Variable Regeln", "VariabelRuleMenu", CTFL, pClonk, 0,0, "Variabel einstellbare Regeln");
+  AddMenuItem("Statische Regeln", "OpenRuleMenu", CTFL, pClonk, nil,nil, "Ein- und Ausschaltbare Regeln");
+  AddMenuItem("Variable Regeln", "VariabelRuleMenu", CTFL, pClonk, nil,nil, "Variabel einstellbare Regeln");
  }
   // Fertig
     AddMenuItem("$Finished$", "OpenMenu", CNCL, pClonk);
@@ -485,19 +489,20 @@ if(dummy==RUSC)
 
 func OpenRuleMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
   CreateMenu(GetID(), pClonk);
   // Regeln einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; i++)
-    if(!DefinitionCall(idR, "IsNotChooseable") && !DefinitionCall(idR, "IsVariabelChooseable2")) // notchoosable soll verhindern, dass bestimmte regeln in den statischen regeln auftauchen, zb angriffsregel usw.
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; S42MigrationStep(i, 1, true))
+    if(And(!DefinitionCall(idR, "IsNotChooseable"), !DefinitionCall(idR, "IsVariabelChooseable2"))) // notchoosable soll verhindern, dass bestimmte regeln in den statischen regeln auftauchen, zb angriffsregel usw.
       {
-      def = TransformObject(idR,aRules[i]);
-      AddMenuItem("%s", "ChangeRuleConf", idR, pClonk, 0, i, 0, 4, def);
-      if(i == iSelection)
+      def = TransformObject(idR,aRules[(i ?? 0)]);
+      AddMenuItem("%s", "ChangeRuleConf", idR, pClonk, nil, i, nil, 4, def);
+      if(Equal(i, iSelection))
         check = true;
       if(!check)
-        j++;
+        S42MigrationStep(j, 1, true);
       RemoveObject(def);
       }
   // Fertig
@@ -509,33 +514,35 @@ func OpenRuleMenu(id dummy, int iSelection)
 func ChangeRuleConf(id idRule, int i)
 {
   // Regel wurde ausgewShlt
-  if(!aRules[i])
+  i ??= 0;
+  if(!aRules[(i ?? 0)])
   {
-    aRules[i] = true;
-    if(idRule->~CreateOnChoose() || Death)
-      CreateObject(idRule,0,0,-1);
+    aRules[(i ?? 0)] = true;
+    if(Or(idRule->~CreateOnChoose(), Death))
+      CreateObject(idRule,nil,nil,-1);
   }
   // Regel wurde abgewShlt
   else
   {
-    aRules[i] = false;
-    if(idRule->~CreateOnChoose() || Death)   // 
+    aRules[(i ?? 0)] = nil;
+    if(Or(idRule->~CreateOnChoose(), Death))   //
       if(FindObject(idRule))
         RemoveObject(FindObject(idRule));
   }
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Regelmenn wieder aufmachen
-  OpenRuleMenu(0, i);
+  OpenRuleMenu(nil, i);
 }
 
 func VariabelRuleMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
-  CreateMenu(GetID(), pClonk,0,0,"Variable Regeln",0,1,0);
+  CreateMenu(GetID(), pClonk,nil,nil,"Variable Regeln",nil,1,nil);
   // Regeln einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Rule) ; S42MigrationStep(i, 1, true))
     if(DefinitionCall(idR, "IsVariabelChooseable2")) // !DefinitionCall(idR, "IsNotChooseable") && 
       {
       AddMenuItem("%s", "EditVariabelRule", idR, pClonk);
@@ -546,85 +553,86 @@ func VariabelRuleMenu(id dummy, int iSelection)
 
 func EditVariabelRule(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   wissenvorher = HashGet(hashSpielRegeln, "StartZeitalter");   
   // Menü aufmachen
-  CreateMenu(GetID(), pClonk,0,0,"Variable Einstellung",0,1,0);
+  CreateMenu(GetID(), pClonk,nil,nil,"Variable Einstellung",nil,1,nil);
 // nun für jede variable Regel die es gibt, einen Menüeintrag schreiben, denn diese müssen individuell sein...
 // Bausatz und Baustoffe bei Abriss
-if(dummy==PPT7)
+if(Equal(dummy, PPT7))
   {
-  AddMenuItem(Format("Chance für Bausatz zurück erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Bausatz")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"Bausatz",1,100),CNKT, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibts mit x% Chance einen Bausatz wieder");
-  AddMenuItem(Format("Chance für Bausatz zurück vermindern (%v/100%)",HashGet(hashSpielRegeln, "Bausatz")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Bausatz",-1,100),CNKT, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibts mit x% Chance einen Bausatz wieder");
-  AddMenuItem(Format("Prozentsatz der Baustoffe erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustoffe")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,2,"Baustoffe",10,100),CNMT, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Baustoffe wieder. Jede einzelne Komponente wird mit Chance x% erstellt. Nur wenn Baumaterialregel an.");
-  AddMenuItem(Format("Prozentsatz der Baustoffe vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustoffe")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,3,"Baustoffe",-10,100),CNMT, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Baustoffe wieder. Jede einzelne Komponente wird mit Chance x% erstellt. Nur wenn Baumaterialregel an.");
-  AddMenuItem(Format("Prozentsatz erstatteter Kosten erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustellenkostenerstattung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,4,"Baustellenkostenerstattung",10,100),BBGG, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Clunker wieder. Nur wenn Baustellenkosten aktiv ist.");
-  AddMenuItem(Format("Prozentsatz erstatteter Kosten vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustellenkostenerstattung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,5,"Baustellenkostenerstattung",-10,100),BBGG, pClonk, 0, 0,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Clunker wieder. Nur wenn Baustellenkosten aktiv ist.");
+  AddMenuItem(Format("Chance für Bausatz zurück erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Bausatz")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"Bausatz",1,100),CNKT, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibts mit x% Chance einen Bausatz wieder");
+  AddMenuItem(Format("Chance für Bausatz zurück vermindern (%v/100%)",HashGet(hashSpielRegeln, "Bausatz")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Bausatz",-1,100),CNKT, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibts mit x% Chance einen Bausatz wieder");
+  AddMenuItem(Format("Prozentsatz der Baustoffe erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustoffe")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,2,"Baustoffe",10,100),CNMT, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Baustoffe wieder. Jede einzelne Komponente wird mit Chance x% erstellt. Nur wenn Baumaterialregel an.");
+  AddMenuItem(Format("Prozentsatz der Baustoffe vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustoffe")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,3,"Baustoffe",-10,100),CNMT, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Baustoffe wieder. Jede einzelne Komponente wird mit Chance x% erstellt. Nur wenn Baumaterialregel an.");
+  AddMenuItem(Format("Prozentsatz erstatteter Kosten erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustellenkostenerstattung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,4,"Baustellenkostenerstattung",10,100),BBGG, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Clunker wieder. Nur wenn Baustellenkosten aktiv ist.");
+  AddMenuItem(Format("Prozentsatz erstatteter Kosten vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustellenkostenerstattung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,5,"Baustellenkostenerstattung",-10,100),BBGG, pClonk, nil, nil,"Beim Abriss eines Gebäudes gibt es x% der eingesetzten Clunker wieder. Nur wenn Baustellenkosten aktiv ist.");
   }
 
 // Ausbildungsregeln
-if(dummy==PP2P)
+if(Equal(dummy, PP2P))
   {
-  AddMenuItem("Info: Angepasste Physics muss aktiviert sein!", "EditVariabelRule",PP2P, pClonk, 0, 0,"Clonks lassen sich dann ausbilden und verbessern, was Zeit, Geld und Erfahrung benötigt. In den statischen Regeln kann noch mit 0, 0.5 und 1 multipliziert werden.");
-  AddMenuItem(Format("Standardwert für nötige Erfahrung erhöhen (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungserfahrung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Ausbildungserfahrung",10,1000,1),PP2P, pClonk, 0, 0,"Wert der nötigen Erfahrung für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
-  AddMenuItem(Format("Standardwert für nötige Erfahrung vermindern (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungserfahrung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Ausbildungserfahrung",-10,1000,1),PP2P, pClonk, 0, 0,"Wert der nötigen Erfahrung für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
-  AddMenuItem(Format("Standardwert für Kosten erhöhen (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Ausbildungskosten",10,1000,1),PP2P, pClonk, 0, 0,"Wert der Geldkosten für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
-  AddMenuItem(Format("Standardwert für Kosten vermindern (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"Ausbildungskosten",-10,1000,1),PP2P, pClonk, 0, 0,"Wert der Geldkosten für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
-  AddMenuItem(Format("Multiplikationsfaktor der Ausbildungszeit erhöhen (%v/10)",HashGet(hashSpielRegeln, "Ausbildungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,5,"Ausbildungszeit",5,10),PP2P, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! D.h. es sind zurzeit nur 3 Möglichkeiten vorhanden: instant, halbe Zeit, volle Zeit. Wobei die Standardzeit voreingestellt ist");
-  AddMenuItem(Format("Multiplikationsfaktor der Ausbildungszeit vermindern (%v/10)",HashGet(hashSpielRegeln, "Ausbildungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,6,"Ausbildungszeit",-5,10),PP2P, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! D.h. es sind zurzeit nur 3 Möglichkeiten vorhanden: instant, halbe Zeit, volle Zeit. Wobei die Standardzeit voreingestellt ist"); 
+  AddMenuItem("Info: Angepasste Physics muss aktiviert sein!", "EditVariabelRule",PP2P, pClonk, nil, nil,"Clonks lassen sich dann ausbilden und verbessern, was Zeit, Geld und Erfahrung benötigt. In den statischen Regeln kann noch mit 0, 0.5 und 1 multipliziert werden.");
+  AddMenuItem(Format("Standardwert für nötige Erfahrung erhöhen (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungserfahrung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Ausbildungserfahrung",10,1000,1),PP2P, pClonk, nil, nil,"Wert der nötigen Erfahrung für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
+  AddMenuItem(Format("Standardwert für nötige Erfahrung vermindern (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungserfahrung")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Ausbildungserfahrung",-10,1000,1),PP2P, pClonk, nil, nil,"Wert der nötigen Erfahrung für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
+  AddMenuItem(Format("Standardwert für Kosten erhöhen (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Ausbildungskosten",10,1000,1),PP2P, pClonk, nil, nil,"Wert der Geldkosten für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
+  AddMenuItem(Format("Standardwert für Kosten vermindern (%v/1000)",HashGet(hashSpielRegeln, "Ausbildungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"Ausbildungskosten",-10,1000,1),PP2P, pClonk, nil, nil,"Wert der Geldkosten für von Stufe 5 auf Stufe 6. Die anderen Werte werden in 5 Stufenschritten anhand dessen berechnet.");
+  AddMenuItem(Format("Multiplikationsfaktor der Ausbildungszeit erhöhen (%v/10)",HashGet(hashSpielRegeln, "Ausbildungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,5,"Ausbildungszeit",5,10),PP2P, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! D.h. es sind zurzeit nur 3 Möglichkeiten vorhanden: instant, halbe Zeit, volle Zeit. Wobei die Standardzeit voreingestellt ist");
+  AddMenuItem(Format("Multiplikationsfaktor der Ausbildungszeit vermindern (%v/10)",HashGet(hashSpielRegeln, "Ausbildungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,6,"Ausbildungszeit",-5,10),PP2P, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! D.h. es sind zurzeit nur 3 Möglichkeiten vorhanden: instant, halbe Zeit, volle Zeit. Wobei die Standardzeit voreingestellt ist");
  }
 // Forschung
-if(dummy==FFF3)
+if(Equal(dummy, FFF3))
   {
-  AddMenuItem(Format("Multiplikationsfaktor der Forschungskosten erhöhen (%v/200)",HashGet(hashSpielRegeln, "Forschungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Forschungskosten",1,200,0),FFF3, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! Die individuellen Forschungskosten je Objekt, werden mit diesem Faktor multipliziert");
-  AddMenuItem(Format("Multiplikationsfaktor der Forschungskosten vermindern (%v/200)",HashGet(hashSpielRegeln, "Forschungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Forschungskosten",-1,200,0),FFF3, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! Die individuellen Forschungskosten je Objekt, werden mit diesem Faktor multipliziert");
-  AddMenuItem(Format("Multiplikationsfaktor der Forschungszeit erhöhen (%v/200)",HashGet(hashSpielRegeln, "Forschungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Forschungszeit",1,200,0),FFF3, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! Die individuelle Forschungszeit je Objekt, werden mit diesem Faktor multipliziert");
-  AddMenuItem(Format("Multiplikationsfaktor der Forschungszeit vermindern (%v/200)",HashGet(hashSpielRegeln, "Forschungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Forschungszeit",-1,200,0),FFF3, pClonk, 0, 0,"Der Wert wird noch durch 10 geteilt! Die individuelle Forschungszeit je Objekt, werden mit diesem Faktor multipliziert"); 
+  AddMenuItem(Format("Multiplikationsfaktor der Forschungskosten erhöhen (%v/200)",HashGet(hashSpielRegeln, "Forschungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Forschungskosten",1,200,nil),FFF3, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! Die individuellen Forschungskosten je Objekt, werden mit diesem Faktor multipliziert");
+  AddMenuItem(Format("Multiplikationsfaktor der Forschungskosten vermindern (%v/200)",HashGet(hashSpielRegeln, "Forschungskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Forschungskosten",-1,200,nil),FFF3, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! Die individuellen Forschungskosten je Objekt, werden mit diesem Faktor multipliziert");
+  AddMenuItem(Format("Multiplikationsfaktor der Forschungszeit erhöhen (%v/200)",HashGet(hashSpielRegeln, "Forschungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Forschungszeit",1,200,nil),FFF3, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! Die individuelle Forschungszeit je Objekt, werden mit diesem Faktor multipliziert");
+  AddMenuItem(Format("Multiplikationsfaktor der Forschungszeit vermindern (%v/200)",HashGet(hashSpielRegeln, "Forschungszeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Forschungszeit",-1,200,nil),FFF3, pClonk, nil, nil,"Der Wert wird noch durch 10 geteilt! Die individuelle Forschungszeit je Objekt, werden mit diesem Faktor multipliziert");
   }
 // StartZeitalter 
-if(dummy==PPT8)
+if(Equal(dummy, PPT8))
   {
-  AddMenuItem(Format("Start-Wissensstand erhöhen (%v/22)",HashGet(hashSpielRegeln, "StartZeitalter")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"StartZeitalter",1,22),PPT8, pClonk, 0, 0,"Je höher dieser Werte, desto mehr Baupläne und fertige Forschungen stehen allen Spielern zur Verfügung. Deaktviert, wenn Regel Szenario-Forschung aktiv!!");
-  AddMenuItem(Format("Start-Wissensstand vermindern (%v/22)",HashGet(hashSpielRegeln, "StartZeitalter")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"StartZeitalter",-1,22),PPT8, pClonk, 0, 0,"Je höher dieser Werte, desto mehr Baupläne und fertige Forschungen stehen allen Spielern zur Verfügung. Deaktviert, wenn Regel Szenario-Forschung aktiv!!"); 
+  AddMenuItem(Format("Start-Wissensstand erhöhen (%v/22)",HashGet(hashSpielRegeln, "StartZeitalter")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"StartZeitalter",1,22),PPT8, pClonk, nil, nil,"Je höher dieser Werte, desto mehr Baupläne und fertige Forschungen stehen allen Spielern zur Verfügung. Deaktviert, wenn Regel Szenario-Forschung aktiv!!");
+  AddMenuItem(Format("Start-Wissensstand vermindern (%v/22)",HashGet(hashSpielRegeln, "StartZeitalter")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"StartZeitalter",-1,22),PPT8, pClonk, nil, nil,"Je höher dieser Werte, desto mehr Baupläne und fertige Forschungen stehen allen Spielern zur Verfügung. Deaktviert, wenn Regel Szenario-Forschung aktiv!!");
   }
 // Produktionsgeschwindigkeit 
-if(dummy==PRTI)
+if(Equal(dummy, PRTI))
   {
-  AddMenuItem(Format("Produktionsgeschwindigkeit erhöhen (%v/500%)",HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"Produktionsgeschwindigkeit",5,500),dummy, pClonk, 0, 0,"x % der Standard Produktionszeit in Chemiefabrik, Amboss, Werkstatt und Co.");
-  AddMenuItem(Format("Produktionsgeschwindigkeit vermindern (%v/500%)",HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Produktionsgeschwindigkeit",-5,500),dummy, pClonk, 0, 0,"x % der Standard Produktionszeit in Chemiefabrik, Amboss, Werkstatt und Co."); 
+  AddMenuItem(Format("Produktionsgeschwindigkeit erhöhen (%v/500%)",HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"Produktionsgeschwindigkeit",5,500),dummy, pClonk, nil, nil,"x % der Standard Produktionszeit in Chemiefabrik, Amboss, Werkstatt und Co.");
+  AddMenuItem(Format("Produktionsgeschwindigkeit vermindern (%v/500%)",HashGet(hashSpielRegeln, "Produktionsgeschwindigkeit")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Produktionsgeschwindigkeit",-5,500),dummy, pClonk, nil, nil,"x % der Standard Produktionszeit in Chemiefabrik, Amboss, Werkstatt und Co.");
   } 
 // Baustellenboost 
-if(dummy==SBUI)
+if(Equal(dummy, SBUI))
   {
-  AddMenuItem(Format("Baustellenboost erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustellenboost")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"Baustellenboost",1,100),dummy, pClonk, 0, 0,"Jede Baustelle bekommt einen Fertigstellungs-Boost von x%. Dies betrifft also sowohl Bauzeit, als auch Baustoffe.");
-  AddMenuItem(Format("Baustellenboost vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustellenboost")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Baustellenboost",-1,100),dummy, pClonk, 0, 0,"Jede Baustelle bekommt einen Fertigstellungs-Boost von x%. Dies betrifft also sowohl Bauzeit, als auch Baustoffe."); 
+  AddMenuItem(Format("Baustellenboost erhöhen (%v/100%)",HashGet(hashSpielRegeln, "Baustellenboost")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"Baustellenboost",1,100),dummy, pClonk, nil, nil,"Jede Baustelle bekommt einen Fertigstellungs-Boost von x%. Dies betrifft also sowohl Bauzeit, als auch Baustoffe.");
+  AddMenuItem(Format("Baustellenboost vermindern (%v/100%)",HashGet(hashSpielRegeln, "Baustellenboost")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Baustellenboost",-1,100),dummy, pClonk, nil, nil,"Jede Baustelle bekommt einen Fertigstellungs-Boost von x%. Dies betrifft also sowohl Bauzeit, als auch Baustoffe.");
   } 
-if(dummy==GGGG) // ereignisse beim Materialabbau
+if(Equal(dummy, GGGG)) // ereignisse beim Materialabbau
   {
-      for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]);inumber++)
+      for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]) ?? 0);S42MigrationStep(inumber, 1, true))
       {
-          AddMenuItem(Format("% von noetigem Material %s erhoehen (%v/100)",HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber],HashGet(hashSpielRegeln, "AbbauEreignisse")[2][inumber]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",1,100,0),HashGet(hashSpielRegeln, "AbbauEreignisse")[1][inumber], pClonk, 0, 0,"Wenn 0, dann deaktiviert. Ansonsten wird alle x% von aus der Karte entferntem Material ein Ereignis ausgelöst. Z.b ein Angriff, oder Naturkatastrophen.");
-          AddMenuItem(Format("% von noetigem Material %s vermindern (%v/100)",HashGet(hashSpielRegeln, "AbbauEreignisse")[0][inumber],HashGet(hashSpielRegeln, "AbbauEreignisse")[2][inumber]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",-1,100,0),HashGet(hashSpielRegeln, "AbbauEreignisse")[1][inumber], pClonk, 0, 0,"Wenn 0, dann deaktiviert. Ansonsten wird alle x% von aus der Karte entferntem Material ein Ereignis ausgelöst. Z.b ein Angriff, oder Naturkatastrophen.");
+          AddMenuItem(Format("% von noetigem Material %s erhoehen (%v/100)",HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(inumber ?? 0)],HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(inumber ?? 0)]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",1,100,nil),HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(inumber ?? 0)], pClonk, nil, nil,"Wenn 0, dann deaktiviert. Ansonsten wird alle x% von aus der Karte entferntem Material ein Ereignis ausgelöst. Z.b ein Angriff, oder Naturkatastrophen.");
+          AddMenuItem(Format("% von noetigem Material %s vermindern (%v/100)",HashGet(hashSpielRegeln, "AbbauEreignisse")[0][(inumber ?? 0)],HashGet(hashSpielRegeln, "AbbauEreignisse")[2][(inumber ?? 0)]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",-1,100,nil),HashGet(hashSpielRegeln, "AbbauEreignisse")[1][(inumber ?? 0)], pClonk, nil, nil,"Wenn 0, dann deaktiviert. Ansonsten wird alle x% von aus der Karte entferntem Material ein Ereignis ausgelöst. Z.b ein Angriff, oder Naturkatastrophen.");
       }
-      AddMenuItem(Format("Ereignis Katastrophen und/oder Monster? (%v/2)",HashGet(hashSpielRegeln, "AbbauEreignisse")[3]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",1,2,0),MONS, pClonk, 0, 0,"Wenn 0, dann Katastrophen und Monster gleich häufig. Wenn 1, dann nur Katastrophen, wenn 2 dann nur Monster.");
+      AddMenuItem(Format("Ereignis Katastrophen und/oder Monster? (%v/2)",HashGet(hashSpielRegeln, "AbbauEreignisse")[3]), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,inumber,"AbbauEreignisse",1,2,nil),MONS, pClonk, nil, nil,"Wenn 0, dann Katastrophen und Monster gleich häufig. Wenn 1, dann nur Katastrophen, wenn 2 dann nur Monster.");
   }
 // Produktionskosten, glaube nur aktiv, wenn baumaterial fuer prodktion deaktiviert.
-if(dummy==PPGG)
+if(Equal(dummy, PPGG))
   {
-  AddMenuItem(Format("Produktionskosten erhöhen (%v/1000%)",HashGet(hashSpielRegeln, "Produktionskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"Produktionskosten",5,1000),dummy, pClonk, 0, 0,"x % der Standard Produktionskosten in Chemiefabrik, Amboss, Werkstatt und Co. Der Standardwert sind die halben Kaufkosten.");
-  AddMenuItem(Format("Produktionskosten vermindern (%v/1000%)",HashGet(hashSpielRegeln, "Produktionskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Produktionskosten",-5,1000),dummy, pClonk, 0, 0,"x % der Standard Produktionskosten in Chemiefabrik, Amboss, Werkstatt und Co. Der Standardwert sind die halben Kaufkosten."); 
+  AddMenuItem(Format("Produktionskosten erhöhen (%v/1000%)",HashGet(hashSpielRegeln, "Produktionskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"Produktionskosten",5,1000),dummy, pClonk, nil, nil,"x % der Standard Produktionskosten in Chemiefabrik, Amboss, Werkstatt und Co. Der Standardwert sind die halben Kaufkosten.");
+  AddMenuItem(Format("Produktionskosten vermindern (%v/1000%)",HashGet(hashSpielRegeln, "Produktionskosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Produktionskosten",-5,1000),dummy, pClonk, nil, nil,"x % der Standard Produktionskosten in Chemiefabrik, Amboss, Werkstatt und Co. Der Standardwert sind die halben Kaufkosten.");
   } 
 // Baustellenkosten 
-if(dummy==BBGG)
+if(Equal(dummy, BBGG))
   {
-  AddMenuItem(Format("Baustellenkosten erhöhen (%v/1000%)",HashGet(hashSpielRegeln, "Baustellenkosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"Baustellenkosten",5,1000),dummy, pClonk, 0, 0,"x % der Standard Baustellenkosten. Der Standardwert ist Gewicht/10.");
-  AddMenuItem(Format("Baustellenkosten vermindern (%v/1000%)",HashGet(hashSpielRegeln, "Baustellenkosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Baustellenkosten",-5,1000),dummy, pClonk, 0, 0,"x % der Standard Baustellenkosten. Der Standardwert ist Gewicht/10."); 
+  AddMenuItem(Format("Baustellenkosten erhöhen (%v/1000%)",HashGet(hashSpielRegeln, "Baustellenkosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"Baustellenkosten",5,1000),dummy, pClonk, nil, nil,"x % der Standard Baustellenkosten. Der Standardwert ist Gewicht/10.");
+  AddMenuItem(Format("Baustellenkosten vermindern (%v/1000%)",HashGet(hashSpielRegeln, "Baustellenkosten")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"Baustellenkosten",-5,1000),dummy, pClonk, nil, nil,"x % der Standard Baustellenkosten. Der Standardwert ist Gewicht/10.");
   } 
   // EnergieverbrauchNeue Gebäude.
-if(dummy==ENVE)
+if(Equal(dummy, ENVE))
   {
-  AddMenuItem(Format("Energieverbrauch für Fabrik Zukunftsgebäude erhöhen (%v/500%)",HashGet(hashSpielRegeln, "EnergieverbrauchNeue")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,0,"EnergieverbrauchNeue",5,500),dummy, pClonk, 0, 0,"x % des Standard-Energieverbrauchs.");
-  AddMenuItem(Format("Energieverbrauch für Fabrik Zukunftsgebäude vermindern (%v/500%)",HashGet(hashSpielRegeln, "EnergieverbrauchNeue")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"EnergieverbrauchNeue",-5,500),dummy, pClonk, 0, 0,"x % des Standard-Energieverbrauchs."); 
+  AddMenuItem(Format("Energieverbrauch für Fabrik Zukunftsgebäude erhöhen (%v/500%)",HashGet(hashSpielRegeln, "EnergieverbrauchNeue")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,nil,"EnergieverbrauchNeue",5,500),dummy, pClonk, nil, nil,"x % des Standard-Energieverbrauchs.");
+  AddMenuItem(Format("Energieverbrauch für Fabrik Zukunftsgebäude vermindern (%v/500%)",HashGet(hashSpielRegeln, "EnergieverbrauchNeue")), Format("ChangeVariableRuleConfig(%i,%d,\"%s\",%d,%d)",dummy,1,"EnergieverbrauchNeue",-5,500),dummy, pClonk, nil, nil,"x % des Standard-Energieverbrauchs.");
   }
   // Fertig
     AddMenuItem("$Finished$", "VariabelRuleMenu", CNCL, pClonk);
@@ -633,51 +641,51 @@ if(dummy==ENVE)
 
 func ChangeVariableRuleConfig(id dummy, iSelection, iname, ichange, imaximum, iminimum)
 {
-  if(iname=="AbbauEreignisse") // spezialbehandlung, weil es aus mehreren Arrays besteht und nicht bloß ein wert ist.
+  if(Equal(iname, "AbbauEreignisse")) // spezialbehandlung, weil es aus mehreren Arrays besteht und nicht bloß ein wert ist.
   {
           var aAbbau = [[],[],[]]; // HashGet(hashSpielRegeln, "AbbauEreignisse")
-          for(var izahl;izahl<3;izahl++)
-              for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[izahl]);inumber++)
+          for(var izahl;(izahl ?? 0)<3;S42MigrationStep(izahl, 1, true))
+              for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[(izahl ?? 0)]) ?? 0);S42MigrationStep(inumber, 1, true))
               {
-                  if(inumber==iSelection && izahl==2) ArrayAdd(aAbbau[izahl],BoundBy(HashGet(hashSpielRegeln, "AbbauEreignisse")[izahl][inumber]+ichange,iminimum,imaximum)); // wenn es das gewählte, Wert verändern
-                  else ArrayAdd(aAbbau[izahl],HashGet(hashSpielRegeln, "AbbauEreignisse")[izahl][inumber]);   // alle anderen beibehalten und so übernehmen
+                  if(And(Equal(inumber, iSelection), Equal(izahl, 2))) ArrayAdd(aAbbau[(izahl ?? 0)],BoundBy((HashGet(hashSpielRegeln, "AbbauEreignisse")[(izahl ?? 0)][(inumber ?? 0)] ?? 0)+(ichange ?? 0),iminimum,imaximum)); // wenn es das gewählte, Wert verändern
+                  else ArrayAdd(aAbbau[(izahl ?? 0)],HashGet(hashSpielRegeln, "AbbauEreignisse")[(izahl ?? 0)][(inumber ?? 0)]);   // alle anderen beibehalten und so übernehmen
               }
           
-          if(HashGet(hashSpielRegeln, "AbbauEreignisse")[3]!=2) // den Monster oder Katastrophe eintrag noch zufügen
-             ArrayAdd(aAbbau,HashGet(hashSpielRegeln, "AbbauEreignisse")[3]+=1);
+          if(!Equal(HashGet(hashSpielRegeln, "AbbauEreignisse")[3], 2)) // den Monster oder Katastrophe eintrag noch zufügen
+             ArrayAdd(aAbbau,S42MigrationAssign(HashGet(hashSpielRegeln, "AbbauEreignisse")[3], "+=", 1));
           else
-             ArrayAdd(aAbbau,0);
+             ArrayAdd(aAbbau,nil);
           HashPut(hashSpielRegeln, iname, aAbbau);
           // Geräusch
-          Sound("Grab", 1,0,0,1);
+          Sound("Grab", 1,nil,nil,1);
           // Environmentmenü wieder aufmachen
-          iSelection = iSelection*2;
-          if(ichange==-1) iSelection = iSelection+1;
+          iSelection = (iSelection ?? 0)*2;
+          if(Equal(ichange, -1)) iSelection = (iSelection ?? 0)+1;
           return(EditVariabelRule(dummy,iSelection));
   }
   
   //Log("dummy=%v,iSelection=%v,iname=%v,ichange=%v",dummy,iSelection,iname,ichange);
   // iname ist der Key
-  HashPut(hashSpielRegeln, iname, BoundBy(HashGet(hashSpielRegeln, iname)+ichange,iminimum,imaximum));
+  HashPut(hashSpielRegeln, iname, BoundBy((HashGet(hashSpielRegeln, iname) ?? 0)+(ichange ?? 0),iminimum,imaximum));
   
 // Ausnahmen behandeln, wie z.b ausbildungszeit, welche noch über anzahl der regelobjekte geregelt wird
-  if(iname=="Ausbildungszeit")
+  if(Equal(iname, "Ausbildungszeit"))
    {// hier noch Regeln erstellen, die im Zuge der variablen Einstellungen erzeugt werden müssen
 
 var zeitregel;
  // Log(Format("objekte vorher: %v . Wert: %v",ObjectCount2(Find_ID(PP2P)),HashGet(hashSpielRegeln, "Ausbildungszeit")));
-if(HashGet(hashSpielRegeln, "Ausbildungszeit")==0)
+if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), nil))
  {
 while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);  // !!! funktioniert so nicht, weil regeln die check nicht true haben, werden vom regelchooser wieder entfernt
 CreateObject(PP2P,1,1,-1); // -> instant
  }
-if(HashGet(hashSpielRegeln, "Ausbildungszeit")==5)
+if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 5))
  {
 while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);
 CreateObject(PP2P,1,1,-1); 
 CreateObject(PP2P,1,1,-1); // -> halbe Zeit
  }
-if(HashGet(hashSpielRegeln, "Ausbildungszeit")==10)
+if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 10))
  {
 while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel); // -> standard Zeit
  }
@@ -685,19 +693,19 @@ while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel); // -> stand
    }
 
   // Geräusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
 
 // Log(Format("ID: %v, Spieler: %v, Playercount: %v",id,GetPlayerByIndex(i),GetPlayerCount()));
 // die gewählten startforschungen einstellen
 
-if (wissenvorher!=HashGet(hashSpielRegeln, "StartZeitalter") && (!FindObject(SZRE))) // nur wenn StartZeitalter geändert wurde, dann das gnaze wissen löschen und neu setzen. und wenn mein forschungsbaum verwendet werden soll, und nicht der des szenarios
+if (And(!Equal(wissenvorher, HashGet(hashSpielRegeln, "StartZeitalter")), (!FindObject(SZRE)))) // nur wenn StartZeitalter geändert wurde, dann das gnaze wissen löschen und neu setzen. und wenn mein forschungsbaum verwendet werden soll, und nicht der des szenarios
 {
     var num, id;
-    num = 0;
-    for(var i = 0; i < GetPlayerCount(); i++)
+    num = nil;
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
   {
-  num = 0;  
-  while (id = GetDefinition(num++)) 
+  num = nil;
+  while (id = GetDefinition(S42MigrationStep(num, 1, true)))
     {
     if (GetPlrKnowledge(GetPlayerByIndex(i), id)) 
       {
@@ -714,19 +722,20 @@ EditVariabelRule(dummy,iSelection);
 
 func OpenEnvironmentMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
   CreateMenu(GetID(), pClonk);
   // Regeln einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; i++)
-    if(!DefinitionCall(idR, "IsNotChooseable") && !DefinitionCall(idR, "IsVariabelChooseable2"))   
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; S42MigrationStep(i, 1, true))
+    if(And(!DefinitionCall(idR, "IsNotChooseable"), !DefinitionCall(idR, "IsVariabelChooseable2")))
       {
-      def = TransformObject(idR,aEnvironment[i]);
-      AddMenuItem("%s", "ChangeEnvironmentConf", idR, pClonk, 0, i, 0, 4, def);
-      if(i == iSelection)
+      def = TransformObject(idR,aEnvironment[(i ?? 0)]);
+      AddMenuItem("%s", "ChangeEnvironmentConf", idR, pClonk, nil, i, nil, 4, def);
+      if(Equal(i, iSelection))
         check = true;
       if(!check)
-        j++;
+        S42MigrationStep(j, 1, true);
       RemoveObject(def);
       }
   // Fertig
@@ -737,73 +746,74 @@ func OpenEnvironmentMenu(id dummy, int iSelection)
 
 func EditVariabelEnvironment(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menü aufmachen
-  CreateMenu(GetID(), pClonk,0,0,"Variable Einstellung",0,1,0);
+  CreateMenu(GetID(), pClonk,nil,nil,"Variable Einstellung",nil,1,nil);
 // nun für jede variable Environment die es gibt, einen Menüeintrag schreiben, denn diese müssen individuell sein...
 // Sichtradius, direkt im clnk skript geregelt
-if(dummy==TS9Z)
+if(Equal(dummy, TS9Z))
   {
-  AddMenuItem(Format("Sichtradius bei Tag an der Oberfläche erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"SichtradiusTagHimmel",10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk tagsüber an der Oberfläche hat");
-  AddMenuItem(Format("Sichtradius bei Tag an der Oberfläche vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"SichtradiusTagHimmel",-10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk tagsüber an der Oberfläche hat");
-  AddMenuItem(Format("Sichtradius bei Tag unter der Erde erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"SichtradiusTagTunnel",10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk tagsüber unter der Erde hat");
-  AddMenuItem(Format("Sichtradius bei Tag unter der Erde vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"SichtradiusTagTunnel",-10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk tagsüber unter der Erde hat");
-  AddMenuItem(Format("Sichtradius bei Nacht an der Oberfläche erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"SichtradiusNachtHimmel",10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk nachts an der Oberfläche hat");
-  AddMenuItem(Format("Sichtradius bei Nacht an der Oberfläche vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,5,"SichtradiusNachtHimmel",-10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk nachts an der Oberfläche hat");
-  AddMenuItem(Format("Sichtradius bei Nacht unter der Erde erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,6,"SichtradiusNachtTunnel",10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk nachts unter der Erde hat");
-  AddMenuItem(Format("Sichtradius bei Nacht unter der Erde vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,7,"SichtradiusNachtTunnel",-10,1000,20),dummy, pClonk, 0, 0,"Der Sichtradius, den jeder Clonk nachts unter der Erde hat");
-  AddMenuItem(Format("Verhalten des Kriegsnebels ändern + (siehe Beschreibgung) (%v/3)",HashGet(hashSpielRegeln, "SichtradiusVerhalten")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,8,"SichtradiusVerhalten",1,3,0),dummy, pClonk, 0, 0,"Der Sichtradius ändert sich unter folgenden Bedingungen: 0:Garkein Kriegsnebel.__ 1:Tag/Nacht/Himmel/Tunnel.__2:nur Tag/Nacht(Wert von Oberfläche).__3:Immer derselbe Sichtradius(der von Tag+Oberfläche).");
-  AddMenuItem(Format("Verhalten des Kriegsnebels ändern - (siehe Beschreibgung) (%v/3)",HashGet(hashSpielRegeln, "SichtradiusVerhalten")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,9,"SichtradiusVerhalten",-1,3,0),dummy, pClonk, 0, 0,"Der Sichtradius ändert sich unter folgenden Bedingungen: 0:Garkein Kriegsnebel.__ 1:Tag/Nacht/Himmel/Tunnel.__2:nur Tag/Nacht(Wert von Oberfläche).__3:Immer derselbe Sichtradius(der von Tag+Oberfläche).");
+  AddMenuItem(Format("Sichtradius bei Tag an der Oberfläche erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"SichtradiusTagHimmel",10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk tagsüber an der Oberfläche hat");
+  AddMenuItem(Format("Sichtradius bei Tag an der Oberfläche vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"SichtradiusTagHimmel",-10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk tagsüber an der Oberfläche hat");
+  AddMenuItem(Format("Sichtradius bei Tag unter der Erde erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"SichtradiusTagTunnel",10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk tagsüber unter der Erde hat");
+  AddMenuItem(Format("Sichtradius bei Tag unter der Erde vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusTagTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"SichtradiusTagTunnel",-10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk tagsüber unter der Erde hat");
+  AddMenuItem(Format("Sichtradius bei Nacht an der Oberfläche erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"SichtradiusNachtHimmel",10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk nachts an der Oberfläche hat");
+  AddMenuItem(Format("Sichtradius bei Nacht an der Oberfläche vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtHimmel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,5,"SichtradiusNachtHimmel",-10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk nachts an der Oberfläche hat");
+  AddMenuItem(Format("Sichtradius bei Nacht unter der Erde erhöhen (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,6,"SichtradiusNachtTunnel",10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk nachts unter der Erde hat");
+  AddMenuItem(Format("Sichtradius bei Nacht unter der Erde vermindern (%v/1000)",HashGet(hashSpielRegeln, "SichtradiusNachtTunnel")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,7,"SichtradiusNachtTunnel",-10,1000,20),dummy, pClonk, nil, nil,"Der Sichtradius, den jeder Clonk nachts unter der Erde hat");
+  AddMenuItem(Format("Verhalten des Kriegsnebels ändern + (siehe Beschreibgung) (%v/3)",HashGet(hashSpielRegeln, "SichtradiusVerhalten")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,8,"SichtradiusVerhalten",1,3,nil),dummy, pClonk, nil, nil,"Der Sichtradius ändert sich unter folgenden Bedingungen: 0:Garkein Kriegsnebel.__ 1:Tag/Nacht/Himmel/Tunnel.__2:nur Tag/Nacht(Wert von Oberfläche).__3:Immer derselbe Sichtradius(der von Tag+Oberfläche).");
+  AddMenuItem(Format("Verhalten des Kriegsnebels ändern - (siehe Beschreibgung) (%v/3)",HashGet(hashSpielRegeln, "SichtradiusVerhalten")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,9,"SichtradiusVerhalten",-1,3,nil),dummy, pClonk, nil, nil,"Der Sichtradius ändert sich unter folgenden Bedingungen: 0:Garkein Kriegsnebel.__ 1:Tag/Nacht/Himmel/Tunnel.__2:nur Tag/Nacht(Wert von Oberfläche).__3:Immer derselbe Sichtradius(der von Tag+Oberfläche).");
   }
 // Tagesdauer
-if(dummy==TIME)
+if(Equal(dummy, TIME))
   {
-  AddMenuItem(Format("Tagegeschwindigkeit erhöhen %v/20",dayspeed),"ChangeDaySpeed",dummy,pClonk,0,1,"Multiplikationsfakter für die Geschwindigket des Tag/Nachtwechsels");
-  AddMenuItem(Format("Tagegeschwindigkeit verringern %v/20",dayspeed),"ChangeDaySpeed",dummy,pClonk,0,-1,"Multiplikationsfakter für die Geschwindigket des Tag/Nachtwechsels");
+  AddMenuItem(Format("Tagegeschwindigkeit erhöhen %v/20",dayspeed),"ChangeDaySpeed",dummy,pClonk,nil,1,"Multiplikationsfakter für die Geschwindigket des Tag/Nachtwechsels");
+  AddMenuItem(Format("Tagegeschwindigkeit verringern %v/20",dayspeed),"ChangeDaySpeed",dummy,pClonk,nil,-1,"Multiplikationsfakter für die Geschwindigket des Tag/Nachtwechsels");
   }
 // Verdunstung
-if(dummy==ECLD)
+if(Equal(dummy, ECLD))
   {
-  AddMenuItem("Info: Verdunstet auch große Seen/Meere!", "EditVariabelRule",PP2P, pClonk, 0, 0,"Um überflutetes Land zb durch Regen zu verhindern, besser Grundwasser verwenden!");
-  AddMenuItem(Format("Verdunstung tagsüber zwischen 10 und 30°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstennormal")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Verdunstennormal",1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 6 eingestellt ist, heißt dies mit einer Chance von 1/6 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
-  AddMenuItem(Format("Verdunstung tagsüber zwischen 10 und 30°C vermindern (%v/20)",HashGet(hashSpielRegeln, "Verdunstennormal")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Verdunstennormal",-1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 6 eingestellt ist, heißt dies mit einer Chance von 1/6 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
-  AddMenuItem(Format("Verdunstung tagsüber zwischen 30 und 40°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstenwarm")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Verdunstenwarm",1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 3 eingestellt ist, heißt dies mit einer Chance von 1/3 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
-  AddMenuItem(Format("Verdunstung tagsüber zwischen 30 und 40°C (%v/20)",HashGet(hashSpielRegeln, "Verdunstenwarm")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Verdunstenwarm",-1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 3 eingestellt ist, heißt dies mit einer Chance von 1/3 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
-  AddMenuItem(Format("Verdunstung tagsüber ab 40°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstenheiß")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"Verdunstenheiß",1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 1 eingestellt ist, heißt dies mit einer Chance von 1/1 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
-  AddMenuItem(Format("Verdunstung tagsüber ab 40°C vermindern (%v/20)",HashGet(hashSpielRegeln, "Verdunstenheiß")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,5,"Verdunstenheiß",-1,20,0),dummy, pClonk, 0, 0,"Wenn z.b 1 eingestellt ist, heißt dies mit einer Chance von 1/1 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem("Info: Verdunstet auch große Seen/Meere!", "EditVariabelRule",PP2P, pClonk, nil, nil,"Um überflutetes Land zb durch Regen zu verhindern, besser Grundwasser verwenden!");
+  AddMenuItem(Format("Verdunstung tagsüber zwischen 10 und 30°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstennormal")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Verdunstennormal",1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 6 eingestellt ist, heißt dies mit einer Chance von 1/6 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem(Format("Verdunstung tagsüber zwischen 10 und 30°C vermindern (%v/20)",HashGet(hashSpielRegeln, "Verdunstennormal")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Verdunstennormal",-1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 6 eingestellt ist, heißt dies mit einer Chance von 1/6 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem(Format("Verdunstung tagsüber zwischen 30 und 40°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstenwarm")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Verdunstenwarm",1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 3 eingestellt ist, heißt dies mit einer Chance von 1/3 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem(Format("Verdunstung tagsüber zwischen 30 und 40°C (%v/20)",HashGet(hashSpielRegeln, "Verdunstenwarm")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Verdunstenwarm",-1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 3 eingestellt ist, heißt dies mit einer Chance von 1/3 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem(Format("Verdunstung tagsüber ab 40°C erhöhen (%v/20)",HashGet(hashSpielRegeln, "Verdunstenheiß")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,4,"Verdunstenheiß",1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 1 eingestellt ist, heißt dies mit einer Chance von 1/1 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
+  AddMenuItem(Format("Verdunstung tagsüber ab 40°C vermindern (%v/20)",HashGet(hashSpielRegeln, "Verdunstenheiß")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,5,"Verdunstenheiß",-1,20,nil),dummy, pClonk, nil, nil,"Wenn z.b 1 eingestellt ist, heißt dies mit einer Chance von 1/1 wird alle 3Frames(fest) ein Partikel wasser verdunsten. Wenn 0, dann keine Verdunstung.");
   }
 // Umweltbelastbarkeit
-if(dummy==SN_A)
+if(Equal(dummy, SN_A))
   {
-  AddMenuItem(Format("Umweltbelastbarkeit pro Spieler erhöhen (%v/100000)",HashGet(hashSpielRegeln, "Umweltbelastbarkeit")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Umweltbelastbarkeit",100,100000,300),dummy, pClonk, 0, 0,"Dies regelt, wie belastbar die Umwelt ist und ab wieviel Abgasen/Müll usw. die höchste Verschmutzungsstufe erreicht ist und Katastrophen usw. kommen (es gibt 5 Verschmutzungsstufen).");
-  AddMenuItem(Format("Umweltbelastbarkeit pro Spieler vermindern (%v/100000)",HashGet(hashSpielRegeln, "Umweltbelastbarkeit")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Umweltbelastbarkeit",-100,100000,300),dummy, pClonk, 0, 0,"Dies regelt, wie belastbar die Umwelt ist und ab wieviel Abgasen/Müll usw. die höchste Verschmutzungsstufe erreicht ist und Katastrophen usw. kommen (es gibt 5 Verschmutzungsstufen).");
+  AddMenuItem(Format("Umweltbelastbarkeit pro Spieler erhöhen (%v/100000)",HashGet(hashSpielRegeln, "Umweltbelastbarkeit")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Umweltbelastbarkeit",100,100000,300),dummy, pClonk, nil, nil,"Dies regelt, wie belastbar die Umwelt ist und ab wieviel Abgasen/Müll usw. die höchste Verschmutzungsstufe erreicht ist und Katastrophen usw. kommen (es gibt 5 Verschmutzungsstufen).");
+  AddMenuItem(Format("Umweltbelastbarkeit pro Spieler vermindern (%v/100000)",HashGet(hashSpielRegeln, "Umweltbelastbarkeit")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Umweltbelastbarkeit",-100,100000,300),dummy, pClonk, nil, nil,"Dies regelt, wie belastbar die Umwelt ist und ab wieviel Abgasen/Müll usw. die höchste Verschmutzungsstufe erreicht ist und Katastrophen usw. kommen (es gibt 5 Verschmutzungsstufen).");
   }
-if(dummy==R_EG)
+if(Equal(dummy, R_EG))
   {
-  AddMenuItem(Format("UNFERTIG Wahrscheinlichkeit für Regenbeginn erhöhen (%v/10)",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Regen",1,10,1),dummy, pClonk, 0, 0,"Über 0°C die Chance für Niederschlag");
-  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Regen",-1,10,1),dummy, pClonk, 0, 0,"Über 0°C die Chance für Niederschlag");
-  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Regen",1,10,1),dummy, pClonk, 0, 0,"Unter 0°C die Chance für Schnee");
-  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Regen",-1,10,1),dummy, pClonk, 0, 0,"Unter 0°C die Chance für Schnee");
+  AddMenuItem(Format("UNFERTIG Wahrscheinlichkeit für Regenbeginn erhöhen (%v/10)",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Regen",1,10,1),dummy, pClonk, nil, nil,"Über 0°C die Chance für Niederschlag");
+  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Regen",-1,10,1),dummy, pClonk, nil, nil,"Über 0°C die Chance für Niederschlag");
+  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,2,"Regen",1,10,1),dummy, pClonk, nil, nil,"Unter 0°C die Chance für Schnee");
+  AddMenuItem(Format("Regen",HashGet(hashSpielRegeln, "Regen")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,3,"Regen",-1,10,1),dummy, pClonk, nil, nil,"Unter 0°C die Chance für Schnee");
   }
-if(dummy==GRLV)
+if(Equal(dummy, GRLV))
 {
-  AddMenuItem(Format("Grundwasser Versickerungsgeschwindigkeit erhöhen (%v/100)",HashGet(hashSpielRegeln, "Grundwasser")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Grundwasser",5,100,0),dummy, pClonk, 0, 0,"Regelt wie stark Wasser in der Erde versickern soll. Verhindert Überschwemmungen (zumindest an der Oberflaeche) und gilt nicht fuer von Beginn an platzierte Gewässer.");
-  AddMenuItem(Format("Grundwasser Versickerungsgeschwindigkeit vermindern (%v/100)",HashGet(hashSpielRegeln, "Grundwasser")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Grundwasser",-5,100,0),dummy, pClonk, 0, 0,"Regelt wie stark Wasser in der Erde versickern soll. Verhindert Überschwemmungen (zumindest an der Oberflaeche) und gilt nicht fuer von Beginn an platzierte Gewässer.");
+  AddMenuItem(Format("Grundwasser Versickerungsgeschwindigkeit erhöhen (%v/100)",HashGet(hashSpielRegeln, "Grundwasser")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Grundwasser",5,100,nil),dummy, pClonk, nil, nil,"Regelt wie stark Wasser in der Erde versickern soll. Verhindert Überschwemmungen (zumindest an der Oberflaeche) und gilt nicht fuer von Beginn an platzierte Gewässer.");
+  AddMenuItem(Format("Grundwasser Versickerungsgeschwindigkeit vermindern (%v/100)",HashGet(hashSpielRegeln, "Grundwasser")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Grundwasser",-5,100,nil),dummy, pClonk, nil, nil,"Regelt wie stark Wasser in der Erde versickern soll. Verhindert Überschwemmungen (zumindest an der Oberflaeche) und gilt nicht fuer von Beginn an platzierte Gewässer.");
 }
-if(dummy==DAR2) // Dunkelheitsgrad, hazard düsternis environment Symbol
+if(Equal(dummy, DAR2)) // Dunkelheitsgrad, hazard düsternis environment Symbol
 {
-  AddMenuItem(Format("Dunkelheitsgrad erhöhen (%v/100)",HashGet(hashSpielRegeln, "Dunkelheitsgrad")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Dunkelheitsgrad",50,100,50),dummy, pClonk, 0, 0,"Regelt wie dunkel es nachts werden soll. Bei 100% werden meist Lichtobjekte benötigt, da man sonst nichts sieht. Bei 50% sollte es zur Not auch ohne Lichtobjekte gehen, wodurch es zwar dunkler wird, aber man keine Lichter braucht und somit evlt Laggs verhindert (In TIME ändert sich nichts, aber das Objekt DUUU wird nicht erstellt). Wenn es garnicht dunkel werden soll, dann die statische Regel konstante Helligkeit aktivieren.");
-  AddMenuItem(Format("Dunkelheitsgrad vermindern (%v/100)",HashGet(hashSpielRegeln, "Dunkelheitsgrad")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Dunkelheitsgrad",-50,100,50),dummy, pClonk, 0, 0,"Regelt wie dunkel es nachts werden soll. Bei 100% werden meist Lichtobjekte benötigt, da man sonst nichts sieht. Bei 50% sollte es zur Not auch ohne Lichtobjekte gehen, wodurch es zwar dunkler wird, aber man keine Lichter braucht und somit evlt Laggs verhindert (In TIME ändert sich nichts, aber das Objekt DUUU wird nicht erstellt). Wenn es garnicht dunkel werden soll, dann die statische Regel konstante Helligkeit aktivieren.");
+  AddMenuItem(Format("Dunkelheitsgrad erhöhen (%v/100)",HashGet(hashSpielRegeln, "Dunkelheitsgrad")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Dunkelheitsgrad",50,100,50),dummy, pClonk, nil, nil,"Regelt wie dunkel es nachts werden soll. Bei 100% werden meist Lichtobjekte benötigt, da man sonst nichts sieht. Bei 50% sollte es zur Not auch ohne Lichtobjekte gehen, wodurch es zwar dunkler wird, aber man keine Lichter braucht und somit evlt Laggs verhindert (In TIME ändert sich nichts, aber das Objekt DUUU wird nicht erstellt). Wenn es garnicht dunkel werden soll, dann die statische Regel konstante Helligkeit aktivieren.");
+  AddMenuItem(Format("Dunkelheitsgrad vermindern (%v/100)",HashGet(hashSpielRegeln, "Dunkelheitsgrad")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Dunkelheitsgrad",-50,100,50),dummy, pClonk, nil, nil,"Regelt wie dunkel es nachts werden soll. Bei 100% werden meist Lichtobjekte benötigt, da man sonst nichts sieht. Bei 50% sollte es zur Not auch ohne Lichtobjekte gehen, wodurch es zwar dunkler wird, aber man keine Lichter braucht und somit evlt Laggs verhindert (In TIME ändert sich nichts, aber das Objekt DUUU wird nicht erstellt). Wenn es garnicht dunkel werden soll, dann die statische Regel konstante Helligkeit aktivieren.");
 }
-if(dummy==BLIM) // Wird in dem Wolkenskript eingesetzt und modifiziert die gesamtwahrscheinlichkeit, dass eine Wolke einen Blitz loslässt. 100==100% ist eine Multiplikation der Wahrscheinlichkeit mit 1. 
+if(Equal(dummy, BLIM)) // Wird in dem Wolkenskript eingesetzt und modifiziert die gesamtwahrscheinlichkeit, dass eine Wolke einen Blitz loslässt. 100==100% ist eine Multiplikation der Wahrscheinlichkeit mit 1.
 {
-  AddMenuItem(Format("BlitzeModifier erhöhen (%v%/5000%)",HashGet(hashSpielRegeln, "BlitzeModifier")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"BlitzeModifier",2,5000,0),dummy, pClonk, 0, 0,"Diese Prozentzahl wird mit der Gesamtwahrscheilichkeit, dass eine Wolke einen Blitz loslässt multipliziert. Bringt nichts, wenn SzenarioBlitze auf 0 sind! (wobei diese sich aus den im szenario eingestelltem wert und einem im Wolken skript definiertem standardwert ergibt. Wenn Endprodukt 10 ist, dann alle 200 sekunden ein Blitz pro Wolke)");
-  AddMenuItem(Format("BlitzeModifier vermindern (%v%/5000%)",HashGet(hashSpielRegeln, "BlitzeModifier")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"BlitzeModifier",-2,5000,0),dummy, pClonk, 0, 0,"Diese Prozentzahl wird mit der Gesamtwahrscheilichkeit, dass eine Wolke einen Blitz loslässt multipliziert. Bringt nichts, wenn SzenarioBlitze auf 0 sind! (wobei diese sich aus den im szenario eingestelltem wert und einem im Wolken skript definiertem standardwert ergibt. Wenn Endprodukt 10 ist, dann alle 200 sekunden ein Blitz pro Wolke)");
+  AddMenuItem(Format("BlitzeModifier erhöhen (%v%/5000%)",HashGet(hashSpielRegeln, "BlitzeModifier")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"BlitzeModifier",2,5000,nil),dummy, pClonk, nil, nil,"Diese Prozentzahl wird mit der Gesamtwahrscheilichkeit, dass eine Wolke einen Blitz loslässt multipliziert. Bringt nichts, wenn SzenarioBlitze auf 0 sind! (wobei diese sich aus den im szenario eingestelltem wert und einem im Wolken skript definiertem standardwert ergibt. Wenn Endprodukt 10 ist, dann alle 200 sekunden ein Blitz pro Wolke)");
+  AddMenuItem(Format("BlitzeModifier vermindern (%v%/5000%)",HashGet(hashSpielRegeln, "BlitzeModifier")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"BlitzeModifier",-2,5000,nil),dummy, pClonk, nil, nil,"Diese Prozentzahl wird mit der Gesamtwahrscheilichkeit, dass eine Wolke einen Blitz loslässt multipliziert. Bringt nichts, wenn SzenarioBlitze auf 0 sind! (wobei diese sich aus den im szenario eingestelltem wert und einem im Wolken skript definiertem standardwert ergibt. Wenn Endprodukt 10 ist, dann alle 200 sekunden ein Blitz pro Wolke)");
 }
-if(dummy==_BAR) // Barriere
+if(Equal(dummy, _BAR)) // Barriere
 {
-  AddMenuItem(Format("Barriere Dauer erhöhen (%v/3600)",HashGet(hashSpielRegeln, "Barriere")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,0,"Barriere",2,3600,0),dummy, pClonk, 0, 0,"Dauer der Barriere in Sekunden, welche wenn größer 0 in der Mitte der Karte platziert wird und niemanden hindurch läasst.");
-  AddMenuItem(Format("Barriere Dauer vermindern (%v/3600)",HashGet(hashSpielRegeln, "Barriere")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Barriere",-2,3600,0),dummy, pClonk, 0, 0,"Dauer der Barriere in Sekunden, welche wenn größer 0 in der Mitte der Karte platziert wird und niemanden hindurch läasst.");
+  AddMenuItem(Format("Barriere Dauer erhöhen (%v/3600)",HashGet(hashSpielRegeln, "Barriere")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,nil,"Barriere",2,3600,nil),dummy, pClonk, nil, nil,"Dauer der Barriere in Sekunden, welche wenn größer 0 in der Mitte der Karte platziert wird und niemanden hindurch läasst.");
+  AddMenuItem(Format("Barriere Dauer vermindern (%v/3600)",HashGet(hashSpielRegeln, "Barriere")), Format("ChangeVariableEnvironmentConfig(%i,%d,\"%s\",%d,%d,%d)",dummy,1,"Barriere",-2,3600,nil),dummy, pClonk, nil, nil,"Dauer der Barriere in Sekunden, welche wenn größer 0 in der Mitte der Karte platziert wird und niemanden hindurch läasst.");
 }
 
 
@@ -815,9 +825,9 @@ if(dummy==_BAR) // Barriere
 
 func ChangeDaySpeed(idummy,izahl)
 {
-dayspeed = BoundBy(dayspeed+izahl,1,20);
-if(izahl==1) izahl=0;
-if(izahl==-1) izahl=1;
+dayspeed = BoundBy((dayspeed ?? 0)+(izahl ?? 0),1,20);
+if(Equal(izahl, 1)) izahl=nil;
+if(Equal(izahl, -1)) izahl=1;
 EditVariabelEnvironment(idummy, izahl);
 }
 
@@ -825,9 +835,9 @@ func ChangeVariableEnvironmentConfig(id dummy, iSelection, iname, ichange, imaxi
 {
    //Log("dummy=%v,iSelection=%v,iname=%v,ichange=%v",dummy,iSelection,iname,ichange);
   // iname ist der Key
-  HashPut(hashSpielRegeln, iname, BoundBy(HashGet(hashSpielRegeln, iname)+ichange,iminimum,imaximum));
+  HashPut(hashSpielRegeln, iname, BoundBy((HashGet(hashSpielRegeln, iname) ?? 0)+(ichange ?? 0),iminimum,imaximum));
   // Geräusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Environmentmenü wieder aufmachen
 EditVariabelEnvironment(dummy,iSelection);
 }
@@ -835,33 +845,35 @@ EditVariabelEnvironment(dummy,iSelection);
 func ChangeEnvironmentConf(id idEnvironment, int i)
 {
   // Regel wurde ausgewShlt
-  if(!aEnvironment[i])
+  i ??= 0;
+  if(!aEnvironment[(i ?? 0)])
   {
-    aEnvironment[i] = true;
-    if(idEnvironment->~CreateOnChoose() || Death)
-      CreateObject(idEnvironment,0,0,-1);
+    aEnvironment[(i ?? 0)] = true;
+    if(Or(idEnvironment->~CreateOnChoose(), Death))
+      CreateObject(idEnvironment,nil,nil,-1);
   }
   // Regel wurde abgewShlt
   else
   {
-    aEnvironment[i] = false;
-    if(idEnvironment->~CreateOnChoose() || Death)
+    aEnvironment[(i ?? 0)] = nil;
+    if(Or(idEnvironment->~CreateOnChoose(), Death))
       if(FindObject(idEnvironment))
         RemoveObject(FindObject(idEnvironment));
   }
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Regelmenn wieder aufmachen
-  OpenEnvironmentMenu(0, i);
+  OpenEnvironmentMenu(nil, i);
 }
 
 func VariabelEnvironmentMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
-  CreateMenu(GetID(), pClonk,0,0,"Variable Umweltobjekte",0,1,0);
+  CreateMenu(GetID(), pClonk,nil,nil,"Variable Umweltobjekte",nil,1,nil);
   // Umweltobjekte einfngen
-  for(var i=0, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; i++)
+  for(var i=nil, idR, def, j, check ; idR = GetDefinition(i, Chooser_Cat_Environment) ; S42MigrationStep(i, 1, true))
     if(DefinitionCall(idR, "IsVariabelChooseable2")) // !DefinitionCall(idR, "IsNotChooseable") && 
       {
       AddMenuItem("%s", "EditVariabelEnvironment", idR, pClonk);
@@ -874,13 +886,13 @@ func VariabelEnvironmentMenu(id dummy, int iSelection)
 
 func OpenGoalChooseMenu(iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   if(!pClonk) return(ScheduleCall(this(), "OpenMenu", 1));
   if(!GetLength(aGoals)) return(ScheduleCall(this(), "OpenMenu", 1));
 
   CloseMenu(pClonk);
 
-  if(GetLength(aGoals) == 1)
+  if(Equal(GetLength(aGoals), 1))
     return(CreateGoal(aGoals[0], aTempGoalSave[0]));
 
   CreateMenu(GetID(), pClonk);
@@ -889,13 +901,13 @@ func OpenGoalChooseMenu(iSelection)
   for(var goal in aGoals)
   {
     def = TransformObject(goal,FindObject2(Find_ID(goal),Find_Exclude(def)));
-    AddMenuItem("%s", "CreateGoal", goal, pClonk, 0, i,0,4,def);
-    if(i == iSelection)
+    AddMenuItem("%s", "CreateGoal", goal, pClonk, nil, i,nil,4,def);
+    if(Equal(i, iSelection))
       check = true;
     if(!check)
-      j++;
+      S42MigrationStep(j, 1, true);
     RemoveObject(def);
-    i++;
+    S42MigrationStep(i, 1, true);
   }
   // Fertig
   AddMenuItem("$Finished$", "OpenMenu", CNCL, pClonk);
@@ -911,12 +923,12 @@ func CreateGoal(id idGoal,iSelection)
     RemoveObject(goal);
   else
   {
-    goal=CreateObject(idGoal, 0,0, -1);
-    for(var i = 0; i < GetPlayerCount(C4PT_User); i++)
-      ProtectedCall(goal,"InitializePlayer",GetPlayerByIndex(i,C4PT_User),0,0,FindBase(GetPlayerByIndex(i,C4PT_User)),GetPlayerTeam(GetPlayerByIndex(i,C4PT_User)));
+    goal=CreateObject(idGoal, nil,nil, -1);
+    for(var i = nil; (i ?? 0) < (GetPlayerCount(C4PT_User) ?? 0); S42MigrationStep(i, 1, true))
+      ProtectedCall(goal,"InitializePlayer",GetPlayerByIndex(i,C4PT_User),nil,nil,FindBase(GetPlayerByIndex(i,C4PT_User)),GetPlayerTeam(GetPlayerByIndex(i,C4PT_User)));
   }
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   //Menn öffnen
   OpenGoalChooseMenu(iSelection);
 }
@@ -926,7 +938,7 @@ func GoalIsCompatible()
   // Schon eines gefunden?
   if(pGoal) return(1);
   // Gut
-  pGoal = FindObject2(Find_Category(C4D_Goal()));
+  pGoal = FindObject2(Find_Category(C4D_Goal));
   return(1);
 }
 
@@ -934,36 +946,37 @@ func GoalIsCompatible()
 
 func OpenDifficultyMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
   CreateMenu(GetID(), pClonk);
   // Regeln einfngen
-  for(var i=1, idR, def, j, check ; idR = GetDifficultyInt(i) ; i++)
+  for(var i=1, idR, def, j, check ; idR = GetDifficultyInt(i) ; S42MigrationStep(i, 1, true))
     if(!DefinitionCall(idR, "IsNotChooseable"))
       {
-      def = TransformObject(idR,idR==idDifficulty);
-      AddMenuItem("%s", "ChangeDifficulty", idR, pClonk, 0, i, 0, 4, def);
-      if(i == iSelection)
+      def = TransformObject(idR,Equal(idR, idDifficulty));
+      AddMenuItem("%s", "ChangeDifficulty", idR, pClonk, nil, i, nil, 4, def);
+      if(Equal(i, iSelection))
         check = true;
       if(!check)
-        j++;
+        S42MigrationStep(j, 1, true);
       RemoveObject(def);
       }
   if(!CampaignMode())
     AddMenuItem("$Finished$", "OpenMenu", CNCL, pClonk);
   else
   {
-    i++;
+    S42MigrationStep(i, 1, true);
     if(!check)
-      j++;
+      S42MigrationStep(j, 1, true);
     def = TransformObject(SPDG,FindObject(SPDG));
-    AddMenuItem("%s", "ChangeRuleEx", SPDG, pClonk, 0, i, 0, 4, def);
+    AddMenuItem("%s", "ChangeRuleEx", SPDG, pClonk, nil, i, nil, 4, def);
     RemoveObject(def);
-    i++;
+    S42MigrationStep(i, 1, true);
     if(!check)
-      j++;
+      S42MigrationStep(j, 1, true);
     def = TransformObject(ATLG,FindObject(ATLG));
-    AddMenuItem("%s", "ChangeRuleEx", ATLG, pClonk, 0, i, 0, 4, def);
+    AddMenuItem("%s", "ChangeRuleEx", ATLG, pClonk, nil, i, nil, 4, def);
     RemoveObject(def);
     AddMenuItem("$Finished$", "ConfigurationFinished", CNCL, pClonk);
   }
@@ -977,45 +990,47 @@ func ChangeRuleEx(idR,i)
   if(obj=FindObject2(Find_ID(idR)))
     RemoveObject(obj);
   else
-    CreateObject(idR,0,0,-1)->~IsChoosen();
-  OpenDifficultyMenu(0,i);
+    CreateObject(idR,nil,nil,-1)->~IsChoosen();
+  OpenDifficultyMenu(nil,i);
   return true;
 }
 
 func ChangeDifficulty(id Difficulty, int i)
 {
+  i ??= 0;
   idDifficulty=Difficulty;
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Regelmenn wieder aufmachen
-  OpenDifficultyMenu(0, i);
+  OpenDifficultyMenu(nil, i);
 }
 
 func GetDifficultyInt(iInt)
 {
   var temp=CreateArray();
-  for(var i=0, idR, diff; idR = GetDefinition(i, Chooser_Cat_Rule) ; i++)
-   if(iInt == DefinitionCall(idR,"IsDifficultyLevel"))
+  for(var i=nil, idR, diff; idR = GetDefinition(i, Chooser_Cat_Rule) ; S42MigrationStep(i, 1, true))
+   if(Equal(iInt, DefinitionCall(idR,"IsDifficultyLevel")))
     return idR;
-  return false;
+  return nil;
 }
 
 /* Zeitalter-Menn */
 func OpenTechLevelMenu(id dummy, int iSelection)
 {
-  var pClonk = GetCursor(GetPlayerByIndex(0,C4PT_User));
+  iSelection ??= 0;
+  var pClonk = GetCursor(GetPlayerByIndex(nil,C4PT_User));
   // Menn aufmachen
   CreateMenu(GetID(), pClonk);
   // WShlbare Technologiestufen einfngen
-  for(var i=1, def, j, check, sAge, idAge ; sAge = GetAges(i); i++)
+  for(var i=1, def, j, check, sAge, idAge ; sAge = GetAges(i); S42MigrationStep(i, 1, true))
   {
     idAge=GetAges(i,1);
-    def = TransformObject(idAge,iTechLevel==i);
-    AddMenuItem(sAge, "SetAge", idAge, pClonk, 0, i, 0, 4, def);
-    if(i == iSelection)
+    def = TransformObject(idAge,Equal(iTechLevel, i));
+    AddMenuItem(sAge, "SetAge", idAge, pClonk, nil, i, nil, 4, def);
+    if(Equal(i, iSelection))
        check = true;
     if(!check)
-       j++;
+       S42MigrationStep(j, 1, true);
     RemoveObject(def);
   }
   // Fertig
@@ -1026,20 +1041,21 @@ func OpenTechLevelMenu(id dummy, int iSelection)
 
 func SetAge(id dummy,int i)
 {
+  i ??= 0;
   iTechLevel=i;
   // GerSusch
-  Sound("Grab", 1,0,0,1);
+  Sound("Grab", 1,nil,nil,1);
   // Menn wieder aufmachen
-  OpenTechLevelMenu(0, i);
+  OpenTechLevelMenu(nil, i);
 }
 
 func GetAges(i,fDef)
 {
-  i--;
-  if(!i--){if(fDef) return ROCK; return "Steinzeit";}// Keine Technologien
-  if(!i--){if(fDef) return METL; return "Mittelalter";}// Ein paar Technologien
-  if(!i--){if(fDef) return STGR; return "Industriezeit";}// Viele Technologien
-  if(!i--){if(fDef) return BRST; return "Neuzeit";}// Alle Technologien
+  S42MigrationStep(i, -1, true);
+  if(!S42MigrationStep(i, -1, true)){if(fDef) return ROCK; return "Steinzeit";}// Keine Technologien
+  if(!S42MigrationStep(i, -1, true)){if(fDef) return METL; return "Mittelalter";}// Ein paar Technologien
+  if(!S42MigrationStep(i, -1, true)){if(fDef) return STGR; return "Industriezeit";}// Viele Technologien
+  if(!S42MigrationStep(i, -1, true)){if(fDef) return BRST; return "Neuzeit";}// Alle Technologien
 }
 
 /* Konfiguration abschlie_en */
@@ -1109,19 +1125,19 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     // }
     
     // die gewählten startforschungen einstellen, falls es iwie verstellt wurde, ohne die change fkt aufzurufen
-    if (wissenvorher!=HashGet(hashSpielRegeln, "StartZeitalter") && (!FindObject(SZRE))) // nur wenn StartZeitalter geändert wurde, dann das gnaze wissen löschen und neu setzen
+    if (And(!Equal(wissenvorher, HashGet(hashSpielRegeln, "StartZeitalter")), (!FindObject(SZRE)))) // nur wenn StartZeitalter geändert wurde, dann das gnaze wissen löschen und neu setzen
   {
     var num, id;
-    for(var i = 0; i < GetPlayerCount(); i++)
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
       {
-      num = 0;
-      while (id = GetDefinition(num++)) SetPlrKnowledge(GetPlayerByIndex(i), id,1); // das gesamte wissen entfernen und danach neu verteilen
+      num = nil;
+      while (id = GetDefinition(S42MigrationStep(num, 1, true))) SetPlrKnowledge(GetPlayerByIndex(i), id,1); // das gesamte wissen entfernen und danach neu verteilen
       }
     GlobalStartingEra(HashGet(hashSpielRegeln, "StartZeitalter")); // die Funktionen für das StartZeitalter aufrufen, welche sich in den forschungsbaum skripten befinden
   }
   if(FindObject(CHHH)) // wenn Regel, dass alle Chemiedinge immer erforscht sein sollen, dann diese Forschungen auch noch vergeben. Kann nicht rückgängig gemacht werden, zu kompliziert
     {
-        for(var i = 0; i < GetPlayerCount(); i++)
+        for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
        {
             var Chemieliste = FindObject(CHHH)->ChemieForschungen();
             for(var element in Chemieliste)
@@ -1144,10 +1160,10 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
   
   if(!FindObject(GGGG))
   {
-      var muss=0;
-      for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]);inumber++)
+      var muss=nil;
+      for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]) ?? 0);S42MigrationStep(inumber, 1, true))
       {
-          if(HashGet(hashSpielRegeln,"AbbauEreignisse")[2][inumber]) muss = 1;  // wenn eines davon gesetzt ist, muss regel erstellt werden
+          if(HashGet(hashSpielRegeln,"AbbauEreignisse")[2][(inumber ?? 0)]) muss = 1;  // wenn eines davon gesetzt ist, muss regel erstellt werden
       }
       if(muss) CreateObject(GGGG,1,1,-1); 
   }
@@ -1155,18 +1171,18 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     // hier noch Regeln erstellen, die im Zuge der variablen Einstellungen erzeugt werden müssen
     var zeitregel;  
      // Log(Format("objekte vorher: %v. Wert: %v",ObjectCount2(Find_ID(PP2P)),HashGet(hashSpielRegeln, "Ausbildungszeit")));
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==0)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), nil))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);
     CreateObject(PP2P,1,1,-1); // -> instant
      }
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==5)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 5))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);
     CreateObject(PP2P,1,1,-1); 
     CreateObject(PP2P,1,1,-1); // -> halbe Zeit
      }
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==10)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 10))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel); // -> standard Zeit
      }
@@ -1174,7 +1190,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     
     // verdunsten erstellen
     var verdunsten;
-    if (HashGet(hashSpielRegeln, "Verdunstennormal") || HashGet(hashSpielRegeln, "Verdunstenwarm") || HashGet(hashSpielRegeln, "Verdunstenheiß"))
+    if (Or(Or(HashGet(hashSpielRegeln, "Verdunstennormal"), HashGet(hashSpielRegeln, "Verdunstenwarm")), HashGet(hashSpielRegeln, "Verdunstenheiß")))
     {
         while(verdunsten=FindObject2(Find_ID(ECLD))) RemoveObject(verdunsten);
         CreateObject(ECLD,1,1,-1); 
@@ -1214,10 +1230,10 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     }
     
     // noch die verlinkten Forschungen erforschen:
-    for(var i = 0; i < GetPlayerCount(); i++)
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
     {
-          var def_num=0, def;
-          while (def = GetDefinition(def_num++)) 
+          var def_num=nil, def;
+          while (def = GetDefinition(S42MigrationStep(def_num, 1, true)))
           {
             var link;
             if (link = DefinitionCall(def, "GetResearchLink"))
@@ -1234,7 +1250,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     }
   
     _Hash_DebugDump(hashSpielRegeln);
-    return();
+    return;
  }
  
  // folgendes NUR machen, wenn das erste mal !!!!!!!!!!!!!!!!!!!!
@@ -1251,10 +1267,10 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     if (!FindObject(SZRE)) // da startzeitalter in den einstellungen verändert werden kann, muss es hier einmal gemacht werden
     {
         var num, id;
-        for(var i = 0; i < GetPlayerCount(); i++)
+        for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
           {
-          num = 0;
-          while (id = GetDefinition(num++)) SetPlrKnowledge(GetPlayerByIndex(i), id,1); // das gesamte wissen entfernen und danach neu verteilen
+          num = nil;
+          while (id = GetDefinition(S42MigrationStep(num, 1, true))) SetPlrKnowledge(GetPlayerByIndex(i), id,1); // das gesamte wissen entfernen und danach neu verteilen
           }
         GlobalStartingEra(HashGet(hashSpielRegeln, "StartZeitalter")); // die Funktionen für das StartZeitalter aufrufen, welche sich in den forschungsbaum skripten befinden
     }
@@ -1273,7 +1289,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     // kann geändert werden, also nur bei laufzeitbeitritt im init und sonst hier einmal machen
     if(FindObject(CHHH)) // wenn Regel, dass alle Chemiedinge immer erforscht sein sollen, dann diese Forschungen auch noch vergeben. Kann nicht rückgängig gemacht werden, zu kompliziert
     {
-        for(var i = 0; i < GetPlayerCount(); i++)
+        for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
        {
             var Chemieliste = FindObject(CHHH)->ChemieForschungen();
             for(var element in Chemieliste)
@@ -1289,10 +1305,10 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     
     if(!FindObject(GGGG))
   {
-      var muss=0;
-      for(var inumber=0; inumber<GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]);inumber++)
+      var muss=nil;
+      for(var inumber=nil; (inumber ?? 0)<(GetLength(HashGet(hashSpielRegeln,"AbbauEreignisse")[0]) ?? 0);S42MigrationStep(inumber, 1, true))
       {
-          if(HashGet(hashSpielRegeln,"AbbauEreignisse")[2][inumber]) muss = 1;  // wenn eines davon gesetzt ist, muss regel erstellt werden
+          if(HashGet(hashSpielRegeln,"AbbauEreignisse")[2][(inumber ?? 0)]) muss = 1;  // wenn eines davon gesetzt ist, muss regel erstellt werden
       }
       if(muss) CreateObject(GGGG,1,1,-1); 
   }
@@ -1300,18 +1316,18 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     // hier noch Regeln erstellen, die im Zuge der variablen Einstellungen erzeugt werden müssen
     var zeitregel;  
      // Log(Format("objekte vorher: %v. Wert: %v",ObjectCount2(Find_ID(PP2P)),HashGet(hashSpielRegeln, "Ausbildungszeit")));
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==0)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), nil))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);
     CreateObject(PP2P,1,1,-1); // -> instant
      }
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==5)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 5))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel);
     CreateObject(PP2P,1,1,-1); 
     CreateObject(PP2P,1,1,-1); // -> halbe Zeit
      }
-    if(HashGet(hashSpielRegeln, "Ausbildungszeit")==10)
+    if(Equal(HashGet(hashSpielRegeln, "Ausbildungszeit"), 10))
      {
     while(zeitregel=FindObject2(Find_ID(PP2P))) RemoveObject(zeitregel); // -> standard Zeit
      }
@@ -1319,7 +1335,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     
     // verdunsten erstellen
     var verdunsten;
-    if (HashGet(hashSpielRegeln, "Verdunstennormal") || HashGet(hashSpielRegeln, "Verdunstenwarm") || HashGet(hashSpielRegeln, "Verdunstenheiß"))
+    if (Or(Or(HashGet(hashSpielRegeln, "Verdunstennormal"), HashGet(hashSpielRegeln, "Verdunstenwarm")), HashGet(hashSpielRegeln, "Verdunstenheiß")))
     {
         while(verdunsten=FindObject2(Find_ID(ECLD))) RemoveObject(verdunsten);
         CreateObject(ECLD,1,1,-1); 
@@ -1359,10 +1375,10 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     }
     
     // noch die verlinkten Forschungen erforschen:
-    for(var i = 0; i < GetPlayerCount(); i++)
+    for(var i = nil; (i ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(i, 1, true))
     {
-          var def_num=0, def;
-          while (def = GetDefinition(def_num++)) 
+          var def_num=nil, def;
+          while (def = GetDefinition(S42MigrationStep(def_num, 1, true)))
           {
             var link;
             if (link = DefinitionCall(def, "GetResearchLink"))
@@ -1382,21 +1398,21 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
   if(iTechLevel)
   {
     var idRes,res;
-    i=j=0;
-    while(idRes=GetDefinition(i++,1))
+    i=j=nil;
+    while(idRes=GetDefinition(S42MigrationStep(i, 1, true),1))
     {
       if(DefinitionCall(idRes,"IsTech"))
       {
         if(res=DefinitionCall(idRes,"IsStartTech"))
-          if(res<=iTechLevel)
-            for(j = 0; j < GetPlayerCount(); j++)
-              DefinitionCall(idRes,"Researched",GetPlayerByIndex(j),0,true);
+          if((res ?? 0)<=(iTechLevel ?? 0))
+            for(j = nil; (j ?? 0) < (GetPlayerCount() ?? 0); S42MigrationStep(j, 1, true))
+              DefinitionCall(idRes,"Researched",GetPlayerByIndex(j),nil,true);
       }
     }
   }
   
   
-  var i = 0, j, pCrew, tmp,idDef,obj,log = "Wahl abgeschlossen, Regeln: ";
+  var i = nil, j, pCrew, tmp,idDef,obj,log = "Wahl abgeschlossen, Regeln: ";
   if(!FindObject2(Find_Category(C4D_Goal))) Message("Hinweis: Kein Ziel gewählt");
     //GameCallEx("PreConfig");
     //Spielziele melden
@@ -1416,23 +1432,23 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
               obj=CreateObject(idDef, 10,10, -1);
               obj->~IsChoosen();
           }
-          log = Format("%s, %s", log, GetName(0, idDef));
+          log = Format("%s, %s", log, GetName(nil, idDef));
       }
     else
       {
           obj=FindObject2(Find_ID(idDef),Find_Exclude(this())); // wenn etwas da, obwohl nicht gewählt, dann entfernen
-          if(idDef!=PP2P) if(obj) if(!obj->~IsNotChooseable()) 
+          if(!Equal(idDef, PP2P)) if(obj) if(!obj->~IsNotChooseable())
           {
             RemoveObject(obj);  // PP2P nicht entfernen. Auch notchoosable dinge da lassen, da diese von anderen dingen gesteuert werden
             idDef->~IsNotChoosen();
           }
-          if(obj) log = Format("%s, %s", log, GetName(0, idDef)); // wenn noch da, dann soll es auch da sein
+          if(obj) log = Format("%s, %s", log, GetName(nil, idDef)); // wenn noch da, dann soll es auch da sein
       }
-    i++;
+    S42MigrationStep(i, 1, true);
     }
   log = Format("%s || UMWELTOBJEKTE: ", log);
   
-  var i = 0, j, pCrew, tmp,idDef,obj;
+  var i = nil, j, pCrew, tmp,idDef,obj;
   for(var check in aEnvironment)
     {
     idDef=GetDefinition(i, Chooser_Cat_Environment);
@@ -1443,7 +1459,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
           obj=CreateObject(idDef, 10,10, -1);
           obj->~IsChoosen();
           }
-          log = Format("%s, %s", log, GetName(0, idDef));
+          log = Format("%s, %s", log, GetName(nil, idDef));
       }
     else
       {
@@ -1453,13 +1469,13 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
             RemoveObject(obj); // notchoosable dinge da lassen, da diese von anderen dingen gesteuert werden
             idDef->~IsNotChoosen();
           }
-          if(obj) log = Format("%s, %s", log, GetName(0, idDef)); // wenn noch da, dann soll es auch da sein
+          if(obj) log = Format("%s, %s", log, GetName(nil, idDef)); // wenn noch da, dann soll es auch da sein
       }
-    i++;
+    S42MigrationStep(i, 1, true);
     }
   Log(log);
 
-  var i = 0, j, pCrew, tmp,idDef,obj;
+  var i = nil, j, pCrew, tmp,idDef,obj;
   for(var check in aEffekte)
     {
     idDef=GetDefinition(i, Chooser_Cat_Rule);                    
@@ -1474,13 +1490,13 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
     else
       {
           obj=FindObject2(Find_ID(idDef),Find_Exclude(this()));// wenn etwas da, obwohl nicht gewählt, dann entfernen
-          if(idDef!=PP2P) if(obj) if(!obj->~IsNotChooseable()) 
+          if(!Equal(idDef, PP2P)) if(obj) if(!obj->~IsNotChooseable())
           {
             RemoveObject(obj); // notchoosable dinge da lassen, da diese von anderen dingen gesteuert werden
             idDef->~IsNotChoosen();
           }
       }
-    i++;
+    S42MigrationStep(i, 1, true);
     }
   
   
@@ -1498,12 +1514,12 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
   GameCallEx("ChooserFinished");
 
   // Spieler freilassen
-  for(i = 0 ; i < GetPlayerCount() ; i++)
+  for(i = nil ; (i ?? 0) < (GetPlayerCount() ?? 0) ; S42MigrationStep(i, 1, true))
     {
-    for(j = 0 ; pCrew = GetCrew(GetPlayerByIndex(i), j) ; j++)
+    for(j = nil ; pCrew = GetCrew(GetPlayerByIndex(i), j) ; S42MigrationStep(j, 1, true))
       {
       tmp = Contained(pCrew);
-      if(GetID(tmp)==TIM1)
+      if(Equal(GetID(tmp), TIM1))
        RemoveObject(tmp, 1);
       
       pCrew->~Recruitment(pCrew->GetOwner());
@@ -1521,7 +1537,7 @@ func ConfigurationFinished()  // beachten, dass einstellungen auch während spiel
       RemoveObject(tmp, 1);
 
 // Spielgeschwindigkeit wieder normal
- SetGameSpeed(0);
+ SetGameSpeed(nil);
  //GameCall("Spielstartet"); // ein Call an ein eventuelles Szenario skript
 
   // Selber entfernen
@@ -1534,12 +1550,12 @@ public func MenuQueryCancel() { return(1); }
 
 func TransformObject(idDef,yes)
 {
-  var def = CreateObject(TIM1, 0,0, -1);
+  var def = CreateObject(TIM1, nil,nil, -1);
   SetGraphics("",def,idDef,1,3);
   if(yes)
   {
     SetGraphics("", def, CNCL, 2, GFXOV_MODE_Picture);
-    SetObjDrawTransform(650,0,5000,0,650,5000, def, 2);
+    SetObjDrawTransform(650,nil,5000,nil,650,5000, def, 2);
   }
   else
   {
@@ -1554,11 +1570,11 @@ public func Eastern(object P)
 {
   var rand = Random(6);
   if(!rand) SetName(GetPlayerName(GetPlayerByIndex(Random(GetPlayerCount()))), P);
-  if(rand == 1) SetName("$Emptiness$", P);
-  if(rand == 2) SetName("$YourBrain$", P);
-  if(rand == 3) SetName("$Nothing$", P);
-  if(rand == 4) SetName("$Freezer$", P);
-  if(rand == 5) SetName("$Space$", P);
+  if(Equal(rand, 1)) SetName("$Emptiness$", P);
+  if(Equal(rand, 2)) SetName("$YourBrain$", P);
+  if(Equal(rand, 3)) SetName("$Nothing$", P);
+  if(Equal(rand, 4)) SetName("$Freezer$", P);
+  if(Equal(rand, 5)) SetName("$Space$", P);
 }
 
 public func IsActive()

@@ -1,6 +1,6 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 #include BAS7
 
 /* B070 stellt die Grundfunktionalität für alle Fundament-Objekte sowie 
@@ -47,15 +47,15 @@ public func FxDestrCheckDamage(pTarget,iNum,iDmg,iCause)
 
 protected func Destruction()
 {
-  if(GetID() == BasementID() ) return(0);
+  if(Equal(GetID(), BasementID()) ) return(nil);
   if(basement) RemoveObject(basement);
   return(_inherited() );
 }
 
 private func MoveOutClonk(object pObj) {
-  if(GetID()!=BasementID()) return(0);
-  while(Stuck(pObj) && Inside(GetY(pObj)-GetY(),-35,+5))
-    SetPosition(GetX(pObj),GetY(pObj)-1,pObj);
+  if(!Equal(GetID(), BasementID())) return(nil);
+  while(And(Stuck(pObj), Inside((GetY(pObj) ?? 0)-(GetY() ?? 0),-35,+5)))
+    SetPosition(GetX(pObj),(GetY(pObj) ?? 0)-1,pObj);
 }
 
 

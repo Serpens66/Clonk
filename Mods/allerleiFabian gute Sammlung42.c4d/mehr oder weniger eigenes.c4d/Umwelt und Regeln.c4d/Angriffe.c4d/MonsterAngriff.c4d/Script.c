@@ -1,6 +1,6 @@
 /*-- Monsterattacken --*/
 
-#strict
+#strict 3
 local maufeinmal,maktuell;
 
 func Activate()
@@ -13,16 +13,16 @@ protected func Initialize()
 {
   // Eigene Position festlegen
   SetPosition();
-  DynMessage("Hö?",0,48,RGBa(82,168,72,0),300);
+  DynMessage("Hö?",nil,48,RGBa(82,168,72,nil),300);
   return(1);
 }
 
 /* Eventuell Monster erstellen */
 private func DoMonsters()
 {
-  maufeinmal = ObjectCount(MOAN)+1 ;
+  maufeinmal = (ObjectCount(MOAN) ?? 0)+1 ;
   maktuell= ObjectCount2(Find_ID(MONS), Find_OCF(OCF_Alive));
-  if (maktuell>=maufeinmal) return(1);
+  if ((maktuell ?? 0)>=(maufeinmal ?? 0)) return(1);
   var pMonster = CreateObject(MONS, Random(LandscapeWidth()), 50, -1);
   SetR(-180, pMonster);
   return(1);

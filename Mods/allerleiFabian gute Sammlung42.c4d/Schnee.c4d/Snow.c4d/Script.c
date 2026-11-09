@@ -1,6 +1,6 @@
 /*-- Schnee-Effekt --*/
 
-#strict
+#strict 3
 
 // local frequency;
 // static const SNOW_MAX_SIZE = 100, SNOW_MIN_SIZE = 10;
@@ -8,7 +8,7 @@
 
 protected func Initialize() {
   // if(!IsNewgfx()) RemoveObject();
-  SetPosition(0,0);
+  SetPosition(nil,nil);
   // frequency = 10;
 }
 

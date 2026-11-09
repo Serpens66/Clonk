@@ -1,6 +1,6 @@
 /*-- Lehm3 --*/
 
-#strict
+#strict 3
 
 protected func Initialize()
 {
@@ -9,8 +9,8 @@ protected func Initialize()
 
 private func Splitting()
 {
-  Enter(Contained(),CreateObject(LOA2,0,0,GetOwner()));
-  RemoveObject(0,1);
+  Enter(Contained(),CreateObject(LOA2,nil,nil,GetOwner()));
+  RemoveObject(nil,1);
 }
 
 public func IsChemicalProduct() { return(1); }

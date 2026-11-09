@@ -1,6 +1,6 @@
 /*-- Schalter --*/
 
-#strict
+#strict 3
 
 local pGate;
 local dir,wand;
@@ -23,7 +23,7 @@ wand = hangar;
 
 protected func ControlLeft(object pClonk)
 {
-  if (dir == 2 && pGate)
+  if (And(Equal(dir, 2), pGate))
   {
     Sound("Click");
     SetAction("Left");
@@ -35,7 +35,7 @@ protected func ControlLeft(object pClonk)
 if(!pGate)
 {
   // Rohstoffe gebraucht gebraucht
-  if (!FindContents(ROCK) && !FindContents(CTIT))
+  if (And(!FindContents(ROCK), !FindContents(CTIT)))
     return(Message("Benötigt|1x Stein|1x Titan",this()));
   if (!FindContents(CTIT))
     return(Message("Benötigt noch|1x Titan",this()));
@@ -53,7 +53,7 @@ RemoveObject();
 
 protected func ControlRight(object pClonk)
 {
-  if (dir == 1 && pGate)
+  if (And(Equal(dir, 1), pGate))
   {
     Sound("Click");
     SetAction("Right");
@@ -65,7 +65,7 @@ protected func ControlRight(object pClonk)
 if(!pGate)
 {
   // Rohstoffe gebraucht gebraucht
-  if (!FindContents(ROCK) && !FindContents(CTIT))
+  if (And(!FindContents(ROCK), !FindContents(CTIT)))
     return(Message("Benötigt|1x Stein|1x Titan",this()));
   if (!FindContents(CTIT))
     return(Message("Benötigt noch|1x Titan",this()));
@@ -83,4 +83,4 @@ RemoveObject();
 
 
 // außer Baumaterial nichts aufnehmen
-protected func RejectCollect(def,pObj) { if(def!=ROCK && def!=CTIT) return(1); }
+protected func RejectCollect(def,pObj) { if(And(!Equal(def, ROCK), !Equal(def, CTIT))) return(1); }

@@ -1,6 +1,6 @@
 /*-- Uranerzmine --*/
 
-#strict
+#strict 3
 #include GGMI
 
 private func MatObjsCount() {  return(ObjectCount(SURO)); }

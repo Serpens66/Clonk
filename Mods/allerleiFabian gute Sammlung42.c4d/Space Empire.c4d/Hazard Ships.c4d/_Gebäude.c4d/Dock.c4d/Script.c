@@ -1,6 +1,6 @@
 /*-- Dock --*/
 
-#strict
+#strict 3
 local order, timer, light, height, product, brain, plr;
 
 func Initialize()
@@ -10,7 +10,7 @@ func Initialize()
 
 func Check()
 {
-  if(product && ObjectDistance(this(),product)<80 || order)  return(0);
+  if(Or(And(product, (ObjectDistance(this(),product) ?? 0)<80), order))  return(nil);
   return(1);
 }
 
@@ -21,17 +21,17 @@ func Order(_order,_timer,_height,brained,player)
   if(order)
   {
   Message("Produktion läuft!", this());
-  return(0);
+  return(nil);
   }
-  if(product && ObjectDistance(this(),product)<80)
+  if(And(product, (ObjectDistance(this(),product) ?? 0)<80))
   {
   Message("Dock noch belegt!", this());
-  return(0);
+  return(nil);
   }
   order=_order;
   timer=_timer;
   height=_height;
-  light=0;
+  light=nil;
   SetAction("Construct");
   return(1);
 }
@@ -39,30 +39,30 @@ func Order(_order,_timer,_height,brained,player)
 func Construct()
 {
   //Bauzeit
-  timer-=2;
+  S42MigrationAssign(timer, "-=", 2);
   //Fertig?
-  if(timer<0)
+  if((timer ?? 0)<0)
   {
-  product=CreateObject(order,0,height/2);
-  order=0;
+  product=CreateObject(order,nil,(height ?? 0)/2);
+  order=nil;
   SetAction("Raise");
   }
   // Sound
   if(!Random(5))
   {
-  Sound("PRReparatur*",0, this());
+  Sound("PRReparatur*",nil, this());
   }
   //Lichter
-  light++;
-  if(light>4) light=0;
-  CreateParticle ("NoGravSpark", -27+light*13, -27, 0, 0, 20, RGBa(250,170,100,0)); 
+  S42MigrationStep(light, 1, true);
+  if((light ?? 0)>4) light=nil;
+  CreateParticle ("NoGravSpark", -27+(light ?? 0)*13, -27, nil, nil, 20, RGBa(250,170,100,nil));
   return(1);
 }
 
 func Raise()
 {
   //Schon Oben?
-  height--;
+  S42MigrationStep(height, -1, true);
   if(!height)
   {
   if(brain)
@@ -73,6 +73,6 @@ func Raise()
   SetAction("Wait");
   }
   //Hochlassen
-  SetPosition (GetX(), GetY(product)-1, product); 
+  SetPosition (GetX(), (GetY(product) ?? 0)-1, product);
   return(1);
 }

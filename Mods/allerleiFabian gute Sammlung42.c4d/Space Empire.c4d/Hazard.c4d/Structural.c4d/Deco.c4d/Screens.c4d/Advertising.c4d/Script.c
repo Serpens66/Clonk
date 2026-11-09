@@ -1,6 +1,6 @@
 /*-- Werbeschirm --*/
 
-#strict
+#strict 3
 
 func Initialize() {
   SetAction("Black");

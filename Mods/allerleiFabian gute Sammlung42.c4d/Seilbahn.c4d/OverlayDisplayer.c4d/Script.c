@@ -1,6 +1,6 @@
 /*-- Overlay-Zeiger --*/
 
-#strict 2
+#strict 3
 
 public func Initialize()
 {
@@ -10,7 +10,11 @@ public func Initialize()
 
 public func SetGraphicShape(int iLength, int iHeight, int iXOff, int iYOff)
 {
+  iLength ??= 0;
+  iHeight ??= 0;
+  iXOff ??= 0;
+  iYOff ??= 0;
   SetCon(Max(Max(iLength,iHeight),1),this());
-  SetShape(-iLength/2+iXOff,-iHeight/2+iYOff,iLength,iHeight,this());
+  SetShape(-(iLength ?? 0)/2+(iXOff ?? 0),-(iHeight ?? 0)/2+(iYOff ?? 0),iLength,iHeight,this());
   return(this());
 }

@@ -1,6 +1,6 @@
 /*-- EJD --*/
 
-#strict
+#strict 3
 
 local range;
 local timer;
@@ -8,7 +8,7 @@ local timer;
 func Initialize() 
 {
   timer = 300;
-  SetGraphics(0);
+  SetGraphics(nil);
   range = 500;
   return(1);
 }
@@ -17,8 +17,8 @@ func Check()
 {
   if(timer)
   {
-   timer --;
-   SetGraphics(0);
+   S42MigrationStep(timer , -1, true);
+   SetGraphics(nil);
   }
   else
   {
@@ -29,7 +29,7 @@ func Check()
 
 func ControlDigDouble(pCaller)
 {
-  if(timer > 0)
+  if((timer ?? 0) > 0)
   {
    Sound("Ding");
    return(1);
@@ -38,23 +38,25 @@ func ControlDigDouble(pCaller)
   timer = 300;
   var desY;
   var desX;
-  if(GetDir(Contained()) == 1)
+  if(Equal(GetDir(Contained()), 1))
   {
-   desX = GetX()+(range/2);
+   desX = (GetX() ?? 0)+((range ?? 0)/2);
   }
   else
   {
-   desX = GetX()-(range/2);
+   desX = (GetX() ?? 0)-((range ?? 0)/2);
   }
   desY = GetYLaunch(GetY(),desX);
-  pCaller->SetPosition(desX,desY-10);
+  pCaller->SetPosition(desX,(desY ?? 0)-10);
   return(1);
 }
   
 func GetYLaunch(int i,int j)
 {
+  i ??= 0;
+  j ??= 0;
   var a;
-  a = i + (range/2);
-  while(GBackSolid(j-GetX(),a-GetY())||GBackLiquid(j-GetX(),a-GetY())) a-=2;
+  a = (i ?? 0) + ((range ?? 0)/2);
+  while(Or(GBackSolid((j ?? 0)-(GetX() ?? 0),(a ?? 0)-(GetY() ?? 0)), GBackLiquid((j ?? 0)-(GetX() ?? 0),(a ?? 0)-(GetY() ?? 0)))) S42MigrationAssign(a, "-=", 2);
   return(a);
 }

@@ -1,6 +1,6 @@
 /*-- Schussfragment --*/
 
-#strict
+#strict 3
 
 local counter;
 
@@ -13,7 +13,7 @@ public func SetCounter(value)
 
 private func Count()
 {
-  if (--counter) return(1);
+  if (S42MigrationStep(counter, -1)) return(1);
   Explode(4);
   return(1);
 }

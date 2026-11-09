@@ -1,6 +1,6 @@
 /*-- Solarzelle --*/
 
-#strict
+#strict 3
 #include BOB2 // Gebäude-Hilfsobjekt
 #include XMTR // Transmitter
 
@@ -8,7 +8,7 @@ local basement, manager;
 
 protected func Construction()
 {
-  basement = CreateObject(BS16,0,8,GetOwner());
+  basement = CreateObject(BS16,nil,8,GetOwner());
   return(1);
 }
 
@@ -28,7 +28,7 @@ public func PreDestruction()
 
 protected func Initialize()
 {  
-  manager = CreateObject(BMAN,0,0,GetOwner());
+  manager = CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this());
    manager->InitLight(1,1);
   SetAction("Inactive");
@@ -42,14 +42,14 @@ protected func CheckSun()
   // Bei Tag aktivieren, falls inaktiv
 //  if (DayDarkness < 195)
 //if (IsDay())
-if (dayhelligkeit > 20)
-    if (GetAction() eq "Inactive") return(SetAction("Open")); 
+if ((dayhelligkeit ?? 0) > 20)
+    if (!!SEqual(GetAction(), "Inactive")) return(SetAction("Open"));
   
   // Bei Nacht deaktivieren, falls aktiv
 //  if (DayDarkness >= 195)
 //if(IsNight())
-if (dayhelligkeit <= 20)
-    if (GetAction() eq "Active") SetAction("Close");
+if ((dayhelligkeit ?? 0) <= 20)
+    if (!!SEqual(GetAction(), "Active")) SetAction("Close");
   return(1);
 }
 
@@ -60,8 +60,8 @@ protected func ControlUp()
   // Statusanzeige
   [Statusabfrage]
   if (HasEMP()) return(Sound("Error"));
-  ShowInfoBar(IBRS,this(),GetMaxDamage()-GetDamage(),GetMaxDamage(),5);
-  ShowInfoBar(IBRE,this(),(GetEnergyOutput()*GetFree())/10, 100,5,1);
+  ShowInfoBar(IBRS,this(),(GetMaxDamage() ?? 0)-(GetDamage() ?? 0),GetMaxDamage(),5);
+  ShowInfoBar(IBRE,this(),((GetEnergyOutput() ?? 0)*(GetFree() ?? 0))/10, 100,5,1);
   return(1);
 }
 
@@ -72,7 +72,7 @@ protected func TransmitEnergy()
   if(FindObject(ENNN))
       Message(Format("%v",GetEnergy()),this());
   if (HasEMP()) return(1);
-  DoEnergy((GetEnergyOutput()*GetFree()*9)/500);
+  DoEnergy(((GetEnergyOutput() ?? 0)*(GetFree() ?? 0)*9)/500);
   return(inherited());
 }
 
@@ -81,7 +81,7 @@ protected func TransmitEnergy()
 private func GetFree()
 {
   var e;
-  for (var i = 0; i < 10; i++) if (GBackSky(-10+i*2,-10)) e++;
+  for (var i = nil; (i ?? 0) < 10; S42MigrationStep(i, 1, true)) if (GBackSky(-10+(i ?? 0)*2,-10)) S42MigrationStep(e, 1, true);
   return(e);
 }
 
@@ -90,10 +90,10 @@ private func GetFree()
 protected func GetEnergyOutput()
 {
   if (!FindObject(TIME)) return(100); // ohne Zeitobjekt ständig 100% Energie liefern
-  if (!GetFree()) return(0);
+  if (!GetFree()) return(nil);
   var n = dayhelligkeit; // 60 = Heller Tag
-  if (n >= 20) return((n*100)/60); // Nur am Tag Energie liefern
-  return(0);  // bei Nacht nix 
+  if ((n ?? 0) >= 20) return(((n ?? 0)*100)/60); // Nur am Tag Energie liefern
+  return(nil);  // bei Nacht nix
 }
 
 // Eigenschaften
@@ -103,9 +103,9 @@ public func InfoBarPos()   { return(10); }
 public func InfoBarSize()  { return(3); }
 
 private func InfoBarText() {        
-  if (Par(0) == IBRE)       
-    return(Format("@Energieoutput:  %d%", Par(1)*100/Par(2)));                            
-  return(0);
+  if (Equal(Par(nil), IBRE))
+    return(Format("@Energieoutput:  %d%", (Par(1) ?? 0)*100/(Par(2) ?? 0)));
+  return(nil);
 }     
 
 

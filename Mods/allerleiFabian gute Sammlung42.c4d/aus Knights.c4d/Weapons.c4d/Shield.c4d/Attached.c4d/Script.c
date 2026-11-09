@@ -1,4 +1,4 @@
-#strict
+#strict 3
 
 public func AttachTargetLost()
 {
@@ -9,7 +9,7 @@ public func AttachTargetLost()
 // dies wird hier auf das neue System umgestellt
 protected func UpdateTransferZone()
 {
-  if(!UnbuckledID()->GetShieldGraphics()) return(); 
+  if(!UnbuckledID()->GetShieldGraphics()) return;
   var pClonk = GetActionTarget();
   if(SetGraphics(UnbuckledID()->GetShieldGraphics(), pClonk, GetID(pClonk), KNIG_ShieldLayer, GFXOV_MODE_ExtraGraphics))
   {

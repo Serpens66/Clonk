@@ -1,13 +1,13 @@
 /*---- Kull ----*/
 
-#strict
+#strict 3
 #include HZCK
 
 static const HZCK_LADDERSPEED = 7;
 
 func Initialize()
 {
-  if(GetName() eq "Nr.")
+  if(!!SEqual(GetName(), "Nr."))
   {
    SetName("Nr. 1");
   }
@@ -18,17 +18,17 @@ func Initialize()
 
 func RejectCollect(pObj)
 {
-  if(pObj != GOKR)
+  if(!Equal(pObj, GOKR))
   {
-   if(pObj != GOKW)
+   if(!Equal(pObj, GOKW))
    {
-    if(pObj != ENAP)
+    if(!Equal(pObj, ENAP))
     {
      return(1);
     }
    }
   }
-  return();
+  return;
 }
 
 func Zated()
@@ -37,7 +37,7 @@ func Zated()
   {
    return(1);
   }
-  if(GetAction() eq "Lie")
+  if(!!SEqual(GetAction(), "Lie"))
   {
    SetAction("Lie");
    EMPShockEffect(50);
@@ -50,7 +50,7 @@ func Zated()
 
 func UpdateCharge()
 {
-  if(RandomX(0,2000) == 1)
+  if(Equal(RandomX(nil,2000), 1))
   {
    DoEnergy(-1);
   }

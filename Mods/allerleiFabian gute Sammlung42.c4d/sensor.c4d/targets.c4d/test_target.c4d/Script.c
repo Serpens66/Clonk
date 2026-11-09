@@ -1,6 +1,6 @@
 /*-- Statue --*/
 
-#strict
+#strict 3
 #include IDOL
 
 
@@ -9,12 +9,13 @@
 */
 public func GetTriggerName(int a)
 {
-	if(a==1)//Pink färben.
+	a ??= 0;
+	if(Equal(a, 1))//Pink färben.
 	{
 		return("PINK");
 	}
   
-	if(a==2)//Entfärben.
+	if(Equal(a, 2))//Entfärben.
 	{
 		return("NORMAL");
 	}
@@ -27,14 +28,14 @@ public func GetTriggerName(int a)
 */
 public func Trigger(a)
 {
-	if(a==1)//Pink färben.
+	if(Equal(a, 1))//Pink färben.
 	{
-		SetClrModulation (RGBa(255,0,128,0),this());
+		SetClrModulation (RGBa(255,nil,128,nil),this());
 	}
   
-	if(a==2)//Entfärben.
+	if(Equal(a, 2))//Entfärben.
 	{
-		SetClrModulation (RGBa(0,0,0,0),this());
+		SetClrModulation (RGBa(nil,nil,nil,nil),this());
 	}
   
   return(true);	

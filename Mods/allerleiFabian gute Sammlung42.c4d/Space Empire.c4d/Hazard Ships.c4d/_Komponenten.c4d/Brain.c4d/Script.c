@@ -1,6 +1,6 @@
 /*-- Brain --*/
 
-#strict
+#strict 3
 
   //Lokale Variablen
   local vessel,ammobag,weapon,type,speed,angle,srange,movpriority,movtimer,rtarget,target,tartimer,turnrate,firemode,firestate,splitfire,firerange,missletimer,kamikaze,saboteur;
@@ -32,11 +32,11 @@ func Starter()  {
   //Movement-Priority auf 5 "unwichtig" Setzen
   movpriority=5;
   //Movement-Timer auf Null setzen
-  movtimer=0;
+  movtimer=nil;
   //Ziel auf Null setzen
-  target=0;  
+  target=nil;
   //Target-Timer auf Null setzen
-  tartimer=0;
+  tartimer=nil;
   //Waffensystem aktivieren & Durchladen
   vessel->ContainedThrow();
   weapon=vessel->Waffe();
@@ -48,7 +48,7 @@ func Starter()  {
   
   func Shipdata()  {
   //Predator
-  if(type==1)
+  if(Equal(type, 1))
   {
   //Sensorreichweite
   srange=5;
@@ -65,7 +65,7 @@ func Starter()  {
   }
   
   //Scorpion
-  if(type==2)
+  if(Equal(type, 2))
   {
   vessel->TurretOwner(GetOwner());
   srange=5;
@@ -76,7 +76,7 @@ func Starter()  {
   }
   
   //Moloch
-  if(type==3)
+  if(Equal(type, 3))
   {
   srange=6;
   turnrate=4;
@@ -94,40 +94,40 @@ func Starter()  {
   angle=GetR(vessel);
   //Kollisions-Check
   var sum;
-  sum=0;
+  sum=nil;
 
-  if(SensorMMR()) sum+=2;
-  if(SensorMML()) sum-=2;
-  if(SensorMR()) sum+=2;
-  if(SensorML()) sum-=2;
-  if(SensorR()) sum+=1;
-  if(SensorR()) sum-=1;
-  if(!sum && SensorM()) SteerRandom(2);
-  if(sum<0) SteerRight(2);
-  if(sum>0) SteerLeft(2);
+  if(SensorMMR()) S42MigrationAssign(sum, "+=", 2);
+  if(SensorMML()) S42MigrationAssign(sum, "-=", 2);
+  if(SensorMR()) S42MigrationAssign(sum, "+=", 2);
+  if(SensorML()) S42MigrationAssign(sum, "-=", 2);
+  if(SensorR()) S42MigrationAssign(sum, "+=", 1);
+  if(SensorR()) S42MigrationAssign(sum, "-=", 1);
+  if(And(!sum, SensorM())) SteerRandom(2);
+  if((sum ?? 0)<0) SteerRight(2);
+  if((sum ?? 0)>0) SteerLeft(2);
   
-  if(IdentifyShip(GetID(target)) && !IdentifyFighter(GetID(target)) && Distance(GetX(),GetY(),GetX(target),GetY(target))<250) SteerRandom(3);
+  if(And(And(IdentifyShip(GetID(target)), !IdentifyFighter(GetID(target))), (Distance(GetX(),GetY(),GetX(target),GetY(target)) ?? 0)<250)) SteerRandom(3);
   
   //Kartengrenzen-Check
   //Oben
-  if(GetY()<=(speed*srange) && (angle>-90 && angle<0)) SteerLeft(1);
-  if(GetY()<=(speed*srange) && (angle>-0 && angle<90)) SteerRight(1);
-  if(GetY()<=(speed*srange) && (!angle)) SteerRandom(1);
+  if(And((GetY() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (And((angle ?? 0)>-90, (angle ?? 0)<0)))) SteerLeft(1);
+  if(And((GetY() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (And((angle ?? 0)>-0, (angle ?? 0)<90)))) SteerRight(1);
+  if(And((GetY() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (!angle))) SteerRandom(1);
   //Unten
-  if(GetY()>=(LandscapeHeight()-speed*3) && (angle>90 && angle<180)) SteerLeft(1);
-  if(GetY()>=(LandscapeHeight()-speed*3) && (angle>-180 && angle<-90)) SteerRight(1);
-  if(GetY()>=(LandscapeHeight()-speed*3) && (angle==180)) SteerRandom(1);
+  if(And((GetY() ?? 0)>=((LandscapeHeight() ?? 0)-(speed ?? 0)*3), (And((angle ?? 0)>90, (angle ?? 0)<180)))) SteerLeft(1);
+  if(And((GetY() ?? 0)>=((LandscapeHeight() ?? 0)-(speed ?? 0)*3), (And((angle ?? 0)>-180, (angle ?? 0)<-90)))) SteerRight(1);
+  if(And((GetY() ?? 0)>=((LandscapeHeight() ?? 0)-(speed ?? 0)*3), (Equal(angle, 180)))) SteerRandom(1);
   //Links
-  if(GetX()<=(speed*srange) && (angle>-180 && angle<-90)) SteerLeft(1);
-  if(GetX()<=(speed*srange) && (angle>-90 && angle<0))   SteerRight(1);
-  if(GetX()<=(speed*srange) && (angle==-90)) SteerRandom(1);
+  if(And((GetX() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (And((angle ?? 0)>-180, (angle ?? 0)<-90)))) SteerLeft(1);
+  if(And((GetX() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (And((angle ?? 0)>-90, (angle ?? 0)<0))))   SteerRight(1);
+  if(And((GetX() ?? 0)<=((speed ?? 0)*(srange ?? 0)), (Equal(angle, -90)))) SteerRandom(1);
   //Rechts
-  if(GetX()>=(LandscapeWidth()-speed*3) && (angle>0 && angle<90)) SteerLeft(1);
-  if(GetX()>=(LandscapeWidth()-speed*3) && (angle>90 && angle<180)) SteerRight(1);
-  if(GetX()>=(LandscapeWidth()-speed*3) && (angle==90)) SteerRandom(1);
+  if(And((GetX() ?? 0)>=((LandscapeWidth() ?? 0)-(speed ?? 0)*3), (And((angle ?? 0)>0, (angle ?? 0)<90)))) SteerLeft(1);
+  if(And((GetX() ?? 0)>=((LandscapeWidth() ?? 0)-(speed ?? 0)*3), (And((angle ?? 0)>90, (angle ?? 0)<180)))) SteerRight(1);
+  if(And((GetX() ?? 0)>=((LandscapeWidth() ?? 0)-(speed ?? 0)*3), (Equal(angle, 90)))) SteerRandom(1);
   //Ecken
-  if(SensorCorner() ==1) SteerLeft(-1); 
-  if(SensorCorner() ==2) SteerRight(-1); 
+  if(Equal(SensorCorner(), 1)) SteerLeft(-1);
+  if(Equal(SensorCorner(), 2)) SteerRight(-1);
   
   /*
 	Maneuverprioritäten:
@@ -141,115 +141,115 @@ func Starter()  {
      */
 	 
   //Maneuver beendet.
-  movtimer++;
-  if (movtimer>30 && !SensorCorner() && !sum)
+  S42MigrationStep(movtimer, 1, true);
+  if (And(And((movtimer ?? 0)>30, !SensorCorner()), !sum))
   {
-  movtimer=0;
+  movtimer=nil;
   movpriority=5;
-  SetRDir(0,vessel);
+  SetRDir(nil,vessel);
   }
   
   //Zielfindung
   //Feind aller Spieler
-  tartimer++;
-  if (tartimer>80)
+  S42MigrationStep(tartimer, 1, true);
+  if ((tartimer ?? 0)>80)
   {
-  tartimer=0;
+  tartimer=nil;
   target=FindTarget();
   }
   
   //Faktor X
   
-  if(!Random(250) && (type==1 || type==3) && movpriority>3 && !sum) SteerRandom(3);
-  if(!Random(100) && type==2)
+  if(And(And(And(!Random(250), (Or(Equal(type, 1), Equal(type, 3)))), (movpriority ?? 0)>3), !sum)) SteerRandom(3);
+  if(And(!Random(100), Equal(type, 2)))
   {
   var tarned, energized;
   vessel->Tarned(tarned,energized);
-  if(!tarned && energized)  vessel->Tarnung();
+  if(And(!tarned, energized))  vessel->Tarnung();
   }
   
   // Zur Zielverfolgung übergehen
-  var iDiff = Normalize(rtarget - angle,-180);
-  if(movpriority==5 && target)
+  var iDiff = Normalize((rtarget ?? 0) - (angle ?? 0),-180);
+  if(And(Equal(movpriority, 5), target))
   {
   rtarget=Angle(GetX(),GetY(),GetX(target),GetY(target));
   var iTurn = Min(Abs(iDiff),turnrate);
-  if(Inside(angle,-5,+5) && iDiff>0)
+  if(And(Inside(angle,-5,+5), (iDiff ?? 0)>0))
   {
   SteerRight(4);
   movtimer=25;
   }
-  if(Inside(angle,-5,+5) && iDiff<0)
+  if(And(Inside(angle,-5,+5), (iDiff ?? 0)<0))
   {
   SteerLeft(4);
   movtimer=25;
   }
-  if(!Inside(angle,-5,+5)) SetR(angle+iTurn*((iDiff > 0)*2-1),vessel);
+  if(!Inside(angle,-5,+5)) SetR((angle ?? 0)+(iTurn ?? 0)*((((iDiff ?? 0) > 0) ?? 0)*2-1),vessel);
   }
   
   //Waffenwahl
   //Predator
-  if(type==1)
+  if(Equal(type, 1))
   {
-  var ammo1=GetAmmo(STAM)+GetAmmo(STAM,weapon);
-  var ammo2=GetAmmo(MIAM)+GetAmmo(MIAM,weapon);
-  var ammoweapon=GetAmmo(STAM,weapon)+GetAmmo(MIAM,weapon);
-  if(!ammo2) {saboteur=0; if(firemode!=1) Mode(1);} // wenn keine raketen mehr, dann keine gebädue mehr angreifen
+  var ammo1=(GetAmmo(STAM) ?? 0)+(GetAmmo(STAM,weapon) ?? 0);
+  var ammo2=(GetAmmo(MIAM) ?? 0)+(GetAmmo(MIAM,weapon) ?? 0);
+  var ammoweapon=(GetAmmo(STAM,weapon) ?? 0)+(GetAmmo(MIAM,weapon) ?? 0);
+  if(!ammo2) {saboteur=nil; if(!Equal(firemode, 1)) Mode(1);} // wenn keine raketen mehr, dann keine gebädue mehr angreifen
   if(!saboteur)
     {
-  if(firemode==1 && ammo2) if(IdentifyShip(GetID(target)))  Mode(5); // normale raketen auf Ships feuern
-  if(firemode==5 && ammo1) if(!IdentifyShip(GetID(target))) Mode(1);
-  if(firemode==5 && !ammo2 && ammo1) Mode(1);
-  if(firemode==1 && !ammo1 && ammo2) Mode(5);
+  if(And(Equal(firemode, 1), ammo2)) if(IdentifyShip(GetID(target)))  Mode(5); // normale raketen auf Ships feuern
+  if(And(Equal(firemode, 5), ammo1)) if(!IdentifyShip(GetID(target))) Mode(1);
+  if(And(And(Equal(firemode, 5), !ammo2), ammo1)) Mode(1);
+  if(And(And(Equal(firemode, 1), !ammo1), ammo2)) Mode(5);
     }
   if(saboteur)
       {
-      if(firemode!=4) Mode(4);  // verschießt Raketen auf Militärgebäude
+      if(!Equal(firemode, 4)) Mode(4);  // verschießt Raketen auf Militärgebäude
       }
   }
   
   //Scorpion
-  if(type==2)
+  if(Equal(type, 2))
   {
-  var ammo1=GetAmmo(ENAM)+GetAmmo(ENAM,weapon);
+  var ammo1=(GetAmmo(ENAM) ?? 0)+(GetAmmo(ENAM,weapon) ?? 0);
   var ammo2=1;
   var ammoweapon=GetAmmo(ENAM,weapon);
-  if(!ammo1) ammo2=0;
+  if(!ammo1) ammo2=nil;
   if(!saboteur)
     {
-  if(firemode==2) if(IdentifyShip(GetID(target)))  {  Mode(1);  splitfire=10;  }
-  if(firemode==1) if(!IdentifyShip(GetID(target)))  {  Mode(2);  splitfire=150;  }
+  if(Equal(firemode, 2)) if(IdentifyShip(GetID(target)))  {  Mode(1);  splitfire=10;  }
+  if(Equal(firemode, 1)) if(!IdentifyShip(GetID(target)))  {  Mode(2);  splitfire=150;  }
     }
   if(saboteur)
       {
-      if(firemode!=4) {Mode(4); splitfire=150;}
+      if(!Equal(firemode, 4)) {Mode(4); splitfire=150;}
       }
   }
   
   //Moloch
-  if(type==3)
+  if(Equal(type, 3))
   {
-  var ammo1=GetAmmo(STAM)+GetAmmo(STAM,weapon);
-  var ammo2=GetAmmo(MIAM)+GetAmmo(MIAM,weapon);
-  var ammoweapon=GetAmmo(STAM,weapon)+GetAmmo(MIAM,weapon);
-  if(firemode==1 && ammo2) Mode(2);
-  if(firemode==2 && !ammo2) Mode(1);
+  var ammo1=(GetAmmo(STAM) ?? 0)+(GetAmmo(STAM,weapon) ?? 0);
+  var ammo2=(GetAmmo(MIAM) ?? 0)+(GetAmmo(MIAM,weapon) ?? 0);
+  var ammoweapon=(GetAmmo(STAM,weapon) ?? 0)+(GetAmmo(MIAM,weapon) ?? 0);
+  if(And(Equal(firemode, 1), ammo2)) Mode(2);
+  if(And(Equal(firemode, 2), !ammo2)) Mode(1);
   }
   
   //Beschuss einleiten
   //Keine Muni mehr...dann eben rammen...
-  if(!(ammo1+ammo2))
+  if(!((ammo1 ?? 0)+(ammo2 ?? 0)))
   {
   kamikaze=1;
   return(1);
   }  
   if(!ammoweapon)
   {
-  firestate=0;
+  firestate=nil;
   vessel->ContainedThrow();
   return(1);
   }
-  if(target && Distance(GetX(),GetY(),GetX(target),GetY(target))<firerange && (PathFree(GetX(),GetY(),GetX(target),GetY(target)) || IdentifyShip(GetID(target))) && Inside(iDiff,-splitfire,+splitfire))
+  if(And(And(And(target, (Distance(GetX(),GetY(),GetX(target),GetY(target)) ?? 0)<(firerange ?? 0)), (Or(PathFree(GetX(),GetY(),GetX(target),GetY(target)), IdentifyShip(GetID(target))))), Inside(iDiff,-(splitfire ?? 0),+(splitfire ?? 0))))
   {
   Fire();
   }
@@ -268,9 +268,9 @@ private func FindTarget() {
   for(pT in FindObjects( Find_NoContainer(),Find_Or(Find_OCF(OCF_Prey),Find_Func("IsHazardShip")) )) 
   {
 	// Verfeindet
-        if(GetOCF(pT) & OCF_Living && !(GetOCF(pT) & OCF_Alive)) continue; //wenn totes Lebewesen, kein Ziel
-	if(!(GetOwner(this())==-1) && (!Hostile(GetOwner(this()),GetOwner(pT)) && !(GetOwner(pT)==-1))) continue;
-	if(GetOwner(this())==-1 && GetOwner(pT)==-1) continue;
+        if(And((GetOCF(pT) ?? 0) & (OCF_Living ?? 0), !((GetOCF(pT) ?? 0) & (OCF_Alive ?? 0)))) continue; //wenn totes Lebewesen, kein Ziel
+	if(And(!(Equal(GetOwner(this()), -1)), (And(!Hostile(GetOwner(this()),GetOwner(pT)), !(Equal(GetOwner(pT), -1)))))) continue;
+	if(And(Equal(GetOwner(this()), -1), Equal(GetOwner(pT), -1))) continue;
 	if(IdentifyFighter(GetID(pT))) if(pT->Tarned()) continue;
 	//if(Contained(pT)) pT=Contained(pT);
     return(pT);
@@ -279,16 +279,16 @@ private func FindTarget() {
   for(pT in FindObjects( Find_NoContainer(),Find_Func("IsMilitaryBuilding") )) 
   {
 	// Verfeindet
-	if(!(GetOwner(this())==-1) && (!Hostile(GetOwner(this()),GetOwner(pT)) && !(GetOwner(pT)==-1))) continue;
-	if(GetOwner(this())==-1 && GetOwner(pT)==-1) continue;
+	if(And(!(Equal(GetOwner(this()), -1)), (And(!Hostile(GetOwner(this()),GetOwner(pT)), !(Equal(GetOwner(pT), -1)))))) continue;
+	if(And(Equal(GetOwner(this()), -1), Equal(GetOwner(pT), -1))) continue;
 	if(IdentifyFighter(GetID(pT))) if(pT->Tarned()) continue;
     return(pT);
   }
 }
   
   //Waffen
-  func WeaponBegin() { return(0); }
-  func WeaponEnd() { return(0); }
+  func WeaponBegin() { return(nil); }
+  func WeaponEnd() { return(nil); }
   
   func Fire()
   {
@@ -303,7 +303,7 @@ private func FindTarget() {
   {
   if(firestate)
   {
-  firestate=0;
+  firestate=nil;
   vessel->ContainedThrow(); 
   }
   }
@@ -312,7 +312,7 @@ private func FindTarget() {
   if(firestate)
   {
   vessel->ContainedThrow();
-  firestate=0;
+  firestate=nil;
   }
   weapon->SetFireMode(mode);
   firemode=mode;
@@ -322,114 +322,114 @@ private func FindTarget() {
   //Kollisions-Sensoren
   func SensorM()  {
   var x,y;
-  x=Sin(angle,srange*speed);
-  y=Cos(angle,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin(angle,(srange ?? 0)*(speed ?? 0));
+  y=Cos(angle,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
  
   func SensorMML()  {
   var x,y;
-  x=Sin(angle-10,srange*speed);
-  y=Cos(angle-10,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)-10,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)-10,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
  
   func SensorML()  {
   var x,y;
-  x=Sin(angle-30,srange*speed);
-  y=Cos(angle-30,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)-30,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)-30,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
   
   func SensorL()  {
   var x,y;
-  x=Sin(angle-60,srange*speed);
-  y=Cos(angle-60,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)-60,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)-60,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
   
   func SensorMMR()  {
   var x,y;
-  x=Sin(angle+10,srange*speed);
-  y=Cos(angle+10,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)+10,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)+10,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
   
   func SensorMR()  {
   var x,y;
-  x=Sin(angle+30,srange*speed);
-  y=Cos(angle+30,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)+30,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)+30,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
   
   func SensorR()  {
   var x,y;
-  x=Sin(angle+60,srange*speed);
-  y=Cos(angle+60,srange*speed);
-  if (!PathFree(GetX(), GetY(), GetX()-x, GetY()-y)) return(1);
-  if (type==1 && GBackLiquid(Sin(angle,-srange*speed), Cos(angle,-srange*speed))) return(1);
-  return(0);
+  x=Sin((angle ?? 0)+60,(srange ?? 0)*(speed ?? 0));
+  y=Cos((angle ?? 0)+60,(srange ?? 0)*(speed ?? 0));
+  if (!PathFree(GetX(), GetY(), (GetX() ?? 0)-(x ?? 0), (GetY() ?? 0)-(y ?? 0))) return(1);
+  if (And(Equal(type, 1), GBackLiquid(Sin(angle,-(srange ?? 0)*(speed ?? 0)), Cos(angle,-(srange ?? 0)*(speed ?? 0))))) return(1);
+  return(nil);
   }
   
   //Ecksensor
   func SensorCorner()   {
   //1=Links
   //2=Rechts
-  if (Distance(0,0,GetX(),GetY()) < srange*speed)
+  if ((Distance(nil,nil,GetX(),GetY()) ?? 0) < (srange ?? 0)*(speed ?? 0))
   {
-  if(GetX()<=GetY()) return(1);
+  if((GetX() ?? 0)<=(GetY() ?? 0)) return(1);
   return(2);
   }
-  if (Distance(0,LandscapeHeight(),GetX(),GetY()) < srange*speed)
+  if ((Distance(nil,LandscapeHeight(),GetX(),GetY()) ?? 0) < (srange ?? 0)*(speed ?? 0))
   {
-  if(GetX()>=LandscapeHeight()-GetY()) return(2);
+  if((GetX() ?? 0)>=(LandscapeHeight() ?? 0)-(GetY() ?? 0)) return(2);
   return(1);
   }
-  if (Distance(LandscapeWidth(),0,GetX(),GetY()) < srange*speed)
+  if ((Distance(LandscapeWidth(),nil,GetX(),GetY()) ?? 0) < (srange ?? 0)*(speed ?? 0))
   {
-  if(LandscapeWidth()-GetX()<=GetY()) return(2);
+  if((LandscapeWidth() ?? 0)-(GetX() ?? 0)<=(GetY() ?? 0)) return(2);
   return(1);
   }
-  if (Distance(LandscapeWidth(),LandscapeHeight(),GetX(),GetY()) < srange*speed)
+  if ((Distance(LandscapeWidth(),LandscapeHeight(),GetX(),GetY()) ?? 0) < (srange ?? 0)*(speed ?? 0))
   {
-  if(LandscapeWidth()-GetX()<=LandscapeHeight()-GetY()) return(1);
+  if((LandscapeWidth() ?? 0)-(GetX() ?? 0)<=(LandscapeHeight() ?? 0)-(GetY() ?? 0)) return(1);
   return(2);
   }
-  return(0);
+  return(nil);
   }
  
   //Steuermethoden
   func SteerRandom(_priority)  {
-  if (movpriority<=_priority) return(0);
-  if (kamikaze && _priority==2) return(0);
+  if ((movpriority ?? 0)<=(_priority ?? 0)) return(nil);
+  if (And(kamikaze, Equal(_priority, 2))) return(nil);
   movpriority=_priority;
   if (Random(1)) return(SteerLeft());
   return(SteerRight());
   }
   
   func SteerRight(_priority)  {
-  if (movpriority<=_priority) return(0);
-  if (kamikaze && _priority==2) return(0);
+  if ((movpriority ?? 0)<=(_priority ?? 0)) return(nil);
+  if (And(kamikaze, Equal(_priority, 2))) return(nil);
   movpriority=_priority;
   vessel->ContainedRight();
   return(1);
   }
   
   func SteerLeft(_priority)  {
-  if (movpriority<=_priority) return(0);
-  if (kamikaze && _priority==2) return(0);
+  if ((movpriority ?? 0)<=(_priority ?? 0)) return(nil);
+  if (And(kamikaze, Equal(_priority, 2))) return(nil);
   movpriority=_priority;
   vessel->ContainedLeft();
   return(1);
@@ -437,10 +437,12 @@ private func FindTarget() {
   
   //Winkelarithmetik
   global func Normalize(int iAngle, int iStart) {
-  var iEnd = 360+iStart;
+  iAngle ??= 0;
+  iStart ??= 0;
+  var iEnd = 360+(iStart ?? 0);
   
-  while(iAngle<iStart) iAngle += 360;
-  while(iAngle>=iEnd) iAngle -= 360;
+  while((iAngle ?? 0)<(iStart ?? 0)) S42MigrationAssign(iAngle, "+=", 360);
+  while((iAngle ?? 0)>=(iEnd ?? 0)) S42MigrationAssign(iAngle, "-=", 360);
 
   return(iAngle);
 }

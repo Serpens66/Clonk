@@ -1,6 +1,6 @@
 /*-- Teleprojektil --*/
 
-#strict
+#strict 3
 
 local iRemoveTimer;
 local user;
@@ -22,26 +22,29 @@ func ControlDigDouble()
     var xpos=GetX();
     var ypos=GetY();
     
-    if(GBackSolid(-2,-20) || GBackSolid(2,-20) || GBackSolid(0,-10)) {Message("$BadPlace$",user); SetCursor(GetController(),user); return(RemoveObject());}
+    if(Or(Or(GBackSolid(-2,-20), GBackSolid(2,-20)), GBackSolid(nil,-10))) {Message("$BadPlace$",user); SetCursor(GetController(),user); return(RemoveObject());}
     
-    DrawParticleLine("XSpark",0,0,GetX(user)-xpos,GetY(user)-ypos,1,50,RGBa(255,0,0,128),RGBa(0,255,0,128));
-    SetPosition(xpos,ypos-12,user);
+    DrawParticleLine("XSpark",nil,nil,(GetX(user) ?? 0)-(xpos ?? 0),(GetY(user) ?? 0)-(ypos ?? 0),1,50,RGBa(255,nil,nil,128),RGBa(nil,255,nil,128));
+    SetPosition(xpos,(ypos ?? 0)-12,user);
     SetCursor(GetController(),user);
     RemoveObject();
     Sound("Electric");
-    CastObjects(SPRK,20,30,0,-20);
+    CastObjects(SPRK,20,30,nil,-20);
     Sound("Fire1");
     
 }
 
 func Launch(int xdir, int ydir, int iDmg, Nutzer)
 {
+  xdir ??= 0;
+  ydir ??= 0;
+  iDmg ??= 0;
   user=Nutzer;
   SetSpeed(xdir, ydir);
 }
 
 func CheckCursor() {
-    iRemoveTimer--;
+    S42MigrationStep(iRemoveTimer, -1, true);
     if(!iRemoveTimer) {SetCursor(GetController(),user); RemoveObject();}
     //if(!GetCursor(GetOwner(this()))==this()) RemoveObject();
 }

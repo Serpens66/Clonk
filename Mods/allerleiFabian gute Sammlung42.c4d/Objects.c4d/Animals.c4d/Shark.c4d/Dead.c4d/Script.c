@@ -1,6 +1,6 @@
 /*-- Toter Hai --*/
 
-#strict
+#strict 3
 
 /* Wird zerlegt */
 

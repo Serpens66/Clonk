@@ -1,10 +1,10 @@
 /*-- toll fadende und bunte Nachrichten --*/
 
-#strict
+#strict 3
 
 global func Message4K(pObject,szText,iFrames,dwRGBa_1,dwRGBa_2)
 {
-  AddEffect ("IntShowMessage4K",pObject,1,1,pObject,0,szText,dwRGBa_1,dwRGBa_2,iFrames); 
+  AddEffect ("IntShowMessage4K",pObject,1,1,pObject,nil,szText,dwRGBa_1,dwRGBa_2,iFrames);
 }
 
 global func Message4K2(pObject,szText,iFrames,dwRGBa,iFadeIn,iFadeOut)
@@ -18,11 +18,11 @@ global func Message4K2(pObject,szText,iFrames,dwRGBa,iFadeIn,iFadeOut)
     pObject = CreateObject(ROCK,100,100);//falls global
   }
 
-  var dwRGBa_fade = SetRGBaValue (dwRGBa,0,0);
+  var dwRGBa_fade = SetRGBaValue (dwRGBa,nil,nil);
 
   Message4K(pObject,szText,iFadeIn,dwRGBa_fade,dwRGBa);//einfaden
-  Schedule (Format("Message4K(%d,\"%s\",%d,%d,%d)",pObject2,szText,iFrames,dwRGBa,dwRGBa),iFadeIn,0,pObject);//statischer Teil
-  Schedule (Format("Message4K(%d,\"%s\",%d,%d,%d)",pObject2,szText,iFadeOut,dwRGBa,dwRGBa_fade),iFadeIn+iFrames,0,pObject);//ausfaden
+  Schedule (Format("Message4K(%d,\"%s\",%d,%d,%d)",pObject2,szText,iFrames,dwRGBa,dwRGBa),iFadeIn,nil,pObject);//statischer Teil
+  Schedule (Format("Message4K(%d,\"%s\",%d,%d,%d)",pObject2,szText,iFadeOut,dwRGBa,dwRGBa_fade),(iFadeIn ?? 0)+(iFrames ?? 0),nil,pObject);//ausfaden
 }
 
 
@@ -36,7 +36,9 @@ global func Message4K2(pObject,szText,iFrames,dwRGBa,iFadeIn,iFadeOut)
 
 global func FxIntShowMessage4KStart(object pTarget, int iEffectNumber, int iTemp,szText,dwRGBa_1,dwRGBa_2,iFrames)
 {
-  EffectVar (0,pTarget,iEffectNumber) = szText;
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
+  EffectVar (nil,pTarget,iEffectNumber) = szText;
   EffectVar (1,pTarget,iEffectNumber) = dwRGBa_1;
   EffectVar (2,pTarget,iEffectNumber) = dwRGBa_2;
   EffectVar (3,pTarget,iEffectNumber) = iFrames;
@@ -46,7 +48,9 @@ global func FxIntShowMessage4KStart(object pTarget, int iEffectNumber, int iTemp
 global func FxIntShowMessage4KTimer(object pTarget, int iEffectNumber, int iEffectTime)
 {
 
-  if(iEffectTime > EffectVar (3,pTarget,iEffectNumber))
+  iEffectNumber ??= 0;
+  iEffectTime ??= 0;
+  if((iEffectTime ?? 0) > (EffectVar (3,pTarget,iEffectNumber) ?? 0))
     return(-1);
 
   var iFrames  = EffectVar (3,pTarget,iEffectNumber);
@@ -55,26 +59,33 @@ global func FxIntShowMessage4KTimer(object pTarget, int iEffectNumber, int iEffe
 
     var dwRGBa_1 = EffectVar (1,pTarget,iEffectNumber);
     var dwRGBa_2 = EffectVar (2,pTarget,iEffectNumber);
-    rgba = InterpolateRGBa(dwRGBa_1,dwRGBa_2,0,iFrames,iEffectTime);
+    rgba = InterpolateRGBa(dwRGBa_1,dwRGBa_2,nil,iFrames,iEffectTime);
 
-  Message ("<c %x>%s</c>",pTarget,rgba,EffectVar (0,pTarget,iEffectNumber));
+  Message ("<c %x>%s</c>",pTarget,rgba,EffectVar (nil,pTarget,iEffectNumber));
 
-  return(0);
+  return(nil);
 }
 
 global func FxIntShowMessage4KStop (object pTarget, int iEffectNumber, int iReason, bool fTemp)
 {
+  iEffectNumber ??= 0;
+  iReason ??= 0;
+  fTemp ??= false;
   Message ("",pTarget);
 }
 
 global func FxIntShowMessage4KEffect (string szNewEffectName, object pTarget, int iEffectNumber, int iNewEffectNumber)
 {
+  iEffectNumber ??= 0;
+  iNewEffectNumber ??= 0;
   return(-2);
 }
 
 global func FxIntShowMessage4KAdd (object pTarget, int iEffectNumber, string szNewEffectName, int iNewEffectTimer,szText,dwRGBa_1,dwRGBa_2,iFrames)
 {
-  EffectVar (0,pTarget,iEffectNumber) = szText;
+  iEffectNumber ??= 0;
+  iNewEffectTimer ??= 0;
+  EffectVar (nil,pTarget,iEffectNumber) = szText;
   EffectVar (1,pTarget,iEffectNumber) = dwRGBa_1;
   EffectVar (2,pTarget,iEffectNumber) = dwRGBa_2;
   EffectVar (3,pTarget,iEffectNumber) = iFrames;
@@ -87,7 +98,7 @@ global func FxIntShowMessage4KAdd (object pTarget, int iEffectNumber, string szN
 
 global func Interpolate(y1,y2,x1,x2,x3)
 {
-  return(y1 + ((y2 - y1)/(x2 - x1)) * (x3 - x1));
+  return((y1 ?? 0) + (((y2 ?? 0) - (y1 ?? 0))/((x2 ?? 0) - (x1 ?? 0))) * ((x3 ?? 0) - (x1 ?? 0)));
 }
 
 global func InterpolateRGBa(RGBa_1,RGBa_2,x1,x2,x3)
@@ -95,7 +106,7 @@ global func InterpolateRGBa(RGBa_1,RGBa_2,x1,x2,x3)
   var r = Interpolate(GetRGBaValue(RGBa_1,1),GetRGBaValue (RGBa_2,1),x1,x2,x3);
   var g = Interpolate(GetRGBaValue(RGBa_1,2),GetRGBaValue (RGBa_2,2),x1,x2,x3);
   var b = Interpolate(GetRGBaValue(RGBa_1,3),GetRGBaValue (RGBa_2,3),x1,x2,x3);
-  var a = Interpolate(GetRGBaValue(RGBa_1,0),GetRGBaValue (RGBa_2,0),x1,x2,x3);
+  var a = Interpolate(GetRGBaValue(RGBa_1,nil),GetRGBaValue (RGBa_2,nil),x1,x2,x3);
 
   return(RGBa(r,g,b,a));
 }

@@ -1,6 +1,6 @@
 /* Use ladder functionality */
 
-#strict
+#strict 3
 
 
 /* Dieses Script bietet die Grundfunktionalität des an Leitern kletterns. Damit
@@ -66,27 +66,27 @@ public func GetLadderSpeed() { return(HZCK_LADDERSPEED); }
 public func FindLadder()
 {
   var iOffset = 6;
-  if (GetDir() == DIR_Left())
+  if (Equal(GetDir(), DIR_Left))
     iOffset = -6;
   var tmp;
-  while(tmp = FindObject(0, iOffset, 0,0,0,0,0,0,0,tmp))
-    if(Abs(GetX() - GetX(tmp)) < 6)
+  while(tmp = FindObject(nil, iOffset, nil,nil,nil,nil,nil,nil,nil,tmp))
+    if((Abs((GetX() ?? 0) - (GetX(tmp) ?? 0)) ?? 0) < 6)
       if(tmp->~IsClimbable())
       return(tmp);
-  return(0);
+  return(nil);
 }
 
 public func GrabLadder(object pLadder)
 {
-  if(lastladder == pLadder)
-    return(0);
+  if(Equal(lastladder, pLadder))
+    return(nil);
   // Kletteraktion
 //  SetAction("ScaleLadder", pLadder);
   if(!GetPlrCoreJumpAndRunControl(GetController()))
     SetComDir(COMD_Stop);  
 
   //erstmal checken ob Backflip 4 great Specialeffects!
-  if((GetAction() S= "BackFlip" && !Stuck())) {
+  if((And(!!SEqual(GetAction(), "BackFlip"), !Stuck()))) {
     //Sound, weil Geschwindigkeit oder so
     Sound("Kime*");
   }
@@ -106,6 +106,8 @@ public func GrabLadder(object pLadder)
 
 public func ReleaseLadder(int iXDir, int iYDir)
 {
+  iXDir ??= 0;
+  iYDir ??= 0;
   var dir;
   //nicht mitten in Material loslassen. Wäre ja evil!
   /*
@@ -135,7 +137,7 @@ public func ReleaseLadder(int iXDir, int iYDir)
   var diffx, pLadder = GetActionTarget(), xpos = GetX(pLadder);
   // von was loslassen..?
   if(!pLadder)
-   return(0);
+   return(nil);
 
 /*  if(!(diffx = pLadder->~LocalN("SizeX",pLadder)))
     diffx = GetDefCoreVal("Width",0,GetID(pLadder));
@@ -149,13 +151,13 @@ public func ReleaseLadder(int iXDir, int iYDir)
   RemoveEffect("ScalingLadder", this());
 
   //und runter von der Leiter
-  if(dir < 0 || GetContact(0,1,CNAT_Bottom)) {
+  if(Or((dir ?? 0) < 0, GetContact(nil,1,CNAT_Bottom))) {
     SetAction("Walk");
   }
-  if(dir > 0) {
+  if((dir ?? 0) > 0) {
     SetAction("Hangle");
   }
-  else if(GetAction() ne "Tumble")  
+  else if(!SEqual(GetAction(), "Tumble"))
     SetAction("Jump");
     
   SetXDir(iXDir);
@@ -165,23 +167,23 @@ public func ReleaseLadder(int iXDir, int iYDir)
 
 public func ReleaseLadderUp() {
 	//Normal runterspringen
-	ReleaseLadder(-10*(GetDir()*2-1));
+	ReleaseLadder(-10*((GetDir() ?? 0)*2-1));
 }
 
 public func ReleaseLadderDown() {
 	//Normal runterspringen
-	ReleaseLadder(-10*(GetDir()*2-1));
+	ReleaseLadder(-10*((GetDir() ?? 0)*2-1));
 }
 
 public func ReleaseLadderStop() {
 	//Normal runterspringen
-	ReleaseLadder(-10*(GetDir()*2-1));
+	ReleaseLadder(-10*((GetDir() ?? 0)*2-1));
 }
 
 public func LadderThrow() {
 	// Ablegen
 	SetComDir(COMD_Stop);
-	SetCommand(0, "Drop");
+	SetCommand(nil, "Drop");
 }
 
 public func LadderDig() {
@@ -190,9 +192,9 @@ public func LadderDig() {
 
 protected func ClimbLadder()
 {
-  if(!GetCommand()) return();
+  if(!GetCommand()) return;
   // Testen, ob wir noch klettern
-  if(GetAction() ne "ScaleLadder") return();
+  if(!SEqual(GetAction(), "ScaleLadder")) return;
   // Feststellen, ob nach oben oder unten
   var targetx = GetCommand(this(), 2);
   var targety = GetCommand(this(), 3);
@@ -206,57 +208,57 @@ protected func ClimbLadder()
   }
   */
   
-  if(targety < GetY()) SetComDir(COMD_Up);
-  if(targety > GetY()) SetComDir(COMD_Down);
+  if((targety ?? 0) < (GetY() ?? 0)) SetComDir(COMD_Up);
+  if((targety ?? 0) > (GetY() ?? 0)) SetComDir(COMD_Down);
   
   // 2do: Wir müssen irgendwie feststellen, ob die Leiter aus ist. :(
   
   
   // Wegpunkt oben? früher abspringen.
-  if(Inside(GetY()-targety,5,15) && Abs(GetX()-targetx) < 30)
+  if(And(Inside((GetY() ?? 0)-(targety ?? 0),5,15), (Abs((GetX() ?? 0)-(targetx ?? 0)) ?? 0) < 30))
   {
     var comd = GetComDir();
-    if(targetx < GetX())
+    if((targetx ?? 0) < (GetX() ?? 0))
     {
     	ControlLadder("ControlLeft");
-    	if(GetDir() == DIR_Left)
+        if(Equal(GetDir(), DIR_Left))
     	  SetComDir(comd);
    	}
-    if(targetx > GetX())
+    if((targetx ?? 0) > (GetX() ?? 0))
     {
     	ControlLadder("ControlRight");
-    	if(GetDir() == DIR_Right)
+        if(Equal(GetDir(), DIR_Right))
     	  SetComDir(comd);
    	}
   }
     
   // Sind wir ungefähr da?
-  if(Inside(GetY(), targety-5, targety+5) && PathFree(GetX(), GetY(), targetx, targety))
+  if(And(Inside(GetY(), (targety ?? 0)-5, (targety ?? 0)+5), PathFree(GetX(), GetY(), targetx, targety)))
   {
     // Wir versuchen mal, abzuspringen (das klappt spätestens beim 2. Mal(theoretisch))
     
     
     //wenn Ziel weiter oben: immer nach oben abspringen
-    if(GetY() > targety)
+    if((GetY() ?? 0) > (targety ?? 0))
       SetComDir(COMD_Up);
     //Ziel weiter unten? Nach unten abspringen.
-    else if(Abs(GetY()-targety) > 50)
+    else if((Abs((GetY() ?? 0)-(targety ?? 0)) ?? 0) > 50)
       SetComDir(COMD_Down);
     //Ziel weiter weg? Backflip! :D
-    else if(Abs(GetX()-targetx) > 80)
+    else if((Abs((GetX() ?? 0)-(targetx ?? 0)) ?? 0) > 80)
       SetComDir(COMD_Stop);
     
     var comd = GetComDir();
-    if(targetx < GetX())
+    if((targetx ?? 0) < (GetX() ?? 0))
     {
     	ControlLadder("ControlLeft");
-    	if(GetDir() == DIR_Left)
+        if(Equal(GetDir(), DIR_Left))
     	  SetComDir(comd);
    	}
-    if(targetx > GetX())
+    if((targetx ?? 0) > (GetX() ?? 0))
     {
     	ControlLadder("ControlRight");
-    	if(GetDir() == DIR_Right)
+        if(Equal(GetDir(), DIR_Right))
     	  SetComDir(comd);
    	}
   }
@@ -269,13 +271,13 @@ private func ControlLadder(string strControl, par1) // par1 is comdir for Contro
 
   // Wenn man schnell genug ist, kann man sich so sogar wieder an der Leiter anhalten!
   if(lastladder)
-    lastladder = 0;
+    lastladder = nil;
     
   // Nicht an einem kletterbaren Objekt.
-  if (GetAction() ne "ScaleLadder") return(0); 
+  if (!SEqual(GetAction(), "ScaleLadder")) return(nil);
 
   // Klettert an der Leiter
-  if(strControl S= "ControlCommand") {
+  if(!!SEqual(strControl, "ControlCommand")) {
     ClimbLadder();
     return(1);
   }
@@ -283,7 +285,7 @@ private func ControlLadder(string strControl, par1) // par1 is comdir for Contro
   //Log("%s: %s",GetName(),strControl); //DEBUGZ!
 
   // JnR
-  if (strControl S= "ControlUpdate")
+  if (!!SEqual(strControl, "ControlUpdate"))
   {
     var comdir = par1;
     // Strip away COMD_Left/COMD_Right, this is handled via ControlLeft/ControlRight
@@ -293,33 +295,33 @@ private func ControlLadder(string strControl, par1) // par1 is comdir for Contro
   }
   
   // Rauf
-  if (strControl S= "ControlUp" && !GetPlrCoreJumpAndRunControl(GetController()))
+  if (And(!!SEqual(strControl, "ControlUp"), !GetPlrCoreJumpAndRunControl(GetController())))
     SetComDir(COMD_Up);
   // Runter
-  if (strControl S= "ControlDown" && !GetPlrCoreJumpAndRunControl(GetController()))
+  if (And(!!SEqual(strControl, "ControlDown"), !GetPlrCoreJumpAndRunControl(GetController())))
     SetComDir(COMD_Down);
   // Rechts
-  if (strControl S= "ControlRight")
+  if (!!SEqual(strControl, "ControlRight"))
   {
     // Richtung wechseln
-    if (GetDir() == DIR_Right) {
+    if (Equal(GetDir(), DIR_Right)) {
       SetDir(DIR_Left);
       SetComDir(COMD_Stop);
       if (!AdjustLadderOffset(GetActionTarget())) //können wir überhaupt?
-        SetDir(DIR_Right());
+        SetDir(DIR_Right);
     }
     // Abspringen
     else {
-      if(GetComDir() == COMD_Up) ReleaseLadderUp();
-      else if(GetComDir() == COMD_Stop) ReleaseLadderStop();
+      if(Equal(GetComDir(), COMD_Up)) ReleaseLadderUp();
+      else if(Equal(GetComDir(), COMD_Stop)) ReleaseLadderStop();
       else ReleaseLadderDown();
     }
   }
   // Links
-  if (strControl S= "ControlLeft")
+  if (!!SEqual(strControl, "ControlLeft"))
   {
     // Richtung wechseln
-    if (GetDir() == DIR_Left) {
+    if (Equal(GetDir(), DIR_Left)) {
       SetDir(DIR_Right);
       SetComDir(COMD_Stop);
       if (!AdjustLadderOffset(GetActionTarget()))
@@ -327,17 +329,17 @@ private func ControlLadder(string strControl, par1) // par1 is comdir for Contro
     }
     // Loslassen
     else {
-      if(GetComDir() == COMD_Up) ReleaseLadderUp();
-      else if(GetComDir() == COMD_Stop) ReleaseLadderStop();
+      if(Equal(GetComDir(), COMD_Up)) ReleaseLadderUp();
+      else if(Equal(GetComDir(), COMD_Stop)) ReleaseLadderStop();
       else ReleaseLadderDown();
     }
   }
   
   // Werfen
-  if (strControl S= "ControlThrow") LadderThrow();
+  if (!!SEqual(strControl, "ControlThrow")) LadderThrow();
   
   //Graben
-  if (strControl S= "ControlDig") LadderDig();
+  if (!!SEqual(strControl, "ControlDig")) LadderDig();
   
   return(1);  
 }  
@@ -347,22 +349,22 @@ private func AdjustLadderOffset(object pLadder)
 {
   //keine Leiter übergeben? An wtf soll dann adjustiert werden..?
   if(!pLadder)
-    return(0);
+    return(nil);
   // Abstand nach Kletterrichtung
   var iLastX = GetX();
   var iChangeX;
-  if(!(iChangeX = pLadder->~LocalN("SizeX",pLadder)/2))
-    iChangeX = GetDefCoreVal("Width",0,GetID(pLadder))/4;
+  if(!(iChangeX = (pLadder->~LocalN("SizeX",pLadder) ?? 0)/2))
+    iChangeX = (GetDefCoreVal("Width",nil,GetID(pLadder)) ?? 0)/4;
     
-  if(GetDir() == DIR_Left())
-    SetPosition(GetX(pLadder) + iChangeX, GetY());
+  if(Equal(GetDir(), DIR_Left))
+    SetPosition((GetX(pLadder) ?? 0) + (iChangeX ?? 0), GetY());
   else
-    SetPosition(GetX(pLadder) - iChangeX, GetY());  
+    SetPosition((GetX(pLadder) ?? 0) - (iChangeX ?? 0), GetY());
   // Nicht in festes Material klettern
   if(Stuck()) 
   {
     SetPosition(iLastX, GetY());
-    return(0);
+    return(nil);
   }   
   // Ausrichtung erfolgreich
   return(1);
@@ -372,31 +374,34 @@ private func AdjustLadderOffset(object pLadder)
 //protected func FxLadderReleasedTimer() { Log("blub"); return(-1); }
 
 protected func FxScalingLadderStart(object pTarget, int iEffectNumber, int iTemp) {
+  iEffectNumber ??= 0;
+  iTemp ??= 0;
   if(iTemp)
-    return();
+    return;
   ClimbLadder(true);
-  EffectVar(0, pTarget, iEffectNumber) = GetY()*100;
+  EffectVar(nil, pTarget, iEffectNumber) = (GetY() ?? 0)*100;
 }
 
 //Oke, das hier ist wohl großteils aus dem Urwaldclonk *hidez*
 protected func FxScalingLadderTimer(object pTarget, int iEffectNumber)
 {
+  iEffectNumber ??= 0;
   var pLadder;
   // Clonk hat aus irgendeinem Grund seine Kletteraktion verloren
-  if (!(GetAction() S= "ScaleLadder"))
+  if (!(!!SEqual(GetAction(), "ScaleLadder")))
     // Klettern beenden
-    return(ReleaseLadder(0));
+    return(ReleaseLadder(nil));
 
   // Keine Leiter mehr: klettern beenden
   if (!(pLadder = FindLadder()))
   {
     // Oberes Ende: versuchen, die Wand zu erreichen
-    if (GetComDir() == COMD_Up()) {
-      return(ReleaseLadder(-15 + GetDir() * 30,-20));
+    if (Equal(GetComDir(), COMD_Up)) {
+      return(ReleaseLadder(-15 + (GetDir() ?? 0) * 30,-20));
     }
     // Unteres Ende: einfach fallen lassen
     else
-      return(ReleaseLadder(0));
+      return(ReleaseLadder(nil));
   }
 
   // Ggf. neues Objekt zum dran klettern speichern
@@ -407,48 +412,49 @@ protected func FxScalingLadderTimer(object pTarget, int iEffectNumber)
   // Klettergeschwindigkeit 
   //var iSpeed = BoundBy(GetPhysical("Scale") / 5000, 0, 3), iStep = 0;
   //var iStep = Max(1,(GetPhysical("Scale")/100*4*HZCK_LADDERSPEED)/200000);
-  var iStep = Max(1,(GetPhysical("Scale")*4*GetLadderSpeed())/20000);
+  var iStep = Max(1,((GetPhysical("Scale") ?? 0)*4*(GetLadderSpeed() ?? 0))/20000);
   
   // Kletterbewegung
-  var iPosY = EffectVar(0, pTarget, iEffectNumber);
+  var iPosY = EffectVar(nil, pTarget, iEffectNumber);
   var iLastY = GetY();
   var iPhase = GetPhase();
-  if (GetComDir() == COMD_Up()) { iPosY -= iStep; iPhase += iStep*14/1000; }
-  if (GetComDir() == COMD_Down()) { iPosY += iStep; iPhase -= iStep*14/1000; }
+  if (Equal(GetComDir(), COMD_Up)) { S42MigrationAssign(iPosY, "-=", (iStep ?? 0)); S42MigrationAssign(iPhase, "+=", (iStep ?? 0)*14/1000); }
+  if (Equal(GetComDir(), COMD_Down)) { S42MigrationAssign(iPosY, "+=", (iStep ?? 0)); S42MigrationAssign(iPhase, "-=", (iStep ?? 0)*14/1000); }
   
   // stecken wir fest?
   if (Stuck())
   {
     // Nicht in festes Material klettern
-		if(GetComDir() == COMD_Up)
+		if(Equal(GetComDir(), COMD_Up))
 		{
-			ReleaseLadder(0,-2);
+			ReleaseLadder(nil,-2);
 			SetAction("Hangle");
 		}
-		if(GetComDir() == COMD_Down)
+		if(Equal(GetComDir(), COMD_Down))
 		{
-			ReleaseLadder(0,2);
+			ReleaseLadder(nil,2);
 			SetAction("Walk");
 		}
 		else
 		{
 	  	SetPosition(GetX(), iLastY);
-	  	SetComDir(COMD_Stop());
+                SetComDir(COMD_Stop);
 	  }
   	
-  	return();
+        return;
   }
   
-  if (iPhase < 0) iPhase = 15; if (iPhase > 15) iPhase = 0;
+  if ((iPhase ?? 0) < 0) iPhase = 15; if ((iPhase ?? 0) > 15) iPhase = nil;
   SetPhase(iPhase);
-  SetPosition(GetX(), iPosY/100);
-  SetXDir(0); SetYDir(0);
+  SetPosition(GetX(), (iPosY ?? 0)/100);
+  SetXDir(nil); SetYDir(nil);
 
-  EffectVar(0, pTarget, iEffectNumber) = iPosY;
+  EffectVar(nil, pTarget, iEffectNumber) = iPosY;
 }
 
 public func JumpStart(bool bBackflip)
 {
+  bBackflip ??= false;
   _inherited(bBackflip);
 
   // Spezielle Funktionen während des Sprungs (An Kletterzeugs festhalten)
@@ -456,7 +462,7 @@ public func JumpStart(bool bBackflip)
 }
 
 private func IsJumping() {
-  if(GetAction() S= "Dive")
+  if(!!SEqual(GetAction(), "Dive"))
     return(true);
   return(WildcardMatch(GetAction(),"Jump*"));
 }
@@ -464,7 +470,7 @@ private func IsJumping() {
 protected func FxJumpingTimer()
 {
   // Springt er?
-  if (IsJumping() || WildcardMatch(GetAction(), "*Flip"))
+  if (Or(IsJumping(), WildcardMatch(GetAction(), "*Flip")))
   {
     // Schaun ob ein kletterbares Objekt da ist (Leiter z.b.)
     //var pVine; ...äh, falsch

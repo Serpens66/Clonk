@@ -1,6 +1,6 @@
 /*-- Palme --*/
 
-#strict
+#strict 3
 
 #include TRE1
 
@@ -11,11 +11,11 @@ private func TreeStrength() { return(100); }
 
 private func Breeze()
 {
-  if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
-  if (Abs(GetWind()) > 74 + MotionThreshold) SetAction("Storm");
+  if ((Abs(GetWind()) ?? 0) < 50 + (MotionThreshold ?? 0)) SetAction("Still");
+  if ((Abs(GetWind()) ?? 0) > 74 + (MotionThreshold ?? 0)) SetAction("Storm");
 }
     
 private func Storm()
 {
-  if (Abs(GetWind()) < 75 + MotionThreshold) SetAction("Breeze");
+  if ((Abs(GetWind()) ?? 0) < 75 + (MotionThreshold ?? 0)) SetAction("Breeze");
 }

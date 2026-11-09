@@ -1,6 +1,6 @@
 /*-- Realistischere Treffergeschwindigkeit --*/
 
-#strict 2
+#strict 3
 
 
 func Initialize(a,b,c,d,e,f,g,h,i,j)

@@ -1,19 +1,19 @@
 /*-- Drachenhorst --*/
 
-#strict
+#strict 3
 
 func IsBulletTarget() { return(1); }
 
 func ProduceEgg()
 {
- CreateObject(SEGG,-15,0);
+ CreateObject(SEGG,-15,nil);
  Sound("Splat");
  return(1);
 }
 
 func Timer()
 {
- if (!Random(80) && GetAction() ne "Produce") SetAction("Produce");
+ if (And(!Random(80), !SEqual(GetAction(), "Produce"))) SetAction("Produce");
  return(1);
 }
 

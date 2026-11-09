@@ -1,6 +1,6 @@
 /*-- Rüstung --*/
 
-#strict
+#strict 3
 #include GEAR
 
 local pTarget;
@@ -14,13 +14,13 @@ public func IsEquipment()	{ return(true); }
 public func Activate(object pClonk)
 {
   [$CtrlActivateDesc$]
-  if(GetID(Contained()) != KULL) { return(0); }
+  if(!Equal(GetID(Contained()), KULL)) { return(nil); }
   // Can the clonk use this?
-  if (!(pClonk->~CanUse(GetID()))) return(0);
+  if (!(pClonk->~CanUse(GetID()))) return(nil);
   // Clonk doesn't already use gear of that type 
   if (pClonk->~HasGear(this()->GetGearType())) {
     PlayerMessage(GetOwner(pClonk),"$AlreadyWears$",pClonk,GetName(pClonk));
-    return(0);
+    return(nil);
   }
   // Buckle
   if(pClonk->~EquipGear(this()))
@@ -35,16 +35,16 @@ public func GearEffect(object pClonk)
   var iPortraitCount = 3; 
   var strGraphics = "Armor";
   SetGraphics(strGraphics,pClonk);
-  SetPortrait(Format("%s%d", strGraphics, 1 + Random(iPortraitCount)), pClonk, GetID(pClonk), 0, 0);
+  SetPortrait(Format("%s%d", strGraphics, 1 + (Random(iPortraitCount) ?? 0)), pClonk, GetID(pClonk), nil, nil);
   Sound("Connect");
 }
 
 public func GearEffectReset(object pClonk)
 {
-  pTarget = 0;
+  pTarget = nil;
   // reset graphics and portrait
   SetGraphics("",pClonk);
-  SetPortrait(GetPortrait(pClonk, 0, 1), pClonk, GetPortrait(pClonk, 1, 1), 0, 0);
+  SetPortrait(GetPortrait(pClonk, nil, 1), pClonk, GetPortrait(pClonk, 1, 1), nil, nil);
   Sound("Connect");
 }
 
@@ -54,10 +54,10 @@ public func GearGiveBreath()
 {
   if(pTarget)
   {
-   if(GetBreath(pTarget) < 70)
+   if((GetBreath(pTarget) ?? 0) < 70)
    {
     pTarget->DoBreath(29);
-    Sound("MakeBreath",0,pTarget);
+    Sound("MakeBreath",nil,pTarget);
     Schedule("pTarget->~Bubble(0,-12)",1,20);
    }
   }
@@ -68,23 +68,25 @@ public func GearGiveBreath()
 
 public func OnClonkDmg(int iDamage, int iType, object pClonk)
 {
-  if(!pClonk) return();
+  iDamage ??= 0;
+  iType ??= 0;
+  if(!pClonk) return;
   
-  if(iType == DMG_Melee)
+  if(Equal(iType, DMG_Melee))
     return(100);
     
-  if(iType == DMG_Projectile)
+  if(Equal(iType, DMG_Projectile))
     return(100);
     
-  if(iType == DMG_Fire)
+  if(Equal(iType, DMG_Fire))
     return(999);
 
-  if(iType == DMG_Explosion)
+  if(Equal(iType, DMG_Explosion))
     return(100);
 
-  if(iType == DMG_Energy)
+  if(Equal(iType, DMG_Energy))
     return(100);
 
-  if(iType == DMG_Bio)
+  if(Equal(iType, DMG_Bio))
     return(110);
 }

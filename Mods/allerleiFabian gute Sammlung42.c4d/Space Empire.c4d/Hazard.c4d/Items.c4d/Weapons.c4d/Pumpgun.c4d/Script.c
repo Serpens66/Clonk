@@ -1,6 +1,6 @@
 /*-- Pumpgun --*/
 
-#strict
+#strict 3
 
 #include WEPN
 
@@ -13,50 +13,54 @@ public func BarrelYOffset(){return(-1000);}
 
 public func FMData1(int data)
 {
-  if(data == FM_Name)      return("$Standard$");
-  if(data == FM_AmmoID)    return(SHTM);
-  if(data == FM_AmmoLoad)  return(6);
-  if(data == FM_AmmoUsage) return(1);
+  data ??= 0;
+  if(Equal(data, FM_Name))      return("$Standard$");
+  if(Equal(data, FM_AmmoID))    return(SHTM);
+  if(Equal(data, FM_AmmoLoad))  return(6);
+  if(Equal(data, FM_AmmoUsage)) return(1);
 
-  if(data == FM_Reload)    return(80);
-  if(data == FM_Recharge)  return(30);
+  if(Equal(data, FM_Reload))    return(80);
+  if(Equal(data, FM_Recharge))  return(30);
 
-  if(data == FM_Damage)    return(28);
+  if(Equal(data, FM_Damage))    return(28);
 
   return(Default(data));
 }
 
 public func BotData1(int data)
 {
-  if(data == BOT_Range)    return(200);
-  if(data == BOT_Power)    return(BOT_Power_2);
+  data ??= 0;
+  if(Equal(data, BOT_Range))    return(200);
+  if(Equal(data, BOT_Power))    return(BOT_Power_2);
 
   return(Default(data));
 }
 
 public func FMData2(int data)
 {
-  if(data == FM_Name)      return("$Cluster$");
-  if(data == FM_AmmoID)    return(GRAM);
-  if(data == FM_AmmoLoad)  return(4);
-  if(data == FM_AmmoUsage) return(2);
+  data ??= 0;
+  if(Equal(data, FM_Name))      return("$Cluster$");
+  if(Equal(data, FM_AmmoID))    return(GRAM);
+  if(Equal(data, FM_AmmoLoad))  return(4);
+  if(Equal(data, FM_AmmoUsage)) return(2);
 
-  if(data == FM_Reload)    return(70);
-  if(data == FM_Recharge)  return(70);
+  if(Equal(data, FM_Reload))    return(70);
+  if(Equal(data, FM_Recharge))  return(70);
 
-  if(data == FM_Condition) return(GetUpgrade(KRFL));
+  if(Equal(data, FM_Condition)) return(GetUpgrade(KRFL));
 
-  if(data == FM_Damage)    return(14);
+  if(Equal(data, FM_Damage))    return(14);
 
   return(Default(data));
 }
 
 public func BotData2(int data)
 {
-  if(data == BOT_Range)    return(100);
-  if(data == BOT_DmgType)  return(DMG_Explosion);
-  if(data == BOT_Ballistic)  return(true);
-  if(data == BOT_Power)    return(BOT_Power_3);
+  data ??= 0;
+  if(Equal(data, BOT_Range))    return(100);
+  if(Equal(data, BOT_DmgType))  return(DMG_Explosion);
+  if(Equal(data, BOT_Ballistic))  return(true);
+  if(Equal(data, BOT_Power))    return(BOT_Power_3);
 
   return(Default(data));
 }
@@ -68,15 +72,15 @@ public func Fire1()    // Projektilschuss
   var angle = user->AimAngle(20);
   var ammo;
 
-  var dir = GetDir(user)*2-1;
+  var dir = (GetDir(user) ?? 0)*2-1;
   
-  for(var i=0; i<15; i++)
+  for(var i=nil; (i ?? 0)<15; S42MigrationStep(i, 1, true))
   {
     ammo = CreateObject(SHT1, x, y, GetController(user));
-    ammo -> Launch(angle+RandomX(-7, 7), 250+Random(100), 80+Random(200), 3, 400, GetFMData(FM_Damage, 1), 1);
+    ammo -> Launch((angle ?? 0)+(RandomX(-7, 7) ?? 0), 250+(Random(100) ?? 0), 80+(Random(200) ?? 0), 3, 400, GetFMData(FM_Damage, 1), 1);
 
-	if(!(i%3))
-		BulletCasing(dir*6, 3, -dir*(Random(15)+5), -Random(15)-15, 5);
+	if(!((i ?? 0)%3))
+		BulletCasing((dir ?? 0)*6, 3, -(dir ?? 0)*((Random(15) ?? 0)+5), -(Random(15) ?? 0)-15, 5);
   }
 
   MuzzleFlash(RandomX(40,60), user,x,y,angle);
@@ -90,19 +94,19 @@ public func Fire2()    // Clusterschuss
   var user = GetUser();
   var x,y; user->WeaponEnd(x,y);
   var angle = user->AimAngle(20);
-  var dir = GetDir(user)*2-1;
+  var dir = (GetDir(user) ?? 0)*2-1;
   var ammo, xdir, ydir;
 
   // Effekte
-  for(var i=0; i<6; i++)
+  for(var i=nil; (i ?? 0)<6; S42MigrationStep(i, 1, true))
   {
     ammo = CreateObject(CGFR, x, y, GetController(user));
     ammo->SetExplodeSize(GetFMData(FM_Damage, 2));
-    var rangle = angle+RandomX(-7,7);
+    var rangle = (angle ?? 0)+(RandomX(-7,7) ?? 0);
     xdir = Sin(rangle, RandomX(100, 140));
-    ydir = -Cos(rangle, RandomX(100, 140));
+    ydir = -(Cos(rangle, RandomX(100, 140)) ?? 0);
     SetSpeed(xdir, ydir, ammo);
-    BulletCasing(dir*6, 3, -dir*(Random(15)+5), -Random(15)-15, 5);
+    BulletCasing((dir ?? 0)*6, 3, -(dir ?? 0)*((Random(15) ?? 0)+5), -(Random(15) ?? 0)-15, 5);
   }
 
   MuzzleFlash(RandomX(40,60), user,x,y,angle);
@@ -115,9 +119,9 @@ public func Fire2()    // Clusterschuss
 
 public func IsUpgradeable(id uid) {
   if(GetUpgrade(uid))
-    return(false);
+    return(nil);
   
-  if(uid == KRFL) return("$KRFLUpgradeDesc$");
+  if(Equal(uid, KRFL)) return("$KRFLUpgradeDesc$");
 }
 
 public func OnUpgrade(id uid) {
@@ -132,7 +136,7 @@ public func OnUpgrade(id uid) {
 
 public func OnDowngrade(id uid) {
     SetUpgradeGraphic();
-  if(uid == KRFL) {
+  if(Equal(uid, KRFL)) {
     SetFireMode(1);
     return(true);
   }

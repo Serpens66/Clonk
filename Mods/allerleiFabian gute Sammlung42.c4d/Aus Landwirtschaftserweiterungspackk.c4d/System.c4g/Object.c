@@ -1,6 +1,6 @@
 /* --- Böse Objektfunktionen --- */
 
-#strict 2
+#strict 3
 
 //Klont ein Objekt 
 global func ObjectClone(object pObject, array anLocal, array anLocalN)
@@ -8,10 +8,10 @@ global func ObjectClone(object pObject, array anLocal, array anLocalN)
 	if (!pObject)
 		pObject = this;
 	if (!pObject)
-		return 0;
-	var pClone = CreateObject(GetID(pObject), 0, 0, GetOwner(pObject));
+		return nil;
+	var pClone = CreateObject(GetID(pObject), nil, nil, GetOwner(pObject));
 	if (!pClone)
-		return 0;
+		return nil;
 	ObjectDataTransfer(pObject, pClone, anLocal, anLocalN);
 	SetClrModulation(GetClrModulation(pObject), pClone);
 	if (pObject->Contained())
@@ -25,9 +25,9 @@ global func ObjectClone(object pObject, array anLocal, array anLocalN)
 global func ObjectDataTransfer(object pObject, object pTarget, array anLocal, array anLocalN)
 {
 	if (!pObject)
-		return 0;
+		return nil;
 	if (!pTarget)
-		return 0;
+		return nil;
 	if (anLocal)
 		for (var dInt in anLocal) 
 			Local(dInt, pTarget) = Local(dInt, pObject);

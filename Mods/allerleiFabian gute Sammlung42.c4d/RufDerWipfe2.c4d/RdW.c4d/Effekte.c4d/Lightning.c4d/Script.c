@@ -1,6 +1,6 @@
 /*-- Blitz --*/
 
-#strict
+#strict 3
 
 static lgt_enlightment; // Globale Erhellung durch Blitze
 static lgt_last_lgt_frame; // Letztes Frame, in dem die Helligkeit angepasst wurde
@@ -37,53 +37,53 @@ public func Activate(iStartX, iStartY, iAdvanceX, iRandomX, iAdvanceY, iRandomY,
 private func Advance()
 {
   // Einschlag
-  var iVtx = GetVertexNum()-1, iVtxX = GetVertex(iVtx, 0), iVtxY = GetVertex(iVtx, 1);
-  if (GBackSolid(iVtxX-GetX(), iVtxY-GetY() ))
+  var iVtx = (GetVertexNum() ?? 0)-1, iVtxX = GetVertex(iVtx, nil), iVtxY = GetVertex(iVtx, 1);
+  if (GBackSolid((iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0) ))
     return(Remove());
 
   // Im Wasser?
-  if (GBackLiquid(iVtxX-GetX(), iVtxY-GetY() ))
+  if (GBackLiquid((iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0) ))
   {
 	  var obj;
 	  // Alle Lebewesen in der Nähe bekommen was ab
-	  while (obj = FindObject( 0, iVtxX-GetX()-400, iVtxY-GetY()-400, 800, 800, OCF_Alive(), 0,0, NoContainer(),obj  ) )
+	  while (obj = FindObject( nil, (iVtxX ?? 0)-(GetX() ?? 0)-400, (iVtxY ?? 0)-(GetY() ?? 0)-400, 800, 800, OCF_Alive, nil,nil, NoContainer(),obj  ) )
     	  {
       	    if(!PathFree(iVtxX, iVtxY, GetX(obj), GetY(obj))) continue;
-	    if(!GBackLiquid(GetX(obj)-GetX(), GetY(obj)-GetY())) continue;
+	    if(!GBackLiquid((GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0))) continue;
   	    obj->~LightningStrike();
   	    Punch(obj, 12);
-            DrawParticleLine ("LightningSpark", iVtxX-GetX(), iVtxY-GetY(), 
-		    GetX(obj)-GetX(), GetY(obj)-GetY(), 6, 60, RGB(0,100,255));
-            DrawParticleLine ("LightningSpark", iVtxX-GetX(), iVtxY-GetY(), 
-		    GetX(obj)-GetX(), GetY(obj)-GetY(),  3, 25, RGB(250,250,255));
+            DrawParticleLine ("LightningSpark", (iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0),
+		    (GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0), 6, 60, RGB(nil,100,255));
+            DrawParticleLine ("LightningSpark", (iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0),
+		    (GetX(obj) ?? 0)-(GetX() ?? 0), (GetY(obj) ?? 0)-(GetY() ?? 0),  3, 25, RGB(250,250,255));
           }
 	  return(Remove());
   }
 
   // Objektschaden
-  if (iVtx>5) BlastObjects(iVtxX, iVtxY, 5);
+  if ((iVtx ?? 0)>5) BlastObjects(iVtxX, iVtxY, 5);
 
   // Verzweigung
   if (!Random(35))
     LaunchLightning(iVtxX, iVtxY, iAdvX, iVarX, iAdvY, iVarY);
 
   // Neuen Eckpunkt
-  if (!AddVertex( iVtxX+iAdvX+Random(iVarX), iVtxY+iAdvY+Random(iVarY)))
+  if (!AddVertex( (iVtxX ?? 0)+(iAdvX ?? 0)+(Random(iVarX) ?? 0), (iVtxY ?? 0)+(iAdvY ?? 0)+(Random(iVarY) ?? 0)))
     return(Remove());
 
   // Objektanziehung
-  iVtx = GetVertexNum()-1; iVtxX = GetVertex(iVtx, 0); iVtxY = GetVertex(iVtx, 1);
+  iVtx = (GetVertexNum() ?? 0)-1; iVtxX = GetVertex(iVtx, nil); iVtxY = GetVertex(iVtx, 1);
   var obj;
-  if (iVtx>7)
-    if (obj = FindObject( 0, iVtxX-GetX()-50, iVtxY-GetY()-50, 100, 100, OCF_AttractLightning(), 0,0, NoContainer()  ) )
+  if ((iVtx ?? 0)>7)
+    if (obj = FindObject( nil, (iVtxX ?? 0)-(GetX() ?? 0)-50, (iVtxY ?? 0)-(GetY() ?? 0)-50, 100, 100, OCF_AttractLightning, nil,nil, NoContainer()  ) )
       Attraction(obj);
 
   //
-  if(IsAntiLag() || FindObject2(Find_ID(ANL_)) || FindObject2(Find_ID(KOHE)))
+  if(Or(Or(IsAntiLag(), FindObject2(Find_ID(ANL_))), FindObject2(Find_ID(KOHE))))
     LightningEffect(4);
   else
     if(!Random(4))
-      CreateParticle("LightningSpark2",iVtxX-GetX(),iVtxY-GetY(),0,0,RandomX(2000,BoundBy(7200-GetActTime()/3,6000)),RGBa(50,50,50));
+      CreateParticle("LightningSpark2",(iVtxX ?? 0)-(GetX() ?? 0),(iVtxY ?? 0)-(GetY() ?? 0),nil,nil,RandomX(2000,BoundBy(7200-(GetActTime() ?? 0)/3,6000)),RGBa(50,50,50));
 
   // Weiter	
   return(ExecLgt());
@@ -93,15 +93,15 @@ private func Advance()
 
 private func Sparkle()
 {
-  var iVtx = GetVertexNum()-1, iVtxX = GetVertex(iVtx, 0), iVtxY = GetVertex(iVtx, 1);
-  CastObjects(SPRK,1,20,iVtxX-GetX(), iVtxY-GetY());
+  var iVtx = (GetVertexNum() ?? 0)-1, iVtxX = GetVertex(iVtx, nil), iVtxY = GetVertex(iVtx, 1);
+  CastObjects(SPRK,1,20,(iVtxX ?? 0)-(GetX() ?? 0), (iVtxY ?? 0)-(GetY() ?? 0));
   ExecLgt();
   return(1);
 }
 
 private func LightningEffect(strength)
 {
-  lgt_enlightment+=Random(strength)+strength/2;
+  S42MigrationAssign(lgt_enlightment, "+=", (Random(strength) ?? 0)+(strength ?? 0)/2);
   return(1);
 }
 
@@ -109,11 +109,11 @@ private func ExecLgt()
 {
   if (!fDoGamma) return(1);
   // Lichteffekt ausführen (Rampe 5)
-  if (lgt_enlightment>0 && lgt_last_lgt_frame != FrameCounter())
+  if (And((lgt_enlightment ?? 0)>0, !Equal(lgt_last_lgt_frame, FrameCounter())))
     {
-    var lgt=Min(lgt_enlightment*3, 255);
-    SetGamma(RGB(lgt, lgt, lgt), RGB(128+lgt/2, 128+lgt/2, 128+lgt/2), 16777215, 5);
-    lgt_enlightment=Max(lgt_enlightment*4/8-1); lgt_last_lgt_frame=FrameCounter();
+    var lgt=Min((lgt_enlightment ?? 0)*3, 255);
+    SetGamma(RGB(lgt, lgt, lgt), RGB(128+(lgt ?? 0)/2, 128+(lgt ?? 0)/2, 128+(lgt ?? 0)/2), 16777215, 5);
+    lgt_enlightment=Max((lgt_enlightment ?? 0)*4/8-1); lgt_last_lgt_frame=FrameCounter();
     }
 }
 
@@ -123,8 +123,8 @@ private func ExecLgt()
 private func Attraction(obj)
 {
   // Einschlag in Objekt
-  AddVertex( GetVertex(0,0,obj)+GetX(obj),
-             GetVertex(0,1,obj)+GetY(obj) );
+  AddVertex( (GetVertex(nil,nil,obj) ?? 0)+(GetX(obj) ?? 0),
+             (GetVertex(nil,1,obj) ?? 0)+(GetY(obj) ?? 0) );
   obj->~LightningStrike();
   SetAction("Connect");
   // Leuchteffekt
@@ -135,6 +135,6 @@ private func Attraction(obj)
 
 private func Remove()
 {
-  if (ObjectCount(FXL1)<=1) ResetGamma(5);
+  if ((ObjectCount(FXL1) ?? 0)<=1) ResetGamma(5);
   RemoveObject();
 }

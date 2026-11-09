@@ -1,22 +1,22 @@
 /*-- Löschobjekt --*/
 
-#strict
+#strict 3
 
 local objekt, Nummer, Temp;
 
 func Check()
 {
-  if(GetAction()ne"Idle") return(0);
-  while(Var()=FindObject(0,0,0,0,0,OCF_OnFire(),0,0,0,Var()))
-    if(!FindObject(GetID(),0,0,0,0,0,"IsOnFire",Var()) && GetAlive(Var(0)))
-     ObjectSetAction(CreateObject(GetID(),0,0,-1),"IsOnFire",Var());
+  if(!SEqual(GetAction(), "Idle")) return(nil);
+  while(Var()=FindObject(nil,nil,nil,nil,nil,OCF_OnFire,nil,nil,nil,Var()))
+    if(And(!FindObject(GetID(),nil,nil,nil,nil,nil,"IsOnFire",Var()), GetAlive(Var(nil))))
+     ObjectSetAction(CreateObject(GetID(),nil,nil,-1),"IsOnFire",Var());
   return(1);
 }
 
 func DoExtinguish()
 {
   if(!GetAlive(GetActionTarget())) return(RemoveObject());
-  if(GetActTime()>180 && !Random(4)) {
+  if(And((GetActTime() ?? 0)>180, !Random(4))) {
     Extinguish(GetActionTarget());
    // feuerleuchteffekt sollte durch das stoppen des feuers von alleine weggehen.
     return(RemoveObject());

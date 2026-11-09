@@ -1,6 +1,6 @@
-#strict
+#strict 3
 
-Hit:
+func Hit(...) {
   Explode(2);
   if(InLiquid()) return(Sound("Splash*"));
   Sound("Earthquake");
@@ -11,3 +11,4 @@ Hit:
   ShakeFree(GetX(this()),Sum(GetY(this()),120),23);
   ShakeFree(GetX(this()),Sum(GetY(this()),150),24);
   return(1);
+}

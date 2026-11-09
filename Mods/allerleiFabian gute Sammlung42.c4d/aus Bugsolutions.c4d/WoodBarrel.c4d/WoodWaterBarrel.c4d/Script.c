@@ -1,6 +1,6 @@
 /*-- Holzwasserfass --*/
 
-#strict
+#strict 3
 #include WDBR
 
 // Fassdaten
@@ -10,7 +10,7 @@ public func BarrelMaterialName() { return("Water"); }
 // Fassermittlungskette
 global func GetWoodBarrelType(iMaterial)
 {
-  if (iMaterial == Material("Water")) return(WDWB);
+  if (Equal(iMaterial, Material("Water"))) return(WDWB);
   return(_inherited(iMaterial));
 }
 
@@ -21,8 +21,8 @@ public func BarrelEject()
   // Inhaltsmenge ermitteln
   var wamnt = iFillLevel, obj, fExt;
   // Objekte im Umkreis löschen
-  while (obj = FindObject(0, -20, -15, 40, 30, OCF_OnFire(), 0,0, NoContainer(), obj))
-    if (Random(wamnt*3) > GetMass(obj))
+  while (obj = FindObject(nil, -20, -15, 40, 30, OCF_OnFire, nil,nil, NoContainer(), obj))
+    if ((Random((wamnt ?? 0)*3) ?? 0) > (GetMass(obj) ?? 0))
     {
       fExt=1; Extinguish(obj);
     }
@@ -45,7 +45,8 @@ protected func Incineration()
 /* Schaden */
 protected func Damage(int iChange)
 {
-  if(iChange > 10)      // Kaputt
+  iChange ??= 0;
+  if((iChange ?? 0) > 10)      // Kaputt
   {
     BarrelEject();      // Leer
     Incinerate(this()); // Feuer

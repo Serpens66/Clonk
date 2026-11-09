@@ -1,24 +1,26 @@
-#strict
+#strict 3
 
 local fRemove, iSpeed, pShot, w, l, r, x, y;
 
 public func Set(int iWidth, int iLength, object pSht)
 {
+  iWidth ??= 0;
+  iLength ??= 0;
   pShot = pSht;  
 
-  w = 1000*iWidth/20;
-  l = 1000*iLength/100;
+  w = 1000*(iWidth ?? 0)/20;
+  l = 1000*(iLength ?? 0)/100;
 
   var iXDir = GetXDir(pShot,100);
   var iYDir = GetYDir(pShot,100);
 
-  iSpeed = Sqrt(iXDir*iXDir/100+iYDir*iYDir/100);
+  iSpeed = Sqrt((iXDir ?? 0)*(iXDir ?? 0)/100+(iYDir ?? 0)*(iYDir ?? 0)/100);
 
   SetAction("Travel");
-  SetXDir(iXDir,0,100);
-  SetYDir(iYDir,0,100);
+  SetXDir(iXDir,nil,100);
+  SetYDir(iYDir,nil,100);
 
-  r = Angle(0,0,iXDir,iYDir);
+  r = Angle(nil,nil,iXDir,iYDir);
   x = GetX();
   y = GetY();
 
@@ -42,37 +44,37 @@ private func Traveling()
     if(pShot->~TrailColor())
       SetClrModulation(pShot->~TrailColor(GetActTime()));
 
-  if(l == 0) return(RemoveObject());
+  if(Equal(l, nil)) return(RemoveObject());
 }
 
 public func Remove() {
   SetXDir();
   SetYDir();
-  l = Min(l,10*Distance(x,y,GetX(),GetY()));
+  l = Min(l,10*(Distance(x,y,GetX(),GetY()) ?? 0));
   fRemove = true;
 }
 
 public func DrawTransform() {
 
   // skip because nothing has to be transformed
-  if(!fRemove && l < 10*Distance(x,y,GetX(),GetY())) return(0);
+  if(And(!fRemove, (l ?? 0) < 10*(Distance(x,y,GetX(),GetY()) ?? 0))) return(nil);
 
   // stretch >-<
-  if(fRemove) l = Max(0,l-iSpeed); 
+  if(fRemove) l = Max(nil,(l ?? 0)-(iSpeed ?? 0));
 
   // stretch <->
-  var h = Min(l,10*Distance(x,y,GetX(),GetY()));
+  var h = Min(l,10*(Distance(x,y,GetX(),GetY()) ?? 0));
 
-  var fsin = -Sin(r, 1000), fcos = Cos(r, 1000);
+  var fsin = -(Sin(r, 1000) ?? 0), fcos = Cos(r, 1000);
 
-  var xoff = -(GetActMapVal("Facet",GetAction(),0,2)*w/1000)/2-1;
-  var yoff = 0;
+  var xoff = -((GetActMapVal("Facet",GetAction(),nil,2) ?? 0)*(w ?? 0)/1000)/2-1;
+  var yoff = nil;
 
-  var width = +fcos*w/1000, height = +fcos*h/1000;
-  var xskew = +fsin*h/1000, yskew = -fsin*w/1000;
+  var width = (+(fcos ?? 0) ?? 0)*(w ?? 0)/1000, height = (+(fcos ?? 0) ?? 0)*(h ?? 0)/1000;
+  var xskew = (+(fsin ?? 0) ?? 0)*(h ?? 0)/1000, yskew = -(fsin ?? 0)*(w ?? 0)/1000;
 
-  var xadjust = +fcos*xoff + fsin*yoff;
-  var yadjust = -fsin*xoff + fcos*yoff;
+  var xadjust = (+(fcos ?? 0) ?? 0)*(xoff ?? 0) + (fsin ?? 0)*(yoff ?? 0);
+  var yadjust = -(fsin ?? 0)*(xoff ?? 0) + (fcos ?? 0)*(yoff ?? 0);
 
   // set matrix values
   SetObjDrawTransform (

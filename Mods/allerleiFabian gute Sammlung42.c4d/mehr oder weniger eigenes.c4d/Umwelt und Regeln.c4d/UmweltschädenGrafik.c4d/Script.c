@@ -1,6 +1,6 @@
 /*-- Umweltschäden Grafik --*/
 
-#strict
+#strict 3
 
 
 func Initialize()

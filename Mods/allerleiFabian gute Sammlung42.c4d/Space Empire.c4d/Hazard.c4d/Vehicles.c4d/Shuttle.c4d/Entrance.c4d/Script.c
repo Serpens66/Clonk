@@ -1,9 +1,10 @@
-#strict
+#strict 3
 
 local target;
 
 public func AttachTo(object pObj, int index)
 {
+	index ??= 0;
 	target = pObj;
 	SetAction("Attached", target);
 	SetActionData(index);
@@ -15,13 +16,13 @@ protected func AttachTargetLost() {
 // && !(target->Contents()) // das hat dafür gesorgt, dass man nicht mehr einsteigen konnte, nachdem man nachgeladen hatte
 protected func ActivateEntrance(pObj)
 {
-	if (pObj->GetOCF() & OCF_CrewMember) {
-		if (target->GetAction() eq "Landed") {
+	if ((pObj->GetOCF() ?? 0) & (OCF_CrewMember ?? 0)) {
+		if (!!SEqual(target->GetAction(), "Landed")) {
 			target->SetAction("DoorOpening");
-		} else if (target->GetAction() eq "DoorOpen") {
+		} else if (!!SEqual(target->GetAction(), "DoorOpen")) {
 			Enter(target, pObj);
 			FinishCommand(pObj, true);
 		}
 	}
-	else { FinishCommand(pObj, false); }
+	else { FinishCommand(pObj, nil); }
 }

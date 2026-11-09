@@ -1,6 +1,6 @@
 /*-- Kleiner Turm --*/
 
-#strict
+#strict 3
 
 #include DOOR
 
@@ -21,7 +21,7 @@ private func SoundDoorClose()
 
 protected func CheckContents()
 {
-  while (Contents()) Exit(Contents(), 0,-10,0, 0);  
+  while (Contents()) Exit(Contents(), nil,-10,nil, nil);
 }
 
 /* Initialisierung */
@@ -41,25 +41,29 @@ protected func UpdateTransferZone()
 protected func ControlTransfer(object pObj, int tx, int ty)
 {
   // Aufstieg zur Plattform
-  if(Inside(tx - GetX(), -20, 20) && Inside(ty - GetY(), -38, -12) )
-    if(GetY(pObj) > GetY() - 12)
+  tx ??= 0;
+  ty ??= 0;
+  if(And(Inside((tx ?? 0) - (GetX() ?? 0), -20, 20), Inside((ty ?? 0) - (GetY() ?? 0), -38, -12)) )
+    if((GetY(pObj) ?? 0) > (GetY() ?? 0) - 12)
       return(HandleTransferAscend(pObj, tx, ty) );
 
   // Abstieg von der Plattform
-  if(Inside(GetX(pObj) - GetX(), -20, 20) && Inside(GetY(pObj) - GetY(), -38, -12) )
-    if(Inside(tx - GetX(), -20, 20) && Inside(ty - GetY(), -12, 20) )
+  if(And(Inside((GetX(pObj) ?? 0) - (GetX() ?? 0), -20, 20), Inside((GetY(pObj) ?? 0) - (GetY() ?? 0), -38, -12)) )
+    if(And(Inside((tx ?? 0) - (GetX() ?? 0), -20, 20), Inside((ty ?? 0) - (GetY() ?? 0), -12, 20)) )
       return(HandleTransferDescend(pObj, tx, ty) );
 
   // Transfer nicht möglich
-  return(0);
+  return(nil);
 }
 
 private func HandleTransferAscend(object pObj, int tx, int ty)
 {
-  if(Inside(GetX(pObj) - GetX(), -20, 20) && Inside(GetY(pObj) - GetY(), -38, -12) )
-    return(0);
+  tx ??= 0;
+  ty ??= 0;
+  if(And(Inside((GetX(pObj) ?? 0) - (GetX() ?? 0), -20, 20), Inside((GetY(pObj) ?? 0) - (GetY() ?? 0), -38, -12)) )
+    return(nil);
     
-  if(Contained(pObj) == this() )
+  if(Equal(Contained(pObj), this()) )
     return(1);
 
   // Clonk soll den Turm betreten
@@ -68,7 +72,9 @@ private func HandleTransferAscend(object pObj, int tx, int ty)
   
 private func HandleTransferDescend(object pObj, int tx, int ty)
 {
-  if(Contained(pObj) == this() )
+  tx ??= 0;
+  ty ??= 0;
+  if(Equal(Contained(pObj), this()) )
     return(1);
   Enter(this(), pObj);
 

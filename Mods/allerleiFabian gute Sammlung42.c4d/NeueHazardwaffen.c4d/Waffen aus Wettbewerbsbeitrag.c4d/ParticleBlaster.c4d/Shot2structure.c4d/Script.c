@@ -1,4 +1,4 @@
-#strict
+#strict 3
 #include SHST
 
 local glow;
@@ -10,9 +10,11 @@ local mlight;
 private func CreateTrail(int iSize, int iTrail) {
   //glow = AddLight(100,RGB(128,64,255),this(),GLOW);
   
-  pTrail = CreateObject(TRAI,0,0,GetOwner());
+  iSize ??= 0;
+  iTrail ??= 0;
+  pTrail = CreateObject(TRAI,nil,nil,GetOwner());
   if(pTrail) {
-    pTrail->Set(iSize+2,iTrail,this());
+    pTrail->Set((iSize ?? 0)+2,iTrail,this());
     pTrail->SetAction("Travel2");
     SetObjectBlitMode(GetObjectBlitMode(),pTrail);
   }
@@ -23,10 +25,10 @@ private func Traveling()
   // effect
   if(glow)
     glow->ChangeColor(Color(GetActTime()));
-  CreateParticle("PSpark",0,0,-GetXDir()/4,-GetYDir()/4,RandomX(100,200),
-                 RGBa(64,32,255,100+50*GetActTime()/iTime),this());
-    if(!Random(5)) LaserLight(RandomX(30,50), Color(GetActTime()),0,0,10);
-    if(!Random(4)) LaserLight(RandomX(30,50), Color(GetActTime()),0,0,10);
+  CreateParticle("PSpark",nil,nil,-(GetXDir() ?? 0)/4,-(GetYDir() ?? 0)/4,RandomX(100,200),
+                 RGBa(64,32,255,100+50*(GetActTime() ?? 0)/(iTime ?? 0)),this());
+    if(!Random(5)) LaserLight(RandomX(30,50), Color(GetActTime()),nil,nil,10);
+    if(!Random(4)) LaserLight(RandomX(30,50), Color(GetActTime()),nil,nil,10);
   return(_inherited());
 }
 
@@ -34,11 +36,11 @@ private func Traveling()
 
 private func HitObject(object pObject) {
   if(BulletStrike(pObject)) {
-      BlastObjects(GetX(), GetY(), iDamage/2);
-      BlastObjects(GetX(), GetY(), iDamage/2);
+      BlastObjects(GetX(), GetY(), (iDamage ?? 0)/2);
+      BlastObjects(GetX(), GetY(), (iDamage ?? 0)/2);
     Remove();
   }
-  FakeExplode(iDamage,0,0,iDamage);
+  FakeExplode(iDamage,nil,nil,iDamage);
 }
 
 public func BulletStrike(object pObj) {
@@ -48,13 +50,16 @@ public func BulletStrike(object pObj) {
 }
 
 private func Color(int iATime) {
-  var iPrg = 100*iATime/iTime;
-  return(RGBa(127,127-iPrg,255,iPrg*2));
+  iATime ??= 0;
+  var iPrg = 100*(iATime ?? 0)/(iTime ?? 0);
+  return(RGBa(127,127-(iPrg ?? 0),255,(iPrg ?? 0)*2));
 }
 
 private func GlowColor(int iATime) {
-  var iPrg = 100*iATime/iTime;
-  return(RGBa(70,50,255-iPrg,50));
+  iATime ??= 0;
+  var iPrg = 100*(iATime ?? 0)/(iTime ?? 0);
+  return(RGBa(70,50,255-(iPrg ?? 0),50));
 }
 
-public func TrailColor(int iATime) { return(Color(iATime)); }
+public func TrailColor(int iATime) { iATime ??= 0;
+    return(Color(iATime)); }

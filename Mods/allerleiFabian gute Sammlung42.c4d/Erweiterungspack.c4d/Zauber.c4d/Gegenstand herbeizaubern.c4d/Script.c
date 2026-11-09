@@ -1,17 +1,17 @@
 /*-- Gegenstand herbeizaubern --*/
 
-#strict
+#strict 3
 
 public func Activate(pCaster,pRealcaster)
 {
   var Typ,idObject,i,pMagic;
   Sound("Magic1");
-  while(Typ=GetDefinition(i++,C4D_Object()))
+  while(Typ=GetDefinition(S42MigrationStep(i, 1, true),C4D_Object))
    if(GetDefCoreVal("Collectible","DefCore",Typ))
     if(!Random(i)) idObject= Typ;
   if(!idObject) return(Message("$Nothing$",pCaster));
-  SetPosition(GetX(),GetY()+ 8,CreateObject(idObject,0,0,GetOwner()));
-  Message(GetName(0,idObject),pCaster);
+  SetPosition(GetX(),(GetY() ?? 0)+ 8,CreateObject(idObject,nil,nil,GetOwner()));
+  Message(GetName(nil,idObject),pCaster);
   RemoveObject();
   return(1);
 }

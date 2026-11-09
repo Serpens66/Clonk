@@ -1,6 +1,6 @@
 /*-- Zapnest --*/
 
-#strict
+#strict 3
 
 /* Aufschlag */
 
@@ -11,17 +11,19 @@ protected func Hit()
 
 public func BreakUp(int num, bool alchemy)
 {
+  num ??= 0;
+  alchemy ??= false;
   if (alchemy)
   {
-  var offsetx=(2*GetDir(Contained(this))-1)*15;
+  var offsetx=(2*(GetDir(Contained(this)) ?? 0)-1)*15;
   var offsety= 8;
   }
   var x,y;
   if(!num) num=28;
-  for (var i=0;i<num;++i)
+  for (var i=nil;(i ?? 0)<(num ?? 0);S42MigrationStep(i, 1))
   {
-    x=offsetx+Random(11)-5;
-    y=offsety+Random(11)-5;
+    x=(offsetx ?? 0)+(Random(11) ?? 0)-5;
+    y=(offsety ?? 0)+(Random(11) ?? 0)-5;
     if (!GBackSolid(x,y))
       CreateObject(ZAP1,x,y,-1);
   }

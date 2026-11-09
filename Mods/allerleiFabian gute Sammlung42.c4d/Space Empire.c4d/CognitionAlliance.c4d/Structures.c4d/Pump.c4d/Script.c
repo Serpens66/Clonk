@@ -1,17 +1,17 @@
 /*-- Pumpe --*/
 
-#strict
+#strict 3
 #include SPMP  // Die SpaceLaunch-Pumpe
 
 
 protected func Construction()
 {
-  basement = CreateObject(BS07,0,+8,GetOwner());
+  basement = CreateObject(BS07,nil,+8,GetOwner());
 }  
 
 protected func Initialize()
 {
-  manager=CreateObject(BMAN,0,0,GetOwner());
+  manager=CreateObject(BMAN,nil,nil,GetOwner());
   manager->Init(this(),1);
   manager->InitLight(1,1);
   // Pumpbetrieb gleich aufnehmen

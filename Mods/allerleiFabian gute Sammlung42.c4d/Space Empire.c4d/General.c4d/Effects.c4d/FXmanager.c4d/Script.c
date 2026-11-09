@@ -1,6 +1,6 @@
 /*-- FX Manager --*/
 
-#strict
+#strict 3
 
 static fx_bitmask;      //     1 = Effekt: Sternenhimmel
                         //     2 = Effekt: Hintergrund-Landschaften
@@ -23,13 +23,13 @@ protected func Initialize()
 protected func PostInit()
 {
   // Startwert vom ersten Spieler holen
-  fx_bitmask = GetPlrExtraData(GetPlayerByIndex(), "SE_fx_bitmask") & 1023;   // ab 1024 Cheats
+  fx_bitmask = (GetPlrExtraData(GetPlayerByIndex(), "SE_fx_bitmask") ?? 0) & 1023;   // ab 1024 Cheats
   // Present Bit nicht gesetzt, dann Defaults herstellen
-  if (!(fx_bitmask & 512))
+  if (!((fx_bitmask ?? 0) & 512))
     fx_bitmask = 519;
   // Effekte aufbauen
-  if (fx_bitmask & 1)  CreateStars();
-  if (fx_bitmask & 2)  CreateBGL();
+  if ((fx_bitmask ?? 0) & 1)  CreateStars();
+  if ((fx_bitmask ?? 0) & 2)  CreateBGL();
     // ...bei (fx_bitmask & 4) nichts zu tun
   // Cheats, Eastereggs, Debug
   AddMsgBoardCmd("cheat:fairbleiben", "FindObject(SFXM)->DeactivateCheats()");
@@ -43,23 +43,23 @@ protected func PostInit()
 public func SwitchFX(bitvalue)
 {
   // Cheat-Bits ignorieren
-  bitvalue = bitvalue & 1023;
+  bitvalue = (bitvalue ?? 0) & 1023;
   // bitweises XOR zum Invertieren der betroffenen Bits
-  fx_bitmask = fx_bitmask ^ bitvalue;
+  fx_bitmask = (fx_bitmask ?? 0) ^ (bitvalue ?? 0);
   // Sternenhimmel
-  if (bitvalue & 1)
-    if (fx_bitmask & 1)  CreateStars();
+  if ((bitvalue ?? 0) & 1)
+    if ((fx_bitmask ?? 0) & 1)  CreateStars();
                    else  RemoveStars();
   // Hintergrund-Landschaft
-  if (bitvalue & 2)
-    if (fx_bitmask & 2)
+  if ((bitvalue ?? 0) & 2)
+    if ((fx_bitmask ?? 0) & 2)
     {
       CreateBGL();
       if (!bgl_ID) Log("Das Szenario unterstützt keine Hintergrund-Landschaft!");
     }
     else RemoveBGL();
   // Atmosphärische Nacht
-  if (bitvalue & 4)
+  if ((bitvalue ?? 0) & 4)
     if (!FindObject(TIME))
       Log("Das Szenario unterstützt keinen Tag/Nachtwechsel!");
   // Helligkeit neu setzen
@@ -75,18 +75,18 @@ timeobj->RestoreColors();
 public func ActivateCheat(bitvalue)
 {
   // untere Bits ignorieren
-  bitvalue = bitvalue & 4294966273;
+  bitvalue = (bitvalue ?? 0) & 4294966273;
   // Reaktion
-  if (bitvalue & 1024)
+  if ((bitvalue ?? 0) & 1024)
     Message("Bazooka-Cheat aktiviert!|Viel Spaß beim Ballern!");
-  if (bitvalue & 65536)
+  if ((bitvalue ?? 0) & 65536)
   {
     var light;
-    while (light = FindObject(LGHT,0,0,0,0,0,0,0,0,light))
+    while (light = FindObject(LGHT,nil,nil,nil,nil,nil,nil,nil,nil,light))
       SetGraphics("Test", light);
   }
   // Bits setzen
-  fx_bitmask = fx_bitmask | bitvalue;
+  fx_bitmask = (fx_bitmask ?? 0) | (bitvalue ?? 0);
 }
 
 public func DeactivateCheats()
@@ -94,7 +94,7 @@ public func DeactivateCheats()
   // Meldung ausgeben
   Message("Alle Cheats deaktiviert!");
   // Cheat-Bits löschen
-  fx_bitmask = fx_bitmask & 1023;
+  fx_bitmask = (fx_bitmask ?? 0) & 1023;
 }
 
 
@@ -106,18 +106,18 @@ private func CreateStars()
   if (starlight) return(1);
   // ist es noch Tag?
 //  if (DayDarkness < 128) return(1);
- if (IsDay()||IsVeryDay()) return(1);
+ if (Or(IsDay(), IsVeryDay())) return(1);
   // Sternenhimmel aufbauen
   var x, y;
-  for (x = 0; x < LandscapeWidth(); x += 300)
-    for (y = 0; y < LandscapeHeight(); y += 300)
-      SetPosition(x, y, CreateObject(SSKY,0,0,-1));
+  for (x = nil; (x ?? 0) < (LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", 300))
+    for (y = nil; (y ?? 0) < (LandscapeHeight() ?? 0); S42MigrationAssign(y, "+=", 300))
+      SetPosition(x, y, CreateObject(SSKY,nil,nil,-1));
   // spezielle Sternenplatte mit Aussparung für den Mond
   var moon = FindObject(SMON);
-  FindObject(SSKY, GetX(moon)-300, GetY(moon)-300, 300, 300)->SetStarPhase(8);
+  FindObject(SSKY, (GetX(moon) ?? 0)-300, (GetY(moon) ?? 0)-300, 300, 300)->SetStarPhase(8);
   starlight = 1;
   // Hintergrund-Landschaft neu aufbauen
-  if (fx_bitmask & 2)
+  if ((fx_bitmask ?? 0) & 2)
     CreateBGL();
 }
 
@@ -133,14 +133,14 @@ private func RemoveStars()
   obj = FindObject(SMON);
   if (obj)
     obj->Disappear();
-  starlight = 0;
+  starlight = nil;
 }
 
 private func SetStarlight(value)
 {
   // Sterne
   var obj;
-  while (obj = FindObject(SSKY, 0,0,0,0, 0,0,0,0, obj))
+  while (obj = FindObject(SSKY, nil,nil,nil,nil, nil,nil,nil,nil, obj))
     obj->SetLightness(value);
   // Mond
   obj = FindObject(SMON);
@@ -161,8 +161,8 @@ private func CreateBGL()
   // Hintergrund neu aufbauen
   var x;
   var xplus = GetDefWidth(bgl_ID);
-  for (x; x < LandscapeWidth(); x += xplus)
-    SetPosition(x, bgl_y, CreateObject(bgl_ID,0,0,-1));
+  for (x; (x ?? 0) < (LandscapeWidth() ?? 0); S42MigrationAssign(x, "+=", (xplus ?? 0)))
+    SetPosition(x, bgl_y, CreateObject(bgl_ID,nil,nil,-1));
   // Helligkeit neu setzen
   var timeobj = FindObject(TIME);
   if (timeobj)
@@ -184,20 +184,20 @@ private func RemoveBGL()
 public func SetLightness(light)
 {
   // Verdunklung der Landschaft bei Nacht
-  if (bgl_ID && (fx_bitmask & 2))
+  if (And(bgl_ID, ((fx_bitmask ?? 0) & 2)))
   {
-    var color = RGB(128+light/2, 128+light/2, 128+light/2);
+    var color = RGB(128+(light ?? 0)/2, 128+(light ?? 0)/2, 128+(light ?? 0)/2);
     var obj;
-    while (obj = FindObject(bgl_ID, 0,0,0,0, 0,0,0,0, obj))
+    while (obj = FindObject(bgl_ID, nil,nil,nil,nil, nil,nil,nil,nil, obj))
       SetClrModulation(color, obj);
   }
   // Sterne & Mond
-  if (fx_bitmask & 1)
+  if ((fx_bitmask ?? 0) & 1)
   {
-    if (light < 128)
+    if ((light ?? 0) < 128)
     {
       if (!starlight) CreateStars();
-      SetStarlight(255-light*2);
+      SetStarlight(255-(light ?? 0)*2);
       return(1);
     }
     if (starlight) RemoveStars();

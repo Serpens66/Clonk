@@ -1,6 +1,6 @@
 /*-- Gold --*/
 
-#strict
+#strict 3
 
 /* Aufschlag */
 
@@ -14,13 +14,14 @@ protected func Hit()
 
 public func Sale(plr) {
   var obj;
-  if (obj = FindObject (GLDM, 50 - GetX (), 49 - GetY ()))
+  if (obj = FindObject (GLDM, 50 - (GetX () ?? 0), 49 - (GetY () ?? 0)))
     obj -> GLDM::PlayerHasSold(plr, this ());
 }
 
 public func Purchase(int plr, object buyobj) {
+  plr ??= 0;
   var obj;
-  if (obj = FindObject (GLDM, 50 - GetX (), 49 - GetY ()))
+  if (obj = FindObject (GLDM, 50 - (GetX () ?? 0), 49 - (GetY () ?? 0)))
     obj -> GLDM::PlayerHasBought(plr, this ());
 }
 

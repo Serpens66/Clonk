@@ -1,20 +1,20 @@
 /*-- Fundament --*/
 
-#strict
+#strict 3
 #include BAS7
 
 private func BasementID()    { return(B4S7);}
 private func BasementWidth() { return(72);  }
-func IsBasement(){return(0);}  //einziges Fundament, welches zerstörbar und reparierbar ist, weil einzeln baubar
+func IsBasement(){return(nil);}  //einziges Fundament, welches zerstörbar und reparierbar ist, weil einzeln baubar
 
 /* Fertigstellung */
 
 protected func Initialize()
 {
-  if(GetID() != BasementID() ) return(0);
+  if(!Equal(GetID(), BasementID()) ) return(nil);
   SetAction("Consolidate");
   MoveOutClonks();
-  SetPosition(GetX(this()),GetY(this())+8,this());
+  SetPosition(GetX(this()),(GetY(this()) ?? 0)+8,this());
   return(_inherited() );
 }
 
@@ -38,17 +38,17 @@ private func MoveOutClonks() {
 }
   
 private func MoveOutClonk(object pObj) {
-  if(GetID()!=BasementID()) return(0);
-  while(Stuck(pObj) && Inside(GetY(pObj)-GetY(),-15,+5))
-    SetPosition(GetX(pObj),GetY(pObj)-1,pObj);  
+  if(!Equal(GetID(), BasementID())) return(nil);
+  while(And(Stuck(pObj), Inside((GetY(pObj) ?? 0)-(GetY() ?? 0),-15,+5)))
+    SetPosition(GetX(pObj),(GetY(pObj) ?? 0)-1,pObj);
 }
 
 protected func Damage(iChange, iByPlayer)
 {
-  if(GetID() != BasementID() ) return(_inherited(iChange, iByPlayer) );
-  if(GetDamage() < 200) return(_inherited(iChange, iByPlayer) );
+  if(!Equal(GetID(), BasementID()) ) return(_inherited(iChange, iByPlayer) );
+  if((GetDamage() ?? 0) < 200) return(_inherited(iChange, iByPlayer) );
 
-  CastObjects(ROCK,4,15,0,-5);
+  CastObjects(ROCK,4,15,nil,-5);
   RemoveObject();
   
   return(_inherited(iChange, iByPlayer) );

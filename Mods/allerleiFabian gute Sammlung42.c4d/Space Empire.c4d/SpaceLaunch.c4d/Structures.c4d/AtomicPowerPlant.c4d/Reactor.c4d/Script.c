@@ -1,6 +1,6 @@
 /* Reaktor-Objekt */
 
-#strict
+#strict 3
 
 local iResttime, iSwitch, PowerPlant;
 
@@ -9,78 +9,85 @@ public func IsWaste(){ return(50);}
 
 /* Initialisierung */
 
-protected Initialize:
-  iResttime = 0;
+protected func Initialize(...) {
+  iResttime = nil;
   iSwitch = 1;
   return(1);
+}
 
-public Init:
+public func Init(...) {
   // wird vom Atomkraftwerk aufgerufen
-  PowerPlant = Par(0);
+  PowerPlant = Par(nil);
   return(1);
+}
 
 
 /* Ein-/Ausschalten */
 
-public SwitchOnOff:
+public func SwitchOnOff(...) {
   // Ein/Ausschalten vom AKW aus
   iSwitch = !iSwitch;
   if (iSwitch) return(SwitchOn());
   return(SwitchOff());
+}
 
-private SwitchOn:
+private func SwitchOn(...) {
   Message("Reaktor ein",PowerPlant);
   Sound("Energize");
   return(1);
+}
 
-private SwitchOff:
+private func SwitchOff(...) {
   Message("Reaktor aus", PowerPlant);
   Sound("DeEnergize");
   return(1);
+}
 
 
 /* Energieproduktion */
 
-private Production:
+private func Production(...) {
   // Update für Anzeige
-  ShowInfoBar(IBRE, PowerPlant, CurrentBoxValue()+FullBoxesCount()*100, 1000, 0,1);
+  ShowInfoBar(IBRE, PowerPlant, (CurrentBoxValue() ?? 0)+(FullBoxesCount() ?? 0)*100, 1000, nil,1);
   // Überhaupt eingeschaltet?
   if (!iSwitch) return(1);
   // EMP-Einwirkung?
-  if (FindObject(SEMP, 0,0,0,0, 0,"Active",PowerPlant)) return(1);
+  if (FindObject(SEMP, nil,nil,nil,nil, nil,"Active",PowerPlant)) return(1);
   // Alles verbraucht?
   if (!iResttime)
     return(ProductionEnd());
   // Energieerzeugung
   PowerPlant->EnergyProduction();
-  --iResttime;
+  S42MigrationStep(iResttime, -1);
   // Warnungen, wenn Brennstäbe fast verbraucht
   if (FindContents(SBST,PowerPlant)) return(1);
-  if (iResttime==1000) return(Message("@Wenig Material",PowerPlant));
-  if (iResttime==320)  return(Message("@Sehr wenig Material",PowerPlant));
+  if (Equal(iResttime, 1000)) return(Message("@Wenig Material",PowerPlant));
+  if (Equal(iResttime, 320))  return(Message("@Sehr wenig Material",PowerPlant));
   return(1);
+}
 
-private ProductionEnd:
+private func ProductionEnd(...) {
   SetAction("Idle");
   if (FindContents(SBST,PowerPlant)) return(1);
   Message("Brennstäbe verbraucht!",PowerPlant);
   Sound("DeEnergize");
-  Enter(Contained(),CreateObject(PLUT,0,0,GetOwner()));
-  Enter(Contained(),CreateObject(AMWS,0,0,GetOwner()));
+  Enter(Contained(),CreateObject(PLUT,nil,nil,GetOwner()));
+  Enter(Contained(),CreateObject(AMWS,nil,nil,GetOwner()));
 var verbrannt;
 verbrannt= CreateObject(VBWS);
 verbrannt->Verbrannt(GetID(),IsWaste());
 
   return(1);
+}
 
 
 /* Inhaltsüberprüfung */
 
-private ContentsCheck:
+private func ContentsCheck(...) {
   // noch aktiv?
   if (!ActIdle()) return(1);
   // Update für Anzeige
-  ShowInfoBar(IBRE, PowerPlant, CurrentBoxValue()+FullBoxesCount()*100, 1000, 0,1);
+  ShowInfoBar(IBRE, PowerPlant, (CurrentBoxValue() ?? 0)+(FullBoxesCount() ?? 0)*100, 1000, nil,1);
   // auch eingeschaltet?
   if (!iSwitch) return(1);
   // Brennstäbe finden
@@ -91,25 +98,31 @@ private ContentsCheck:
   iResttime = 4800;
   SetAction("Process");
   return(1);
+}
 
 
 /* Energieanzeige */
 
-public ShowEnergyInfo:
+public func ShowEnergyInfo(...) {
   // aktuelle Kiste
-  ShowInfoBar(IBRE, PowerPlant, CurrentBoxValue()+FullBoxesCount()*100, 1000, 5,1);
+  ShowInfoBar(IBRE, PowerPlant, (CurrentBoxValue() ?? 0)+(FullBoxesCount() ?? 0)*100, 1000, 5,1);
   // Meldung löschen
-  if (!FindContents(SBST,PowerPlant) && (iResttime <= 1000))
+  if (And(!FindContents(SBST,PowerPlant), ((iResttime ?? 0) <= 1000)))
     return(1);
   Message("", PowerPlant);
   return(1);
+}
 
 
 /* Infos */
 
-public CurrentBoxValue: return(iResttime/48);
-public FullBoxesCount:  return(ContentsCount(SBST,PowerPlant));
+public func CurrentBoxValue(...) { return((iResttime ?? 0)/48);
+}
+public func FullBoxesCount(...) {  return(ContentsCount(SBST,PowerPlant));
+}
 
-public GetRestTime: return(iResttime);
-public GetSwitch: return(iSwitch);
+public func GetRestTime(...) { return(iResttime);
+}
+public func GetSwitch(...) { return(iSwitch);
+}
 

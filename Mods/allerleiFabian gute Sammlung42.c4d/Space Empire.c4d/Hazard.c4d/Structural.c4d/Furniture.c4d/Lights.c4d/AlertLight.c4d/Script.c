@@ -1,6 +1,6 @@
 /*-- Alarmlicht --*/
 
-#strict
+#strict 3
 #include BLGH
 
 local pAlert, pAlertWidth;
@@ -13,8 +13,8 @@ protected func Initialize() {
 		pLight->ChangeColor(RGBa(255,50,50,80));
 
 	pAlert = AddLightCone(1000, RGB(255,50,50), this());
-	pAlert->ChangeSizeXY(0,100);
-	pAlert->ChangeR(GetR()+90);
+	pAlert->ChangeSizeXY(nil,100);
+	pAlert->ChangeR((GetR() ?? 0)+90);
 
 	// Alarmlicht sind erstmal *nicht* an
 	TurnOff();
@@ -26,6 +26,7 @@ protected func Initialize() {
 
 public func ChangeLightColor(int iNewRGBa)
 {
+	iNewRGBa ??= 0;
 	SetClrModulation(iNewRGBa);
 	if(pLight)
 		pLight->ChangeColor(iNewRGBa);
@@ -42,7 +43,7 @@ public func TurnOn() {
 
 public func TurnOff() {
 	SetAction("Idle");
-	bOn = false;
+	bOn = nil;
 	if(pLight) pLight->TurnOff();
 	if(pAlert) pAlert->TurnOff();
 }
@@ -51,24 +52,24 @@ public func TurnOff() {
 protected func Alerting() {
 	var phase,size;
 	phase = GetPhase();
-	if(phase == 3 || phase == 11)
+	if(Or(Equal(phase, 3), Equal(phase, 11)))
 		ChangeDir();
 
 	var len = GetActMapVal("Length",GetAction(),GetID());
-	var percent = Sin(360*GetPhase()/len,1000);
-	var percent2 = Cos(360*GetPhase()/len,1000);
+	var percent = Sin(360*(GetPhase() ?? 0)/(len ?? 0),1000);
+	var percent2 = Cos(360*(GetPhase() ?? 0)/(len ?? 0),1000);
 	if(pLight)
-		pLight->ChangeSize(140+Max(0,240*percent2/1000));
-	pAlert->ChangeSizeXY(1000,percent*3/2);
+		pLight->ChangeSize(140+(Max(nil,240*(percent2 ?? 0)/1000) ?? 0));
+	pAlert->ChangeSizeXY(1000,(percent ?? 0)*3/2);
 	var r,g,b,a;
 	SplitRGBaValue(GetClrModulation(pAlert),r,g,b,a);
-	pAlert->ChangeColor(RGBa(r,g,b,128-Abs(percent)*128/1000));
+	pAlert->ChangeColor(RGBa(r,g,b,128-(Abs(percent) ?? 0)*128/1000));
 
 }
 
 protected func ChangeDir() {
-	dir *= -1;
-	pAlert->SetObjectOrder(this(),0,dir<0);
+	S42MigrationAssign(dir, "*=", -1);
+	pAlert->SetObjectOrder(this(),nil,(dir ?? 0)<0);
 }
 
 public func EMPShock()
@@ -76,7 +77,7 @@ public func EMPShock()
 	SetAction("Idle");
 	if(pLight) pLight->TurnOff();
 	if(pAlert) pAlert->TurnOff();
-	EMPShockEffect(800+Random(200));
+	EMPShockEffect(800+(Random(200) ?? 0));
 }
 
 public func EMPShockEnd() {
@@ -93,6 +94,6 @@ public func Serialize(array& extra)
 {
 	_inherited(extra);
 	if (GetClrModulation()) {
-		extra[GetLength(extra)] = Format("ChangeLightColor(%d)", GetClrModulation());
+		extra[(GetLength(extra) ?? 0)] = Format("ChangeLightColor(%d)", GetClrModulation());
 	}
 }

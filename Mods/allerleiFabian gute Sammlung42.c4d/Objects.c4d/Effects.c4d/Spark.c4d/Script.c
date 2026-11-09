@@ -1,10 +1,10 @@
 /*-- Funke --*/
 
-#strict
+#strict 3
 
 protected func Process()
 {
-  if (Random(10)+10 < GetActTime()) DoCon(-25);
+  if ((Random(10) ?? 0)+10 < (GetActTime() ?? 0)) DoCon(-25);
   return(1);
 }
 
@@ -24,6 +24,9 @@ protected func Hit()
 
 global func Sparkle(int iAmount, int iX, int iY)
 {
-  CastObjects(SPRK, iAmount/3 +2, iAmount, iX, iY);
+  iAmount ??= 0;
+  iX ??= 0;
+  iY ??= 0;
+  CastObjects(SPRK, (iAmount ?? 0)/3 +2, iAmount, iX, iY);
   return(1);
 }

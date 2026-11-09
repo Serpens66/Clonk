@@ -1,6 +1,6 @@
 /*-- Konsole --*/
 
-#strict
+#strict 3
 
 local smashed, target, ar_Tele,derclonk,Ziel,basement, pfeil;
 
@@ -11,7 +11,7 @@ func Initialize()
 
 protected func Construction()
 {
-  basement = CreateObject(BS06,0,+8,GetOwner());
+  basement = CreateObject(BS06,nil,+8,GetOwner());
 }
 
 protected func Destruction()
@@ -24,14 +24,14 @@ protected func Destruction()
 // Effekte
 protected func Lights()
 {
-  if(smashed || GetEffect("EMPShock", this()))
+  if(Or(smashed, GetEffect("EMPShock", this())))
     {
     if(!Random(10)) CastObjects(SPRK, 1, 30, RandomX(-15,15));
     }
   else
     {
-    if(!Random(8)) CreateParticle("NoGravSpark", 3, 1, 0, 0, 50, RGBa(250, 10, 10, 50));
-    if(!Random(8)) CreateParticle("NoGravSpark", 3, 3, 0, 0, 50, RGBa(10, 10, 250, 50));
+    if(!Random(8)) CreateParticle("NoGravSpark", 3, 1, nil, nil, 50, RGBa(250, 10, 10, 50));
+    if(!Random(8)) CreateParticle("NoGravSpark", 3, 3, nil, nil, 50, RGBa(10, 10, 250, 50));
     }
 }
 
@@ -39,12 +39,12 @@ protected func Lights()
 protected func Damage()
 {
   if(smashed) return(CastObjects(SPRK, 1, 30, RandomX(-15,15)));
-  if(GetDamage() >= 40)
+  if((GetDamage() ?? 0) >= 40)
     {
     CastObjects(SPRK, 4, 50);
-    Sparks(15, RGB(210, 210, 0));
-    CreateSmokeTrail(RandomX(15,20), Random(360), 0,0, this());
-    CreateSmokeTrail(RandomX(15,20), Random(360), 0,0, this());
+    Sparks(15, RGB(210, 210, nil));
+    CreateSmokeTrail(RandomX(15,20), Random(360), nil,nil, this());
+    CreateSmokeTrail(RandomX(15,20), Random(360), nil,nil, this());
     Sound("Blast1");
     Sound("CrystalHit*");
     SetGraphics("Broken");
@@ -67,7 +67,7 @@ protected func ControlThrow(pClonk)
 var obj, i = -1;
 
 
-CreateMenu(GetID(),pClonk , 0, 0, "Konsole konfigurieren", 0, 1);
+CreateMenu(GetID(),pClonk , nil, nil, "Konsole konfigurieren", nil, 1);
 
 
 derclonk=pClonk;
@@ -75,11 +75,11 @@ derclonk=pClonk;
 
 for (var obj in FindObjects(Find_Func("IsConsoleTarget"),Find_Owner(GetOwner())))
 {
-ar_Tele[++i] = obj;
-  AddMenuItem("Konsole auf %s einstellen","Set",GetID(obj),pClonk,0,obj);
+ar_Tele[S42MigrationStep(i, 1)] = obj;
+  AddMenuItem("Konsole auf %s einstellen","Set",GetID(obj),pClonk,nil,obj);
 }
   // Effekt für tolles Feature
-  AddEffect("TeleMenu", pClonk, 101, 5, this(), 0, ar_Tele);
+  AddEffect("TeleMenu", pClonk, 101, 5, this(), nil, ar_Tele);
   AddMenuItem("Zurück","Nothing",GetID(),pClonk);
 }
 
@@ -88,9 +88,11 @@ ar_Tele[++i] = obj;
 
 func FxTeleMenuStart(object ziel, int no, int temp, array targets)
 {
-  if(temp) return();
-  EffectVar(0, ziel, no) = CreateArray();
-  EffectVar(0, ziel, no) = targets;
+  no ??= 0;
+  temp ??= 0;
+  if(temp) return;
+  EffectVar(nil, ziel, no) = CreateArray();
+  EffectVar(nil, ziel, no) = targets;
  // zusätzlich das Ziel noch markieren
  if(pfeil) RemoveObject(pfeil);
  pfeil=CreateObject(PFEI,-30,-80,-1);
@@ -100,12 +102,13 @@ func FxTeleMenuStart(object ziel, int no, int temp, array targets)
 func FxTeleMenuTimer(object ziel, int no)
 {
   // Menü weg?
-  if(GetMenu(ziel) != CONS && GetMenu(ziel) != CNS2 ) return(-1);
+  no ??= 0;
+  if(And(!Equal(GetMenu(ziel), CONS), !Equal(GetMenu(ziel), CNS2)) ) return(-1);
 
   var i = GetMenuSelection(ziel);
-  SetPlrView(ziel->GetOwner(), EffectVar(0, ziel, no)[i]);
+  SetPlrView(ziel->GetOwner(), EffectVar(nil, ziel, no)[(i ?? 0)]);
  // zusätzlich Markierung auf Ziel anpassen
- SetPosition(GetX(EffectVar(0, ziel, no)[i])-30, GetY(EffectVar(0, ziel, no)[i])-80,pfeil);
+ SetPosition((GetX(EffectVar(nil, ziel, no)[(i ?? 0)]) ?? 0)-30, (GetY(EffectVar(nil, ziel, no)[(i ?? 0)]) ?? 0)-80,pfeil);
 }
 
 func FxTeleMenuStop()
@@ -124,28 +127,28 @@ if(pfeil) RemoveObject(pfeil);
 protected func ControlDig(pClonk)
 {
   [$Control$]
-  if(smashed || GetEffect("EMPShock", this()))
+  if(Or(smashed, GetEffect("EMPShock", this())))
     {
     Sound("Electric");
     Fling(pClonk, RandomX(-2,2), -2);
-    return();
+    return;
     }
     
  
 
 
-if(!target) return();
+if(!target) return;
 
 
 PlayerMessage(GetOwner(),Format("Eingestellt auf: %v",GetName(Ziel)),derclonk);
 
-  CreateMenu(GetID(target), pClonk, target, 0, Format("$Control$: %s", GetName(target)), 0, 1);
-  for(var i = 1, desc ; desc = target->~ConsoleControl(i) ; i++)
+  CreateMenu(GetID(target), pClonk, target, nil, Format("$Control$: %s", GetName(target)), nil, 1);
+  for(var i = 1, desc ; desc = target->~ConsoleControl(i) ; S42MigrationStep(i, 1, true))
   {
     //Aufrufenden Clonk und uns selbst dem Zielobjekt übergeben. Dies kann es in ConsoleController abrufen
 //    target->~ConsoleController(this(), pClonk);
     // Zielobjekt muss für ConsoleControl(i) jeweils den Namen der Aktion zurückgeben, wichtig: i beginnt bei 1
-    AddMenuItem(desc, Format("ConsoleControlled(%d, %d, %d)", i, ObjectNumber(pClonk), ObjectNumber(this())), GetID(), pClonk, 0, 0, "$Control$");
+    AddMenuItem(desc, Format("ConsoleControlled(%d, %d, %d)", i, ObjectNumber(pClonk), ObjectNumber(this())), GetID(), pClonk, nil, nil, "$Control$");
     // Zielobjekt bekommt Aufruf: ConsoleControll(i) und muss das dann verarbeiten
   }
   return(1);
@@ -158,7 +161,7 @@ func Nothing()
 public func EMPShock()
 {
   //Nock Schockbar?
-  if(GetEffect("EMPShock", this()) || smashed) return(0);
+  if(Or(GetEffect("EMPShock", this()), smashed)) return(nil);
   
   //Ansonsten knallt's
   AddEffect("EMPShock", this(), 180, 650, this(), GetID());
@@ -181,8 +184,8 @@ func ClearArray()
 {
   //Lokale Variablen löschen
   var l = GetLength(ar_Tele);
-  for(var i = 0; i < l; ++i)
-      ar_Tele[i] = 0;
+  for(var i = nil; (i ?? 0) < (l ?? 0); S42MigrationStep(i, 1))
+      ar_Tele[(i ?? 0)] = nil;
 }
 
 
@@ -191,7 +194,7 @@ func ClearArray()
 public func Serialize(array& extra)
 {
 	if (target)
-		extra[GetLength(extra)] = ["Set(Object(%d))", target];
+		extra[(GetLength(extra) ?? 0)] = ["Set(Object(%d))", target];
 	if (smashed)
-		extra[GetLength(extra)] = "LocalN(\"smashed\")=true";
+		extra[(GetLength(extra) ?? 0)] = "LocalN(\"smashed\")=true";
 }

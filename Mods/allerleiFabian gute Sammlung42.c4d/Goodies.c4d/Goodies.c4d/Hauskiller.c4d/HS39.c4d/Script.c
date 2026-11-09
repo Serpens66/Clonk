@@ -1,5 +1,6 @@
-#strict
+#strict 3
 
-Initialize:
-  BlastObjects(GetX(),GetY(),5,0,GetOwner()+1); // damit laggt es deutlich weniger, als mit explode
+func Initialize(...) {
+  BlastObjects(GetX(),GetY(),5,nil,(GetOwner() ?? 0)+1); // damit laggt es deutlich weniger, als mit explode
 return(RemoveObject());
+}

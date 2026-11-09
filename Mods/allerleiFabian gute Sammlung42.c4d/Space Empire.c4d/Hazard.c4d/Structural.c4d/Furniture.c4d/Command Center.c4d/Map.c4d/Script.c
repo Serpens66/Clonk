@@ -1,6 +1,6 @@
 /*-- Kartenprojektor --*/
 
-#strict
+#strict 3
 
 local iNew,Active; // Nächste Phase
 
@@ -12,13 +12,13 @@ func Completion() {
 
 func Move()
 {
-  if(GetAction() eq "Stand") return();
+  if(!!SEqual(GetAction(), "Stand")) return;
 	var iPhase=GetPhase();
-	if( iPhase != iNew) 
-		SetPhase(BoundBy(iNew, iPhase-1, iPhase+1)); // Noch nicht da
+	if( !Equal(iPhase, iNew))
+		SetPhase(BoundBy(iNew, (iPhase ?? 0)-1, (iPhase ?? 0)+1)); // Noch nicht da
 	else if(!Random(50)) // Hinbewegt: Irgendwann neues Ziel suchen. 
 		iNew=Random(20);
-	CreateParticle("PSpark", RandomX(-26,22), RandomX(-18,9), 0, 0, Random(16)+15, RGB(200,255,255));
+	CreateParticle("PSpark", RandomX(-26,22), RandomX(-18,9), nil, nil, (Random(16) ?? 0)+15, RGB(200,255,255));
 }
 
 
@@ -26,7 +26,7 @@ protected func ControlThrow(clonk,a,b,c,d,f)
 {
         if(Active)
         {
-          Active = 0;
+          Active = nil;
           TurnOff();
         }
         else
@@ -57,8 +57,8 @@ public func EMPShock() { return(TurnOff()); }
 
 public func Serialize(array& extra)
 {
-	if (GetAction() eq "Stand") {
-		extra[GetLength(extra)] = "SetAction(\"Stand\")";
-		extra[GetLength(extra)] = Format("SetPhase(%d)", GetPhase());
+	if (!!SEqual(GetAction(), "Stand")) {
+		extra[(GetLength(extra) ?? 0)] = "SetAction(\"Stand\")";
+		extra[(GetLength(extra) ?? 0)] = Format("SetPhase(%d)", GetPhase());
 	}
 }
