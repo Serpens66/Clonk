@@ -10,6 +10,10 @@ Der Workspace dient C4Script-Mods, Szenarien und Werkzeugen für **LegacyClonk**
 - [Entwicklerdokumentation](https://crdocs.clonkspot.org/de/sdk/index.html), [Download und Projektseite](https://fulgen.itch.io/legacyclonk), [LegacyClonk-Forum](https://forum.clonkspot.org/c/projekte/legacyclonk/30).
 - `alte Projekte/` ist das historische Archiv. Analyse und Tests erfolgen mit Arbeitskopien unter `.work/`. Eigene neue Mods und Werkzeuge erhalten beim ersten Bedarf getrennte Projektordner unter `Mods/` bzw. `Tools/`.
 
+## Zusammenarbeit mit Unteragenten
+
+- Unteragenten sind für Chats in diesem Projekt ausdrücklich erlaubt und sollen eigenständig eingesetzt werden, wenn dies nach Einschätzung des Hauptagenten sinnvoll ist. Eine gesonderte Rückfrage ist dafür nicht erforderlich.
+
 ## Entwicklung und Nachweise
 
 - Zuerst die SDK-Signatur, den Aufrufkontext und die benötigten Definitionen prüfen. Bei versionsabhängigen Aussagen im passenden Release-Quellstand nachsehen. Clonk Rage, LegacyClonk und OpenClonk als getrennte Referenzen behandeln.
